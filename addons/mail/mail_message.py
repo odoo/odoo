@@ -182,6 +182,7 @@ class mail_message(osv.Model):
             fields allow to have the foreign record name without having
             to check external access rights).
         """
+
         has_voted = False
         vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
@@ -202,6 +203,13 @@ class mail_message(osv.Model):
             partner_ids = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [x.id for x in msg.partner_ids], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
+
+        try:
+            record_name = msg.record_name
+        except (orm.except_orm, osv.except_osv):
+            record_name = False
+
+
 
         return {
             'id': msg.id,
@@ -233,12 +241,19 @@ class mail_message(osv.Model):
         # expandable for not show message
         for msg in tree:
             # get all childs
-            not_loaded_ids = self.search(cr, uid, [['parent_id','=',msg.id],['id','not in',message_loaded_ids]], None, limit=1000)
+            not_loaded_ids = self.search(cr, uid, [['parent_id','=',msg.id],['id','not in',message_loaded_ids]], context=context, limit=1000)
             # group childs not read
             id_min=None
             id_max=None
             nb=0
             for not_loaded in self.browse(cr, uid, not_loaded_ids, context=context):
+
+                # check if the user have access to this message
+                try:
+                    not_loaded.author_id
+                except (orm.except_orm, osv.except_osv):
+                    continue
+
                 if not_loaded not in tree:
                     nb+=1
                     if id_min==None or id_min>not_loaded.id:
@@ -329,8 +344,7 @@ class mail_message(osv.Model):
 
                     try:
                         parent = msg.parent_id
-                    except orm.except_orm, inst:
-                        print inst
+                    except (orm.except_orm, osv.except_osv):
                         parent = False
 
                     while parent and parent.id != parent_id:
@@ -343,8 +357,7 @@ class mail_message(osv.Model):
 
                             try:
                                 parent = msg.parent_id
-                            except orm.except_orm, inst:
-                                print inst
+                            except (orm.except_orm, osv.except_osv):
                                 parent = False
 
         result = []
@@ -534,7 +547,6 @@ class mail_message(osv.Model):
         """
         message = self.browse(cr, uid, newid, context=context)
 
-        print message.partner_ids
         if not message:
             self._notify_followers(cr, uid, newid, message, context=context)
         
