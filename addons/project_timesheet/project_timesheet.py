@@ -284,6 +284,19 @@ class account_analytic_line(osv.osv):
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
 
+   def _default_product(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        print "record_ids",record_ids
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee.product_id:
+            return employee.product_id.id
+        return False
+
+   _defaults = {
+        'product_id': _default_product,
+        }
+
 account_analytic_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
