@@ -27,7 +27,6 @@
     'category': 'Tools',
     'installable': True,
     'auto_install': False,
-    'web': True,
     'js': ['static/src/js/gdocs.js'],
     'data': [
         'security/ir.model.access.csv',
