@@ -440,7 +440,7 @@
             <field name="search_view_id" ref="view_sales_order_filter"/>
         </record>
 
-        <record id="view_order_line_graph" model="ir.ui.view">
+<!--        <record id="view_order_line_graph" model="ir.ui.view">
             <field name="name">sale.order.line.graph</field>
             <field name="model">sale.order.line</field>
             <field name="arch" type="xml">
@@ -449,7 +449,7 @@
                     <field name="price_subtotal" operator="+"/>
                 </graph>
             </field>
-        </record>
+        </record>    -->
 
         <record id="view_order_line_tree" model="ir.ui.view">
             <field name="name">sale.order.line.tree</field>
@@ -562,7 +562,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_sales_order_uninvoiced_line_filter"/>
             <field name="context">{"search_default_uninvoiced":1}</field>
             <field name="filter" eval="True"/>
@@ -581,7 +581,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order.line</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="domain">[('invoiced','&lt;&gt;', 1),('state','=','done')]</field>
             <field name="filter" eval="True"/>
         </record>
