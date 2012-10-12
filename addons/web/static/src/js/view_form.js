@@ -678,7 +678,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             for (var i = 0; i < fields_order.length; i += 1) {
                 var field = this.fields[fields_order[i]];
-                if (!field.get('effective_invisible') && !field.get('effective_readonly')) {
+                if (!field.get('effective_invisible') && !field.get('effective_readonly') && field.$label) {
                     if (field.focus() !== false) {
                         break;
                     }
