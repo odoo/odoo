@@ -2445,7 +2445,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         }
     },
     is_syntax_valid: function() {
-        if (!this.get("effective_readonly")) {
+        if (!this.get("effective_readonly") && this.datewidget) {
             return this.datewidget.is_valid_();
         }
         return true;
