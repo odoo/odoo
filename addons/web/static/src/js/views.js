@@ -525,8 +525,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             controller.set_embedded_view(view.embedded_view);
         }
         controller.on('switch_mode', self, this.switch_mode);
-
-        controller.do_prev_view.add_last(this.on_prev_view);
+        controller.on('previous_view', self, this.prev_view);
+        
         var container = this.$el.find(".oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
@@ -602,7 +602,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @param {String} [options.default=null] view to switch to if no previous view
      * @returns {$.Deferred} switching end signal
      */
-    on_prev_view: function (options) {
+    prev_view: function (options) {
         options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
@@ -1266,8 +1266,7 @@ instance.web.View = instance.web.Widget.extend({
      * @param {Boolean} [options.created=false] resource was created
      * @param {String} [options.default=null] view to switch to if no previous view
      */
-    do_prev_view: function (options) {
-    },
+
     do_search: function(view) {
     },
     on_sidebar_export: function() {
