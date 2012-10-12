@@ -746,6 +746,7 @@ class sale_order_line(osv.osv):
         'sequence': 10,
         'invoiced': 0,
         'state': 'draft',
+        'type': 'make_to_stock',
         'price_unit': 0.0,
     }
 

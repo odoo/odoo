@@ -194,6 +194,7 @@
         <record id="view_product_hr_expense_form" model="ir.ui.view">
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
+            <field eval="8" name="priority"/>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <field name="purchase_ok" position="before">

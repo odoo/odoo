@@ -497,7 +497,6 @@ class sale_order_line(osv.osv):
     }
     _defaults = {
         'delay': 0.0,
-        'type': 'make_to_stock',
         'product_packaging': False,
     }
 
