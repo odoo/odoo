@@ -39,6 +39,5 @@ instance.web.form.FieldUOMFactor = instance.web.form.FieldFloat.extend({
     parse_value: function(val, def) {
         return instance.web.parse_value(val, {type: "float"}, def);
     },
-    
 });
 }
