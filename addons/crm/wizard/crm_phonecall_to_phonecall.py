@@ -87,7 +87,7 @@ class crm_phonecall2phonecall(osv.osv_memory):
             if 'user_id' in fields:
                 res.update({'user_id': phonecall.user_id and phonecall.user_id.id or False})
             if 'date' in fields:
-                res.update({'date': phonecall.date})
+                res.update({'date': False})
             if 'section_id' in fields:
                 res.update({'section_id': phonecall.section_id and phonecall.section_id.id or False})
             if 'categ_id' in fields:
