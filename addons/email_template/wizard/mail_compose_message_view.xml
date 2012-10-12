@@ -39,7 +39,7 @@
                             attrs="{'invisible':[('use_template','=',False)]}"
                             on_change="onchange_template_id(use_template, template_id, composition_mode, model, res_id, context)"/>
                     </xpath>
-                    <xpath expr="//button[@class='oe_mail_compose_message_attachment']" position="before">
+                    <xpath expr="//button[@name='dummy']" position="before">
                         <button icon="/email_template/static/src/img/email_template.png"
                             type="object" name="toggle_template" string=""
                             help="Use a message template"

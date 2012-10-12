@@ -19,21 +19,16 @@
 #
 ##############################################################################
 
-try:
-    # embedded
-    import openerp.addons.web.common.http as openerpweb
-except ImportError:
-    # standalone
-    import web.common.http as openerpweb
-
 import base64
 import urllib2
+
+import openerp
 from osv import osv, fields
 
-class Binary(openerpweb.Controller):
+class Binary(openerp.addons.web.http.Controller):
     _cp_path = "/web_linkedin/binary"
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def url2binary(self, req,url):
         bfile = urllib2.urlopen(url)
         return base64.b64encode(bfile.read())
