@@ -61,11 +61,6 @@
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
                             <span>...wait upload...</span>
-                            <div t-attf-style="{attachment.percent_loaded&gt;0?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;20?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;40?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;60?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;80?'':'display:none;'}"/>
                         </div>
                         <t t-raw="attachment.name || attachment.filename"/>
                     </span>

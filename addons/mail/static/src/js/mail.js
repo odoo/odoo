@@ -199,7 +199,6 @@ openerp.mail = function(session) {
                 // submit file
                 //session.web.blockUI();
                 self.$('form.oe_form_binary_form').submit();
-                //self.submit_ajax_attachment();
 
                 this.$(".oe_attachment_file").hide();
 
@@ -212,52 +211,6 @@ openerp.mail = function(session) {
                 });
                 this.display_attachments();
             }
-        },
-        
-        submit_ajax_attachment: function(){
-            var self=this;
-            var $form = self.$('form.oe_form_binary_form');
-            var filename = this.$('input.oe_form_binary_file').val().replace(/.*[\\\/]/,'');
-
-            // create form data
-            var fomdata = new FormData();
-            $.each($form.find('input'), function(i, field) {
-                var $field=$(field);
-                if($field.attr('type')!='file'){
-                    fomdata.append($field.attr('name'), $field.val());
-                } else {
-                    fomdata.append($field.attr('name'), field.files[0]);
-                }
-            });
-
-            var progress=function(event) {
-                self.$("span[name='"+filename+"'] div:lt("+Math.floor(event.loaded / event.total*5)+")").show();
-            };
-
-            $.ajax({
-                url: $form.attr("action"),
-                data: fomdata,
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                enctype: 'multipart/form-data',
-                xhr: function() {
-                    // custom xhr
-                    myXhr = $.ajaxSettings.xhr();
-                    if(myXhr.upload){
-                        // for handling the progress of the upload
-                        myXhr.upload.addEventListener('progress', progress, false);
-                    }
-                    myXhr.addEventListener('progress', progress, false);
-                    return myXhr;
-                },
-                success: function(data){
-                    $iframe=$('<iframe style="display:none;"/>').html(data);
-                    $iframe.appendTo(self.$el);
-                    $iframe.remove();
-                }
-            });
         },
         
         on_attachment_loaded: function (event, result) {
