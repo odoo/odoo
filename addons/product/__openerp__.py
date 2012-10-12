@@ -64,6 +64,13 @@ Print product labels with barcode.
         'test/product_uom.yml',
         'test/product_pricelist.yml',
     ],
+    'js': [
+        'static/src/js/product.js',
+    ],
+    'qweb' : [
+        "static/src/xml/product.xml",
+    ],
+
     'installable': True,
     'auto_install': False,
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
