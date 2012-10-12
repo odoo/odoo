@@ -211,7 +211,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 e.stopPropagation();
             }
          });
-
+        this._super.apply(this, arguments);
         return $.when();
     },
     extract_qweb_template: function(fvg) {
@@ -4078,7 +4078,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         }
         this.list_view.m2m_field = this;
         var loaded = $.Deferred();
-        this.list_view.on_loaded.add_last(function() {
+        this.list_view.on("view_loaded",self,function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4203,7 +4203,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this.kanban_view.m2m = this;
         var loaded = $.Deferred();
-        this.kanban_view.on_loaded.add_last(function() {
+        this.kanban_view.on("view_loaded",self,function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4427,7 +4427,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$el.find(".oe_popup_form"));
-        this.view_form.on_loaded.add_last(function() {
+        this.view_form.on("view_loaded",self,function() {
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
             self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
                 multi_select: multi_select,
@@ -4546,7 +4546,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.on_loaded.add_last(function () {
+        this.searchview.on("search_view_load",self,function () {
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
@@ -4563,7 +4563,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             }).pipe(function() {
                 self.searchview.do_search();
             });
-            self.view_list.on_loaded.add_last(function() {
+            self.view_list.on("view_loaded",self,function() {
                 self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons", {widget:self}));
                 var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {

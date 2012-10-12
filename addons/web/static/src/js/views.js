@@ -1146,6 +1146,7 @@ instance.web.View = instance.web.Widget.extend({
      * Must return a promise.
      */
     on_loaded: function(fields_view_get) {
+        this.trigger("view_loaded");
     },
     set_default_options: function(options) {
         this.options = options || {};

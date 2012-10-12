@@ -671,7 +671,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             'facet_for_defaults', this.defaults)).then(function () {
                 self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
-
+        self.trigger("search_view_load");
         return $.when(drawer_started, defaults_fetched)
             .then(function () { self.ready.resolve(); })
     },

@@ -358,6 +358,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        this._super.apply(this, arguments);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
