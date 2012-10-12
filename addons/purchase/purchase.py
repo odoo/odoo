@@ -114,7 +114,7 @@ class purchase_order(osv.osv):
             if state=='done':
                 res[oid][0] += nbr or 0.0
                 res[oid][1] += nbr or 0.0
-            else:L878
+            else:
                 res[oid][1] += nbr or 0.0
         for r in res:
             if not res[r][1]:
