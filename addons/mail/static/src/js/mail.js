@@ -49,7 +49,6 @@ openerp.mail = function(session) {
         },
     });
 
-
     /**
      * ------------------------------------------------------------
      * ChatterUtils
@@ -1278,4 +1277,65 @@ openerp.mail = function(session) {
             this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
         }
     });
+
+
+    /**
+     * ------------------------------------------------------------
+     * UserMenu
+     * ------------------------------------------------------------
+     * 
+     * add a link on the top user bar for write a full mail
+     */
+    session.web.ComposeMessageTopButton = session.web.Widget.extend({
+
+        template:'mail.compose_message.button_top_bar',
+
+        init: function (parent, options) {
+            this._super.apply(this, options);
+            this.options = this.options || {};
+            this.options.domain = this.options.domain || [];
+            this.options.context = {
+                'default_res_id': 0,
+                'default_model': 'mail.thread',
+                'default_is_private': true, 
+                'default_res_model': false,
+                'default_res_id': 0,
+                'default_content_subtype': 'html',
+                'default_is_private': true,
+                'default_parent_id': 0
+            };
+        },
+
+        start: function(parent, params) {
+            var self = this;
+            this.$el.on('click', 'button', self.on_compose_message );
+            this._super(parent, params);
+        },
+
+        on_compose_message: function(event){
+            event.stopPropagation();
+            var action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                view_type: 'form',
+                action_from: 'mail.ThreadComposeMessage',
+                views: [[false, 'form']],
+                target: 'new',
+                context: this.options.context,
+            };
+            session.client.action_manager.do_action(action);
+        },
+
+    });
+
+    session.web.UserMenu = session.web.UserMenu.extend({
+        start: function(parent, params) {
+            var render = new session.web.ComposeMessageTopButton();
+            render.insertAfter(this.$el);
+            this._super(parent, params);
+        }
+
+    });
+
 };
