@@ -2380,7 +2380,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
         this.$input.change(function(){
-            self.datetime_changed();
+            self.change_datetime();
         });
         
         this.picker({
@@ -2450,7 +2450,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    datetime_changed: function() {
+    change_datetime: function() {
         if (this.is_valid_()) {
             this.set_value_from_ui_();
             this.trigger("datetime_changed");
