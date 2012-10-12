@@ -280,7 +280,8 @@ instance.web.Model = instance.web.Class.extend({
             kwargs = args;
             args = [];
         }
-        return instance.session.rpc('/web/dataset/call_kw', {
+        var debug = instance.session.debug ? '/'+this.name+':'+method : '';
+        return instance.session.rpc('/web/dataset/call_kw' + debug, {
             model: this.name,
             method: method,
             args: args,

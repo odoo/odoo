@@ -57,7 +57,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
         this.$el.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
-            self.on_pager_action(action);
+            self.execute_pager_action(action);
         });
 
         this.do_update_pager();
@@ -273,7 +273,7 @@ instance.web.DiagramView = instance.web.View.extend({
             self.dataset.domain,
             self.context || self.dataset.context
         );
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
 
@@ -325,7 +325,7 @@ instance.web.DiagramView = instance.web.View.extend({
             this.dataset.domain,
             this.context || this.dataset.context
         );
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
@@ -347,7 +347,7 @@ instance.web.DiagramView = instance.web.View.extend({
        });
     },
 
-    on_pager_action: function(action) {
+    execute_pager_action: function(action) {
         switch (action) {
             case 'first':
                 this.dataset.index = 0;
@@ -380,7 +380,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
     do_show: function() {
         this.do_push_state({});
-        return $.when(this._super(), this.on_pager_action('reload'));
+        return $.when(this._super(), this.execute_pager_action('reload'));
     }
 });
 };
