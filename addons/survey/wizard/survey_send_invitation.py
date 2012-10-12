@@ -176,7 +176,7 @@ class survey_send_invitation(osv.osv_memory):
                     vals['attachment_ids'] = [(0,0,{'name': a_name,
                                                     'datas_fname': a_name,
                                                     'datas': str(a_content).encode('base64')})
-                                                    for a_name, a_content in attachments]
+                                                    for a_name, a_content in attachments.items()]
                 ans = self.pool.get('mail.mail').create(cr, uid, vals, context=context)
                 if ans:
                     res_data = {'name': partner.name or _('Unknown'),
