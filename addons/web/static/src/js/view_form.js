@@ -2144,7 +2144,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
  */
 instance.web.form.ReinitializeWidgetMixin =  {
     /**
-     * Default implementation of start(), use it or call explicitly initialize_field().
+     * Default implementation of, you should not override it, use initialize_field() instead.
      */
     start: function() {
         this.initialize_field();
@@ -2175,10 +2175,6 @@ instance.web.form.ReinitializeWidgetMixin =  {
  * switch.
  */
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
-    initialize_field: function() {
-        instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
-        this.render_value();
-    },
     reinitialize: function() {
         instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
         this.render_value();
@@ -2868,21 +2864,20 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.current_display = null;
         this.is_started = false;
     },
-    start: function() {
-        instance.web.form.ReinitializeFieldMixin.start.call(this);
+    reinit_value: function(val) {
+        this.internal_set_value(val);
+        this.floating = false;
+        if (this.is_started)
+            this.render_value();
+    },
+    initialize_field: function() {
         this.is_started = true;
         instance.web.bus.on('click', this, function() {
             if (!this.get("effective_readonly") && this.$input && this.$input.autocomplete('widget').is(':visible')) {
                 this.$input.autocomplete("close");
             }
         });
-        this._super();
-    },
-    reinit_value: function(val) {
-        this.internal_set_value(val);
-        this.floating = false;
-        if (this.is_started)
-            this.render_value();
+        instance.web.form.ReinitializeFieldMixin.initialize_field.call(this);
     },
     initialize_content: function() {
         if (!this.get("effective_readonly"))
@@ -3820,10 +3815,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         this.set({"value": []});
         this._display_orderer = new instance.web.DropMisordered();
         this._drop_shown = false;
-    },
-    start: function() {
-        instance.web.form.ReinitializeFieldMixin.start.call(this);
-        this._super();
     },
     initialize_content: function() {
         if (this.get("effective_readonly"))
