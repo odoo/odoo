@@ -683,7 +683,7 @@ class mail_thread(osv.AbstractModel):
         if parent_id:
             msg = messages.browse(cr, uid, parent_id, context=context)
             values["is_private"] = msg.is_private or False
-            values["partner_ids"] = [(4, partner.id) for partner in msg.partner_ids]
+            values["partner_ids"] = [(4, partner.id) for partner in msg.partner_ids] + [(4, msg.author_id.id)]
 
         print values
         # Avoid warnings about non-existing fields

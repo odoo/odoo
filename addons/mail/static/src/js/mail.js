@@ -144,7 +144,6 @@ openerp.mail = function(session) {
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
-
             this.ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
             this.fileupload_id = _.uniqueId('oe_fileupload_temp');
             $(window).on(self.fileupload_id, self.on_attachment_loaded);
@@ -302,7 +301,7 @@ openerp.mail = function(session) {
                     'default_res_model': this.context.default_res_model,
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
-                    'default_is_private': true,
+                    'default_is_private': this.is_private,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
                     'default_attachment_ids': attachments,
@@ -478,6 +477,7 @@ openerp.mail = function(session) {
             this.res_id =       param.res_id || false;
             this.type =         param.type || false;
             this.is_author =    param.is_author || false;
+            this.is_private =   param.is_private || false;
             this.subject =      param.subject || false;
             this.name =         param.name || false;
             this.record_name =  param.record_name || false;
@@ -1004,32 +1004,32 @@ openerp.mail = function(session) {
         },
 
         /** Displays a message or an expandable message  */
-        insert_message: function (message) {
+        insert_message: function (record) {
             var self=this;
 
             this.$("li.oe_wall_no_message").remove();
 
-            if(message.type=='expandable'){
+            if(record.type=='expandable'){
                 var message = new mail.ThreadExpandable(self, {
-                    'domain': message.domain,
+                    'domain': record.domain,
                     'context': {
-                        'default_model':        message.model,
-                        'default_res_id':       message.res_id,
-                        'default_parent_id':    message.id },
-                    'parameters': message
+                        'default_model':        record.model,
+                        'default_res_id':       record.res_id,
+                        'default_parent_id':    record.id },
+                    'parameters': record
                 });
             } else {
                 var message = new mail.ThreadMessage(self, {
-                    'domain': message.domain,
+                    'domain': record.domain,
                     'context': {
-                        'default_model':        message.model,
-                        'default_res_id':       message.res_id,
-                        'default_parent_id':    message.id },
+                        'default_model':        record.model,
+                        'default_res_id':       record.res_id,
+                        'default_parent_id':    record.id },
                     'options':{
                         'thread': self.options.thread,
                         'message': self.options.message
                     },
-                    'parameters': message
+                    'parameters': record
                 });
             }
 
@@ -1140,7 +1140,8 @@ openerp.mail = function(session) {
             // update context
             _.extend(this.options.context, {
                 default_res_id: this.view.datarecord.id,
-                default_model: this.view.model });
+                default_model: this.view.model,
+                default_is_private: false });
             // update domain
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
             // create and render Thread widget

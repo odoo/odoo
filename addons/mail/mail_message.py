@@ -151,7 +151,7 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
-        'is_private': True,
+        'is_private': False,
     }
 
     #------------------------------------------------------
@@ -215,6 +215,7 @@ class mail_message(osv.Model):
             'date': msg.date,
             'author_id': author_id,
             'is_author': is_author,
+            'is_private': msg.is_private,
             'partner_ids': partner_ids,
             'parent_id': msg.parent_id and msg.parent_id.id or False,
             'vote_user_ids': vote_ids,

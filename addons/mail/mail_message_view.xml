@@ -89,28 +89,28 @@
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('notification_ids.read', '=', False)],
-                'context': {'default_model': 'res.partner'} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
         </record>
 
         <record id="action_mail_to_me_feeds" model="ir.actions.client">
             <field name="name">To: me</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('partner_ids.user_ids', 'in', [uid]),('notification_ids.read', '=', False),('create_uid', '!=', uid)],
-                'context': {'default_model': 'res.partner'} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('notification_ids.read', '=', True)],
-                'context': {'default_model': 'res.partner'} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
         </record>
 
         <record id="action_mail_sent_feeds" model="ir.actions.client">
             <field name="name">Sent</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('create_uid', '=', uid)],
-                'context': {'default_model': 'res.partner'} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
         </record>
     </data>
 </openerp>
