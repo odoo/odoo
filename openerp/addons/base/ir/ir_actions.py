@@ -766,7 +766,7 @@ class ir_actions_todo(osv.osv):
         'action_id': fields.many2one(
             'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
-        'state': fields.selection(TODO_STATES, string='State', required=True),
+        'state': fields.selection(TODO_STATES, string='Status', required=True),
         'name': fields.char('Name', size=64),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
