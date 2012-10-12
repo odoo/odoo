@@ -3563,7 +3563,7 @@ class BaseModel(object):
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
             #remove depricated fields from field list 
-            for field in fields:
+            for field in self._columns.keys():
                 if getattr(self._columns[field], 'deprecated'):
                     fields.remove(field)
         if isinstance(ids, (int, long)):
