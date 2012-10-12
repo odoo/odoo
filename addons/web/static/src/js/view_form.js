@@ -3825,8 +3825,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         this._drop_shown = false;
     },
     start: function() {
-        this._super();
         instance.web.form.ReinitializeFieldMixin.start.call(this);
+        this._super();
     },
     initialize_content: function() {
         if (this.get("effective_readonly"))
