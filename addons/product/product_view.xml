@@ -429,8 +429,8 @@
                         </group>
                         <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}" widget="uom_factor" options="{'category_field': 'category_id', 'name_field': 'name'}"/>
--                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}" widget="uom_factor" options="{'category_field': 'category_id', 'name_field': 'name'}"/>
+                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}" widget="uom_factor"/>
+-                           <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}" widget="uom_factor"/>
                             <field name="rounding"/>
                         </group>
                     </group>

@@ -5,10 +5,17 @@
 <t t-name="FieldUOMFactor" t-extend="FieldChar">
     <t t-jquery="t:first" t-operation="before">
         <t t-if="widget.get('uom_reference')">
-            1 <t t-esc="widget.get('uom_reference').name"/> =
+            <t t-if="widget.get('uom_type') === 'smaller'">
+                1 <t t-esc="widget.get('uom_reference').name"/> =
+            </t>
         </t>
     </t>
     <t t-jquery="t:last" t-operation="after">
+        <t t-if="widget.get('uom_reference')">
+            <t t-if="widget.get('uom_type') === 'bigger'">
+                <t t-esc="widget.get('uom_reference').name"/> = 1 
+            </t>
+        </t>
         <t t-esc="widget.get('name')"/>
     </t>
 </t>
