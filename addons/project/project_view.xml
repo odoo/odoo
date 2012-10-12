@@ -377,7 +377,6 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                     <header>
-                        <span groups="base.group_user">
                             <!--
                             <button name="do_open" string="Start Task" type="object"
                                     states="draft,pending" class="oe_highlight"/>
@@ -385,12 +384,11 @@
                                     states="cancel,done"/>
                             -->
                             <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="cancelled,done" context="{'button_reactivate':True}"/>
+                                    states="cancelled,done" context="{'button_reactivate':True}" groups="base.group_user"/>
                             <button name="action_close" string="Done" type="object"
-                                    states="draft,open,pending"/>
+                                    states="draft,open,pending" groups="base.group_user"/>
                             <button name="do_cancel" string="Cancel" type="object"
-                                    states="draft,open,pending"/>
-                        </span>
+                                    states="draft,open,pending" groups="base.group_user"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
