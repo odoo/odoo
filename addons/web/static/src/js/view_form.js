@@ -2210,7 +2210,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         }
     },
     is_syntax_valid: function() {
-        if (!this.get("effective_readonly")) {
+        if (!this.get("effective_readonly") && this.$("input").size() > 0) {
             try {
                 var value_ = this.parse_value(this.$el.find('input').val(), '');
                 return true;
@@ -2500,7 +2500,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         this.$textarea.autosize();        
     },
     is_syntax_valid: function() {
-        if (!this.get("effective_readonly")) {
+        if (!this.get("effective_readonly") && this.$textarea) {
             try {
                 var value_ = instance.web.parse_value(this.$textarea.val(), this, '');
                 return true;
