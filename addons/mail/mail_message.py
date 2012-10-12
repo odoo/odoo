@@ -232,12 +232,12 @@ class mail_message(osv.Model):
         # expandable for not show message
         for msg in tree:
             # get all childs
-            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',msg.id],['id','not in',message_loaded_ids]], None, limit=1000)
+            not_loaded_ids = self.search(cr, uid, [['parent_id','=',msg.id],['id','not in',message_loaded_ids]], None, limit=1000)
             # group childs not read
             id_min=None
             id_max=None
             nb=0
-            for not_loaded in self.browse(cr, SUPERUSER_ID, not_loaded_ids, context=context):
+            for not_loaded in self.browse(cr, uid, not_loaded_ids, context=context):
                 if not_loaded not in tree:
                     nb+=1
                     if id_min==None or id_min>not_loaded.id:
@@ -270,7 +270,7 @@ class mail_message(osv.Model):
             message_loaded_ids.append( msg.id )
 
         # expandable for limit max
-        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded_ids]], context=context, limit=1)
+        ids = self.search(cr, uid, domain+[['id','not in',message_loaded_ids]], context=context, limit=1)
         if len(ids) > 0:
             result.append(
             {
@@ -309,33 +309,47 @@ class mail_message(osv.Model):
         context = context or {}
 
         tree = []
-        result = []
+        message_ids = []
         record = None
 
         # select ids
         if ids and ids!=[None]:
             for msg in self.browse(cr, uid, ids, context=context):
-                result.append(self._message_dict_get(cr, uid, msg, context=context))
-            return result
+                message_ids.append(msg.id)
 
-        # key: ID, value: record
-        ids = self.search(cr, uid, domain, context=context, limit=limit)
-        for msg in self.browse(cr, uid, ids, context=context):
-            # if not in record and not in message_loded list
-            if msg not in tree and msg.id not in message_loaded_ids :
-                record = self._message_dict_get(cr, uid, msg, context=context)
-                tree.append(msg)
-                result.append(record)
-
-            while msg.parent_id and msg.parent_id.id != parent_id:
-                parent_id = msg.parent_id.id
-                if msg.parent_id.id not in tree:
-                    msg = msg.parent_id
+        # key: ID, value: tree
+        if not ids:
+            ids = self.search(cr, uid, domain, context=context, limit=limit)
+            for msg in self.browse(cr, uid, ids, context=context):
+                # if not in tree and not in message_loded list
+                if msg not in tree and msg.id not in message_loaded_ids :
+                    message_ids.append(msg.id)
                     tree.append(msg)
-                    # if not in record and not in message_loded list
-                    if msg.id not in message_loaded_ids :
-                        record = self._message_dict_get(cr, uid, msg, context=context)
-                        result.append(record)
+
+                    try:
+                        parent = msg.parent_id
+                    except orm.except_orm, inst:
+                        print inst
+                        parent = False
+
+                    while parent and parent.id != parent_id:
+                        parent_id = msg.parent_id.id
+                        if msg.parent_id.id not in tree:
+                            tree.append(parent)
+                            # if not in tree and not in message_loded list
+                            if parent.id not in message_loaded_ids :
+                                message_ids.append(parent.id)
+
+                            try:
+                                parent = msg.parent_id
+                            except orm.except_orm, inst:
+                                print inst
+                                parent = False
+
+        result = []
+        for msg in self.browse(cr, uid, message_ids, context=context):
+            record = self._message_dict_get(cr, uid, msg, context=context)
+            result.append( record )
 
         result = sorted(result, key=lambda k: k['id'])
 
@@ -371,7 +385,8 @@ class mail_message(osv.Model):
                 - Otherwise: raise
             - create: if
                 - I am in the document message_follower_ids OR
-                - I can write on the related document if res_model, res_id
+                - I can write on the related document if res_model, res_id OR
+                - I write a mail to another user (no res_model)
                 - Otherwise: raise
             - write: if
                 - I can write on the related document if res_model, res_id
@@ -412,7 +427,7 @@ class mail_message(osv.Model):
         else:
             author_ids = []
 
-        # Create: Check message_follower_ids
+        # Create: Check message_follower_ids and author_ids
         if operation == 'create':
             doc_follower_ids = []
             for model, mids in model_record_ids.items():
@@ -427,6 +442,12 @@ class mail_message(osv.Model):
                     if message.get('res_model') == model and message.get('res_id') in fol_mids]
         else:
             doc_follower_ids = []
+
+        # Create/write: Check author_ids
+        if operation == 'create' or operation == 'write':
+            author_ids = author_ids+[mid for mid, message in message_values.iteritems() 
+                if message.get('author_id') and message.get('author_id') == partner_id and not message.get('res_model')]
+
 
         # Calculate remaining ids, and related model/res_ids
         model_record_ids = {}
@@ -511,6 +532,8 @@ class mail_message(osv.Model):
             Call mail_notification.notify to manage the email sending
         """
         message = self.browse(cr, uid, newid, context=context)
+
+        print message.partner_ids
         if not message:
             self._notify_followers(cr, uid, newid, message, context=context)
         

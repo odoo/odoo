@@ -27,6 +27,7 @@ openerp.mail = function(session) {
                     if( key!='default_template_id' &&
                         key!='default_use_template' &&
                         key!='default_is_private' &&
+                        key!='default_partner_ids' &&
                         key!='default_model' &&
                         key!='default_res_id' &&
                         key!='default_subtype' &&
@@ -331,6 +332,11 @@ openerp.mail = function(session) {
             for(var i in this.attachment_ids){
                 attachments.push(this.attachment_ids[i].id);
             }
+            var partner_ids=[];
+            for(var i in this.partner_ids){
+                partner_ids.push(this.partner_ids[i][0]);
+            }
+
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -346,14 +352,15 @@ openerp.mail = function(session) {
                     'default_is_private': true,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
-                    'default_attachment_ids': attachments
+                    'default_attachment_ids': attachments,
+                    'default_partner_ids': partner_ids
                 },
             };
             this.do_action(action);
         },
 
-        on_cancel: function(){
-            event.stopPropagation();
+        on_cancel: function(event){
+            if(event) event.stopPropagation();
             this.$('textarea').val("");
             this.$('input[data-id]').remove();
             //this.attachment_ids=[];
@@ -365,6 +372,7 @@ openerp.mail = function(session) {
 
         /*post a message and fetch the message*/
         on_message_post: function (body) {
+            var self = this;
 
             if (! body) {
                 var comment_node = this.$('textarea');
@@ -390,9 +398,11 @@ openerp.mail = function(session) {
                         false, 
                         this.context.default_parent_id, 
                         attachments]
-                    ).then(this.parent_thread.proxy('switch_new_message'));
-                this.attachment_ids=[];
-                this.on_cancel();
+                    ).then(function(records){
+                        self.parent_thread.switch_new_message(records);
+                        self.attachment_ids=[];
+                        self.on_cancel();
+                    });
                 return true;
             }
         },
@@ -451,8 +461,12 @@ openerp.mail = function(session) {
         */
         on_expandable: function (event) {
             if(event)event.stopPropagation();
+            var self = this;
             this.parent_thread.message_fetch(false, this.domain, this.context);
-            this.destroy();
+            this.$el.fadeOut(300, function(){
+                self.destroy();
+            });
+            this.$('*').unbind();
             return false;
         },
     });
@@ -841,7 +855,7 @@ openerp.mail = function(session) {
 
             this.messages = [];
 
-            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model);
+            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
         },
         
@@ -1002,7 +1016,7 @@ openerp.mail = function(session) {
          * @param {Array} replace_domain: added to this.domain
          * @param {Object} replace_context: added to this.context
          */
-        message_fetch: function (initial_mode, replace_domain, replace_context, ids) {
+        message_fetch: function (initial_mode, replace_domain, replace_context, ids, callback) {
             var self = this;
 
             // initial mode: try to use message_data or message_ids
@@ -1015,7 +1029,7 @@ openerp.mail = function(session) {
             fetch_context.message_loaded= [this.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
             return this.ds_message.call('message_read', [ids, fetch_domain, fetch_context, 0, this.context.default_parent_id || undefined]
-                ).then(this.proxy('switch_new_message'));
+                ).then(function (records) { self.switch_new_message(records); });
         },
 
         /* create record object and linked him
@@ -1072,13 +1086,15 @@ openerp.mail = function(session) {
             // check older and newer message for insert
             var parent_newer = false;
             var parent_older = false;
-            for(var i in thread_messages){
-                if(thread_messages[i].id > message.id){
-                    if(!parent_newer || parent_newer.id>=thread_messages[i].id)
-                        parent_newer = thread_messages[i];
-                } else if(thread_messages[i].id>0 && thread_messages[i].id < message.id) {
-                    if(!parent_older || parent_older.id<thread_messages[i].id)
-                        parent_older = thread_messages[i];
+            if ( message.id > 0 ){
+                for(var i in thread_messages){
+                    if(thread_messages[i].id > message.id){
+                        if(!parent_newer || parent_newer.id>=thread_messages[i].id)
+                            parent_newer = thread_messages[i];
+                    } else if(thread_messages[i].id>0 && thread_messages[i].id < message.id) {
+                        if(!parent_older || parent_older.id<thread_messages[i].id)
+                            parent_older = thread_messages[i];
+                    }
                 }
             }
 
@@ -1099,12 +1115,13 @@ openerp.mail = function(session) {
                 }
             }
             else {
-                if(sort){
+                if(sort && message.id > 0){
                     message.prependTo(thread.list_ul);
                 } else {
                     message.appendTo(thread.list_ul);
                 }
             }
+
             return message
         },
 
@@ -1115,9 +1132,6 @@ openerp.mail = function(session) {
         
         /*  Send the records to his parent thread */
         switch_new_message: function(records) {
-
-            console.log(records);
-
             var self=this;
             _(records).each(function(record){
                 self.browse_thread({

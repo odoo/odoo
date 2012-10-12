@@ -221,8 +221,8 @@ class mail_thread(osv.AbstractModel):
 
     def create(self, cr, uid, vals, context=None):
         """ Override to subscribe the current user. """
-        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
-        self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
+        thread_id = super(mail_thread, self).create(cr, SUPERUSER_ID, vals, context=context)
+        self.message_subscribe_users(cr, SUPERUSER_ID, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -682,9 +682,10 @@ class mail_thread(osv.AbstractModel):
         # if the parent is private, the message must be private
         if parent_id:
             msg = messages.browse(cr, uid, parent_id, context=context)
-            if msg.is_private:
-                values["is_private"] = msg.is_private
+            values["is_private"] = msg.is_private or False
+            values["partner_ids"] = [(4, partner.id) for partner in msg.partner_ids]
 
+        print values
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
