@@ -219,7 +219,7 @@
                 </xpath>
                 <ul position="inside">
                     <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                    <li t-if="record.type.raw_value != 'service'">Available: <field name="virtual_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value != 'service'">Future Quantity: <field name="virtual_available"/> <field name="uom_id"/></li>
                 </ul>
             </field>
         </record>
