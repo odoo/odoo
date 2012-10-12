@@ -488,12 +488,12 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Waiting Goods'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
-            help="When the production order is created the state is set to 'Draft'.\n\
-                If the order is confirmed the state is set to 'Waiting Goods'.\n\
-                If any exceptions are there, the state is set to 'Picking Exception'.\n\
-                If the stock is available then the state is set to 'Ready to Produce'.\n\
-                When the production gets started then the state is set to 'In Production'.\n\
-                When the production is over, the state is set to 'Done'."),
+            help="When the production order is created the status is set to 'Draft'.\n\
+                If the order is confirmed the status is set to 'Waiting Goods'.\n\
+                If any exceptions are there, the status is set to 'Picking Exception'.\n\
+                If the stock is available then the status is set to 'Ready to Produce'.\n\
+                When the production gets started then the status is set to 'In Production'.\n\
+                When the production is over, the status is set to 'Done'."),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id':fields.many2one('res.users', 'Responsible'),

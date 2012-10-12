@@ -154,7 +154,7 @@ class membership_line(osv.osv):
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
                         'res.partner': (_get_partners, ['membership_state'], 12),
-                        }, help="""It indicates the membership state.
+                        }, help="""It indicates the membership status.
                         -Non Member: A member who has not applied for any membership.
                         -Cancelled Member: A member who has cancelled his membership.
                         -Old Member: A member whose membership date has expired.
