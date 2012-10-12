@@ -50,10 +50,10 @@ class crm_phonecall(base_state, osv.osv):
                                     ('cancel', 'Cancelled'),
                                     ('done', 'Held'),],
                         string='Status', size=16, readonly=True,
-                        help='The Status is set to \'Todo\', when a case is created.\
-                                If the case is in progress the Status is set to \'Open\'.\
-                                When the call is over, the Status is set to \'Held\'.\
-                                If the call needs to be done then the Status is set to \'Not Held\'.'),
+                        help='The status is set to \'Todo\', when a case is created.\
+                                If the case is in progress the status is set to \'Open\'.\
+                                When the call is over, the status is set to \'Held\'.\
+                                If the call needs to be done then the status is set to \'Not Held\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'date_open': fields.datetime('Opened', readonly=True),
         # phonecall fields
