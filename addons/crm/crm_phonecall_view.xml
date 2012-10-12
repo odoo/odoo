@@ -70,11 +70,6 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="opportunity_id" />
-                <field name="partner_phone"/>
-                <field name="user_id"/>
-                <field name="categ_id" invisible="1"/>
-                <field name="create_date" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
@@ -83,6 +78,11 @@
                 <button string="Meeting"
                     states="open,pending" icon="gtk-redo"
                      name="action_make_meeting" type="object"/>
+                <field name="partner_phone"/>
+                <field name="user_id"/>
+                <field name="categ_id" invisible="1"/>
+                <field name="create_date" invisible="1"/>
+                <field name="opportunity_id" invisible="1"/>
                 <field name="state"/>
                 <button name="case_open" string="Confirm" type="object"
                         states="draft,pending" icon="gtk-go-forward"/>
