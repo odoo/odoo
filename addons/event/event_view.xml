@@ -100,12 +100,10 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
-                        <span groups="base.group_user">
-                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
-                            <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
-                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
-                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object"/>
-                        </span>
+                            <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                            <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+                            <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" groups="base.group_user"/>
+                            <button string="Cancel Event" name="button_cancel" states="draft,confirm" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
