@@ -114,7 +114,7 @@ class purchase_order(osv.osv):
             if state=='done':
                 res[oid][0] += nbr or 0.0
                 res[oid][1] += nbr or 0.0
-            else:
+            else:L878
                 res[oid][1] += nbr or 0.0
         for r in res:
             if not res[r][1]:
@@ -877,10 +877,10 @@ class purchase_order_line(osv.osv):
             context = {}
         
         # - check for the presence of partner_id and pricelist_id
-        if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
         if not partner_id:
             raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        if not pricelist_id:
+            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
             return res
