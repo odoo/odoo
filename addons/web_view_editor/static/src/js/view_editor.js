@@ -67,7 +67,6 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 {text: _t("Close"), click: function() { self.view_edit_dialog.close(); window.location.reload(); }}
             ]
         }).open();
-        this.view_edit_dialog.on("dialog_close", self, function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog.$el);
