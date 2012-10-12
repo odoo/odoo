@@ -1440,6 +1440,10 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     },
 });
 
+instance.web.py_eval = function(expr, context) {
+    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+};
+
 }
 
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
