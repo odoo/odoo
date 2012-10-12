@@ -1017,9 +1017,7 @@ openerp.mail = function(session) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
-        set_value: function() {
-            var self = this;
-            this._super.apply(this, arguments);
+        render_value: function() {
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
