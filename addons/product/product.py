@@ -112,12 +112,12 @@ class product_uom(osv.osv):
         'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
         'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
-        'factor': fields.float('Ratio', required=True,digits=(12, 12),
+        'factor': fields.float('Computation', required=True,digits=(12, 12),
             help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
-            string='Ratio',
+            string='Computation',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
         'rounding': fields.float('Rounding precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
