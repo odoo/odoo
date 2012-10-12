@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Top menu item -->
+        <menuitem name="Tools" id="base.menu_tools" sequence="160"/>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
         
@@ -1123,7 +1125,8 @@
                     <field name="date_deadline"/>
                     <field name="survey_id"/>
                     <field name="user_id" on_change="on_change_user(user_id)"/>
-                     <field name="response" readonly="1"/>
+                    <field name="email"/>
+                    <field name="response" readonly="1"/>
                     </group>
                     </sheet>
                 </form>
@@ -1137,6 +1140,7 @@
                 <tree string="Evaluation Plan Phase" colors="red:date_deadline&lt;current_date">
                     <field name="date_deadline"/>
                     <field name="user_id"/>
+                    <field name="email"/>
                     <field name="survey_id"/>
                     <field name="response" />
                     <field name="state" />

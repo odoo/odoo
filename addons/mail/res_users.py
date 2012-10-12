@@ -73,7 +73,7 @@ class res_users(osv.Model):
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
         if not data.get('login', False):
-            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user.'))
+            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
 
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
@@ -110,9 +110,19 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post(self, cr, uid, thread_id, **kwargs):
-        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id)[0].partner_id.id
-        return self.pool.get('res.partner').message_post(cr, uid, partner_id, **kwargs)
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        assert thread_id, "res.users does not support posting global messages"
+        if context and 'thread_model' in context:
+            context['thread_model'] = 'res.partner'
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id).partner_id.id
+        return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
+
+    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
+        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
+            update_vals=update_vals, context=context)
 
 class res_users_mail_group(osv.Model):
     """ Update of res.users class

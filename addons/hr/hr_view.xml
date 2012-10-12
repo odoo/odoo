@@ -42,14 +42,14 @@
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
-                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -57,14 +57,14 @@
                             <page string="Personal Information" groups="base.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
-                                        <field name="country_id" options='{"no_open": true}'/>
+                                        <field name="country_id" options='{"no_open": True}'/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -112,8 +112,6 @@
                 <search string="Employees">
                     <field name="name" string="Employees"/>
                     <field name="department_id" />
-                    <field name="job_id"/>
-                    <field name="parent_id"/>
                     <field name="category_ids"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
@@ -203,25 +201,6 @@
                 contact data, job position, availability, etc.
               </p>
             </field>
-        </record>
-
-        <record id="open_view_employee_list_my_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record>
-        <record id="open_view_employee_list_my_tree2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_employee_tree"/>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record>
-
-        <record id="open_view_employee_list_my_form2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_employee_form"/>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
         </record>
 
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
@@ -350,20 +329,15 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <span groups="base.group_user">
-                            <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight"/>
-                            <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight"/>
-                        </span>
+                        <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_inline"/>
-                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                            <field name="department_id" class="oe_inline"/>
-                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                        </h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
@@ -372,17 +346,21 @@
                             </group>
                             <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                                <field name="department_id"/>                            </group>
                         </group>
-                        <notebook>
-                            <page string="Description">
-                                <label for="description"/>
-                                <field name="description"/>
-                                <label for="requirements"/>
-                                <field name="requirements"/>
-                            </page>
-                        </notebook>
+                        <div>
+                            <label for="description"/>
+                            <field name="description"/>
+                        </div>
+                        <div>
+                            <label for="requirements"/>
+                            <field name="requirements"/>
+                        </div>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>

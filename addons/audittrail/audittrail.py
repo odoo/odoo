@@ -202,7 +202,7 @@ class audittrail_objects_proxy(object_proxy):
             res = value
         return res
 
-    def create_log_line(self, cr, uid, log_id, model, lines=[]):
+    def create_log_line(self, cr, uid, log_id, model, lines=None):
         """
         Creates lines for changed fields with its old and new values
 
@@ -211,6 +211,8 @@ class audittrail_objects_proxy(object_proxy):
         @param model: Object which values are being changed
         @param lines: List of values for line is to be created
         """
+        if lines is None:
+            lines = []
         pool = pooler.get_pool(cr.dbname)
         obj_pool = pool.get(model.model)
         model_pool = pool.get('ir.model')
@@ -349,9 +351,9 @@ class audittrail_objects_proxy(object_proxy):
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
-    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=[]):
+    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
         """
-        This function compares the old data (i.e before the method was executed) and the new data 
+        This function compares the old data (i.e before the method was executed) and the new data
         (after the method was executed) and returns a structure with all the needed information to
         log those differences.
 
@@ -375,9 +377,11 @@ class audittrail_objects_proxy(object_proxy):
                 (model.id, resource_id): []
               }
 
-        The reason why the structure returned is build as above is because when modifying an existing 
+        The reason why the structure returned is build as above is because when modifying an existing
         record, we may have to log a change done in a x2many field of that object
         """
+        if field_list is None:
+            field_list = []
         key = (model.id, resource_id)
         lines = {
             key: []
@@ -416,7 +420,7 @@ class audittrail_objects_proxy(object_proxy):
                 lines[key].append(data)
         return lines
 
-    def process_data(self, cr, uid, pool, res_ids, model, method, old_values={}, new_values={}, field_list=[]):
+    def process_data(self, cr, uid, pool, res_ids, model, method, old_values=None, new_values=None, field_list=None):
         """
         This function processes and iterates recursively to log the difference between the old
         data (i.e before the method was executed) and the new data and creates audittrail log
@@ -435,6 +439,8 @@ class audittrail_objects_proxy(object_proxy):
             on specific fields only.
         :return: True
         """
+        if field_list is None:
+            field_list = []
         # loop on all the given ids
         for res_id in res_ids:
             # compare old and new values and get audittrail log lines accordingly
@@ -442,11 +448,13 @@ class audittrail_objects_proxy(object_proxy):
 
             # if at least one modification has been found
             for model_id, resource_id in lines:
+                name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
                 vals = {
                     'method': method,
                     'object_id': model_id,
                     'user_id': uid,
                     'res_id': resource_id,
+                    'name': name,
                 }
                 if (model_id, resource_id) not in old_values and method not in ('copy', 'read'):
                     # the resource was not existing so we are forcing the method to 'create'
@@ -484,7 +492,7 @@ class audittrail_objects_proxy(object_proxy):
                     if len(rule['user_id']) == 0 or uid in rule['user_id']:
                         if rule.get('log_'+method,0):
                             return True
-                        elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create'):
+                        elif method not in ('default_get','read','fields_view_get','fields_get','search','search_count','name_search','name_get','get','request_get', 'get_sc', 'unlink', 'write', 'create', 'read_group', 'import_data'):
                             if rule['log_action']:
                                 return True
 

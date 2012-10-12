@@ -36,6 +36,5 @@ Deactivates minimal chart of accounts.
     'data': [],
     'demo': [],
     'installable': True,
-    'certificate': '0073332443901',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

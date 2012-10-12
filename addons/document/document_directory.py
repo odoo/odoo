@@ -221,7 +221,7 @@ class document_directory(osv.osv):
                 pass
         return res
 
-    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
+    def _locate_child(self, cr, uid, root_id, uri, nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
@@ -231,10 +231,10 @@ class document_directory(osv.osv):
         if not default:
             default ={}
         name = self.read(cr, uid, [id])[0]['name']
-        default.update({'name': name+ " (copy)"})
+        default.update(name=_("%s (copy)") % (name))
         return super(document_directory,self).copy(cr, uid, id, default, context=context)
 
-    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=None, op='create'):
         name=vals.get('name',False)
         parent_id=vals.get('parent_id',False)
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)

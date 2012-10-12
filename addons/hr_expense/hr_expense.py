@@ -118,6 +118,9 @@ class hr_expense_expense(osv.osv):
         return {'value': {'department_id': department_id, 'company_id': company_id}}
 
     def expense_confirm(self, cr, uid, ids, *args):
+        for expense in self.browse(cr, uid, ids):
+            if expense.employee_id and expense.employee_id.parent_id.user_id:
+                self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
@@ -240,7 +243,7 @@ class product_product(osv.osv):
         data_obj = self.pool.get('ir.model.data')
         cat_id = data_obj._get_id(cr, uid, 'hr_expense', 'cat_expense')
         categ_id = data_obj.browse(cr, uid, cat_id).res_id
-        res = {'value' : {'type':'service','procure_method':'make_to_stock','supply_method':'buy','purchase_ok':True,'sale_ok' :False,'categ_id':categ_id }}
+        res = {'value' : {'type':'service','sale_ok' :False,'categ_id':categ_id }}
         return res
 
 product_product()

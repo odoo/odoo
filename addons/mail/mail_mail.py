@@ -19,13 +19,12 @@
 #
 ##############################################################################
 
-# import ast
 import base64
 import logging
 import tools
 
-from osv import osv
-from osv import fields
+from openerp import SUPERUSER_ID
+from osv import osv, fields
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -64,10 +63,12 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        cur = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not cur.alias_domain:
-            raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
-        return cur.alias_name + '@' + cur.alias_domain
+        this = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if this.alias_domain:
+            return '%s@%s' % (this.alias_name, this.alias_domain)
+        elif this.email:
+            return this.email
+        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     _defaults = {
         'state': 'outgoing',
@@ -134,7 +135,8 @@ class mail_mail(osv.Model):
         :return: True
         """
         if mail.auto_delete:
-            mail.unlink()
+            # done with SUPERUSER_ID to avoid giving large unlink access rights
+            self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
         return True
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):

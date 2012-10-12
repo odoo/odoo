@@ -38,11 +38,11 @@ that have no counterpart in the general financial accounts.
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
         'analytic_sequence.xml',
-        'analytic_view.xml'
+        'analytic_view.xml',
+        'analytic_data.xml'
     ],
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00462253285027988541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -348,6 +348,29 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return True
 
+
+    def open_cb(self, cr, uid, ids, context=None):
+        """
+        call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
+        """
+        if context is None:
+            context = dict()
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        this_record = self.browse(cr, uid, ids[0], context=context)
+        this_record._workflow_signal('open')
+
+        context.update(active_id=this_record.id)
+
+        return {
+            'type' : 'ir.actions.client',
+            'name' : _('Start Point Of Sale'),
+            'tag' : 'pos.ui',
+            'context' : context,
+        }
+
     def wkf_action_open(self, cr, uid, ids, context=None):
         # second browse because we need to refetch the data from the DB for cash_register_id
         for record in self.browse(cr, uid, ids, context=context):
@@ -439,10 +462,10 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
-        context.update({'session_id' : ids[0]})
+        context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
-            'name' : 'Start Point Of Sale',
+            'name' : _('Start Point Of Sale'),
             'tag' : 'pos.ui',
             'context' : context,
         }
@@ -1277,7 +1300,7 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
+        'to_weight' : fields.boolean('To Weigh', help="This category contains products that should to be weighed, mainly used for the self-checkout interface"),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):

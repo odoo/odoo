@@ -25,8 +25,10 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-This modules allows you to track your customers/suppliers claims and grievances.
+
+Manage Customer Claims.
 ================================================================================
+This application allows you to track your customers/suppliers claims and grievances.
 
 It is fully integrated with the email gateway so that you can create
 automatically new claims based on incoming emails.
@@ -48,7 +50,6 @@ automatically new claims based on incoming emails.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00612027414703404749',
     'images': ['images/claim_categories.jpeg','images/claim_stages.jpeg','images/claims.jpeg'],
 }
 

@@ -208,7 +208,7 @@
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
                 <filter string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
@@ -342,8 +342,8 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="/form/sheet/h1" version="7.0" position="after">
-                <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+            <xpath expr="//div[@class='oe_title']" version="7.0" position="after">
+                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <field name="alias_id" invisible="1" required="0"/>
                     <label for="alias_name" class="oe_edit_only"/>
                     <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>

@@ -26,6 +26,7 @@ from osv import fields, osv
 import time
 import tools
 from tools.translate import _
+from tools import html2plaintext
 
 CRM_CLAIM_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -35,7 +36,7 @@ CRM_CLAIM_PENDING_STATES = (
 
 class crm_claim_stage(osv.osv):
     """ Model for claim stages. This models the main stages of a claim
-        management flow. Main CRM objects (leads, opportunities, project 
+        management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
@@ -104,7 +105,7 @@ class crm_claim(base_stage, osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"), 
+                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,
@@ -192,9 +193,10 @@ class crm_claim(base_stage, osv.osv):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         custom_values.update({
             'name': msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })

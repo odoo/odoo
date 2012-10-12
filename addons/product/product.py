@@ -280,11 +280,8 @@ class product_template(osv.osv):
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
-        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
-        'sale_delay': fields.float('Customer Lead Time', help="This is the average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
+        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
@@ -296,7 +293,6 @@ class product_template(osv.osv):
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
-        'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),
             ('draft', 'In Development'),
             ('sellable','Normal'),
@@ -309,11 +305,8 @@ class product_template(osv.osv):
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert Unit of Measure to UOS\n'
             ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
+        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
-        'loc_rack': fields.char('Rack', size=16),
-        'loc_row': fields.char('Row', size=16),
-        'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
@@ -335,7 +328,7 @@ class product_template(osv.osv):
             res = False
         return res
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
         return {}
@@ -351,21 +344,17 @@ class product_template(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
-        'list_price': lambda *a: 1,
-        'cost_method': lambda *a: 'standard',
-        'supply_method': lambda *a: 'buy',
-        'standard_price': lambda *a: 0.0,
-        'sale_ok': lambda *a: 1,
-        'sale_delay': lambda *a: 7,
-        'produce_delay': lambda *a: 1,
-        'purchase_ok': lambda *a: 1,
-        'procure_method': lambda *a: 'make_to_stock',
+        'list_price': 1,
+        'cost_method': 'standard',
+        'standard_price': 0.0,
+        'sale_ok': 1,
+        'produce_delay': 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        'uos_coeff' : lambda *a: 1.0,
-        'mes_type' : lambda *a: 'fixed',
+        'uos_coeff' : 1.0,
+        'mes_type' : 'fixed',
         'categ_id' : _default_category,
-        'type' : lambda *a: 'consu',
+        'type' : 'consu',
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -511,7 +500,7 @@ class product_product(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -594,7 +583,7 @@ class product_product(osv.osv):
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]
@@ -609,7 +598,7 @@ class product_product(osv.osv):
         return res
 
 
-    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the internal reference field instead.', ['ean13'])]
+    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the "Internal Reference" field instead.', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass
@@ -727,7 +716,7 @@ class product_product(osv.osv):
         context_wo_lang.pop('lang', None)
         product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
         default = default.copy()
-        default['name'] = product['name'] + ' (copy)'
+        default.update(name=_("%s (copy)") % (product['name']))
 
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
@@ -743,6 +732,14 @@ class product_product(osv.osv):
         else:
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context and context.get('search_default_categ_id', False):
+            args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
+        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
 product_product()
 
 class product_packaging(osv.osv):
@@ -897,4 +894,43 @@ class pricelist_partnerinfo(osv.osv):
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
+
+class res_currency(osv.osv):
+    _inherit = 'res.currency'
+
+    def _check_main_currency_rounding(self, cr, uid, ids, context=None):
+        cr.execute('SELECT digits FROM decimal_precision WHERE name like %s',('Account',))
+        digits = cr.fetchone()
+        if digits and len(digits):
+            digits = digits[0]
+            main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+            for currency_id in ids:
+                if currency_id == main_currency.id:
+                    if main_currency.rounding < 10 ** -digits:
+                        return False
+        return True
+
+    _constraints = [
+        (_check_main_currency_rounding, 'Error! You cannot define a rounding factor for the company\'s main currency that is smaller than the decimal precision of \'Account\'.', ['rounding']),
+    ]
+
+class decimal_precision(osv.osv):
+    _inherit = 'decimal.precision'
+
+    def _check_main_currency_rounding(self, cr, uid, ids, context=None):
+        cr.execute('SELECT id, digits FROM decimal_precision WHERE name like %s',('Account',))
+        res = cr.fetchone()
+        if res and len(res):
+            account_precision_id, digits = res
+            main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+            for decimal_precision in ids:
+                if decimal_precision == account_precision_id:
+                    if main_currency.rounding < 10 ** -digits:
+                        return False
+        return True
+
+    _constraints = [
+        (_check_main_currency_rounding, 'Error! You cannot define the decimal precision of \'Account\' as greater than the rounding factor of the company\'s main currency', ['digits']),
+    ]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
