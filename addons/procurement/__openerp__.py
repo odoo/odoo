@@ -57,7 +57,7 @@ depending on the product's configuration.
         'company_view.xml',
         'board_mrp_procurement_view.xml',
     ],
-    'demo': ['stock_orderpoint.xml'],
+    'demo': ['stock_orderpoint.xml','procurement_demo.xml'],
     'test': ['test/procurement.yml'],
     'installable': True,
     'auto_install': True,

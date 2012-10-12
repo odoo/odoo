@@ -300,7 +300,6 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            _logger.debug('Filters: %s',(filters))
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -316,7 +315,6 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            _logger.debug('Status: %s',(cr.statusmessage))
 
             for row in cr.dictfetchall():
                 accounts[row['id']] = row
