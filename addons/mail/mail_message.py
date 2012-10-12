@@ -134,6 +134,8 @@ class mail_message(osv.Model):
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
+        'star_user_ids': fields.many2many('res.users', 'mail_star', 'message_id', 'user_id', string='Stared',
+            help='Users that stared this message'),
         'is_private': fields.boolean('Private message'),
     }
 
@@ -173,6 +175,24 @@ class mail_message(osv.Model):
         return not(has_voted) or False
 
     #------------------------------------------------------
+    # Stared/unstared
+    #------------------------------------------------------
+
+    def star_toggle(self, cr, uid, ids, user_ids=None, context=None):
+        ''' Toggles voting. Done as SUPERUSER_ID because of write access on
+            mail.message not always granted. '''
+        if not user_ids:
+            user_ids = [uid]
+        for message in self.read(cr, SUPERUSER_ID, ids, ['star_user_ids'], context=context):
+            for user_id in user_ids:
+                has_stared = user_id in message.get('star_user_ids')
+                if not has_stared:
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'star_user_ids': [(4, user_id)]}, context=context)
+                else:
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'star_user_ids': [(3, user_id)]}, context=context)
+        return not(has_stared) or False
+
+    #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
 
@@ -188,6 +208,13 @@ class mail_message(osv.Model):
         for vote in vote_ids:
             if vote[0] == uid:
                 has_voted = True
+                break
+
+        has_stared = False
+        star_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.star_user_ids], context=context)
+        for star in star_ids:
+            if star[0] == uid:
+                has_stared = True
                 break
         try:
             attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, SUPERUSER_ID, [x.id for x in msg.attachment_ids], context=context)]
@@ -228,6 +255,7 @@ class mail_message(osv.Model):
             'parent_id': msg.parent_id and msg.parent_id.id or False,
             'vote_user_ids': vote_ids,
             'has_voted': has_voted,
+            'has_stared': has_stared,
             'unread': msg.unread and msg.unread['unread'] or False
         }
 

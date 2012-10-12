@@ -99,6 +99,13 @@
                 'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
         </record>
 
+        <record id="action_mail_star_feeds" model="ir.actions.client">
+            <field name="name">Stared</field>
+            <field name="tag">mail.wall</field>
+            <field name="params" eval="&quot;{'domain': [('star_user_ids.user_ids', 'in', [uid])],
+                'context': {'default_model': 'res.partner', 'default_is_private': False} }&quot;"/>
+        </record>
+
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>

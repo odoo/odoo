@@ -185,6 +185,7 @@
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
+                <li class="placeholder-mail-star"><t t-call="mail.thread.message.star"/></li>
                 <li t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
                 <li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
@@ -283,6 +284,15 @@
                 <t t-if="widget.has_voted">Unagree</t>
             </span>
         </button>
+    </span>
+
+    <!-- mail.thread.message.star
+        Template used to display stared/unstared message in a mail.message
+    -->
+    <span t-name="mail.thread.message.star">
+        <span class="oe_left">
+            <button t-attf-class="oe_mail_starbox oe_tag #{widget.has_stared?'oe_stared':''}">*</button>
+        </span>
     </span>
 
 </template>

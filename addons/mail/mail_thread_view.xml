@@ -24,15 +24,21 @@
           <field name="action" ref="action_mail_to_me_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
+        <record id="mail_starfeeds" model="ir.ui.menu">
+          <field name="name">Stared</field>
+          <field name="sequence" eval="14"/>
+          <field name="action" ref="action_mail_star_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
+        </record>
         <record id="mail_archivesfeeds" model="ir.ui.menu">
           <field name="name">Archives</field>
-          <field name="sequence" eval="12"/>
+          <field name="sequence" eval="16"/>
           <field name="action" ref="action_mail_archives_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
         <record id="mail_sentfeeds" model="ir.ui.menu">
           <field name="name">Sent</field>
-          <field name="sequence" eval="13"/>
+          <field name="sequence" eval="18"/>
           <field name="action" ref="action_mail_sent_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>

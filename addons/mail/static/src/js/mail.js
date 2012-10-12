@@ -403,7 +403,6 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'Vote' button
             this.$el.on('click', 'a.oe_mail_fetch_more', self.on_expandable);
         },
 
@@ -483,6 +482,7 @@ openerp.mail = function(session) {
             this.body =         param.body || false;
             this.vote_user_ids =param.vote_user_ids || [];
             this.has_voted =    param.has_voted || false;
+            this.has_stared =   param.has_stared || false;
 
             this.vote_user_ids = param.vote_user_ids || [];
 
@@ -568,6 +568,8 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_reply', this.on_message_reply);
             // event: click on 'Vote' button
             this.$el.on('click', 'button.oe_mail_msg_vote', this.on_vote);
+            // event: click on 'Star' button
+            this.$el.on('click', 'button.oe_mail_starbox', this.on_star);
         },
 
         on_message_reply:function(event){
@@ -696,7 +698,6 @@ openerp.mail = function(session) {
             return res;
         },
 
-
         on_vote: function (event) {
             event.stopPropagation();
             var self=this;
@@ -726,6 +727,22 @@ openerp.mail = function(session) {
             self.$(".placeholder-mail-vote:first").empty();
             self.$(".placeholder-mail-vote:first").html(vote_element);
         },
+
+        // Stared/unstared + Render star.
+        on_star: function (event) {
+            event.stopPropagation();
+            var self=this;
+            return this.ds_message.call('star_toggle', [[self.id]]).pipe(function(star){
+                self.has_stared=star;
+                if(self.has_stared){
+                    self.$('button.oe_mail_starbox').addClass('oe_stared');
+                } else {
+                    self.$('button.oe_mail_starbox').removeClass('oe_stared');
+                }
+            });
+            return false;
+        },
+
     });
 
     /** 
