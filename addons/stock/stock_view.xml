@@ -875,7 +875,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Customer"/>
                     <field name="origin"/>
                     <field name="min_date"/>
                     <field name="date"/>
@@ -1006,7 +1006,7 @@
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';grey:state == 'done';red:state not in ('cancel', 'done') and date &lt; current_date" string="Picking list">
                     <field name="name"/>
-                    <field name="partner_id"/>
+                    <field name="partner_id" string="Supplier"/>
                     <field name="backorder_id"/>
                     <field name="origin"/>
                     <field name="date"/>
