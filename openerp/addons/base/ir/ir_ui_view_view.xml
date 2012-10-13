@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- View -->
+        <record id="view_view_form" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <form string="Views" version="7.0">
+                   <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="type"/>
+                            <field name="model"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="field_parent"/>
+                            <field name="inherit_id"/>
+                            <field name="xml_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Architecture">
+                            <field name="arch"/>
+                        </page>
+                        <page string="Groups">
+                            <field name="groups_id"/>
+                        </page>
+                    </notebook>
+                  </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_view_tree" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <tree string="Views">
+                    <field name="priority" string="Sequence"/>
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="model"/>
+                    <field name="xml_id"/>
+                    <field name="inherit_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_view_search" model="ir.ui.view">
+            <field name="model">ir.ui.view</field>
+            <field name="arch" type="xml">
+                <search string="Views">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('model','ilike',self)]" string="View"/>
+                    <filter icon="terp-stock_zoom"
+                        string="Search"
+                        domain="[('type', '=', 'search')]"/>
+                    <filter icon="gtk-indent"
+                        string="Tree"
+                        domain="[('type', '=', 'tree')]"/>
+                    <filter icon="gtk-new"
+                        string="Form"
+                        domain="[('type', '=','form')]"/>
+                    <field name="inherit_id"/>
+                    <field name="type"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Object" icon="terp-stock_align_left_24" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+        <record id="action_ui_view" model="ir.actions.act_window">
+            <field name="name">Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view</field>
+            <field name="view_id" ref="view_view_tree"/>
+            <field name="help">Views allows you to personalize each view of OpenERP. You can add new fields, move fields, rename them or delete the ones that you do not need.</field>
+        </record>
+        <menuitem action="action_ui_view" id="menu_action_ui_view" parent="base.next_id_2" sequence="2"/>
+
+        <!-- View customizations -->
+        <record id="view_view_custom_form" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <form string="Customized Views" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="user_id"/>
+                        <field name="ref_id"/>
+                        <field name="arch" colspan="4" nolabel="1"/>
+                    </group>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+        <record id="view_view_custom_tree" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <tree string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_view_custom_search" model="ir.ui.view">
+            <field name="model">ir.ui.view.custom</field>
+            <field name="arch" type="xml">
+                <search string="Customized Views">
+                    <field name="user_id"/>
+                    <field name="ref_id"/>
+                </search>
+            </field>
+        </record>
+        <record id="action_ui_view_custom" model="ir.actions.act_window">
+            <field name="name">Customized Views</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.ui.view.custom</field>
+            <field name="help">Customized views are used when users reorganize the content of their dashboard views (via web client)</field>
+        </record>
+        <menuitem id="menu_action_ui_view_custom" action="action_ui_view_custom" parent="base.next_id_2" sequence="3"/>
+
+        <!-- Shortcuts -->
+        <record id="shortcut_form" model="ir.ui.view">
+            <field name="model">ir.ui.view_sc</field>
+            <field name="arch" type="xml">
+                <form string="Shortcut" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="shortcut_tree" model="ir.ui.view">
+            <field name="model">ir.ui.view_sc</field>
+            <field name="arch" type="xml">
+                <tree string="Shortcut">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</openerp>
