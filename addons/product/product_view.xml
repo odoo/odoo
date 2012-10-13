@@ -412,7 +412,6 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor"/>
                 </tree>
             </field>
         </record>
@@ -426,19 +425,22 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="active"/>
+                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <label for="factor"/>
+                            <div>
+                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
+                                    e.g: 1 * (reference unit) = ratio * (this unit)
+                                </p>
+                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
+                                    e.g: 1 * (this unit) = ratio * (reference unit)
+                                </p>
+                            </div>
                         </group>
                         <group>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
-                                e.g: 1 * (reference unit) = ratio * (this unit)
-                            </p>
-                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
-                                e.g: 1 * (this unit) = ratio * (reference unit)
-                            </p>
+                            <field name="active"/>
                             <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
