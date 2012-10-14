@@ -85,7 +85,6 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
-        'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
         'crm_meeting_shortcut_data.xml',
 
