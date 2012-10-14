@@ -70,14 +70,14 @@
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
+                <button string="Meeting"
+                    states="open,pending" icon="gtk-redo"
+                     name="action_make_meeting" type="object"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
                     icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
-                <button string="Meeting"
-                    states="open,pending" icon="gtk-redo"
-                     name="action_make_meeting" type="object"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
