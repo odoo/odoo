@@ -108,7 +108,7 @@ instance.web.UserMenu.include({
 });
 
 instance.web.ViewManagerAction.include({
-    on_mode_switch: function (view_type, no_store) {
+    switch_mode: function (view_type, no_store) {
         var self = this;
         this._super.apply(this, arguments).then(function() {
             self.shortcut_check(self.views[view_type]);

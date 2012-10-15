@@ -27,6 +27,7 @@ from tools.translate import _
 import binascii
 import time
 import tools
+from tools import html2plaintext
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -279,7 +280,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
-         }
+    }
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -462,9 +463,11 @@ class project_issue(base_stage, osv.osv):
         if context is None: context = {}
         context['state_to'] = 'draft'
 
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
+
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -486,7 +489,6 @@ class project_issue(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         # Update doc values according to the message
-        update_vals['description'] = msg.get('body', '')
         if msg.get('priority'):
             update_vals['priority'] = msg.get('priority')
         # Parse 'body' to find values to update

@@ -74,7 +74,7 @@
             <button class="input-button number-char">7</button>
             <button class="input-button number-char">8</button>
             <button class="input-button number-char">9</button>
-            <button class="mode-button" data-mode='list_price'>Price</button>
+            <button class="mode-button" data-mode='price'>Price</button>
             <br />
             <button class="input-button" id="numpad-minus" >+/-</button>
             <button class="input-button number-char">0</button>
@@ -490,7 +490,7 @@
                         </em>
                         <t t-esc="widget.model.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_list_price())" />
+                        <t t-esc="widget.format_currency(widget.model.get_price())" />
                         /
                         <t t-esc="widget.model.get_unit().name" />
                     </li>
@@ -558,7 +558,7 @@
                         <t t-esc="order.get_quantity().toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_list_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        <t t-esc="widget.format_currency(order.get_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
                     </td>
                 </tr>
             </table>
