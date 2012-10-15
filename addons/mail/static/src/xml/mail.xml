@@ -55,8 +55,8 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <ul t-attf-class="oe_mail_msg_attachments #{widget.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
-            <t t-foreach="widget.attachment_ids" t-as="attachment">
+        <ul t-attf-class="oe_mail_msg_attachments #{widget.datasets.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
+            <t t-foreach="widget.datasets.attachment_ids" t-as="attachment">
                 <li>
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
@@ -90,13 +90,13 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             Post to: 
-            <span t-if="!widget.is_private" class="oe_all_follower">All Followers</span> 
-            <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
+            <span t-if="!widget.datasets.is_private" class="oe_all_follower">All Followers</span> 
+            <t t-if="!widget.datasets.is_private and widget.datasets.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
-            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
+            <t t-if="widget.datasets.partner_ids.length" t-foreach="widget.datasets.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
             </t>
-            <t t-if="widget.partner_ids.length>=3">
-                <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
+            <t t-if="widget.datasets.partner_ids.length>=3">
+                <span class="oe_more">, <a><t t-raw="widget.datasets.partner_ids.length-3"/> others...</a></span>
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
             </t>
         </div>
@@ -180,8 +180,8 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}">
-        <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.datasets.unread?'oe_mail_unread':'oe_mail_read'}">
+        <div t-attf-class="oe_mail_msg_#{widget.datasets.type} oe_semantic_html_override">
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
@@ -189,51 +189,47 @@
                 <li t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
                 <li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
-                <t t-if="(widget.is_author and widget.options.message.show_dd_delete) or widget.type == 'email'">
+                <t t-if="(widget.datasets.is_author and widget.options.message.show_dd_delete) or widget.datasets.type == 'email'">
                     <li>
                         <span class="oe_dropdown_toggle">
                             <a class="oe_e" title="More options">í</a>
                             <ul class="oe_dropdown_menu">
-                                <li t-if="widget.is_author and widget.options.message.show_dd_delete"><a class="oe_mail_msg_delete">Delete</a></li>
-                                <!--  Uncomment when adding subtype hiding
-                                <li t-if="display['show_hide']">
-                                    <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{widget.subtype}'>Hide '<t t-esc="widget.subtype"/>' for this document</a>
-                                </li> -->
-                                <li t-if="widget.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{widget.id}" >Details</a></li>
+                                <li t-if="widget.datasets.is_author and widget.options.message.show_dd_delete"><a class="oe_mail_msg_delete">Delete</a></li>
+                                <li t-if="widget.datasets.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{widget.datasets.id}" >Details</a></li>
                             </ul>
                         </span>
                     </li>
                 </t>
             </ul>
 
-            <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
-                <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="widget.avatar"/>
+            <a t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}" t-att-title="widget.datasets.author_id[1]">
+                <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="widget.datasets.avatar"/>
             </a>
 
             <div class="oe_mail_msg_content">
                 <!-- message itself -->
                 <div class="oe_mail_msg">
-                    <h1 t-if="widget.subject" class="oe_mail_msg_title">
-                        <t t-raw="widget.subject"/>
+                    <h1 t-if="widget.datasets.subject" class="oe_mail_msg_title">
+                        <t t-raw="widget.datasets.subject"/>
                     </h1>
                     <ul class="oe_mail_msg_footer">
-                        <li t-if="widget.author_id"><a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a></li>
-                        <li><span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span></li>
-                        <li t-if="widget.attachment_ids.length > 0">
+                        <li t-if="widget.datasets.author_id"><a t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}"><t t-raw="widget.datasets.author_id[1]"/></a></li>
+                        <li><span t-att-title="widget.datasets.date"><t t-raw="widget.datasets.timerelative"/></span></li>
+                        <li t-if="widget.datasets.attachment_ids.length > 0">
                             <a class="oe_mail_msg_view_attachments">
-                                <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
-                                <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
+                                <t t-if="widget.datasets.attachment_ids.length == 1">1 Attachment</t>
+                                <t t-if="widget.datasets.attachment_ids.length > 1"><t t-raw="widget.datasets.attachment_ids.length"/> Attachments</t>
                             </a>
                         </li>
                     </ul>
                     <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
-                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and !widget.options.thread.thread_level and !widget.options.thread.display_on_flat and widget.model!='res.partner'">
-                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
+                        <t t-if="widget.options.message.show_record_name and widget.datasets.record_name and (!widget.datasets.subject) and !widget.options.thread.thread_level and !widget.options.thread.display_on_flat and widget.datasets.model!='res.partner'">
+                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.datasets.model}&amp;id=#{widget.res_id}"><t t-raw="widget.datasets.record_name"/></a>
                         </t>
-                        <t t-raw="widget.body"/>
+                        <t t-raw="widget.datasets.body"/>
                     </div>
-                    <t t-if="widget.attachment_ids.length > 0">
+                    <t t-if="widget.datasets.attachment_ids.length > 0">
                         <div class="oe_clear"></div>
                         <t t-call="mail.thread.message.attachments"/>
                     </t>
@@ -245,9 +241,9 @@
 
     <!-- expandable message layout -->
     <li t-name="mail.thread.expandable" class="oe_mail oe_mail_thread_msg oe_mail_unread">
-        <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
+        <div t-attf-class="oe_mail_msg_#{widget.datasets.type} oe_semantic_html_override">
             <div class="oe_mail_msg_content oe_mail_msg_more_message">
-                <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> messages not display)</span>...</a>
+                <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.datasets.nb_messages>0">(<t t-raw="widget.datasets.nb_messages"/> messages not display)</span>...</a>
             </div>
         </div>
     </li>
@@ -267,21 +263,21 @@
     -->
     <span t-name="mail.thread.message.vote">
         <span class="oe_left oe_mail_vote_count">
-            <t t-if='widget.has_voted'>
+            <t t-if='widget.datasets.has_voted'>
                 You
             </t>
-            <t t-if='(widget.vote_user_ids.length-(widget.has_voted?1:0)) > 0'>
-                <t t-if='widget.has_voted'> and </t>
-                <t t-esc="widget.vote_user_ids.length"/> people
+            <t t-if='(widget.datasets.vote_user_ids.length-(widget.datasets.has_voted?1:0)) > 0'>
+                <t t-if='widget.datasets.has_voted'> and </t>
+                <t t-esc="widget.datasets.vote_user_ids.length"/> people
             </t>
-            <t t-if='widget.vote_user_ids.length > 0'>
+            <t t-if='widget.datasets.vote_user_ids.length > 0'>
                 agree
             </t>
         </span>
         <button t-attf-class="oe_mail_msg_vote oe_tag">
             <span>
-                <t t-if="!widget.has_voted">Agree</t>
-                <t t-if="widget.has_voted">Unagree</t>
+                <t t-if="!widget.datasets.has_voted">Agree</t>
+                <t t-if="widget.datasets.has_voted">Unagree</t>
             </span>
         </button>
     </span>
@@ -291,7 +287,7 @@
     -->
     <span t-name="mail.thread.message.star">
         <span class="oe_left">
-            <button t-attf-class="oe_mail_starbox oe_tag #{widget.has_stared?'oe_stared':''}">*</button>
+            <button t-attf-class="oe_mail_starbox oe_tag #{widget.datasets.has_stared?'oe_stared':''}">*</button>
         </span>
     </span>
 

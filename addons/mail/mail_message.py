@@ -331,10 +331,9 @@ class mail_message(osv.Model):
         return result
 
     def message_read(self, cr, uid, ids=False, domain=[], level=0, context=None, parent_id=False, limit=None):
-        """ Read messages from mail.message, and get back a structured tree
-            of messages to be displayed as discussion threads. If IDs is set,
+        """ Read messages from mail.message. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
-            After having fetch messages, their parents will be added to obtain
+            After having fetch messages, their parents & child will be added to obtain
             well formed threads.
 
             :param domain: optional domain for searching ids
@@ -372,6 +371,7 @@ class mail_message(osv.Model):
 
                     try:
                         parent = msg.parent_id
+                        parent = parent.parent_id
                     except (orm.except_orm, osv.except_osv):
                         parent = False
 

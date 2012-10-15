@@ -95,10 +95,11 @@ openerp_mail_followers = function(session, mail) {
 
         set_is_follower: function(value_) {
             for(var i in value_){
-                if(value_[i]['user_ids'][0]==this.session.uid)
+                if(value_[i]['user_ids'][0]==this.session.uid){
                     this.message_is_follower=true;
                     this.display_buttons();
                     return true;
+                }
             }
             this.message_is_follower=false;
             this.display_buttons();
