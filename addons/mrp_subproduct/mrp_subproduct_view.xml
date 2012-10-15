@@ -11,13 +11,13 @@
                      <field name="sub_products">
                          <tree string="sub products"  editable="top">
                              <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                             <field name="product_uom" groups="product.group_uom"/>
+                             <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                              <field name="product_qty"/>
                              <field name="subproduct_type"/>
                          </tree>
                          <form string="Sub Products">
                              <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                             <field name="product_uom" groups="product.group_uom"/>
+                             <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                              <field name="product_qty"/>
                              <field name="subproduct_type"/>
                          </form>

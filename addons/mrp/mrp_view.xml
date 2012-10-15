@@ -351,7 +351,7 @@
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
-                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
@@ -382,7 +382,7 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
