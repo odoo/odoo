@@ -638,31 +638,10 @@ class sale_advance_payment_inv(osv.osv_memory):
     def create_invoices(self, cr, uid, ids, context=None):
         """ create invoices for the active sale orders """
         sale_obj = self.pool.get('sale.order')
-        act_window = self.pool.get('ir.actions.act_window')
+        sale_line_obj = self.pool.get('sale.order.line')
         wizard = self.browse(cr, uid, ids[0], context)
-        sale_ids = context.get('active_ids', [])
-        if wizard.advance_payment_method == 'all':
-            # create the final invoices of the active sale orders
-            res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
-            if context.get('open_invoices', False):
-                return res
-            return {'type': 'ir.actions.act_window_close'}
 
-        if wizard.advance_payment_method == 'lines':
-            # open the list view of sale order lines to invoice
-            res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
-            res['context'] = {
-                'search_default_uninvoiced': 1,
-                'search_default_order_id': sale_ids and sale_ids[0] or False,
-            }
-            return res
-        assert wizard.advance_payment_method in ('fixed', 'percentage')
-
-        inv_ids = []
         for sale_id, inv_values in self._prepare_advance_invoice_vals(cr, uid, ids, context=context):
-
-            sale_obj = self.pool.get('sale.order')
-            sale_line_obj = self.pool.get('sale.order.line')
             sale = sale_obj.browse(cr, uid, sale_id, context=context)
             if sale.order_policy == 'postpaid':
                 raise osv.except_osv(
@@ -688,11 +667,4 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'tax_id': line_tax,
                 }
                 sale_line_obj.create(cr, uid, vals, context=context)
-
-            inv_ids.append(self._create_invoices(cr, uid, inv_values, sale_id, context=context))
-
-        if context.get('open_invoices', False):
-            return self.open_invoices( cr, uid, ids, inv_ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
-        res = super(sale_advance_payment_inv, self).create_invoices(self, cr, uid, ids, context=context)
-        return res
+        return super(sale_advance_payment_inv, self).create_invoices(cr, uid, ids, context=context)
