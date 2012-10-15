@@ -81,7 +81,11 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
+            if context.get('default_template_id'):
+                vals =  self.pool.get('email.template').generate_email(cr, uid, context.get('default_template_id'), res_id, context=context)
+                vals.update({'content_subtype': 'html'})
+            else:
+                vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -121,7 +125,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -219,7 +223,6 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
-        print '**', context
         active_ids = context.get('active_ids')
 
         for wizard in self.browse(cr, uid, ids, context=context):

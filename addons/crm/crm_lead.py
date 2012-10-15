@@ -26,6 +26,7 @@ from osv import fields, osv
 import time
 import tools
 from tools.translate import _
+from tools import html2plaintext
 
 from base.res.res_partner import format_address
 
@@ -776,7 +777,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,
-            'default_state': 'open',
             'default_name': opportunity.name,
         }
         return res
@@ -812,9 +812,11 @@ class crm_lead(base_stage, format_address, osv.osv):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,

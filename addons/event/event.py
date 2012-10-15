@@ -267,25 +267,18 @@ class event_event(osv.osv):
             return {'value': dic}
 
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
-        values = {
-            'street' : False,
-            'street2' : False,
-            'city' : False,
-            'zip' : False,
-            'country_id' : False,
-            'state_id' : False,
-        }
-        if isinstance(address_id, (long, int)):
-            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
-            values.update({
-                'street' : address.street,
-                'street2' : address.street2,
-                'city' : address.city,
-                'country_id' : address.country_id and address.country_id.id,
-                'state_id' : address.state_id and address.state_id.id,
-                'zip' : address.zip,
-            })
-
+        values = {}
+        if not address_id:
+            return values
+        address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
+        values.update({
+            'street' : address.street,
+            'street2' : address.street2,
+            'city' : address.city,
+            'country_id' : address.country_id and address.country_id.id or False,
+            'state_id' : address.state_id and address.state_id.id or False,
+            'zip' : address.zip,
+        })
         return {'value' : values}
 
 
@@ -434,22 +427,6 @@ class event_registration(osv.osv):
             'name':contact_id.name,
             'phone':contact_id.phone,
             }}
-
-    def onchange_event(self, cr, uid, ids, event_id, context=None):
-        """This function returns value of Product Name, Unit Price based on Event.
-        """
-        if context is None:
-            context = {}
-        if not event_id:
-            return {}
-        event_obj = self.pool.get('event.event')
-        data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        return {'value':
-                    {'event_begin_date': data_event.date_begin,
-                     'event_end_date': data_event.date_end,
-                     'company_id': data_event.company_id and data_event.company_id.id or False,
-                    }
-               }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')
