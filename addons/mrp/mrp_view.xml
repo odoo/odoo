@@ -962,21 +962,21 @@
                </data>
             </field>
         </record>
-        <record id="product.product_normal_form_supply_view" model="ir.ui.view">
+        <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='supply_method']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
                 <group name="procurement_help" position="inside">
-                    <p attrs="{'invisible': [('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
+                    <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
                         When you sell this product, OpenERP will trigger <b>a manufacturing
                         order</b> using the bill of materials assigned to this product.
                         The delivery order will be ready once the production is done.
                     </p>
-</group>
+                </group>
             </field>
         </record>
 
@@ -1038,6 +1038,7 @@
         <record model="ir.actions.act_window" id="product_open_bom">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
             <field name="name">Bill of Materials</field>
+            <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
         </record>
 
@@ -1051,7 +1052,5 @@
                 </xpath>
             </field>
         </record>
-
-
     </data>
 </openerp>

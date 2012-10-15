@@ -60,7 +60,7 @@
                 <li>
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
-                            <span>...wait upload...</span>
+                            <span>Upload in progress...</span>
                             <div t-attf-style="{attachment.percent_loaded&gt;0?'':'display:none;'}"/>
                             <div t-attf-style="{attachment.percent_loaded&gt;20?'':'display:none;'}"/>
                             <div t-attf-style="{attachment.percent_loaded&gt;40?'':'display:none;'}"/>
@@ -73,7 +73,7 @@
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
                     <t t-if="widget.options.thread.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
+                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 
                 </li>
@@ -276,7 +276,7 @@
         <button t-attf-class="oe_mail_msg_vote oe_tag">
             <span>
                 <t t-if="!widget.has_voted">Agree</t>
-                <t t-if="widget.has_voted">Unagree</t>
+                <t t-if="widget.has_voted">Undo</t>
             </span>
         </button>
     </span>

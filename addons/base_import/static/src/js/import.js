@@ -416,7 +416,7 @@ openerp.base_import = function (instance) {
                             '</div>'
                         ].join('')
                     },
-                })).get(0).scrollIntoView();
+                }));
         },
     });
     // FSM-ize DataImport
