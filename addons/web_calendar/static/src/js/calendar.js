@@ -455,7 +455,8 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false
+            pager: false,
+            $buttons: this.$buttons,
         });
         var def = this.form.appendTo(this.$el);
         this.form.on('record_created', self, this.on_form_dialog_saved);
