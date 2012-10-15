@@ -14,7 +14,27 @@ openerp.base = function(instance) {
             };
             i.onload = function() {
                 console.log('client is available', client);
-                d.resolve(client);
+
+                client.session.session_bind(client.origin).then(function() {
+                    // check if client can authenticate
+                    client.authenticate().done(function() {
+                        d.resolve(client);
+                    }).fail(function() {
+                        if (client.login === 'anonymous') {
+                            d.reject(client);
+                        } else {
+                            sessionStorage.removeItem('apps.login');
+                            sessionStorage.removeItem('apps.access_token');
+                            client.bind(client.dbname, 'anonymous', 'anonymous');
+                            client.authenticate().done(function() {
+                                d.resolve(client);
+                            }).fail(function() {
+                                d.reject(client);
+                            });
+                        }
+                    });
+                });
+
             };
             i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', client.origin);
             return d.promise();
@@ -56,7 +76,7 @@ openerp.base = function(instance) {
 
         init: function(parent, options) {
             this._super(parent);
-            
+
             if (options.apps_user) {
                 sessionStorage.setItem('apps.login', options.apps_user);
             }
@@ -102,7 +122,7 @@ openerp.base = function(instance) {
 
     instance.base.apps.UpdatesAvailable = instance.base.apps.Apps.extend({
         remote_action_id: 'loempia.action_embed_updates'
-    })
+    });
 
     instance.web.client_actions.add("apps", "instance.base.apps.Apps");
     instance.web.client_actions.add("apps.updates", "instance.base.apps.UpdatesAvailable");
