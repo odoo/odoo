@@ -59,7 +59,7 @@ class mrp_subproduct(osv.osv):
         product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
         uom = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
         if uom.category_id.id != product.uom_id.category_id.id:
-            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
+            res['warning'] = {'title': _('Warning'), 'message': _('The Product Unit of Measure you chose has a different category than in the product form.')}
             res['value'].update({'product_uom': product.uom_id.id})
         return res
 
