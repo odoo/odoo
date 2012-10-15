@@ -19,9 +19,9 @@
         <record model="ir.ui.view" id="view_product_form_expiry">
             <field name="name">product.normal.form</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form" />
             <field name="arch" type="xml">
-                <group name="inventory">
+                <group name="Weights" position="after">
                     <group string="Dates">
                         <field name="life_time" />
                         <field name="use_time" />
