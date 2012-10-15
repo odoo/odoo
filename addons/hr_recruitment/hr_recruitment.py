@@ -297,7 +297,6 @@ class hr_applicant(base_stage, osv.Model):
         res['context'] = {
             'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
-            'default_state': 'open',
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
         }
