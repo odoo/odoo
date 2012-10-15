@@ -116,8 +116,19 @@ instance.web.DiagramView = instance.web.View.extend({
         if(id_record) {
             this.id = id_record;
             this.get_diagram_info();
+            this.do_push_state({id:record.id});
         }
     },
+
+    do_load_state: function(state, warm) {
+        if (state && !this.dataset.get_id_index(state.id)) {
+            this.dataset.ids.push(state.id);
+        }
+        this.dataset.select_id(state.id);
+        if (warm) {
+            this.do_show();
+        }
+     },
 
     // Set-up the drawing elements of the diagram
     draw_diagram: function(result) {
