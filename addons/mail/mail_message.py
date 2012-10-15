@@ -296,7 +296,8 @@ class mail_message(osv.Model):
                             'nb_messages': nb,
                             'type': 'expandable', 
                             'parent_id': msg.id,
-                            'id':  id_min
+                            'id':  id_min,
+                            'model':  msg.model
                         })
                     id_min=None
                     id_max=None
@@ -307,7 +308,8 @@ class mail_message(osv.Model):
                     'nb_messages': nb,
                     'type': 'expandable', 
                     'parent_id': msg.id, 
-                    'id':  id_min
+                    'id':  id_min,
+                    'model':  msg.model
                 })
 
         for msg in tree+tree_not:
@@ -347,6 +349,11 @@ class mail_message(osv.Model):
         # don't read the message display by .js, in context message_loaded list
         if context and context.get('message_loaded'):
             domain += [ ['id','not in',message_loaded_ids] ];
+
+        print ""
+        print context
+        print domain
+        print ""
 
         limit = limit or self._message_read_limit
         context = context or {}

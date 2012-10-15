@@ -349,7 +349,8 @@ openerp.mail = function(session) {
                         'comment', 
                         false, 
                         this.context.default_parent_id, 
-                        attachments]
+                        attachments,
+                        _.extend(this.parent_thread.context, {'message_loaded':[this.datasets.id||0].concat( self.parent_thread.options.thread._parents[0].get_child_ids() )})]
                     ).then(function(records){
                         self.parent_thread.switch_new_message(records);
                         self.datasets.attachment_ids=[];
@@ -386,6 +387,7 @@ openerp.mail = function(session) {
 
             this.datasets = {};
             this.datasets.id = options.parameters.id || -1;
+            this.datasets.model = options.parameters.model || false;
             this.datasets.parent_id= options.parameters.parent_id || false;
             this.datasets.nb_messages = options.parameters.nb_messages || 0;
             this.datasets.type = 'expandable';
@@ -471,29 +473,27 @@ openerp.mail = function(session) {
             for(var i in param){
                 this[i] = param[i];
             }
-            this.datasets = {};
-            this.datasets.id = param.id || -1;
-            this.datasets.model = param.model || false;
-            this.datasets.parent_id= param.parent_id || false;
-            this.datasets.res_id = param.res_id || false;
-            this.datasets.type = param.type || false;
-            this.datasets.is_author = param.is_author || false;
-            this.datasets.is_private = param.is_private || false;
-            this.datasets.subject = param.subject || false;
-            this.datasets.name = param.name || false;
-            this.datasets.record_name = param.record_name || false;
-            this.datasets.body = param.body || false;
-            this.datasets.vote_user_ids =param.vote_user_ids || [];
-            this.datasets.has_voted = param.has_voted || false;
-            this.datasets.has_stared = param.has_stared || false;
-            this.datasets.thread_level = param.thread_level || 0;
-
-            this.datasets.vote_user_ids = param.vote_user_ids || [];
-
-            this.datasets.unread = param.unread || false;
+            this.datasets = _.extend({
+                'id' : -1,
+                'model' : false,
+                'parent_id': false,
+                'res_id' : false,
+                'type' : false,
+                'is_author' : false,
+                'is_private' : false,
+                'subject' : false,
+                'name' : false,
+                'record_name' : false,
+                'body' : false,
+                'vote_user_ids' :[],
+                'has_voted' : false,
+                'has_stared' : false,
+                'thread_level' : 0,
+                'unread' : false,
+                'author_id' : [],
+                'attachment_ids' : [],
+            }, param || {});
             this.datasets._date = param.date;
-            this.datasets.author_id = param.author_id || [];
-            this.datasets.attachment_ids = param.attachment_ids || [];
 
             // record domain and context
             this.domain = options.domain || [];
@@ -890,7 +890,7 @@ openerp.mail = function(session) {
                 self.message_fetch();
             });
             this.$el.prepend(button_fetch);
-            this.$el.addClass("oe_mail_wall_first_thread");
+            this.$el.addClass("oe_mail_root_thread");
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -1006,7 +1006,7 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.datasets.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, fetch_context, 0, this.context.default_parent_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, 0, fetch_context, this.context.default_parent_id || undefined]
                 ).then(function (records) { self.switch_new_message(records); });
         },
 
@@ -1025,7 +1025,6 @@ openerp.mail = function(session) {
             }
 
             self.messages.push( self.insert_message(message) );
-            
         },
 
         /** Displays a message or an expandable message  */
@@ -1038,9 +1037,9 @@ openerp.mail = function(session) {
                 var message = new mail.ThreadExpandable(self, {
                     'domain': record.domain,
                     'context': {
-                        'default_model': record.model,
-                        'default_res_id': record.res_id,
-                        'default_parent_id': record.id },
+                        'default_model': record.model || this.context.default_model,
+                        'default_res_id': record.res_id || this.context.default_res_id,
+                        'default_parent_id': self.datasets.id },
                     'parameters': record
                 });
             } else {
@@ -1064,13 +1063,13 @@ openerp.mail = function(session) {
             // check older and newer message for insert
             var parent_newer = false;
             var parent_older = false;
-            if ( message.id > 0 ){
+            if ( message.datasets.id > 0 ){
                 for(var i in thread_messages){
-                    if(thread_messages[i].id > message.id){
-                        if(!parent_newer || parent_newer.id>=thread_messages[i].id)
+                    if(thread_messages[i].datasets.id > message.datasets.id){
+                        if(!parent_newer || parent_newer.datasets.id>=thread_messages[i].datasets.id)
                             parent_newer = thread_messages[i];
-                    } else if(thread_messages[i].id>0 && thread_messages[i].id < message.id) {
-                        if(!parent_older || parent_older.id<thread_messages[i].id)
+                    } else if(thread_messages[i].datasets.id>0 && thread_messages[i].datasets.id < message.datasets.id) {
+                        if(!parent_older || parent_older.id<thread_messages[i].datasets.id)
                             parent_older = thread_messages[i];
                     }
                 }
