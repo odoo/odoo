@@ -272,6 +272,27 @@ res_partner()
 class account_analytic_line(osv.osv):
    _inherit = "account.analytic.line"
 
+   def _default_account_id(self, cr, uid, context=None):
+        proxy = self.pool.get('account.analytic.account')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee:
+            return employee.id
+        return False
+
+   def _default_product(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee.product_id:
+            return employee.product_id.id
+        return False
+
+   _defaults = {
+        'product_id': _default_product,
+        'account_id': _default_account_id
+        }
+
    def on_change_account_id(self, cr, uid, ids, account_id):
        res = {}
        if not account_id:
@@ -283,38 +304,6 @@ class account_analytic_line(osv.osv):
        if acc.state == 'close' or acc.state == 'cancelled':
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
-
-   def _default_product(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        print "record_ids",record_ids
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee.product_id:
-            return employee.product_id.id
-        return False
-
-   def _default_product_uom(self, cr, uid, context=None):
-        proxy = self.pool.get('hr.employee')
-        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        print "record_ids",record_ids
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee.product_id and employee.product_id.uom_id:
-            return employee.product_id.uom_id.id
-        return False
-
-   def _default_invoice(self, cr, uid, context=None):
-        proxy = self.pool.get('hr_timesheet_invoice.factor')
-        record_ids = proxy.search(cr, uid, [('customer_name', '=', '100%')], context=context)
-        invoice = proxy.browse(cr, uid, record_ids[0], context=context)
-        if invoice:
-            return invoice.id
-        return False
-
-   _defaults = {
-        'product_id': _default_product,
-        'product_uom_id': _default_product_uom,
-        'to_invoice': _default_invoice
-        }
 
 account_analytic_line()
 
