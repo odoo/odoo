@@ -899,11 +899,11 @@ openerp.mail = function(session) {
         on_scroll: function(event){
             if(event)event.stopPropagation();
             var last=this.messages[0];
-            if(last && last.type=="expandable"){
+            if(last && last.datasets.type=="expandable"){
                 var pos = last.$el.position();
                 if(pos.top){
                     /* bottom of the screen */
-                    var bottom = $(window).scrollTop()+$(window).height()+100;
+                    var bottom = $(window).scrollTop()+$(window).height()+200;
                     if(bottom - pos.top > 0){
                         last.on_expandable();
                     }
