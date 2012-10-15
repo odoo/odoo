@@ -27,8 +27,11 @@ try:
 except ImportError:
     xlwt = None
 
-from .. import common
-openerpweb = common.http
+import openerp
+
+from .. import http
+from .. import nonliterals
+openerpweb = http
 
 #----------------------------------------------------------
 # OpenERP Web helpers
@@ -135,7 +138,7 @@ def db_list(req):
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
-    r = req.config.dbfilter.replace('%h', h).replace('%d', d)
+    r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
@@ -227,11 +230,12 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
-    return [m for m in req.config.server_wide_modules if m in openerpweb.addons_manifest]
+    server_wide_modules = openerp.conf.server_wide_modules or ['web']
+    return [m for m in server_wide_modules if m in openerpweb.addons_manifest]
     # TODO the following will be enabled once we separate the module code and translation loading
     serverside = []
     dbside = []
-    for i in req.config.server_wide_modules:
+    for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
     # if only one db load every module at boot
@@ -502,12 +506,12 @@ def fix_view_modes(action):
 
 def parse_domain(domain, session):
     """ Parses an arbitrary string containing a domain, transforms it
-    to either a literal domain or a :class:`common.nonliterals.Domain`
+    to either a literal domain or a :class:`nonliterals.Domain`
 
     :param domain: the domain to parse, if the domain is not a string it
                    is assumed to be a literal domain and is returned as-is
     :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
+    :type session: openerpweb.OpenERPSession
     """
     if not isinstance(domain, basestring):
         return domain
@@ -515,24 +519,23 @@ def parse_domain(domain, session):
         return ast.literal_eval(domain)
     except ValueError:
         # not a literal
-        return common.nonliterals.Domain(session, domain)
+        return nonliterals.Domain(session, domain)
 
 def parse_context(context, session):
     """ Parses an arbitrary string containing a context, transforms it
-    to either a literal context or a :class:`common.nonliterals.Context`
+    to either a literal context or a :class:`nonliterals.Context`
 
     :param context: the context to parse, if the context is not a string it
            is assumed to be a literal domain and is returned as-is
     :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
+    :type session: openerpweb.OpenERPSession
     """
     if not isinstance(context, basestring):
         return context
     try:
         return ast.literal_eval(context)
     except ValueError:
-        return common.nonliterals.Context(session, context)
-
+        return nonliterals.Context(session, context)
 
 def _local_web_translations(trans_file):
     messages = []
@@ -546,6 +549,31 @@ def _local_web_translations(trans_file):
             messages.append({'id': x.id, 'string': x.string})
     return messages
 
+def from_elementtree(el, preserve_whitespaces=False):
+    """ xml2json-direct
+    Simple and straightforward XML-to-JSON converter in Python
+    New BSD Licensed
+    http://code.google.com/p/xml2json-direct/
+    """
+    res = {}
+    if el.tag[0] == "{":
+        ns, name = el.tag.rsplit("}", 1)
+        res["tag"] = name
+        res["namespace"] = ns[1:]
+    else:
+        res["tag"] = el.tag
+    res["attrs"] = {}
+    for k, v in el.items():
+        res["attrs"][k] = v
+    kids = []
+    if el.text and (preserve_whitespaces or el.text.strip() != ''):
+        kids.append(el.text)
+    for kid in el:
+        kids.append(from_elementtree(kid, preserve_whitespaces))
+        if kid.tail and (preserve_whitespaces or kid.tail.strip() != ''):
+            kids.append(kid.tail)
+    res["children"] = kids
+    return res
 
 #----------------------------------------------------------
 # OpenERP Web web Controllers
@@ -611,7 +639,6 @@ class Home(openerpweb.Controller):
     @openerpweb.httprequest
     def login(self, req, db, login, key):
         return login_and_redirect(req, db, login, key)
-
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -746,7 +773,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": common.release.version
+            "version": openerp.release.version
         }
 
 class Proxy(openerpweb.Controller):
@@ -862,12 +889,10 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
-        release = common.release
         env = dict(
             base_location=base_location,
             HTTP_HOST=wsgienv['HTTP_HOST'],
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            user_agent="%s / %s" % (release.name, release.version),
         )
         req.session.authenticate(db, login, password, env)
 
@@ -942,8 +967,8 @@ class Session(openerpweb.Controller):
                 no group by should be performed)
         """
         context, domain = eval_context_and_domain(req.session,
-                                                  common.nonliterals.CompoundContext(*(contexts or [])),
-                                                  common.nonliterals.CompoundDomain(*(domains or [])))
+                                                  nonliterals.CompoundContext(*(contexts or [])),
+                                                  nonliterals.CompoundDomain(*(domains or [])))
 
         group_by_sequence = []
         for candidate in (group_by_seq or []):
@@ -1165,14 +1190,14 @@ class DataSet(openerpweb.Controller):
     
     def _call_kw(self, req, model, method, args, kwargs):
         for i in xrange(len(args)):
-            if isinstance(args[i], common.nonliterals.BaseContext):
+            if isinstance(args[i], nonliterals.BaseContext):
                 args[i] = req.session.eval_context(args[i])
-            elif isinstance(args[i], common.nonliterals.BaseDomain):
+            elif isinstance(args[i], nonliterals.BaseDomain):
                 args[i] = req.session.eval_domain(args[i])
         for k in kwargs.keys():
-            if isinstance(kwargs[k], common.nonliterals.BaseContext):
+            if isinstance(kwargs[k], nonliterals.BaseContext):
                 kwargs[k] = req.session.eval_context(kwargs[k])
-            elif isinstance(kwargs[k], common.nonliterals.BaseDomain):
+            elif isinstance(kwargs[k], nonliterals.BaseDomain):
                 kwargs[k] = req.session.eval_domain(kwargs[k])
 
         # Temporary implements future display_name special field for model#read()
@@ -1303,7 +1328,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = common.xml2json.from_elementtree(xml, preserve_whitespaces)
+        fvg['arch'] = from_elementtree(xml, preserve_whitespaces)
 
         if 'id' in fvg['fields']:
             # Special case for id's
@@ -1436,12 +1461,12 @@ class SearchView(View):
             try:
                 parsed_context = parse_context(filter["context"], req.session)
                 filter["context"] = (parsed_context
-                        if not isinstance(parsed_context, common.nonliterals.BaseContext)
+                        if not isinstance(parsed_context, nonliterals.BaseContext)
                         else req.session.eval_context(parsed_context))
 
                 parsed_domain = parse_domain(filter["domain"], req.session)
                 filter["domain"] = (parsed_domain
-                        if not isinstance(parsed_domain, common.nonliterals.BaseDomain)
+                        if not isinstance(parsed_domain, nonliterals.BaseDomain)
                         else req.session.eval_domain(parsed_domain))
             except Exception:
                 logger.exception("Failed to parse custom filter %s in %s",
@@ -1932,7 +1957,7 @@ class Reports(View):
 
         report_srv = req.session.proxy("report")
         context = req.session.eval_context(
-            common.nonliterals.CompoundContext(
+            nonliterals.CompoundContext(
                 req.context or {}, action[ "context"]))
 
         report_data = {}
