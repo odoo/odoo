@@ -273,7 +273,7 @@ instance.web.DiagramView = instance.web.View.extend({
             self.dataset.domain,
             self.context || self.dataset.context
         );
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
 
@@ -325,7 +325,7 @@ instance.web.DiagramView = instance.web.View.extend({
             this.dataset.domain,
             this.context || this.dataset.context
         );
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
