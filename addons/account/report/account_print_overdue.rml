@@ -126,15 +126,10 @@
     <blockTable colWidths="286.0,224.0" style="Tableau2">
       <tr>
         <td>
-          <para style="terp_default_9">[[ repeatIn(adr_get(o, 'invoice'),'addr') ]]</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.title.name or '' ]] [[ o.name ]]</para>
-          <para style="terp_default_9">[[ addr['street'] ]]</para>
-          <para style="terp_default_9">[[ addr['street2'] or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ addr['zip'] ]] [[ addr['city'] ]]</para>
-          <para style="terp_default_9">[[ addr['state_id'] or removeParentNode('para')]]</para>
-          <para style="terp_default_9">[[ addr['country_id'] ]]</para>
+          <para style="terp_default_9">[[ display_address(o.partner_id)] ]]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
@@ -216,7 +211,7 @@
             <para style="terp_default_Right_9">[[ (line['account_id']['type'] == 'receivable' and formatLang(line['credit']) or 0) or (line['account_id']['type'] == 'payable' and formatLang(line['debit'] * -1) or 0) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ time.strftime('%Y-%m-%d') &gt; formatLang((line['date_maturity'])) and formatLang(line['debit'] - line['credit']) ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ time.strftime('%Y-%m-%d') &gt; formatLang((line['date_maturity'])) and formatLang(line['debit'] - line['credit'], currency_obj = company.currency_id) ]]</para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ line['blocked'] and 'X' or '' ]]</para>
@@ -241,7 +236,7 @@
           <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['credit'] or 0) or (y['account_id']['type'] == 'payable' and y['debit'] * -1 or 0)), getLines(o), 0))) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0))) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0)), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -261,7 +256,7 @@
           <para style="terp_default_Bold_9">Balance :</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0))) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0)), currency_obj = company.currency_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_8">
