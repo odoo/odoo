@@ -171,7 +171,7 @@ openerp_mail_followers = function(session, mail) {
 
             if(subtype_list_ul.is(":empty")) {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                this.ds_model.call('get_message_subtypes',[[self.view.datarecord.id], context]).pipe(this.proxy('set_subtypes'));
+                this.ds_model.call('message_get_subscription_data',[[self.view.datarecord.id], context]).pipe(this.proxy('set_subtypes'));
             }
         },
         

@@ -36,6 +36,7 @@ from tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
+
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, message.get_all(header, [])))
 
@@ -404,7 +405,8 @@ class mail_thread(osv.AbstractModel):
                overrides the automatic detection based on the message
                headers.
         """
-        if context is None: context = {}
+        if context is None:
+            context = {}
 
         # extract message bytes - we are forced to pass the message as binary because
         # we don't know its encoding until we parse its headers and hence can't
@@ -420,7 +422,8 @@ class mail_thread(osv.AbstractModel):
                                     thread_id, custom_values,
                                     context=context)
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
-        if strip_attachments: msg.pop('attachments', None)
+        if strip_attachments:
+            msg.pop('attachments', None)
         thread_id = False
         for model, thread_id, custom_values, user_id in routes:
             if self._name != model:
@@ -700,8 +703,10 @@ class mail_thread(osv.AbstractModel):
         # when writing on res.partner, without specific thread_id -> redirect to the user's partner
         if self._name == 'res.partner' and not thread_id:
             thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, context=context)
+
         # Chatter: attachments linked to the document (not done JS-side), load the message
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
@@ -711,13 +716,14 @@ class mail_thread(osv.AbstractModel):
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]})
         new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id])
+
         return new_message
 
     #------------------------------------------------------
     # Followers API
     #------------------------------------------------------
 
-    def get_message_subtypes(self, cr, uid, ids, context=None):
+    def message_get_subscription_data(self, cr, uid, ids, context=None):
         """ Wrapper to get subtypes. """
         return self._get_subscription_data(cr, uid, ids, None, None, context=context)
 
