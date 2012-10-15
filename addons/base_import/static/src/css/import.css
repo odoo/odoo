@@ -10,7 +10,8 @@
 .oe_import .oe_import_grid,
 .oe_import .oe_import_error_report,
 .oe_import .oe_import_with_file,
-.oe_import .oe_import_noheaders {
+.oe_import .oe_import_noheaders,
+.oe_import .oe_import_report_more {
     display: none;
 }
 
@@ -19,7 +20,8 @@
 }
 .oe_import.oe_import_error .oe_import_error_report,
 .oe_import.oe_import_with_file .oe_import_with_file,
-.oe_import.oe_import_noheaders .oe_import_noheaders {
+.oe_import.oe_import_noheaders .oe_import_noheaders,
+.oe_import .oe_import_report_showmore .oe_import_report_more {
     display: block;
 }
 
@@ -28,6 +30,9 @@
 }
 .oe_import .oe_import_error_report ul .oe_import_report_warning {
     background-color: #FEFFD9;
+}
+.oe_import .oe_import_error_report ul .oe_import_report_info {
+    background-color: #d3ffd3;
 }
 
 .oe_import .oe_import_noheaders {
@@ -47,7 +52,7 @@
 }
 .oe_import .oe_import_options label {
     display: inline-block;
-    width: 10em;
+    width: 8em;
     text-align: right;
 }
 
