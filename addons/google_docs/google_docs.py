@@ -125,7 +125,10 @@ class google_docs_ir_attachment(osv.osv):
         google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
         if google_docs_config:
             name_gdocs = pool_gdoc_config.browse(cr, uid, google_docs_config, context=context)[0].name_template
+        try:
             name_gdocs = name_gdocs % model_fields_dic
+        except:
+            raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern is not correct."))
             google_template_id = pool_gdoc_config.browse(cr, uid, google_docs_config[0], context=context).gdocs_resource_id
             google_document = pool_ir_attachment.copy_gdoc(cr, uid, res_model, res_id, name_gdocs, google_template_id, context=context)
         else:
@@ -138,7 +141,7 @@ class config(osv.osv):
 
     _columns = {
         'model_id': fields.many2one('ir.model', 'Model', required=True),
-        'gdocs_resource_id': fields.char('Google Resource ID to Use as Template', size=256, help='''
+        'gdocs_resource_id': fields.char('Google Resource ID to Use as Template', size=64, help='''
 This is the id of the template document, on google side. You can find it thanks to its URL: 
 *for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`
 *for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`
