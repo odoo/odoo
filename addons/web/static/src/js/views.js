@@ -164,6 +164,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         state = state || {};
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
+                if (this.inner_action._push_me === false) {
+                    // this action has been explicitly marked as not pushable
+                    return;
+                }
                 state['title'] = this.inner_action.name;
                 if(this.inner_action.type == 'ir.actions.act_window') {
                     state['model'] = this.inner_action.res_model;
@@ -172,7 +176,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     state['action'] = this.inner_action.id;
                 } else if (this.inner_action.type == 'ir.actions.client') {
                     state['action'] = this.inner_action.tag;
-                    //state = _.extend(this.inner_action.params || {}, state);
+                    var params = {};
+                    _.each(this.inner_action.params, function(v, k) {
+                        if(_.isString(v) || _.isNumber(v)) {
+                            params[k] = v;
+                        }
+                    });
+                    state = _.extend(params || {}, state);
                 }
             }
             if(!this.dialog) {
@@ -286,8 +296,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     buttons: { "Close": function() { $(this).dialog("close"); }},
                     dialogClass: executor.klass
                 });
-                if(on_close)
-                    this.dialog.on_close.add(on_close);
+                if (on_close) {
+                    this.dialog.on("dialog_close", this, on_close);
+                }
             } else {
                 this.dialog_widget.destroy();
             }
@@ -525,19 +536,19 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             controller.set_embedded_view(view.embedded_view);
         }
         controller.on('switch_mode', self, this.switch_mode);
-
-        controller.do_prev_view.add_last(this.on_prev_view);
+        controller.on('previous_view', self, this.prev_view);
+        
         var container = this.$el.find(".oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).then(function() {
-            self.on_controller_inited(view_type, controller);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.then(self.searchview.do_search);
             }
+            self.trigger("controller_inited",view_type,controller);
         });
     },
     set_title: function(title) {
@@ -602,7 +613,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * @param {String} [options.default=null] view to switch to if no previous view
      * @returns {$.Deferred} switching end signal
      */
-    on_prev_view: function (options) {
+    prev_view: function (options) {
         options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
@@ -651,14 +662,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
             controller.do_search(results.domain, results.context, groupby || []);
         });
-    },
-    /**
-     * Event launched when a controller has been inited.
-     *
-     * @param {String} view_type type of view
-     * @param {String} view the inited controller
-     */
-    on_controller_inited: function(view_type, view) {
     },
     /**
      * Called when one of the view want to execute an action
@@ -1266,8 +1269,7 @@ instance.web.View = instance.web.Widget.extend({
      * @param {Boolean} [options.created=false] resource was created
      * @param {String} [options.default=null] view to switch to if no previous view
      */
-    do_prev_view: function (options) {
-    },
+
     do_search: function(view) {
     },
     on_sidebar_export: function() {

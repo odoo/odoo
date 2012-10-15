@@ -280,7 +280,8 @@ instance.web.Model = instance.web.Class.extend({
             kwargs = args;
             args = [];
         }
-        return instance.session.rpc('/web/dataset/call_kw', {
+        var debug = instance.session.debug ? '/'+this.name+':'+method : '';
+        return instance.session.rpc('/web/dataset/call_kw' + debug, {
             model: this.name,
             method: method,
             args: args,
@@ -567,7 +568,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      */
     write: function (id, data, options) {
         options = options || {};
-        return this._model.call('write', [[id], data], {context: this._model.context(options.context)});
+        return this._model.call('write', [[id], data], {context: this._model.context(options.context)}).then(this.trigger('dataset_changed', id, data, options));
     },
     /**
      * Deletes an existing record from the database
@@ -575,8 +576,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
-        this.trigger('unlink', ids);
-        return this._model.call('unlink', [ids], {context: this._model.context()});
+        return this._model.call('unlink', [ids], {context: this._model.context()}).then(this.trigger('dataset_changed', ids));
     },
     /**
      * Calls an arbitrary RPC method
@@ -778,6 +778,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
             }
+            this.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
     size: function () {
@@ -834,7 +835,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         $.extend(cached.values, record.values);
         if (dirty)
-            this.on_change();
+            this.trigger("dataset_changed", id, data, options);
         return $.Deferred().resolve(true).promise();
     },
     unlink: function(ids, callback, error_callback) {
@@ -848,7 +849,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        this.on_change();
+        this.trigger("dataset_changed", ids, callback, error_callback);
         return $.async_when({result: true}).then(callback);
     },
     reset_ids: function(ids) {
@@ -858,8 +859,6 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = [];
         this.cache = [];
         this.delete_all = false;
-    },
-    on_change: function() {
     },
     read_ids: function (ids, fields, options) {
         var self = this;
@@ -947,7 +946,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
-        this.on_change();
+        this.trigger("dataset_changed", n_ids);
     },
 });
 instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
