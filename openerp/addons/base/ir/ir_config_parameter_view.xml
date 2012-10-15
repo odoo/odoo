@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record model="ir.ui.view" id="view_ir_config_search">
-            <field name="name">ir.config_parameter.search</field>
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
                 <search string="System Properties">
@@ -13,7 +11,6 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_ir_config_list">
-            <field name="name">ir.config_parameter.list</field>
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
                 <tree string="System Parameters">
@@ -23,7 +20,6 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_ir_config_form">
-            <field name="name">ir.config_parameter.form</field>
             <field name="model">ir.config_parameter</field>
             <field name="arch" type="xml">
                 <form string="System Parameters" version="7.0">
@@ -36,7 +32,6 @@
                 </form>
             </field>
         </record>
-
         <act_window name="System Parameters" res_model="ir.config_parameter" id="ir_config_list_action"/>
         <menuitem id="ir_config_menu" name="System Parameters" parent="menu_ir_property" action="ir_config_list_action"/>
     </data>
