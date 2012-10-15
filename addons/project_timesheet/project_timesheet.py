@@ -275,17 +275,19 @@ class account_analytic_line(osv.osv):
    def _default_account_id(self, cr, uid, context=None):
         proxy = self.pool.get('account.analytic.account')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee:
-            return employee.id
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            if employee:
+                return employee.id
         return False
 
    def _default_product(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee.product_id:
-            return employee.product_id.id
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            if employee.product_id:
+                return employee.product_id.id
         return False
 
    _defaults = {
