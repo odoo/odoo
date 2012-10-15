@@ -387,7 +387,7 @@ openerp.mail = function(session) {
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
                         'comment', 
-                        false, 
+                        'mail.mt_comment',, 
                         this.context.default_parent_id, 
                         attachments]
                     ).then(this.parent_thread.proxy('switch_new_message'));
