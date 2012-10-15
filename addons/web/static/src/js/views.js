@@ -296,9 +296,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     buttons: { "Close": function() { $(this).dialog("close"); }},
                     dialogClass: executor.klass
                 });
-                if (on_close) {
-                    this.dialog.on("dialog_close", this, on_close);
-                }
+                if(on_close)
+                    this.dialog.on_close.add(on_close);
             } else {
                 this.dialog_widget.destroy();
             }
