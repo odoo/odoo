@@ -26,7 +26,6 @@ openerp_mail_followers = function(session, mail) {
             this._super.apply(this, arguments);
             this.options.image = this.node.attrs.image || 'image_small';
             this.options.title = this.node.attrs.title || 'Followers';
-            this.options.context = this.node.attrs.context;
             this.options.comment = this.node.attrs.help || false;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.sub_model = new session.web.DataSetSearch(this,'mail.message.subtype');
@@ -55,16 +54,14 @@ openerp_mail_followers = function(session, mail) {
         bind_events: function() {
             var self = this;
             this.$('button.oe_follower')
-                .on('click', function () {
+                .on('click', function (event) {
                     if($(this).hasClass('oe_notfollow'))
                         self.do_follow();
                     else
                         self.do_unfollow();
                 });
-
-            this.$el.on('click', 'ul.oe_subtypes input', self.do_update_subscription );
-
-            this.$el.on('click', 'button.oe_invite', function(event) {
+            this.$('ul.oe_subtypes input').on('click', self.do_update_subscription);
+            this.$('button.oe_invite').on('click', function (event) {
                 action = {
                     type: 'ir.actions.act_window',
                     res_model: 'mail.wizard.invite',
@@ -93,23 +90,13 @@ openerp_mail_followers = function(session, mail) {
             return this.fetch_followers(value_  || this.get_value());
         },
 
-        set_is_follower: function(value_) {
-            for(var i in value_){
-                if(value_[i]['user_ids'][0]==this.session.uid)
-                    this.message_is_follower=true;
-                    this.display_buttons();
-                    return true;
-            }
-            this.message_is_follower=false;
-            this.display_buttons();
-            return false;
-        },
-
         fetch_followers: function (value_) {
             this.value = value_ || {};
             this.message_is_follower = (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
             if(value_)
-                return this.ds_follow.call('read', [this.value, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
+                return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
+                    .pipe(this.proxy('display_followers'), this.proxy('display_generic'))
+                    .pipe(this.proxy('display_buttons'));
         },
 
         /* Display generic info about follower, for people not having access to res_partner */
@@ -125,8 +112,6 @@ openerp_mail_followers = function(session, mail) {
                 content += ' (' + this.value.length + ')'
             }
             this.$('div.oe_mail_recthread_followers h4').html(content);
-            this.display_buttons();
-            return $.when();
         },
 
         /** Display the followers, evaluate is_follower directly */
@@ -142,6 +127,17 @@ openerp_mail_followers = function(session, mail) {
             self.set_is_follower(records);
         },
 
+        /** Computes whether the current user is in the followers */
+        set_is_follower: function(value_) {
+            this.message_is_follower = false;
+            for(var i in value_) {
+                if (value_[i]['user_ids'][0] == this.session.uid) {
+                    this.message_is_follower = true;
+                    return true;
+                }
+            }
+        },
+
         display_buttons: function () {
             if (this.message_is_follower) {
                 this.$('button.oe_follower').removeClass('oe_notfollow').addClass('oe_following');
@@ -149,7 +145,7 @@ openerp_mail_followers = function(session, mail) {
             else {
                 this.$('button.oe_follower').removeClass('oe_following').addClass('oe_notfollow');
             }
-            
+
             if (this.view.is_action_enabled('edit'))
                 this.$('span.oe_mail_invite_wrapper').hide();
             else
