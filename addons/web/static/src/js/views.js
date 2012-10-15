@@ -297,7 +297,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     dialogClass: executor.klass
                 });
                 if(on_close)
-                    this.dialog.on_close.add(on_close);
+                    this.dialog.on("closing", null, on_close);
             } else {
                 this.dialog_widget.destroy();
             }

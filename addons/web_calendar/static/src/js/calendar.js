@@ -450,6 +450,12 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.dataset = dataset;
         this.view_id = view_id;
         this.view = view;
+        this.on("closing", this, function() {
+            if (this.view.creating_event_id) {
+                scheduler.deleteEvent(this.view.creating_event_id);
+                this.view.creating_event_id = null;
+            }
+        });
     },
     start: function() {
         var self = this;
@@ -475,12 +481,6 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.view.reload_event(id);
         this.close();
     },
-    on_close: function() {
-        if (this.view.creating_event_id) {
-            scheduler.deleteEvent(this.view.creating_event_id);
-            this.view.creating_event_id = null;
-        }
-    }
 });
 
 instance.web_calendar.Sidebar = instance.web.Widget.extend({
