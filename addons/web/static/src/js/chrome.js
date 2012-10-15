@@ -1153,17 +1153,14 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
     _template: 'EmbedClient',
     init: function(parent, origin, dbname, login, key, action_id, options) {
         this._super(parent, origin);
-
-        this.dbname = dbname;
-        this.login = login;
-        this.key = key;
+        this.bind(dbname, login, key);
         this.action_id = action_id;
         this.options = options || {};
     },
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
-            return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+            return self.authenticate().pipe(function() {
                 if (!self.action_id) {
                     return;
                 }
@@ -1185,7 +1182,22 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
 
     do_action: function(action) {
         return this.action_manager.do_action(action);
-    }
+    },
+
+    authenticate: function() {
+        var s = instance.session;
+        if (s.session_is_valid() && s.db === this.dbname && s.login === this.login) {
+            return $.when();
+        }
+        return instance.session.session_authenticate(this.dbname, this.login, this.key, true);
+    },
+
+    bind: function(dbname, login, key) {
+        this.dbname = dbname;
+        this.login = login;
+        this.key = key;
+    },
+
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
