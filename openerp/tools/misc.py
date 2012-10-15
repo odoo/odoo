@@ -312,16 +312,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    from lxml.etree import tostring
-    try:
-        from lxml.html.soupparser import fromstring
-        kwargs = {}
-    except ImportError:
-        _logger.debug('tools.misc.html2plaintext: cannot use BeautifulSoup, fallback to lxml.etree.HTMLParser')
-        from lxml.etree import fromstring, HTMLParser
-        kwargs = dict(parser=HTMLParser())
-
-    tree = fromstring(html, **kwargs)
+    from lxml.etree import tostring, fromstring, HTMLParser
+    tree = fromstring(html, parser=HTMLParser())
 
     if body_id is not None:
         source = tree.xpath('//*[@id=%s]'%(body_id,))

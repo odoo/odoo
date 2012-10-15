@@ -41,6 +41,7 @@
 
 """
 
+import babel.dates
 import calendar
 import collections
 import copy
@@ -66,7 +67,6 @@ import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
-from ast import literal_eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
@@ -1812,13 +1812,7 @@ class BaseModel(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
-                #evaluate the options as python code, but send it as json to the client
-                if node.get('options'):
-                    try:
-                        node.set('options', simplejson.dumps(literal_eval(node.get('options'))))
-                    except Exception, e:
-                        _logger.exception('Invalid `options´ attribute, should be a valid python expression: %r', node.get('options'))
-                        raise except_orm('Invalid options', 'Invalid options: %r %s' % (node.get('options'), e))
+
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -2708,7 +2702,9 @@ class BaseModel(object):
                     dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
                     days = calendar.monthrange(dt.year, dt.month)[1]
 
-                    d[groupby] = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d').strftime('%B %Y')
+                    date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
+                    d[groupby] = babel.dates.format_date(
+                        date_value, format='MMMM yyyy', locale=context.get('lang', 'en_US'))
                     d['__domain'] = [(groupby, '>=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01', '%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                      (groupby, '<=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days), '%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 del alldata[d['id']][groupby]
