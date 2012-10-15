@@ -104,11 +104,11 @@
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
-                                    <group name="procurement_uom" groups="product.group_uom">
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
                                     </group>
                                 </group>
-                                <separator string="Notes for Suppliers"/>
+                                <separator string="Description for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
                             <page string="Inventory" groups="base.group_user">
@@ -160,7 +160,7 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
-                                <separator string="Notes on Quotations"/>
+                                <separator string="Description for Quotations"/>
                                 <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
                         </notebook>
@@ -412,7 +412,6 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor"/>
                 </tree>
             </field>
         </record>
@@ -426,19 +425,22 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="active"/>
+                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <label for="factor"/>
+                            <div>
+                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
+                                    e.g: 1 * (reference unit) = ratio * (this unit)
+                                </p>
+                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
+                                    e.g: 1 * (this unit) = ratio * (reference unit)
+                                </p>
+                            </div>
                         </group>
                         <group>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
-                                e.g: 1 * (reference unit) = ratio * (this unit)
-                            </p>
-                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
-                                e.g: 1 * (this unit) = ratio * (reference unit)
-                            </p>
+                            <field name="active"/>
                             <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
