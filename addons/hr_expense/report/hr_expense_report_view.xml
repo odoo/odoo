@@ -6,7 +6,7 @@
         <field name="name">hr.expense.report.tree</field>
         <field name="model">hr.expense.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'" string="Expenses Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'" create="false" string="Expenses Analysis">
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
