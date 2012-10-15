@@ -334,13 +334,10 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_inline"/>
-                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                            <field name="department_id" class="oe_inline"/>
-                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                        </h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
@@ -349,7 +346,7 @@
                             </group>
                             <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                                <field name="department_id"/>                            </group>
                         </group>
                         <div>
                             <label for="description"/>

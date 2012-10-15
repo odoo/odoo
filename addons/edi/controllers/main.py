@@ -4,14 +4,8 @@ import textwrap
 import simplejson
 import werkzeug.wrappers
 
-try:
-    # embedded
-    import openerp.addons.web.common.http as openerpweb
-    import openerp.addons.web.controllers.main as webmain
-except ImportError:
-    # standalone
-    import web.common.http as openerpweb
-    import web.controllers.main as webmain
+import openerp.addons.web.http as openerpweb
+import openerp.addons.web.controllers.main as webmain
 
 class EDI(openerpweb.Controller):
     # http://hostname:8069/edi/view?db=XXXX&token=XXXXXXXXXXX
