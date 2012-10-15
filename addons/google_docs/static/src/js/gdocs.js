@@ -16,7 +16,7 @@ var QWeb = instance.web.qweb,
             var form = self.getParent();
             form.sidebar_context().then(function (context) {
                 var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                def = ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context], function(r) {
+                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).then(function(r) {
                     if (r == 'False') {
                         var params = {
                             error: response,
@@ -27,11 +27,9 @@ var QWeb = instance.web.qweb,
                             modal: true,
                         });
                     }
-                    
-                }).done(function(){ 
-                        form.reload();
-                   });
-            })
+                    form.reload();
+                });
+            });
         }
-    })
-}
+    });
+};
