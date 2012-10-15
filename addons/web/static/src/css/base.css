@@ -2914,3 +2914,13 @@ div.ui-widget-overlay {
   -webkit-border-radius: 3px;
   border-radius: 3px;
 }
+
+@media print {
+  .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header {
+    display: none;
+  }
+
+  .openerp .oe_application .oe_form_sheet {
+    border: none;
+  }
+}
