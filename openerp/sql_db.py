@@ -215,6 +215,9 @@ class Cursor(object):
             _logger.warning(query)
             _logger.warning("SQL queries cannot contain %d or %f anymore. "
                          "Use only %s")
+        if params and not isinstance(params, (tuple, list, dict)):
+            _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
+            raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
             now = mdt.now()
