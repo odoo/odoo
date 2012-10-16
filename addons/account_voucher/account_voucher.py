@@ -42,6 +42,21 @@ class res_company(osv.osv):
 
 res_company()
 
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'income_currency_exchange_account_id': fields.related(
+            'company_id', 'income_currency_exchange_account_id',
+            type='many2one',
+            relation='account.account',
+            string="Gain Exchange Rate Account"),
+        'expense_currency_exchange_account_id': fields.related(
+            'company_id', 'expense_currency_exchange_account_id',
+            type="many2one",
+            relation='account.account',
+            string="Loss Exchange Rate Account"),
+    }
+
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
