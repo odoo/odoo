@@ -25,6 +25,7 @@ openerp.mail = function(session) {
                 */
                 for(var key in action.context){
                     if( key!='default_template_id' &&
+                        key!='default_composition_mode' &&
                         key!='default_use_template' &&
                         key!='default_is_private' &&
                         key!='default_model' &&
