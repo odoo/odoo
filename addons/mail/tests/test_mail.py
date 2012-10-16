@@ -305,7 +305,6 @@ class test_mail(TestMailMockups):
         # CASE2: test mail_thread fields
         # ----------------------------------------
 
-        group_pigs.refresh()
         subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
         self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
         self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
@@ -314,11 +313,8 @@ class test_mail(TestMailMockups):
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
-        cr, uid = self.cr, self.uid
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -344,11 +340,12 @@ class test_mail(TestMailMockups):
         # CASE1: post comment, body and subject specified
         # ----------------------------------------
 
+        # 1. Post a new comment on Pigs
         self._init_mock_build_email()
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment', subtype='mt_comment')
         message = self.mail_message.browse(cr, uid, msg_id)
         sent_emails = self._build_email_kwargs_list
-        # Test: notifications have been deleted
+        # Test: mail.mail notifications have been deleted
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id)]), 'mail.mail notifications should have been auto-deleted!')
         # Test: mail_message: subject is _subject, body is _body1 (no formatting done)
         self.assertEqual(message.subject, _subject, 'mail.message subject incorrect')
@@ -376,19 +373,18 @@ class test_mail(TestMailMockups):
         # CASE2: post an email with attachments, parent_id, partner_ids
         # ----------------------------------------
 
-        # TESTS: automatic subject, signature in body_html, attachments propagation
+        # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
-
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
         self.assertEqual(message.body, html_sanitize(_body2), 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
-        # Test: sent_email: email send by server: correct subject, body, body_alternative
+        # Test: sent_email: email send by server: correct automatic subject, body, body_alternative
         self.assertEqual(len(sent_emails), 2, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
@@ -412,13 +408,11 @@ class test_mail(TestMailMockups):
             self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
                 'mail.message attachment name / data incorrect')
 
-    def test_21_message_compose_wizard(self):
+    def test_25_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
-        cr, uid = self.cr, self.uid
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         mail_compose = self.registry('mail.compose.message')
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'})
         group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
@@ -433,7 +427,6 @@ class test_mail(TestMailMockups):
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
-        # Create partners
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -469,7 +462,6 @@ class test_mail(TestMailMockups):
         msg_pids = [partner.id for partner in message.partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
-
         self.assertEqual(len(notif_ids), 3, 'mail.message: too much notifications created')
         self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
 
@@ -530,12 +522,12 @@ class test_mail(TestMailMockups):
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
-        cr, uid = self.cr, self.uid
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        user_demo = self.res_users.browse(cr, uid, self.user_demo_id)
         group_pigs_demo = self.mail_group.browse(cr, self.user_demo_id, self.group_pigs_id)
-        user_admin = self.res_users.browse(cr, uid, uid)
+        na_count_current = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
 
-        # Demo values: check unread notification = needaction on mail.message
+        # Test: number of unread notification = needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
@@ -543,36 +535,28 @@ class test_mail(TestMailMockups):
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
-        na_count1 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        # Post 2 message on group_pigs as admin, 3 messages as demo user
+        # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
         for dummy in range(3):
             group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
 
-        # Check there are 4 new needaction on mail.message
+        # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
             ])
-        na_count = self.mail_message._needaction_count(cr, uid, domain=[])
-        self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
-
-        # Check there are 4 needaction on mail.message with particular domain
-        na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(len(notif_ids), na_count_current + 3, 'Admin should have 3 new unread notifications')
+        na_count_admin = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count_admin, na_count_current + 3, 'Admin should have 3 new needaction')
+        # Test: demo has 0 new notifications (not a follower, not receiving its own messages), and 0 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
-            ('partner_id', '=', user_admin.partner_id.id),
-            ('read', '=', False),
-            ('message_id.model','=','mail.group'),
-            ('message_id.res_id','=',self.group_pigs_id)
+            ('partner_id', '=', user_demo.partner_id.id),
+            ('read', '=', False)
             ])
-        self.assertEqual(len(notif_ids), na_count, 'posted message count does not match needaction count')
-
-        na_count3 = self.mail_message._needaction_count(cr, self.user_demo_id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count3-na_count1, 0, 'demo has 0 message: not a follower and do not follow his own messages')
-
-        na_count2 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count2-na_count1, 3, 'admin has 3 messages: 0 from itself as they are marked as read, 3 from demo')
+        self.assertEqual(len(notif_ids), na_count_current + 0, 'Demo should have 0 new unread notifications')
+        na_count_demo = self.mail_message._needaction_count(cr, self.user_demo_id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count_demo, na_count_current + 0, 'Demo should have 0 new notifications')
 
     def test_50_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""
