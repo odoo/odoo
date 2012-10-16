@@ -291,17 +291,20 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var widget = executor.widget();
         if (executor.action.target === 'new') {
             if (this.dialog === null || this.dialog.isDestroyed()) {
-                // These buttons will be overwrited by <footer> if any
                 this.dialog = new instance.web.Dialog(this, {
-                    buttons: { "Close": function() { $(this).dialog("close"); }},
+                    buttons: {"Close": function() {$(this).dialog("close")}},
                     dialogClass: executor.klass
                 });
                 if (on_close)
                     this.dialog.on("closing", null, on_close);
+                this.dialog.init_dialog();
             } else {
                 this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = executor.action.name;
+            if (widget instanceof instance.web.ViewManager) {
+                _.extend(widget.flags, {$buttons: this.dialog.$buttons,});
+            }
             this.dialog_widget = widget;
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
