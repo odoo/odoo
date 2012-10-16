@@ -180,14 +180,14 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.datasets.unread?'oe_mail_unread':'oe_mail_read'}">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{!widget.datasets.read ? 'oe_mail_undefined_read' : (widget.datasets.read=='read'?'oe_mail_read':'oe_mail_unread')}">
         <div t-attf-class="oe_mail_msg_#{widget.datasets.type} oe_semantic_html_override">
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
                 <li class="placeholder-mail-star"><t t-call="mail.thread.message.star"/></li>
-                <li t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
-                <li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
+                <li t-if="!widget.options.thread.display_on_flat and widget.datasets.read=='unread'" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
+                <li t-if="!widget.options.thread.display_on_flat and widget.datasets.read=='read'" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
                 <t t-if="(widget.datasets.is_author and widget.options.message.show_dd_delete) or widget.datasets.type == 'email'">
                     <li>

@@ -67,27 +67,25 @@ class mail_message(osv.Model):
                 pass
         return result
 
-    def _get_unread(self, cr, uid, ids, name, arg, context=None):
-        """ Compute if the message is unread by the current user. """
-        res = dict((id, {'unread': False}) for id in ids)
+    def _get_read(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is read by the current user. """
+        res = dict((id, {'read': False}) for id in ids)
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids),
-            ('read', '=', False)
+            ('message_id', 'in', ids)
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id]['unread'] = True
+            res[notif.message_id.id] = notif.read and 'read' or 'unread'
         return res
 
-    def _search_unread(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages unread by the current user. Condition is
-            inversed because we search unread message on a read column. """
+    def _search_read(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages read by the current user. """
         if domain[0][2]:
-            read_cond = '(read = false or read is null)'
+            read_cond = "(read = False OR read IS NULL)"
         else:
-            read_cond = 'read = true'
+            read_cond = "read = True"
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         cr.execute("SELECT message_id FROM mail_notification "\
                         "WHERE partner_id = %%s AND %s" % read_cond,
@@ -128,9 +126,9 @@ class mail_message(osv.Model):
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'unread': fields.function(_get_unread, fnct_search=_search_unread,
-            type='boolean', string='Unread',
-            help='Functional field to search for unread messages linked to uid'),
+        'read': fields.function(_get_read, fnct_search=_search_read,
+            type='boolean', string='Read',
+            help='Functional field to search for read messages linked to uid'),
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
@@ -141,7 +139,7 @@ class mail_message(osv.Model):
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            return [('unread', '=', True)]
+            return [('read', '=', 'unread')]
         return []
 
     def _get_default_author(self, cr, uid, context=None):
@@ -236,8 +234,6 @@ class mail_message(osv.Model):
         except (orm.except_orm, osv.except_osv):
             record_name = False
 
-
-
         return {
             'id': msg.id,
             'type': msg.type,
@@ -256,7 +252,7 @@ class mail_message(osv.Model):
             'vote_user_ids': vote_ids,
             'has_voted': has_voted,
             'has_stared': has_stared,
-            'unread': msg.unread and msg.unread['unread'] or False
+            'read': msg.read
         }
 
     def _message_read_expandable(self, cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit):
@@ -350,11 +346,6 @@ class mail_message(osv.Model):
         if context and context.get('message_loaded'):
             domain += [ ['id','not in',message_loaded_ids] ];
 
-        print ""
-        print context
-        print domain
-        print ""
-
         limit = limit or self._message_read_limit
         context = context or {}
 
@@ -366,6 +357,11 @@ class mail_message(osv.Model):
         if ids and ids!=[None]:
             for msg in self.browse(cr, uid, ids, context=context):
                 message_ids.append(msg.id)
+
+            result = []
+            for msg in self.browse(cr, uid, message_ids, context=context):
+                record = self._message_dict_get(cr, uid, msg, context=context)
+                result.append( record )
 
         # key: ID, value: tree
         if not ids:
@@ -395,14 +391,14 @@ class mail_message(osv.Model):
                             except (orm.except_orm, osv.except_osv):
                                 parent = False
 
-        result = []
-        for msg in self.browse(cr, uid, message_ids, context=context):
-            record = self._message_dict_get(cr, uid, msg, context=context)
-            result.append( record )
+            result = []
+            for msg in self.browse(cr, uid, message_ids, context=context):
+                record = self._message_dict_get(cr, uid, msg, context=context)
+                result.append( record )
+
+            result = self._message_read_expandable(cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit)
 
         result = sorted(result, key=lambda k: k['id'])
-
-        result = self._message_read_expandable(cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit)
 
         return result
 

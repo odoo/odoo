@@ -489,7 +489,7 @@ openerp.mail = function(session) {
                 'has_voted' : false,
                 'has_stared' : false,
                 'thread_level' : 0,
-                'unread' : false,
+                'read' : false,
                 'author_id' : [],
                 'attachment_ids' : [],
             }, param || {});
@@ -1110,6 +1110,7 @@ openerp.mail = function(session) {
         /*  Send the records to his parent thread */
         switch_new_message: function(records) {
             var self=this;
+            console.log(records);
             _(records).each(function(record){
                 self.browse_thread({
                     'id': record.parent_id, 
