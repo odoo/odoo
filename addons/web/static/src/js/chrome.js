@@ -70,7 +70,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: {},
-            beforeClose: function () { self.trigger("closing") },
+            beforeClose: function () {
+                self.trigger("closing");
+            },
             resizeStop: this.on_resized
         };
         for (var f in this) {
