@@ -3,6 +3,13 @@ var QWeb = instance.web.qweb,
     _t = instance.web._t;
 
     instance.web.Sidebar = instance.web.Sidebar.extend({
+       on_attachments_loaded: function(attachments) {
+            var self = this;
+            _.chain(attachments)
+                .filter(function(attachment){ if (attachment.name ==='Google Doc') return true})
+                .map(function(attachment, i){ attachment.name = _.str.sprintf(_t("%s (%s)"), attachment.name, i+1)})
+            self._super(attachments);
+       },
        redraw: function() {
            var self = this;
            this._super.apply(this, arguments);
