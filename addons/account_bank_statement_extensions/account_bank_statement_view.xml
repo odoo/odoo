@@ -56,6 +56,9 @@
             <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>
+          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="replace">
+            <field name="date" string="'Entry Date'" attrs="{'readonly':[('state','=','draft')]}" />
+          </xpath>
         </data>
       </field>
     </record>
