@@ -307,6 +307,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         return $.when.apply(null, groups_started).then(function () {
             self.on_groups_started();
             self.$el.appendTo($parent);
+            _.each(self.groups, function(group) {
+                group.compute_cards_auto_height();
+            });
         });
     },
     on_groups_started: function() {
@@ -598,7 +601,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$el.data('widget', this);
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
-        this.compute_cards_auto_height();
         var add_btn = this.$el.find('.oe_kanban_add');
         add_btn.tipsy({delayIn: 500, delayOut: 1000});
         this.$records.click(function (ev) {
