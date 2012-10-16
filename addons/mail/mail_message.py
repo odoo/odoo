@@ -322,7 +322,8 @@ class mail_message(osv.Model):
                 'nb_messages': 0,
                 'type': 'expandable', 
                 'parent_id': parent_id, 
-                'id': -1
+                'id': -1,
+                'max_limit': True
             });
 
         return result

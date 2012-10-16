@@ -137,7 +137,7 @@ openerp.mail = function(session) {
             this.options={};
             this.options.thread={};
             this.options.thread.show_header_compose = options.options.thread.show_header_compose;
-            this.options.thread.display_on_hierarchy = options.options.thread.display_on_hierarchy;
+            this.options.thread.display_on_thread = options.options.thread.display_on_thread;
             this.options.thread.show_attachment_delete = true;
             this.options.thread.show_attachment_link = true;
 
@@ -317,7 +317,7 @@ openerp.mail = function(session) {
             this.$('input[data-id]').remove();
             //this.attachment_ids=[];
             this.display_attachments();
-            if(!this.options.thread.show_header_compose || !this.options.thread.display_on_hierarchy[0]){
+            if(!this.options.thread.show_header_compose || !this.options.thread.display_on_thread[0]){
                 this.$el.hide();
             }
         },
@@ -385,12 +385,14 @@ openerp.mail = function(session) {
                 default_res_id: 0,
                 default_parent_id: false }, options.context || {});
 
-            this.datasets = {};
-            this.datasets.id = options.parameters.id || -1;
-            this.datasets.model = options.parameters.model || false;
-            this.datasets.parent_id= options.parameters.parent_id || false;
-            this.datasets.nb_messages = options.parameters.nb_messages || 0;
-            this.datasets.type = 'expandable';
+            this.datasets = {
+                'id' : options.parameters.id || -1,
+                'model' : options.parameters.model || false,
+                'parent_id' : options.parameters.parent_id || false,
+                'nb_messages' : options.parameters.nb_messages || 0,
+                'type' : 'expandable',
+                'max_limit' : options.parameters.max_limit || false,
+            };
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0] ;
@@ -463,7 +465,10 @@ openerp.mail = function(session) {
          *              will not be truncated if it does not have 110% of the parameter
          *          @param {Boolean} [show_record_name]
          *          @param {Boolean} [show_dd_delete]
-         *          @param {Boolean} [show_dd_hide]
+         *          @param {Array [A,B]} [show_reply] display the reply button on the
+         *              message for thread level between A and B. -1 for no begin or no end.
+         *          @param {Array [A,B]} [show_read_unread] display the read/unread button on the
+         *              message for thread level between A and B. -1 for no begin or no end.
          */
         init: function(parent, options) {
             this._super(parent);
@@ -510,11 +515,19 @@ openerp.mail = function(session) {
                     'message_data': options.options.message.message_data || null,
                     'show_record_name': options.options.message.show_record_name != undefined ? options.options.message.show_record_name: true,
                     'show_dd_delete': options.options.message.show_dd_delete || false,
-                    'show_dd_hide': options.options.message.show_dd_hide || false,
                     'truncate_limit': options.options.message.truncate_limit || 250,
-                    'show_hide': options.options.message.show_hide || false,
+                    'show_reply': options.options.message.show_reply || [0,-1],
+                    'show_read_unread': options.options.message.show_read_unread || [0,-1],
                 }
             };
+
+            this.datasets.show_reply = this.options.message.show_reply[0]<=0 && 
+                this.options.message.show_reply[0]>=this.datasets.thread_level &&
+                (this.options.message.show_reply[1]<0 || this.options.message.show_reply[1]<=this.datasets.thread_level);
+
+            this.datasets.show_read_unread = this.options.message.show_read_unread[0]<=0 && 
+                this.options.message.show_read_unread[0]>=this.datasets.thread_level &&
+                (this.options.message.show_read_unread[1]<0 || this.options.message.show_read_unread[1]<=this.datasets.thread_level);
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0];
@@ -787,7 +800,7 @@ openerp.mail = function(session) {
          *              for each click on "show more message"
          *          @param {Number} [expandable_default_number=5] number message show
          *              on begin before the first click on "show more message"
-         *          @param {Array [A,B]} [display_on_hierarchy] display the threads on hierarchy
+         *          @param {Array [A,B]} [display_on_thread] display the threads (hierarchy)
          *              for the thread level between A and B. -1 for no begin or no end.
          *              All thread before A are insert in the root thread.
          *              All thread after B are insert in parent thread on B level.
@@ -813,7 +826,7 @@ openerp.mail = function(session) {
                     'expandable_number': options.options.thread.expandable_number || 5,
                     'expandable_default_number': options.options.thread.expandable_default_number || 5,
                     '_expandable_max': options.options.thread.expandable_default_number || 5,
-                    'display_on_hierarchy': options.options.thread.display_on_hierarchy || [0,-1],
+                    'display_on_thread': options.options.thread.display_on_thread || [0,-1],
                     'typeof_thread': options.options.thread.typeof_thread || 'inbox',
                     '_parents': (options.options.thread._parents != undefined ? options.options.thread._parents : []).concat( [this] )
                 },
@@ -824,16 +837,17 @@ openerp.mail = function(session) {
             this.parent_message= parent.thread!= undefined ? parent : false ;
 
             var param = options.parameters
-            this.datasets = {};
-            // datasetss and internal vars
-            this.datasets.id= param.id || false;
-            this.datasets.model= param.model || false;
-            this.datasets.parent_id= param.parent_id || false;
-            this.datasets.is_private = param.is_private || false;
-            this.datasets.author_id = param.author_id || false;
-            this.datasets.thread_level = param.thread_level+1 || 0
+            // datasets and internal vars
+            this.datasets = {
+                'id' : param.id || false,
+                'model' : param.model || false,
+                'parent_id' : param.parent_id || false,
+                'is_private' : param.is_private || false,
+                'author_id' : param.author_id || false,
+                'thread_level' : param.thread_level+1 || 0,
+                'partner_ids' : []
+            };
 
-            this.datasets.partner_ids = [];
             for(var i in param.partner_ids){
                 if(param.partner_ids[i][0]!=(param.author_id ? param.author_id[0] : -1)){
                     this.datasets.partner_ids.push(param.partner_ids[i]);
@@ -885,6 +899,7 @@ openerp.mail = function(session) {
             this.message_fetch();
 
             $(document).scroll( self.on_scroll );
+            $(window).resize( self.on_scroll );
             window.setTimeout( self.on_scroll, 500 );
 
             $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$('ul.oe_mail_thread_display'));
@@ -908,17 +923,19 @@ openerp.mail = function(session) {
         */
         on_scroll: function(event){
             if(event)event.stopPropagation();
-            var last=this.messages[0];
-            if(last && last.datasets.type=="expandable"){
-                var pos = last.$el.position();
-                if(pos.top){
-                    /* bottom of the screen */
-                    var bottom = $(window).scrollTop()+$(window).height()+200;
-                    if(bottom - pos.top > 0){
-                        last.on_expandable();
+            _(this.messages).each(function(message,key){
+                if(message && message.datasets.type=="expandable" && message.datasets.max_limit){
+                    var pos = message.$el.position();
+                    if(pos.top){
+                        /* bottom of the screen */
+                        var bottom = $(window).scrollTop()+$(window).height()+200;
+                        if(bottom - pos.top > 0){
+                            message.on_expandable();
+                        }
                     }
+
                 }
-            }
+            });
         },
 
         /**
@@ -1082,7 +1099,7 @@ openerp.mail = function(session) {
             var thread_messages = self.messages;
             var thread = self;
             var flat = false;
-            var hierarchy = self.options.thread.display_on_hierarchy;
+            var hierarchy = self.options.thread.display_on_thread;
             if( hierarchy[0] < 0 ||
                 hierarchy[0] > self.datasets.thread_level ||
                 (hierarchy[1]>0 && hierarchy[1] < self.datasets.thread_level) ) {
@@ -1212,7 +1229,7 @@ openerp.mail = function(session) {
         set_value: function() {
             var self = this;
             this._super.apply(this, arguments);
-            if (! this.view.datarecord.id || session.web.Buffereddatasets.virtual_id_regex.test(this.view.datarecord.id)) {
+            if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
@@ -1237,10 +1254,12 @@ openerp.mail = function(session) {
                         'thread':{
                             'show_header_compose': show_header_compose,
                             'use_composer': show_header_compose,
-                            'display_on_hierarchy':[-1]
+                            'display_on_thread':[-1,-1]
                         },
                         'message':{
-                            'show_dd_delete': true
+                            'show_reply': [-1,-1],
+                            'show_read_unread': [-1,-1],
+                            'show_dd_delete': false
                         }
                     },
                     'parameters': {},
@@ -1332,7 +1351,6 @@ openerp.mail = function(session) {
         message_render: function (search) {
             var domain = this.options.domain.concat(this.search_results['domain']);
             var context = _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {});
-            console.log(context);
             this.thread = new mail.Thread(this, {
                     'domain' : domain,
                     'context' : context,
@@ -1341,13 +1359,12 @@ openerp.mail = function(session) {
                             'use_composer': true,
                             'show_header_compose': false,
                             'typeof_thread': context.typeof_thread || 'inbox',
-                            'display_on_hierarchy': [0,1]
+                            'display_on_thread': [0,1]
                         },
                         'message': {
-                            'show_reply': true,
-                            'show_dd_hide': true,
-                            'show_dd_delete': true,
-                            'show_hide': true,
+                            'show_reply': [0,0],
+                            'show_read_unread': [0,0],
+                            'show_dd_delete': false,
                         },
                     },
                     'parameters': {},
