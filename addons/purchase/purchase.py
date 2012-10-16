@@ -892,7 +892,7 @@ class purchase_order_line(osv.osv):
         if not pricelist_id:
             raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
         if not partner_id:
-            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+            raise osv.except_osv(_('No Supplier!'), _('Select a supplier in purchase order to choose a product.'))
 
         # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
