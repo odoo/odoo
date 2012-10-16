@@ -774,11 +774,11 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
             if (self._length) {
                 self._length -= 1;
             }
-            if (this.index !== null) {
+            if (self.index !== null) {
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
             }
-            this.trigger("dataset_changed", ids, callback, error_callback);
+            self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
     size: function () {
