@@ -10,6 +10,14 @@
             <field name="domain">[('invoice_id','=',False)]</field>
             <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new cost to invoice.
+              </p><p>
+                You will find here timesheets and purchases you did for contracts that can be reinvoiced to the customer.
+                If you want to record new jobs to invoice, you should use the timesheet menu instead.
+              </p>
+            </field>
         </record>
         <menuitem action="action_hr_tree_invoiced_all" id="menu_action_hr_tree_invoiced_all" parent="base.menu_invoiced" sequence="5"/>
 
