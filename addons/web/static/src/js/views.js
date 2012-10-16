@@ -293,7 +293,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if (this.dialog === null || this.dialog.isDestroyed()) {
                 this.dialog = new instance.web.Dialog(this, {
                     buttons: {"Close": function() {$(this).dialog("close")}},
-                    dialogClass: executor.klass
+                    dialogClass: executor.klass,
                 });
                 if (on_close)
                     this.dialog.on("closing", null, on_close);
@@ -303,7 +303,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
-                _.extend(widget.flags, {$buttons: this.dialog.$buttons,});
+                _.extend(widget.flags, {
+                    $buttons: this.dialog.$buttons,
+                    footer_to_buttons: true,
+                });
             }
             this.dialog_widget = widget;
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
@@ -496,13 +499,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     } else {
                         container.hide();
                         controller.do_hide();
-                    }
-                    // put the <footer> in the dialog's buttonpane
-                    if (self.$el.parent('.ui-dialog-content') && self.$el.find('footer')) {
-                        self.$el.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
-                        self.$el.find('footer').appendTo(
-                            self.$el.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonpane')
-                        );
                     }
                 }
             });

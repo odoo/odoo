@@ -110,6 +110,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             "not_interactible_on_create": false,
             "initial_mode": "view",
             "disable_autofocus": false,
+            "footer_to_buttons": false,
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
@@ -166,6 +167,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
+            this.options.$buttons.children().remove();
             this.$buttons.appendTo(this.options.$buttons);
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
@@ -174,6 +176,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$buttons.on('click', '.oe_form_button_edit', this.on_button_edit);
         this.$buttons.on('click', '.oe_form_button_save', this.on_button_save);
         this.$buttons.on('click', '.oe_form_button_cancel', this.on_button_cancel);
+        if (this.options.footer_to_buttons) {
+            this.$el.find('footer').appendTo(this.$buttons);
+        }
 
         this.$sidebar = this.options.$sidebar || this.$el.find('.oe_form_sidebar');
         if (!this.sidebar && this.options.$sidebar) {
