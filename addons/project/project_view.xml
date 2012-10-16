@@ -417,9 +417,9 @@
                             <field name="work_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
                                     <field name="name"/>
+                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                     <field name="date"/>
                                     <field name="user_id"/>
-                                    <field name="hours" widget="float_time" sum="Spent Hours"/>
                                 </tree>
                             </field>
                             <group>
