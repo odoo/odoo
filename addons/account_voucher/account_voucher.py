@@ -42,6 +42,21 @@ class res_company(osv.osv):
 
 res_company()
 
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'income_currency_exchange_account_id': fields.related(
+            'company_id', 'income_currency_exchange_account_id',
+            type='many2one',
+            relation='account.account',
+            string="Gain Exchange Rate Account"),
+        'expense_currency_exchange_account_id': fields.related(
+            'company_id', 'expense_currency_exchange_account_id',
+            type="many2one",
+            relation='account.account',
+            string="Loss Exchange Rate Account"),
+    }
+
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -1070,7 +1085,8 @@ class account_voucher(osv.osv):
             if line.amount == line.amount_unreconciled:
                 if not line.move_line_id.amount_residual:
                     raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
-                currency_rate_difference = line.move_line_id.amount_residual - amount
+                sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
+                currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
             move_line = {

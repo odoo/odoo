@@ -224,7 +224,7 @@
           <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_credit(objects,data['form']['date1'],data['form']['date2'])) ]] </para>
         </td>
         <td>
-          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_balance(objects,data['form']['date1'],data['form']['date2'])) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_Default_Bold_Right_9_U">[[ formatLang (sum_balance(objects,data['form']['date1'],data['form']['date2']), currency_obj = company.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -245,7 +245,7 @@
             <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_credit(account,data['form']['date1'],data['form']['date2'])) ]] </para>
           </td>
           <td>
-            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(account,data['form']['date1'],data['form']['date2']))]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_Default_Bold_Right_9_U">[[ formatLang (account_sum_balance(account,data['form']['date1'],data['form']['date2']), currency_obj = company.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -266,7 +266,7 @@
               <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['credit']) ]] </para>
             </td>
             <td>
-              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['balance']) ]] [[ company.currency_id.symbol ]]</para>
+              <para style="terp_Default_Bold_Right_9_U">[[ formatLang( move_g['balance'], currency_obj = company.currency_id) ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -290,7 +290,7 @@
                 <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['credit']) ]] </para>
               </td>
               <td>
-                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['balance']) ]] [[ company.currency_id.symbol]]</para>
+                <para style="terp_default_9_italic_Rignt">[[ formatLang( move_a['balance'], currency_obj = company.currency_id)]]</para>
               </td>
             </tr>
           </blockTable>

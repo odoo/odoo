@@ -633,13 +633,10 @@
                                 <field name="period_id" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
+                            <field name="currency" invisible="1"/>
                         </group><group>
-                            <label for="balance_start"/>
-                            <div>
-                                <field name="balance_start" class="oe_inline"/>
-                                <field name="currency" class="oe_inline"/>
-                            </div>
-                            <field name="balance_end_real"/>
+                            <field name="balance_start" widget="monetary" options='{"currency_field" : "currency"}'/>
+                            <field name="balance_end_real" widget="monetary" options='{"currency_field" : "currency"}'/>
                         </group>
                     </group>
 
@@ -1040,11 +1037,10 @@
     -->
 
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="name">account.move.line.reconcile.tree</field>
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
+                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1052,9 +1048,10 @@
                     <field name="partner_id"/>
                     <field name="account_id"/>
                     <field name="reconcile_partial_id"/>
+                    <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                </tree>
+                </tree_account_reconciliation>
             </field>
         </record>
 
@@ -1130,8 +1127,8 @@
                                         <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                     </group>
                                     <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
-                                        <field name="currency_id"/>
-                                        <field name="amount_currency"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="amount_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </group>
                                     <group string="Reconciliation">
                                         <field name="reconcile_id"/>
@@ -1177,8 +1174,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="amount_currency" groups="base.group_multi_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1545,8 +1542,7 @@
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">account_reconciliation_list</field>
+            <field name="view_mode">tree_account_reconciliation</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.
@@ -2174,7 +2170,6 @@
                         <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
-                        <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
@@ -2567,7 +2562,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
+                            <field name="currency" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -2629,12 +2624,12 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Cash Control"/>
-                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" />
-                            <field name="total_entry_encoding" />
+                            <field name="balance_start" readonly="1" string="Opening Cash Control" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <group string="Closing Balance">
-                            <field name="balance_end"/>
+                            <field name="balance_end" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                 </sheet>

@@ -32,7 +32,7 @@ Price and Cost Price.
     'author':'OpenERP SA',
     'images':['images/sale_margin.jpeg'],
     'depends':['sale_stock'],
-    'demo':[],
+    'demo':['sale_margin_demo.xml'],
     'test': ['test/sale_margin.yml'],
     'data':['security/ir.model.access.csv','sale_margin_view.xml'],
     'auto_install': False,
