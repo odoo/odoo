@@ -22,7 +22,7 @@ var _t = instance.web._t;
             var form = self.getParent();
             form.sidebar_context().then(function (context) {
                 var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context], function(r) {
+                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).then(function(r) {
                     if (r == 'False') {
                         var params = {
                             error: response,
@@ -35,7 +35,7 @@ var _t = instance.web._t;
                     }
                     form.reload();
                 });
-            })
+            });
         }
-    })
-}
+    });
+};
