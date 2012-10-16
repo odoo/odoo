@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-08 12:28+0000\n"
-"PO-Revision-Date: 2012-10-10 14:08+0000\n"
+"PO-Revision-Date: 2012-10-11 14:43+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-11 05:39+0000\n"
-"X-Generator: Launchpad (build 16118)\n"
+"X-Launchpad-Export-Date: 2012-10-13 05:00+0000\n"
+"X-Generator: Launchpad (build 16137)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -1696,7 +1696,7 @@ msgstr ""
 "* Черновик: не подтверждено и не будет запланировано до подтверждения\n"
 "* Подтверждено: в ожидании доступных ТМЦ\n"
 "* Доступно: ТМЦ зарезервированы, ожидание подтверждения.\n"
-"* В ожидании: ожидает другого перемещения, перед тем, как станет доступно "
+"* Ожидание: ожидает другого перемещения, перед тем, как станет доступно "
 "автоматически (например, изготовить на заказ)\n"
 "* Сделано: было обработано, больше не может быть изменено или отменено\n"
 "* Отменено: было отменено, больше не может быть подтверждено"
@@ -1747,7 +1747,7 @@ msgstr ""
 "ТМЦ.\n"
 " Когда ТМЦ зарезервированы состояние \"Доступно\".\n"
 " Когда комплектование выполнено, то состояние \"Сделано\".\n"
-"Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
+"Состояние \"Ожидание\", если перемещение ожидает другого перемещения."
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -3670,7 +3670,7 @@ msgstr "Заказы на доставку"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders already processed"
-msgstr ""
+msgstr "Уже обработанные заказы доставки"
 
 #. module: stock
 #: help:res.partner,property_stock_customer:0
@@ -3731,7 +3731,7 @@ msgstr "Связанное комплектование"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Year Planned"
-msgstr ""
+msgstr "Плановый год"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3743,7 +3743,7 @@ msgstr "Общее исходящее количество"
 #: selection:stock.picking,state:0
 #: report:stock.picking.list:0
 msgid "New"
-msgstr ""
+msgstr "Новый"
 
 #. module: stock
 #: help:stock.partial.move.line,cost:0
@@ -3779,7 +3779,7 @@ msgstr "Количество, оставляемое в текущей упак�
 #. module: stock
 #: view:stock.move:0
 msgid "Stock available to be delivered"
-msgstr ""
+msgstr "Запас доступный для доставки"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_invoice_onshipping
@@ -3826,7 +3826,7 @@ msgstr ""
 #. module: stock
 #: field:stock.location,chained_journal_id:0
 msgid "Chaining Journal"
-msgstr ""
+msgstr "Сцепленный журнал"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_picking_list
@@ -3842,7 +3842,7 @@ msgstr "Не хватает остатка, нельзя зарезервиро�
 #. module: stock
 #: model:stock.location,name:stock.stock_location_customers
 msgid "Customers"
-msgstr "Клиенты"
+msgstr "Заказчики"
 
 #. module: stock
 #: selection:stock.move,state:0
@@ -3855,7 +3855,7 @@ msgstr "Ожидание поступления"
 #: code:addons/stock/stock.py:1356
 #, python-format
 msgid "is cancelled."
-msgstr "отменяется."
+msgstr "отменено."
 
 #. module: stock
 #: view:stock.inventory.line:0
@@ -3888,7 +3888,7 @@ msgstr "Упаковка"
 #: view:stock.move:0
 #: view:stock.picking:0
 msgid "Date Expected"
-msgstr "Ожидаемый срок"
+msgstr "Ожидаемая дата"
 
 #. module: stock
 #: field:stock.move,auto_validate:0
@@ -4002,7 +4002,7 @@ msgstr "Черновик"
 #: model:ir.actions.report.xml,name:stock.report_stock_inventory_move
 #: report:stock.inventory.move:0
 msgid "Stock Inventory"
-msgstr "Складской учет"
+msgstr "Инвентаризация запаса"
 
 #. module: stock
 #: help:report.stock.inventory,state:0
@@ -4017,7 +4017,7 @@ msgstr ""
 " После этого состояние становится \"Подтверждено\".\n"
 " Если ТМЦ доступны состояние становится \"Доступно\".\n"
 " Когда комплектование выполнено, то состояние \"Сделано\".              \n"
-"Состояние \"В ожидании\", если перемещение ожидает другого перемещения."
+"Состояние \"Ожидание\", если перемещение ожидает другого перемещения."
 
 #. module: stock
 #: view:stock.picking:0
@@ -4227,13 +4227,17 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"При проведении оценки инвентаризации в реальном времени, корреспондирующие "
+"пункты журнала для всех входящих перемещений запасов будут отправлены на "
+"этот счёт, если нет конкретного счёта заданного по исходному месту хранения. "
+"Его также можно установить непосредственно для каждого товара."
 
 #. module: stock
 #: view:stock.move:0
 #: field:stock.partial.move,move_ids:0
 #: field:stock.return.picking,product_return_moves:0
 msgid "Moves"
-msgstr "Перемещения товаров"
+msgstr "Перемещения"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4276,7 +4280,7 @@ msgstr "Разбивающее перемещение"
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr ""
+msgstr "Дозаказ из"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:106
@@ -4326,7 +4330,7 @@ msgstr "Май"
 #: model:ir.actions.act_window,name:stock.action5
 #: view:stock.tracking:0
 msgid "Upstream traceability"
-msgstr ""
+msgstr "Восходящее отслеживание"
 
 #. module: stock
 #: model:ir.actions.report.xml,name:stock.report_location_overview_all
@@ -4362,7 +4366,7 @@ msgstr "Отчет по партиям изделий"
 #: selection:stock.location,chained_location_type:0
 #: view:stock.move:0
 msgid "Customer"
-msgstr "Клиент"
+msgstr "Заказчик"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4431,6 +4435,8 @@ msgid ""
 "By default, the pack reference is generated following the sscc standard. "
 "(Serial number + 1 check digit)"
 msgstr ""
+"По умолчанию, ссылка упаковки создана следуя стандарту sscc. (Серийный номер "
+"+ 1 контрольный знак)"
 
 #. module: stock
 #: constraint:res.partner:0
@@ -4445,6 +4451,9 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
+"Округление исходной ед.изм. не позволяет вам доставить \"%s %s\", поскольку "
+"позволяет доставить количество \"%s %s\" доставки и только округляется до "
+"\"%s %s\" применимое при ед.изм."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:213
@@ -4452,6 +4461,8 @@ msgstr ""
 msgid ""
 "Production lot quantity %d of %s is larger than available quantity (%d) !"
 msgstr ""
+"Количество в партии производства %d  %s больше, чем доступное количество "
+"(%d) !"
 
 #. module: stock
 #: constraint:product.category:0
@@ -4461,7 +4472,7 @@ msgstr "Ошибка ! Нельзя создавать рекурсивные к
 #. module: stock
 #: help:stock.move,move_dest_id:0
 msgid "Optional: next stock move when chaining them"
-msgstr "Опционально: следующее перемещение ТМЦ, при перемещении по цепочке"
+msgstr "Опционально: следующее перемещение ТМЦ при его сцеплении"
 
 #. module: stock
 #: view:report.stock.inventory:0
