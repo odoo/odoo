@@ -70,7 +70,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: {},
-            beforeClose: function () { self.close(); },
+            beforeClose: function () { self.trigger("closing") },
             resizeStop: this.on_resized
         };
         for (var f in this) {
@@ -84,6 +84,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             }
             _.extend(this.dialog_options, options);
         }
+        this.on("closing", this, this._closing);
     },
     get_options: function(options) {
         var self = this,
@@ -150,14 +151,16 @@ instance.web.Dialog = instance.web.Widget.extend({
         var res = this.start();
         return res;
     },
-    close: function() {        
+    close: function() {
+        this.$el.dialog('close');
+    },
+    _closing: function() {
         if (this.__tmp_dialog_destroying)
             return;
         if (this.dialog_options.destroy_on_close) {
             this.__tmp_dialog_closing = true;
             this.destroy();
             this.__tmp_dialog_closing = undefined;
-            this.trigger("dialog_close");
         }
     },
     on_resized: function() {

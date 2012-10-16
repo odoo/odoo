@@ -4404,9 +4404,8 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
                 self.check_exit(true);
             },
             title: this.options.title || "",
-            buttons: [{text:"tmp"}],
         }, this.$el).open();
-        this.$buttonpane = dialog.$el.dialog("widget").find(".ui-dialog-buttonpane").html("");
+        this.$buttonpane = dialog.$buttons;
         this.start();
     },
     setup_form_view: function() {
