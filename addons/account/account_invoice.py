@@ -1121,13 +1121,13 @@ class account_invoice(osv.osv):
             for field in line._all_columns.keys():
                 if line._all_columns[field].column._type == 'many2one':
                     clean_line[field] = line[field].id
-                elif line._all_columns[field].column._type == 'many2many':
-                    m2m_list = []
-                    for link in line[field]:
-                        m2m_list.append(link.id)
-                    clean_line[field] = [(6,0, m2m_list)]
-                else:
+                elif line._all_columns[field].column._type not in ['many2many','one2many']:
                     clean_line[field] = line[field]
+                elif field == 'invoice_line_tax_id':
+                    tax_list = []
+                    for tax in line[field]:
+                        tax_list.append(tax.id)
+                    clean_line[field] = [(6,0, tax_list)]
             clean_lines.append(clean_line)
         return map(lambda x: (0,0,x), clean_lines)
 
@@ -1155,7 +1155,7 @@ class account_invoice(osv.osv):
         }
         invoice_data = {}
         for field in ['name', 'reference', 'comment', 'date_due', 'partner_id', 'company_id',
-                'account_id', 'currency_id', 'payment_term', 'journal_id']:
+                'account_id', 'currency_id', 'payment_term']:
             if invoice._all_columns[field].column._type == 'many2one':
                 invoice_data[field] = invoice[field].id
             else:
