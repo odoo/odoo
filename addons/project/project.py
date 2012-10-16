@@ -1425,7 +1425,7 @@ class project_task_history_cumulative(osv.osv):
     }
 
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_event_registration')
+        tools.drop_view_if_exists(cr, 'project_task_history_cumulative')
 
         cr.execute(""" CREATE VIEW project_task_history_cumulative AS (
             SELECT
