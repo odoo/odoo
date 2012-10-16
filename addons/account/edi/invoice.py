@@ -19,9 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
-from edi.models import edi
 
 INVOICE_LINE_EDI_STRUCT = {
     'name': True,
@@ -137,9 +136,14 @@ class account_invoice(osv.osv, EDIMixin):
 
         # imported company_address = new partner address
         address_info = edi_document.pop('company_address')
+        if '__import_model' not in address_info and '__model' not in address_info:
+            # for pre-7.0 EDI format - address used to be a record of res.partner.address
+            address_info['__import_model'] = 'res.partner'
         if 'name' not in address_info:
+            # for pre-7.0 EDI format - address name was not required
             address_info['name'] = src_company_name
         address_info['type'] = 'invoice'
+        address_info['is_company'] = True
         address_info.update(partner_value)
         address_id = res_partner.edi_import(cr, uid, address_info, context=context)
 
@@ -190,7 +194,7 @@ class account_invoice(osv.osv, EDIMixin):
         invoice_type = invoice_type.startswith('in_') and invoice_type.replace('in_','out_') or invoice_type.replace('out_','in_')
         edi_document['type'] = invoice_type
 
-        #import company as a new partner
+        # import company as a new partner
         partner_id = self._edi_import_company(cr, uid, edi_document, context=context)
 
         # Set Account

@@ -20,18 +20,9 @@
 ##############################################################################
 import logging
 
+from . import controllers
 from . import models
 from . import edi_service
-from models.edi import EDIMixin, edi
-_logger = logging.getLogger(__name__)
-
-# web
-try:
-    import openerp.addons.web.controllers
-except ImportError:
-    _logger.warn(
-        """Could not load openerp-web section of EDI, EDI will not behave correctly
-
-To fix, launch openerp-web in embedded mode""")
+from .models.edi import EDIMixin, edi
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

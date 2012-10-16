@@ -24,14 +24,12 @@ import hashlib
 import json
 import logging
 import re
-import threading
 import time
 import urllib2
 
 import openerp
 import openerp.release as release
 import openerp.netsvc as netsvc
-from openerp.modules.registry import RegistryManager
 from openerp.osv import osv, fields
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
@@ -540,7 +538,7 @@ class EDIMixin(object):
         assert self._name == edi.get('__import_model') or \
                 ('__import_model' not in edi and self._name == edi.get('__model')), \
                 "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)." % \
-                   (edi['__model'], self._name)
+                   (edi.get('__model'), self._name)
 
         # First check the record is now already known in the database, in which case it is ignored
         ext_id_members = split_external_id(edi['__id'])

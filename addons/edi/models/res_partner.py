@@ -23,7 +23,6 @@ import logging
 from openerp.osv import osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
-from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 RES_PARTNER_EDI_STRUCT = {

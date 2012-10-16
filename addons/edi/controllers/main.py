@@ -1,4 +1,6 @@
-import openerp.addons.web.common.http as openerpweb
+import simplejson
+
+import openerp.addons.web.http as openerpweb
 import openerp.addons.web.controllers.main as webmain
 
 class EDI(openerpweb.Controller):
@@ -7,10 +9,17 @@ class EDI(openerpweb.Controller):
 
     @openerpweb.httprequest
     def import_url(self, req, url):
-        d = self.template(req)
-        d["init"] = 's.edi.edi_import("%s");'%(url)
-        r = webmain.html_template % d
-        return r
+        modules = webmain.module_boot(req) + ['edi']
+        modules_str = ','.join(modules)
+        modules_json = simplejson.dumps(modules)
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in webmain.manifest_list(req, modules_str, 'js'))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in webmain.manifest_list(req, modules_str, 'css'))
+        return webmain.html_template % {
+            'js': js,
+            'css': css,
+            'modules': modules_json,
+            'init': 's.edi.edi_import("%s");' % url,
+        }
 
     @openerpweb.jsonrequest
     def import_edi_url(self, req, url):
