@@ -89,7 +89,8 @@
                     <page string="Meeting Detail">
                         <group>
                             <group>
-                                <field name="date" string="Starting at"/>
+                                <field name="date" string="Starting at"
+                                    on_change="onchange_dates(date, duration, False, allday)"/>
                                 <label for="duration"/>
                                 <div>
                                     <field name="duration" widget="float_time"
