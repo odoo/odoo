@@ -1078,7 +1078,7 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
-        <li t-att-class="i[0] === widget.selected_value ? 'oe_active' : ''" t-att-data-id="i[0]">
+        <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
             <span class="label"><t t-esc="i[1]"/></span>
             <!-- are you mit ? -->
             <span class="arrow"><span></span></span>
