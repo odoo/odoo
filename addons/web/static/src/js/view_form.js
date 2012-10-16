@@ -689,7 +689,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_button_save: function() {
         var self = this;
         return this.save().then(function(result) {
-            self.trigger("save");
+            self.trigger("save", result);
             self.to_view_mode();
         });
     },
@@ -2812,7 +2812,7 @@ instance.web.form.CompletionFieldMixin = {
             self.build_domain(),
             new instance.web.CompoundContext(self.build_context(), context || {})
         );
-        pop.on("select_elements",self,function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.add_id(element_ids[0]);
             self.focus();
         });
@@ -3211,7 +3211,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
         var self = this;
-        this.dataset.on_change.add_last(function() {
+        this.dataset.on('dataset_changed', this, function() {
             self.trigger_on_change();
         });
         this.set_value([]);
@@ -3514,7 +3514,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             create_function: function(data) {
                 return self.o2m.dataset.create(data).then(function(r) {
                     self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
-                    self.o2m.dataset.on_change();
+                    self.o2m.dataset.trigger("dataset_changed", r);
                 });
             },
             write_function: function(id, data, options) {
@@ -3531,7 +3531,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
         });
-        pop.on("select_elements", self, function() {
+        pop.on("elements_selected", self, function() {
             self.o2m.reload_current_view();
         });
     },
@@ -3604,7 +3604,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                     create_function: function(data, callback, error_callback) {
                         return self.o2m.dataset.create(data).then(function(r) {
                             self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
-                            self.o2m.dataset.on_change();
+                            self.o2m.dataset.trigger("dataset_changed", r);
                         }).then(callback, error_callback);
                     },
                     read_function: function() {
@@ -3617,7 +3617,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 self.o2m.build_domain(),
                 self.o2m.build_context()
             );
-            pop.on("select_elements", self, function() {
+            pop.on("elements_selected", self, function() {
                 self.o2m.reload_current_view();
             });
         }
@@ -4042,7 +4042,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             this.m2m_field.build_context()
         );
         var self = this;
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             _.each(element_ids, function(one_id) {
                 if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
                     self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
@@ -4152,7 +4152,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                 new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
                 this.build_context()
             );
-            pop.on("select_elements", self, function(element_ids) {
+            pop.on("elements_selected", self, function(element_ids) {
                 _.each(element_ids, function(one_id) {
                     if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
                         self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
@@ -4318,9 +4318,8 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
                 self.check_exit(true);
             },
             title: this.options.title || "",
-            buttons: [{text:"tmp"}],
         }, this.$el).open();
-        this.$buttonpane = dialog.$el.dialog("widget").find(".ui-dialog-buttonpane").html("");
+        this.$buttonpane = dialog.$buttons;
         this.start();
     },
     setup_form_view: function() {
@@ -4372,12 +4371,12 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             self.view_form.do_show();
         });
     },
-    elements_selected: function(element_ids) {
-        this.trigger("select_elements",element_ids);
+    select_elements: function(element_ids) {
+        this.trigger("elements_selected", element_ids);
     },
     check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
-            this.elements_selected(this.created_elements);
+            this.select_elements(this.created_elements);
             this.created_elements = [];
         }
         this.destroy();
@@ -4488,7 +4487,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
                 var $sbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-select");
                 $sbutton.click(function() {
-                    self.elements_selected(self.selected_ids);
+                    self.select_elements(self.selected_ids);
                     self.destroy();
                 });
             });
@@ -4530,7 +4529,7 @@ instance.web.form.SelectCreateListView = instance.web.ListView.extend({
         this.popup.new_object();
     },
     select_record: function(index) {
-        this.popup.elements_selected([this.dataset.ids[index]]);
+        this.popup.select_elements([this.dataset.ids[index]]);
         this.popup.destroy();
     },
     do_select: function(ids, records) {

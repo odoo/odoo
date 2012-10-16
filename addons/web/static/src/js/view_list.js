@@ -1321,7 +1321,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 } catch (e) {
                     group_label = row_data[group_column.id].value;
                 }
-                $group_column.text(_.str.sprintf("%s (%d)",
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {

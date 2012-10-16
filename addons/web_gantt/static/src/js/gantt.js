@@ -222,7 +222,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_task_create: function() {
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.on("select_elements", self, function() {
+        pop.on("elements_selected", self, function() {
             self.reload();
         });
         pop.select_element(
