@@ -91,11 +91,16 @@ class crm_meeting(base_state, osv.Model):
                 partner_wo_email_lst.append(partner)
         if not partner_wo_email_lst:
             return {}
-        warning_msg = _('The following contacts have no email address :')
         for partner in partner_wo_email_lst:
+            recipients = "contacts"
+            if partner.customer and not partner.supplier:
+                recipients = "customers"
+            elif partner.supplier and not partner.customer:
+                recipients = "suppliers"
+            warning_msg = _('The following %s do not have an email address specified.') % (recipients,)
             warning_msg += '\n- %s' % (partner.name)
         return {'warning': {
-                    'title': _('Email addresses not found'),
+                    'title': _('Email not found'),
                     'message': warning_msg,
                     }
                 }
