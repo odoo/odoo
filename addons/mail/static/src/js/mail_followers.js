@@ -91,7 +91,6 @@ openerp_mail_followers = function(session, mail) {
 
         fetch_followers: function (value_) {
             this.value = value_ || {};
-            this.message_is_follower = this.set_is_follower(value_);
             if (value_)
                 return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
                     .pipe(this.proxy('display_followers'), this.proxy('display_generic'))
@@ -101,6 +100,7 @@ openerp_mail_followers = function(session, mail) {
         /* Display generic info about follower, for people not having access to res_partner */
         display_generic: function (error, event) {
             event.preventDefault();
+            this.message_is_follower = false;
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
             // format content: Followers (You and 0 other) // Followers (3)
             var content = this.options.title;
@@ -116,6 +116,7 @@ openerp_mail_followers = function(session, mail) {
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
+            this.message_is_follower = this.set_is_follower(records);
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
             this.$('div.oe_mail_recthread_followers h4').html(this.options.title + (records.length>=5 ? ' (' + records.length + ')' : '') );
             for(var i=0; i<records.length&&i<5; i++) {
@@ -126,9 +127,9 @@ openerp_mail_followers = function(session, mail) {
         },
 
         /** Computes whether the current user is in the followers */
-        set_is_follower: function(value_) {
-            for(var i in value_) {
-                if (value_[i]['user_ids'][0] == this.session.uid) {
+        set_is_follower: function(records) {
+            for(var i in records) {
+                if (records[i]['user_ids'][0] == this.session.uid) {
                     return true;
                 }
             }
