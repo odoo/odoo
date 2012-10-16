@@ -46,7 +46,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     load: function() {
         var self = this;
         this.$el.find('.oe_systray_shortcuts_items').empty();
-        return this.rpc('/web/shortcuts/list', {}, function(shortcuts) {
+        return this.rpc('/web/shortcuts/list', {}).then(function(shortcuts) {
             _.each(shortcuts, function(sc) {
                 self.trigger('display', sc);
             });
@@ -80,7 +80,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
             id = $link.data('id');
         self.session.active_id = id;
         // TODO: Use do_action({menu_id: id, type: 'ir.actions.menu'})
-        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
+        self.rpc('/web/menu/action', {'menu_id': id}).then(function(ir_menu_data) {
             if (ir_menu_data.action.length){
                 instance.webclient.user_menu.on_action({action_id: ir_menu_data.action[0][2].id});
             }
