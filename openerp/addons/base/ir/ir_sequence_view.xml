@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- Sequences -->
+        <record id="sequence_view" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <form string="Sequences" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="active" groups="base.group_no_one"/>
+                    </group>
+                    <notebook>
+                    <page string="Sequence">
+                        <group col="4">
+                            <field name="prefix"/>
+                            <field name="suffix"/>
+                            <field name="padding"/>
+                            <field name="number_increment"/>
+                            <field name="number_next"/>
+                            <field name="implementation"/>
+                        </group>
+                        <group col="3" string="Legend (for prefix, suffix)">
+                            <group>
+                                <label colspan="2" string="Current Year with Century: %%(year)s"/>
+                                <label colspan="2" string="Current Year without Century: %%(y)s"/>
+                                <label colspan="2" string="Month: %%(month)s"/>
+                                <label colspan="2" string="Day: %%(day)s"/>
+                            </group>
+                            <group>
+                                <label colspan="2" string="Day of the Year: %%(doy)s"/>
+                                <label colspan="2" string="Week of the Year: %%(woy)s"/>
+                                <label colspan="2" string="Day of the Week (0:Monday): %%(weekday)s"/>
+                            </group>
+                            <group>
+                                <label colspan="2" string="Hour 00->24: %%(h24)s"/>
+                                <label colspan="2" string="Hour 00->12: %%(h12)s"/>
+                                <label colspan="2" string="Minute: %%(min)s"/>
+                                <label colspan="2" string="Second: %%(sec)s"/>
+                            </group>
+                        </group>
+                    </page>
+                    </notebook>
+                   </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="sequence_view_tree" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <tree string="Sequences">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="prefix"/>
+                    <field name="padding"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="number_next"/>
+                    <field name="number_increment"/>
+                    <field name="implementation"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_sequence_search" model="ir.ui.view">
+            <field name="model">ir.sequence</field>
+            <field name="arch" type="xml">
+                <search string="Sequences">
+                    <field name="name" string="Sequence"/>
+                    <field name="code"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
+            </field>
+        </record>
+        <record id="ir_sequence_form" model="ir.actions.act_window">
+            <field name="name">Sequences</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.sequence</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sequence_view_tree"/>
+            <field name="context">{'active_test': False}</field>
+        </record>
+        <menuitem action="ir_sequence_form" id="menu_ir_sequence_form" parent="next_id_5"/>
+
+        <!-- Sequences Types -->
+        <record id="sequence_type_form_view" model="ir.ui.view">
+            <field name="model">ir.sequence.type</field>
+            <field name="arch" type="xml">
+                <form string="Sequence Type" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                    </group>
+                   </sheet> 
+                </form>
+            </field>
+        </record>
+        <record id="sequence_type_tree_view" model="ir.ui.view">
+            <field name="model">ir.sequence.type</field>
+            <field name="arch" type="xml">
+                <tree string="Sequence Type">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_sequence_type_search" model="ir.ui.view">
+            <field name="model">ir.sequence.type</field>
+            <field name="arch" type="xml">
+                <search string="Sequences Type">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Sequence Type"/>
+                </search>
+            </field>
+        </record>
+        <record id="ir_sequence_type" model="ir.actions.act_window">
+            <field name="name">Sequence Codes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.sequence.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field eval="False" name="view_id"/>
+        </record>
+        <menuitem action="ir_sequence_type" id="menu_ir_sequence_type"
+            groups="base.group_no_one"
+            parent="base.next_id_5"/>
+
+    </data>
+</openerp>

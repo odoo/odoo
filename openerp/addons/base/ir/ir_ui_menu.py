@@ -316,9 +316,5 @@ class ir_ui_menu(osv.osv):
         'sequence' : 10,
     }
     _order = "sequence,id"
-ir_ui_menu()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

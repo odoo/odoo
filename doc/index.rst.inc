@@ -6,6 +6,7 @@ OpenERP Server
    :maxdepth: 1
 
    import
+   module-versioning
    test-framework
 
 Changed in 7.0
