@@ -33,7 +33,6 @@ Keep track of Wiki groups, pages, and history.
     'author': ['OpenERP SA', 'Axelor'],
     'website': 'http://openerp.com',
     'depends': ['knowledge'],
-    'web_depends': ['widget_wiki'],
     'init_xml': [],
     'update_xml': [
         'wizard/wiki_wiki_page_open_view.xml',
@@ -51,7 +50,6 @@ Keep track of Wiki groups, pages, and history.
     'installable': True,
     'auto_install': False,
     'certificate': '0086363630317',
-    'web': True,
     'images': ['images/create_index.jpeg','images/page_history.jpeg','images/wiki_groups.jpeg','images/wiki_pages.jpeg'],
     'js': ['static/src/lib/wiky/wiky.js', 'static/src/js/wiki.js'],
 }
