@@ -949,6 +949,7 @@ class sale_order_line(osv.osv):
                 result['product_uos'] = product_obj.uos_id.id
                 result['product_uos_qty'] = qty * product_obj.uos_coeff
             else:
+                result['product_uom'] = default_uom
                 result['product_uos'] = False
                 result['product_uos_qty'] = qty
             result['th_weight'] = q * product_obj.weight        # Round the quantity up
