@@ -652,11 +652,13 @@ openerp.mail = function(session) {
             // if this message is read, all childs message display is read
             var ids = [this.datasets.id].concat( this.get_child_ids() );
             var read = $(event.srcElement).hasClass("oe_read");
-            this.$el.removeClass("oe_mail_"+(read?"un":"")+"read").addClass("oe_mail_"+(read?"":"un")+"read");
-            if( (read && this.options.thread.typeof_thread=='inbox') ||
-                (!read && this.options.thread.typeof_thread=='archives')) {
+            this.$el.removeClass("oe_mail_" + (read?"un":"") + "read").addClass("oe_mail_" + (read?"":"un") + "read");
+
+            if( (read && this.options.thread.typeof_thread == 'inbox') ||
+                (!read && this.options.thread.typeof_thread == 'archives')) {
                 this.animated_destroy({fadeTime:250});
             }
+
             this.ds_notification.call('set_message_read', [ids,read]);
             return false;
         },
@@ -736,12 +738,16 @@ openerp.mail = function(session) {
         on_star: function (event) {
             event.stopPropagation();
             var self=this;
+            var button = self.$('button.oe_mail_starbox:first');
             return this.ds_message.call('star_toggle', [[self.datasets.id]]).pipe(function(star){
                 self.datasets.has_stared=star;
                 if(self.datasets.has_stared){
-                    self.$('button.oe_mail_starbox:first').addClass('oe_stared');
+                    button.addClass('oe_stared');
                 } else {
-                    self.$('button.oe_mail_starbox:first').removeClass('oe_stared');
+                    button.removeClass('oe_stared');
+                    if( self.options.thread.typeof_thread == 'stared' ) {
+                        self.animated_destroy({fadeTime:250});
+                    }
                 }
             });
             return false;
@@ -1021,8 +1027,6 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.datasets.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
-            console.log(fetch_domain, 0, fetch_context, this.context.default_parent_id);
-
             return this.ds_message.call('message_read', [ids, fetch_domain, 0, fetch_context, this.context.default_parent_id || undefined]
                 ).then(function (records) { self.switch_new_message(records); });
         },
@@ -1161,7 +1165,6 @@ openerp.mail = function(session) {
         /*  Send the records to his parent thread */
         switch_new_message: function(records) {
             var self=this;
-            console.log(records);
             _(records).each(function(record){
                 self.browse_thread({
                     'id': record.parent_id, 

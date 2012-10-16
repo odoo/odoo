@@ -186,8 +186,8 @@
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
                 <li class="placeholder-mail-star"><t t-call="mail.thread.message.star"/></li>
-                <li t-if="!widget.options.thread.display_on_hierarchy[0] and widget.datasets.read=='unread'" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
-                <li t-if="!widget.options.thread.display_on_hierarchy[0] and widget.datasets.read=='read'" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
+                <li t-if="!widget.options.thread.display_on_hierarchy[0]" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
+                <li t-if="!widget.options.thread.display_on_hierarchy[0]" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
                 <t t-if="(widget.datasets.is_author and widget.options.message.show_dd_delete) or widget.datasets.type == 'email'">
                     <li>
