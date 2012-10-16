@@ -260,6 +260,8 @@ class mail_message(osv.Model):
         create the expandable message for all parent message read
         this function is used by message_read
         """
+        # sort for group items
+        tree = sorted(tree, key=lambda k: k['id'])
 
         tree_not = []   
         # expandable for not show message
@@ -323,9 +325,6 @@ class mail_message(osv.Model):
                 'id': -1
             });
 
-
-        result = sorted(result, key=lambda k: k['id'])
-
         return result
 
     def message_read(self, cr, uid, ids=False, domain=[], level=0, context=None, parent_id=False, limit=None):
@@ -352,54 +351,58 @@ class mail_message(osv.Model):
         tree = []
         message_ids = []
         record = None
+        result = []
 
         # select ids
         if ids and ids!=[None]:
             for msg in self.browse(cr, uid, ids, context=context):
-                message_ids.append(msg.id)
-
-            result = []
-            for msg in self.browse(cr, uid, message_ids, context=context):
-                record = self._message_dict_get(cr, uid, msg, context=context)
-                result.append( record )
+                if msg.id not in message_ids:
+                    message_ids.append(msg.id)
+                    record = self._message_dict_get(cr, uid, msg, context=context)
+                    result.append( record )
 
         # key: ID, value: tree
         if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
             for msg in self.browse(cr, uid, ids, context=context):
                 # if not in tree and not in message_loded list
-                if msg not in tree and msg.id not in message_loaded_ids :
+                if msg.id not in message_ids and msg.id not in message_loaded_ids :
                     message_ids.append(msg.id)
                     tree.append(msg)
 
+                    #try to get parent message
                     try:
                         parent = msg.parent_id
                         parent = parent.parent_id
                     except (orm.except_orm, osv.except_osv):
                         parent = False
 
+                    # get all parented message if the user have the access
                     while parent and parent.id != parent_id:
                         parent_id = msg.parent_id.id
-                        if msg.parent_id.id not in tree:
+                        if msg.parent_id not in tree and parent_id not in message_loaded_ids:
                             tree.append(parent)
                             # if not in tree and not in message_loded list
-                            if parent.id not in message_loaded_ids :
+                            if parent.id not in message_ids and parent.id not in message_loaded_ids :
                                 message_ids.append(parent.id)
 
+                            #try to get parent message
                             try:
                                 parent = msg.parent_id
                             except (orm.except_orm, osv.except_osv):
                                 parent = False
+                        else:
+                            parent = False
 
-            result = []
+            # record the dic of message
             for msg in self.browse(cr, uid, message_ids, context=context):
                 record = self._message_dict_get(cr, uid, msg, context=context)
                 result.append( record )
 
+            # get the child expandable messages for the tree
             result = self._message_read_expandable(cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit)
 
         result = sorted(result, key=lambda k: k['id'])
-
         return result
 
     def user_free_attachment(self, cr, uid, context=None):
