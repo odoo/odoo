@@ -134,6 +134,20 @@ class mrp_bom(osv.osv):
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
 
+    def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (list, tuple)) and not ids:
+            return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+        reads = self.read(cr, uid, ids, ['code','product_id'], context=context)
+        res = []
+        for record in reads:
+            name = self.pool.get('product.product').browse(cr, uid, record['product_id'][0], context=context).name
+            if record['code']: 
+                name = name +' - '+ record['code']
+            res.append((record['id'], name))
+        return res
+
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         """ Gets child bom.
         @param self: The object pointer
@@ -192,7 +206,6 @@ class mrp_bom(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
@@ -263,7 +276,7 @@ class mrp_bom(osv.osv):
         (_check_product, 'BoM line product should not be same as BoM product.', ['product_id']),
     ]
 
-    def onchange_product_id(self, cr, uid, ids, product_id, name, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
@@ -271,7 +284,7 @@ class mrp_bom(osv.osv):
         """
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
-            return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
+            return {'value': {'product_uom': prod.uom_id.id}}
         return {}
 
     def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
@@ -371,7 +384,7 @@ class mrp_bom(osv.osv):
         if default is None:
             default = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update(name=_("%s (copy)") % (bom_data['name']), bom_id=False)
+        default.update(bom_id=False)
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
     def create(self, cr, uid, vals, context=None):
