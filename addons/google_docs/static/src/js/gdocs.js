@@ -8,7 +8,7 @@ var QWeb = instance.web.qweb,
            this._super.apply(this, arguments);
            self.$el.find('.oe_sidebar_add_attachment').after(QWeb.render('Google_doc', {widget: self}))
            self.$el.find('.oe_sidebar_add_google_doc').on('click', function (e) {
-                                self.on_google_doc();
+                self.on_google_doc();
             });
         },
         on_google_doc: function() {
@@ -16,7 +16,7 @@ var QWeb = instance.web.qweb,
             var form = self.getParent();
             form.sidebar_context().then(function (context) {
                 var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                def = ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context], function(r) {
+                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).then(function(r) {
                     if (r == 'False') {
                         var params = {
                             error: response,
@@ -27,11 +27,10 @@ var QWeb = instance.web.qweb,
                             modal: true,
                         });
                     }
-                    
-                }).done(function(){ 
-                        form.reload();
-                   });
-            })
+                }).done(function(){
+                    form.reload();
+                });
+            });
         }
-    })
-}
+    });
+};
