@@ -202,6 +202,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 domain.push([self.group_by, '=', new_record[0][0]]);
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model, self.dataset.get_context(), domain);
                 var datagroup = {
+                    get: function(key) {
+                        return this[key];
+                    },
                     value: new_record[0],
                     length: 0,
                     aggregates: {},
@@ -225,8 +228,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
-            self.datagroup = new instance.web.DataGroup(self, self.dataset.model, domain, context, self.group_by ? [self.group_by] : []);
-            self.datagroup.list(self.fields_keys, self.do_process_groups, self.do_process_dataset);
+            var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
+            $.when(grouping).then(function(groups) {
+                if (groups) {
+                    self.do_process_groups(groups);
+                } else {
+                    self.do_process_dataset();
+                }
+            })
         });
     },
     do_process_groups: function(groups) {
@@ -238,7 +247,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
-                    new instance.web.CompoundContext(self.dataset.get_context(), group.context), group.domain);
+                    new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
                     .pipe(function(records) {
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
@@ -252,7 +261,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         });
         self.do_clear_groups();
     },
-    do_process_dataset: function(dataset) {
+    do_process_dataset: function() {
         var self = this;
         this.$el.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
@@ -516,8 +525,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.aggregates = {};
         this.value = this.title = null;
         if (this.group) {
-            this.value = group.value;
-            this.title = group.value;
+            this.value = group.get('value');
+            this.title = group.get('value');
             if (this.value instanceof Array) {
                 this.title = this.value[1];
                 this.value = this.value[0];
@@ -525,11 +534,11 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             var field = this.view.group_by_field;
             if (!_.isEmpty(field)) {
                 try {
-                    this.title = instance.web.format_value(group.value, field, false);
+                    this.title = instance.web.format_value(group.get('value'), field, false);
                 } catch(e) {}
             }
             _.each(this.view.aggregates, function(value, key) {
-                self.aggregates[value] = group.aggregates[key];
+                self.aggregates[value] = group.get('aggregates')[key];
             });
         }
 
@@ -540,7 +549,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var key = this.view.group_by + '-' + this.value;
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
-                folded: group?group.folded:false
+                folded: group ? group.get('folded') : false
             };
         }
         this.state = this.view.state.groups[key];
@@ -674,7 +683,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_action_edit: function() {
         var self = this;
         self.do_action({
-            res_id: this.group.value[0],
+            res_id: this.value,
             name: _t("Edit column"),
             res_model: self.view.group_by_field.relation,
             views: [[false, 'form']],
@@ -695,7 +704,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_action_delete: function() {
         var self = this;
         if (confirm(_t("Are you sure to remove this column ?"))) {
-            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.group.value[0]]).then(function(r) {
+            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.value]).then(function(r) {
                 self.view.do_reload();
             });
         }
