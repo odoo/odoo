@@ -247,7 +247,7 @@
             <para style="P5">[[ line['acc_no'] ]]</para>
           </td>
           <td>
-            <para style="P8">[[formatLang(line['bysal'])]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+            <para style="P8">[[formatLang(line['bysal'], currency_obj = company.currency_id) ]]</para>
           </td>
           <td>
             <para style="P5">[[ line['debit_credit'] ]]</para>
@@ -296,7 +296,7 @@
             <para style="P5">[[ line['ifsc_code'] ]]</para>
           </td>
           <td>
-            <para style="P8">[[formatLang(line['bysal'])]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+            <para style="P8">[[formatLang(line['bysal'], currency_obj = company.currency_id) ]]</para>
           </td>
           <td>
             <para style="P5">[[ line['debit_credit'] ]]</para>
@@ -321,7 +321,7 @@
           <para style="P4"/>
         </td>
         <td>
-          <para style="P4"><font face="Helvetica" size="6.0">[[ o.line_ids==[] and removeParentNode('para') ]]</font>[[ formatLang(get_bysal_total()) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+          <para style="P4"><font face="Helvetica" size="6.0">[[ o.line_ids==[] and removeParentNode('para') ]]</font>[[ formatLang(get_bysal_total(), currency_obj = company.currency_id) ]]</para>
         </td>
         <td>
           <para style="P4">
@@ -347,7 +347,7 @@
           <para style="P4"/>
         </td>
         <td>
-          <para style="P4"><font face="Helvetica" size="6.0">[[ o.line_ids==[] and removeParentNode('para') ]]</font>[[ formatLang(get_bysal_total()) ]] [[ (company.currency_id and company.currency_id.symbol) or '' ]]</para>
+          <para style="P4"><font face="Helvetica" size="6.0">[[ o.line_ids==[] and removeParentNode('para') ]]</font>[[ formatLang(get_bysal_total(), currency_obj = company.currency_id) ]]</para>
         </td>
         <td>
           <para style="P4">
