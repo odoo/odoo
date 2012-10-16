@@ -61,7 +61,7 @@
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
+                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)" domain="[('to_invoice','!=', False)]"/>
                 </field>
             </field>
         </record>
