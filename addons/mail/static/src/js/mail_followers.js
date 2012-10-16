@@ -53,13 +53,12 @@ openerp_mail_followers = function(session, mail) {
 
         bind_events: function() {
             var self = this;
-            this.$('button.oe_follower')
-                .on('click', function (event) {
-                    if($(this).hasClass('oe_notfollow'))
-                        self.do_follow();
-                    else
-                        self.do_unfollow();
-                });
+            this.$('button.oe_follower').on('click', function (event) {
+                if($(this).hasClass('oe_notfollow'))
+                    self.do_follow();
+                else
+                    self.do_unfollow();
+            });
             this.$('ul.oe_subtypes input').on('click', self.do_update_subscription);
             this.$('button.oe_invite').on('click', function (event) {
                 action = {
@@ -87,13 +86,13 @@ openerp_mail_followers = function(session, mail) {
 
         set_value: function(value_) {
             this.reinit();
-            return this.fetch_followers(value_  || this.get_value());
+            return this.fetch_followers(value_ || this.get_value());
         },
 
         fetch_followers: function (value_) {
             this.value = value_ || {};
-            this.message_is_follower = (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
-            if(value_)
+            this.message_is_follower = this.set_is_follower(value_);
+            if (value_)
                 return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
                     .pipe(this.proxy('display_followers'), this.proxy('display_generic'))
                     .pipe(this.proxy('display_buttons'));
@@ -114,7 +113,7 @@ openerp_mail_followers = function(session, mail) {
             this.$('div.oe_mail_recthread_followers h4').html(content);
         },
 
-        /** Display the followers, evaluate is_follower directly */
+        /** Display the followers */
         display_followers: function (records) {
             var self = this;
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
@@ -124,18 +123,16 @@ openerp_mail_followers = function(session, mail) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             }
-            self.set_is_follower(records);
         },
 
         /** Computes whether the current user is in the followers */
         set_is_follower: function(value_) {
-            this.message_is_follower = false;
             for(var i in value_) {
                 if (value_[i]['user_ids'][0] == this.session.uid) {
-                    this.message_is_follower = true;
                     return true;
                 }
             }
+            return false;
         },
 
         display_buttons: function () {
@@ -208,7 +205,6 @@ openerp_mail_followers = function(session, mail) {
                         self.display_subtypes(true);
                     });
             }
-
         },
 
     });

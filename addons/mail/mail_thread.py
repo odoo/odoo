@@ -94,10 +94,9 @@ class mail_thread(osv.AbstractModel):
 
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
-            - message_is_follower: is uid in the document followers
             - message_subtype_data: data about document subtypes: which are
                 available, which are followed if any """
-        res = dict((id, dict(message_subtype_data='', message_is_follower=False)) for id in ids)
+        res = dict((id, dict(message_subtype_data='')) for id in ids)
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # find current model subtypes, add them to a dictionary
@@ -116,7 +115,6 @@ class mail_thread(osv.AbstractModel):
         ], context=context)
         for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
-            res[fol.res_id]['message_is_follower'] = True
             for subtype in fol.subtype_ids:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
@@ -139,9 +137,12 @@ class mail_thread(osv.AbstractModel):
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        res = dict((res_id, []) for res_id in ids)
+        res = dict((id, dict(message_follower_ids=[], message_is_follower=False)) for id in ids)
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids):
-            res[fol.res_id].append(fol.partner_id.id)
+            res[fol.res_id]['message_follower_ids'].append(fol.partner_id.id)
+            if fol.partner_id.id == user_pid:
+                res[fol.res_id]['message_is_follower'] = True
         return res
 
     def _set_followers(self, cr, uid, id, name, value, arg, context=None):
@@ -195,15 +196,11 @@ class mail_thread(osv.AbstractModel):
         return res
 
     _columns = {
-        'message_is_follower': fields.function(_get_subscription_data,
-            type='boolean', string='Is a Follower', multi='_get_subscription_data,'),
-        'message_subtype_data': fields.function(_get_subscription_data,
-            type='text', string='Subscription data', multi="_get_subscription_data",
-            help="Holds data about the subtypes. The content of this field "\
-                  "is a structure holding the current model subtypes, and the "\
-                  "current document followed subtypes."),
+        'message_is_follower': fields.function(_get_followers,
+            type='boolean', string='Is a Follower', multi='_get_followers,'),
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
-                fnct_search=_search_followers, type='many2many', obj='res.partner', string='Followers'),
+                fnct_search=_search_followers, type='many2many',
+                obj='res.partner', string='Followers', multi='_get_followers'),
         'message_comment_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
             string='Comments and emails',

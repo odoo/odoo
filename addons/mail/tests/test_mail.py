@@ -135,7 +135,9 @@ class test_mail(TestMailMockups):
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
-        self.user_demo = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+        # Test users
+        self.user_demo_id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+        self.user_admin = self.res_users.browse(self.cr, self.uid, self.uid)
 
         # Mock send_get_mail_body to test its functionality without other addons override
         self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
@@ -148,6 +150,7 @@ class test_mail(TestMailMockups):
         # create a 'pigs' group that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+        self.group_pigs = self.mail_group.browse(self.cr, self.uid, self.group_pigs_id)
 
     def tearDown(self):
         # Remove mocks
@@ -155,6 +158,7 @@ class test_mail(TestMailMockups):
         super(test_mail, self).tearDown()
 
     def test_00_message_process(self):
+        """ Testing incoming emails processing. """
         cr, uid = self.cr, self.uid
         # Incoming mail creates a new mail_group "frogs"
         self.assertEqual(self.mail_group.search(cr, uid, [('name', '=', 'frogs')]), [])
@@ -193,18 +197,15 @@ class test_mail(TestMailMockups):
         self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
                          'plaintext mail incorrectly parsed')
 
-    def test_10_many2many_reference_field(self):
+    def test_10_followers_function_field(self):
         """ Tests designed for the many2many function field 'follower_ids'.
             We will test to perform writes using the many2many commands 0, 3, 4,
             5 and 6. """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
 
-        # Create partner Bert Poilu
+        # Data: create partner Bert Poilu
         partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu'})
-
-        # Create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
+        # Data: create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
         group_dummy_id = self.mail_group.create(cr, uid,
             {'name': 'Dummy group'})
         self.mail_followers.create(cr, uid,
@@ -257,9 +258,7 @@ class test_mail(TestMailMockups):
 
     def test_11_message_followers_and_subtypes(self):
         """ Tests designed for the subscriber API as well as message subtypes """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         # Data: user Raoul
         user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul'})
         user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
@@ -281,7 +280,6 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(len(follower_ids), 2, 'There should be 2 Pigs fans')
         self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]), 'Admin and Raoul should be the only 2 Pigs fans')
         # Test: Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_raoul.partner_id.id)])
@@ -308,10 +306,11 @@ class test_mail(TestMailMockups):
         # ----------------------------------------
 
         group_pigs.refresh()
-        self.assertEqual(set(group_pigs.message_subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
-        self.assertFalse(group_pigs.message_subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
-        self.assertTrue(group_pigs.message_subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
-        self.assertTrue(group_pigs.message_subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
+        subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
+        self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
+        self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
+        self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
@@ -533,7 +532,7 @@ class test_mail(TestMailMockups):
         """ Tests for mail.message needaction. """
         cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        group_pigs_demo = self.mail_group.browse(cr, self.user_demo, self.group_pigs_id)
+        group_pigs_demo = self.mail_group.browse(cr, self.user_demo_id, self.group_pigs_id)
         user_admin = self.res_users.browse(cr, uid, uid)
 
         # Demo values: check unread notification = needaction on mail.message
@@ -569,7 +568,7 @@ class test_mail(TestMailMockups):
             ])
         self.assertEqual(len(notif_ids), na_count, 'posted message count does not match needaction count')
 
-        na_count3 = self.mail_message._needaction_count(cr, self.user_demo, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        na_count3 = self.mail_message._needaction_count(cr, self.user_demo_id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
         self.assertEqual(na_count3-na_count1, 0, 'demo has 0 message: not a follower and do not follow his own messages')
 
         na_count2 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
