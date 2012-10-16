@@ -107,12 +107,6 @@
                                 states="draft,pending" />
                         <button name="case_close" string="Done" type="object" class="oe_highlight"
                                 states="open,pending"/>
-                        <button name="case_refuse" string="Refuse" type="object" class="oe_highlight"
-                                states="draft,open,pending"/>
-                        <button name="stage_previous" string="Previous Stage" type="object"
-                                states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="stage_next" string="Next Stage" type="object"
-                                states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
                         <button name="case_reset" string="Reset to Draft" type="object" 
                                 states="cancel,done"/>
                         <button name="case_cancel" string="Cancel" type="object" 
