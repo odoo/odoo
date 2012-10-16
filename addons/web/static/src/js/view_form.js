@@ -845,7 +845,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
-                } else if (f.name !== 'id' && (!self.datarecord.id || (!f.get("readonly") && f._dirty_flag))) {
+                } else if (f.name !== 'id' && !f.get("readonly") && (!self.datarecord.id || f._dirty_flag)) {
                     // Special case 'id' field, do not save this field
                     // on 'create' : save all non readonly fields
                     // on 'edit' : save non readonly modified fields
