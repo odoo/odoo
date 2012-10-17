@@ -1,7 +1,7 @@
 openerp.google_docs = function(instance, m) {
-var QWeb = instance.web.qweb,
-    _t = instance.web._t;
-//{}
+var _t = instance.web._t,
+    QWeb = instance.web.qweb;
+
     instance.web.Sidebar = instance.web.Sidebar.extend({
         on_attachments_loaded: function(attachments) {
             var self = this;
