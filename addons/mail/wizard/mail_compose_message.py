@@ -220,7 +220,6 @@ class mail_compose_message(osv.TransientModel):
         if context is None:
             context = {}
         active_ids = context.get('active_ids')
-        print 'odefnzeofiznpenf'
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
