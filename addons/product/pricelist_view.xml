@@ -119,7 +119,7 @@
                     <field name="name" string="Products Price"/>
                     <field name="type"/>
                     <field name="active" />
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                 </search>
             </field>
         </record>
@@ -132,7 +132,7 @@
                 <tree string="Products Price List">
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="active" />
                 </tree>
             </field>
@@ -149,7 +149,7 @@
                     <group col="4">
                         <field name="active"/>
                         <field name="type"/>
-                        <field name="currency_id"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                     <field name="version_id">
@@ -219,7 +219,7 @@
         </record>
         <menuitem
             action="product_pricelist_action2" id="menu_product_pricelist_action2"
-            parent="base.menu_base_config" sequence="20" groups="product.group_sale_pricelist"/>
+            parent="product.menu_product_pricelist_main" sequence="1" groups="product.group_sale_pricelist"/>
 
         <record id="product_price_type_view" model="ir.ui.view">
             <field name="name">product.price.type.form</field>
@@ -230,7 +230,7 @@
                         <field name="name"/>
                         <field name="active"/>
                         <field name="field"/>
-                        <field name="currency_id"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
                     </group>
                 </form>
             </field>

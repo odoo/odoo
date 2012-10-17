@@ -10,12 +10,10 @@
                 <search string="Product">
                    <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
-                   <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
+                   <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                    <separator/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
-                   <field name="categ_id" operator="child_of"/>
+                   <field name="categ_id"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <field name="company_id" groups="base.group_multi_company"/>
@@ -39,6 +37,7 @@
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="qty_available"/>
@@ -59,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Product" version="7.0">
                     <sheet>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_right"/>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Product Name"/>
@@ -72,8 +71,6 @@
                             <div name="options" groups="base.group_user">
                                 <field name="sale_ok"/>
                                 <label for="sale_ok"/>
-                                <field name="purchase_ok"/>
-                                <label for="purchase_ok"/>
                             </div>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
@@ -103,16 +100,15 @@
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group>
-                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
+                                    <group name="general">
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
-                                    <group>
-                                        <field name="uom_po_id" groups="product.group_uom"/>
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
+                                        <field name="uom_po_id"/>
                                     </group>
                                 </group>
-                                <separator string="Notes for Suppliers"/>
+                                <separator string="Description for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
                             <page string="Inventory" groups="base.group_user">
@@ -121,13 +117,7 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="store" string="Storage Localisation">
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
-                                    </group>
-                                    <group groups="product.group_stock_packaging" string="Weights">
+                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
@@ -137,10 +127,6 @@
                             <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
                                 <group name="sale">
                                     <group string="Sale Conditions">
-                                        <label for="sale_delay"/>
-                                        <div>
-                                            <field name="sale_delay" class="oe_inline"/> days
-                                        </div>
                                         <label for="warranty"/>
                                         <div>
                                             <field name="warranty" class="oe_inline"/> months
@@ -174,7 +160,7 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
-                                <separator string="Notes on Quotations"/>
+                                <separator string="Description for Quotations"/>
                                 <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
                         </notebook>
@@ -290,9 +276,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_filter_to_purchase":1}</field>
-            <field name="view_id" ref="product_product_tree_view"/>
+            <field name="view_id" ref="product_kanban_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -426,7 +412,6 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor"/>
                 </tree>
             </field>
         </record>
@@ -440,15 +425,22 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="active"/>
+                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <label for="factor"/>
+                            <div>
+                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
+                                    e.g: 1 * (reference unit) = ratio * (this unit)
+                                </p>
+                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
+                                    e.g: 1 * (this unit) = ratio * (reference unit)
+                                </p>
+                            </div>
                         </group>
                         <group>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <field name="active"/>
                             <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
-                            <label string="  e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
@@ -688,12 +680,9 @@
                         <group>
                             <group string="Product Type">
                                 <field name="sale_ok"/>
-                                <field name="purchase_ok"/>
                             </group>
                             <group string="Procurement">
                                 <field name="type"/>
-                                <field name="procure_method"/>
-                                <field name="supply_method"/>
                             </group>
 
                             <group string="Base Prices">
@@ -706,7 +695,7 @@
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
-                            </group>
+                            </group> 
 
                             <group name="status" string="Status">
                                 <field name="categ_id"/>
@@ -729,17 +718,11 @@
                         <page string="Procurement &amp; Locations">
                             <group>
                                 <group name="delay" string="Delays">
-                                    <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
                                     <label for="produce_delay"/>
                                     <div>
                                         <field name="produce_delay" class="oe_inline"/> days
                                     </div>
                                     <field name="warranty"/>
-                                </group>
-                                <group name="store" string="Storage Localisation">
-                                    <field name="loc_rack"/>
-                                    <field name="loc_row"/>
-                                    <field name="loc_case"/>
                                 </group>
                             </group>
 

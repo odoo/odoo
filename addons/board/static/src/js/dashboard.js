@@ -24,6 +24,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             scroll: false
         }).bind('sortstop', self.do_save_dashboard);
 
+        var old_title = this.__parentedParent.get('title');
+        this.__parentedParent.on('load_record', self, function(){
+            self.__parentedParent.set({ 'title': old_title});
+        })
         // Events
         this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
         this.$el.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
@@ -42,7 +46,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 delete(action.attrs.colspan);
                 var action_id = _.str.toNumber(action.attrs.name);
                 if (!_.isNaN(action_id)) {
-                    self.rpc('/web/action/load', {action_id: action_id}, function(result) {
+                    self.rpc('/web/action/load', {action_id: action_id}).then(function(result) {
                         self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                     });
                 }
@@ -77,7 +81,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/undo_custom', {
             view_id: this.view.fields_view.view_id,
             reset: true
-        }, this.do_reload);
+        }).then(this.do_reload);
     },
     on_change_layout: function() {
         var self = this;
@@ -165,13 +169,11 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/add_custom', {
             view_id: this.view.fields_view.view_id,
             arch: arch
-        }, function() {
-            self.$el.find('.oe_dashboard_link_reset').show();
         });
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
-            action = result.result,
+            action = result,
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
@@ -220,36 +222,40 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         am.do_action = function (action) {
             self.do_action(action);
         };
-        if (action_attrs.creatable && action_attrs.creatable !== 'false') {
-            var action_id = parseInt(action_attrs.creatable, 10);
-            $action.parent().find('button.oe_dashboard_button_create').click(function() {
-                if (isNaN(action_id)) {
-                    action_orig.flags.default_view = 'form';
-                    self.do_action(action_orig);
-                } else {
-                    self.rpc('/web/action/load', {
-                        action_id: action_id
-                    }, function(result) {
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.default_view = 'form';
-                        self.do_action(result.result);
-                    });
-                }
-            });
-        }
         if (am.inner_widget) {
-            am.inner_widget.on_mode_switch.add(function(mode) {
+            var new_form_action = function(id, editable) {
                 var new_views = [];
                 _.each(action_orig.views, function(view) {
-                    new_views[view[1] === mode ? 'unshift' : 'push'](view);
+                    new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
                 });
-                if (!new_views.length || new_views[0][1] !== mode) {
-                    new_views.unshift([false, mode]);
+                if (!new_views.length || new_views[0][1] !== 'form') {
+                    new_views.unshift([false, 'form']);
                 }
                 action_orig.views = new_views;
-                action_orig.res_id = am.inner_widget.dataset.ids[am.inner_widget.dataset.index];
+                action_orig.res_id = id;
+                action_orig.flags = {
+                    form: {
+                        "initial_mode": editable ? "edit" : "view",
+                    }
+                };
                 self.do_action(action_orig);
-            });
+            };
+            var list = am.inner_widget.views.list;
+            if (list) {
+                list.deferred.then(function() {
+                    $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
+                        new_form_action(id);
+                    });
+                });
+            }
+            var kanban = am.inner_widget.views.kanban;
+            if (kanban) {
+                kanban.deferred.then(function() {
+                    kanban.controller.open_record = function(id, editable) {
+                        new_form_action(id, editable);
+                    };
+                });
+            }
         }
     },
     renderElement: function() {
@@ -376,7 +382,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
             domain: domain,
             view_mode: view_parent.active_view,
             name: this.$el.find("input").val()
-        }, function(r) {
+        }).then(function(r) {
             if (r === false) {
                 self.do_warn("Could not add filter to dashboard");
             } else {

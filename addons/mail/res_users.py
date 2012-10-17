@@ -55,12 +55,26 @@ class res_users(osv.Model):
         return init_res
 
     def _auto_init(self, cr, context=None):
-        """Installation hook to create aliases for all users and avoid constraint errors."""
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users,self)._auto_init,
+        """ Installation hook: aliases, partner following themselves """
+        # create aliases for all users and avoid constraint errors
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
+        cr.execute("""  SELECT p.id FROM res_partner p
+                        LEFT JOIN mail_followers n
+                        ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
+                        WHERE n.id IS NULL
+                    """)
+        params = [(res[0], res[0]) for res in cr.fetchall()]
+        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
+                            VALUES (%s, 'res.partner', %s)
+                        """, params)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
+        if not data.get('login', False):
+            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user. To create new users, you should use the "Settings > Users" menu.'))
+
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
@@ -96,9 +110,19 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post(self, cr, uid, thread_id, **kwargs):
-        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id)[0].partner_id.id
-        return self.pool.get('res.partner').message_post(cr, uid, partner_id, **kwargs)
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        assert thread_id, "res.users does not support posting global messages"
+        if context and 'thread_model' in context:
+            context['thread_model'] = 'res.partner'
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id).partner_id.id
+        return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
+
+    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
+        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
+            update_vals=update_vals, context=context)
 
 class res_users_mail_group(osv.Model):
     """ Update of res.users class

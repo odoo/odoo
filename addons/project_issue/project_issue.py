@@ -27,6 +27,7 @@ from tools.translate import _
 import binascii
 import time
 import tools
+from tools import html2plaintext
 
 class project_issue_version(osv.osv):
     _name = "project.issue.version"
@@ -279,7 +280,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
-         }
+    }
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -355,7 +356,7 @@ class project_issue(base_stage, osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['name'] = issue['name'] + _(' (copy)')
+        default.update(name=_('%s (copy)') % (issue['name']))
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
 
@@ -364,6 +365,10 @@ class project_issue(base_stage, osv.osv):
         logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
+
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -381,6 +386,10 @@ class project_issue(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
+        project_id = self.browse(cr, uid, obj_id, context=context).project_id
+        if project_id:
+            followers = [follower.id for follower in project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
@@ -454,9 +463,11 @@ class project_issue(base_stage, osv.osv):
         if context is None: context = {}
         context['state_to'] = 'draft'
 
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
+
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -478,7 +489,6 @@ class project_issue(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         # Update doc values according to the message
-        update_vals['description'] = msg.get('body', '')
         if msg.get('priority'):
             update_vals['priority'] = msg.get('priority')
         # Parse 'body' to find values to update
@@ -503,7 +513,7 @@ class project_issue(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
@@ -515,7 +525,7 @@ class project_issue(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>created</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="mt_issue_new", context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -534,7 +544,7 @@ class project(osv.osv):
 
     def _get_alias_models(self, cr, uid, context=None):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
-        
+
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
@@ -557,7 +567,7 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
-    
+
 project()
 
 class account_analytic_account(osv.osv):

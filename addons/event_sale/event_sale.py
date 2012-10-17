@@ -81,8 +81,6 @@ class sale_order_line(osv.osv):
                     'nb_register': int(order_line.product_uom_qty),
                     'email': order_line.order_id.partner_id.email,
                     'phone': order_line.order_id.partner_id.phone,
-                    'street': order_line.order_id.partner_invoice_id.street,
-                    'city': order_line.order_id.partner_invoice_id.city,
                     'origin': order_line.order_id.name,
                     'event_id': order_line.event_id.id,
                 }

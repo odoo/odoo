@@ -30,19 +30,21 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     _inherit = 'crm.lead2partner'
 
     _columns = {
-        'action': fields.selection([('exist', 'Link to an existing partner'), \
-                                    ('create', 'Create a new partner'), \
-                                    ('nothing', 'Do not link to a partner')], \
-                                    'Related Partner', required=True),
-        'name': fields.selection([('convert', 'Convert to Opportunities'), ('merge', 'Merge with existing Opportunities')], 'Conversion Action', required=True),
+        'action': fields.selection([('exist', 'Link to an existing customer'), \
+                                    ('create', 'Create a new customer'), \
+                                    ('nothing', 'Do not link to a customer')], \
+                                    'Related Customer', required=True),
+        'name': fields.selection([('convert', 'Convert to opportunity'), \
+                                  ('merge', 'Merge with existing opportunities')], \
+                                  'Conversion Action', required=True),
         'opportunity_ids': fields.many2many('crm.lead', string='Opportunities', domain=[('type', '=', 'opportunity')]),
     }
 
     def default_get(self, cr, uid, fields, context=None):
         """
-            Default get for name, opportunity_ids
-            if there is an exisitng  partner link to the lead, find all existing opportunity link with this partnet to merge
-            all information together
+        Default get for name, opportunity_ids.
+        If there is an exisitng partner link to the lead, find all existing
+        opportunities links with this partner to merge all information together
         """
         lead_obj = self.pool.get('crm.lead')
 
@@ -62,12 +64,13 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
         ids = []
         if partner_id:
+            # Search for opportunities that have the same partner and that arent done or cancelled
             ids = lead_obj.search(cr, uid, [('partner_id', '=', partner_id), ('type', '=', 'opportunity'), '!', ('state', 'in', ['done', 'cancel'])])
             if ids:
                 opportunities.append(ids[0])
         if not partner_id:
             if email:
-                # Find email of existing opportunity matches the email_from of the lead
+                # Find email of existing opportunity matching the email_from of the lead
                 cr.execute("""select id from crm_lead where type='opportunity' and
                                 substring(email_from from '([^ ,<@]+@[^> ,]+)') in (%s)""" % (','.join(email)))
                 ids = map(lambda x:x[0], cr.fetchall())
@@ -83,12 +86,11 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         if 'opportunity_ids' in fields:
             res.update({'opportunity_ids': opportunities})
 
-
         return res
 
     def view_init(self, cr, uid, fields, context=None):
         """
-        This function checks for precondition before wizard executes
+        Check some preconditions before the wizard executes.
         """
         if context is None:
             context = {}
@@ -110,7 +112,7 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             partner_id = partner_ids_map.get(lead_id, False)
             # FIXME: cannot pass user_ids as the salesman allocation only works in batch
             res = lead.convert_opportunity(cr, uid, [lead_id], partner_id, [], team_id, context=context)
-        # FIXME: must perform salesman allocation in batch separately here  
+        # FIXME: must perform salesman allocation in batch separately here
         user_ids = vals.get('user_ids', False)
         if user_ids:
             lead.allocate_salesman(cr, uid, lead_ids, user_ids, team_id=team_id, context=context)
@@ -136,9 +138,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
 
     def action_apply(self, cr, uid, ids, context=None):
         """
-        This converts lead to opportunity and opens Opportunity view
+        Convert lead to opportunity or merge lead and opportunity and open
+        the freshly created opportunity view.
         """
-        if not context:
+        if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
         lead_ids = context.get('active_ids', [])

@@ -61,6 +61,21 @@ class picking(osv.osv):
     }
 picking()
 
+class stock_picking_in(osv.osv):
+    _inherit = "stock.picking.in"
+    _columns = {
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
+    }
+stock_picking_in()
+
+class stock_picking_out(osv.osv):
+    _inherit = "stock.picking.out"
+    _columns = {
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', readonly=True)
+    }
+stock_picking_out()
+
+
 class sale(osv.osv):
     _inherit = "sale.order"
     _columns = {

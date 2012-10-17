@@ -38,7 +38,6 @@ class stock_partial_picking_line(osv.TransientModel):
             res[tracklot.id] = tracking
         return res
 
-
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
@@ -56,8 +55,17 @@ class stock_partial_picking_line(osv.TransientModel):
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'), 
     }
 
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        uom_id = False
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            uom_id = product.uom_id.id
+        return {'value': {'product_uom': uom_id}}
+
+
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
+    _rec_name = 'picking_id'
     _description = "Partial Picking Processing Wizard"
 
     def _hide_tracking(self, cursor, user, ids, name, arg, context=None):
@@ -78,7 +86,7 @@ class stock_partial_picking(osv.osv_memory):
         if context is None:
             context={}
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        type = context.get('active_model','').split('.')[-1]
+        type = context.get('default_type', False)
         if type:
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//button[@name='do_partial']"):
@@ -100,21 +108,10 @@ class stock_partial_picking(osv.osv_memory):
         picking_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
 
-        if active_model == 'purchase.order':
-            for purchase_order in self.pool.get('purchase.order').browse(cr, uid, picking_ids, context=context):
-                picking_ids = [picking_id.id for picking_id in purchase_order.picking_ids]
-        elif active_model == 'sale.order':
-            for sale_order in self.pool.get('sale.order').browse(cr, uid, picking_ids, context=context):
-                picking_ids = [picking.id for picking in sale_order.picking_ids]
-
         if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
-        # The check about active_model is there in case the client mismatched the context during propagation of it
-        # (already seen in previous bug where context passed was containing ir.ui.menu as active_model and the menu 
-        # ID as active_id). Though this should be fixed in clients now, this place is sensitive enough to ensure the
-        # consistancy of the context.
-        assert active_model in ('stock.picking', 'stock.picking.in', 'stock.picking.out', 'purchase.order', 'sale.order'), 'Bad context propagation'
+        assert active_model in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)

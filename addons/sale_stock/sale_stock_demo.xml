@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    
+        <record id="sale.sale_order_1" model="sale.order">
+            <field name="order_policy">prepaid</field>
+        </record>
+
+        <record id="sale.sale_order_4" model="sale.order">
+            <field name="order_policy">prepaid</field>
+        </record>
+
+        <record id="sale.sale_order_5" model="sale.order">
+            <field name="order_policy">picking</field>
+        </record>
+
+        <record id="sale.sale_order_6" model="sale.order">
+            <field name="order_policy">picking</field>
+        </record>
+        
+         <!-- Confirm some Sale Orders-->
+        <workflow action="order_confirm" model="sale.order" ref="sale.sale_order_1"/>
+        <workflow action="order_confirm" model="sale.order" ref="sale.sale_order_5"/>
+        
+        <record id="sale.sale_order_line_4" model="sale.order.line">
+            <field name="type">make_to_order</field>
+        </record>
+        
+        <record id="sale.sale_order_line_5" model="sale.order.line">
+             <field name="type">make_to_order</field>
+        </record>
+        
+        <record id="sale.sale_order_line_6" model="sale.order.line">
+            <field name="type">make_to_order</field>
+        </record>
+        
+        <record id="sale.sale_order_line_8" model="sale.order.line">
+             <field name="type">make_to_order</field>
+        </record>
+
+        <!-- Run all schedulers -->
+        <function model="procurement.order" name="run_scheduler"/>
+        
+    </data>
+</openerp>

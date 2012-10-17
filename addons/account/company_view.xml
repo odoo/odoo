@@ -15,18 +15,5 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="view_company_inherit_1_form">
-            <field name="name">res.company.form.inherit</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="model">res.company</field>
-            <field name="arch" type="xml">
-                <xpath expr="//group[@name='account_grp']" position="inside">
-                    <field name="property_reserve_and_surplus_account"/>
-                    <field name="tax_calculation_rounding_method"/>
-                    <field name="paypal_account"  placeholder="e.g. sales@openerp.com"/>
-                </xpath>
-            </field>
-        </record>
-
     </data>
 </openerp>

@@ -26,42 +26,30 @@
     'sequence': 2,
     'summary': 'Discussions, Mailing Lists, News',
     'description': """
-A business oriented Social Networking with a fully-integrated email and message management.
-===========================================================================================
+Business oriented Social Networking
+===================================
+The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete 
+communication history on documents with a fully-integrated email and message management system.
 
-The Social Networking module provides an unified social network
-abstraction layer allowing applications to display a complete 
-communication history on documents. It gives the users the possibility
-to read and send messages and emails in an unified way.
+It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
 
-It also provides a feeds page combined to a subscription mechanism, that 
-allows to follow documents, and to be constantly updated about recent
-news.
-        
-The main features of the module are:
-------------------------------------
-    * a clean and renewed communication history for any OpenERP
-      document that can act as a discussion topic,
-    * a discussion mean on documents,
-    * a subscription mechanism to be updated about new messages on 
-      interesting documents,
-    * an unified feeds page to see recent messages and activity 
-      on followed documents,
-    * user communication through the feeds page,
-    * a threaded discussion design,
-    * relies on the global outgoing mail server, an integrated email
-      management system allowing to send emails with a configurable 
-      scheduler-based processing engine
-    * includes an extensible generic email composition assistant, that can turn
-      into a mass-mailing assistant, and is capable of interpreting
-      simple *placeholder expressions* that will be replaced with
-      dynamic data when each email is actually sent
+Main Features
+-------------
+* Clean and renewed communication history for any OpenERP document that can act as a discussion topic
+* Subscription mechanism to be updated about new messages on interesting documents
+* Unified feeds page to see recent messages and activity on followed documents
+* User communication through the feeds page
+* Threaded discussion design on documents
+* Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
+* Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools', 'base_setup'],
+    'depends': ['base', 'base_setup'],
     'data': [
+        'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'mail_message_subtype.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
         'mail_mail_view.xml',
@@ -80,7 +68,6 @@ The main features of the module are:
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
         'images/messages_form.jpeg',

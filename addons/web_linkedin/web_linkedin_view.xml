@@ -4,7 +4,6 @@
         <record id="view_linkedin_partner_form" model="ir.ui.view">
             <field name="name">res.partner.linkedin.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <field name="name" position="replace">
@@ -18,8 +17,8 @@
             <field name="model">sale.config.settings</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <div name="linkedin" position="inside">
-                    <form string="Configure Linkedin" version="7.0" class="oe_form_configuration">
+                <div name="LinkedIn" position="inside">
+                    <div attrs="{'invisible':[('module_web_linkedin','=',False)]}">
                         <p>
                             To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
                         </p>
@@ -34,12 +33,11 @@
                                     <li>The programming tool is Javascript</li>
                                 </ul>
                             </li>
-                            <li>Copy the API key down here:</li>
+                            <li>Copy the <strong>API key</strong> here:
+                                <field name="api_key" attrs="{'required':[('module_web_linkedin','=',True)]}" class="oe_inline"/>
+                            </li>
                         </ul>
-                        <group>
-                            <field name="api_key"/>
-                        </group>
-                    </form>
+                    </div>
                 </div>
             </field>
         </record>

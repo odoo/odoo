@@ -27,13 +27,11 @@
     'sequence': 22,
     'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """
-This module provides Issues/Bugs Management in Project.
-=======================================================
+Track Issues/Bugs Management for Projects
+=========================================
+This application allows you to manage the issues you might face in a project like bugs in a system, client complaints or material breakdowns. 
 
-OpenERP allows you to manage the issues you might face in a project
-like bugs in a system, client complaints or material breakdowns. A
-list view allows the manager to quickly check the issues, assign them
-and decide on their status as they evolve.
+It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -63,7 +61,6 @@ and decide on their status as they evolve.
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '001236490750848623845',
     'js': ['static/src/js/project_issue.js'],
 }
 

@@ -115,13 +115,13 @@
             <sheet>
                 <div class="oe_right oe_button_box">
                     <button name="action_makeMeeting" type="object"
-                        string="Schedule Interview" icon="gtk-index" help="Schedule interview with this applicant"/>
+                        string="Schedule Meeting" help="Schedule interview with this applicant"/>
                     <button name="%(survey.action_view_survey_question_message)d" type="action"
-                        string="Start Interview" icon="gtk-execute" help="Answer related job question"
+                        string="Start Interview" help="Answer related job question"
                         context="{'survey_id': survey, 'response_id': [response], 'response_no':0 ,'active' : response, 'object' : 'hr.applicant'}"
                         attrs="{'invisible':[('survey','=',False)]}"/>
                     <button name="action_print_survey" type="object"
-                        string="Print Interview" icon="gtk-print" help="Print interview report"
+                        string="Print Interview" help="Print interview report"
                         attrs="{'invisible':[('survey','=',False)]}"/>
                 </div>
                 <div class="oe_title">
@@ -208,28 +208,28 @@
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
-                <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
-                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
-                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Jobs"/>
+                <filter string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
+                <filter string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
+                <filter string="Pending" domain="[('state','=','pending')]" help="Pending Jobs"/>
                 <separator/>
-                <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-"/>
+                <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments"/>
                 <separator/>
-                <filter icon="terp-gtk-jump-to-ltr" string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
+                <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
                 <field name="job_id"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By...">
-                    <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                    <filter string="Degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
-                    <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
-                    <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
-                    <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
-                    <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
+                    <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Department" domain="[]" context="{'group_by':'department_id'}"/>
+                    <filter string="Job" domain="[]" context="{'group_by':'job_id'}"/>
+                    <filter string="Degree" domain="[]" context="{'group_by':'type_id'}"/>
+                    <filter string="Availability" domain="[]" context="{'group_by':'availability'}"/>
+                    <filter string="Appreciation" domain="[]" context="{'group_by':'priority'}"/>
+                    <filter string="Stage" domain="[]" context="{'group_by':'stage_id'}"/>
+                    <filter string="Source" domain="[]" context="{'group_by':'source_id'}"/>
+                    <filter string="Creation Date" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
            </search>
         </field>
@@ -289,7 +289,8 @@
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
-                                    <b><field name="name"/></b><br/>
+                                    <t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>
+                                    <i><field name="name"/></i><br/>
                                     <field name="job_id"/><br/>
                                     <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                     <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
@@ -314,9 +315,7 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <div class="oe_left oe_tags">
-                                        <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
-                                            <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
-                                        </t>
+                                        <field name="categ_ids"/>
                                     </div>
                                 </div>
                             </div>
@@ -337,15 +336,15 @@
             <field name="no_of_recruitment" version="7.0" position="after">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
-                    <field name="survey_id" class="oe_inline"/>
+                    <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
                     <button class="oe_inline"
-                        string="Interview" icon="gtk-print"
+                        string="Interview"
                         name="action_print_survey" type="object"
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
-            <xpath expr="/form/sheet/h1" version="7.0" position="after">
-                <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+            <xpath expr="//div[@class='oe_title']" version="7.0" position="after">
+                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
                     <field name="alias_id" invisible="1" required="0"/>
                     <label for="alias_name" class="oe_edit_only"/>
                     <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
