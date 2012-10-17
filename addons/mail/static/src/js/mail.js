@@ -639,7 +639,7 @@ openerp.mail = function(session) {
                 }
             );
             /*insert thread in parent message*/
-            self.thread.appendTo(self.$el.find('div.oe_thread_placeholder'));
+            self.thread.replace(self.$('.oe_thread_placeholder'));
         },
         
         animated_destroy: function(options) {
@@ -1140,7 +1140,6 @@ openerp.mail = function(session) {
                 _(thread.get_childs( nb_thread_level )).each(function (val, key) { thread_messages.push(val.parent_message); });
             }
 
-
             // check older and newer message for insert
             var parent_newer = false;
             var parent_older = false;
@@ -1377,7 +1376,6 @@ openerp.mail = function(session) {
         bind_events: function(){
             var self=this;
             this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); });
-
             this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
         }
     });
