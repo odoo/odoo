@@ -187,12 +187,12 @@ class mail_message(osv.Model):
             has_voted = False
 
         try:
-            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [message['attachment_ids']], context=context)]
+            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, message['attachment_ids'], context=context)]
         except (orm.except_orm, osv.except_osv):
             attachment_ids = []
 
         try:
-            partner_ids = self.pool.get('res.partner').name_get(cr, uid, [message['partner_ids']], context=context)
+            partner_ids = self.pool.get('res.partner').name_get(cr, uid, message['partner_ids'], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
 
@@ -341,7 +341,6 @@ class mail_message(osv.Model):
 
             parent = self._get_parent(cr, uid, message, context=context)
             while parent and parent['id'] != parent_id:
-                parent = message.parent_id.id
                 if parent['id'] not in id_tree:
                     message = parent
                     id_tree.append(message['id'])
@@ -349,6 +348,7 @@ class mail_message(osv.Model):
                     if message['id'] not in context.get('message_loaded', []):
                         record = self._message_get_dict(cr, uid, message, context=context)
                         message_list.append(record)
+                parent = self._get_parent(cr, uid, parent, context=context)
 
         message_list = sorted(message_list, key=lambda k: k['id'])
 
