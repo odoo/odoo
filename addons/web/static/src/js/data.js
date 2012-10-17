@@ -120,6 +120,10 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping)) { return null; }
 
         var self = this;
+
+        // FIXME: when pyeval is merged
+        var ctx = instance.session.test_eval_contexts(
+                [this._model.context(this._context)]);
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
@@ -130,6 +134,8 @@ instance.web.Query = instance.web.Class.extend({
             orderby: instance.web.serialize_sort(this._order_by) || false
         }).pipe(function (results) {
             return _(results).map(function (result) {
+                // FIX: querygroup initialization
+                _.defaults(result.__context, ctx);
                 return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
             });
