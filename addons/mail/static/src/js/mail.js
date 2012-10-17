@@ -134,7 +134,6 @@ openerp.mail = function(session) {
             };
             this.options={};
             this.options.thread={};
-            this.options.thread.show_header_compose = options.options.thread.show_header_compose;
             this.options.thread.display_on_thread = options.options.thread.display_on_thread;
             this.options.thread.show_attachment_delete = true;
             this.options.thread.show_attachment_link = true;
@@ -315,9 +314,7 @@ openerp.mail = function(session) {
             this.$('input[data-id]').remove();
             //this.attachment_ids=[];
             this.display_attachments();
-            if(!this.options.thread.show_header_compose || !this.options.thread.display_on_thread[0]){
-                this.$el.hide();
-            }
+            this.$el.hide();
         },
 
         /*post a message and fetch the message*/
@@ -476,7 +473,6 @@ openerp.mail = function(session) {
          *              display before having a "show more" link; note that the text
          *              will not be truncated if it does not have 110% of the parameter
          *          @param {Boolean} [show_record_name]
-         *          @param {Boolean} [show_dd_delete]
          *          @param {Array [A,B]} [show_reply] display the reply button on the
          *              message for thread level between A and B. -1 for no begin or no end.
          *          @param {Array [A,B]} [show_read_unread] display the read/unread button on the
@@ -523,7 +519,6 @@ openerp.mail = function(session) {
                     'message_ids': options.options.message.message_ids || null,
                     'message_data': options.options.message.message_data || null,
                     'show_record_name': options.options.message.show_record_name != undefined ? options.options.message.show_record_name: true,
-                    'show_dd_delete': options.options.message.show_dd_delete || false,
                     'truncate_limit': options.options.message.truncate_limit || 250,
                     'show_reply': options.options.message.show_reply || [0,-1],
                     'show_read_unread': options.options.message.show_read_unread || [0,-1],
@@ -735,7 +730,7 @@ openerp.mail = function(session) {
                 if (!self.datasets.has_voted) {
                     var votes=[];
                     for(var i in self.datasets.vote_user_ids){
-                        if(self.datasets.vote_user_ids[i][0]!=self.datasets.session.uid)
+                        if(self.datasets.vote_user_ids[i][0]!=self.session.uid)
                             vote.push(self.datasets.vote_user_ids[i]);
                     }
                     self.datasets.vote_user_ids=votes;
@@ -803,8 +798,6 @@ openerp.mail = function(session) {
          * @param {Object} [options]
          *      @param {Object} [message] read about mail.ThreadMessage object
          *      @param {Object} [thread]
-         *          @param {Boolean} [use_composer] use the advanced composer, or
-         *              the default basic textarea if not set
          *          @param {Number} [expandable_number=5] number message show
          *              for each click on "show more message"
          *          @param {Number} [expandable_default_number=5] number message show
@@ -830,8 +823,6 @@ openerp.mail = function(session) {
             // options
             this.options={
                 'thread' : {
-                    'show_header_compose': (options.options.thread.show_header_compose != undefined ? options.options.thread.show_header_compose: false),
-                    'use_composer': options.options.thread.use_composer || false,
                     'expandable_number': options.options.thread.expandable_number || 5,
                     'expandable_default_number': options.options.thread.expandable_default_number || 5,
                     '_expandable_max': options.options.thread.expandable_default_number || 5,
@@ -1189,10 +1180,10 @@ openerp.mail = function(session) {
 
     /** 
      * ------------------------------------------------------------
-     * Wall Widget
+     * mail : root Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of messages on a Wall. Its main
+     * This widget handles the display of messages with thread options. Its main
      * use is to receive a context and a domain, and to delegate the message
      * fetching and displaying to the Thread widget.
      */
@@ -1202,12 +1193,25 @@ openerp.mail = function(session) {
 
         /**
          * @param {Object} parent parent
+         * @param {Array} [domain]
+         * @param {Object} [context] context of the thread. It should
+         *   contain at least default_model, default_res_id. Please refer to
+         *   the ComposeMessage widget for more information about it.
+         * ... @param {Select} [typeof_thread=(mail|stared|archives|send|other)]
+         *       options for destroy message when the user click on a button
          * @param {Object} [options]
-         * @param {Array} [options.domain] domain on the Wall
-         * @param {Object} [options.context] context, is an object. It should
-         *      contain default_model, default_res_id, to give it to the threads.
-         * @param {Number} [options.thread_level] number of thread levels to display
-         *      0 being flat.
+         *...  @param {Number} [truncate_limit=250] number of character to
+         *      display before having a "show more" link; note that the text
+         *      will not be truncated if it does not have 110% of the parameter
+         *...  @param {Boolean} [show_record_name] display the name and link for do action
+         *...  @param {Array [A,B]} [show_reply] display the reply button on the
+         *      message for thread level between A and B. -1 for no begin or no end.
+         *...  @param {Array [A,B]} [show_read_unread] display the read/unread button on the
+         *      message for thread level between A and B. -1 for no begin or no end.
+         *...  @param {Array [A,B]} [display_on_thread] display the threads (hierarchy)
+         *      for the thread level between A and B. -1 for no begin or no end.
+         *      All thread before A are insert in the root thread.
+         *      All thread after B are insert in parent thread on B level.
          */
         init: function (parent, options) {
             this._super(parent);
@@ -1219,7 +1223,8 @@ openerp.mail = function(session) {
 
         start: function (options) {
             this._super.apply(this, arguments);
-            return this.message_render();
+            this.message_render();
+            this.bind_events();
         },
 
         /**
@@ -1231,15 +1236,14 @@ openerp.mail = function(session) {
                     'context' : this.options.context,
                     'options': {
                         'thread' :{
-                            'use_composer': this.options.use_composer || false,
-                            'show_header_compose': this.options.show_header_compose || false,
-                            'typeof_thread': this.options.context.typeof_thread || 'inbox',
+                            'typeof_thread': this.options.typeof_thread || 'inbox',
                             'display_on_thread': this.options.display_on_thread || [0,1]
                         },
                         'message': {
                             'show_reply': this.options.show_reply || [0,0],
                             'show_read_unread': this.options.show_read_unread || [0,-1],
-                            'show_dd_delete': this.options.show_dd_delete || false,
+                            'truncate_limit': this.options.truncate_limit || 250,
+                            'show_record_name': this.options.show_record_name || false,
                         },
                     },
                     'datasets': {},
@@ -1249,14 +1253,14 @@ openerp.mail = function(session) {
             this.thread.appendTo( this.$el );
             this.thread.no_message();
             this.thread.message_fetch();
-
-            $(document).scroll( self.on_scroll );
-            $(window).resize( self.on_scroll );
-            window.setTimeout( self.on_scroll, 500 );
         },
 
         bind_events: function(){
-            var self=this;
+            if(this.options.context.typeof_thread!='other'){
+                $(document).scroll( this.thread.on_scroll );
+                $(window).resize( this.thread.on_scroll );
+                window.setTimeout( this.thread.on_scroll, 500 );
+            }
         }
     });
 
@@ -1302,24 +1306,20 @@ openerp.mail = function(session) {
                 default_is_private: false });
             // update domain
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
-            // create and render Thread widget
-            var show_header_compose = this.view.is_action_enabled('edit') ||
-                (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
-
+            
             if(this.thread){
                 this.thread.destroy();
             }
             this.thread = new mail.Thread(self, {
                     'domain': domain,
                     'context': this.options.context,
-                    'show_header_compose': show_header_compose,
-                    'use_composer': show_header_compose,
+                    'typeof_thread': this.options.context.typeof_thread || 'other',
                     'display_on_thread':[-1,-1],
                     'show_reply': [-1,-1],
                     'show_read_unread': [-1,-1],
-                    'show_dd_delete': false
                 }
             );
+
             return this.thread.appendTo( this.$('.oe_mail_wall_threads:first') );
         },
     });
@@ -1409,17 +1409,13 @@ openerp.mail = function(session) {
             this.root = new mail.Widget(this, {
                 'domain' : domain,
                 'context' : context,
-                'use_composer': true,
-                'show_header_compose': false,
-                'typeof_thread': context.typeof_thread || 'inbox',
+                'typeof_thread': context.typeof_thread || 'other',
                 'display_on_thread': [0,1],
                 'show_reply': [0,0],
                 'show_read_unread': [0,-1],
-                'show_dd_delete': false,
                 }
             );
             return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
-
         },
 
         bind_events: function(){
