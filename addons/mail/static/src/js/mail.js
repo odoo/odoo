@@ -300,22 +300,23 @@ openerp.mail = function(session) {
 
         /* to avoid having unsorted file on the server.
             we will show the users files of the first message post
+            TDE note: unnecessary call to server I think
          */
-        set_free_attachments: function(){
-            var self=this;
-            this.parent_thread.ds_message.call('user_free_attachment').then(function(attachments){
-                this.attachment_ids=[];
-                for(var i in attachments){
-                    self.attachment_ids[i]={
-                        'id': attachments[i].id,
-                        'name': attachments[i].name,
-                        'filename': attachments[i].filename,
-                        'url': mail.ChatterUtils.get_attachment_url(self.session, attachments[i])
-                    };
-                }
-                self.display_attachments();
-            });
-        },
+        // set_free_attachments: function(){
+        //     var self=this;
+        //     this.parent_thread.ds_message.call('user_free_attachment').then(function(attachments){
+        //         this.attachment_ids=[];
+        //         for(var i in attachments){
+        //             self.attachment_ids[i]={
+        //                 'id': attachments[i].id,
+        //                 'name': attachments[i].name,
+        //                 'filename': attachments[i].filename,
+        //                 'url': mail.ChatterUtils.get_attachment_url(self.session, attachments[i])
+        //             };
+        //         }
+        //         self.display_attachments();
+        //     });
+        // },
 
         bind_events: function() {
             var self = this;
@@ -341,7 +342,7 @@ openerp.mail = function(session) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    'default_res_model': this.context.default_res_model,
+                    'default_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
                     'default_is_private': true,
@@ -867,7 +868,7 @@ openerp.mail = function(session) {
             return display_done && compose_done;
         },
 
-        instantiate_ComposeMessage: function(){
+        instantiate_ComposeMessage: function() {
             // add message composition form view
             this.ComposeMessage = new mail.ThreadComposeMessage(this,{
                 'context': this.context,
