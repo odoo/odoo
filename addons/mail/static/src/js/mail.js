@@ -148,10 +148,7 @@ openerp.mail = function(session) {
         start: function(){
             this.display_attachments();
             this.bind_events();
-
-            //load avatar img
-            var user_avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
-            this.$('img.oe_mail_icon').attr('src', user_avatar);
+            this.display_user_avatar();
         },
 
         /* upload the file on the server, add in the attachments list and reload display
@@ -352,6 +349,11 @@ openerp.mail = function(session) {
                     });
                 return true;
             }
+        },
+
+        display_user_avatar: function () {
+            var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
+            return this.$('img.oe_msg_icon').attr('src', avatar);
         },
     });
 
@@ -862,11 +864,6 @@ openerp.mail = function(session) {
         
         start: function() {
             this._super.apply(this, arguments);
-
-            this.more_msg = this.$(">.oe_msg_more_message:first");
-
-            this.display_user_avatar();
-            
             this.bind_events();
         },
 
@@ -1158,11 +1155,6 @@ openerp.mail = function(session) {
             }
 
             return message
-        },
-
-        display_user_avatar: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
-            return this.$('img.oe_mail_icon').attr('src', avatar);
         },
         
         /*  Send the records to his parent thread */
