@@ -881,9 +881,9 @@ openerp.mail = function(session) {
             });
 
             if(this.datasets.thread_level){
-                this.ComposeMessage.prependTo(this.$el);
-            } else {
                 this.ComposeMessage.appendTo(this.$el);
+            } else {
+                this.ComposeMessage.prependTo(this.$el);
             }
         },
 
@@ -1142,11 +1142,11 @@ openerp.mail = function(session) {
                 if(sort){
                     message.insertBefore(parent_older.$el);
                 } else {
-                    message.insertAfter(parent_older.thread.$el);
+                    message.insertAfter(parent_older.thread ? parent_older.thread.$el : parent_older.$el);
                 }
             } else if(parent_newer){
                 if(sort){
-                    message.insertAfter(parent_newer.thread.$el);
+                    message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
                 } else {
                     message.insertBefore(parent_newer.$el);
                 }
