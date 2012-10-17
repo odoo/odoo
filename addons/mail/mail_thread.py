@@ -685,7 +685,6 @@ class mail_thread(osv.AbstractModel):
             values["is_private"] = msg.is_private or False
             values["partner_ids"] = [(4, partner.id) for partner in msg.partner_ids] + [(4, msg.author_id.id)]
 
-        print values
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
@@ -709,10 +708,10 @@ class mail_thread(osv.AbstractModel):
         attachment_ids=[]
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
-            attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', False), ('res_id', '=', False), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
+            attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
-                self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
-                self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
+                self.pool.get('ir.attachment').write(cr, SUPERUSER_ID, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
+                self.pool.get('mail.message').write(cr, SUPERUSER_ID, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
           
         added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
         return added_message

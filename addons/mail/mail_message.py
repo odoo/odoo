@@ -74,10 +74,11 @@ class mail_message(osv.Model):
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids)
+            ('message_id', 'in', ids),
+            ('read', '=', True)
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id] = notif.read and 'read' or 'unread'
+            res[notif.message_id.id] = not notif.read
         return res
 
     def _search_read(self, cr, uid, obj, name, domain, context=None):
@@ -126,7 +127,7 @@ class mail_message(osv.Model):
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'read': fields.function(_get_read, fnct_search=_search_read,
+        'to_read': fields.function(_get_read, fnct_search=_search_read,
             type='boolean', string='Read',
             help='Functional field to search for read messages linked to uid'),
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
@@ -139,7 +140,7 @@ class mail_message(osv.Model):
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            return [('read', '=', 'unread')]
+            return [('to_read', '=', True)]
         return []
 
     def _get_default_author(self, cr, uid, context=None):
@@ -252,7 +253,7 @@ class mail_message(osv.Model):
             'vote_user_ids': vote_ids,
             'has_voted': has_voted,
             'has_stared': has_stared,
-            'read': msg.read
+            'to_read': msg.to_read
         }
 
     def _message_read_expandable(self, cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit):

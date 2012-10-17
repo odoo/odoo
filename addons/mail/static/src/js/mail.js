@@ -213,7 +213,7 @@ openerp.mail = function(session) {
         on_attachment_loaded: function (event, result) {
             //session.web.unblockUI();
             for(var i in this.datasets.attachment_ids){
-                if(this.datasets.attachment_ids[i].filename == result.filename && this.datasets.attachment_ids[i].upload){
+                if(this.datasets.attachment_ids[i].filename == result.filename && this.datasets.attachment_ids[i].upload) {
                     this.datasets.attachment_ids[i]={
                         'id': result.id,
                         'name': result.name,
@@ -503,7 +503,7 @@ openerp.mail = function(session) {
                 'has_voted' : false,
                 'has_stared' : false,
                 'thread_level' : 0,
-                'read' : false,
+                'to_read' : true,
                 'author_id' : [],
                 'attachment_ids' : [],
             }, param || {});
@@ -530,13 +530,13 @@ openerp.mail = function(session) {
                 }
             };
 
-            this.datasets.show_reply = this.options.message.show_reply[0]<=0 && 
-                this.options.message.show_reply[0]>=this.datasets.thread_level &&
-                (this.options.message.show_reply[1]<0 || this.options.message.show_reply[1]<=this.datasets.thread_level);
+            this.datasets.show_reply = this.options.message.show_reply[0]>=0 && 
+                this.options.message.show_reply[0]<=this.datasets.thread_level &&
+                (this.options.message.show_reply[1]<0 || this.options.message.show_reply[1]>=this.datasets.thread_level);
 
-            this.datasets.show_read_unread = this.options.message.show_read_unread[0]<=0 && 
-                this.options.message.show_read_unread[0]>=this.datasets.thread_level &&
-                (this.options.message.show_read_unread[1]<0 || this.options.message.show_read_unread[1]<=this.datasets.thread_level);
+            this.datasets.show_read_unread = this.options.message.show_read_unread[0]>=0 && 
+                this.options.message.show_read_unread[0]<=this.datasets.thread_level &&
+                (this.options.message.show_read_unread[1]<0 || this.options.message.show_read_unread[1]>=this.datasets.thread_level);
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0];
@@ -1363,7 +1363,7 @@ openerp.mail = function(session) {
                         },
                         'message': {
                             'show_reply': [0,0],
-                            'show_read_unread': [0,0],
+                            'show_read_unread': [0,-1],
                             'show_dd_delete': false,
                         },
                     },
