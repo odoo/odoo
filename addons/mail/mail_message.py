@@ -58,11 +58,11 @@ class mail_message(osv.Model):
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
         """ Return the related document name, using get_name. """
         result = dict.fromkeys(ids, False)
-        for message in self.browse(cr, 1, ids, context=context):
-            if not message.model or not message.res_id:
+        for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
+            if not message['model'] or not message['res_id']:
                 continue
             try:
-                result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+                result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, uid, [message['res_id']], context=context)[0][1])
             except (orm.except_orm, osv.except_osv):
                 pass
         return result
