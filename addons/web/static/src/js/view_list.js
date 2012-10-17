@@ -1580,7 +1580,7 @@ var DataGroup =  instance.web.Class.extend({
            var child_datagroups = _(querygroups).map(function (group) {
                var child_context = _.extend(
                    {}, self.model.context(), group.model.context());
-               var child_dg = new instance.web.DataGroup(
+               var child_dg = new DataGroup(
                    self, self.model.name, group.model.domain(),
                    child_context, group.model._context.group_by,
                    self.level + 1);
