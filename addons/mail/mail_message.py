@@ -134,7 +134,6 @@ class mail_message(osv.Model):
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
-        'is_private': fields.boolean('Private message'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -151,7 +150,6 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
-        'is_private': True,
     }
 
     #------------------------------------------------------
@@ -518,19 +516,17 @@ class mail_message(osv.Model):
             missing_notified = missing_notified
             if missing_notified:
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
-            partners_to_notify |= extra_notified
 
     def _notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
         message = self.browse(cr, uid, newid, context=context)
-        if message and (message.is_private!=False and message.is_private!=None):
+        if message and message.model and message.res_id:
             self._notify_followers(cr, uid, newid, message, context=context)
-        
-        # add myself if I wrote on my wall, 
-        # unless remove myself author
-        if ((message.model=="res.partner" and message.res_id==message.author_id.id)):
+
+        # add myself if I wrote on my wall, otherwise remove myself author
+        if ((message.model == "res.partner" and message.res_id == message.author_id.id)):
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
         else:
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)

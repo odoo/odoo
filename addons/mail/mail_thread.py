@@ -683,12 +683,6 @@ class mail_thread(osv.AbstractModel):
             'subtype_id': subtype_id,
         })
 
-        # if the parent is private, the message must be private
-        if parent_id:
-            parent_message = mail_message.browse(cr, uid, parent_id, context=context)
-            if parent_message.is_private:
-                values["is_private"] = parent_message.is_private
-
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
@@ -697,6 +691,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        # TDE FIXME: body is plaintext: convert it into html
         # when writing on res.partner, without specific thread_id -> redirect to the user's partner
         if self._name == 'res.partner' and not thread_id:
             thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]

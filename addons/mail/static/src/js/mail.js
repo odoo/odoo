@@ -27,7 +27,6 @@ openerp.mail = function(session) {
                     if( key!='default_template_id' &&
                         key!='default_composition_mode' &&
                         key!='default_use_template' &&
-                        key!='default_is_private' &&
                         key!='default_model' &&
                         key!='default_res_id' &&
                         key!='default_subtype' &&
@@ -132,7 +131,6 @@ openerp.mail = function(session) {
             this.id =           options.parameters.id;
             this.model =        options.parameters.model;
             this.res_id =       options.parameters.res_id;
-            this.is_private =   options.parameters.is_private;
             this.partner_ids =  options.parameters.partner_ids;
             this.options={thread:{}};
             this.options.thread.show_header_compose =  options.parameters.options.thread.show_header_compose;
@@ -345,7 +343,6 @@ openerp.mail = function(session) {
                     'default_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
-                    'default_is_private': true,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
                     'default_attachment_ids': attachments
@@ -832,7 +829,6 @@ openerp.mail = function(session) {
             this.id=            param.id || false;
             this.model=         param.model || false;
             this.parent_id=     param.parent_id || false;
-            this.is_private =   param.is_private || false;
             this.author_id =   param.author_id || false;
             this.partner_ids =  [];
             for(var i in param.partner_ids){
