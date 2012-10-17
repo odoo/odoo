@@ -107,13 +107,14 @@ class report_custom(report_rml):
         day_diff=eom-som
 
         if data['form']['holiday_type']!='both':
-            type=data['form']['holiday_type']
             if data['form']['holiday_type']=='Confirmed':
+                type = _('Confirmed')
                 holiday_type=('confirm')
             else:
+                type = _('Validated')
                 holiday_type=('validate')
         else:
-            type="Confirmed and Validated"
+            type = _("Confirmed and Validated")
             holiday_type=('confirm','validate')
         date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))

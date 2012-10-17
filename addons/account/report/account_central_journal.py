@@ -38,6 +38,7 @@ class journal_print(report_sxw.rml_parse, common_report_header):
             'lines': self.lines,
             'sum_debit': self._sum_debit,
             'sum_credit': self._sum_credit,
+            'has_filter': self._has_filter,
             'get_filter': self._get_filter,
             'get_fiscalyear': self._get_fiscalyear,
             'get_account': self._get_account,

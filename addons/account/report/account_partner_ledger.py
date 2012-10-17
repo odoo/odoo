@@ -42,6 +42,7 @@ class third_party_ledger(report_sxw.rml_parse, common_report_header):
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
             'get_account': self._get_account,
+            'has_filter': self._has_filter,
             'get_filter': self._get_filter,
             'get_start_date': self._get_start_date,
             'get_end_date': self._get_end_date,
