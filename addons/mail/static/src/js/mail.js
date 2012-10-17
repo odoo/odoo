@@ -1307,7 +1307,7 @@ openerp.mail = function(session) {
             var thread_displayed = this.message_render();
             this.options.domain = this.options.domain.concat(this.search_results['domain']);
             this.bind_events();
-            return (searchview_ready && thread_displayed);
+            return $.when(searchview_ready, thread_displayed);
         },
 
         /**
@@ -1377,6 +1377,7 @@ openerp.mail = function(session) {
         bind_events: function(){
             var self=this;
             this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); });
+
             this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
         }
     });
