@@ -68,7 +68,7 @@
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
                     <t t-if="widget.options.thread.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
+                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 
                 </li>
@@ -276,8 +276,8 @@
         </span>
         <button t-attf-class="oe_msg_vote oe_tag">
             <span>
-                <t t-if="!widget.datasets.has_voted">Agree</t>
-                <t t-if="widget.datasets.has_voted">Unagree</t>
+                <t t-if="!widget.has_voted">Agree</t>
+                <t t-if="widget.has_voted">Undo</t>
             </span>
         </button>
     </span>

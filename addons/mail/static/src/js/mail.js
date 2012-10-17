@@ -1228,14 +1228,7 @@ openerp.mail = function(session) {
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-
-        /**
-         * Reinitialize the widget field and Display the threads
-         * @param {Object} new_context: context of the refresh
-          */
-        set_value: function() {
-            var self = this;
-            this._super.apply(this, arguments);
+        render_value: function() {
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
@@ -1343,7 +1336,7 @@ openerp.mail = function(session) {
                 domains: domains || [],
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
-            }, function (results) {
+            }).then(function (results) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
                 self.thread.destroy();
