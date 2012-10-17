@@ -1122,7 +1122,9 @@ instance.web.WebClient = instance.web.Client.extend({
                 if (options.needaction) {
                     action.context.search_default_message_unread = true;
                 }
-                return $.when(self.action_manager.do_action(action, null, true)).fail(function() {
+                return $.when(self.action_manager.do_action(action, {
+                    clear_breadcrumbs: true,
+                })).fail(function() {
                     self.menu.open_menu(options.previous_menu_id);
                 });
             });
