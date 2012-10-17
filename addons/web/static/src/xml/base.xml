@@ -10,6 +10,21 @@
         Loading...
     </div>
 </t>
+<t t-name="Resolution">
+<div class="resolution">
+    <label style="font-size:20px;font-weight:bold;">Resolution:</label>
+    <table width="100%" >
+        <tr>
+            <td valign="middle"><a class="whiteres"  href="#">100</a>px</td>
+            <td valign="middle"><a class="whiteres"  href="#" >200</a>px</td>
+        </tr>
+        <tr>
+            <td valign="middle"><a class="whiteres"  href="#">250</a>px</td>
+            <td valign="middle"><a class="whiteres"  href="#" >300</a>px</td>
+        </tr>
+    </table>
+</div>
+</t>
 <t t-name="Notification">
     <div class="oe_notification" t-translation="off">
         <div id="oe_notification_default">
@@ -404,7 +419,7 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" href="#"><img onContextMenu="return false;" t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
@@ -1090,7 +1105,7 @@
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                Edit 
+                Edit
             </t>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
