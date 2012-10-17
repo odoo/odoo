@@ -100,6 +100,23 @@ class product_uom(osv.osv):
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
         return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
 
+    def name_create(self, cr, uid, name, context=None):
+        """ The UoM category and factor are required, so we'll have to add temporary values
+            for imported UoMs """
+        uom_categ = self.pool.get('product.uom.categ')
+        # look for the category based on the english name, i.e. no context on purpose!
+        # TODO: should find a way to have it translated but not created until actually used
+        categ_misc = 'Unsorted/Imported Units'
+        categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
+        if categ_id:
+            categ_id = categ_id[0]
+        else:
+            categ_id, _ = uom_categ.name_create(cr, uid, categ_misc)
+        uom_id = self.create(cr, uid, {self._rec_name: name,
+                                       'category_id': categ_id,
+                                       'factor': 1})
+        return self.name_get(cr, uid, [uom_id], context=context)[0]
+
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
             if data['factor_inv'] <> 1:
