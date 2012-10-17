@@ -41,6 +41,7 @@
 
 """
 
+import babel.dates
 import calendar
 import collections
 import copy
@@ -2701,7 +2702,9 @@ class BaseModel(object):
                     dt = datetime.datetime.strptime(alldata[d['id']][groupby][:7], '%Y-%m')
                     days = calendar.monthrange(dt.year, dt.month)[1]
 
-                    d[groupby] = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d').strftime('%B %Y')
+                    date_value = datetime.datetime.strptime(d[groupby][:10], '%Y-%m-%d')
+                    d[groupby] = babel.dates.format_date(
+                        date_value, format='MMMM yyyy', locale=context.get('lang', 'en_US'))
                     d['__domain'] = [(groupby, '>=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-01', '%Y-%m-%d').strftime('%Y-%m-%d') or False),\
                                      (groupby, '<=', alldata[d['id']][groupby] and datetime.datetime.strptime(alldata[d['id']][groupby][:7] + '-' + str(days), '%Y-%m-%d').strftime('%Y-%m-%d') or False)] + domain
                 del alldata[d['id']][groupby]
