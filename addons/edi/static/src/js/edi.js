@@ -3,6 +3,7 @@ var _t = instance.web._t;
 instance.edi = {}
 
 instance.edi.EdiImport = instance.web.Widget.extend({
+
     init: function(parent,url) {
         this._super();
         this.url = url;
@@ -38,11 +39,11 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     },
 
     do_import: function() {
-        this.rpc('/edi/import_edi_url', {url: this.url}, this.on_imported, this.on_imported_error);
+        this.rpc('/edi/import_edi_url', {url: this.url}).then(this.on_imported, this.on_imported_error);
     },
     on_imported: function(response) {
         if ('action' in response) {
-            this.rpc("/web/session/save_session_action", {the_action: response.action}, function(key) {
+            this.rpc("/web/session/save_session_action", {the_action: response.action}).then(function(key) {
                 window.location = "/#sa="+encodeURIComponent(key);
             });
         }
