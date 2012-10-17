@@ -116,7 +116,7 @@ class res_users(osv.Model):
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
