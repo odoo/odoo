@@ -4357,9 +4357,12 @@ class BaseModel(object):
                 upd0 = upd0 + ',"' + field + '"'
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
-            else:
-                if not isinstance(self._columns[field], fields.related):
+                #for the function fields that receive a value, we set them directly in the database 
+                #(they may be required), but we also need to trigger the _fct_inv()
+                if (hasattr(self._columns[field], '_fnct_inv')):
                     upd_todo.append(field)
+            else:
+                upd_todo.append(field)
             if field in self._columns \
                     and hasattr(self._columns[field], 'selection') \
                     and vals[field]:
