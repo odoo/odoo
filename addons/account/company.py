@@ -32,14 +32,6 @@ class res_company(osv.osv):
             help="If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'paypal_account': fields.char("Paypal Account", size=128, help="Paypal username (usually email) for receiving online payments."),
         'overdue_msg': fields.text('Overdue Payments Message', translate=True),
-        'property_reserve_and_surplus_account': fields.property(
-            'account.account',
-            type='many2one',
-            relation='account.account',
-            string="Reserve and Profit/Loss Account",
-            view_load=True,
-            domain="[('type', '=', 'other')]",
-            help="This account is used for transferring Profit/Loss (If It is Profit: Amount will be added, Loss : Amount will be deducted.), as calculated in Profit & Loss Report"),
     }
 
     _defaults = {
