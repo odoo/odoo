@@ -324,7 +324,7 @@ class mail_message(osv.Model):
         # TDE note: should not receive [None] !!
         if ids and ids != [None]:
             for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
-                message_list.append(self._message_dict_get(cr, uid, message, context=context))
+                message_list.append(self._message_get_dict(cr, uid, message, context=context))
             return message_list
 
         # key: ID, value: record
