@@ -262,7 +262,6 @@ class mail_message(osv.Model):
         """
         # sort for group items
         tree = sorted(tree, key=lambda k: k['id'])
-
         tree_not = []   
         # expandable for not show message
         for msg in tree:
@@ -367,7 +366,7 @@ class mail_message(osv.Model):
             ids = self.search(cr, uid, domain, context=context, limit=limit)
             for msg in self.browse(cr, uid, ids, context=context):
                 # if not in tree and not in message_loded list
-                if msg.id not in message_ids and msg.id not in message_loaded_ids :
+                if msg.id not in message_ids and msg not in tree and msg.id not in message_loaded_ids :
                     message_ids.append(msg.id)
                     tree.append(msg)
 
@@ -381,7 +380,7 @@ class mail_message(osv.Model):
                     # get all parented message if the user have the access
                     while parent and parent.id != parent_id:
                         parent_id = msg.parent_id.id
-                        if msg.parent_id not in tree and parent_id not in message_loaded_ids:
+                        if parent not in tree and parent_id not in message_loaded_ids:
                             tree.append(parent)
                             # if not in tree and not in message_loded list
                             if parent.id not in message_ids and parent.id not in message_loaded_ids :
