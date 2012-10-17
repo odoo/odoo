@@ -59,7 +59,7 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <ul t-attf-class="oe_msg_attachments #{widget.datasets.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
+        <ul t-attf-class="oe_msg_attachments #{widget.datasets.attachment_ids[0]?'':'oe_hidden'}">
             <t t-foreach="widget.datasets.attachment_ids" t-as="attachment">
                 <li>
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">

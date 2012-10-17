@@ -136,7 +136,6 @@ openerp.mail = function(session) {
             this.options.thread={};
             this.options.thread.display_on_thread = options.options.thread.display_on_thread;
             this.options.thread.show_attachment_delete = true;
-            this.options.thread.show_attachment_link = true;
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
@@ -161,11 +160,11 @@ openerp.mail = function(session) {
             var self = this;
             var render = $(session.web.qweb.render('mail.thread.message.attachments', {'widget': self}));
             if(!this.list_attachment){
-                this.$('.oe_mail_compose_attachment_list').replaceWith( render );
+                this.$('.oe_msg_attachment_list').replaceWith( render );
             } else {
                 this.list_attachment.replaceWith( render );
             }
-            this.list_attachment = this.$("ul.oe_msg_attachments");
+            this.list_attachment = this.$(".oe_msg_attachments");
 
             // event: delete an attachment
             this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
@@ -602,7 +601,7 @@ openerp.mail = function(session) {
         },
 
         expender: function(){
-            this.$('div.oe_msg_body:first').expander({
+            this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
                 userCollapseText: '[^]',
