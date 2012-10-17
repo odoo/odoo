@@ -190,10 +190,10 @@ openerp.web.list_editable = function (instance) {
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
-            var $recordRow = this.groups.get_row_for(record);
-            var cells = this.get_cells_for($recordRow);
 
             return this.ensure_saved().pipe(function () {
+                var $recordRow = self.groups.get_row_for(record);
+                var cells = self.get_cells_for($recordRow);
                 self.fields_for_resize.splice(0, self.fields_for_resize.length);
                 return self.with_event('edit', {
                     record: record.attributes,
@@ -398,7 +398,6 @@ openerp.web.list_editable = function (instance) {
         setup_events: function () {
             var self = this;
             _.each(this.editor.form.fields, function(field, field_name) {
-                var field;
                 var setting = false;
                 var set_invisible = function() {
                     if (!setting && field.get("effective_readonly")) {
@@ -774,7 +773,7 @@ openerp.web.list_editable = function (instance) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');
-            this.view.start_edition(
+            return this.view.start_edition(
                 record_id ? this.records.get(record_id) : null, {
                 focus_field: $(event.target).data('field')
             });
