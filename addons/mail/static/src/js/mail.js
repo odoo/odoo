@@ -503,7 +503,7 @@ openerp.mail = function(session) {
 
             // record parameters
             var param =         options.parameters;
-            for(var i in param){
+            for(var i in param){    //FIXME
                 this[i] = param[i];
             }
             this.id =           param.id || -1;
@@ -644,7 +644,7 @@ openerp.mail = function(session) {
                 }
             );
             /*insert thread in parent message*/
-            self.thread.appendTo(self.$el.find('div.oe_thread_placeholder'));
+            self.thread.replace(self.$('.oe_thread_placeholder'));
         },
         
         animated_destroy: function(options) {
@@ -1052,7 +1052,7 @@ openerp.mail = function(session) {
                     'parameters': message
                 });
             } else {
-                var message = new mail.ThreadMessage(self, {
+                var message = new mail.ThreadMessage(self, {    //FIXME
                     'domain': message.domain,
                     'context': {
                         'default_model':        message.model,
@@ -1227,7 +1227,7 @@ openerp.mail = function(session) {
             var thread_displayed = this.message_render();
             this.options.domain = this.options.domain.concat(this.search_results['domain']);
             this.bind_events();
-            return (searchview_ready && thread_displayed);
+            return (searchview_ready && thread_displayed); //FIXME
         },
 
         /**
@@ -1293,7 +1293,7 @@ openerp.mail = function(session) {
 
         bind_events: function(){
             var self=this;
-            this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); }); //FIXME
             this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
         }
     });
