@@ -488,8 +488,10 @@ class EDIMixin(object):
         if data_ids:
             model = self.pool.get(model)
             data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
-            result = model.browse(cr, uid, data.res_id, context=context)
-            return result
+            if model.exists(cr, uid, [data.res_id]):
+                return model.browse(cr, uid, data.res_id, context=context)
+            # stale external-id, cleanup to allow re-import, as the corresponding record is gone
+            ir_model_data.unlink(cr, 1, [data_ids[0]])
 
     def edi_import_relation(self, cr, uid, model, value, external_id, context=None):
         """Imports a M2O/M2M relation EDI specification ``[external_id,value]`` for the
@@ -503,6 +505,10 @@ class EDIMixin(object):
            * If previous steps gave no result, create a new record with the given
              value in the target model, assign it the given external_id, and return
              the new database ID
+
+           :param str value: display name of the record to import
+           :param str external_id: fully-qualified external ID of the record
+           :return: database id of newly-imported or pre-existing record
         """
         _logger.debug("%s: Importing EDI relationship [%r,%r]", model, external_id, value)
         target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
@@ -517,8 +523,7 @@ class EDIMixin(object):
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
             model = self.pool.get(model)
-            # should use name_create() but e.g. res.partner won't allow it at the moment
-            res_id = model.create(cr, uid, {model._rec_name: value}, context=context)
+            res_id, _ = model.name_create(cr, uid, value, context=context)
             target = model.browse(cr, uid, res_id, context=context)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)

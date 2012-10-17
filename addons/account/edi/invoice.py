@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -100,8 +100,8 @@ class account_invoice(osv.osv, EDIMixin):
         return tax_account
 
     def _edi_invoice_account(self, cr, uid, partner_id, invoice_type, context=None):
-        partner_pool = self.pool.get('res.partner')
-        partner = partner_pool.browse(cr, uid, partner_id, context=context)
+        res_partner = self.pool.get('res.partner')
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
         if invoice_type in ('out_invoice', 'out_refund'):
             invoice_account = partner.property_account_receivable
         else:
@@ -125,36 +125,31 @@ class account_invoice(osv.osv, EDIMixin):
         self._edi_requires_attributes(('company_id','company_address','type'), edi_document)
         res_partner = self.pool.get('res.partner')
 
-        _, src_company_name = edi_document.pop('company_id')
+        xid, company_name = edi_document.pop('company_id')
+        # Retrofit address info into a unified partner info (changed in v7 - used to keep them separate)
+        company_address_edi = edi_document.pop('company_address')
+        company_address_edi['name'] = company_name
+        company_address_edi['is_company'] = True
+        company_address_edi['__import_model'] = 'res.partner'
+        company_address_edi['__id'] = xid  # override address ID, as of v7 they should be the same anyway
+        if company_address_edi.get('logo'):
+            company_address_edi['image'] = company_address_edi.pop('logo')
 
         invoice_type = edi_document['type']
-        partner_value = {}
-        if invoice_type in ('out_invoice', 'out_refund'):
-            partner_value.update({'customer': True})
-        if invoice_type in ('in_invoice', 'in_refund'):
-            partner_value.update({'supplier': True})
-
-        # imported company_address = new partner address
-        address_info = edi_document.pop('company_address')
-        if '__import_model' not in address_info and '__model' not in address_info:
-            # for pre-7.0 EDI format - address used to be a record of res.partner.address
-            address_info['__import_model'] = 'res.partner'
-        if 'name' not in address_info:
-            # for pre-7.0 EDI format - address name was not required
-            address_info['name'] = src_company_name
-        address_info['type'] = 'invoice'
-        address_info['is_company'] = True
-        address_info.update(partner_value)
-        address_id = res_partner.edi_import(cr, uid, address_info, context=context)
+        if invoice_type.startswith('out_'):
+            company_address_edi['customer'] = True
+        else:
+            company_address_edi['supplier'] = True
+        partner_id = res_partner.edi_import(cr, uid, company_address_edi, context=context)
 
         # modify edi_document to refer to new partner
-        partner_address = res_partner.browse(cr, uid, address_id, context=context)
-        address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
-        edi_document['partner_id'] = address_edi_m2o
-        edi_document.pop('partner_address', False) # ignored
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
+        partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
+        edi_document['partner_id'] = partner_edi_m2o
+        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
 
-        return address_id
 
+        return partner_id
 
     def edi_import(self, cr, uid, edi_document, context=None):
         """ During import, invoices will import the company that is provided in the invoice as
