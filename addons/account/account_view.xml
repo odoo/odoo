@@ -1037,11 +1037,10 @@
     -->
 
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="name">account.move.line.reconcile.tree</field>
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
+                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1049,9 +1048,10 @@
                     <field name="partner_id"/>
                     <field name="account_id"/>
                     <field name="reconcile_partial_id"/>
+                    <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                </tree>
+                </tree_account_reconciliation>
             </field>
         </record>
 
@@ -1542,8 +1542,7 @@
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">account_reconciliation_list</field>
+            <field name="view_mode">tree_account_reconciliation</field>
             <field name="help" type="html">
                 <p>
                     No journal items found.
@@ -2171,7 +2170,6 @@
                         <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
-                        <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
