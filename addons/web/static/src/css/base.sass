@@ -2100,12 +2100,14 @@ $sheet-max-width: 860px
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            th
-                position: relative
         td, th
             padding: 3px 6px
             line-height: 18px
-        th:after
+        th.oe_sortable, th.oe_sortable div
+            cursor: pointer
+        th.oe_sortable div
+            position: relative
+        th.oe_sortable div:after
             position: absolute
             right: 6px
             content: ""
@@ -2114,10 +2116,10 @@ $sheet-max-width: 860px
             border-style: solid
             border-color: #000 transparent
             visibility: hidden
-        th.sortup:after
+        th.sortup div:after
             visibility: visible
             @include opacity(0.6)
-        th.sortdown:after
+        th.sortdown div:after
             border-bottom: none
             border-left: 4px solid transparent
             border-right: 4px solid transparent
