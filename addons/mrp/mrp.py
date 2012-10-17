@@ -153,8 +153,7 @@ class mrp_bom(osv.osv):
             args = []
         if context is None:
             context = {}
-        ids = self.search(cr, user, [('code', '=', name)]+ args, limit=limit, context=context)
-        ids += self.search(cr, user, [('product_id',operator,name)] + args, limit=limit, context=context)
+        ids = self.search(cr, user, ['|', ('code', '=', name), ('product_id',operator,name)]+ args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
