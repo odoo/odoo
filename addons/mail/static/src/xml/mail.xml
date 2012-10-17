@@ -2,7 +2,7 @@
 <template>
 
     <!-- this template contains the mail widget and is used to namespace the css -->
-    <t t-name="mail">
+    <t t-name="mail.Widget">
         <div class="oe_mail">
         </div>
     </t>
@@ -152,9 +152,9 @@
     <!--
         display message on the wall when there are no message
         -->
-    <li t-name="mail.wall_no_message" class="oe_wall_no_message">
-        You have no messages
-    </li>
+    <t t-name="mail.wall_no_message">
+        <div class="oe_wall_no_message">You have no messages</div>
+    </t>
 
     <!--
         record_thread main template
@@ -168,12 +168,13 @@
         </ul>
     </div>
 
-    <div t-name="mail.thread" t-attf-class="oe_thread #{widget.root?'oe_root_thread':''} ">
-    </div>
+    <t t-name="mail.thread">
+        <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>
+    </t>
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_msg_#{widget.type} oe_msg#{widget.unread?'unread':'read'}">
+        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">

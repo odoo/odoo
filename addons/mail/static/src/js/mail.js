@@ -408,7 +408,7 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            this.$el.on('click', 'a.oe_mail_fetch_more', self.on_expandable);
+            this.$el.on('click', 'a.oe_msg_fetch_more', self.on_expandable);
         },
 
         animated_destroy: function(options) {
@@ -639,7 +639,7 @@ openerp.mail = function(session) {
                 }
             );
             /*insert thread in parent message*/
-            self.thread.replace(self.$('.oe_thread_placeholder'));
+            self.thread.insertAfter(self.$el);
         },
         
         animated_destroy: function(options) {
@@ -873,19 +873,11 @@ openerp.mail = function(session) {
         start: function() {
             this._super.apply(this, arguments);
 
-            this.list_ul = this.$('ul.oe_mail_thread_display:first');
             this.more_msg = this.$(">.oe_msg_more_message:first");
 
             this.display_user_avatar();
-            var display_done = compose_done = false;
             
             this.bind_events();
-
-            if(this.options.thread._parents[0]==this){
-                this.on_root_thread();
-            }
-
-            return display_done && compose_done;
         },
 
         instantiate_ComposeMessage: function(){
@@ -896,31 +888,12 @@ openerp.mail = function(session) {
                 'options': this.options,
                 'show_attachment_delete': true,
             });
-            this.ComposeMessage.appendTo(this.$(".oe_mail_thread_action:first"));
-        },
 
-        /* this method is runing for first parent thread
-        */
-        on_root_thread: function(){
-            var self=this;
-            // fetch and display message, using message_ids if set
-            this.message_fetch();
-
-            $(document).scroll( self.on_scroll );
-            $(window).resize( self.on_scroll );
-            window.setTimeout( self.on_scroll, 500 );
-
-            $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$('ul.oe_mail_thread_display'));
-
-            this.instantiate_ComposeMessage();
-            this.ComposeMessage.datasets.is_private=true;
-
-            if(this.options.thread.show_header_compose){
-                this.ComposeMessage.$el.show();
-                //this.ComposeMessage.set_free_attachments();
+            if(this.datasets.thread_level){
+                this.ComposeMessage.prependTo(this.$el);
+            } else {
+                this.ComposeMessage.appendTo(this.$el);
             }
-
-            this.$el.addClass("oe_mail_root_thread");
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -947,8 +920,16 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            self.$('.oe_mail_compose_textarea .oe_more').click(function () { var p=$(this).parent(); p.find('.oe_more_hidden, .oe_hidden').show(); p.find('.oe_more').hide(); });
-            self.$('.oe_mail_compose_textarea .oe_more_hidden').click(function () { var p=$(this).parent(); p.find('.oe_more_hidden, .oe_hidden').hide(); p.find('.oe_more').show(); });
+            self.$('.oe_mail_compose_textarea .oe_more').click(function () {
+                var p=$(this).parent(); 
+                p.find('.oe_more_hidden, .oe_hidden').show(); 
+                p.find('.oe_more').hide(); 
+            });
+            self.$('.oe_mail_compose_textarea .oe_more_hidden').click(function () {
+                var p=$(this).parent(); 
+                p.find('.oe_more_hidden, .oe_hidden').hide(); 
+                p.find('.oe_more').show(); 
+            });
         },
 
         /* get all child message/thread id linked
@@ -1027,9 +1008,18 @@ openerp.mail = function(session) {
         on_compose_message: function(){
             if(!this.ComposeMessage){
                 this.instantiate_ComposeMessage();
+            } else {
+                this.ComposeMessage.$el.toggle();
             }
-            this.ComposeMessage.$el.toggle();
             return false;
+        },
+
+        /* display the no message on the thread
+        */
+        no_message: function(){
+
+            $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$el);
+
         },
 
         /** Fetch messages
@@ -1087,9 +1077,9 @@ openerp.mail = function(session) {
 
             // check if the message is already create
             for(var i in self.messages){
-                if(self.messages[i].datasets.id==message.datasets.id){
+                if(self.messages[i].datasets.id == message.datasets.id){
                     self.messages[i].destroy();
-                    self.messages[i]=self.insert_message(message);
+                    self.messages[i] = self.insert_message(message);
                     return true;
                 }
             }
@@ -1100,7 +1090,7 @@ openerp.mail = function(session) {
         insert_message: function (message) {
             var self=this;
 
-            this.$("li.oe_wall_no_message").remove();
+            this.$('.oe_wall_no_message').remove();
 
             // insert on hierarchy display => insert in self child
             var thread_messages = self.messages;
@@ -1161,19 +1151,19 @@ openerp.mail = function(session) {
                 if(sort){
                     message.insertBefore(parent_older.$el);
                 } else {
-                    message.insertAfter(parent_older.$el);
+                    message.insertAfter(parent_older.thread.$el);
                 }
             } else if(parent_newer){
                 if(sort){
-                    message.insertAfter(parent_newer.$el);
+                    message.insertAfter(parent_newer.thread.$el);
                 } else {
                     message.insertBefore(parent_newer.$el);
                 }
             } else {
                 if(sort && message.id > 0){
-                    message.prependTo(thread.list_ul);
+                    message.prependTo(thread.$el);
                 } else {
-                    message.appendTo(thread.list_ul);
+                    message.appendTo(thread.$el);
                 }
             }
 
@@ -1195,6 +1185,79 @@ openerp.mail = function(session) {
                 }).create_message_object( record );
             });
         },
+    });
+
+    /** 
+     * ------------------------------------------------------------
+     * Wall Widget
+     * ------------------------------------------------------------
+     *
+     * This widget handles the display of messages on a Wall. Its main
+     * use is to receive a context and a domain, and to delegate the message
+     * fetching and displaying to the Thread widget.
+     */
+    session.web.client_actions.add('mail.Widget', 'session.mail.Widget');
+    mail.Widget = session.web.Widget.extend({
+        template: 'mail.Widget',
+
+        /**
+         * @param {Object} parent parent
+         * @param {Object} [options]
+         * @param {Array} [options.domain] domain on the Wall
+         * @param {Object} [options.context] context, is an object. It should
+         *      contain default_model, default_res_id, to give it to the threads.
+         * @param {Number} [options.thread_level] number of thread levels to display
+         *      0 being flat.
+         */
+        init: function (parent, options) {
+            this._super(parent);
+            this.options = options || {};
+            this.options.domain = options.domain || [];
+            this.options.context = options.context || {};
+            this.search_results = {'domain': [], 'context': {}, 'groupby': {}};
+        },
+
+        start: function (options) {
+            this._super.apply(this, arguments);
+            return this.message_render();
+        },
+
+        /**
+         * Display the threads
+          */
+        message_render: function (search) {
+            this.thread = new mail.Thread(this, {
+                    'domain' : this.options.domain,
+                    'context' : this.options.context,
+                    'options': {
+                        'thread' :{
+                            'use_composer': this.options.use_composer || false,
+                            'show_header_compose': this.options.show_header_compose || false,
+                            'typeof_thread': this.options.context.typeof_thread || 'inbox',
+                            'display_on_thread': this.options.display_on_thread || [0,1]
+                        },
+                        'message': {
+                            'show_reply': this.options.show_reply || [0,0],
+                            'show_read_unread': this.options.show_read_unread || [0,-1],
+                            'show_dd_delete': this.options.show_dd_delete || false,
+                        },
+                    },
+                    'datasets': {},
+                }
+            );
+
+            this.thread.appendTo( this.$el );
+            this.thread.no_message();
+            this.thread.message_fetch();
+
+            $(document).scroll( self.on_scroll );
+            $(window).resize( self.on_scroll );
+            window.setTimeout( self.on_scroll, 500 );
+        },
+
+        bind_events: function(){
+            var self=this;
+        }
     });
 
 
@@ -1249,19 +1312,12 @@ openerp.mail = function(session) {
             this.thread = new mail.Thread(self, {
                     'domain': domain,
                     'context': this.options.context,
-                    'options':{
-                        'thread':{
-                            'show_header_compose': show_header_compose,
-                            'use_composer': show_header_compose,
-                            'display_on_thread':[-1,-1]
-                        },
-                        'message':{
-                            'show_reply': [-1,-1],
-                            'show_read_unread': [-1,-1],
-                            'show_dd_delete': false
-                        }
-                    },
-                    'datasets': {},
+                    'show_header_compose': show_header_compose,
+                    'use_composer': show_header_compose,
+                    'display_on_thread':[-1,-1],
+                    'show_reply': [-1,-1],
+                    'show_read_unread': [-1,-1],
+                    'show_dd_delete': false
                 }
             );
             return this.thread.appendTo( this.$('.oe_mail_wall_threads:first') );
@@ -1350,33 +1406,26 @@ openerp.mail = function(session) {
         message_render: function (search) {
             var domain = this.options.domain.concat(this.search_results['domain']);
             var context = _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {});
-            this.thread = new mail.Thread(this, {
-                    'domain' : domain,
-                    'context' : context,
-                    'options': {
-                        'thread' :{
-                            'use_composer': true,
-                            'show_header_compose': false,
-                            'typeof_thread': context.typeof_thread || 'inbox',
-                            'display_on_thread': [0,1]
-                        },
-                        'message': {
-                            'show_reply': [0,0],
-                            'show_read_unread': [0,-1],
-                            'show_dd_delete': false,
-                        },
-                    },
-                    'datasets': {},
+            this.root = new mail.Widget(this, {
+                'domain' : domain,
+                'context' : context,
+                'use_composer': true,
+                'show_header_compose': false,
+                'typeof_thread': context.typeof_thread || 'inbox',
+                'display_on_thread': [0,1],
+                'show_reply': [0,0],
+                'show_read_unread': [0,-1],
+                'show_dd_delete': false,
                 }
             );
-            return this.thread.appendTo( this.$('.oe_mail_wall_threads:first') );
+            return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
 
         },
 
         bind_events: function(){
             var self=this;
-            this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); });
-            this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
+            this.$("button.oe_write_full:first").click(function(){ self.root.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$("button.oe_write_onwall:first").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
 
