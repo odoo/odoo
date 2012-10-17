@@ -290,9 +290,7 @@
             <tr>
               <td>
                 <para style="terp_default_Bold_8">[[o.employee_id.name or '_']]</para>
-                <para style="terp_default_Bold_8">[[o.employee_id.address_home_id.street or '_' ]]</para>
-                <para style="terp_default_Bold_8">[[o.employee_id.address_home_id.street2 or '' ]]</para>
-                <para style="terp_default_Bold_8">[[o.employee_id.address_home_id.zip or '_' ]] [[o.employee_id.address_home_id.city or '' ]]</para>
+                <para style="terp_default_Bold_8">[[display_address(o.employee_id.address_home_id) or '_' ]]</para>
               </td>
             </tr>
           </blockTable>

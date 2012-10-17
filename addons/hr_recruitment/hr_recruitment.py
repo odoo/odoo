@@ -26,6 +26,7 @@ from base_status.base_stage import base_stage
 from datetime import datetime
 from osv import fields, osv
 from tools.translate import _
+from tools import html2plaintext
 
 AVAILABLE_STATES = [
     ('draft', 'New'),
@@ -296,7 +297,6 @@ class hr_applicant(base_stage, osv.Model):
         res['context'] = {
             'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
             'default_user_id': uid,
-            'default_state': 'open',
             'default_name': applicant.name,
             'default_categ_ids': category and [category.id] or False,
         }
@@ -327,9 +327,10 @@ class hr_applicant(base_stage, osv.Model):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
