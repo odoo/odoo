@@ -125,10 +125,10 @@ class google_docs_ir_attachment(osv.osv):
         google_docs_config = pool_gdoc_config.search(cr, uid, [('model_id', '=', res_model)], context=context)
         if google_docs_config:
             name_gdocs = pool_gdoc_config.browse(cr, uid, google_docs_config, context=context)[0].name_template
-        try:
-            name_gdocs = name_gdocs % model_fields_dic
-        except:
-            raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
+            try:
+                name_gdocs = name_gdocs % model_fields_dic
+            except:
+                raise osv.except_osv(_('Key Error!'), _("Your Google Doc Name Pattern's key does not found in object."))
             google_template_id = pool_gdoc_config.browse(cr, uid, google_docs_config[0], context=context).gdocs_resource_id
             google_document = pool_ir_attachment.copy_gdoc(cr, uid, res_model, res_id, name_gdocs, google_template_id, context=context)
         else:
