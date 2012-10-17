@@ -148,6 +148,15 @@ class mrp_bom(osv.osv):
             res.append((record['id'], name))
         return res
 
+    def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
+        if not args:
+            args = []
+        if context is None:
+            context = {}
+        ids = self.search(cr, user, [('code', '=', name)]+ args, limit=limit, context=context)
+        ids += self.search(cr, user, [('product_id.name',operator,name)] + args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context)
+
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         """ Gets child bom.
         @param self: The object pointer
