@@ -1555,7 +1555,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
-var DataGroup =  instance.web.Class.extend({
+var DataGroup =  instance.web.CallbackEnabled.extend({
    init: function(parent, model, domain, context, group_by, level) {
        this._super(parent, null);
        this.model = new instance.web.Model(model, context, domain);
