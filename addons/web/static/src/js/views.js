@@ -570,9 +570,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             show: function(index) {
                 var view_to_select = views[index];
                 self.$el.show();
-                if (self.active_view !== view_to_select) {
-                    self.switch_mode(view_to_select);
-                }
+                self.switch_mode(view_to_select);
             },
             get_title: function() {
                 var id;
