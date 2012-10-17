@@ -2768,7 +2768,6 @@ class account_chart_template(osv.osv):
         'property_account_income_categ': fields.many2one('account.account.template', 'Income Category Account'),
         'property_account_expense': fields.many2one('account.account.template', 'Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template', 'Income Account on Product Template'),
-        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')], help='This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss: Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
         'property_account_income_opening': fields.many2one('account.account.template', 'Opening Entries Income Account'),
         'property_account_expense_opening': fields.many2one('account.account.template', 'Opening Entries Expense Account'),
     }
@@ -3216,7 +3215,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_income_categ','product.category','account.account'),
             ('property_account_expense','product.template','account.account'),
             ('property_account_income','product.template','account.account'),
-            ('property_reserve_and_surplus_account','res.company','account.account')
         ]
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
         for record in todo_list:
