@@ -57,8 +57,8 @@
                     <field name="type"/>
                     <field name="author_id"/>
                     <filter string="Unread"
-                            name="unread_message" help="Show unread message"
-                            domain="[('unread', '=', True)]"/>
+                            name="messages_unread" help="Show messages to read"
+                            domain="[('to_read', '=', True)]"/>
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -78,7 +78,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
-            <field name="context">{'search_default_unread_message':True}</field>
+            <field name="context">{'search_default_to_read_message':True}</field>
         </record>
         
         <!-- Add menu entry in Settings/Email -->
@@ -87,14 +87,14 @@
         <record id="action_mail_inbox_feeds" model="ir.actions.client">
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', False)],
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', False)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 

@@ -67,9 +67,9 @@ class mail_message(osv.Model):
                 pass
         return result
 
-    def _get_unread(self, cr, uid, ids, name, arg, context=None):
+    def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
-        res = dict((id, {'unread': False}) for id in ids)
+        res = dict((id, {'to_read': False}) for id in ids)
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
@@ -78,11 +78,11 @@ class mail_message(osv.Model):
             ('read', '=', False)
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id]['unread'] = True
+            res[notif.message_id.id]['to_read'] = True
         return res
 
-    def _search_unread(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages unread by the current user. Condition is
+    def _search_to_read(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
         if domain[0][2]:
             read_cond = '(read = false or read is null)'
@@ -128,9 +128,9 @@ class mail_message(osv.Model):
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'unread': fields.function(_get_unread, fnct_search=_search_unread,
-            type='boolean', string='Unread',
-            help='Functional field to search for unread messages linked to uid'),
+        'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
+            type='boolean', string='To read',
+            help='Functional field to search for messages the current user has to read'),
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
@@ -138,7 +138,7 @@ class mail_message(osv.Model):
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            return [('unread', '=', True)]
+            return [('to_read', '=', True)]
         return []
 
     def _get_default_author(self, cr, uid, context=None):
@@ -210,7 +210,7 @@ class mail_message(osv.Model):
             'parent_id': message['parent_id'] and message['parent_id'][0] or False,
             # 'vote_user_ids': vote_ids,
             'has_voted': has_voted,
-            # 'unread': msg.unread and msg.unread['unread'] or False
+            'to_read': message['to_read'],
         }
 
     def _message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
@@ -276,7 +276,8 @@ class mail_message(osv.Model):
 
         return result
 
-    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
+    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read',
+        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
 
     def _get_parent(self, cr, uid, message, context=None):
         """ Tools method that try to get the parent of a mail.message. If

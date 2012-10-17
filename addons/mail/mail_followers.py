@@ -84,8 +84,20 @@ class mail_notification(osv.Model):
         return False
 
     def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
+        """ TDE note: add a comment, verify method calls, because js seems obfuscated. """
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_ids = self.search(cr, uid, [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)], context=context)
+
+        # all message have notifications: already set them as (un)read
+        if len(notif_ids) == len(msg_ids):
+            return self.write(cr, uid, notif_ids, {'read': read}, context=context)
+
+        # some messages do not have notifications: find which one, create notification, update read status
+        exist_notification = dict.fromkeys(msg_ids, False)
+        for notification in self.browse(cr, uid, notif_ids, context=context):
+            exist_notification[notification.message_id] = True
+        for msg_id in exist_notification.keys():
+            self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return self.write(cr, uid, notif_ids, {'read': read}, context=context)
 
     def get_partners_to_notify(self, cr, uid, message, context=None):

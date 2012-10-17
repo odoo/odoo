@@ -340,12 +340,12 @@ openerp.mail = function(session) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
+                    'default_model': false,
+                    'default_res_id': 0,
                     'default_content_subtype': 'html',
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
-                    'default_attachment_ids': attachments
+                    'default_attachment_ids': attachments,
                 },
             };
             this.do_action(action);
@@ -519,7 +519,7 @@ openerp.mail = function(session) {
 
             this.vote_user_ids = param.vote_user_ids || [];
 
-            this.unread =       param.unread || false;
+            this.to_read =      param.to_read || false;
             this._date =        param.date;
             this.author_id =    param.author_id || [];
             this.attachment_ids = param.attachment_ids || [];
@@ -679,10 +679,10 @@ openerp.mail = function(session) {
             var ids = [this.id].concat( this.get_child_ids() );
             
             if($(event.srcElement).hasClass("oe_read")) {
-                this.ds_notification.call('set_message_read', [ids,true]);
+                this.ds_notification.call('set_message_read', [ids, true]);
                 this.$el.removeClass("oe_mail_unread").addClass("oe_mail_read");
             } else {
-                this.ds_notification.call('set_message_read', [ids,false]);
+                this.ds_notification.call('set_message_read', [ids, false]);
                 this.$el.removeClass("oe_mail_read").addClass("oe_mail_unread");
             }
             return false;
