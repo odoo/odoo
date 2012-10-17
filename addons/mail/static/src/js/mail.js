@@ -1016,7 +1016,7 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, fetch_context, 0, this.context.default_parent_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
@@ -1157,14 +1157,7 @@ openerp.mail = function(session) {
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-
-        /**
-         * Reinitialize the widget field and Display the threads
-         * @param {Object} new_context: context of the refresh
-          */
-        set_value: function() {
-            var self = this;
-            this._super.apply(this, arguments);
+        render_value: function() {
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;

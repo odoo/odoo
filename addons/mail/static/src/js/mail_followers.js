@@ -84,9 +84,9 @@ openerp_mail_followers = function(session, mail) {
             });
         },
 
-        set_value: function(value_) {
+        render_value: function() {
             this.reinit();
-            return this.fetch_followers(value_ || this.get_value());
+            return this.fetch_followers(this.get("value"));
         },
 
         fetch_followers: function (value_) {
