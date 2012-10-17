@@ -1155,14 +1155,7 @@ openerp.mail = function(session) {
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-
-        /**
-         * Reinitialize the widget field and Display the threads
-         * @param {Object} new_context: context of the refresh
-          */
-        set_value: function() {
-            var self = this;
-            this._super.apply(this, arguments);
+        render_value: function() {
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
