@@ -982,6 +982,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     open_defaults_dialog: function () {
         var self = this;
+        var display = function (field, value) {
+            if (field instanceof instance.web.form.FieldSelection) {
+                return _(field.values).find(function (option) {
+                    return option[0] === value;
+                })[1];
+            } else if (field instanceof instance.web.form.FieldMany2One) {
+                return field.get_displayed();
+            }
+            return value;
+        }
         var fields = _.chain(this.fields)
             .map(function (field, name) {
                 var value = field.get_value();
@@ -995,29 +1005,28 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         || field.field.type === 'binary') {
                     return false;
                 }
-                var displayed = value;
-                if (field instanceof instance.web.form.FieldSelection) {
-                    displayed = _(field.values).find(function (option) {
-                            return option[0] === value;
-                        })[1];
-                } else if (field instanceof instance.web.form.FieldMany2One) {
-                    displayed = field.get_displayed();
-                }
 
                 return {
                     name: name,
                     string: field.string,
                     value: value,
-                    displayed: displayed,
-                    // convert undefined to false
-                    change_default: !!field.field.change_default
+                    displayed: display(field, value),
                 }
             })
             .compact()
             .sortBy(function (field) { return field.string; })
             .value();
-        var conditions = _.chain(fields)
-            .filter(function (field) { return field.change_default; })
+        var conditions = _.chain(self.fields)
+            .filter(function (field) { return field.field.change_default; })
+            .map(function (field, name) {
+                var value = field.get_value();
+                return {
+                    name: name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                }
+            })
             .value();
 
         var d = new instance.web.Dialog(this, {
