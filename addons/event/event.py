@@ -188,7 +188,7 @@ class event_event(osv.osv):
         'type': fields.many2one('event.type', 'Type of Event', readonly=False, states={'done': [('readonly', True)]}),
         'register_max': fields.integer('Maximum Registrations', help="You can for each event define a maximum registration level. If you have too much registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
         'register_min': fields.integer('Minimum Registrations', help="You can for each event define a minimum registration level. If you do not enough registrations you are not able to confirm your event. (put 0 to ignore this rule )", readonly=True, states={'draft': [('readonly', False)]}),
-        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers'),
+        'register_current': fields.function(_get_register, string='Confirmed Registrations', multi='register_numbers', store=True),
         'register_avail': fields.function(_get_register, string='Available Registrations', multi='register_numbers',type='integer'),
         'register_prospect': fields.function(_get_register, string='Unconfirmed Registrations', multi='register_numbers'),
         'register_attended': fields.function(_get_register, string='# of Participations', multi='register_numbers'),
