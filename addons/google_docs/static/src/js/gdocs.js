@@ -1,21 +1,25 @@
 openerp.google_docs = function(instance, m) {
 var QWeb = instance.web.qweb,
     _t = instance.web._t;
-
+//{}
     instance.web.Sidebar = instance.web.Sidebar.extend({
-
-       on_attachments_loaded: function(attachments) {
+        on_attachments_loaded: function(attachments) {
             var self = this;
             _.chain(attachments)
-                .filter(function(attachment){ if (attachment.name ==='Google Doc') return true})
-                .map(function(attachment, i){ attachment.name = _.str.sprintf(_t("%s (%s)"), attachment.name, i+1)})
+                 .groupBy(function(attachment) { return attachment.name})
+                 .each(function(attachment){
+                     if(attachment.length > 1)
+                         _.map(attachment, function(attachment, i){
+                             attachment.name = _.str.sprintf(_t("%s (%s)"), attachment.name, i+1)
+                         })
+                  })
             self._super(attachments);
-       },
-       redraw: function() {
-           var self = this;
-           this._super.apply(this, arguments);
-           self.$el.find('.oe_sidebar_add_attachment').after(QWeb.render('Google_doc', {widget: self}))
-           self.$el.find('.oe_sidebar_add_google_doc').on('click', function (e) {
+        },
+        redraw: function() {
+            var self = this;
+            this._super.apply(this, arguments);
+            self.$el.find('.oe_sidebar_add_attachment').after(QWeb.render('Google_doc', {widget: self}))
+            self.$el.find('.oe_sidebar_add_google_doc').on('click', function (e) {
                 self.on_google_doc();
             });
         },
