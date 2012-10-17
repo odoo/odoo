@@ -144,7 +144,7 @@
         <record id="trans_ready_repair_start" model="workflow.transition">
             <field name="act_from" ref="act_repair_ready"/>
             <field name="act_to" ref="act_repair_start"/>
-            <field name="signal">action_repair_start</field>
+            <field name="signal">repair_ready</field>
         </record>
 
        <record id="trans_repair_repair_end" model="workflow.transition">
