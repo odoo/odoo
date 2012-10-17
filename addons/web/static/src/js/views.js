@@ -113,6 +113,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         var item = this.breadcrumbs[index];
         item.show(subindex);
         this.inner_widget = item.widget;
+        this.inner_action = item.action;
         return true;
     },
     clear_breadcrumbs: function() {
@@ -131,6 +132,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             if (!dups.length) {
                 if (this.getParent().has_uncommitted_changes()) {
                     this.inner_widget = item.widget;
+                    this.inner_action = item.action;
                     this.breadcrumbs.splice(index, 0, item);
                     return false;
                 } else {
@@ -139,7 +141,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         }
         var last_widget = this.breadcrumbs.slice(-1)[0];
-        this.inner_widget =  last_widget && last_widget.widget;
+        if (last_widget) {
+            this.inner_widget = last_widget.widget;
+            this.inner_action = last_widget.action;
+        }
     },
     get_title: function() {
         var titles = [];
@@ -405,6 +410,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     template: "ViewManager",
     init: function(parent, dataset, views, flags) {
         this._super(parent);
+        this.url_states = {};
         this.model = dataset ? dataset.model : undefined;
         this.dataset = dataset;
         this.searchview = null;
@@ -569,6 +575,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             action: this.action,
             show: function(index) {
                 var view_to_select = views[index];
+                var state = self.url_states[view_to_select];
+                self.do_push_state(state || {});
                 self.$el.show();
                 self.switch_mode(view_to_select);
             },
@@ -908,6 +916,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             state["view_type"] = this.active_view;
+            this.url_states[this.active_view] = state;
             this.getParent().do_push_state(state);
         }
     },
