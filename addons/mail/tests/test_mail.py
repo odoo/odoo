@@ -525,7 +525,8 @@ class test_mail(TestMailMockups):
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         user_demo = self.res_users.browse(cr, uid, self.user_demo_id)
         group_pigs_demo = self.mail_group.browse(cr, self.user_demo_id, self.group_pigs_id)
-        na_count_current = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        na_admin_base = self.mail_message._needaction_count(cr, uid, domain=[])
+        na_demo_base = self.mail_message._needaction_count(cr, user_demo.id, domain=[])
 
         # Test: number of unread notification = needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
@@ -546,17 +547,21 @@ class test_mail(TestMailMockups):
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
             ])
-        self.assertEqual(len(notif_ids), na_count_current + 3, 'Admin should have 3 new unread notifications')
-        na_count_admin = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count_admin, na_count_current + 3, 'Admin should have 3 new needaction')
+        self.assertEqual(len(notif_ids), na_admin_base + 3, 'Admin should have 3 new unread notifications')
+        na_admin = self.mail_message._needaction_count(cr, uid, domain=[])
+        na_admin_group = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_admin, na_admin_base + 3, 'Admin should have 3 new needaction')
+        self.assertEqual(na_admin_group, 3, 'Admin should have 3 needaction related to Pigs')
         # Test: demo has 0 new notifications (not a follower, not receiving its own messages), and 0 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_demo.partner_id.id),
             ('read', '=', False)
             ])
-        self.assertEqual(len(notif_ids), na_count_current + 0, 'Demo should have 0 new unread notifications')
-        na_count_demo = self.mail_message._needaction_count(cr, self.user_demo_id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count_demo, na_count_current + 0, 'Demo should have 0 new notifications')
+        self.assertEqual(len(notif_ids), na_demo_base + 0, 'Demo should have 0 new unread notifications')
+        na_demo = self.mail_message._needaction_count(cr, user_demo.id, domain=[])
+        na_demo_group = self.mail_message._needaction_count(cr, user_demo.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_demo, na_demo_base + 0, 'Demo should have 0 new needaction')
+        self.assertEqual(na_demo_group, 0, 'Demo should have 0 needaction related to Pigs')
 
     def test_50_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""
