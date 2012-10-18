@@ -425,7 +425,19 @@ class YamlInterpreter(object):
                 continue
             field_value = self._eval_field(model, field_name, expression, default=False)
             record_dict[field_name] = field_value
-
+        if 'line_cr_ids' in record_dict and record_dict['line_cr_ids']:
+            for item in record_dict['line_cr_ids']:
+                if item[2] and 'date_original' in item[2]:
+                    del(item[2]['date_original'])
+                if item[2] and 'date_original' in item[2]:
+                    del(item[2]['date_due'])
+        if 'line_dr_ids' in record_dict and record_dict['line_dr_ids']:
+            for item in record_dict['line_dr_ids']:
+                if item[2] and 'date_original' in item[2]:
+                    del(item[2]['date_original'])
+                if item[2] and 'date_original' in item[2]:
+                    del(item[2]['date_due'])
+        print "ICICICICICICI", record_dict
         return record_dict
 
     def process_ref(self, node, column=None):
