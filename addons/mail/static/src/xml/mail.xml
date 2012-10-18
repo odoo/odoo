@@ -185,7 +185,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
+        <div t-attf-class="oe_msg oe_with_buttons oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
@@ -204,7 +204,7 @@
 
             <div class="oe_msg_center">
                 <!-- message itself -->
-                <div class="oe_mail_msg">
+                <div class="oe_msg_content">
                     <h1 t-if="widget.datasets.subject" class="oe_msg_title">
                         <t t-raw="widget.datasets.subject"/>
                     </h1>
@@ -277,10 +277,8 @@
     <!-- mail.thread.message.star
         Template used to display stared/unstared message in a mail.message
     -->
-    <span t-name="mail.thread.message.star">
-        <span class="oe_left">
-            <button t-attf-class="oe_mail_starbox oe_tag #{widget.datasets.has_stared?'oe_stared':''}">*</button>
-        </span>
-    </span>
+    <t t-name="mail.thread.message.star">
+         <a t-attf-class="oe_mail_starbox #{widget.datasets.has_stared?'oe_stared':''}">*</a>
+    </t>
 
 </template>
