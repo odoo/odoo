@@ -393,8 +393,8 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contract Renewal Due Soon',store=False),
-        'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contract Renewal Overdue',store=False),
+        'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contracts to renew',store=False),
+        'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contracts Overdued',store=False),
         
         'car_value': fields.float('Car value', help='Value of the bought vehicle'),
         #'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
