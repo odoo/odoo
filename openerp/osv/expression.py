@@ -540,7 +540,8 @@ class expression(object):
                             ids2 = select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator)
                             if ids2:
                                 call_null = False
-                                self.__exp[i] = ('id', 'in', ids2)
+                                o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                                self.__exp[i] = ('id', o2m_op, ids2)
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
