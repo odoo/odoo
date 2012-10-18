@@ -126,6 +126,7 @@
     invoice_new = self.browse(cr, uid, invoice_id)
 
     # check bank info on partner
+    assert invoice_new.partner_id.supplier, "Imported partner should be a supplier, as we just imported the document as a supplier invoice"
     assert len(invoice_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
     bank_info = invoice_new.partner_id.bank_ids[0]
     assert bank_info.acc_number == "Sample bank: 70-123465789-156113", 'Expected "Sample bank: 70-123465789-156113", got %s' % bank_info.acc_number
@@ -233,6 +234,7 @@
     invoice_new = self.browse(cr, uid, invoice_id)
 
     # check bank info on partner
+    assert invoice_new.partner_id.supplier, "Imported partner should be a supplier, as we just imported the document as a supplier invoice"
     assert len(invoice_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
     bank_info = invoice_new.partner_id.bank_ids[0]
     assert bank_info.acc_number == "Sample bank: 123465789-156113", 'Expected "Sample bank: 123465789-156113", got %s' % bank_info.acc_number
