@@ -374,7 +374,7 @@ class fleet_vehicle(osv.Model):
         'log_contracts' : fields.one2many('fleet.vehicle.log.contract','vehicle_id', 'Contracts'),
         'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
-        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle'),
+        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle',ondelete="set null"),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','fleet_vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
@@ -450,12 +450,25 @@ class fleet_vehicle(osv.Model):
         changes = []
         if 'driver' in vals:
             value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
-            changes.append('Driver: from \'' + self.browse(cr, uid, ids, context)[0].driver.name + '\' to \'' + value+'\'')
+            olddriver = self.browse(cr, uid, ids, context)[0].driver
+            if olddriver:
+                olddriver = olddriver.name
+            else:
+                olddriver = 'None'
+            changes.append('Driver: from \'' + olddriver + '\' to \'' + value+'\'')
         if 'state' in vals:
             value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
-            changes.append('State: from \'' + self.browse(cr, uid, ids, context)[0].state.name + '\' to \'' + value+'\'')
+            oldstate = self.browse(cr, uid, ids, context)[0].state
+            if oldstate:
+                oldstate=oldstate.name
+            else:
+                oldstate = 'None'
+            changes.append('State: from \'' + oldstate + '\' to \'' + value+'\'')
         if 'license_plate' in vals:
-            changes.append('License Plate: from \'' + self.browse(cr, uid, ids, context)[0].license_plate + '\' to \'' + vals['license_plate']+'\'')   
+            old_license_plate = self.browse(cr, uid, ids, context)[0].license_plate
+            if not old_license_plate:
+                old_license_plate = 'None'
+            changes.append('License Plate: from \'' + old_license_plate + '\' to \'' + vals['license_plate']+'\'')   
        
         vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
 
