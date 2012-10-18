@@ -613,7 +613,7 @@ class test_mail(TestMailMockups):
         # Test: msg1 has Admin as voter
         self.assertEqual(set(msg1.vote_user_ids), set([user_admin]), 'after voting, Admin is not the voter')
         # Do: Bert vote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id], [user_bert_id])
+        self.mail_message.vote_toggle(cr, user_bert_id, [msg1.id])
         msg1.refresh()
         # Test: msg1 has Admin and Bert as voters
         self.assertEqual(set(msg1.vote_user_ids), set([user_admin, user_bert]), 'after voting, Admin and Bert are not the voters')

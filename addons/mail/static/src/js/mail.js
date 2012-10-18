@@ -12,40 +12,30 @@ openerp.mail = function(session) {
      * ------------------------------------------------------------
      * 
      * Override of formview do_action method, to catch all return action about
-     * mail.compose.message. The purpose is to bind 'Send by e-mail' buttons
-     * and redirect them to the Chatter.
+     * mail.compose.message. The purpose is to bind 'Send by e-mail' buttons.
      */
 
     session.web.FormView = session.web.FormView.extend({
         do_action: function(action) {
             if (action.res_model == 'mail.compose.message') {
-
                 /* hack for stop context propagation of wrong value
                  * delete this hack when a global method to clean context is create
-                */
-                for(var key in action.context){
-                    if( key!='default_template_id' &&
-                        key!='default_composition_mode' &&
-                        key!='default_use_template' &&
-                        key!='default_partner_ids' &&
-                        key!='default_model' &&
-                        key!='default_res_id' &&
-                        key!='default_subtype' &&
-                        key!='active_id' &&
-                        key!='lang' &&
-                        key!='bin_raw' &&
-                        key!='tz' &&
-                        key!='active_model' &&
-                        key!='edi_web_url_view' &&
-                        key!='active_ids')
-                    action.context[key]=null;
-                };
+                 */
+                var context_keys = ['default_template_id', 'default_composition_mode', 
+                    'default_use_template', 'default_partner_ids', 'default_model',
+                    'default_res_id', 'default_subtype', 'active_id', 'lang',
+                    'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids']
+                for (var key in action.context) {
+                    if (_.indexOf(context_keys, key) == -1) {
+                        action.context[key] = null;
+                    }
+                }
                 /* end hack */
-
             }
             return this._super.apply(this, arguments);
         },
     });
+
 
     /**
      * ------------------------------------------------------------
@@ -90,6 +80,7 @@ openerp.mail = function(session) {
 
         /* replace textarea text into html text
          * (add <p>, <a>)
+         * TDE note : should not be here, but server-side I think ...
         */
         get_text2html: function(text){
             return text
@@ -501,7 +492,7 @@ openerp.mail = function(session) {
                 'body' : false,
                 'vote_user_ids' :[],
                 'has_voted' : false,
-                'has_stared' : false,
+                'is_favorite' : false,
                 'thread_level' : 0,
                 'to_read' : true,
                 'author_id' : [],
@@ -761,9 +752,9 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('button.oe_mail_starbox:first');
-            return this.ds_message.call('star_toggle', [[self.datasets.id]]).pipe(function(star){
-                self.datasets.has_stared=star;
-                if(self.datasets.has_stared){
+            return this.ds_message.call('favorite_toggle', [[self.datasets.id]]).pipe(function(star){
+                self.datasets.is_favorite=star;
+                if(self.datasets.is_favorite){
                     button.addClass('oe_stared');
                 } else {
                     button.removeClass('oe_stared');

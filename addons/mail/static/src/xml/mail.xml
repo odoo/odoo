@@ -287,7 +287,7 @@
     -->
     <span t-name="mail.thread.message.star">
         <span class="oe_left">
-            <button t-attf-class="oe_mail_starbox oe_tag #{widget.datasets.has_stared?'oe_stared':''}">*</button>
+            <button t-attf-class="oe_mail_starbox oe_tag #{widget.datasets.is_favorite?'oe_stared':''}">*</button>
         </span>
     </span>
 
