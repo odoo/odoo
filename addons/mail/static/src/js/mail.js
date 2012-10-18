@@ -17,7 +17,7 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
-        do_action: function(action, on_close) {
+        do_action: function(action) {
             if (action.res_model == 'mail.compose.message') {
 
                 /* hack for stop context propagation of wrong value
@@ -44,7 +44,7 @@ openerp.mail = function(session) {
                 $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_fetch').click();
 
             }
-            return this._super(action, on_close);
+            return this._super.apply(this, arguments);
         },
     });
 
