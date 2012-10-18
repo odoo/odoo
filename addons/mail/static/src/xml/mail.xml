@@ -89,7 +89,7 @@
         -->
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
-            Post to: 
+            Post to:
             <span t-if="!widget.datasets.is_private" class="oe_all_follower">All Followers</span> 
             <t t-if="!widget.datasets.is_private and widget.datasets.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>

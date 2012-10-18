@@ -58,8 +58,8 @@
                     <field name="author_id"/>
                     <field name="partner_ids"/>
                     <filter string="Unread"
-                            name="unread_message" help="Show unread message"
-                            domain="[('read', '=', False)]"/>
+                            name="messages_unread" help="Show messages to read"
+                            domain="[('to_read', '=', True)]"/>
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -79,7 +79,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
-            <field name="context">{'search_default_unread_message':True}</field>
+            <field name="context">{'search_default_to_read_message':True}</field>
         </record>
         
         <!-- Add menu entry in Settings/Email -->
