@@ -248,6 +248,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
+                self.do_clear_groups();
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
@@ -261,14 +262,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 });
             }));
         });
-        self.do_clear_groups();
     },
     do_process_dataset: function() {
         var self = this;
-        this.$el.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
+        this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
+                self.do_clear_groups();
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 self.do_add_groups([kgroup]).then(function() {
                     if (_.isEmpty(records)) {
@@ -281,7 +282,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             });
             return def;
         });
-        self.do_clear_groups();
     },
     do_reload: function() {
         this.do_search(this.search_domain, this.search_context, this.search_group_by);
