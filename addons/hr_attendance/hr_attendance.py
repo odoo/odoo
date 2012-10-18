@@ -158,7 +158,10 @@ class hr_employee(osv.osv):
                 if employee.state == 'absent': action = 'sign_in'
 
             if not self._action_check(cr, uid, employee.id, action_date, context):
-                raise osv.except_osv(_('Warning'), _('You are trying to %s for a date that is posterior to the starting date of the project. Please contact the HR Manager to correct attendances.')%(action),)
+                if action == 'sign_out':
+                    raise osv.except_osv(_('Warning'), _('You are trying to sign out for a date that is posterior to the starting date of the project. Please contact the HR Manager to correct attendances.'))
+                elif action == 'action':
+                    raise osv.except_osv(_('Warning'), _('You are trying to sign out and switch project for a date that is posterior to the starting date of the current project. Please contact the HR Manager to correct attendances.'))
 
             vals = {'action': action, 'employee_id': employee.id}
             if action_date:
