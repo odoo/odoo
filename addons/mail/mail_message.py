@@ -266,7 +266,7 @@ class mail_message(osv.Model):
             # SHOULD NOT BE SUPERUSED_ID -> check search is correctly implemented in mail.message
             not_loaded_ids = self.search(cr, uid, [
                 ('parent_id', '=', message['id']),
-                (['id', 'not in', message_loaded_ids),
+                ('id', 'not in', message_loaded_ids),
                 ], context=context, limit=1000)
             # group childs not read
             id_min = None
@@ -286,7 +286,7 @@ class mail_message(osv.Model):
                         result.append({
                             'domain': [('id', '>=', id_min), ('id', '<=', id_max), ('parent_id', '=', msg_id)],
                             'nb_messages': nb,
-                            'type': 'expandable', 
+                            'type': 'expandable',
                             'parent_id': msg_id,
                             'id':  id_min,
                             'model':  message['model']
@@ -298,13 +298,13 @@ class mail_message(osv.Model):
                 result.append({
                     'domain': [('id', '>=', id_min), ('id', '<=', id_max), ('parent_id', '=', msg_id)],
                     'nb_messages': nb,
-                    'type': 'expandable', 
-                    'parent_id': msg_id, 
+                    'type': 'expandable',
+                    'parent_id': msg_id,
                     'id':  id_min,
                     'model':  message['model'],
                 })
 
-        for msg_id in tree+tree_not:
+        for msg_id in tree + tree_not:
             message_loaded_ids.append(msg_id)
 
         # expandable for limit max
@@ -313,17 +313,16 @@ class mail_message(osv.Model):
             result.append({
                 'domain': domain,
                 'nb_messages': 0,
-                'type': 'expandable', 
-                'parent_id': parent_id, 
+                'type': 'expandable',
+                'parent_id': parent_id,
                 'id': -1,
                 'max_limit': True
-            });
+            })
 
         return result
 
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read',
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'star_user_ids']
-
 
     def _get_parent(self, cr, uid, message, context=None):
         """ Tools method that tries to get the parent of a mail.message. If
@@ -362,7 +361,7 @@ class mail_message(osv.Model):
         # TDE note: better name ?
         dict_tree = {}
         message_ids = []
-        record = None
+        # record = None
         message_list = []
 
         # select ids
@@ -376,7 +375,7 @@ class mail_message(osv.Model):
             ids = self.search(cr, uid, domain, context=context, limit=limit)
             for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
                 # if not in tree and not in message_loded list
-                if message['id'] not in message_ids and message['id'] not in tree and message['id'] not in message_loaded_ids :
+                if message['id'] not in message_ids and message['id'] not in tree and message['id'] not in message_loaded_ids:
                     message_ids.append(message['id'])
                     tree.append(message['id'])
                     dict_tree[message['id']] = message
@@ -391,7 +390,7 @@ class mail_message(osv.Model):
                             dict_tree[message['id']] = message
                             message_list.append(self._message_get_dict(cr, uid, message, context=context))
                             # if not in tree and not in message_loded list
-                            if parent['id'] not in message_ids and parent['id'] not in message_loaded_ids :
+                            if parent['id'] not in message_ids and parent['id'] not in message_loaded_ids:
                                 message_ids.append(parent['id'])
                             parent = self._get_parent(cr, uid, parent, context=context)
                         else:
@@ -405,8 +404,8 @@ class mail_message(osv.Model):
             # get the child expandable messages for the tree
             message_list = self._message_read_expandable(cr, uid, tree, message_list, dict_tree, message_loaded_ids, domain, context, parent_id, limit)
 
-        result = sorted(result, key=lambda k: k['id'])
-        return result
+        message_list = sorted(message_list, key=lambda k: k['id'])
+        return message_list
 
     # TDE Note: do we need this ?
     def user_free_attachment(self, cr, uid, context=None):
