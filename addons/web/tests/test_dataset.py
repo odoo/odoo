@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 import mock
 import unittest2
-import web.controllers.main
+import openerp.addons.web.controllers.main
 
 class TestDataSetController(unittest2.TestCase):
     def setUp(self):
-        self.dataset = web.controllers.main.DataSet()
+        self.dataset = openerp.addons.web.controllers.main.DataSet()
         self.request = mock.Mock()
         self.read = self.request.session.model().read
         self.search = self.request.session.model().search

@@ -70,7 +70,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: {},
-            beforeClose: function () { self.close(); },
+            beforeClose: function () {
+                self.trigger("closing");
+            },
             resizeStop: this.on_resized
         };
         for (var f in this) {
@@ -84,6 +86,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             }
             _.extend(this.dialog_options, options);
         }
+        this.on("closing", this, this._closing);
     },
     get_options: function(options) {
         var self = this,
@@ -126,13 +129,10 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
-        if (! this.params_buttons) {
-            this.$buttons.appendTo($("body"));
-        }
+        this.$buttons.appendTo($("body"));
         instance.web.dialog(this.$el, o).dialog('open');
-        if (! this.params_buttons) {
-            this.$buttons.appendTo(this.$el.dialog("widget"));
-        }
+        this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
+        this.$buttons.appendTo(this.$el.dialog("widget"));
         if (o.height === 'auto' && o.max_height) {
             this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -145,19 +145,23 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.params_buttons) {
             this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
             this.$el.dialog("widget").append(this.$buttons);
+        } else {
+            this.$buttons = this.$el.dialog("widget").find(".ui-dialog-buttonpane");
         }
         this.dialog_inited = true;
         var res = this.start();
         return res;
     },
-    close: function() {        
+    close: function() {
+        this.$el.dialog('close');
+    },
+    _closing: function() {
         if (this.__tmp_dialog_destroying)
             return;
         if (this.dialog_options.destroy_on_close) {
             this.__tmp_dialog_closing = true;
             this.destroy();
             this.__tmp_dialog_closing = undefined;
-            this.trigger("dialog_close");
         }
     },
     on_resized: function() {
@@ -1116,9 +1120,11 @@ instance.web.WebClient = instance.web.Client.extend({
             .pipe(function (result) {
                 var action = result;
                 if (options.needaction) {
-                    action.context.search_default_needaction_pending = true;
+                    action.context.search_default_message_unread = true;
                 }
-                return $.when(self.action_manager.do_action(action, null, true)).fail(function() {
+                return $.when(self.action_manager.do_action(action, {
+                    clear_breadcrumbs: true,
+                })).fail(function() {
                     self.menu.open_menu(options.previous_menu_id);
                 });
             });
