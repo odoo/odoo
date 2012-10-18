@@ -987,12 +987,10 @@ instance.web.WebClient = instance.web.Client.extend({
                 instance.web.dialog($(QWeb.render('Resolution')),{
                     title: "OpenERP Resolution" });
                 $('.resolution a').click(function() {
-                    if ($(this).text() == "Original") {
-                        self.$el.find('.oe_logo').css('width', "220px");
-                        self.$el.find('.oe_logo img').css('width', "157px");
-                    }
-                    self.$el.find('.oe_logo').css('width', $(this).text()+"px");
-                    self.$el.find('.oe_logo img').css('width', $(this).text()+"px");
+                    self.$el.find('.oe_logo').css('width', $(this).attr('awidth')+"px");
+                    self.$el.find('.oe_logo').css('height', $(this).attr('aheight')+"px");
+                    self.$el.find('.oe_logo img').css('width', $(this).attr('imgw')+"px");
+                    self.$el.find('.oe_logo img').css('height', $(this).attr('imgh')+"px");
                 })
             })
             self.$el.on('click', '.oe_logo', function(e) {
