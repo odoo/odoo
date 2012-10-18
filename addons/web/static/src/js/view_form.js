@@ -2143,6 +2143,20 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             self.do_action(r);
         });
     },
+
+    set_dimensions: function (height, width) {
+        // remove width css property
+        this.$el.css('width', '');
+        // extract style (without width)
+        var old_style = this.$el.attr('style');
+        // jQuery doesn't understand/use !important
+        var style = 'width:' + width + 'px !important;';
+        if (old_style) {
+            style += old_style
+        }
+        this.$el.attr('style', style);
+        this.$el.css('minHeight', height);
+    }
 });
 
 /**
@@ -2520,6 +2534,13 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function($el) {
         this.$textarea.focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super();
+        this.$textarea.css({
+            width: width,
+            minHeight: height
+        });
     },
 });
 

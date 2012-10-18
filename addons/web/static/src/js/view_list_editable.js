@@ -251,12 +251,10 @@ openerp.web.list_editable = function (instance) {
             var $cell = $(cell);
             var position = $cell.position();
 
-            // jquery does not understand !important
-            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important');
+            field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
             field.$el.css({
                 top: position.top,
                 left: position.left,
-                minHeight: $cell.outerHeight()
             });
         },
         /**
