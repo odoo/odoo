@@ -164,7 +164,7 @@
           <para style="terp_tblheader_Details_Right">[[ formatLang(sum_credit(objects,data['form']['date1'],data['form']['date2']))]]</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(sum_balance(objects,data['form']['date1'],data['form']['date2']))]] [[ company.currency_id.symbol]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(sum_balance(objects,data['form']['date1'],data['form']['date2']), currency_obj = company.currency_id)]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ formatLang(sum_quantity(objects,data['form']['date1'],data['form']['date2'])) ]]</para>
@@ -188,7 +188,7 @@
             <para style="terp_tblheader_Details_Right">[[formatLang(move_g['credit'])]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_Details_Right">[[ formatLang(move_g['balance'])]] [[ company.currency_id.symbol]]</para>
+            <para style="terp_tblheader_Details_Right">[[ formatLang(move_g['balance'], currency_obj = company.currency_id)]]</para>
           </td>
           <td>
             <para style="terp_tblheader_Details_Right">[[formatLang(move_g['quantity']) ]]</para>
@@ -212,7 +212,7 @@
               <para style="terp_default_Right_9">[[ formatLang(move_a['credit']) ]] </para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ formatLang(move_a['balance']) ]] [[ company.currency_id.symbol]]</para>
+              <para style="terp_default_Right_9">[[ formatLang(move_a['balance'], currency_obj = company.currency_id)]]</para>
             </td>
             <td>
               <para style="terp_default_Right_9">[[ formatLang(move_a['quantity']) ]]</para>

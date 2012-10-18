@@ -55,11 +55,11 @@
                 <sheet>
                     <label for="employee_id" class="oe_edit_only"/>
                     <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
-                    <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
-                    <h2>From <field name="date_from"/> to <field name="date_to"/></h2>
                     <group>
                         <group>
-                            <field name="name"/>
+                            <label for="date_from" string="Timesheet Period"/>
+                            <div><field name="date_from"/> to <field name="date_to"/></div>
+                            <field name="name" invisible="1"/>
                             <field name="department_id"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>

@@ -47,6 +47,7 @@ openerp.base_import = function (instance) {
             this._super.apply(this, arguments);
             if(add_button) {
                 this.$buttons.on('click', '.oe_list_button_import', function() {
+
                     self.do_action({
                         type: 'ir.actions.client',
                         tag: 'import',
@@ -56,6 +57,7 @@ openerp.base_import = function (instance) {
                     }, void 0, void 0, function () {
                         self.reload();
                     });
+
                     return false;
                 });
             }
@@ -416,7 +418,7 @@ openerp.base_import = function (instance) {
                             '</div>'
                         ].join('')
                     },
-                })).get(0).scrollIntoView();
+                }));
         },
     });
     // FSM-ize DataImport

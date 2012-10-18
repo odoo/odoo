@@ -198,8 +198,9 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_highlight"/>
-                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="purchase_confirm" states="draft" string="Confirm Order"/>
+                    <button name="purchase_confirm" states="sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
@@ -607,13 +608,13 @@
             <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <group name="procurement_help" position="inside">
-                    <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                    <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
                         When you sell this service to a customer, <b>a draft purchase order</b>
                         will be created in order to subcontract the job 
                         <i attrs="{'invisible': [('seller_id','=',False)]}">to 
                         <field name="seller_id" class="oe_inline"/></i>.
                     </p>
-                    <p attrs="{'invisible': [('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                    <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
                         When you sell this product, OpenERP will trigger <b>a draft
                         purchase order</b> to buy the required quantities to the supplier.
                         The delivery order will be ready after having received the
