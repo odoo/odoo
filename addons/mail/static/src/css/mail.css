@@ -4,11 +4,7 @@
 .openerp .oe_mail {
     position: relative;
     width: 560px;
-    margin: 20px;
-    background: #EEE;
-    border: solid 1px #ccc;
-    border-radius: 3px;
-    padding: 8px;
+    margin: 16px;
 }
 .openerp .oe_mail .oe_thread{
     margin-left: 32px;
@@ -21,21 +17,26 @@
 
 .openerp .oe_mail .oe_msg{
     position: relative;
-    background: blue;
+    background: #f7f7f7;
+    border-radius: 2px;
+    border: solid 1px #ececec;
     margin-bottom: 4px;
     min-height: 75px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_left{
     position: absolute;
-    left:0; top: 0; bottom: 0; width: 75px;
-    background: red;
+    left:0; top: 0; bottom: 0; width: 40px;
     overflow: hidden;
+}
+.openerp .oe_mail .oe_msg .oe_msg_icon{
+    width: 32px;
+    margin: 4px;
+    border-radius: 2px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_center{
     position: relative;
     display: block;
-    margin-left: 75px;
-    background: gray;
+    margin-left: 40px;
 }
 .openerp .oe_mail .oe_msg.oe_with_buttons .oe_msg_center{
     margin-right: 32px;
@@ -43,17 +44,17 @@
 .openerp .oe_mail .oe_msg .oe_msg_right{
     position: absolute;
     right:0; top:0; bottom: 0; width: 32px;
-    background: fuchsia;
     overflow: hidden;
 }
 .openerp .oe_mail .oe_msg .oe_msg_footer{
     height: 32px;
-    background: purple;
+    padding-left: 4px;
     overflow: hidden;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content{
     display: block;
-    background: yellow;
+    overflow: hidden;
+    padding: 4px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_icons a{
     text-decoration: none;
@@ -67,7 +68,7 @@
     padding: 0px;
     resize: vertical;
 }
-.openerp .oe_mail .oe_msg.oe_msg_composer_compact{
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact, .openerp .oe_mail .oe_msg.oe_msg_expandable{
     padding:4px;
     min-height:0px;
 }
