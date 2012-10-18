@@ -393,8 +393,17 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
         instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
-    set: function(map, options) {
-        options = options || {};
+    set: function(arg1, arg2, arg3) {
+        var map;
+        var options;
+        if (typeof arg1 === "string") {
+            map = {};
+            map[arg1] = arg2;
+            options = arg3 || {};
+        } else {
+            map = arg1;
+            options = arg2 || {};
+        }
         var self = this;
         var changed = false;
         _.each(map, function(val, key) {
