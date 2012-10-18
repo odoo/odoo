@@ -120,6 +120,10 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping)) { return null; }
 
         var self = this;
+
+        // FIXME: when pyeval is merged
+        var ctx = instance.session.test_eval_contexts(
+                [this._model.context(this._context)]);
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
@@ -130,6 +134,8 @@ instance.web.Query = instance.web.Class.extend({
             orderby: instance.web.serialize_sort(this._order_by) || false
         }).pipe(function (results) {
             return _(results).map(function (result) {
+                // FIX: querygroup initialization
+                _.defaults(result.__context, ctx);
                 return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
             });
@@ -350,89 +356,6 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.DataGroup =  instance.web.CallbackEnabled.extend({
-    /**
-     * Management interface between views and grouped collections of OpenERP
-     * records.
-     *
-     * The root DataGroup is instantiated with the relevant information
-     * (a session, a model, a domain, a context and a group_by sequence), the
-     * domain and context may be empty. It is then interacted with via
-     * :js:func:`~instance.web.DataGroup.list`, which is used to read the
-     * content of the current grouping level.
-     *
-     * @constructs instance.web.DataGroup
-     * @extends instance.web.CallbackEnabled
-     *
-     * @param {instance.web.CallbackEnabled} parent widget
-     * @param {String} model name of the model managed by this DataGroup
-     * @param {Array} domain search domain for this DataGroup
-     * @param {Object} context context of the DataGroup's searches
-     * @param {Array} group_by sequence of fields by which to group
-     * @param {Number} [level=0] nesting level of the group
-     */
-    init: function(parent, model, domain, context, group_by, level) {
-        this._super(parent, null);
-        this.model = new instance.web.Model(model, context, domain);
-        this.group_by = group_by;
-        this.context = context;
-        this.domain = domain;
-
-        this.level = level || 0;
-    },
-    list: function (fields, ifGroups, ifRecords) {
-        var self = this;
-        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
-        $.when(query).then(function (querygroups) {
-            // leaf node
-            if (!querygroups) {
-                var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
-                ds._sort = self.sort;
-                ifRecords(ds);
-                return;
-            }
-            // internal node
-            var child_datagroups = _(querygroups).map(function (group) {
-                var child_context = _.extend(
-                    {}, self.model.context(), group.model.context());
-                var child_dg = new instance.web.DataGroup(
-                    self, self.model.name, group.model.domain(),
-                    child_context, group.model._context.group_by,
-                    self.level + 1);
-                child_dg.sort = self.sort;
-                // copy querygroup properties
-                child_dg.__context = child_context;
-                child_dg.__domain = group.model.domain();
-                child_dg.folded = group.get('folded');
-                child_dg.grouped_on = group.get('grouped_on');
-                child_dg.length = group.get('length');
-                child_dg.value = group.get('value');
-                child_dg.openable = group.get('has_children');
-                child_dg.aggregates = group.get('aggregates');
-                return child_dg;
-            });
-            ifGroups(child_datagroups);
-        });
-    }
-});
-
-instance.web.StaticDataGroup = instance.web.DataGroup.extend({
-    /**
-     * A specialization of data groups, relying on a single static
-     * dataset as its records provider.
-     *
-     * @constructs instance.web.StaticDataGroup
-     * @extends instance.web.DataGroup
-     * @param {openep.web.DataSetStatic} dataset a static dataset backing the groups
-     */
-    init: function (dataset) {
-        this.dataset = dataset;
-    },
-    list: function (fields, ifGroups, ifRecords) {
-        ifRecords(this.dataset);
-    }
-});
-
 instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
@@ -568,7 +491,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      */
     write: function (id, data, options) {
         options = options || {};
-        return this._model.call('write', [[id], data], {context: this._model.context(options.context)});
+        return this._model.call('write', [[id], data], {context: this._model.context(options.context)}).then(this.trigger('dataset_changed', id, data, options));
     },
     /**
      * Deletes an existing record from the database
@@ -576,8 +499,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
-        this.trigger('unlink', ids);
-        return this._model.call('unlink', [ids], {context: this._model.context()});
+        return this._model.call('unlink', [ids], {context: this._model.context()}).then(this.trigger('dataset_changed', ids));
     },
     /**
      * Calls an arbitrary RPC method
@@ -775,10 +697,11 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
             if (self._length) {
                 self._length -= 1;
             }
-            if (this.index !== null) {
+            if (self.index !== null) {
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
             }
+            self.trigger("dataset_changed", ids, callback, error_callback);
         });
     },
     size: function () {
@@ -835,7 +758,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         $.extend(cached.values, record.values);
         if (dirty)
-            this.on_change();
+            this.trigger("dataset_changed", id, data, options);
         return $.Deferred().resolve(true).promise();
     },
     unlink: function(ids, callback, error_callback) {
@@ -849,7 +772,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        this.on_change();
+        this.trigger("dataset_changed", ids, callback, error_callback);
         return $.async_when({result: true}).then(callback);
     },
     reset_ids: function(ids) {
@@ -859,8 +782,6 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = [];
         this.cache = [];
         this.delete_all = false;
-    },
-    on_change: function() {
     },
     read_ids: function (ids, fields, options) {
         var self = this;
@@ -948,7 +869,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
-        this.on_change();
+        this.trigger("dataset_changed", n_ids);
     },
 });
 instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;

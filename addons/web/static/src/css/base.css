@@ -1184,7 +1184,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightgrey;
+  border: 1px solid lightGray;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1209,7 +1209,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightgrey;
+  border-top: 1px solid lightGray;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -2054,36 +2054,36 @@
   width: 400px;
   padding-bottom: 0;
 }
-.openerp .oe_form header .oe_tags div.oe_chatter {
+.openerp .oe_form div.oe_chatter {
   min-width: 650px;
   max-width: 860px;
   margin: 0 auto;
   padding: 16px 0 48px;
 }
-.openerp .oe_form header .oe_tags div.oe_form_configuration p, .openerp .oe_form header .oe_tags div.oe_form_configuration ul, .openerp .oe_form header .oe_tags div.oe_form_configuration ol {
+.openerp .oe_form div.oe_form_configuration p, .openerp .oe_form div.oe_form_configuration ul, .openerp .oe_form div.oe_form_configuration ol {
   color: #aaaaaa;
   max-width: 650px;
 }
-.openerp .oe_form header .oe_tags div.oe_form_configuration label {
+.openerp .oe_form div.oe_form_configuration label {
   min-width: 150px;
 }
-.openerp .oe_form header .oe_tags div.oe_form_configuration .oe_form_group_cell_label {
+.openerp .oe_form div.oe_form_configuration .oe_form_group_cell_label {
   padding: 1px 0;
 }
-.openerp .oe_form header .oe_tags div.oe_form_configuration .oe_form_group_cell div div {
+.openerp .oe_form div.oe_form_configuration .oe_form_group_cell div div {
   padding: 1px 0;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer {
+.openerp .oe_form .oe_subtotal_footer {
   width: 1% !important;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer td.oe_form_group_cell {
+.openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell {
   text-align: right;
   padding: 0 !important;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer td.oe_form_group_cell_label {
+.openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell_label {
   border-right: none;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer .oe_subtotal_footer_separator {
+.openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
   width: 108px;
   border-top: 1px solid #cacaca;
   margin-top: 4px;
@@ -2091,14 +2091,14 @@
   font-weight: bold;
   font-size: 18px;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer label:after {
+.openerp .oe_form .oe_subtotal_footer label:after {
   content: ":";
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer label.oe_subtotal_footer_separator {
+.openerp .oe_form .oe_subtotal_footer label.oe_subtotal_footer_separator {
   font-weight: bold !important;
   padding: 2px 11px 2px 0px !important;
 }
-.openerp .oe_form header .oe_tags .oe_subtotal_footer label.oe_form_label_help {
+.openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
   font-weight: normal;
 }
 .openerp .oe_form .oe_form_button {
@@ -2130,7 +2130,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkgreen;
+  color: darkGreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -2561,6 +2561,12 @@
 .openerp .oe_list.oe_list_editable td.oe_list_record_delete {
   position: absolute;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) {
+  color: transparent;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) * {
+  visibility: hidden;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
   top: 5px;
 }
@@ -2579,10 +2585,10 @@
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   text-align: right;
-  width: 100%;
+  width: 100% !important;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime > span, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date > span {
-  width: 100%;
+  width: 100% !important;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
   width: 100% !important;
@@ -2590,6 +2596,9 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_field_float, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_view_integer, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date {
   min-width: 0 !important;
   max-width: none !important;
+}
+.openerp .oe_list_group_name {
+  white-space: nowrap;
 }
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
@@ -2650,14 +2659,17 @@
   background: #eeeeee;
   vertical-align: top;
 }
-.openerp .oe_list_content > thead th {
-  position: relative;
-}
 .openerp .oe_list_content td, .openerp .oe_list_content th {
   padding: 3px 6px;
   line-height: 18px;
 }
-.openerp .oe_list_content th:after {
+.openerp .oe_list_content th.oe_sortable, .openerp .oe_list_content th.oe_sortable div {
+  cursor: pointer;
+}
+.openerp .oe_list_content th.oe_sortable div {
+  position: relative;
+}
+.openerp .oe_list_content th.oe_sortable div:after {
   position: absolute;
   right: 6px;
   content: "";
@@ -2667,12 +2679,12 @@
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe_list_content th.sortup:after {
+.openerp .oe_list_content th.sortup div:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe_list_content th.sortdown:after {
+.openerp .oe_list_content th.sortdown div:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;

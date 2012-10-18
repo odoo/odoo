@@ -291,6 +291,17 @@ var Events = instance.web.Class.extend({
         return this;
     },
 
+    callbackList: function() {
+        var lst = [];
+        _.each(this._callbacks || {}, function(el, eventName) {
+            var node = el;
+            while ((node = node.next) && node.next) {
+                lst.push([eventName, node.callback, node.context]);
+            }
+        });
+        return lst;
+    },
+    
     trigger : function(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
@@ -369,9 +380,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        if(!this.__edispatcherEvents) {
-            debugger;
-        }
+        _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+            this.off(cal[0], cal[2], cal[1]);
+        }, this);
         this.__edispatcherEvents.off();
         instance.web.ParentedMixin.destroy.call(this);
     }
@@ -382,8 +393,17 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
         instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
-    set: function(map, options) {
-        options = options || {};
+    set: function(arg1, arg2, arg3) {
+        var map;
+        var options;
+        if (typeof arg1 === "string") {
+            map = {};
+            map[arg1] = arg2;
+            options = arg3 || {};
+        } else {
+            map = arg1;
+            options = arg2 || {};
+        }
         var self = this;
         var changed = false;
         _.each(map, function(val, key) {

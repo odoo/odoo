@@ -12,6 +12,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     display_name: _lt('Calendar'),
 // Dhtmlx scheduler ?
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.ready = $.Deferred();
         this.set_default_options(options);
@@ -38,6 +39,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.range_stop = null;
         this.update_range_dates(Date.today());
         this.selected_filters = [];
+        this.on('view_loaded', self, self.load_calendar);
     },
     start: function() {
         this._super();
@@ -47,7 +49,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.clearAll();
         this._super();
     },
-    on_loaded: function(data) {
+    load_calendar: function(data) {
         this.fields_view = data;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.calendar_fields = {};
@@ -106,7 +108,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             this.sidebar = new instance.web_calendar.Sidebar(this);
             this.has_been_loaded.pipe(this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container')));
         }
-
+        this.trigger('calendar_view_loaded', data);
         return this.has_been_loaded.resolve();
     },
     init_scheduler: function() {
@@ -450,12 +452,19 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.dataset = dataset;
         this.view_id = view_id;
         this.view = view;
+        this.on("closing", this, function() {
+            if (this.view.creating_event_id) {
+                scheduler.deleteEvent(this.view.creating_event_id);
+                this.view.creating_event_id = null;
+            }
+        });
     },
     start: function() {
         var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false
+            pager: false,
+            $buttons: this.$buttons,
         });
         var def = this.form.appendTo(this.$el);
         this.form.on('record_created', self, this.on_form_dialog_saved);
@@ -474,12 +483,6 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.view.reload_event(id);
         this.close();
     },
-    on_close: function() {
-        if (this.view.creating_event_id) {
-            scheduler.deleteEvent(this.view.creating_event_id);
-            this.view.creating_event_id = null;
-        }
-    }
 });
 
 instance.web_calendar.Sidebar = instance.web.Widget.extend({

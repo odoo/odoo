@@ -23,6 +23,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_type: "graph",
 
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
@@ -41,6 +42,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.group_by = [];
 
         this.graph = null;
+        this.on('view_loaded', self, self.load_graph);
     },
     destroy: function () {
         if (this.graph) {
@@ -49,7 +51,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this._super();
     },
 
-    on_loaded: function(fields_view_get) {
+    load_graph: function(fields_view_get) {
         // TODO: move  to load_view and document
         var self = this;
         this.fields_view = fields_view_get;
@@ -98,7 +100,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 self.forcehtml = false;
             });
         });
-        return this._super();
+        this.trigger('graph_view_loaded', fields_view_get);
     },
 
     get_format: function (options) {

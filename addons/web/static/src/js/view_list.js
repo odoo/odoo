@@ -64,9 +64,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.set_groups(new (this.options.GroupsType)(this));
 
         if (this.dataset instanceof instance.web.DataSetStatic) {
-            this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
+            this.groups.datagroup = new StaticDataGroup(this.dataset);
         } else {
-            this.groups.datagroup = new instance.web.DataGroup(
+            this.groups.datagroup = new DataGroup(
                 this, this.model,
                 dataset.get_domain(),
                 dataset.get_context());
@@ -83,6 +83,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
+        this.on('view_load', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -218,7 +219,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    on_loaded: function(data, grouped) {
+    load_list: function(data, grouped) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -358,6 +359,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        this.trigger('list_view_loaded', data, grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -399,14 +401,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     setup_columns: function (fields, grouped) {
         var registry = instance.web.list.columns;
-        var reorder = this.options.reorderable;
         this.columns.splice(0, this.columns.length);
         this.columns.push.apply(this.columns,
             _(this.fields_view.arch.children).map(function (field) {
                 var id = field.attrs.name;
-                if(field.attrs.widget == 'handle' && !reorder){
-                    field.attrs.reorderable = reorder || true;
-                }
                 return registry.for_(id, fields[id], field);
         }));
         if (grouped) {
@@ -415,8 +413,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         this.visible_columns = _.filter(this.columns, function (column) {
-            return column.invisible !== '1' && !column.reorderable;
+            return column.invisible !== '1';
         });
+
         this.aggregate_columns = _(this.visible_columns).invoke('to_aggregate');
     },
     /**
@@ -471,7 +470,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     reload_view: function (grouped, context, initial) {
         var self = this;
         var callback = function (field_view_get) {
-            self.on_loaded(field_view_get, grouped);
+            self.load_list(field_view_get, grouped);
         };
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve(this.embedded_view);
@@ -557,7 +556,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     do_search: function (domain, context, group_by) {
         this.page = 0;
-        this.groups.datagroup = new instance.web.DataGroup(
+        this.groups.datagroup = new DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -1153,7 +1152,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
-     * with the :js:class:`~instance.web.DataGroup` bound to it.
+     * with the :js:class:`~DataGroup` bound to it.
      *
      * Provides events similar to those of
      * :js:class:`~instance.web.ListView.List`
@@ -1233,6 +1232,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     .replaceWith(self.render());
             });
         this.$row.children().last()
+            .addClass('oe_list_group_pagination')
             .append($prev)
             .append('<span class="oe_list_pager_state"></span>')
             .append($next);
@@ -1417,10 +1417,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                             }))
                         .end()
                         .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
+                            .css('visibility',
+                                 page === 0 ? 'hidden' : '')
                         .end()
                         .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
+                            .css('visibility',
+                                 page === pages - 1 ? 'hidden' : '');
                 }
             }
 
@@ -1556,6 +1558,60 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 return child.get_records();
             }).flatten().value();
     }
+});
+
+var DataGroup =  instance.web.CallbackEnabled.extend({
+   init: function(parent, model, domain, context, group_by, level) {
+       this._super(parent, null);
+       this.model = new instance.web.Model(model, context, domain);
+       this.group_by = group_by;
+       this.context = context;
+       this.domain = domain;
+
+       this.level = level || 0;
+   },
+   list: function (fields, ifGroups, ifRecords) {
+       var self = this;
+       var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
+       $.when(query).then(function (querygroups) {
+           // leaf node
+           if (!querygroups) {
+               var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
+               ds._sort = self.sort;
+               ifRecords(ds);
+               return;
+           }
+           // internal node
+           var child_datagroups = _(querygroups).map(function (group) {
+               var child_context = _.extend(
+                   {}, self.model.context(), group.model.context());
+               var child_dg = new DataGroup(
+                   self, self.model.name, group.model.domain(),
+                   child_context, group.model._context.group_by,
+                   self.level + 1);
+               child_dg.sort = self.sort;
+               // copy querygroup properties
+               child_dg.__context = child_context;
+               child_dg.__domain = group.model.domain();
+               child_dg.folded = group.get('folded');
+               child_dg.grouped_on = group.get('grouped_on');
+               child_dg.length = group.get('length');
+               child_dg.value = group.get('value');
+               child_dg.openable = group.get('has_children');
+               child_dg.aggregates = group.get('aggregates');
+               return child_dg;
+           });
+           ifGroups(child_datagroups);
+       });
+   }
+});
+var StaticDataGroup = DataGroup.extend({
+   init: function (dataset) {
+       this.dataset = dataset;
+   },
+   list: function (fields, ifGroups, ifRecords) {
+       ifRecords(this.dataset);
+   }
 });
 
 /**
