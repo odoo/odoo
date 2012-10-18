@@ -296,6 +296,8 @@ class pos_session(osv.osv):
     ]
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
         config_id = values.get('config_id', False) or False
         if config_id:
             # journal_id is not required on the pos_config because it does not
@@ -304,6 +306,7 @@ class pos_session(osv.osv):
             # the .xml files as the CoA is not yet installed.
             jobj = self.pool.get('pos.config')
             pos_config = jobj.browse(cr, uid, config_id, context=context)
+            context.update({'company_id': pos_config.shop_id.company_id.id})
             if not pos_config.journal_id:
                 jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
                 if jid:
@@ -330,6 +333,7 @@ class pos_session(osv.osv):
                 bank_values = {
                     'journal_id' : journal.id,
                     'user_id' : uid,
+                    'company_id' : pos_config.shop_id.company_id.id
                 }
                 statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
                 bank_statement_ids.append(statement_id)
