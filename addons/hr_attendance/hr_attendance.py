@@ -149,7 +149,7 @@ class hr_employee(osv.osv):
         if context is None:
             context = {}
         action_date = context.get('action_date', False)
-        action = context.get('action')
+        action = context.get('action',False)
         hr_attendance = self.pool.get('hr.attendance')
         warning_sign = {'sign_in': _('Sign In'), 'sign_out': _('Sign Out')}
         for employee in self.browse(cr, uid, ids, context=context):
@@ -158,7 +158,7 @@ class hr_employee(osv.osv):
                 if employee.state == 'absent': action = 'sign_in'
 
             if not self._action_check(cr, uid, employee.id, action_date, context):
-                raise osv.except_osv(_('Warning'), _('You are trying to %s for a date that is posterior to the starting date of the project. Please contact the HR Manager to correct attendances.')%(context.get('action'),))
+                raise osv.except_osv(_('Warning'), _('You are trying to %s for a date that is posterior to the starting date of the project. Please contact the HR Manager to correct attendances.')%(action),)
 
             vals = {'action': action, 'employee_id': employee.id}
             if action_date:
