@@ -818,6 +818,18 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="fleet_vehicle_costs_graph">
+           <field name="name">fleet.vehicle.cost.graph</field>
+           <field name="model">fleet.vehicle.cost</field>
+           <field name="arch" type="xml">
+                <graph string="Costs Per Month">
+                    <field name="date" />
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="amount" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_costs_act'>
             <field name="name">Vehicle Costs</field>
             <field name="res_model">fleet.vehicle.cost</field>
@@ -853,12 +865,5 @@
             <field name="model_id" ref="citroen" />
         </record>
  -->
-        <record model="ir.actions.act_window" id="action_fleet_vehicle_log_fuel_graph">
-            <field name="name">Fuel Costs by Month</field>
-            <field name="res_model">fleet.vehicle.log.fuel</field>
-            <field name="view_id" ref="fleet_vehicle_log_fuel_graph"></field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree</field>
-        </record>
     </data>
 </openerp>

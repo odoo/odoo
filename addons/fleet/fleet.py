@@ -358,7 +358,7 @@ class fleet_vehicle(osv.Model):
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
     #_order = 'contract_renewal_overdue desc, contract_renewal_due_soon desc'
-    _order= 'name asc'
+    _order= 'license_plate asc'
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
 
