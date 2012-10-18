@@ -439,7 +439,6 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
         for (var name in this) {
             if(typeof(this[name]) == "function") {
                 if((/^on_|^do_/).test(name)) {
-                    console.log("Proxyfy,",name);
                     this[name] = callback_maker(this[name]);
                 }
             }
