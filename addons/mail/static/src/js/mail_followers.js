@@ -73,7 +73,11 @@ openerp_mail_followers = function(session, mail) {
                         'default_res_id': self.view.datarecord.id
                     },
                 }
-                self.do_action(action, function() { self.read_value(); });
+                self.do_action(action, {
+                    on_close: function() {
+                        self.read_value();
+                    },
+                });
             });
         },
 
