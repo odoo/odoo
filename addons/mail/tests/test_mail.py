@@ -520,6 +520,10 @@ class test_mail(TestMailMockups):
         self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message2.body, group_bird.description, 'mail.message body incorrect')
 
+    def test_30_message_read(self):
+        """ Tests for message_read and expandables. """
+        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
+
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
@@ -593,7 +597,7 @@ class test_mail(TestMailMockups):
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
 
-    def test_60_vote(self):
+    def test_60_message_vote(self):
         """ Test designed for the vote/unvote feature. """
         cr, uid = self.cr, self.uid
         user_admin = self.res_users.browse(cr, uid, uid)
@@ -622,3 +626,7 @@ class test_mail(TestMailMockups):
         msg1.refresh()
         # Test: msg1 has Bert as voter
         self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
+
+    def test_70_message_favorite(self):
+        """ Tests for favorites. """
+        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
