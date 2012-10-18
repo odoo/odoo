@@ -127,6 +127,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.init_pager();
         });
         self.on("load_record", self, self.load_record);
+        this.on('view_loaded', self, self.load_form);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
@@ -143,13 +144,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this._super();
     },
-    on_loaded: function(data) {
+    load_form: function(data) {
         var self = this;
         if (!data) {
             throw new Error("No data provided.");
         }
         if (this.arch) {
-            throw "Form view does not support multiple calls to on_loaded";
+            throw "Form view does not support multiple calls to load_form";
         }
         this.fields_order = [];
         this.fields_view = data;
@@ -213,7 +214,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 e.stopPropagation();
             }
          });
-        this._super.apply(this, arguments);
+        this.trigger('form_view_loaded', data);
         return $.when();
     },
     widgetFocused: function() {
@@ -3802,7 +3803,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
 
 instance.web.form.One2ManyFormView = instance.web.FormView.extend({
     form_template: 'One2Many.formview',
-    on_loaded: function(data) {
+    load_form: function(data) {
         this._super(data);
         var self = this;
         this.$buttons.find('button.oe_form_button_create').click(function() {
@@ -4012,7 +4013,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         }
         this.list_view.m2m_field = this;
         var loaded = $.Deferred();
-        this.list_view.on("view_loaded",self,function() {
+        this.list_view.on("list_view_loaded", self, function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4132,7 +4133,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this.kanban_view.m2m = this;
         var loaded = $.Deferred();
-        this.kanban_view.on("view_loaded",self,function() {
+        this.kanban_view.on("kanban_view_loaded",self,function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4356,7 +4357,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$el.find(".oe_popup_form"));
-        this.view_form.on("view_loaded",self,function() {
+        this.view_form.on("form_view_loaded", self, function() {
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
             self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
                 multi_select: multi_select,
@@ -4493,7 +4494,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             }).pipe(function() {
                 self.searchview.do_search();
             });
-            self.view_list.on("view_loaded",self,function() {
+            self.view_list.on("list_view_loaded", self, function() {
                 self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons", {widget:self}));
                 var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {
