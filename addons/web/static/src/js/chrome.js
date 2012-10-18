@@ -70,7 +70,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             autoOpen: false,
             position: [false, 40],
             buttons: {},
-            beforeClose: function () { self.on_close(); },
+            beforeClose: function () {
+                self.trigger("closing");
+            },
             resizeStop: this.on_resized
         };
         for (var f in this) {
@@ -84,6 +86,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             }
             _.extend(this.dialog_options, options);
         }
+        this.on("closing", this, this._closing);
     },
     get_options: function(options) {
         var self = this,
@@ -126,13 +129,10 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
-        if (! this.params_buttons) {
-            this.$buttons.appendTo($("body"));
-        }
+        this.$buttons.appendTo($("body"));
         instance.web.dialog(this.$el, o).dialog('open');
-        if (! this.params_buttons) {
-            this.$buttons.appendTo(this.$el.dialog("widget"));
-        }
+        this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
+        this.$buttons.appendTo(this.$el.dialog("widget"));
         if (o.height === 'auto' && o.max_height) {
             this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -145,6 +145,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.params_buttons) {
             this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
             this.$el.dialog("widget").append(this.$buttons);
+        } else {
+            this.$buttons = this.$el.dialog("widget").find(".ui-dialog-buttonpane");
         }
         this.dialog_inited = true;
         var res = this.start();
@@ -153,7 +155,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     close: function() {
         this.$el.dialog('close');
     },
-    on_close: function() {
+    _closing: function() {
         if (this.__tmp_dialog_destroying)
             return;
         if (this.dialog_options.destroy_on_close) {
@@ -627,6 +629,7 @@ instance.web.Reload = function(parent, params) {
         hash = "#menu_id=" + menu_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+    window.onerror = function() {};
     window.location = url;
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
@@ -878,9 +881,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         };
         this.update_promise = this.update_promise.pipe(fct, fct);
     },
-    on_action: function() {
-    },
     on_menu_logout: function() {
+        this.trigger('user_logout');
     },
     on_menu_settings: function() {
         var self = this;
@@ -897,8 +899,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             var $help = $(QWeb.render("UserMenu.about", {version_info: res}));
             $help.find('a.oe_activate_debug_mode').click(function (e) {
                 e.preventDefault();
-                window.location = $.param.querystring(
-                        window.location.href, 'debug');
+                window.location = $.param.querystring( window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
                 modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
@@ -1019,15 +1020,13 @@ instance.web.WebClient = instance.web.Client.extend({
 
         var state = $.bbq.getState(true);
         var action = {
-            'type': 'ir.actions.client',
-            'tag': 'login',
-            'params': state
+            type: 'ir.actions.client',
+            tag: 'login',
+            _push_me: false,
         };
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
-            this.do_push_state(state);
-            this._current_state = null;     // ensure the state will be loaded
             this.show_application();        // will load the state we just pushed
         });
     },
@@ -1039,8 +1038,7 @@ instance.web.WebClient = instance.web.Client.extend({
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
         self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
-        self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
-        self.user_menu.on_action.add(this.proxy('on_menu_action'));
+        self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
@@ -1103,6 +1101,7 @@ instance.web.WebClient = instance.web.Client.extend({
                     });
                 });
             } else {
+                state._push_me = false;  // no need to push state back...
                 this.action_manager.do_load_state(state, !!this._current_state);
             }
         }
@@ -1121,9 +1120,11 @@ instance.web.WebClient = instance.web.Client.extend({
             .pipe(function (result) {
                 var action = result;
                 if (options.needaction) {
-                    action.context.search_default_needaction_pending = true;
+                    action.context.search_default_message_unread = true;
                 }
-                return $.when(self.action_manager.do_action(action, null, true)).fail(function() {
+                return $.when(self.action_manager.do_action(action, {
+                    clear_breadcrumbs: true,
+                })).fail(function() {
                     self.menu.open_menu(options.previous_menu_id);
                 });
             });
