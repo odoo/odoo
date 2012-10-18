@@ -1232,6 +1232,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     .replaceWith(self.render());
             });
         this.$row.children().last()
+            .addClass('oe_list_group_pagination')
             .append($prev)
             .append('<span class="oe_list_pager_state"></span>')
             .append($next);
@@ -1416,10 +1417,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                             }))
                         .end()
                         .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
+                            .css('visibility',
+                                 page === 0 ? 'hidden' : '')
                         .end()
                         .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
+                            .css('visibility',
+                                 page === pages - 1 ? 'hidden' : '');
                 }
             }
 
