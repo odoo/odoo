@@ -1379,10 +1379,9 @@ openerp.mail = function(session) {
      * UserMenu
      * ------------------------------------------------------------
      * 
-     * add a link on the top user bar for write a full mail
+     * Add a link on the top user bar for write a full mail
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
-
         template:'mail.compose_message.button_top_bar',
 
         init: function (parent, options) {
@@ -1390,14 +1389,9 @@ openerp.mail = function(session) {
             this.options = this.options || {};
             this.options.domain = this.options.domain || [];
             this.options.context = {
-                'default_res_id': 0,
-                'default_model': 'mail.thread',
-                'default_is_private': true, 
-                'default_res_model': false,
+                'default_model': false,
                 'default_res_id': 0,
                 'default_content_subtype': 'html',
-                'default_is_private': true,
-                'default_parent_id': 0
             };
         },
 
@@ -1430,7 +1424,6 @@ openerp.mail = function(session) {
             render.insertAfter(this.$el);
             this._super(parent, params);
         }
-
     });
 
 };
