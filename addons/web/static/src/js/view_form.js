@@ -3172,7 +3172,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         return ! this.get("value");
     },
     focus: function () {
-        this.$input.focus();
+        if (!this.get('effective_readonly')) {
+            this.$input.focus();
+        }
     },
     _quick_create: function() {
         this.no_ed = true;
