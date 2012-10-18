@@ -113,7 +113,7 @@ class product_uom(osv.osv):
         'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
-            help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
+            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
@@ -233,7 +233,7 @@ class product_category(osv.osv):
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
     }
