@@ -676,45 +676,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             .then(function () { self.ready.resolve(); })
     },
     /**
-     * Handle event when the user make a selection in the filters management select box.
-     */
-    on_filters_management: function(e) {
-        var self = this;
-        var select = this.$el.find(".oe_search-view-filters-management");
-        var val = select.val();
-        switch(val) {
-        case 'advanced_filter':
-            this.extended_search.on_activate();
-            break;
-        case '':
-            this.do_clear();
-        }
-        if (val.slice(0, 4) == "get:") {
-            val = val.slice(4);
-            val = parseInt(val, 10);
-            var filter = this.managed_filters[val];
-            this.do_clear(false).then(_.bind(function() {
-                select.val('get:' + val);
-
-                var groupbys = [];
-                var group_by = filter.context.group_by;
-                if (group_by) {
-                    groupbys = _.map(
-                        group_by instanceof Array ? group_by : group_by.split(','),
-                        function (el) { return { group_by: el }; });
-                }
-                this.filter_data = {
-                    domains: [filter.domain],
-                    contexts: [filter.context],
-                    groupbys: groupbys
-                };
-                this.do_search();
-            }, this));
-        } else {
-            select.val('');
-        }
-    },
-    /**
      * Extract search data from the view's facets.
      *
      * Result is an object with 4 (own) properties:
@@ -771,8 +732,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * If at least one field failed its validation, triggers
      * :js:func:`instance.web.SearchView.on_invalid` instead.
-     *
-     * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (_query, options) {
         if (options && options.preventSearch) {
