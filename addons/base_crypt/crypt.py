@@ -154,7 +154,6 @@ class users(osv.osv):
             encrypted = ''
         cr.execute('update res_users set password=%s where id=%s',
             (encrypted.encode('utf-8'), int(id)))
-        cr.commit()
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):
