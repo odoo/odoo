@@ -678,7 +678,7 @@ openerp.mail = function(session) {
             // if this message is read, all childs message display is read
             var ids = [this.datasets.id].concat( this.get_child_ids() );
             var read = $(event.srcElement).hasClass("oe_read");
-            this.$el.removeClass("oe_mail_" + (read?"un":"") + "read").addClass("oe_mail_" + (read?"":"un") + "read");
+            this.$el.removeClass(read ? 'oe_msg_unread':'oe_msg_read').addClass(read ? 'oe_msg_read':'oe_msg_unread');
 
             if( (read && this.options.typeof_thread == 'inbox') ||
                 (!read && this.options.typeof_thread == 'archives')) {
