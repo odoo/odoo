@@ -4643,14 +4643,19 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         var self = this;
         this._super(field_manager, node);
         this.binary_value = false;
-        this.fileupload_id = _.uniqueId('oe_fileupload');
-        $(window).on(this.fileupload_id, function() {
-            var args = [].slice.call(arguments).slice(1);
-            self.on_file_uploaded.apply(self, args);
-        });
+        this.useFileAPI = !!window.FileReader;
+        if (!this.useFileAPI) {
+            this.fileupload_id = _.uniqueId('oe_fileupload');
+            $(window).on(this.fileupload_id, function() {
+                var args = [].slice.call(arguments).slice(1);
+                self.on_file_uploaded.apply(self, args);
+            });
+        }
     },
     stop: function() {
-        $(window).off(this.fileupload_id);
+        if (!this.useFileAPI) {
+            $(window).off(this.fileupload_id);
+        }
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
@@ -4668,13 +4673,22 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         return size.toFixed(2) + ' ' + units[i];
     },
     on_file_change: function(e) {
-        // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
-        // http://www.html5rocks.com/tutorials/file/dndfiles/
-        // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
-
-        if ($(e.target).val() !== '') {
-            this.$el.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
-            this.$el.find('form.oe_form_binary_form').submit();
+        var self = this;
+        var file_node = e.target;
+        if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
+            if (this.useFileAPI) {
+                var file = file_node.files[0];
+                var filereader = new FileReader();
+                filereader.readAsDataURL(file);
+                filereader.onloadend = function(upload) {
+                    var data = upload.target.result;
+                    data = data.split(',')[1];
+                    self.on_file_uploaded(file.size, file.name, file.type, data);
+                };
+            } else {
+                this.$el.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
+                this.$el.find('form.oe_form_binary_form').submit();
+            }
             this.$el.find('.oe_form_binary_progress').show();
             this.$el.find('.oe_form_binary').hide();
         }
