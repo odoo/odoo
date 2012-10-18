@@ -243,7 +243,8 @@ instance.web.DiagramView = instance.web.View.extend({
                     title: _t("Open: ") + title
                 }
             );
-        pop.on('on_write_complete', self, function() {
+
+        pop.on('write_completed', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
         
@@ -307,7 +308,7 @@ instance.web.DiagramView = instance.web.View.extend({
                 title: _t("Open: ") + title
             }
         );
-        pop.on('on_write_complete', self, function() {
+        pop.on('write_completed', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
     },
