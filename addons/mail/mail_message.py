@@ -208,6 +208,7 @@ class mail_message(osv.Model):
             'is_author': message['author_id'] and message['author_id'][0] == uid,
             'partner_ids': partner_ids,
             'parent_id': message['parent_id'] and message['parent_id'][0] or False,
+            # TDE note: see with CHM about votes, how they are displayed (only number, or name_get ?)
             # 'vote_user_ids': vote_ids,
             'has_voted': has_voted,
             'to_read': message['to_read'],
@@ -216,7 +217,7 @@ class mail_message(osv.Model):
     def _message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
         """ Create the expandable message for all parent message read
             this function is used by message_read
-            TDE note: place use default values for args, and comment your vars !!
+            TDE note: add default values for args, add some comments
 
             :param dict tree: tree of message ids
         """
@@ -280,7 +281,7 @@ class mail_message(osv.Model):
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name']
 
     def _get_parent(self, cr, uid, message, context=None):
-        """ Tools method that try to get the parent of a mail.message. If
+        """ Tools method that tries to get the parent of a mail.message. If
             no parent, or if uid has no access right on the parent, False
             is returned.
 
@@ -301,6 +302,8 @@ class mail_message(osv.Model):
             After having fetch messages, their parents will be added to obtain
             well formed threads.
 
+            TDE note: update this comment after final method implementation
+
             :param domain: optional domain for searching ids
             :param limit: number of messages to fetch
             :param parent_id: if parent_id reached, stop searching for
@@ -314,15 +317,12 @@ class mail_message(osv.Model):
         if context.get('message_loaded'):
             domain += [('id', 'not in', context.get('message_loaded'))]
         limit = limit or self._message_read_limit
-        # tree = []
-        # result = []
-        record = None
-
         id_tree = []
         message_list = []
+        record = None
 
         # select ids
-        # TDE note: should not receive [None] !!
+        # TDE note: should not receive [None] -> investigate
         if ids and ids != [None]:
             for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
                 message_list.append(self._message_get_dict(cr, uid, message, context=context))

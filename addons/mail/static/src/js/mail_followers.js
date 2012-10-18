@@ -216,7 +216,7 @@ openerp_mail_followers = function(session, mail) {
             var checklist = new Array();
             _(this.$('.oe_mail_recthread_actions input[type="checkbox"]')).each(function (record) {
                 if ($(record).is(':checked')) {
-                    checklist.push(parseInt($(record).data('id')))
+                    checklist.push(parseInt($(record).data('id')));
                 }
             });
 

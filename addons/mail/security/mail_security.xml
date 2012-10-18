@@ -13,7 +13,6 @@
         <record id="mail_followers_read_own" model="ir.rule">
             <field name="name">mail.followers: read its own entries</field>
             <field name="model_id" ref="model_mail_followers"/>
-            <!-- This rule has to be improved for employee only groups -->
             <field name="domain_force">[('partner_id', '=', user.partner_id.id)]</field>
             <field name="perm_create" eval="False"/>
             <field name="perm_unlink" eval="False"/>
@@ -21,7 +20,6 @@
 
         <!--
         This rule can not be uncommented, because we have a more wide method in mail.message. When we implement a many2one_variable field, we will be able to uncomment this.
-
         <record id="mail_message_read_partner_or_author" model="ir.rule">
             <field name="name">mail.message: read if notified or author</field>
             <field name="model_id" ref="model_mail_message"/>
