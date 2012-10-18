@@ -52,7 +52,6 @@ class action_traceability(osv.osv_memory):
         value = {
             'domain': "[('id','in',["+','.join(map(str, ids))+"])]",
             'name': ((type1=='move_history_ids2') and _('Upstream Traceability')) or _('Downstream Traceability'),
-            'view_type': 'tree',
             'view_mode': 'tree',
             'res_model': 'stock.move',
             'field_parent': type1,
