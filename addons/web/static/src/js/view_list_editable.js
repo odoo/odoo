@@ -100,7 +100,7 @@ openerp.web.list_editable = function (instance) {
                 this._super();
             }
         },
-        on_loaded: function (data, grouped) {
+        load_list: function (data, grouped) {
             var self = this;
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);

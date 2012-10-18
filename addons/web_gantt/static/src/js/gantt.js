@@ -12,11 +12,13 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     template: "GanttView",
     view_type: "gantt",
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
+        this.on('view_loaded', self, self.load_gantt);
     },
-    on_loaded: function(fields_view_get, fields_get) {
+    load_gantt: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);

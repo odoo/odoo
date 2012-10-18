@@ -11,6 +11,7 @@ instance.web.DiagramView = instance.web.View.extend({
     display_name: _lt('Diagram'),
     searchable: false,
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.set_default_options(options);
         this.view_manager = parent;
@@ -20,17 +21,20 @@ instance.web.DiagramView = instance.web.View.extend({
         this.domain = this.dataset._domain || [];
         this.context = {};
         this.ids = this.dataset.ids;
+        this.on('view_loaded', self, self.load_diagram);
     },
     start: function() {
-        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}, this.on_loaded);
+        var self = this;
+        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).then(function(r) {
+            self.load_diagram(r);
+        });
     },
 
     toTitleCase: function(str) {
         return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
     },
 
-    on_loaded: function(result) {
-
+    load_diagram: function(result) {
         var self = this;
         if(this.ids && this.ids.length) {
             this.id = this.ids[self.dataset.index || 0];
@@ -47,7 +51,7 @@ instance.web.DiagramView = instance.web.View.extend({
             return label.tag == "label";
         });
 
-        this.$el.html(QWeb.render("DiagramView", {'widget': this}));
+        this.$el.html(QWeb.render("DiagramView", {'widget': self}));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         _.each(self.labels,function(label){
@@ -68,7 +72,7 @@ instance.web.DiagramView = instance.web.View.extend({
         if(this.id) {
             self.get_diagram_info();
         }
-
+        this.trigger('diagram_view_loaded', result);
     },
 
     get_diagram_info: function() {

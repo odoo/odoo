@@ -14,6 +14,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
+        var self = this;
         _.defaults(this.options, {
             "quick_creatable": true,
             "creatable": true,
@@ -41,6 +42,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        this.on('view_loaded', self, self.load_kanban);
     },
     start: function() {
         var self = this;
@@ -55,7 +57,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this._super.apply(this, arguments);
         $('html').off('click.kanban');
     },
-    on_loaded: function(data) {
+    load_kanban: function(data) {
         this.fields_view = data;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
@@ -71,7 +73,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
-        this._super.apply(this, arguments);
+        this.trigger('kanban_view_loaded', data);
         return $.when();
     },
     _is_quick_create_enabled: function() {

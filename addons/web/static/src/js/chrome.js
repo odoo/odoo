@@ -701,9 +701,12 @@ instance.web.Menu =  instance.web.Widget.extend({
         return this.do_reload();
     },
     do_reload: function() {
-        return this.rpc("/web/menu/load", {}).then(this.on_loaded);
+        var self = this;
+        return this.rpc("/web/menu/load", {}).then(function(r) {
+            self.menu_loaded(r);
+        });
     },
-    on_loaded: function(data) {
+    menu_loaded: function(data) {
         var self = this;
         this.data = data;
         this.renderElement();
@@ -720,6 +723,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         if (self.current_menu) {
             self.open_menu(self.current_menu);
         }
+        this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
     },
     limit_entries: function() {

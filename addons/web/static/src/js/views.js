@@ -1135,11 +1135,13 @@ instance.web.View = instance.web.Widget.extend({
         return this.load_view();
     },
     load_view: function() {
+        var self = this;
         if (this.embedded_view) {
             var def = $.Deferred();
-            var self = this;
             $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.pipe(this.on_loaded);
+            return def.pipe(function(r) {
+                self.trigger('view_loaded', r);
+            });
         } else {
             var context = new instance.web.CompoundContext(this.dataset.get_context());
             if (! this.view_type)
@@ -1150,14 +1152,10 @@ instance.web.View = instance.web.Widget.extend({
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
                 context: context
-                }).pipe(this.on_loaded);
+                }).pipe(function(r) {
+                    self.trigger('view_loaded', r);
+            });
         }
-    },
-    /**
-     * Called after a successful call to fields_view_get.
-     * Must return a promise.
-     */
-    on_loaded: function(fields_view_get) {
     },
     set_default_options: function(options) {
         this.options = options || {};
