@@ -11,16 +11,19 @@
     padding: 8px;
 }
 .openerp .oe_mail .oe_thread{
-    margin-left: 8px;
+    margin-left: 32px;
 }
-.openerp .oe_mail .oe_thread.oe_root_thread{
+.openerp .oe_mail > .oe_thread{
     margin-left: 0px;
 }
+
+/* ---------------- MESSAGES ------------------ */
+
 .openerp .oe_mail .oe_msg{
     position: relative;
     background: blue;
     margin-bottom: 4px;
-    min-height: 100px;
+    min-height: 75px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_left{
     position: absolute;
@@ -32,8 +35,10 @@
     position: relative;
     display: block;
     margin-left: 75px;
-    margin-right: 32px;
     background: gray;
+}
+.openerp .oe_mail .oe_msg.oe_with_buttons .oe_msg_center{
+    margin-right: 32px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_right{
     position: absolute;
@@ -61,4 +66,19 @@
     margin: 0px;
     padding: 0px;
     resize: vertical;
+}
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact{
+    padding:4px;
+    min-height:0px;
+}
+.openerp .oe_mail .oe_msg.oe_msg_composer_compact textarea{
+    height: 24px;
+    width: 100%;
+}
+
+.openerp .oe_mail .oe_msg.oe_msg_unread .oe_unread{
+    display:none;
+}
+.openerp .oe_mail .oe_msg.oe_msg_read .oe_read{
+    display:none;
 }
