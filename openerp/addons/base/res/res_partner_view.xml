@@ -211,7 +211,7 @@
                                                     <img t-att-src="kanban_image('res.partner', 'image', record.id.value, {'preview_image': 'image_small'})" class="oe_avatar oe_kanban_avatar_smallbox"/>
                                                 </a>
                                                     <div class="oe_module_desc">
-                                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger oe_kanban_color_border">
+                                                        <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_color_border">
                                                             <table class="oe_kanban_table">
                                                                 <tr>
                                                                     <td class="oe_kanban_title1" align="left" valign="middle">
@@ -298,7 +298,7 @@
                    <field name="user_id"/>
                    <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
                    <group expand="0" string="Group By...">
-                       <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
+                       <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by' : 'user_id'}" />
                        <filter string="Company" context="{'group_by': 'parent_id'}"/>
                    </group>
                </search>
