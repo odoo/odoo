@@ -57,7 +57,6 @@ class procurement_order(osv.osv):
                     break
             assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
-            #TOFIX: implement hook method for creating picking
             picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,
                 'company_id': line.company_id and line.company_id.id or False,
@@ -68,7 +67,6 @@ class procurement_order(osv.osv):
                 'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'invoice_state': line.invoice_state,
             })
-            #TOFIX: implement hook method for creating move
             move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
@@ -94,8 +92,6 @@ class procurement_order(osv.osv):
                 move_obj.write(cr,uid, [proc.move_id.id],  {
                     'state':'waiting'
                 }, context=context)
-
-            #TOFIX: implement hook method for creating new procurement
             proc_id = proc_obj.create(cr, uid, {
                 'name': line.name,
                 'origin': origin,

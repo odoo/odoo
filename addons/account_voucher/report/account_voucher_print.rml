@@ -219,7 +219,7 @@
             <para style="terp_default_9_30cm">[[ p['pname'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ p['amount'] ]] [[ voucher.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(p['amount'], currency_obj=voucher.currency_id) ]]</para>
           </td>
         </tr>
         <tr>
@@ -323,7 +323,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ voucher.amount ]] [[ voucher.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(voucher.amount, currency_obj=voucher.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

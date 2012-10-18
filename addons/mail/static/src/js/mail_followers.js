@@ -77,7 +77,11 @@ openerp_mail_followers = function(session, mail) {
                         'default_res_id': self.view.datarecord.id
                     },
                 }
-                self.do_action(action, function() { self.read_value(); });
+                self.do_action(action, {
+                    on_close: function() {
+                        self.read_value();
+                    },
+                });
             });
         },
 
@@ -88,9 +92,9 @@ openerp_mail_followers = function(session, mail) {
             });
         },
 
-        set_value: function(value_) {
+        render_value: function() {
             this.reinit();
-            return this.fetch_followers(value_  || this.get_value());
+            return this.fetch_followers(this.get("value"));
         },
 
         set_is_follower: function(value_) {
