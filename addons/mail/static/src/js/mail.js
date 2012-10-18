@@ -106,10 +106,14 @@ openerp.mail = function(session) {
      * 
      * This widget handles the display of a form to compose a new message.
      * This form is a mail.compose.message form_view.
-     */
+     * On first time : display a compact textarea but is not the compose form.
+     * When the user focus this box, the compose message is intantiate and 
+     * with focus on the textarea.
+    */
     
     mail.ThreadComposeMessage = session.web.Widget.extend({
-        template: 'mail.compose_message',
+        template: 'mail.compose_message.compact',
+                    // expandable view : 'mail.compose_message'
 
         /**
          * @param {Object} parent parent
@@ -130,7 +134,8 @@ openerp.mail = function(session) {
                 'model': options.datasets.model,
                 'res_model': options.datasets.res_model,
                 'is_private': options.datasets.is_private || false,
-                'partner_ids': options.datasets.partner_ids || []
+                'partner_ids': options.datasets.partner_ids || [],
+                'avatar': mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid),
             };
             this.options={};
             this.options.thread={};
@@ -148,7 +153,6 @@ openerp.mail = function(session) {
         start: function(){
             this.display_attachments();
             this.bind_events();
-            this.display_user_avatar();
         },
 
         /* upload the file on the server, add in the attachments list and reload display
@@ -166,6 +170,9 @@ openerp.mail = function(session) {
             // event: delete an attachment
             this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
         },
+
+        /* when a user click on the upload button, send file read on_attachment_loaded
+        */
         on_attachment_change: function (event) {
             event.stopPropagation();
             var self = this;
@@ -205,6 +212,8 @@ openerp.mail = function(session) {
             }
         },
         
+        /* when the file is uploaded 
+        */
         on_attachment_loaded: function (event, result) {
             //session.web.unblockUI();
             for(var i in this.datasets.attachment_ids){
@@ -223,6 +232,7 @@ openerp.mail = function(session) {
             $input.after($input.clone(true)).remove();
             this.$(".oe_attachment_file").show();
         },
+
         /* unlink the file on the server and reload display
          */
         on_attachment_delete: function (event) {
@@ -270,6 +280,7 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_cancel', self.on_cancel );
             this.$el.on('click', 'button.oe_post', function(){self.on_message_post()} );
             this.$el.on('click', 'button.oe_full', function(){self.on_compose_fullmail()} );
+            self.$el.on('focus', 'textarea.oe_compact', self.on_compose_expandable);
         },
 
         on_compose_fullmail: function(){
@@ -351,9 +362,21 @@ openerp.mail = function(session) {
             }
         },
 
-        display_user_avatar: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
-            return this.$('img.oe_msg_icon').attr('src', avatar);
+        /* convert the compact mode into the compose message
+        */
+        on_compose_expandable: function(){
+            var $render = $(session.web.qweb.render('mail.compose_message', {'widget': this}));
+            this.$el.replaceWith( $render );
+            this.$el = $render;
+            this.$('textarea').focus();
+        },
+
+        /* convert the compact mode into the compose message
+        */
+        on_compose_compact: function(){
+            var $render = $(session.web.qweb.render('mail.compose_message.compact', {'widget': this}));
+            this.$el.replaceWith( $render );
+            this.$el = $render;
         },
     });
 
@@ -864,11 +887,11 @@ openerp.mail = function(session) {
         
         start: function() {
             this._super.apply(this, arguments);
+            this.instantiate_ComposeMessage();
             this.bind_events();
         },
 
         instantiate_ComposeMessage: function(){
-            // add message composition form view
             this.ComposeMessage = new mail.ThreadComposeMessage(this,{
                 'context': this.context,
                 'datasets': this.datasets,
@@ -879,6 +902,7 @@ openerp.mail = function(session) {
             if(this.datasets.thread_level){
                 this.ComposeMessage.appendTo(this.$el);
             } else {
+                // root view
                 this.ComposeMessage.prependTo(this.$el);
             }
         },
@@ -907,16 +931,20 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            self.$('.oe_mail_compose_textarea .oe_more').click(function () {
-                var p=$(this).parent(); 
-                p.find('.oe_more_hidden, .oe_hidden').show(); 
-                p.find('.oe_more').hide(); 
-            });
-            self.$('.oe_mail_compose_textarea .oe_more_hidden').click(function () {
-                var p=$(this).parent(); 
-                p.find('.oe_more_hidden, .oe_hidden').hide(); 
-                p.find('.oe_more').show(); 
-            });
+            self.$el.on('click', '.oe_mail_list_recipients .oe_more', self.on_show_recipients);
+            self.$el.on('click', '.oe_mail_compose_textarea .oe_more_hidden', self.on_hide_recipients);
+        },
+
+        on_show_recipients: function(){
+            var p=$(this).parent(); 
+            p.find('.oe_more_hidden, .oe_hidden').show(); 
+            p.find('.oe_more').hide(); 
+        },
+
+        on_hide_recipients: function(){
+            var p=$(this).parent(); 
+            p.find('.oe_more_hidden, .oe_hidden').hide(); 
+            p.find('.oe_more').show(); 
         },
 
         /* get all child message/thread id linked
@@ -993,20 +1021,13 @@ openerp.mail = function(session) {
         /* this function is launch when a user click on "Reply" button
         */
         on_compose_message: function(){
-            if(!this.ComposeMessage){
-                this.instantiate_ComposeMessage();
-            } else {
-                this.ComposeMessage.$el.toggle();
-            }
-            return false;
+            this.ComposeMessage.on_compose_expandable();
         },
 
         /* display the no message on the thread
         */
         no_message: function(){
-
             $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$el);
-
         },
 
         /** Fetch messages

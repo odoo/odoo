@@ -17,7 +17,7 @@
     <t t-name="mail.compose_message">
         <div class="oe_msg oe_msg_composer">
             <div class="oe_msg_left">
-                <img class="oe_msg_icon" alt="User img"/>
+                <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.datasets.avatar}"/>
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
@@ -31,6 +31,17 @@
                     <button class="oe_full oe_right">Full</button>
                 </div>
             </div>
+        </div>
+    </t>
+
+    <!--
+        mail.compose_message.compact template
+        This template holds the composition form to write a message, this box is converted into
+        mail.compose_message when focus on textarea
+        -->
+    <t t-name="mail.compose_message.compact">
+        <div class="oe_msg oe_msg_composer_compact">
+            <textarea class="field_text oe_compact" placeholder="Add your comment here..."/>
         </div>
     </t>
 
