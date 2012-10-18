@@ -82,7 +82,7 @@
                     <a t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)" t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
-                    <t t-if="widget.options.thread.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
+                    <t t-if="widget.options.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
                         <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 
@@ -209,7 +209,7 @@
                         <t t-raw="widget.datasets.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-if="widget.options.message.show_record_name and widget.datasets.record_name and (!widget.datasets.subject) and !widget.options.thread.thread_level and !widget.options.thread.display_on_thread[0] and widget.datasets.model!='res.partner'">
+                        <t t-if="widget.options.show_record_name and widget.datasets.record_name and (!widget.datasets.subject) and !widget.options.thread_level and !widget.options.display_on_thread[0] and widget.datasets.model!='res.partner'">
                             <a class="oe_mail_action_model" t-attf-href="#model=#{widget.datasets.model}&amp;id=#{widget.datasets.res_id}"><t t-raw="widget.datasets.record_name"/></a>
                         </t>
                         <t t-raw="widget.datasets.body"/>
