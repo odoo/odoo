@@ -369,6 +369,7 @@ openerp.mail = function(session) {
             this.$el.replaceWith( $render );
             this.$el = $render;
             this.$('textarea').focus();
+            this.bind_events();
         },
 
         /* convert the compact mode into the compose message
@@ -377,6 +378,7 @@ openerp.mail = function(session) {
             var $render = $(session.web.qweb.render('mail.compose_message.compact', {'widget': this}));
             this.$el.replaceWith( $render );
             this.$el = $render;
+            this.bind_events();
         },
     });
 
