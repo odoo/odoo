@@ -88,6 +88,8 @@ class fleet_vehicle_state(osv.Model):
         'sequence': fields.integer('Order',help="Used to order the note stages")
     }
     _order = 'sequence asc'
+    _sql_constraints = [('fleet_state_name_unique','unique(name)','State name already exists')]
+
 
 ############################
 ############################
@@ -365,20 +367,20 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate' : fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle', domain="['|',('customer','=',True),('employee','=',True)]"),
+        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle', domain="[('employee','=',True)]"),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_contracts' : fields.one2many('fleet.vehicle.log.contract','vehicle_id', 'Contracts'),
         'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
-        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ),
+        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle'),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','fleet_vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=False),
+        'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=True),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
@@ -401,7 +403,12 @@ class fleet_vehicle(osv.Model):
     _defaults = {
         'doors' : 5,
         'odometer_unit' : 'kilometers',
+        'state' : lambda s,cr,uid,c:s.get_state(cr,uid,'Active',context=c),
     }
+
+    def get_state(self,cr,uid,state_name,context=None):
+        states=self.pool.get('fleet.vehicle.state').search(cr,uid,[('name','=',state_name)],context=context,limit=1)
+        return states
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
