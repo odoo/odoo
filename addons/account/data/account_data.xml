@@ -127,6 +127,7 @@
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="name">Status</field>
             <field name="field">state</field>
+            <field eval="True" name="invisible"/>
             <field eval="19" name="sequence"/>
         </record>
         <record id="bank_col20" model="account.journal.column">
@@ -214,6 +215,7 @@
             <field name="view_id" ref="account_journal_bank_view_multi"/>
             <field name="name">Status</field>
             <field name="field">state</field>
+            <field eval="True" name="invisible"/>
             <field eval="19" name="sequence"/>
         </record>
         <record id="bank_col20_multi" model="account.journal.column">
@@ -289,6 +291,7 @@
             <field name="view_id" ref="account_journal_view"/>
             <field name="name">Status</field>
             <field name="field">state</field>
+            <field eval="True" name="invisible"/>
             <field eval="19" name="sequence"/>
         </record>
 
@@ -370,6 +373,7 @@
             <field name="view_id" ref="account_sp_journal_view"/>
             <field name="name">Status</field>
             <field name="field">state</field>
+            <field eval="True" name="invisible"/>
             <field eval="19" name="sequence"/>
         </record>
         <record id="sp_journal_col20" model="account.journal.column">
@@ -456,6 +460,7 @@
             <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="name">Status</field>
             <field name="field">state</field>
+            <field eval="True" name="invisible"/>
             <field eval="19" name="sequence"/>
         </record>
         <record id="sp_refund_journal_col20" model="account.journal.column">
