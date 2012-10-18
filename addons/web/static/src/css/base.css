@@ -2561,12 +2561,6 @@
 .openerp .oe_list.oe_list_editable td.oe_list_record_delete {
   position: absolute;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) {
-  color: transparent;
-}
-.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) * {
-  visibility: hidden;
-}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
   top: 5px;
 }
@@ -2585,10 +2579,10 @@
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   text-align: right;
-  width: 100% !important;
+  width: 100%;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime > span, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date > span {
-  width: 100% !important;
+  width: 100%;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime input.oe_datepicker_master, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date input.oe_datepicker_master {
   width: 100% !important;
@@ -2596,9 +2590,6 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_field_float, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field .oe_form_view_integer, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date {
   min-width: 0 !important;
   max-width: none !important;
-}
-.openerp .oe_list_group_name {
-  white-space: nowrap;
 }
 .openerp .oe_form .oe_form_field_many2many > .oe_list .oe_list_pager_single_page {
   display: none;
@@ -2659,17 +2650,14 @@
   background: #eeeeee;
   vertical-align: top;
 }
+.openerp .oe_list_content > thead th {
+  position: relative;
+}
 .openerp .oe_list_content td, .openerp .oe_list_content th {
   padding: 3px 6px;
   line-height: 18px;
 }
-.openerp .oe_list_content th.oe_sortable, .openerp .oe_list_content th.oe_sortable div {
-  cursor: pointer;
-}
-.openerp .oe_list_content th.oe_sortable div {
-  position: relative;
-}
-.openerp .oe_list_content th.oe_sortable div:after {
+.openerp .oe_list_content th:after {
   position: absolute;
   right: 6px;
   content: "";
@@ -2679,12 +2667,12 @@
   border-color: black transparent;
   visibility: hidden;
 }
-.openerp .oe_list_content th.sortup div:after {
+.openerp .oe_list_content th.sortup:after {
   visibility: visible;
   filter: alpha(opacity=60);
   opacity: 0.6;
 }
-.openerp .oe_list_content th.sortdown div:after {
+.openerp .oe_list_content th.sortdown:after {
   border-bottom: none;
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
@@ -2927,11 +2915,21 @@ div.ui-widget-overlay {
 }
 
 @media print {
-  .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header {
+  .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default {
     display: none;
   }
 
-  .openerp .oe_application .oe_form_sheet {
+  .oe_list_content button, .oe_list_content input[type=checkbox] {
+    display: none;
+  }
+
+  .openerp .tree_header button {
+    display: none;
+  }
+  .openerp .oe_notebook > li.ui-tabs-selected {
+    display: block;
+  }
+  .openerp .oe_application .oe_form_sheet, .openerp .oe_application .oe_form_sheetbg {
     border: none;
   }
 }

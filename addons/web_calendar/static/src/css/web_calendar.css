@@ -1053,3 +1053,11 @@ div.openerp .dhx_cal_editor textarea {
 .openerp .dhx_cal_event .dhx_header, .openerp .dhx_cal_event .dhx_header {
     display:none;
 }
+@media print {
+    div.dhx_cal_navline .dhx_cal_tab, div.dhx_cal_navline .dhx_cal_prev_button, div.dhx_cal_navline .dhx_cal_next_button, div.dhx_cal_navline .dhx_cal_today_button{
+        display: none;
+    }
+    .openerp .dhx_cal_data {
+        overflow-y: hidden !important;
+    }
+}
