@@ -581,9 +581,7 @@ class mail_message(osv.Model):
             Call mail_notification.notify to manage the email sending
         """
         message = self.browse(cr, uid, newid, context=context)
-
-        if not message:
-            self._notify_followers(cr, uid, newid, message, context=context)
+        self._notify_followers(cr, uid, newid, message, context=context)
         
         # add myself if I wrote on my wall, 
         # unless remove myself author

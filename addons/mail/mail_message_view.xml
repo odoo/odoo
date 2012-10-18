@@ -59,7 +59,7 @@
                     <field name="partner_ids"/>
                     <filter string="Unread"
                             name="unread_message" help="Show unread message"
-                            domain="[('read', '=', 'unread')]"/>
+                            domain="[('read', '=', False)]"/>
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
