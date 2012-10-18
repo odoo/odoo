@@ -2561,6 +2561,12 @@
 .openerp .oe_list.oe_list_editable td.oe_list_record_delete {
   position: absolute;
 }
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) {
+  color: transparent;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_edition .oe_list_field_cell:not(.oe_readonly) * {
+  visibility: hidden;
+}
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_drop_down_button {
   top: 5px;
 }
