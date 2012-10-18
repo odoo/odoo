@@ -263,7 +263,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     },
     do_process_dataset: function() {
         var self = this;
-        this.$el.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
+        this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
