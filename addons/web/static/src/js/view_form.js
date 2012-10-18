@@ -4048,13 +4048,17 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         );
         var self = this;
         pop.on("elements_selected", self, function(element_ids) {
-            _.each(element_ids, function(one_id) {
-                if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
-                    self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
+            var reload = false;
+            _(element_ids).each(function (id) {
+                if(! _.detect(self.dataset.ids, function(x) {return x == id;})) {
+                    self.dataset.set_ids(self.dataset.ids.concat([id]));
                     self.m2m_field.dataset_changed();
-                    self.reload_content();
+                    reload = true;
                 }
             });
+            if (reload) {
+                self.reload_content();
+            }
         });
     },
     do_activate_record: function(index, id) {
