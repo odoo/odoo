@@ -129,6 +129,7 @@
             <field name="name">Budget Planning</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
             <field name="stage_id" ref="project_tt_negotiation"/>
+            <field name="state">pending</field>
             <field name="color">4</field>
         </record>
         <record id="project_task_4" model="project.task">

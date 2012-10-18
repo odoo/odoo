@@ -777,7 +777,6 @@ class task(base_stage, osv.osv):
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
-        'state': 'draft',
         'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
