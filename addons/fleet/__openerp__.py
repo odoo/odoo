@@ -21,10 +21,12 @@ Add insurance and services reminder that will help you by sending you a mail whe
     'depends' : [
         'base',
         'mail',
+        'board'
     ],
     'data' : [
         'fleet_view.xml',
         'data.xml',
+        'board_fleet_view.xml'
     ],
     'update_xml' : ['security/ir.model.access.csv'],
 

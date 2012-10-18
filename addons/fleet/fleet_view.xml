@@ -154,9 +154,8 @@
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" />
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
-        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" />
+        <menuitem name="Fleet" id="menu_root" sequence="30" />
+        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" />
         <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" />
@@ -369,7 +368,7 @@
             </field>
         </record>
 
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" />
         <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_contract_form'>
@@ -854,6 +853,12 @@
             <field name="model_id" ref="citroen" />
         </record>
  -->
- 
+        <record model="ir.actions.act_window" id="action_fleet_vehicle_log_fuel_graph">
+            <field name="name">Fuel Costs by Month</field>
+            <field name="res_model">fleet.vehicle.log.fuel</field>
+            <field name="view_id" ref="fleet_vehicle_log_fuel_graph"></field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree</field>
+        </record>
     </data>
 </openerp>
