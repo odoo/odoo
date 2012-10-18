@@ -2,7 +2,7 @@
 <template>
 
     <!-- this template contains the mail widget and is used to namespace the css -->
-    <t t-name="mail">
+    <t t-name="mail.Widget">
         <div class="oe_mail">
         </div>
     </t>
@@ -17,7 +17,7 @@
     <t t-name="mail.compose_message">
         <div class="oe_msg oe_msg_composer">
             <div class="oe_msg_left">
-                <img class="oe_msg_icon" alt="User img"/>
+                <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.datasets.avatar}"/>
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
@@ -35,6 +35,17 @@
     </t>
 
     <!--
+        mail.compose_message.compact template
+        This template holds the composition form to write a message, this box is converted into
+        mail.compose_message when focus on textarea
+        -->
+    <t t-name="mail.compose_message.compact">
+        <div class="oe_msg oe_msg_composer_compact">
+            <textarea class="field_text oe_compact" placeholder="Add your comment here..."/>
+        </div>
+    </t>
+
+    <!--
         mail.compose_message.add_attachment template
         Small template to be inserted in the composition for add attachments
         -->
@@ -46,7 +57,7 @@
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                     <t t-set="fileupload_action">/web/binary/upload_attachment</t>
-                    <input type="hidden" name="model" value=""/>
+                    <input type="hidden" name="model" value="mail.message"/>
                     <input type="hidden" name="id" value="0"/>
                     <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
                 </t>
@@ -59,17 +70,12 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <ul t-attf-class="oe_mail_msg_attachments #{widget.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
-            <t t-foreach="widget.attachment_ids" t-as="attachment">
+        <ul t-attf-class="oe_msg_attachments #{widget.datasets.attachment_ids[0]?'':'oe_hidden'}">
+            <t t-foreach="widget.datasets.attachment_ids" t-as="attachment">
                 <li>
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
-                            <span>...wait upload...</span>
-                            <div t-attf-style="{attachment.percent_loaded&gt;0?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;20?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;40?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;60?'':'display:none;'}"/>
-                            <div t-attf-style="{attachment.percent_loaded&gt;80?'':'display:none;'}"/>
+                            <span>...Upload in progress...</span>
                         </div>
                         <t t-raw="attachment.name || attachment.filename"/>
                     </span>
@@ -77,7 +83,7 @@
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
                     <t t-if="widget.options.thread.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
-                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
+                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 
                 </li>
@@ -99,13 +105,13 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             Post to: 
-            <span t-if="!widget.is_private" class="oe_all_follower">All Followers</span> 
-            <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
+            <span t-if="!widget.datasets.is_private" class="oe_all_follower">All Followers</span> 
+            <t t-if="!widget.datasets.is_private and widget.datasets.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
-            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
+            <t t-if="widget.datasets.partner_ids.length" t-foreach="widget.datasets.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
             </t>
-            <t t-if="widget.partner_ids.length>=3">
-                <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
+            <t t-if="widget.datasets.partner_ids.length>=3">
+                <span class="oe_more">, <a><t t-raw="widget.datasets.partner_ids.length-3"/> others...</a></span>
                 <a class="oe_more_hidden">&lt;&lt;&lt;</a>
             </t>
         </div>
@@ -115,8 +121,7 @@
         wall main template
         Template used to display the communication history in the wall.
         -->
-    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manag
-        er_current">
+    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
         <table class="oe_view_manager_header">
           <colgroup>
             <col width="33%"/>
@@ -142,7 +147,7 @@
                         Compose a new message
                     </button>
                     <button type="button" class="oe_write_onwall" help="Your followers can read this message">
-                        Write on your wall
+                        Write to your followers
                     </button>
                 </td>
             </tr>
@@ -158,9 +163,9 @@
     <!--
         display message on the wall when there are no message
         -->
-    <li t-name="mail.wall_no_message" class="oe_wall_no_message">
-        You have no messages
-    </li>
+    <t t-name="mail.wall_no_message">
+        <div class="oe_wall_no_message">You have no messages</div>
+    </t>
 
     <!--
         record_thread main template
@@ -174,49 +179,51 @@
         </ul>
     </div>
 
-    <div t-name="mail.thread" t-attf-class="oe_thread #{widget.root?'oe_root_thread':''} ">
-    </div>
+    <t t-name="mail.thread">
+        <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>
+    </t>
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_msg_#{widget.type} oe_msg#{widget.unread?'unread':'read'}">
+        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
-                    <a t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read oe_e">W</a>
-                    <!--<li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>-->
-                    <a title="Reply" class="oe_reply oe_e">)</a>
+                    <t t-call="mail.thread.message.star"/>
+                    <a t-if="widget.datasets.show_read_unread" title="Read" class="oe_read oe_e">W</a>
+                    <a t-if="widget.datasets.show_read_unread" title="Set back to unread" class="oe_unread oe_e">h</a>
+                    <a t-if="widget.datasets.show_reply" title="Reply" class="oe_reply oe_e">)</a>
                 </div>
             </div>
 
             <div class='oe_msg_left'>
-                <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
-                    <img class="oe_msg_icon" t-att-src="widget.avatar"/>
+                <a t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}" t-att-title="widget.datasets.author_id[1]">
+                    <img class="oe_msg_icon" t-att-src="widget.datasets.avatar"/>
                 </a>
             </div>
 
             <div class="oe_msg_center">
                 <!-- message itself -->
-                <div class="oe_msg_content">
-                    <h1 t-if="widget.subject" class="oe_msg_title">
-                        <t t-raw="widget.subject"/>
+                <div class="oe_mail_msg">
+                    <h1 t-if="widget.datasets.subject" class="oe_msg_title">
+                        <t t-raw="widget.datasets.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.model!='res.partner'">
-                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
+                        <t t-if="widget.options.message.show_record_name and widget.datasets.record_name and (!widget.datasets.subject) and !widget.options.thread.thread_level and !widget.options.thread.display_on_thread[0] and widget.datasets.model!='res.partner'">
+                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.datasets.model}&amp;id=#{widget.datasets.res_id}"><t t-raw="widget.datasets.record_name"/></a>
                         </t>
-                        <t t-raw="widget.body"/>
+                        <t t-raw="widget.datasets.body"/>
                     </div>
-                    <t t-if="widget.attachment_ids.length > 0">
+                    <t t-if="widget.datasets.attachment_ids.length > 0">
                         <t t-call="mail.thread.message.attachments"/>
                     </t>
                 </div>
                 <div class="oe_msg_footer">
-                    <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
-                    <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                        <a t-if="widget.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
-                            <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
-                            <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
+                    <a t-if="widget.datasets.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}"><t t-raw="widget.datasets.author_id[1]"/></a>
+                    <span t-att-title="widget.datasets.date"><t t-raw="widget.datasets.timerelative"/></span>
+                        <a t-if="widget.datasets.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
+                            <t t-if="widget.datasets.attachment_ids.length == 1">1 Attachment</t>
+                            <t t-if="widget.datasets.attachment_ids.length > 1"><t t-raw="widget.datasets.attachment_ids.length"/> Attachments</t>
                         </a>
                     <t t-call="mail.thread.message.vote"/>
                 </div>
@@ -226,10 +233,20 @@
 
     <!-- expandable message layout -->
     <t t-name="mail.thread.expandable">
-        <div t-attf-class="oe_msg oe_msg_#{widget.type} oe_msg_unread">
+        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_unread">
             <div class="oe_msg_content oe_msg_more_message">
-                <a class="oe_msg_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> messages not display)</span>...</a>
+                <a class="oe_msg_fetch_more">Load more messages <span t-if="widget.datasets.nb_messages>0">(<t t-raw="widget.datasets.nb_messages"/> messages not display)</span>...</a>
             </div>
+        </div>
+    </t>
+
+    <!--
+        mail.compose_message.button_top_bar
+        render of the button on the user bar for open wizard compose message
+        -->
+    <t t-name="mail.compose_message.button_top_bar">
+        <div class="oe_topbar_compose_full_email">
+            <button class="oe_button oe_highlight">Write an email</button>
         </div>
     </t>
 
@@ -238,23 +255,32 @@
     -->
     <span t-name="mail.thread.message.vote">
         <span class="oe_left oe_mail_vote_count">
-            <t t-if='widget.has_voted'>
+            <t t-if='widget.datasets.has_voted'>
                 You
             </t>
-            <t t-if='(widget.vote_user_ids.length-(widget.has_voted?1:0)) > 0'>
-                <t t-if='widget.has_voted'> and </t>
-                <t t-esc="widget.vote_user_ids.length"/> people
+            <t t-if='(widget.datasets.vote_user_ids.length-(widget.datasets.has_voted?1:0)) > 0'>
+                <t t-if='widget.datasets.has_voted'> and </t>
+                <t t-esc="widget.datasets.vote_user_ids.length"/> people
             </t>
-            <t t-if='widget.vote_user_ids.length > 0'>
+            <t t-if='widget.datasets.vote_user_ids.length > 0'>
                 concur
             </t>
         </span>
-        <button t-attf-class="oe_mail_msg_vote oe_tag">
+        <button t-attf-class="oe_msg_vote oe_tag">
             <span>
-                <t t-if="!widget.has_voted">Concur</t>
-                <t t-if="widget.has_voted">Respectfully disagree</t>
+                <t t-if="!widget.datasets.has_voted">Concur</t>
+                <t t-if="widget.datasets.has_voted">Respectfully disagree</t>
             </span>
         </button>
+    </span>
+
+    <!-- mail.thread.message.star
+        Template used to display stared/unstared message in a mail.message
+    -->
+    <span t-name="mail.thread.message.star">
+        <span class="oe_left">
+            <button t-attf-class="oe_mail_starbox oe_tag #{widget.datasets.has_stared?'oe_stared':''}">*</button>
+        </span>
     </span>
 
 </template>

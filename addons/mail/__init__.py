@@ -27,6 +27,7 @@ import mail_mail
 import mail_thread
 import mail_group
 import mail_vote
+import mail_star
 import res_partner
 import res_users
 import report

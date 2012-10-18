@@ -529,67 +529,6 @@ class test_mail(TestMailMockups):
         self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message2.body, group_bird.description, 'mail.message body incorrect')
 
-    # FP Note: to be reviewed to be more generic, not depending on the algorythm of
-    #          message_read
-    #def test_30_message_read(self):
-    #    """ Tests designed for message_read. """
-    #    # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
-    #    # It will be updated as soon as we have fixed specs !
-    #    cr, uid = self.cr, self.uid
-    #    group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-
-    #    def _compare_structures(struct1, struct2, n=0):
-    #        # print '%scompare structure' % ('\t' * n)
-    #        # self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
-
-    #        for x in range(len(struct1)):
-    #            if struct1[x].get('type') == 'expandable':
-    #                continue
-    #            # print '%s' % ('\t' * n), struct1[x]['id'], struct1[x]['child_nbr'], struct2[x]['id'], struct2[x].get('child_nbr', 'XX'), struct1[x].get('subject') or ''
-    #            self.assertEqual(struct1[x]['id'], struct2[x]['id'], 'message_read failure %s' % struct1[x].get('subject'))
-    #            _compare_structures(struct1[x]['child_ids'], struct2[x]['child_ids'], n + 1)
-    #        # print '%send compare' % ('\t' * n)
-
-    #    # ----------------------------------------
-    #    # CASE2: message_read test
-    #    # ----------------------------------------
-
-    #    # 1. Add a few messages to pigs group
-    #    msgid1 = group_pigs.message_post(body='1', subject='1', parent_id=False)
-    #    msgid2 = group_pigs.message_post(body='2', subject='1-1', parent_id=msgid1)
-    #    msgid3 = group_pigs.message_post(body='3', subject='1-2', parent_id=msgid1)
-    #    msgid4 = group_pigs.message_post(body='4', subject='2', parent_id=False)
-    #    msgid5 = group_pigs.message_post(body='5', subject='1-1-1', parent_id=msgid2)
-    #    msgid6 = group_pigs.message_post(body='6', subject='2-1', parent_id=msgid4)
-
-    #    # Test: read all messages flat
-    #    tree_test = [{'id': msgid6, 'child_ids': []}, {'id': msgid5, 'child_ids': []},
-    #                    {'id': msgid4, 'child_ids': []}, {'id': msgid3, 'child_ids': []},
-    #                    {'id': msgid2, 'child_ids': []}, {'id': msgid1, 'child_ids': []}]
-    #    tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=0, limit=15)
-    #    _compare_structures(tree, tree_test)
-    #    # Test: read with 1 level of thread
-    #    tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
-    #                {'id': msgid1, 'child_ids': [
-    #                    {'id': msgid5, 'child_ids': []}, {'id': msgid3, 'child_ids': []},
-    #                    {'id': msgid2, 'child_ids': []},
-    #                ]},
-    #                ]
-    #    tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=1, limit=15)
-    #    _compare_structures(tree, tree_test)
-    #    # Test: read with 2 levels of thread
-    #    tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
-    #                {'id': msgid1, 'child_ids': [
-    #                    {'id': msgid3, 'child_ids': []},
-    #                    {'id': msgid2, 'child_ids': [{'id': msgid5, 'child_ids': []}, ]},
-    #                ]},
-    #                ]
-    #    tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=2, limit=15)
-    #    _compare_structures(tree, tree_test)
-
-    #    # 2. Test expandables
-    #    # TDE FIXME: add those tests when expandables are specified and implemented
-
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
         cr, uid = self.cr, self.uid

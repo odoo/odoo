@@ -312,7 +312,7 @@
             <para style="terp_default_Right_9">[[ formatLang(line.price_unit) ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(line.price_subtotal, currency_obj = o.pricelist_id.currency_id) ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -337,7 +337,7 @@
           <para style="terp_default_Right_9">[[ formatLang(fees.price_unit) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(fees.price_subtotal) ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(fees.price_subtotal, currency_obj = o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -353,7 +353,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
 
       </tr>
@@ -367,7 +367,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_tax, dp='Account')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_tax, dp='Account', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -380,7 +380,7 @@
           <para style="terp_tblheader_Details">Total :</para>
         </td>
         <td>
-          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price') ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

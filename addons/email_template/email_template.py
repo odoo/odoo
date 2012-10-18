@@ -319,7 +319,7 @@ class email_template(osv.osv):
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
-            attachments.append(report_name, result)
+            attachments.append((report_name, result))
 
         # Add template attachments
         for attach in template.attachment_ids:
