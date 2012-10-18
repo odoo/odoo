@@ -61,7 +61,7 @@ my.SearchQuery = B.Collection.extend({
         this.on('change', function (facet) {
             if(!facet.values.isEmpty()) { return; }
 
-            this.remove(facet);
+            this.remove(facet, {silent: true});
         }, this);
     },
     add: function (values, options) {
