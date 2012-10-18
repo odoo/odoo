@@ -5,8 +5,8 @@ import mock
 import unittest2
 import simplejson
 
-import web.controllers.main
-from ..common import nonliterals, session as s
+import openerp.addons.web.controllers.main
+from .. import nonliterals, session as s
 
 def field_attrs(fields_view_get, fieldname):
     (field,) =  filter(lambda f: f['attrs'].get('name') == fieldname,
@@ -16,7 +16,7 @@ def field_attrs(fields_view_get, fieldname):
 #noinspection PyCompatibility
 class DomainsAndContextsTest(unittest2.TestCase):
     def setUp(self):
-        self.view = web.controllers.main.View()
+        self.view = openerp.addons.web.controllers.main.View()
 
     def test_convert_literal_domain(self):
         e = xml.etree.ElementTree.Element(
@@ -106,7 +106,7 @@ class DomainsAndContextsTest(unittest2.TestCase):
 
 class AttrsNormalizationTest(unittest2.TestCase):
     def setUp(self):
-        self.view = web.controllers.main.View()
+        self.view = openerp.addons.web.controllers.main.View()
 
     def test_identity(self):
         web_view = """

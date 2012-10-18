@@ -95,8 +95,8 @@ DataGroup -> also Model
 -----------------------
 
 Alongside the deprecation of ``DataSet`` for
-:js:class:`~openerp.web.Model`, OpenERP Web 7.0 also deprecates
-``DataGroup`` and its subtypes in favor of a single method on
+:js:class:`~openerp.web.Model`, OpenERP Web 7.0 removes
+``DataGroup`` and its subtypes as public objects in favor of a single method on
 :js:class:`~openerp.web.Query`:
 :js:func:`~openerp.web.Query.group_by`.
 
@@ -116,3 +116,8 @@ Because it is heavily related to ``DataSet`` (as it *yields*
 ``DataGroup`` (if we want to stay consistent), which is a good time to
 make the API more imperative and look more like what most developers
 are used to.
+
+But as ``DataGroup`` users in 6.1 were rare (and there really was little reason
+to use it), it has been removed as a public API.
+
+
