@@ -100,7 +100,7 @@ openerp.web.list_editable = function (instance) {
                 this._super();
             }
         },
-        on_loaded: function (data, grouped) {
+        load_list: function (data, grouped) {
             var self = this;
             // tree/@editable takes priority on everything else if present.
             var result = this._super(data, grouped);
@@ -201,10 +201,7 @@ openerp.web.list_editable = function (instance) {
                 }, function () {
                     return self.editor.edit(item, function (field_name, field) {
                         var cell = cells[field_name];
-                        if (!cell || field.get('effective_readonly')) {
-                            // Readonly fields can just remain the list's,
-                            // form's usually don't have backgrounds &al
-                            field.set({invisible: true});
+                        if (!cell) {
                             return;
                         }
 
@@ -400,6 +397,21 @@ openerp.web.list_editable = function (instance) {
         },
         setup_events: function () {
             var self = this;
+            _.each(this.editor.form.fields, function(field, field_name) {
+                var field;
+                var setting = false;
+                var set_invisible = function() {
+                    if (!setting && field.get("effective_readonly")) {
+                        setting = true;
+                        field.set({invisible: true});
+                        setting = false;
+                    }
+                };
+                field.on("change:effective_readonly", self, set_invisible);
+                field.on("change:invisible", self, set_invisible);
+                set_invisible();
+            });
+
             this.editor.$el.on('keyup keydown', function (e) {
                 if (!self.editor.is_editing()) { return; }
                 var key = _($.ui.keyCode).chain()
@@ -724,7 +736,7 @@ openerp.web.list_editable = function (instance) {
         save: function () {
             var self = this;
             return this.form
-                .do_save(this.delegate.prepends_on_create())
+                .save(this.delegate.prepends_on_create())
                 .pipe(function (result) {
                     var created = result.created && !self.record.id;
                     if (created) {

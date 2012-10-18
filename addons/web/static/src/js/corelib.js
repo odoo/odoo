@@ -291,6 +291,17 @@ var Events = instance.web.Class.extend({
         return this;
     },
 
+    callbackList: function() {
+        var lst = [];
+        _.each(this._callbacks || {}, function(el, eventName) {
+            var node = el;
+            while ((node = node.next) && node.next) {
+                lst.push([eventName, node.callback, node.context]);
+            }
+        });
+        return lst;
+    },
+    
     trigger : function(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
@@ -369,9 +380,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        if(!this.__edispatcherEvents) {
-            debugger;
-        }
+        _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+            this.off(cal[0], cal[2], cal[1]);
+        }, this);
         this.__edispatcherEvents.off();
         instance.web.ParentedMixin.destroy.call(this);
     }
@@ -1439,6 +1450,10 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         return this.prefix + file;
     },
 });
+
+instance.web.py_eval = function(expr, context) {
+    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+};
 
 }
 

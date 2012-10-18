@@ -67,14 +67,14 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 {text: _t("Close"), click: function() { self.view_edit_dialog.close(); window.location.reload(); }}
             ]
         }).open();
-        this.view_edit_dialog.on_close.add_last(function(){window.location.reload();});
+        this.view_edit_dialog.on("closing", this, function(){window.location.reload();});
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog.$el);
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_widget;
             var controller = viewmanager.views[viewmanager.active_view].controller;
-            controller.on_loaded.add_last(function(){
+            controller.on('view_loaded', function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
                         self.main_view_id = ids[0];
@@ -1017,7 +1017,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             controller.on("on_button_cancel", self, function(){
                 action_manager.destroy();
             });
-            controller.do_save.add_last(function(){
+            controller.on("save", self, function(){
                 action_manager.destroy();
                 var value =controller.fields.name.get('value');
                 self.add_node_dialog.$el.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));

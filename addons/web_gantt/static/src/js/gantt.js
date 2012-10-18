@@ -12,11 +12,13 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     template: "GanttView",
     view_type: "gantt",
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
+        this.on('view_loaded', self, self.load_gantt);
     },
-    on_loaded: function(fields_view_get, fields_get) {
+    load_gantt: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
@@ -222,7 +224,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_task_create: function() {
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.on_select_elements.add_last(function() {
+        pop.on("elements_selected", self, function() {
             self.reload();
         });
         pop.select_element(

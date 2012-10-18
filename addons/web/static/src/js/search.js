@@ -324,8 +324,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context() });
 
             $.when(load_view)
-                .pipe(this.on_loaded)
-                .fail(function () {
+                .pipe(function(r) {
+                    self.search_view_loaded(r)
+                }).fail(function () {
                     self.ready.reject.apply(null, arguments);
                 });
         }
@@ -645,7 +646,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         (new instance.web.search.Advanced(this));
     },
 
-    on_loaded: function(data) {
+    search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
         if (data.fields_view.type !== 'search' ||
@@ -654,7 +655,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                     "Got non-search view after asking for a search view: type %s, arch root %s",
                     data.fields_view.type, data.fields_view.arch.tag));
         }
-
         this.make_widgets(
             data.fields_view['arch'].children,
             data.fields_view.fields);
@@ -671,9 +671,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             'facet_for_defaults', this.defaults)).then(function () {
                 self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
-
+        
         return $.when(drawer_started, defaults_fetched)
-            .then(function () { self.ready.resolve(); })
+            .then(function () { 
+                self.trigger("search_view_loaded", data);
+                self.ready.resolve();
+            });
     },
     /**
      * Handle event when the user make a selection in the filters management select box.
@@ -763,7 +766,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             groupbys: groupbys,
             errors: errors
         };
-    }, /**
+    }, 
+    /**
      * Performs the search view collection of widget data.
      *
      * If the collection went well (all fields are valid), then triggers
@@ -783,7 +787,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             this.on_invalid(search.errors);
             return;
         }
-        return this.on_search(search.domains, search.contexts, search.groupbys);
+        return this.trigger('search_data', search.domains, search.contexts, search.groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -801,8 +805,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts, groupbys) {
-    },
     /**
      * Triggered after a validation error in the SearchView fields.
      *
