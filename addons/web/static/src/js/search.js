@@ -766,7 +766,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             groupbys: groupbys,
             errors: errors
         };
-    }, /**
+    }, 
+    /**
      * Performs the search view collection of widget data.
      *
      * If the collection went well (all fields are valid), then triggers
@@ -786,7 +787,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             this.on_invalid(search.errors);
             return;
         }
-        return this.on_search(search.domains, search.contexts, search.groupbys);
+        return this.trigger('search_data', search.domains, search.contexts, search.groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -804,8 +805,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts, groupbys) {
-    },
     /**
      * Triggered after a validation error in the SearchView fields.
      *
