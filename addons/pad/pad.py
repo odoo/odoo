@@ -86,7 +86,7 @@ class pad_common(osv.osv_memory):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        for k,v in self._all_columns:
+        for k,v in self._all_columns.items():
             field = v.column
             if hasattr(field,'pad_content_field'):
                 pad = self.pad_generate_url(cr, uid, context)
