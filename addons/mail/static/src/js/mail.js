@@ -274,6 +274,10 @@ openerp.mail = function(session) {
             for(var i in this.datasets.attachment_ids){
                 attachments.push(this.datasets.attachment_ids[i].id);
             }
+            /* TDE note: I think this is not necessary, because
+             * 1/ post on a document: followers added server-side in _notify
+             * 2/ reply to a message: mail.compose.message should add the previous partners
+             */
             var partner_ids=[];
             for(var i in this.datasets.partner_ids){
                 partner_ids.push(this.datasets.partner_ids[i][0]);
@@ -660,6 +664,8 @@ openerp.mail = function(session) {
         * @param {object} mouse envent
         */
         on_message_read_unread: function (event) {
+            // TDE note: code here seems complicated... just check that current message is read (value coming from server)
+            // and send its opposite to set_message_read
             event.stopPropagation();
             // if this message is read, all childs message display is read
             var ids = [this.datasets.id].concat( this.get_child_ids() );
@@ -720,7 +726,7 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
             return this.ds_message.call('vote_toggle', [[self.datasets.id]]).pipe(function(vote){
-
+                // TDE note: to update, because vote_user_ids is about to disappear to be replaced by vote_nb (number of votes)
                 self.datasets.has_voted=vote;
                 if (!self.datasets.has_voted) {
                     var votes=[];
