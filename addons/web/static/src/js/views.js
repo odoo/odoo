@@ -299,6 +299,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
+            if (this.dialog_widget && ! this.dialog_widget.isDestroyed())
+                this.dialog_widget.destroy();
             if (this.dialog === null || this.dialog.isDestroyed()) {
                 this.dialog = new instance.web.Dialog(this, {
                     buttons: {"Close": function() {$(this).dialog("close")}},
@@ -306,8 +308,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
                 this.dialog.on("closing", null, options.on_close);
                 this.dialog.init_dialog();
-            } else {
-                this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
@@ -317,6 +317,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
             }
             this.dialog_widget = widget;
+            this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
             return initialized;
@@ -914,8 +915,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         view.set({ 'title': this.action.name });
         return r;
     },
+    get_action_manager: function() {
+        var cur = this;
+        while (cur = cur.getParent()) {
+            if (cur instanceof instance.web.ActionManager) {
+                return cur;
+            }
+        }
+        return undefined;
+    },
     set_title: function(title) {
-        this.$el.find('.oe_breadcrumb_title:first').html(this.getParent().get_title());
+        this.$el.find('.oe_breadcrumb_title:first').html(this.get_action_manager().get_title());
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
