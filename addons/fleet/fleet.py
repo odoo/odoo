@@ -398,6 +398,7 @@ class fleet_vehicle(osv.Model):
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle',ondelete="set null"),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
+        'seats' : fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','fleet_vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
@@ -418,7 +419,7 @@ class fleet_vehicle(osv.Model):
         'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contracts to renew',store=False),
         'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contracts Overdued',store=False),
         
-        'car_value': fields.float('Car value', help='Value of the bought vehicle'),
+        'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
         #'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
         }
 

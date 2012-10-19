@@ -58,6 +58,7 @@
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_break'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_2" model="fleet.vehicle">
@@ -72,6 +73,7 @@
           <field name="state" ref="vehicle_state_inactive"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">16000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_junior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_3" model="fleet.vehicle">
@@ -86,6 +88,7 @@
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
        <record id="vehicle_4" model="fleet.vehicle">
@@ -100,6 +103,7 @@
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">20000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="vehicle_5" model="fleet.vehicle">
@@ -114,6 +118,7 @@
           <field name="state" ref="vehicle_state_active"/>
           <field name="odometer_unit">kilometers</field>
           <field name="car_value">18000</field>
+          <field eval="[(6,0,[ref('vehicle_tag_leasing'),ref('fleet.vehicle_tag_compact'),ref('fleet.vehicle_tag_senior')])]" name="tag_ids"/>
       </record>
 
       <record id="log_odometer_1" model="fleet.vehicle.odometer">
@@ -903,6 +908,5 @@
         <field name="date">2012-01-01</field>
         <field name="parent_id" ref="log_contract_5_fleet_vehicle_cost" />
       </record>
-
     </data>
 </openerp>

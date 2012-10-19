@@ -189,14 +189,14 @@
                             <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
                             <button name="act_show_log_odometer" type="object" string="Odometer Logs" help="show the odometer logs for this vehicle" />
                         </div> 
-                        <group col ="2">
-                            <group string="General Properties">
+                        <group col="2" string="General Properties">
+                            <group >
                                 <field name="driver" />
                                 <field name="location" />
                                 <field name="vin_sn" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-                            <group string="Additional Properties">
+                            <group >
                                 <label for="odometer" />
                                 <div>
                                     <field name="odometer" class="oe_inline"/>
@@ -207,7 +207,8 @@
                             </group>
                         </group>
                         <group col="2">
-                            <group string="External Options">
+                            <group string="Additional Properties">
+                                <field name="seats" />
                                 <field name="doors" />
                                 <field name="color" />
                             </group>
