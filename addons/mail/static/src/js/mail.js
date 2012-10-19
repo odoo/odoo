@@ -23,7 +23,7 @@ openerp.mail = function(session) {
                  */
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_subtype', 'active_id', 'lang',
+                    'default_res_id', 'default_content_subtype', 'active_id', 'lang',
                     'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids']
                 for (var key in action.context) {
                     if (_.indexOf(context_keys, key) == -1) {
