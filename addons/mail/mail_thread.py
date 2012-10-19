@@ -108,12 +108,12 @@ class mail_thread(osv.AbstractModel):
 
         # find the document followers, update the data
         fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
+        fol_ids = fol_obj.search(cr, uid, [
             ('partner_id', '=', user_pid),
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
+        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
             for subtype in fol.subtype_ids:
                 thread_subtype_dict[subtype.name]['followed'] = True
@@ -225,8 +225,8 @@ class mail_thread(osv.AbstractModel):
 
     def create(self, cr, uid, vals, context=None):
         """ Override to subscribe the current user. """
-        thread_id = super(mail_thread, self).create(cr, SUPERUSER_ID, vals, context=context)
-        self.message_subscribe_users(cr, SUPERUSER_ID, [thread_id], [uid], context=context)
+        thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
+        self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
 
     def unlink(self, cr, uid, ids, context=None):
@@ -705,10 +705,10 @@ class mail_thread(osv.AbstractModel):
             mail_message = self.pool.get('mail.message')
             attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
-                ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
-                mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
-          
-        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id])
+                ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
+                mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
+
+        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], context=context)
         return new_message
 
     #------------------------------------------------------
