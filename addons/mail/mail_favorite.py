@@ -22,13 +22,13 @@
 from osv import osv, fields
 
 
-class mail_star(osv.Model):
-    ''' Mail vote feature allow users to select messages and display.
-        This allows for example see in one time all important document
-        for the user. '''
+class mail_favorite(osv.Model):
+    ''' Favorite model: relationship table between messages and users. A favorite
+        message is a message the user wants to see in a specific 'Favorite'
+        mailbox, like a starred mechanism. '''
 
-    _name = 'mail.star'
-    _description = 'Mail Star'
+    _name = 'mail.favorite'
+    _description = 'Favorite messages'
     _columns = {
             'message_id': fields.many2one('mail.message', 'Message', select=1,
                 ondelete='cascade', required=True),
