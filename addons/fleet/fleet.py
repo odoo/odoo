@@ -47,7 +47,7 @@ class fleet_vehicle_cost(osv.Model):
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
         'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
 
-        'date' :fields.date('Cost Date',help='Date when the cost has been executed'),
+        'date' :fields.date('Date',help='Date when the cost has been executed'),
     }
 
     _default ={
@@ -362,6 +362,32 @@ class fleet_vehicle(osv.Model):
         
         return dict(res)
 
+    def _search_get_overdue_contract_reminder(self, cr, uid, obj, name, args, context):
+        res = []
+        for field, operator, value in args:
+            #assert field == name
+            vehicle_ids = self.search(cr, uid, [])
+            renew_ids = self.get_overdue_contract_reminder_fnc(cr,uid,vehicle_ids,context=context)
+            res_ids = []
+            for renew_key,renew_value in renew_ids.items():
+                if eval(str(renew_value) + " " + str(operator) + " " + str(value)):
+                    res_ids.append(renew_key)
+            res.append(('id', 'in', res_ids))      
+        return res
+    
+    def _search_contract_renewal_due_soon(self, cr, uid, obj, name, args, context):
+        res = []
+        for field, operator, value in args:
+            #assert field == name
+            vehicle_ids = self.search(cr, uid, [])
+            renew_ids = self.get_next_contract_reminder_fnc(cr,uid,vehicle_ids,context=context)
+            res_ids = []
+            for renew_key,renew_value in renew_ids.items():
+                if eval(str(renew_value) + " " + str(operator) + " " + str(value)):
+                    res_ids.append(renew_key)
+            res.append(('id', 'in', res_ids))      
+        return res
+
     def get_next_contract_reminder(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.get_next_contract_reminder_fnc(cr, uid, ids, context=context)
         return res
@@ -416,8 +442,8 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contracts to renew',store=False),
-        'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contracts Overdued',store=False),
+        'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,fnct_search=_search_contract_renewal_due_soon,type="integer",string='Contracts to renew',store=False),
+        'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,fnct_search=_search_get_overdue_contract_reminder,type="integer",string='Contracts Overdued',store=False),
         
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
         #'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
