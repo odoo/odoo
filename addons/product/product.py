@@ -109,8 +109,8 @@ class product_uom(osv.osv):
 
     _order = "name"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
+        'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
+        'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
@@ -126,7 +126,7 @@ class product_uom(osv.osv):
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
-                                      ('smaller','Smaller than the reference Unit of Measure')],'Unit of Measure Type', required=1),
+                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
     }
 
     _defaults = {
