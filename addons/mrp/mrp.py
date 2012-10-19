@@ -431,16 +431,6 @@ class mrp_production(osv.osv):
             result[prod.id] = prod.date_planned
         return result
 
-    def _production_date(self, cr, uid, ids, prop, unknow_none, context=None):
-        """ Finds production planned date.
-        @param prop: Name of field.
-        @param unknow_none:
-        @return: Dictionary of values.
-        """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            result[prod.id] = prod.date_planned[:10]
-        return result
 
     def _src_id_default(self, cr, uid, ids, context=None):
         src_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
@@ -471,7 +461,6 @@ class mrp_production(osv.osv):
             help="Location where the system will stock the finished products."),
 
         'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
-        'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft':[('readonly',False)]}),
         'date_start': fields.datetime('Start Date', select=True, readonly=True),
         'date_finished': fields.datetime('End Date', select=True, readonly=True),
