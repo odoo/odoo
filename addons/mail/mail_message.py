@@ -252,7 +252,10 @@ class mail_message(osv.Model):
         # result = sorted(result, key=lambda k: k['id'])
         tree_not = []
         # expandable for not show message
-        for message_id, message in read_messages.iteritems():
+        id_list = sorted(read_messages.keys())
+        for message_id in id_list:
+            message = read_messages[message_id]
+
             # get all childs
             # SHOULD NOT BE SUPERUSED_ID -> check search is correctly implemented in mail.message
             not_loaded_ids = self.search(cr, uid, [
@@ -342,7 +345,7 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
-        print '>>> executing message_read'
+        # print '>>> executing message_read', message_loaded_ids
         if message_loaded_ids:
             domain += [('id', 'not in', message_loaded_ids)]
         limit = limit or self._message_read_limit
@@ -375,13 +378,10 @@ class mail_message(osv.Model):
                             message_list.append(self._message_get_dict(cr, uid, parent, context=context))
                         parent = self._get_parent(cr, uid, parent, context=context)
 
-                # print read_messages
-                # print message_list
-
-                # get the child expandable messages for the tree
-                message_list = sorted(message_list, key=lambda k: k['id'])
-                message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
-                    message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
+            # get the child expandable messages for the tree
+            message_list = sorted(message_list, key=lambda k: k['id'])
+            message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
+                message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
 
         # message_list = sorted(message_list, key=lambda k: k['id'])
         return message_list
