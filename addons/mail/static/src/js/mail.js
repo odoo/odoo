@@ -1124,11 +1124,6 @@ openerp.mail = function(session) {
                 }
             }
 
-            self.$('.oe_msg_first:first').removeClass("oe_msg_first");
-            self.$('.oe_msg_last:last').removeClass("oe_msg_last");
-            self.$('.oe_msg_comment:first, .oe_msg_comment:first-child').addClass("oe_msg_first");
-            self.$('.oe_msg_comment:last, .oe_msg_comment:last-child').addClass("oe_msg_last");
-
             return message
         },
         
