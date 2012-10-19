@@ -1,5 +1,5 @@
-Outside the box: network interactions
-=====================================
+RPC Calls
+=========
 
 Building static displays is all nice and good and allows for neat
 effects (and sometimes you're given data to display from third parties

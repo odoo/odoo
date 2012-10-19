@@ -61,7 +61,7 @@ my.SearchQuery = B.Collection.extend({
         this.on('change', function (facet) {
             if(!facet.values.isEmpty()) { return; }
 
-            this.remove(facet);
+            this.remove(facet, {silent: true});
         }, this);
     },
     add: function (values, options) {
@@ -324,8 +324,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context() });
 
             $.when(load_view)
-                .pipe(this.on_loaded)
-                .fail(function () {
+                .pipe(function(r) {
+                    self.search_view_loaded(r)
+                }).fail(function () {
                     self.ready.reject.apply(null, arguments);
                 });
         }
@@ -645,7 +646,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         (new instance.web.search.Advanced(this));
     },
 
-    on_loaded: function(data) {
+    search_view_loaded: function(data) {
         var self = this;
         this.fields_view = data.fields_view;
         if (data.fields_view.type !== 'search' ||
@@ -654,7 +655,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                     "Got non-search view after asking for a search view: type %s, arch root %s",
                     data.fields_view.type, data.fields_view.arch.tag));
         }
-
         this.make_widgets(
             data.fields_view['arch'].children,
             data.fields_view.fields);
@@ -671,48 +671,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             'facet_for_defaults', this.defaults)).then(function () {
                 self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
-
+        
         return $.when(drawer_started, defaults_fetched)
-            .then(function () { self.ready.resolve(); })
-    },
-    /**
-     * Handle event when the user make a selection in the filters management select box.
-     */
-    on_filters_management: function(e) {
-        var self = this;
-        var select = this.$el.find(".oe_search-view-filters-management");
-        var val = select.val();
-        switch(val) {
-        case 'advanced_filter':
-            this.extended_search.on_activate();
-            break;
-        case '':
-            this.do_clear();
-        }
-        if (val.slice(0, 4) == "get:") {
-            val = val.slice(4);
-            val = parseInt(val, 10);
-            var filter = this.managed_filters[val];
-            this.do_clear(false).then(_.bind(function() {
-                select.val('get:' + val);
-
-                var groupbys = [];
-                var group_by = filter.context.group_by;
-                if (group_by) {
-                    groupbys = _.map(
-                        group_by instanceof Array ? group_by : group_by.split(','),
-                        function (el) { return { group_by: el }; });
-                }
-                this.filter_data = {
-                    domains: [filter.domain],
-                    contexts: [filter.context],
-                    groupbys: groupbys
-                };
-                this.do_search();
-            }, this));
-        } else {
-            select.val('');
-        }
+            .then(function () { 
+                self.trigger("search_view_loaded", data);
+                self.ready.resolve();
+            });
     },
     /**
      * Extract search data from the view's facets.
@@ -763,7 +727,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             groupbys: groupbys,
             errors: errors
         };
-    }, /**
+    }, 
+    /**
      * Performs the search view collection of widget data.
      *
      * If the collection went well (all fields are valid), then triggers
@@ -771,8 +736,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * If at least one field failed its validation, triggers
      * :js:func:`instance.web.SearchView.on_invalid` instead.
-     *
-     * @param e jQuery event object coming from the "Search" button
      */
     do_search: function (_query, options) {
         if (options && options.preventSearch) {
@@ -783,7 +746,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             this.on_invalid(search.errors);
             return;
         }
-        return this.on_search(search.domains, search.contexts, search.groupbys);
+        return this.trigger('search_data', search.domains, search.contexts, search.groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -801,8 +764,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * @param {Array} contexts an array of literal contexts or context refs
      * @param {Array} groupbys ordered contexts which may or may not have group_by keys
      */
-    on_search: function (domains, contexts, groupbys) {
-    },
     /**
      * Triggered after a validation error in the SearchView fields.
      *

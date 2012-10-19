@@ -2026,6 +2026,10 @@ $sheet-max-width: 860px
         td.oe_list_record_delete
             position: absolute
     .oe_list.oe_list_editable.oe_editing
+        .oe_edition .oe_list_field_cell:not(.oe_readonly)
+            *
+                visibility: hidden
+            color: transparent
         .oe_m2o_drop_down_button
             top: 5px
         .oe_m2o_cm_button
@@ -2040,15 +2044,17 @@ $sheet-max-width: 860px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
-                    width: 100%
+                    width: 100% !important
             &.oe_form_field_datetime,&.oe_form_field_date
                 > span
-                    width: 100%
+                    width: 100% !important
                 input.oe_datepicker_master
                     width: 100% !important
             .oe_form_field_float,.oe_form_view_integer,&.oe_form_field_datetime,&.oe_form_field_date
                 min-width: 0 !important
                 max-width: none !important
+    .oe_list_group_name
+        white-space: nowrap
     // }}}
     // FormView.many2many {{{
     .oe_form .oe_form_field_many2many > .oe_list
@@ -2098,12 +2104,14 @@ $sheet-max-width: 860px
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            th
-                position: relative
         td, th
             padding: 3px 6px
             line-height: 18px
-        th:after
+        th.oe_sortable, th.oe_sortable div
+            cursor: pointer
+        th.oe_sortable div
+            position: relative
+        th.oe_sortable div:after
             position: absolute
             right: 6px
             content: ""
@@ -2112,10 +2120,10 @@ $sheet-max-width: 860px
             border-style: solid
             border-color: #000 transparent
             visibility: hidden
-        th.sortup:after
+        th.sortup div:after
             visibility: visible
             @include opacity(0.6)
-        th.sortdown:after
+        th.sortdown div:after
             border-bottom: none
             border-left: 4px solid transparent
             border-right: 4px solid transparent
