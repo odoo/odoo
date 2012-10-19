@@ -1130,9 +1130,12 @@ openerp.mail = function(session) {
             }
 
             // must be improve by CHM (temporary test for DOM)
-            self.options._parents[0].$('.oe_msg_comment:first, .oe_thread .oe_msg_comment:first').addClass("oe_msg_first");
+            self.$('.oe_msg_first').removeClass("oe_msg_first");
+            self.$('.oe_msg_comment:first, .oe_thread .oe_msg_comment:first').addClass("oe_msg_first");
+            self.$('.oe_msg_last').removeClass("oe_msg_last");
+            self.$('.oe_msg_comment:last, .oe_thread .oe_msg_comment:last').addClass("oe_msg_last");
+
             self.options._parents[0].$('.oe_thread:has(.oe_msg_comment:visible) + .oe_msg').addClass("oe_msg_group_first");
-            self.options._parents[0].$('.oe_msg_comment:last, .oe_thread .oe_msg_comment:last').addClass("oe_msg_last");
             self.options._parents[0].$('.oe_thread:not(:has(.oe_msg:visible)) ~ .oe_thread:has(.oe_thread .oe_msg:visible)').addClass("oe_msg_group_last");
             
             return message
@@ -1336,7 +1339,7 @@ openerp.mail = function(session) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
             return this.searchview.appendTo(this.$('.oe_view_manager_view_search')).then(function () {
-                self.searchview.on_search.add(self.do_searchview_search);
+                self.searchview.on('search_data', self, self.do_searchview_search);
             });
         },
 
@@ -1356,7 +1359,7 @@ openerp.mail = function(session) {
             }).then(function (results) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
-                self.thread.destroy();
+                self.root.destroy();
                 return self.message_render();
             });
         },
