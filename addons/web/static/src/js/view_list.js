@@ -1112,7 +1112,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
         if (!this.$current) { return; }
         this.$current.remove();
-        this.$current = null;
     },
     get_records: function () {
         return this.records.map(function (record) {
