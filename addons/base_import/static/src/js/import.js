@@ -53,8 +53,10 @@ openerp.base_import = function (instance) {
                         params: {
                             model: self.dataset.model
                         }
-                    }, void 0, void 0, function () {
-                        self.reload();
+                    }, {
+                        on_reverse_breadcrumb: function () {
+                            self.reload();
+                        },
                     });
                     return false;
                 });
@@ -416,7 +418,7 @@ openerp.base_import = function (instance) {
                             '</div>'
                         ].join('')
                     },
-                })).get(0).scrollIntoView();
+                }));
         },
     });
     // FSM-ize DataImport
