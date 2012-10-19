@@ -42,7 +42,7 @@
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                     <t t-set="fileupload_action">/web/binary/upload_attachment</t>
-                    <input type="hidden" name="model" value=""/>
+                    <input type="hidden" name="model" value="mail.message"/>
                     <input type="hidden" name="id" value="0"/>
                     <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
                 </t>
@@ -95,8 +95,8 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             Post to: 
-            <span t-if="!widget.is_private" class="oe_all_follower">All Followers</span> 
-            <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
+            <span t-if="widget.context.default_res_id and widget.context.default_res_id" class="oe_all_follower">All Followers</span> 
+            <t t-if="!widget.context.default_res_id and widget.context.default_res_id and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
             <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
             </t>
@@ -186,7 +186,7 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.to_read ?'oe_mail_unread':'oe_mail_read'}">
         <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
