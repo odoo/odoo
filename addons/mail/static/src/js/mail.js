@@ -336,7 +336,7 @@ openerp.mail = function(session) {
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
                         'comment', 
-                        'mail.mt_comment',, 
+                        'mail.mt_comment',
                         this.context.default_parent_id, 
                         attachments,
                         _.extend(this.parent_thread.context, {'message_loaded':[this.datasets.id||0].concat( self.parent_thread.options.thread._parents[0].get_child_ids() )})]
