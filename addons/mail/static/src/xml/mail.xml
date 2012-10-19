@@ -82,7 +82,7 @@
                     <a t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)" t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
-                    <t t-if="widget.options.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
+                    <t t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)">
                         <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 

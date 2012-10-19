@@ -123,14 +123,12 @@ openerp.mail = function(session) {
                 'attachment_ids' : [],
                 'id': datasets.id,
                 'model': datasets.model,
-                'show_compact': true,
                 'res_model': datasets.res_model,
                 'is_private': datasets.is_private || false,
                 'partner_ids': datasets.partner_ids || [],
                 'avatar': mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid),
             };
             this.options = options.options;
-            this.options.show_attachment_delete = true;
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
@@ -146,7 +144,7 @@ openerp.mail = function(session) {
         start: function(){
             this.$render_compact = this.$el;
 
-            if(this.datasets.show_compact) {
+            if(this.options.show_compact_message) {
                 this.$render_compact.show();
             } else {
                 this.$render_compact.hide();
@@ -403,7 +401,7 @@ openerp.mail = function(session) {
                 // do not close the box if there are some text
                 if(!this.$render_expandable.find('textarea').val().match(/\S+/)){
                     this.$render_expandable.hide();
-                    if(this.datasets.show_compact) {
+                    if(this.options.show_compact_message) {
                         this.$render_compact.show();
                     } else {
                         this.$render_compact.hide();
@@ -416,14 +414,14 @@ openerp.mail = function(session) {
 
         do_hide_compact: function() {
             this.$render_compact.hide();
-            this.datasets.show_compact = false;
+            this.options.show_compact_message = false;
         },
 
         do_show_compact: function() {
             if(!this.$render_expandable || this.$render_expandable.is(':hidden')){
                 this.$render_compact.show();
             }
-            this.datasets.show_compact = true;
+            this.options.show_compact_message = true;
         }
     });
 
@@ -863,16 +861,10 @@ openerp.mail = function(session) {
                 'is_private' : datasets.is_private || false,
                 'author_id' : datasets.author_id || false,
                 'thread_level' : (datasets.thread_level+1) || 0,
-                'partner_ids' : []
+                'partner_ids' : _.filter(datasets.partner_ids, function(partner){ return partner[0]!=datasets.author_id[0]; } ) 
             };
 
             this.datasets.show_compose_message = this.options.show_compose_message && this.options.show_reply_button>this.datasets.thread_level;
-
-            for(var i in datasets.partner_ids){
-                if(datasets.partner_ids[i][0]!=(datasets.author_id ? datasets.author_id[0] : -1)){
-                    this.datasets.partner_ids.push(datasets.partner_ids[i]);
-                }
-            }
 
             this.messages = [];
             this.ComposeMessage = false;
@@ -1020,6 +1012,11 @@ openerp.mail = function(session) {
         /* this function is launch when a user click on "Reply" button
         */
         on_compose_message: function(){
+            if(!this.ComposeMessage){
+                this.instantiate_ComposeMessage();
+                this.ComposeMessage.do_hide_compact();
+            }
+
             this.ComposeMessage.on_compose_expandable();
         },
 
@@ -1091,7 +1088,7 @@ openerp.mail = function(session) {
         insert_message: function (message) {
             var self=this;
 
-            if(this.datasets.show_compose_message && this.options.display_indented_thread > self.datasets.thread_level){
+            if(this.datasets.show_compose_message && this.options.display_indented_thread > self.datasets.thread_level && this.options.show_compact_message){
                 this.ComposeMessage.do_show_compact();
             }
 
@@ -1197,21 +1194,37 @@ openerp.mail = function(session) {
          *...  @param {int} [show_read_unread_button] number thread level to display the read/unread button
          *...  @param {int} [display_indented_thread] number thread level to indented threads.
          *      other are on flat mode
+         *...  @param {Boolean} [show_compose_message] allow to display the composer
+         *...  @param {Boolean} [show_compact_message] display the compact message on the thread
+         *      when the user clic on this compact mode, the composer is open
          */
         init: function (parent, options) {
             this._super(parent);
-            this.options = options || {};
             this.domain = options.domain || [];
             this.context = options.context || {};
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}};
 
-            this.options.typeof_thread = this.options.typeof_thread || 'inbox',
-            this.options.display_indented_thread = this.options.display_indented_thread !== false ? this.options.display_indented_thread : -1,
-            this.options.show_reply_button = this.options.show_reply_button !== false ? this.options.show_reply_button : -1,
-            this.options.show_read_unread_button = this.options.show_read_unread_button !== false ? this.options.show_read_unread_button : -1,
-            this.options.truncate_limit = this.options.truncate_limit || 250,
-            this.options.show_record_name = this.options.show_record_name || false,
-            this.options.show_compose_message = this.options.show_compose_message || false
+            this.options = _.extend({
+                'typeof_thread' : 'inbox',
+                'display_indented_thread' : -1,
+                'show_reply_button' : -1,
+                'show_read_unread_button' : -1,
+                'truncate_limit' : 250,
+                'show_record_name' : false,
+                'show_compose_message' : false,
+                'show_compact_message' : false 
+            }, options);
+
+            if(this.display_indented_thread === false) {
+                this.display_indented_thread = -1;
+            }
+            if(this.show_reply_button === false) {
+                this.show_reply_button = -1;
+            }
+            if(this.show_read_unread_button === false) {
+                this.show_read_unread_button = -1;
+            }
+            
         },
 
         start: function (options) {
@@ -1402,8 +1415,8 @@ openerp.mail = function(session) {
                 'context' : context,
                 'typeof_thread': context['typeof_thread'] || 'other',
                 'display_indented_thread': 2,
-                'show_reply_button': 2,
-                'show_read_unread_button': 3,
+                'show_reply_button': 10,
+                'show_read_unread_button': 11,
                 'show_compose_message': true
                 }
             );
