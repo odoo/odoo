@@ -27,9 +27,17 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_fleet_vehicle_log_services_graph">
-      <field name="name">Fuel Costs by Month</field>
+      <field name="name">Services Costs by Month</field>
       <field name="res_model">fleet.vehicle.log.services</field>
       <field name="view_id" ref="fleet_vehicle_log_services_graph"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_vehicle_log_contract_graph">
+      <field name="name">Contracts Costs by Month</field>
+      <field name="res_model">fleet.vehicle.log.contract</field>
+      <field name="view_id" ref="fleet_vehicle_log_contract_graph"></field>
       <field name="view_type">form</field>
       <field name="view_mode">tree</field>
     </record>
@@ -63,6 +71,7 @@
                     <column>
                       <action string="Fuel Costs" name="%(fleet.action_fleet_vehicle_log_fuel_graph)d" view_mode="graph,tree"/>
                       <action string="Services Costs" name="%(fleet.action_fleet_vehicle_log_services_graph)d" view_mode="graph,tree"/>
+                      <action string="Contracts Costs" name="%(fleet.action_fleet_vehicle_log_contract_graph)d" view_mode="graph,tree"/>
                     </column>
                 </board>
             </form>

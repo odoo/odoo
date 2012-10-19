@@ -451,11 +451,24 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="fleet_vehicle_log_contract_graph">
+           <field name="name">fleet.vehicle.log.contract.graph</field>
+           <field name="model">fleet.vehicle.log.contract</field>
+           <!--<field name="type">graph</field>-->
+           <field name="arch" type="xml">
+                <graph string="Contract Costs Per Month">
+                    <field name="date"/>
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="cost_amount" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_log_contract_act'>
             <field name="name">Vehicles Contracts</field>
             <field name="res_model">fleet.vehicle.log.contract</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new contract. 
@@ -522,7 +535,7 @@
            <field name="model">fleet.vehicle.odometer</field>
            <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Odometer value per month">
+                <graph string="Odometer Values Per Month">
                     <field name="date" />
                     <field name="value" />
                     <field name="vehicle_id" group="True" /> 
@@ -610,7 +623,7 @@
            <field name="model">fleet.vehicle.log.fuel</field>
            <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
-                <graph string="Total Fuel amount per month">
+                <graph string="Fuel Costs Per Month">
                     <field name="date"/>
                     <field name="vehicle_id" group="True" /> 
                     <field name="cost_amount" operator="+"/>
@@ -705,7 +718,7 @@
            <field name="name">fleet.vehicle.log.services.graph</field>
            <field name="model">fleet.vehicle.log.services</field>
            <field name="arch" type="xml">
-                <graph string="Services total amount per month">
+                <graph string="Services Costs Per Month">
                     <field name="date" />
                     <field name="vehicle_id" group="True" /> 
                     <field name="cost_amount" operator="+"/>
