@@ -139,6 +139,7 @@ openerp_mail_followers = function(session, mail) {
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
+            records = records || [];
             this.message_is_follower = this.set_is_follower(records);
             // clean and display title
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
