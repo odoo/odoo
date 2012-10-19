@@ -646,7 +646,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
-        'amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
+        'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
@@ -717,7 +717,7 @@ class fleet_vehicle_log_services(osv.Model):
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
-        'amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
+        'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
@@ -868,6 +868,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
+        'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,

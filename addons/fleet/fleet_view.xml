@@ -239,7 +239,7 @@
                     <field name="state"/>
                     <field name="odometer" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
-                    <field name="contract_renewal_overdue" invisible="1"/>
+                    <field name="contract_renewal_overdue" invisible="1" />
                 </tree>
             </field>
         </record>
@@ -314,9 +314,7 @@
                                     </ul>
 
                                 </div>
-                                
                             </div>
-                            
                         </t>
                     </templates>
                 </kanban>
@@ -615,7 +613,7 @@
                 <graph string="Total Fuel amount per month">
                     <field name="date"/>
                     <field name="vehicle_id" group="True" /> 
-                    <field name="amount" operator="+"/>
+                    <field name="cost_amount" operator="+"/>
                 </graph>
             </field>
         </record>
@@ -710,7 +708,7 @@
                 <graph string="Services total amount per month">
                     <field name="date" />
                     <field name="vehicle_id" group="True" /> 
-                    <field name="amount" operator="+"/>
+                    <field name="cost_amount" operator="+"/>
                 </graph>
             </field>
         </record>
