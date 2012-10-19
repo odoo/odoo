@@ -45,7 +45,7 @@ class mail_message(osv.Model):
     _inherit = ['ir.needaction_mixin']
     _order = 'id desc'
 
-    _message_read_limit = 10
+    _message_read_limit = 15
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read',
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
     _message_record_name_length = 18
@@ -346,7 +346,7 @@ class mail_message(osv.Model):
         if message_loaded_ids:
             domain += [('id', 'not in', message_loaded_ids)]
         limit = limit or self._message_read_limit
-        limit = 200
+
         read_messages = {}
         message_list = []
 

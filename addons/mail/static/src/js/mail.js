@@ -457,6 +457,7 @@ openerp.mail = function(session) {
                 'model' : datasets.model || false,
                 'parent_id' : datasets.parent_id || false,
                 'nb_messages' : datasets.nb_messages || 0,
+                'thread_level' : datasets.thread_level || 0,
                 'type' : 'expandable',
                 'max_limit' : datasets.max_limit || false,
                 'flag_used' : false,
@@ -933,13 +934,13 @@ openerp.mail = function(session) {
         */
         on_scroll: function(event){
             if(event)event.stopPropagation();
-            var message = this.messages[0];
+            var message = this.messages[this.messages.length-1];
             if(message && message.datasets.type=="expandable" && message.datasets.max_limit){
                 var pos = message.$el.position();
                 if(pos.top){
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
-                    if(bottom - pos.top > 0){
+                    if(bottom > pos.top){
                         message.on_expandable();
                     }
                 }
@@ -1131,23 +1132,23 @@ openerp.mail = function(session) {
             // check older and newer message for insert
             var parent_newer = false;
             var parent_older = false;
-            for(var i in thread_messages){
-                if((thread_messages[i].datasets.id > message.datasets.id && message.datasets.id > 0) || 
-                    thread_messages[i].datasets.id < 0){
-                    if(!parent_newer || 
-                        thread_messages[i].datasets.id < 0 || 
-                        parent_newer.datasets.id >= thread_messages[i].datasets.id) {
-                        parent_newer = thread_messages[i];
-                    }
-                } else if((thread_messages[i].datasets.id > 0 && thread_messages[i].datasets.id < message.datasets.id) || message.datasets.id < 0) {
-                    if(!parent_older || 
-                        parent_older.datasets.id < thread_messages[i].datasets.id) {
-                        parent_older = thread_messages[i];
+            if(message.datasets.id > 0){
+                for(var i in thread_messages){
+                    if(thread_messages[i].datasets.id > message.datasets.id){
+                        if(!parent_newer || 
+                            parent_newer.datasets.id > thread_messages[i].datasets.id) {
+                            parent_newer = thread_messages[i];
+                        }
+                    } else if(thread_messages[i].datasets.id > 0 && thread_messages[i].datasets.id < message.datasets.id) {
+                        if(!parent_older || 
+                            parent_older.datasets.id < thread_messages[i].datasets.id) {
+                            parent_older = thread_messages[i];
+                        }
                     }
                 }
             }
 
-            var sort = self.datasets.thread_level;
+            var sort = (!!message.datasets.thread_level || message.datasets.id<0);
 
             if(parent_older){
                 if(sort){
@@ -1162,7 +1163,7 @@ openerp.mail = function(session) {
                     message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
                 }
             } else {
-                if(sort) {
+                if(sort && message.datasets.id>0) {
                     message.prependTo(thread.$el);
                 } else {
                     message.appendTo(thread.$el);
