@@ -317,7 +317,7 @@ openerp.mail = function(session) {
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
                     'default_parent_id': this.datasets.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable.find('textarea').val() || ''),
+                    'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable ? (this.$render_expandable.find('textarea').val() || '') : ''),
                     'default_attachment_ids': attachments,
                     'default_partner_ids': partner_ids
                 },
