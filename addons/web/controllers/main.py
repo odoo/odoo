@@ -817,6 +817,17 @@ class Database(openerpweb.Controller):
         return req.session.proxy("db").create_database(*create_attrs)
 
     @openerpweb.jsonrequest
+    def duplicate(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        duplicate_attrs = (
+            params['super_admin_pwd'],
+            params['db_original_name'],
+            params['db_name'],
+        )
+
+        return req.session.proxy("db").duplicate_database(*duplicate_attrs)
+
+    @openerpweb.jsonrequest
     def drop(self, req, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
