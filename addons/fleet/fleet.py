@@ -252,6 +252,28 @@ class fleet_vehicle(osv.Model):
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
 
+    def act_show_log_cost(self, cr, uid, ids, context=None):
+        """ This opens log view to view and add new log for this vehicle
+            @return: the costs log view
+        """
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_cost', context)
+        res['context'] = {
+            'default_vehicle_id': ids[0]
+        }
+        res['domain']=[('vehicle_id','=', ids[0])]
+        return res
+
+    def act_show_log_odometer(self, cr, uid, ids, context=None):
+        """ This opens log view to view and add new log for this vehicle
+            @return: the odometer log view
+        """
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_odometer', context)
+        res['context'] = {
+            'default_vehicle_id': ids[0]
+        }
+        res['domain']=[('vehicle_id','=', ids[0])]
+        return res
+
     def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
         res = dict.fromkeys(ids, False)
         for record in self.browse(cr,uid,ids,context=context):    
@@ -367,7 +389,7 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate' : fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle', domain="[('employee','=',True)]"),
+        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
@@ -855,11 +877,11 @@ class fleet_vehicle_log_contract(osv.Model):
 
         #'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
 
-        'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
-        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
+        'start_date' : fields.date('Contract Start Date', required=False, help='Date when the coverage of the contract begins'),
+        'expiration_date' : fields.date('Contract Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'warning_date' : fields.function(get_warning_date,type='integer',string='Warning Date',store=False),
 
-        'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
+        'insurer_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Contractor',domain="['|',('customer','=',True),('employee','=',True)]",help='Person to which the contract is signed for'),
         'ins_ref' : fields.char('Contract Reference', size=64),
         'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),

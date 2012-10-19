@@ -184,8 +184,10 @@
                         </div>
                         <div class="oe_right oe_button_box">
                             <button name="act_show_log_contract" type="object" string="Contracts" help="show the contract for this vehicle" />
-                            <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" /> 
-                            <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
+                            <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" />
+                            <button name="act_show_log_services" type="object" string="Services" help="show the services logs for this vehicle" />
+                            <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
+                            <button name="act_show_log_odometer" type="object" string="Odometer Logs" help="show the odometer logs for this vehicle" />
                         </div> 
                         <group col ="2">
                             <group string="General Properties">
@@ -322,7 +324,7 @@
         </record>
 
         <act_window
-            context="{'default_vehicle_id': active_id}"
+            
             id="act_show_log_services"
             name="Services Logs"
             res_model="fleet.vehicle.log.services"
@@ -331,22 +333,41 @@
             view_type="form"/>
 
         <act_window
-            context="{'default_vehicle_id': active_id}"
+            
             id="act_show_log_fuel"
             name="Fuel Logs"
             res_model="fleet.vehicle.log.fuel"
             src_model="fleet.vehicle"
-            view_mode="tree,form"
+            view_mode="tree,form,graph"
             view_type="form"/>
 
         <act_window
-            context="{'default_vehicle_id': active_id}"
+            
             id="act_show_log_contract"
             name="Contract"
             res_model="fleet.vehicle.log.contract"
             src_model="fleet.vehicle"
             view_mode="tree,form"
             view_type="form"/>
+
+        <act_window
+            
+            id="act_show_log_cost"
+            name="Costs"
+            res_model="fleet.vehicle.cost"
+            src_model="fleet.vehicle"
+            view_mode="tree,form,graph"
+            view_type="form"/>
+
+        <act_window
+            
+            id="act_show_log_odometer"
+            name="Costs"
+            res_model="fleet.vehicle.odometer"
+            src_model="fleet.vehicle"
+            view_mode="tree,form,graph"
+            view_type="form"
+            />
         
 
         <record model='ir.actions.act_window' id='fleet_vehicle_act'>
@@ -383,8 +404,8 @@
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <field name="amount" string="Price"/>
+                                <field name="cost_type" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                                <field name="amount" string="Invoice Amount"/>
                             </group>
                             <group string="Odometer details">
                                 <label for="odometer"/>
@@ -396,7 +417,7 @@
                         </group>
                         <group col="2">
                             <group>
-                                <field name="date" />
+                                <field name="date" string="Invoice Date"/>
                                 <field name="start_date" on_change="on_change_start_date(start_date)"/>
                                 <field name="expiration_date" />
                             </group>
@@ -406,11 +427,11 @@
                                 <field name="ins_ref" />
                             </group>
                         </group>
-                        <group>
-                            <field name="cost_ids" context="{'vehicle_id': vehicle_id}">
-                                <tree string="Included services" version="7.0" editable="bottom">
+                        <group string="Included services">
+                            <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
+                                <tree version="7.0" editable="bottom">
                                     <field name="cost_type" domain="[('category','=','service')]"/>
-                                    <field name="amount" sum="Price" string="Cost" />
+                                    <field name="amount" sum="Price" string="Indicative Cost" />
                                 </tree>
                                 <!--<form string="Costs" version="7.0">
                                     <sheet>
