@@ -103,7 +103,7 @@ class db(netsvc.ExportService):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
             'change_admin_password', 'migrate_databases',
-            'create_database' ]:
+            'create_database', 'duplicate_database' ]:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -155,6 +155,17 @@ class db(netsvc.ExportService):
         _logger.info('CREATE DATABASE %s', db_name.lower())
         self._create_empty_database(db_name)
         _initialize_db(self, id, db_name, demo, lang, user_password)
+        return True
+
+    def exp_duplicate_database(self, db_original_name, db_name):
+        _logger.info('Duplicate database %s', db_name.lower())
+        db = sql_db.db_connect('postgres')
+        cr = db.cursor()
+        try:
+            cr.autocommit(True) # avoid transaction block
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
+        finally:
+            cr.close()
         return True
 
     def exp_get_progress(self, id):
