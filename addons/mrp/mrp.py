@@ -420,18 +420,6 @@ class mrp_production(osv.osv):
                 result[prod.id]['cycle_total'] += wc.cycle
         return result
 
-    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context=None):
-        """ Finds production end date.
-        @param prop: Name of field.
-        @param unknow_none:
-        @return: Dictionary of values.
-        """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            result[prod.id] = prod.date_planned
-        return result
-
-
     def _src_id_default(self, cr, uid, ids, context=None):
         src_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return src_location_id.id
@@ -459,12 +447,9 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
             help="Location where the system will stock the finished products."),
-
-        'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft':[('readonly',False)]}),
         'date_start': fields.datetime('Start Date', select=True, readonly=True),
         'date_finished': fields.datetime('End Date', select=True, readonly=True),
-
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]},
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
