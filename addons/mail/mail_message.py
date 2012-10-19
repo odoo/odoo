@@ -163,13 +163,14 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     def vote_toggle(self, cr, uid, ids, context=None):
-        ''' Toggles vote. Performed using read to avoid access rights issues. '''
+        ''' Toggles vote. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may vote for a message he cannot modify. '''
         for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
             new_has_voted = not (uid in message.get('vote_user_ids'))
             if new_has_voted:
-                self.write(cr, uid, message.get('id'), {'vote_user_ids': [(4, uid)]}, context=context)
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, uid)]}, context=context)
             else:
-                self.write(cr, uid, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
         return new_has_voted or False
 
     #------------------------------------------------------
@@ -177,13 +178,14 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     def favorite_toggle(self, cr, uid, ids, context=None):
-        ''' Toggles favorite. Performed using read to avoid access rights issues. '''
+        ''' Toggles favorite. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may star a message he cannot modify. '''
         for message in self.read(cr, uid, ids, ['favorite_user_ids'], context=context):
             new_is_favorite = not (uid in message.get('favorite_user_ids'))
             if new_is_favorite:
-                self.write(cr, uid, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
             else:
-                self.write(cr, uid, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
         return new_is_favorite or False
 
     #------------------------------------------------------
