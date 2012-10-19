@@ -77,8 +77,7 @@ class mail_message(osv.Model):
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids),
-            ('read', '=', True)
+            ('message_id', 'in', ids)
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
             res[notif.message_id.id] = not notif.read
@@ -342,7 +341,6 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
-        print '>>> executing message_read'
         if message_loaded_ids:
             domain += [('id', 'not in', message_loaded_ids)]
         limit = limit or self._message_read_limit
@@ -375,8 +373,9 @@ class mail_message(osv.Model):
                             message_list.append(self._message_get_dict(cr, uid, parent, context=context))
                         parent = self._get_parent(cr, uid, parent, context=context)
 
-            # get the child expandable messages for the tree
             message_list = sorted(message_list, key=lambda k: k['id'])
+
+            # get the child expandable messages for the tree
             message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
                 message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
 

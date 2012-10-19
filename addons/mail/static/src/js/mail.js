@@ -934,6 +934,8 @@ openerp.mail = function(session) {
         */
         on_scroll: function(event){
             if(event)event.stopPropagation();
+            this.$('.oe_msg_expandable:last');
+
             var message = this.messages[this.messages.length-1];
             if(message && message.datasets.type=="expandable" && message.datasets.max_limit){
                 var pos = message.$el.position();
@@ -944,7 +946,6 @@ openerp.mail = function(session) {
                         message.on_expandable();
                     }
                 }
-
             }
         },
 
@@ -1099,15 +1100,22 @@ openerp.mail = function(session) {
                 });
             }
 
+            // insert the message on dom
+            self.insert_message( message );
+
             // check if the message is already create
             for(var i in self.messages){
                 if(self.messages[i].datasets.id == message.datasets.id){
                     self.messages[i].destroy();
-                    self.messages[i] = self.insert_message(message);
-                    return true;
+                    if(message.datasets.id>0){
+                        self.messages[i] = message;
+                        return true;
+                    } else {
+                        delete self.messages[i];
+                    }
                 }
             }
-            self.messages.push( self.insert_message(message) );
+            self.messages.push( message );
         },
 
         /** Displays a message or an expandable message  */
