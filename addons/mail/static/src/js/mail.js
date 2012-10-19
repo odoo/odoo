@@ -400,11 +400,14 @@ openerp.mail = function(session) {
 
             } else if(!this.stay_open){
 
-                this.$render_expandable.hide();
-                if(this.datasets.show_compact) {
-                    this.$render_compact.show();
-                } else {
-                    this.$render_compact.hide();
+                // do not close the box if there are some text
+                if(!this.$render_expandable.find('textarea').val().match(/\S+/)){
+                    this.$render_expandable.hide();
+                    if(this.datasets.show_compact) {
+                        this.$render_compact.show();
+                    } else {
+                        this.$render_compact.hide();
+                    }
                 }
 
             }
