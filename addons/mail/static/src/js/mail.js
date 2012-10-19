@@ -886,7 +886,7 @@ openerp.mail = function(session) {
             }
 
             this.messages = [];
-            this.ComposeMessage = false;
+            this.composeMessage = false;
 
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
@@ -902,18 +902,18 @@ openerp.mail = function(session) {
 
         instantiate_ComposeMessage: function(){
             // add message composition form view
-            this.ComposeMessage = new mail.ThreadComposeMessage(this, this.datasets, {
+            this.composeMessage = new mail.ThreadComposeMessage(this, this.datasets, {
                 'context': this.context,
                 'options': this.options,
             });
 
             if(this.datasets.thread_level){
-                this.ComposeMessage.appendTo(this.$el);
+                this.composeMessage.appendTo(this.$el);
             } else {
                 // root view
-                this.ComposeMessage.prependTo(this.$el);
+                this.composeMessage.prependTo(this.$el);
             }
-            this.ComposeMessage.do_hide_compact();
+            this.composeMessage.do_hide_compact();
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -1030,7 +1030,7 @@ openerp.mail = function(session) {
         /* this function is launch when a user click on "Reply" button
         */
         on_compose_message: function(){
-            this.ComposeMessage.on_compose_expandable();
+            this.composeMessage.on_compose_expandable();
         },
 
         /* display the no message on the thread
@@ -1102,7 +1102,7 @@ openerp.mail = function(session) {
             var self=this;
 
             if(this.datasets.show_composeform){
-                this.ComposeMessage.do_show_compact();
+                this.composeMessage.do_show_compact();
             }
 
             this.$('.oe_wall_no_message').remove();
@@ -1412,7 +1412,7 @@ openerp.mail = function(session) {
 
         bind_events: function(){
             var self=this;
-            this.$("button.oe_write_full:first").click(function(){ self.root.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$("button.oe_write_full:first").click(function(){ self.root.thread.composeMessage.on_compose_fullmail(); });
             this.$("button.oe_write_onwall:first").click(function(){ self.root.thread.on_compose_message(); });
         }
     });

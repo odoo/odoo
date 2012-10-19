@@ -185,14 +185,14 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
+        <div t-attf-class="oe_msg oe_lvl_#{widget.datasets.thread_level} oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
                     <t t-call="mail.thread.message.star"/>
-                    <a t-if="widget.datasets.show_read_unread_button" title="Read" class="oe_read oe_e">W</a>
-                    <a t-if="widget.datasets.show_read_unread_button" title="Set back to unread" class="oe_unread oe_e">h</a>
-                    <a t-if="widget.datasets.show_reply_button" title="Reply" class="oe_reply oe_e">)</a>
+                    <span class='oe_read' t-if="widget.datasets.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
+                    <span class='oe_unread' t-if="widget.datasets.show_read_unread_button"><a title="Set back to unread" class="oe_e">h</a></span>
+                    <span class='oe_reply' t-if="widget.datasets.show_reply_button"><a title="Reply" class="oe_e">)</a></span>
                 </div>
             </div>
 
@@ -279,6 +279,6 @@
         Template used to display stared/unstared message in a mail.message
     -->
     <t t-name="mail.thread.message.star">
-         <a t-attf-class="oe_mail_starbox #{widget.datasets.has_stared?'oe_stared':''}">*</a>
+        <span><a t-attf-class="oe_mail_starbox #{widget.datasets.has_stared?'oe_stared':''}">*</a></span>
     </t>
 </template>
