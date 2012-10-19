@@ -1129,15 +1129,11 @@ openerp.mail = function(session) {
                 }
             }
 
-            // must be improve by CHM (temporary test for DOM)
-            self.$('.oe_msg_first').removeClass("oe_msg_first");
-            self.$('.oe_msg_comment:first, .oe_thread .oe_msg_comment:first').addClass("oe_msg_first");
-            self.$('.oe_msg_last').removeClass("oe_msg_last");
-            self.$('.oe_msg_comment:last, .oe_thread .oe_msg_comment:last').addClass("oe_msg_last");
+            self.$('.oe_msg_first:first').removeClass("oe_msg_first");
+            self.$('.oe_msg_last:last').removeClass("oe_msg_last");
+            self.$('.oe_msg_comment:first, .oe_msg_comment:first-child').addClass("oe_msg_first");
+            self.$('.oe_msg_comment:last, .oe_msg_comment:last-child').addClass("oe_msg_last");
 
-            self.options._parents[0].$('.oe_thread:has(.oe_msg_comment:visible) + .oe_msg').addClass("oe_msg_group_first");
-            self.options._parents[0].$('.oe_thread:not(:has(.oe_msg:visible)) ~ .oe_thread:has(.oe_thread .oe_msg:visible)').addClass("oe_msg_group_last");
-            
             return message
         },
         
