@@ -652,7 +652,7 @@ $(document).ready(function () {
             }
         });
         var ds, cs, gs;
-        view.on_search.add(function (d, c, g) {
+        view.on('search_data', this, function (d, c, g) {
             ds = d, cs = c, gs = g;
         });
         view.appendTo($fix)
@@ -690,7 +690,7 @@ $(document).ready(function () {
             }
         }, {dummy: 42});
         var ds, cs, gs;
-        view.on_search.add(function (d, c, g) {
+        view.on('search_data', this, function (d, c, g) {
             ds = d, cs = c, gs = g;
         });
         view.appendTo($fix)
@@ -718,7 +718,7 @@ $(document).ready(function () {
             }
         }, {dummy: 42});
         var ds;
-        view.on_search.add(function (d) { ds = d; });
+        view.on('search_data', this, function (d) { ds = d; });
         view.appendTo($fix)
             .always(start)
             .fail(function (error) { ok(false, error.message); })
@@ -1044,8 +1044,12 @@ $(document).ready(function () {
                       "second value should be clicked filter");
             });
     });
-    asyncTest('click removing from query', 2, function () {
+    asyncTest('click removing from query', 4, function () {
+        var calls = 0;
         var view = makeSearchView({}, {foo2: true});
+        view.on('search_data', null, function () {
+            ++calls;
+        });
         var $fix = $('#qunit-fixture');
         view.appendTo($fix)
             .always(start)
@@ -1054,8 +1058,10 @@ $(document).ready(function () {
                 var $fs = $fix.find('.oe_searchview_filters ul');
                 // sanity check
                 equal(view.query.length, 1, "query should have default facet");
+                strictEqual(calls, 0);
                 $fs.children(':eq(1)').trigger('click');
                 equal(view.query.length, 0, "click should have removed facet");
+                strictEqual(calls, 1, "one search should have been triggered");
             });
     });
 

@@ -83,6 +83,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
+        this.on('view_load', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -218,7 +219,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    on_loaded: function(data, grouped) {
+    load_list: function(data, grouped) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -358,6 +359,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
+        this.trigger('list_view_loaded', data, grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -468,7 +470,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     reload_view: function (grouped, context, initial) {
         var self = this;
         var callback = function (field_view_get) {
-            self.on_loaded(field_view_get, grouped);
+            self.load_list(field_view_get, grouped);
         };
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve(this.embedded_view);
@@ -1230,6 +1232,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     .replaceWith(self.render());
             });
         this.$row.children().last()
+            .addClass('oe_list_group_pagination')
             .append($prev)
             .append('<span class="oe_list_pager_state"></span>')
             .append($next);
@@ -1414,10 +1417,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                             }))
                         .end()
                         .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
+                            .css('visibility',
+                                 page === 0 ? 'hidden' : '')
                         .end()
                         .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
+                            .css('visibility',
+                                 page === pages - 1 ? 'hidden' : '');
                 }
             }
 
