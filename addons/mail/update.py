@@ -41,6 +41,8 @@ def get_sys_logs(cr, uid):
         nbr_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True)], count=True)
         nbr_active_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True), ("date", ">=", limit_date_str)], count=True)
     user = pool.get("res.users").browse(cr, uid, uid)
+
+    web_base_url = safe_eval(self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', 'False'))
     msg = {
         "dbuuid": dbuuid,
         "nbr_users": nbr_users,
@@ -51,6 +53,7 @@ def get_sys_logs(cr, uid):
         "db_create_date": db_create_date,
         "version": release.version,
         "language": user.lang,
+        "web_base_url": web_base_url,
     }
     msg.update(pool.get("res.company").read(cr,uid,[1],["name","email","phone"])[0])
 
