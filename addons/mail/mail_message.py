@@ -240,7 +240,7 @@ class mail_message(osv.Model):
             'to_read': message['to_read'],
         }
 
-    def _message_read_expandable(self, cr, uid, message_list, read_messages,
+    def _message_read_add_expandables(self, cr, uid, message_list, read_messages,
             message_loaded_ids=[], domain=[], context=None, parent_id=False, limit=None):
         """ Create the expandable message for all parent message read
             this function is used by message_read
@@ -331,23 +331,30 @@ class mail_message(osv.Model):
         except (orm.except_orm, osv.except_osv):
             return False
 
-    def message_read(self, cr, uid, ids=False, domain=[], message_loaded_ids=[], context=None, parent_id=False, limit=None):
-        """ Read messages from mail.message, and get back a structured tree
-            of messages to be displayed as discussion threads. If IDs is set,
+    def message_read(self, cr, uid, ids=False, domain=[], message_unload_ids=[], context=None, parent_id=False, limit=None):
+        """ Read messages from mail.message, and get back a list of structured
+            messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
-            After having fetch messages, their parents & child will be added to obtain
-            well formed threads.
+            After having fetch messages, their ancestors will be added to obtain
+            well formed threads, if uid has access to them.
 
-            TDE note: update this comment after final method implementation
+            After reading the messages, expandables messages are added in the
+            message list (see ``_message_read_add_expandables``). It consists
+            in messages holding the 'read more' data: number of messages to
+            read, domain to apply.
 
-            :param domain: optional domain for searching ids
-            :param limit: number of messages to fetch
-            :param parent_id: if parent_id reached, stop searching for
-                further parents
-            :return list: list of trees of messages
+            :param list ids: optional IDs to fetch
+            :param list domain: optional domain for searching ids if ids not set
+            :param list message_unload_ids: optional ids we do not want to fetch,
+                because i.e. they are already displayed somewhere
+            :param int parent_id: if parent_id reached when adding ancestors,
+                stop going further in the ancestor search
+            :param int limit: number of messages to fetch, before adding the
+                ancestors and expandables
+            :return list: list of message structure for the Chatter widget
         """
-        if message_loaded_ids:
-            domain += [('id', 'not in', message_loaded_ids)]
+        if message_unload_ids:
+            domain += [('id', 'not in', message_unload_ids)]
         limit = limit or self._message_read_limit
         read_messages = {}
         message_list = []
@@ -364,22 +371,22 @@ class mail_message(osv.Model):
         ids = self.search(cr, uid, domain, context=context, limit=limit)
         for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
             # if not in tree and not in message_loded list
-            if not read_messages.get(message.get('id')) and message.get('id') not in message_loaded_ids:
+            if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
                 read_messages[message.get('id')] = message
                 message_list.append(self._message_get_dict(cr, uid, message, context=context))
 
                 # get all parented message if the user have the access
                 parent = self._get_parent(cr, uid, message, context=context)
                 while parent and parent.get('id') != parent_id:
-                    if not read_messages.get(parent.get('id')) and parent.get('id') not in message_loaded_ids:
+                    if not read_messages.get(parent.get('id')) and parent.get('id') not in message_unload_ids:
                         read_messages[parent.get('id')] = parent
                         message_list.append(self._message_get_dict(cr, uid, parent, context=context))
                     parent = self._get_parent(cr, uid, parent, context=context)
 
         # get the child expandable messages for the tree
         message_list = sorted(message_list, key=lambda k: k['id'])
-        message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
-            message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
+        message_list = self._message_read_add_expandables(cr, uid, message_list, read_messages,
+            message_loaded_ids=message_unload_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
 
         # message_list = sorted(message_list, key=lambda k: k['id'])
         return message_list

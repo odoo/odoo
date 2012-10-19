@@ -522,7 +522,22 @@ class test_mail(TestMailMockups):
 
     def test_30_message_read(self):
         """ Tests for message_read and expandables. """
-        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+
+        # Data: create a discussion in Pigs
+        msg_ids = []
+        for dummy in range(5):
+            msg_ids.append(self.group_pigs.message_post(body='My Body', subtype='mt_comment'))
+
+        # Test: read some specific ids
+        read_msg_list = self.mail_message.message_read(cr, uid, ids=msg_ids[1:3], domain=[('body', 'like', 'dummy')])
+        read_msg_ids = [msg.get('id') for msg in read_msg_list]
+        self.assertEqual(msg_ids[1:3], read_msg_ids, 'message_read with direct ids should read only the requested ids')
+
+        # Test: read messages of Pigs through a domain
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=200)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list]
+        self.assertEqual(msg_ids, read_msg_ids, 'message_read with domain on Pigs should equal all messages of Pigs')
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
@@ -584,7 +599,7 @@ class test_mail(TestMailMockups):
         # TDE note: temp various asserts because of the random bug about msg1.child_ids
         msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
         new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
-        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message (%d) should have msg1 as parent' % (new_msg.id))
+        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message (%d) should have msg1 as parent (msg2 is %d)' % (new_msg.id, msg2.id))
 
         # 2. References header
         reply_msg2 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: Re: 1',
