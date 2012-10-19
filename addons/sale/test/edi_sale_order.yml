@@ -63,7 +63,7 @@
                 "zip": "1367",
                 "country_id": ["base:5af12v70-dv70-1v70-bv70-701a04e25v70.be", "Belgium"],
                 "bank_ids": [
-                    ["base:5af12v70-dv70-1v70-bv70-701a04e25v70.res_partner_bank-adaWadsadasdDJzGbp","Ladies bank: 032465789-156113"]
+                    ["base:5af12v70-dv70-1v70-bv70-701a04e25v70.res_partner_bank-adaWadsadasdDJzGbp","Another bank: 032465700-156700"]
                 ],
         },
         "partner_id": ["purchase:5af12v70-dv70-1v70-bv70-701a04e25v70.res_partner_test20", "jones white"],
@@ -100,7 +100,7 @@
     assert order_new.partner_id.customer, "Imported partner should be a customer, as we just imported the document as a sale order"
     assert len(order_new.partner_id.bank_ids) == 1, "Expected 1 bank entry related to partner"
     bank_info = order_new.partner_id.bank_ids[0]
-    assert bank_info.acc_number == "Ladies bank: 032465789-156113", 'Expected "Ladies bank: 032465789-156113", got %s' % bank_info.acc_number
+    assert bank_info.acc_number == "Another bank: 032465700-156700", 'Expected "Another bank: 032465700-156700", got %s' % bank_info.acc_number
 
     assert order_new.pricelist_id.name == 'Public Pricelist' , "Public Price list was not automatically assigned"
     assert order_new.amount_total == 350, "Amount total is wrong"
@@ -206,12 +206,10 @@
     assert len(order_new.order_line) == 2, "Sale order lines mismatch"
     for sale_line in order_new.order_line:
         if sale_line.name == 'Basic PC':
-            assert sale_line.delay == 18 , "incorrect delay: got %s, expected 18"%(sale_line.delay,)
             assert sale_line.product_uom.name == "PCE" , "uom is not same"
             assert sale_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 1 , "product qty is not same"
         elif sale_line.name == 'Medium PC':
-            assert sale_line.delay == 3 , "incorrect delay: got %s, expected 3"%(sale_line.delay,)
             assert sale_line.product_uom.name == "PCE" , "uom is not same"
             assert sale_line.price_unit == 100 , "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 2 , "product qty is not same"

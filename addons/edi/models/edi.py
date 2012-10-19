@@ -525,6 +525,9 @@ class EDIMixin(object):
             model = self.pool.get(model)
             res_id, _ = model.name_create(cr, uid, value, context=context)
             target = model.browse(cr, uid, res_id, context=context)
+        else:
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - record already exists with ID %s, using it",
+                          self._name, external_id, value, target.id)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)
             # module name is never used bare when creating ir.model.data entries, in order
