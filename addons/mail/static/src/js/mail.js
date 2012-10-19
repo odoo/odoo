@@ -113,6 +113,7 @@ openerp.mail = function(session) {
          *          mail.compose.message DataSetSearch. Please refer to this model
          *          for more details about fields and default values.
          */
+
         init: function (parent, datasets, options) {
             var self = this;
             this._super(parent);
@@ -122,6 +123,7 @@ openerp.mail = function(session) {
                 'attachment_ids' : [],
                 'id': datasets.id,
                 'model': datasets.model,
+                'show_compact': true,
                 'res_model': datasets.res_model,
                 'is_private': datasets.is_private || false,
                 'partner_ids': datasets.partner_ids || [],
@@ -137,10 +139,20 @@ openerp.mail = function(session) {
 
             this.fileupload_id = _.uniqueId('oe_fileupload_temp');
             $(window).on(self.fileupload_id, self.on_attachment_loaded);
+
+            this.$render_expandable = false;
+            this.$render_compact = false;
         },
 
         start: function(){
-            this.display_attachments();
+            this.$render_compact = this.$el;
+
+            if(this.datasets.show_compact) {
+                this.$render_compact.show();
+            } else {
+                this.$render_compact.hide();
+            }
+
             this.bind_events();
         },
 
@@ -270,7 +282,8 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_cancel', self.on_cancel );
             this.$el.on('click', 'button.oe_post', function(){self.on_message_post()} );
             this.$el.on('click', 'button.oe_full', function(){self.on_compose_fullmail()} );
-            self.$el.on('focus', 'textarea.oe_compact', self.on_compose_expandable);
+
+            this.$('textarea.oe_compact').on('focus', self.on_compose_expandable);
         },
 
         on_compose_fullmail: function(){
@@ -353,22 +366,52 @@ openerp.mail = function(session) {
 
         /* convert the compact mode into the compose message
         */
-        on_compose_expandable: function(){
-            var $render = $(session.web.qweb.render('mail.compose_message', {'widget': this}));
-            this.$el.replaceWith( $render );
-            this.$el = $render;
-            this.$('textarea').focus();
-            this.bind_events();
+        on_compose_expandable: function(event){
+            if(event) event.stopPropagation();
+
+            var self = this;
+
+            if(!this.$render_expandable) {
+                this.$render_expandable = $(session.web.qweb.render('mail.compose_message', {'widget': this}));
+                this.$render_expandable.hide();
+
+                this.$render_expandable.insertAfter( this.$render_compact );
+                this.display_attachments();
+                
+                this.$render_expandable.on('blur', 'textarea', this.on_compose_expandable);
+
+                /* stack for don't close the compose form if the user click on a button */
+                this.$render_expandable.on('focus', 'textarea', function () { self.stay_open = false; });
+                this.$render_expandable.on('mousedown', function () { self.stay_open = true; });
+            }
+            if(this.$render_expandable.is(':hidden')){
+
+                this.$render_expandable.show();
+                this.$render_compact.hide();
+                this.$render_expandable.find('textarea').focus();
+
+            } else if(!this.stay_open){
+
+                this.$render_expandable.hide();
+                if(this.datasets.show_compact) {
+                    this.$render_compact.show();
+                } else {
+                    this.$render_compact.hide();
+                }
+
+            }
+            return true;
         },
 
-        /* convert the compact mode into the compose message
-        */
-        on_compose_compact: function(){
-            var $render = $(session.web.qweb.render('mail.compose_message.compact', {'widget': this}));
-            this.$el.replaceWith( $render );
-            this.$el = $render;
-            this.bind_events();
+        do_hide_compact: function() {
+            this.$render_compact.hide();
+            this.datasets.show_compact = false;
         },
+
+        do_show_compact: function() {
+            this.$render_compact.show();
+            this.datasets.show_compact = true;
+        }
     });
 
     /** 
@@ -507,7 +550,7 @@ openerp.mail = function(session) {
                 'name' : false,
                 'record_name' : false,
                 'body' : false,
-                'vote_user_ids' :[],
+                'vote_nb' :0,
                 'has_voted' : false,
                 'is_favorite' : false,
                 'thread_level' : 0,
@@ -595,8 +638,8 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_reply', this.on_message_reply);
             // event: click on 'Vote' button
             this.$el.on('click', 'button.oe_msg_vote', this.on_vote);
-            // event: click on 'Star' button
-            this.$el.on('click', 'button.oe_mail_starbox', this.on_star);
+            // event: click on 'starred/favorite' button
+            this.$el.on('click', 'a.oe_mail_starbox', this.on_star);
         },
 
         on_message_reply:function(event){
@@ -727,17 +770,7 @@ openerp.mail = function(session) {
             return this.ds_message.call('vote_toggle', [[self.datasets.id]]).pipe(function(vote){
 
                 self.datasets.has_voted=vote;
-                if (!self.datasets.has_voted) {
-                    var votes=[];
-                    for(var i in self.datasets.vote_user_ids){
-                        if(self.datasets.vote_user_ids[i][0]!=self.session.uid)
-                            vote.push(self.datasets.vote_user_ids[i]);
-                    }
-                    self.datasets.vote_user_ids=votes;
-                }
-                else {
-                    self.datasets.vote_user_ids.push([self.session.uid, 'You']);
-                }
+                self.datasets.vote_nb += self.datasets.has_voted ? 1 : -1;
                 self.display_vote();
             });
             return false;
@@ -747,8 +780,8 @@ openerp.mail = function(session) {
         display_vote: function () {
             var self = this;
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': self});
-            self.$(".placeholder-mail-vote:first").empty();
-            self.$(".placeholder-mail-vote:first").html(vote_element);
+            self.$(".oe_msg_vote:first").remove();
+            self.$(".oe_mail_vote_count:first").replaceWith(vote_element);
         },
 
         // Stared/unstared + Render star.
@@ -880,7 +913,7 @@ openerp.mail = function(session) {
                 // root view
                 this.ComposeMessage.prependTo(this.$el);
             }
-            this.ComposeMessage.$el.hide();
+            this.ComposeMessage.do_hide_compact();
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -1069,7 +1102,7 @@ openerp.mail = function(session) {
             var self=this;
 
             if(this.datasets.show_composeform){
-                this.ComposeMessage.$el.show();
+                this.ComposeMessage.do_show_compact();
             }
 
             this.$('.oe_wall_no_message').remove();
@@ -1198,6 +1231,7 @@ openerp.mail = function(session) {
                     'show_read_unread_button': this.options.show_read_unread_button || 1,
                     'truncate_limit': this.options.truncate_limit || 250,
                     'show_record_name': this.options.show_record_name || false,
+                    'show_header_compose': this.options.show_header_compose || false
                 },
             });
 

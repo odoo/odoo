@@ -190,9 +190,9 @@
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
                     <t t-call="mail.thread.message.star"/>
-                    <a t-if="widget.datasets.show_read_unread" title="Read" class="oe_read oe_e">W</a>
-                    <a t-if="widget.datasets.show_read_unread" title="Set back to unread" class="oe_unread oe_e">h</a>
-                    <a t-if="widget.datasets.show_reply" title="Reply" class="oe_reply oe_e">)</a>
+                    <a t-if="widget.datasets.show_read_unread_button" title="Read" class="oe_read oe_e">W</a>
+                    <a t-if="widget.datasets.show_read_unread_button" title="Set back to unread" class="oe_unread oe_e">h</a>
+                    <a t-if="widget.datasets.show_reply_button" title="Reply" class="oe_reply oe_e">)</a>
                 </div>
             </div>
 
@@ -258,11 +258,12 @@
             <t t-if='widget.datasets.has_voted'>
                 You
             </t>
-            <t t-if='(widget.datasets.vote_user_ids.length-(widget.datasets.has_voted?1:0)) > 0'>
+            <t t-if='(widget.datasets.vote_nb - (widget.datasets.has_voted ? 1 : 0)) > 0'>
                 <t t-if='widget.datasets.has_voted'> and </t>
-                <t t-esc="widget.datasets.vote_user_ids.length"/> people
+                <t t-esc="widget.datasets.vote_nb"/> people
             </t>
-            <t t-if='widget.datasets.vote_user_ids.length > 0'>
+            <t t-if='(widget.datasets.vote_nb - (widget.datasets.has_voted ? 1 : 0)) > 0'>
+                <t t-raw="(widget.datasets.vote_nb - (widget.datasets.has_voted ? 1 : 0))"/>
                 concur
             </t>
         </span>
