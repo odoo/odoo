@@ -4559,7 +4559,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_list", self.$el));
+        this.searchview.appendTo($(".oe_popup_search", self.$el));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
