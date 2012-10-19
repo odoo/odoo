@@ -700,8 +700,8 @@
                                 <field name="inv_ref" />
                             </group>
                         </group>
-                        <group string="Service Details">
-                            <field name="cost_ids">
+                        <group string="Included Services">
+                            <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
                                     <field name="cost_type" domain="[('category','=','service')]"/>
                                     <field name="amount" sum="Price" string="Cost"/>
