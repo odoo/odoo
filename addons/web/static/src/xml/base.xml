@@ -1169,7 +1169,8 @@
             <input type="hidden" name="session_id" value=""/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="__content__"/>
-            <input type="file" class="oe_form_binary_file" name="ufile"/>
+            <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
+            <input type="file" class="oe_form_binary_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
     </div>
