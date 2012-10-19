@@ -1,0 +1,77 @@
+ <openerp>
+ 	<data>
+
+ 		<!-- followup of customers views
+ 		-->
+
+ 		<record id="customer_followup_form" model="ir.ui.view">
+ 			<field name="name">eee</field>
+ 			<field name="model">res.partner</field>
+ 			<field name="type">form</field>
+ 			<field name="arch" type="xml">
+ 				<form string="Customer FollowUp form">
+ 					<field name="name"/>
+ 					<field name="phone"/>
+ 					<separator name="Detail of accounts"/>	
+ 					<field name="aml_ids"/>
+ 					<separator name="Payment Followup Remarks"/>
+ 					<field name="payment_responsible_id"/>
+ 					<field name="payment_note"/>
+ 					<field name="payment_followup_level_id"/>
+ 					<field name="payment_new_action"/>
+
+ 					
+
+
+ 				</form>
+ 			</field>
+ 		</record>
+
+ 		<record id="customer_followup_tree" model="ir.ui.view">
+ 			<field name="name">ddd</field>
+ 			<field name="model">res.partner</field>
+ 			<field name="type">tree</field>
+ 			<field name="arch" type="xml">
+ 				<tree string="Customer Followup">
+ 					<field name="name"/>
+ 					<field name="payment_note"/>
+ 					<field name="payment_new_action"/>
+ 					<field name="email"/>
+ 					<field name="phone"/>
+
+ 				<!--	<field name="latest_followup_date"/>-->
+ 				</tree>
+ 			</field>
+ 		</record>
+
+
+
+ 		<record id="action_customer_followup" model="ir.actions.act_window">
+ 			<field name="name">Customer Follow Up</field>
+ 			<field name="view_id" ref="customer_followup_tree"/>
+ 			<field name="res_model">res.partner</field>
+ 			<field name="view_type">tree</field>
+ 			
+ 		</record>
+
+
+
+ 		<record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
+ 			<field name="sequence" eval="2"/>
+ 			<field name="view_mode">form</field>
+ 			<field name="view_id" ref="customer_followup_form"/>
+ 			<field name="act_window_id" ref="action_customer_followup"/>
+ 		</record>
+
+ 		<record id="action_view_customer_followup_tree" model="ir.actions.act_window.view">
+ 			<field name="sequence" eval="1"/>
+ 			<field name="view_mode">tree</field>
+ 			<field name="view_id" ref="customer_followup_tree"/>
+ 			<field name="act_window_id" ref="action_customer_followup"/>
+ 		</record>
+
+         <!-- Menus about followup of customers -->
+        <menuitem id="account_followup_" action="action_customer_followup"  parent="account.menu_configuration_misc" name="Customer follow up"/>
+
+  	    </data>
+</openerp>
