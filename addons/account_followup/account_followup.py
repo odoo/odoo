@@ -28,7 +28,7 @@ class followup(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),
+        'company_id': fields.many2one('res.company', 'Company', required=True),        
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -46,10 +46,14 @@ class followup_line(osv.osv):
         'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
+        'send_email':fields.boolean('Send email', help="When processing, it will send an email"),
+        'send_letter':fields.boolean('Print email'),
+        'phonecall':fields.boolean('Phone call'), 
     }
     _defaults = {
         'start': 'days',
-
+        'send_email': True,
+        'send_letter': False,
     }
     def _check_description(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
@@ -71,6 +75,10 @@ class account_move_line(osv.osv):
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level'),
         'followup_date': fields.date('Latest Follow-up', select=True),
+        'payment_commitment':fields.text('Commitment'),
+        'payment_date':fields.date('Date'),
+        'payment_note':fields.text('Payment note'),
+        'payment_new_action':fields.text('New action'),
     }
 
 account_move_line()
@@ -79,6 +87,7 @@ class res_company(osv.osv):
     _inherit = "res.company"
     _columns = {
         'follow_up_msg': fields.text('Follow-up Message', translate=True),
+        
     }
 
     _defaults = {
@@ -99,5 +108,17 @@ Thanks,
     }
 
 res_company()
+
+class res_partner(osv.osv):
+    _inherit = "res.partner"
+    _columns = {
+        'payment_responsible_id':fields.many2one('res.partner', ondelete='set null'), 
+        'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
+        'payment_note':fields.text('Payment note', help="Payment note"),
+        'payment_new_action':fields.text('New action'),
+        #followup_date:fields.function(''),
+        #followup_level_id:fields.function(''),
+    }
+res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
