@@ -185,7 +185,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_with_buttons oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
+        <div t-attf-class="oe_msg oe_msg_#{widget.datasets.type} oe_msg_#{widget.datasets.to_read?'unread':'read'}">
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
