@@ -2326,13 +2326,19 @@ div.ui-widget-overlay
             display: block
         .oe_application
             .oe_form_sheet, .oe_form_sheetbg
-                border: none
-    .openerp div.oe_mail_wall
-        overflow: hidden !important
+                border: 0px !important
+                box-shadow: 0px 0px 0px
+        .oe_view_manager_current > .oe_view_manager_header
+            border: 0px !important
+            box-shadow: 0px 0px 0px
 
     .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more
         display: none
     .openerp
         text-shadow: none
+    .text-core .text-wrap .text-arrow
+        background: none
+    .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add, a.oe_m2o_cm_button, a.oe_e
+        display: none
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

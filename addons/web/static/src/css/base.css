@@ -2942,11 +2942,12 @@ div.ui-widget-overlay {
     display: block;
   }
   .openerp .oe_application .oe_form_sheet, .openerp .oe_application .oe_form_sheetbg {
-    border: none;
+    border: 0px !important;
+    box-shadow: 0px 0px 0px;
   }
-
-  .openerp div.oe_mail_wall {
-    overflow: hidden !important;
+  .openerp .oe_view_manager_current > .oe_view_manager_header {
+    border: 0px !important;
+    box-shadow: 0px 0px 0px;
   }
 
   .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more {
@@ -2955,5 +2956,13 @@ div.ui-widget-overlay {
 
   .openerp {
     text-shadow: none;
+  }
+
+  .text-core .text-wrap .text-arrow {
+    background: none;
+  }
+
+  .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add, a.oe_m2o_cm_button, a.oe_e {
+    display: none;
   }
 }
