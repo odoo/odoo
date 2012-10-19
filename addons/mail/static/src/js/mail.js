@@ -671,7 +671,7 @@ openerp.mail = function(session) {
                 (!read && this.options.thread.typeof_thread == 'archives')) {
                 this.animated_destroy({fadeTime:250});
             }
-
+            // TDE note: should have a context here
             this.ds_notification.call('set_message_read', [ids, read]);
             return false;
         },
