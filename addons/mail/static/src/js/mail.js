@@ -278,7 +278,6 @@ openerp.mail = function(session) {
             for(var i in this.datasets.partner_ids){
                 partner_ids.push(this.datasets.partner_ids[i][0]);
             }
-
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -288,10 +287,10 @@ openerp.mail = function(session) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    'default_model': false,
-                    'default_res_id': 0,
+                    'default_model': this.context.default_model,
+                    'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
-                    'default_parent_id': this.datasets.id,
+                    'default_parent_id': this.context.default_parent_id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
                     'default_attachment_ids': attachments,
                     'default_partner_ids': partner_ids
@@ -1220,6 +1219,7 @@ openerp.mail = function(session) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
         render_value: function() {
+            var self = this;
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
