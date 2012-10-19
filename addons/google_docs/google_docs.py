@@ -114,7 +114,8 @@ class google_docs_ir_attachment(osv.osv):
             a length of 1 element only (batch processing is not supported in the code, though nothing really prevent it)
           :return: the google document object created
         '''
-        assert len(ids) == 1, 'Creating google docs may only be done by one at a time'
+        if len(ids) != 1:
+            raise osv.except_osv(_('Google Docs Error!'), _("Creating google docs may only be done by one at a time."))
         res_id = ids[0]
         pool_ir_attachment = self.pool.get('ir.attachment')
         pool_gdoc_config = self.pool.get('google.docs.config')

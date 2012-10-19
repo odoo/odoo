@@ -13,24 +13,27 @@ var _t = instance.web._t,
         },
         on_google_doc: function() {
             var self = this;
-            var form = self.getParent();
-            form.sidebar_context().then(function (context) {
-                var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).then(function(r) {
-                    if (r == 'False') {
-                        var params = {
-                            error: response,
-                            message: _t("The user google credentials are not set yet. Contact your administrator for help.")
+            var view = self.getParent();
+            var ids = ( view.fields_view.type != "form" )? view.groups.get_selection().ids : [ view.datarecord.id ];
+            if( !_.isEmpty(ids) ){
+                view.sidebar_context().then(function (context) {
+                    var ds = new instance.web.DataSet(this, 'ir.attachment', context);
+                    ds.call('google_doc_get', [view.dataset.model, ids, context]).then(function(r) {
+                        if (r == 'False') {
+                            var params = {
+                                error: response,
+                                message: _t("The user google credentials are not set yet. Contact your administrator for help.")
+                            }
+                            $(openerp.web.qweb.render("DialogWarning", params)).dialog({
+                                title: _t("User Google credentials are not yet set."),
+                                modal: true,
+                            });
                         }
-                        $(openerp.web.qweb.render("DialogWarning", params)).dialog({
-                            title: _t("User Google credentials are not yet set."),
-                            modal: true,
-                        });
-                    }
-                }).done(function(){
-                    form.reload();
+                    }).done(function(){
+                        view.reload();
+                    });
                 });
-            });
+            }
         }
     });
 };
