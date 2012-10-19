@@ -236,6 +236,9 @@ instance.web.Loading = instance.web.Widget.extend({
         this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
+        this.old_title = document.title;
+        this.request_count = 0;
+        this.response_count = 0;
         this.session.on("request", this, this.request_call);
         this.session.on("response", this, this.response_call);
         this.session.on("response_failed", this, this.response_call);
@@ -245,13 +248,19 @@ instance.web.Loading = instance.web.Widget.extend({
         this._super();
     },
     request_call: function() {
+        this.request_count += 1;
         this.on_rpc_event(1);
     },
     response_call: function() {
+        this.response_count += 1;
         this.on_rpc_event(-1);
+    },
+    loading_title:function(percentage){
+        document.title = percentage + "% processed |" + this.old_title;
     },
     on_rpc_event : function(increment) {
         var self = this;
+        this.loading_title(parseInt(this.response_count * 100 / this.request_count))
         if (!this.count && increment === 1) {
             // Block UI after 3s
             this.long_running_timer = setTimeout(function () {
@@ -271,6 +280,7 @@ instance.web.Loading = instance.web.Widget.extend({
             this.getParent().$el.addClass('oe_wait');
         } else {
             this.count = 0;
+            document.title = this.old_title;
             clearTimeout(this.long_running_timer);
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
