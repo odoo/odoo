@@ -21,24 +21,26 @@
                     class="oe_import_csv" target="_blank">.CSV</a>
             file to import. If you need a sample importable file, you
             can use the export tool to generate one.</p>
-            <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
-            <input type="file" id-attf-id="file_#{_id}"
-                   name="file" class="oe_import_file"/>
-            <button type="button" class="oe_import_file_reload">
-                <img src="/web/static/src/img/icons/gtk-refresh.png"/>
-            </button>
-            <div class="oe_import_with_file">
-                <a href="#" class="oe_import_toggle">
-                    File Format Options…</a>
-                <div class="oe_import_toggled oe_import_options">
-                    <p t-foreach="widget.opts" t-as="option">
-                        <!-- no @name, avoid submission when file_update called -->
-                        <label t-attf-for="#{option.name}_#{_id}">
-                            <t t-esc="option.label"/></label>
-                        <input t-attf-id="#{option.name}_#{_id}"
-                               t-attf-class="oe_import_#{option.name}"
-                               t-att-value="option.value"/>
-                    </p>
+            <div class="oe_import_box">
+                <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+                <input type="file" id-attf-id="file_#{_id}"
+                       name="file" class="oe_import_file"/>
+                <button type="button" class="oe_import_file_reload">
+                    <img src="/web/static/src/img/icons/gtk-refresh.png"/>
+                </button>
+                <div class="oe_import_with_file">
+                    <a href="#" class="oe_import_toggle">
+                        File Format Options…</a>
+                    <div class="oe_import_toggled oe_import_options">
+                        <p t-foreach="widget.opts" t-as="option">
+                            <!-- no @name, avoid submission when file_update called -->
+                            <label t-attf-for="#{option.name}_#{_id}">
+                                <t t-esc="option.label"/></label>
+                            <input t-attf-id="#{option.name}_#{_id}"
+                                   t-attf-class="oe_import_#{option.name}"
+                                   t-att-value="option.value"/>
+                        </p>
+                    </div>
                 </div>
             </div>
 
@@ -54,7 +56,7 @@
                 simpler especially when the file has many columns.</p>
 
                 <div class="oe_import_error_report"></div>
-                <table class="oe_import_grid" width="100%"/>
+                <table class="oe_import_grid" />
 
                 <h2>Frequently Asked Questions</h2>
                 <dl>
