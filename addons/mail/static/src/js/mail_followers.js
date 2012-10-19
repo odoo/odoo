@@ -72,7 +72,7 @@ openerp_mail_followers = function(session, mail) {
                     target: 'new',
                     context: {
                         'default_res_model': self.view.dataset.model,
-                        'default_res_id': self.view.dataset.ids[0]
+                        'default_res_id': self.view.datarecord.id,
                     },
                 }
                 self.do_action(action, {
@@ -85,7 +85,7 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function () {
             var self = this;
-            return this.ds_model.read_ids([this.view.dataset.ids[0]], ['message_follower_ids']).pipe(function (results) {
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
         },
@@ -209,7 +209,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked',false);
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.dataset.ids[0]], [this.session.uid], context]).pipe(this.proxy('read_value'));
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).pipe(this.proxy('read_value'));
         },
 
         do_update_subscription: function (event) {
