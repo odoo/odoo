@@ -219,7 +219,7 @@
                     </t>
                 </div>
                 <div class="oe_msg_footer">
-                    <a t-if="widget.datasets.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}"><t t-raw="widget.datasets.author_id[1]"/></a>
+                    from <a t-if="widget.datasets.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.datasets.author_id[0]}"><t t-raw="widget.datasets.author_id[1]"/></a>
                     <span t-att-title="widget.datasets.date"><t t-raw="widget.datasets.timerelative"/></span>
                         <a t-if="widget.datasets.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
                             <t t-if="widget.datasets.attachment_ids.length == 1">1 Attachment</t>
@@ -254,6 +254,7 @@
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
+        <!--
         <span class="oe_left oe_mail_vote_count">
             <t t-if='widget.datasets.has_voted'>
                 You
@@ -273,6 +274,7 @@
                 <t t-if="widget.datasets.has_voted">Respectfully disagree</t>
             </span>
         </button>
+        -->
     </span>
 
     <!-- mail.thread.message.star
