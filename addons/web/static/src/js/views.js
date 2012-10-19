@@ -24,10 +24,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_widget.destroy();
-            this.dialog_widget = null;
             this.dialog.destroy();
-            this.dialog = null;
         }
     },
     /**
