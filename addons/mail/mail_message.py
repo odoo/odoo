@@ -350,8 +350,6 @@ class mail_message(osv.Model):
         read_messages = {}
         message_list = []
 
-        print message_loaded_ids
-
         # specific IDs given: fetch those ids and return directly the message list
         if ids:
             for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
@@ -377,15 +375,11 @@ class mail_message(osv.Model):
                             message_list.append(self._message_get_dict(cr, uid, parent, context=context))
                         parent = self._get_parent(cr, uid, parent, context=context)
 
-                # print read_messages
-                # print message_list
+            # get the child expandable messages for the tree
+            message_list = sorted(message_list, key=lambda k: k['id'])
+            message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
+                message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
 
-                # get the child expandable messages for the tree
-                message_list = sorted(message_list, key=lambda k: k['id'])
-                # message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
-                #     message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
-
-        # message_list = sorted(message_list, key=lambda k: k['id'])
         return message_list
 
     # TDE Note: do we need this ?
