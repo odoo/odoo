@@ -43,7 +43,7 @@ class ormcache(object):
            return r
         except KeyError:
            self.stat_miss += 1
-           value = d[args] = self.method(self2, cr, *args)
+           value = d[key] = self.method(self2, cr, *args)
            return value
         except TypeError:
            self.stat_err += 1
