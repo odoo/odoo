@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from datetime import date
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -109,15 +110,54 @@ Thanks,
 
 res_company()
 
+
+
 class res_partner(osv.osv):
+
+
+    def _get_latest_followup_date(self, cr, uid, ids):
+        res = {}
+        for partner in self.browse(cr, uid, ids): 
+            accountmovelines = self.pool.get('account.account_move_line').search(cr, uid, [('partner_id', '=', partner.id)])
+            latest_date = 0
+            for accountmoveline in accountmovelines:
+                if (latest_date < accountmoveline.followup_date):
+                    latest_date = accountmoveline.followup_date
+            res[partner.id] = latest_date
+        return res
+
+    def _test_latestfollowup(self, cr, uid, ids, name, args, context = None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context = context):
+            res[partner.id] = 5
+        return res
+
+    def _dummyfollowup(self, cr, uid, ids, context = None):
+        return {}
+
+    
+    def _get_latest_followup_level_id(self, cr, uid, ids, context = None):
+        res = {}
+        for partner in self.browse(cr, uid, ids, context = context):
+            accountmovelines = self.pool.get('account.account_move_line').search(cr, uid, [('partner_id', '=', partner.id)])
+            level_id = 0
+            level_days = -1000
+            for accountmoveline in accountmovelines:
+                if (level_days < accountmoveline.followup_id.delay):
+                    level_days = accountmoveline.followup_id.delay
+                    latest_date = accountmoveline.followup_id.followup_date
+            res[partner.id] = latest_date
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.partner', ondelete='set null'), 
         'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
         'payment_note':fields.text('Payment note', help="Payment note"),
-        'payment_new_action':fields.text('New action'),
-        #followup_date:fields.function(''),
-        #followup_level_id:fields.function(''),
+        'payment_new_action':fields.text('New action'), #one2many?
+        'aml_ids':fields.one2many('account.move.line', 'partner_id'),
+
+        #'latest_followup_date':fields.function('_dummy_followup', type='integer', string="latest_followup_date"),
+        #'latest_followup_level_id':fields.function('_get_followup_level_id', type='one2many'),
     }
 res_partner()
 

@@ -56,6 +56,7 @@ Note that if you want to check the follow-up level for a given partner/account e
         'account_followup_demo.xml',   # Defined by default
         'account_followup_view.xml',
         'account_followup_data.xml',
+        'account_followup_customers.xml',
     ],
     'demo': [],
     'test': [

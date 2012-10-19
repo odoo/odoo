@@ -9,6 +9,7 @@
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="start"/>
+
                 </tree>
             </field>
         </record>
@@ -22,6 +23,13 @@
                        <field name="name"/>
                        <field name="delay"/>
                        <field name="start"/>
+
+                    </group>
+                    <separator string="Processing actions"/>
+                    <group col="4">
+                       <field name="send_email"/>
+                       <field name="send_letter"/>
+                       <field name="phonecall"/>
                     </group>
                     <separator string="Message"/>
                     <field name="description"/>
@@ -109,6 +117,7 @@
                     <field name="followup_date"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
+
                     <field name="state"/>
                     <field name="date_maturity"/>
                 </tree>
