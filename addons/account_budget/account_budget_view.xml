@@ -1,13 +1,8 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    <!-- budget form and tree view from account module *********************************** -->
-        <record id="action_account_budget_post_tree" model="ir.actions.act_window">
-            <field name="name">Budgets</field>
-            <field name="res_model">account.budget.post</field>
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem action="action_account_budget_post_tree" id="menu_action_account_budget_post_tree" parent="account.menu_finance_generic_reporting" sequence="6"/>
+
+        <menuitem name="Budgets" id="menu_action_account_budget_post_tree" parent="account.menu_finance_generic_reporting" sequence="6"/>
 
         <!--
     Budgets
