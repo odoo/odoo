@@ -39,6 +39,7 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.reinit();
             this.bind_events();
+            this._super();
         },
 
         _check_visibility: function() {
@@ -88,13 +89,6 @@ openerp_mail_followers = function(session, mail) {
             return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
-        },
-
-        set_value: function (value_) {
-            this._super(value_);
-            // TDE FIXME: render_value is never called... ask to niv
-            // TDE TODO: in start, call this._super(), should resolve this issue
-            this.render_value();
         },
 
         render_value: function () {
