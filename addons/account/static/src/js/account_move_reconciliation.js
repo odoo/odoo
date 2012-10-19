@@ -11,15 +11,15 @@ openerp.account = function (instance) {
             this._super.apply(this, arguments);
             var self = this;
             this.current_partner = null;
-            this.do_select.add(function() {
-                if (self.get_selected_ids().length === 0) {
+            this.on('record_selected', this, function(ids, records) {
+                if (ids.length === 0) {
                     self.$(".oe_account_recon_reconcile").attr("disabled", "");
                 } else {
                     self.$(".oe_account_recon_reconcile").removeAttr("disabled");
                 }
             });
         },
-        on_loaded: function() {
+        load_list: function() {
             var self = this;
             var tmp = this._super.apply(this, arguments);
             if (this.partners) {
@@ -120,6 +120,10 @@ openerp.account = function (instance) {
             new instance.web.Model("res.partner").call("mark_as_reconciled", [[id]]).pipe(function() {
                 self.do_search(self.last_domain, self.last_context, self.last_group_by);
             });
+        },
+        do_select: function (ids, records) {
+            this.trigger('record_selected', ids, records)
+            this._super.apply(this, arguments);
         },
     });
     
