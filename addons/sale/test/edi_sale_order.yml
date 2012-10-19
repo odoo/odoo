@@ -120,7 +120,7 @@
 -
   "Then I import a sample EDI document of a purchase order (v6.1 - to test backwards compatibility)"
 -
-  !python {model: edi.document}: |
+  !python {model: edi.edi}: |
     sale_order_pool = self.pool.get('sale.order')
     edi_document = {
         "__id": "purchase:5af1272e-dd26-11e0-b65e-701a04e25543.purchase_order_test",
