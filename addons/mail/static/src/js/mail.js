@@ -339,8 +339,8 @@ openerp.mail = function(session) {
                         'mail.mt_comment',
                         this.context.default_parent_id, 
                         attachments,
-                        _.extend(this.parent_thread.context, {'message_loaded':[this.datasets.id||0].concat( self.parent_thread.options.thread._parents[0].get_child_ids() )})]
-                    ).then(function(records){
+                        this.parent_thread.context
+                    ]).then(function(records){
                         self.parent_thread.switch_new_message(records);
                         self.datasets.attachment_ids=[];
                         self.on_cancel();
