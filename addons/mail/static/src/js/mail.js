@@ -292,7 +292,6 @@ openerp.mail = function(session) {
                 this.$render_expandable.on('focus', 'textarea', function () { self.stay_open = false; });
                 this.$render_expandable.on('mousedown', function () { self.stay_open = true; });
             }
-
         },
 
         on_compose_fullmail: function(){
@@ -334,6 +333,7 @@ openerp.mail = function(session) {
             this.datasets.attachment_ids=[];
             this.display_attachments();
 
+            this.stay_open = false;
             this.on_compose_expandable();
         },
 
@@ -357,7 +357,7 @@ openerp.mail = function(session) {
             }
 
             if(body.match(/\S+/)) {
-                session.web.blockUI();
+                //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
@@ -370,7 +370,7 @@ openerp.mail = function(session) {
                     ]).then(function(records){
                         self.parent_thread.switch_new_message(records);
                         self.on_cancel();
-                        session.web.unblockUI();
+                        //session.web.unblockUI();
                     });
                 return true;
             }
@@ -392,6 +392,7 @@ openerp.mail = function(session) {
 
                 this.bind_events();
             }
+
             if(this.$render_expandable.is(':hidden')){
 
                 this.$render_expandable.show();
@@ -420,7 +421,9 @@ openerp.mail = function(session) {
         },
 
         do_show_compact: function() {
-            this.$render_compact.show();
+            if(!this.$render_expandable || this.$render_expandable.is(':hidden')){
+                this.$render_compact.show();
+            }
             this.datasets.show_compact = true;
         }
     });
