@@ -145,7 +145,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     start: function() {
         this.$el.addClass('oe_list');
-        return this.start();
+        return this.reload_view(null, null, true);
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -219,7 +219,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    load_list: function(data) {
+    load_list: function(data, grouped) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -245,7 +245,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 }).value();
         }
 
-        this.setup_columns(this.fields_view.fields, this.grouped);
+        this.setup_columns(this.fields_view.fields, grouped);
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
@@ -282,7 +282,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Add button
         if (!this.$buttons) {
-            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':this}));
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
             } else {
@@ -290,12 +290,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', this.grouped);
+                    .prop('disabled', grouped);
         }
 
         // Pager
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':this}));
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
@@ -359,7 +359,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
-        this.trigger('list_view_loaded', data, this.grouped);
+        this.trigger('list_view_loaded', data, grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -462,6 +462,29 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this._super();
     },
     /**
+     * Reloads the list view based on the current settings (dataset & al)
+     *
+     * @param {Boolean} [grouped] Should the list be displayed grouped
+     * @param {Object} [context] context to send the server while loading the view
+     */
+    reload_view: function (grouped, context, initial) {
+        var self = this;
+        var callback = function (field_view_get) {
+            self.load_list(field_view_get, grouped);
+        };
+        if (this.embedded_view) {
+            return $.Deferred().then(callback).resolve(this.embedded_view);
+        } else {
+            return this.rpc('/web/view/load', {
+                model: this.model,
+                view_id: this.view_id,
+                view_type: "tree",
+                context: this.dataset.get_context(context),
+                toolbar: !!this.options.$sidebar
+            }).then(callback);
+        }
+    },
+    /**
      * re-renders the content of the list view
      *
      * @returns {$.Deferred} promise to content reloading
@@ -541,9 +564,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             group_by = null;
         }
         this.no_leaf = !!context['group_by_no_leaf'];
-        this.grouped = !!group_by;
 
-        this.load_view(context).then(this.proxy('reload_content'));
+        this.reload_view(!!group_by, context).then(
+            this.proxy('reload_content'));
     },
     /**
      * Handles the signal to delete lines from the records list
