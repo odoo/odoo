@@ -99,7 +99,7 @@ openerp.mail = function(session) {
             var nb_and = -1;
             
             for ( var k = domain.length-1; k >= 0 ; k-- ) {
-                if ( typeof domain[k] != 'array' ) {
+                if ( typeof domain[k] != 'array' && typeof domain[k] != 'object' ) {
                     nb_and -= 2;
                     continue;
                 }
@@ -109,8 +109,6 @@ openerp.mail = function(session) {
             for (var k = 0; k < nb_and ; k++){
                 domain.unshift('&');
             }
-
-            console.log( JSON.stringify(domain) );
 
             return domain;
         }
@@ -531,6 +529,16 @@ openerp.mail = function(session) {
             this.parent_thread.message_fetch(this.domain, this.context);
             return false;
         },
+
+        /**
+         * call on_message_delete on his parent thread
+        */
+        destroy: function() {
+
+            this._super();
+            this.parent_thread.on_message_detroy(this);
+
+        }
     });
 
     /**
@@ -857,6 +865,16 @@ openerp.mail = function(session) {
             return false;
         },
 
+        /**
+         * call on_message_delete on his parent thread
+        */
+        destroy: function() {
+
+            this._super();
+            this.parent_thread.on_message_detroy(this);
+
+        }
+
     });
 
     /**
@@ -1113,9 +1131,9 @@ openerp.mail = function(session) {
             // domain and context: options + additional
             fetch_domain = replace_domain ? replace_domain : this.domain;
             fetch_context = replace_context ? replace_context : this.context;
-            var message_loaded = [this.id||0].concat( self.options._parents[0].get_child_ids() );
+            var message_loaded_ids = this.id ? [this.id].concat( self.get_child_ids() ) : self.get_child_ids();
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded, fetch_context, this.context.default_parent_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
@@ -1270,6 +1288,12 @@ openerp.mail = function(session) {
             });
         },
 
+        on_message_detroy: function (message) {
+
+            this.messages = _.filter(this.messages, function (val) { return !val.isDestroyed(); });
+
+        },
+
         /**
          * Convert a destroyed message into a expandable message
          */
@@ -1280,7 +1304,7 @@ openerp.mail = function(session) {
                 return false;
             }
 
-            var messages = _.sortBy( _.filter(this.messages, function (val) { return !val.isDestroyed(); }), function (val) { return val.id; });
+            var messages = _.sortBy( this.messages, function (val) { return val.id; });
             var it = _.indexOf( messages, message );
 
             var msg_up = messages[it-1];
