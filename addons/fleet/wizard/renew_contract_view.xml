@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+      <record model='ir.ui.view' id='fleet_vehicle_contract_wizard_form'>
+            <field name="name">fleet.vehicle.contract.wizard.form</field>
+            <field name="model">fleet.vehicle.contract.renew</field>
+            <field name="arch" type="xml">
+                <form string="Contract logs" version="7.0">
+                    <sheet>
+                      <header>
+                        <button string="Cancel" icon="gtk-cancel" special="cancel"/>
+                        <button string="Validate" icon="gtk-ok"
+                                type="object" name="renew"/>
+                      </header>
+                        <group col="2" string="Please check that all informations are correct">
+                            <group string="Contract details">
+                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="cost_type" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                                <field name="amount" string="Invoice Amount"/>
+                            </group>
+                            <group string="Odometer details">
+                                <label for="odometer"/>
+                                <div>
+                                    <field name="odometer" class="oe_inline"/>
+                                    <field name="odometer_unit" class="oe_inline"/>
+                                </div>
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group>
+                                <field name="date" string="Invoice Date"/>
+                                <field name="start_date"/>
+                                <field name="expiration_date" />
+                            </group>
+                            <group>
+                                <field name="insurer_id" />
+                                <field name="purchaser_id" />
+                                <field name="ins_ref" />
+                            </group>
+                        </group>
+                        <group string="Included services">
+                            <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
+                                <tree version="7.0" editable="bottom">
+                                    <field name="cost_type" domain="[('category','=','service')]"/>
+                                    <field name="amount" sum="Price" string="Indicative Cost" />
+                                </tree>
+                            </field>
+                        </group>
+                        <group string="Terms and Conditions">
+                            <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <act_window
+            
+            id="act_renew_contract_wizard"
+            name="Renew Contract"
+            res_model="fleet.vehicle.contract.renew"
+            src_model="fleet.vehicle.log.contract"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            />
+        
+
+    </data>
+</openerp>
