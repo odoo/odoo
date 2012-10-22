@@ -168,7 +168,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
-            this.options.$buttons.children().remove();
             this.$buttons.appendTo(this.options.$buttons);
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);

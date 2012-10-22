@@ -300,7 +300,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_widget.destroy();
             if (this.dialog === null || this.dialog.isDestroyed()) {
                 this.dialog = new instance.web.Dialog(this, {
-                    buttons: {"Close": function() {$(this).dialog("close")}},
                     dialogClass: executor.klass,
                 });
                 this.dialog.on("closing", null, options.on_close);
