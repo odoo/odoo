@@ -4160,6 +4160,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this._super(value_);
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.kanban_view = new instance.web.form.Many2ManyKanbanView(this, this.dataset, false, {
@@ -4187,12 +4190,13 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
     },
     render_value: function() {
         var self = this;
+        this.dataset.set_ids(this.get("value"));
         this.is_loaded = this.is_loaded.pipe(function() {
             return self.kanban_view.do_search(self.build_domain(), self.dataset.get_context(), []);
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
     open_popup: function(type, unused) {
         if (type !== "form")
