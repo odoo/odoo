@@ -25,12 +25,13 @@ from osv import osv
 from osv import fields
 from openerp import SUPERUSER_ID
 
+
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
         group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
     _name = 'mail.group'
-    _mail_autothread = False
+    _mail_flat_thread = False
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
