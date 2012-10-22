@@ -986,6 +986,10 @@ instance.web.WebClient = instance.web.Client.extend({
             self.$el.on('contextmenu','.oe_logo',function(e) {
                 instance.web.dialog($(QWeb.render('Resolution')),{
                     title: "OpenERP Resolution" });
+
+                $(self.$el).click(function(){
+                    $('.resolution').dialog('close');
+                })
                 $('.resolution a').click(function() {
                     self.$el.find('.oe_logo').css('width', $(this).attr('awidth')+"px");
                     self.$el.find('.oe_logo').css('height', $(this).attr('aheight')+"px");
