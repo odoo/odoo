@@ -69,7 +69,7 @@ instance.web.Login = instance.web.Login.extend({
     _check_error: function() {
         var self = this;
         if (this.params.loginerror !== undefined) {
-            this.rpc('/auth_openid/login/status', {}, function(result) {
+            this.rpc('/auth_openid/login/status', {}).then(function(result) {
                 if (_.contains(['success', 'failure'], result.status) && result.message) {
                     self.do_warn('Invalid OpenID Login', result.message);
                 }
@@ -106,7 +106,7 @@ instance.web.Login = instance.web.Login.extend({
 
     do_openid_login: function(db, openid_url) {
         var self = this;
-        this.rpc('/auth_openid/login/verify', {'db': db, 'url': openid_url}, function(result) {
+        this.rpc('/auth_openid/login/verify', {'db': db, 'url': openid_url}).then(function(result) {
             if (result.error) {
                 self.do_warn(result.title, result.error);
                 return;

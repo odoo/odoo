@@ -175,7 +175,7 @@ class email_template(osv.osv):
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d}" % (template.id),
+                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
@@ -319,7 +319,7 @@ class email_template(osv.osv):
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
-            attachments.append(report_name, result)
+            attachments.append((report_name, result))
 
         # Add template attachments
         for attach in template.attachment_ids:

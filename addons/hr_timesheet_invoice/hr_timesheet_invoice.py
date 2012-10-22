@@ -135,6 +135,8 @@ class account_analytic_line(osv.osv):
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if not record_ids:
+            raise osv.except_osv(_('Error!'), _('Please create an employee associated to this user.'))
         employee = proxy.browse(cr, uid, record_ids[0], context=context)
         if employee.product_id and employee.product_id.property_account_income:
             return employee.product_id.property_account_income.id
@@ -174,7 +176,7 @@ account_analytic_line()
 
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
         res = {}
         if not account_id:
             return res
