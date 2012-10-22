@@ -167,7 +167,7 @@ class ir_translation(osv.osv):
             [('to_translate','To Translate'),
              ('inprogress','Translation in Progress'),
              ('translated','Translated')],
-            string="State",
+            string="Status",
             help="Automatically set to let administators find new terms that might need to be translated"),
 
         # aka gettext extracted-comments - we use them to flag openerp-web translation
