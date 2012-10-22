@@ -160,7 +160,7 @@
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Analytic Entries">
+                <tree string="Analytic Entries">
                     <field name="date"/>
                     <field name="ref" invisible="context.get('to_invoice', False)"/>
                     <field name="name"/>
