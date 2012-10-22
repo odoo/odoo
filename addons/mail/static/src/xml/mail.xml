@@ -197,7 +197,7 @@
                     <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">W</a></span>
                     <span class='oe_reply' t-if="widget.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
-                    <span class='oe_star'><a t-attf-class="oe_e oe_mail_starbox #{widget.has_stared?'oe_stared':''}">7</a></span>
+                    <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Add To Favorites" class="oe_e">7</a></span>
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
