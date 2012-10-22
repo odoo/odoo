@@ -46,12 +46,15 @@ class project_project(osv.osv):
 
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+
         project = self.browse(cr, uid, ids[0], context)
         view_context = {
             'search_default_account_id': [project.analytic_account_id.id],
             'default_account_id': project.analytic_account_id.id,
         }
-        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""")
+        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
         try:
             if project.to_invoice and project.partner_id:
                 help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
@@ -59,16 +62,13 @@ class project_project(osv.osv):
             # if the user do not have access rights on the partner
             pass
 
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Timesheets'),
-            'res_model': 'hr.analytic.timesheet',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': view_context,
-            'nodestroy': True,
-            'help': help
-        }
+        res = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
+        id = res and res[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['name'] = _('Timesheets')
+        result['context'] = view_context
+        result['help'] = help
+        return result
 
 project_project()
 
