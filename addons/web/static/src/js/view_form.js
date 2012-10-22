@@ -4187,7 +4187,6 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
     },
     render_value: function() {
         var self = this;
-        this.dataset.set_ids(this.get("value"));
         this.is_loaded = this.is_loaded.pipe(function() {
             return self.kanban_view.do_search(self.build_domain(), self.dataset.get_context(), []);
         });
