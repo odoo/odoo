@@ -6,6 +6,85 @@ import common
 UID = common.ADMIN_USER_ID
 DB = common.DB
 
+class TestInherits(common.TransactionCase):
+    """ test the behavior of the orm for models that use _inherits;
+        specifically: res.users, that inherits from res.partner
+    """
+
+    def setUp(self):
+        super(TestInherits, self).setUp()
+        self.partner = self.registry('res.partner')
+        self.user = self.registry('res.users')
+
+    def test_create(self):
+        """ creating a user should automatically create a new partner """
+        partners_before = self.partner.search(self.cr, UID, [])
+        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        foo = self.user.browse(self.cr, UID, foo_id)
+
+        self.assertNotIn(foo.partner_id.id, partners_before)
+
+    def test_create_with_ancestor(self):
+        """ creating a user with a specific 'partner_id' should not create a new partner """
+        par_id = self.partner.create(self.cr, UID, {'name': 'Foo'})
+        partners_before = self.partner.search(self.cr, UID, [])
+        foo_id = self.user.create(self.cr, UID, {'partner_id': par_id, 'login': 'foo', 'password': 'foo'})
+        partners_after = self.partner.search(self.cr, UID, [])
+
+        self.assertEqual(set(partners_before), set(partners_after))
+
+        foo = self.user.browse(self.cr, UID, foo_id)
+        self.assertEqual(foo.name, 'Foo')
+        self.assertEqual(foo.partner_id.id, par_id)
+
+    def test_read(self):
+        """ inherited fields should be read without any indirection """
+        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        foo_values, = self.user.read(self.cr, UID, [foo_id])
+        partner_id = foo_values['partner_id'][0]
+        partner_values, = self.partner.read(self.cr, UID, [partner_id])
+        self.assertEqual(foo_values['name'], partner_values['name'])
+
+        foo = self.user.browse(self.cr, UID, foo_id)
+        self.assertEqual(foo.name, foo.partner_id.name)
+
+    def test_copy(self):
+        """ copying a user should automatically copy its partner, too """
+        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        foo_before, = self.user.read(self.cr, UID, [foo_id])
+        bar_id = self.user.copy(self.cr, UID, foo_id, {'login': 'bar', 'password': 'bar'})
+        foo_after, = self.user.read(self.cr, UID, [foo_id])
+
+        self.assertEqual(foo_before, foo_after)
+
+        foo, bar = self.user.browse(self.cr, UID, [foo_id, bar_id])
+        self.assertEqual(bar.login, 'bar')
+        self.assertNotEqual(foo.id, bar.id)
+        self.assertNotEqual(foo.partner_id.id, bar.partner_id.id)
+
+    def test_copy_with_ancestor(self):
+        """ copying a user with 'parent_id' in defaults should not duplicate the partner """
+        foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
+        par_id = self.partner.create(self.cr, UID, {'name': 'Bar'})
+
+        foo_before, = self.user.read(self.cr, UID, [foo_id])
+        partners_before = self.partner.search(self.cr, UID, [])
+        bar_id = self.user.copy(self.cr, UID, foo_id, {'partner_id': par_id, 'login': 'bar'})
+        foo_after, = self.user.read(self.cr, UID, [foo_id])
+        partners_after = self.partner.search(self.cr, UID, [])
+
+        self.assertEqual(foo_before, foo_after)
+        self.assertEqual(set(partners_before), set(partners_after))
+
+        foo, bar = self.user.browse(self.cr, UID, [foo_id, bar_id])
+        self.assertNotEqual(foo.id, bar.id)
+        self.assertEqual(bar.partner_id.id, par_id)
+        self.assertEqual(bar.login, 'bar', "login is given from copy parameters")
+        self.assertEqual(bar.password, foo.password, "password is given from original record")
+        self.assertEqual(bar.name, 'Bar', "name is given from specific partner")
+
+
+
 CREATE = lambda values: (0, False, values)
 UPDATE = lambda id, values: (1, id, values)
 DELETE = lambda id: (2, id, False)
@@ -19,6 +98,7 @@ def sorted_by_id(list_of_dicts):
     return sorted(list_of_dicts, key=lambda d: d.get('id'))
 
 class TestO2MSerialization(common.TransactionCase):
+    """ test the orm method 'write' on one2many fields """
 
     def setUp(self):
         super(TestO2MSerialization, self).setUp()

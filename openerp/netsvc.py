@@ -192,8 +192,7 @@ def init_logger():
     default_config = [
         'openerp.netsvc.rpc.request:INFO',
         'openerp.netsvc.rpc.response:INFO',
-        'openerp.addons.web.common.http:INFO',
-        'openerp.addons.web.common.openerplib:INFO',
+        'openerp.addons.web.http:INFO',
         'openerp.sql_db:INFO',
         ':INFO',
     ]

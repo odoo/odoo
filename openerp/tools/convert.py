@@ -386,18 +386,8 @@ form: module.record_id""" % (xml_id,)
 
         res = {'name': name, 'url': url, 'target':target}
 
-        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(cr, self.uid, "ir.actions.act_url", self.module, res, xml_id, noupdate=self.isnoupdate(data_node), mode=self.mode)
         self.idref[xml_id] = int(id)
-        # ir_set
-        if (not rec.get('menu') or eval(rec.get('menu','False'))) and id:
-            keyword = str(rec.get('keyword','') or 'client_action_multi')
-            value = 'ir.actions.url,'+str(id)
-            replace = rec.get("replace",'') or True
-            self.pool.get('ir.model.data').ir_set(cr, self.uid, 'action', keyword, url, ["ir.actions.url"], value, replace=replace, isobject=True, xml_id=xml_id)
-        elif self.mode=='update' and (rec.get('menu') and eval(rec.get('menu','False'))==False):
-            # Special check for URL having attribute menu=False on update
-            value = 'ir.actions.url,'+str(id)
-            self._remove_ir_values(cr, url, value, "ir.actions.url")
 
     def _tag_act_window(self, cr, rec, data_node=None):
         name = rec.get('name','').encode('utf-8')
