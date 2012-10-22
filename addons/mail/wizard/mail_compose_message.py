@@ -81,11 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            if context.get('default_template_id'):
-                vals =  self.pool.get('email.template').generate_email(cr, uid, context.get('default_template_id'), res_id, context=context)
-                vals.update({'content_subtype': 'html'})
-            else:
-                vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -229,22 +225,13 @@ class mail_compose_message(osv.TransientModel):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
 
-            if wizard.content_subtype == 'html':
-                if not wizard.body:
-                    return False
-                body = wizard.body
-            else: # wizard.content_subtype == 'plain':
-                if not wizard.body_text:
-                    return False
-                body = '<pre>%s</pre>' % tools.ustr(wizard.body_text or '')
-
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
             for res_id in res_ids:
                 # default values, according to the wizard options
                 post_values = {
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
-                    'body': body,
+                    'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
                     'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
                     'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
@@ -258,13 +245,13 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                id=active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
 
             # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
             # self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
             #     'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
-        
-        return {'type': 'ir.actions.act_window_close', 'res_model':'mail.compose.message', 'id': id}
+
+        return {'type': 'ir.actions.act_window_close'}
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
         """ Generate an email from the template for given (wizard.model, res_id)
