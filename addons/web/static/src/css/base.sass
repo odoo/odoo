@@ -144,7 +144,6 @@ $sheet-max-width: 860px
 
 .openerp.openerp_webclient_container
     height: 100%
-    position: relative
 
 // jQueryUI css bug fixing
 .text-tag .text-button
@@ -253,6 +252,10 @@ $sheet-max-width: 860px
     .oe_bounce_container
         display: inline-block
 
+    // bug noted in jquery ui CSS doesn't seem to occur in IE9,
+    // so remove position:relative
+    .ui-tabs
+        position: static
     // Modal box
     &.ui-dialog
         display: none
@@ -2078,7 +2081,6 @@ $sheet-max-width: 860px
                 visibility: visible
 
     .oe_list
-        position: relative
         .oe_form
             .oe_form_nosheet
                 margin: 0 // FIXME: either class or border should not be by default
