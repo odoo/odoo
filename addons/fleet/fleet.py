@@ -392,6 +392,48 @@ class fleet_vehicle(osv.Model):
         res = self.get_next_contract_reminder_fnc(cr, uid, ids, context=context)
         return res
 
+    def get_contract_renewal_names(self,cr,uid,ids,function_name,args,context=None):
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+
+        for record in reads:
+            ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],limit=1,order='expiration_date asc')
+            if len(ids) > 0:
+                res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_type.name))
+        return dict(res)
+
+    def get_total_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+        if context is None:
+            context={}
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+
+        for record in reads:
+            due_soon=0
+            if (record.log_contracts):
+                for element in record.log_contracts:
+                    if (element.state=='open' and element.expiration_date):
+                        current_date_str=time.strftime('%Y-%m-%d')
+                        due_time_str=element.expiration_date
+
+                        current_date=self.str_to_date(current_date_str)
+                        due_time=self.str_to_date(due_time_str)
+             
+                        diff_time=int((due_time-current_date).days)
+                        if diff_time<15:
+                            due_soon = due_soon +1;
+                if due_soon>0:
+                    due_soon=due_soon-1
+                res.append((record.id,due_soon))
+            else:
+                res.append((record.id,0))
+        
+        return dict(res)
+
     def run_scheduler(self,cr,uid,context=None):
         ids = self.pool.get('fleet.vehicle').search(cr, uid, [], offset=0, limit=None, order=None,context=None, count=False)
         nexts = self.get_next_contract_reminder_fnc(cr,uid,ids,context=context)
@@ -444,7 +486,9 @@ class fleet_vehicle(osv.Model):
 
         'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,fnct_search=_search_contract_renewal_due_soon,type="integer",string='Contracts to renew',store=False),
         'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,fnct_search=_search_get_overdue_contract_reminder,type="integer",string='Contracts Overdued',store=False),
-        
+        'contract_renewal_name' : fields.function(get_contract_renewal_names,type="text",string='Name of contract to renew soon',store=False),
+        'contract_renewal_total' : fields.function(get_total_contract_reminder,type="integer",string='Total of contracts due or overdue minus one',store=False),
+
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
         #'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
         }
@@ -811,6 +855,8 @@ class fleet_vehicle_log_contract(osv.Model):
                 name = str(record.vehicle_id.name)
             if record.cost_type.name:
                 name = name+ ' / '+ str(record.cost_type.name)
+            if record.date:
+                name = name+ ' / '+ record.date
             res.append((record.id, name))
         return res
 
@@ -895,6 +941,27 @@ class fleet_vehicle_log_contract(osv.Model):
             #else:
             #    res.append((record.id,-1))
         return dict(res)
+
+    def act_renew_contract(self,cr,uid,ids,context=None):
+        contracts = self.browse(cr,uid,ids,context=context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract', context)
+        for element in contracts:
+            print '--------------------------'
+            print element.vehicle_id.id
+            print element.cost_type.id
+            print element.amount
+            print element.odometer
+            print element.insurer_id
+            res['context'] = {
+                'default_vehicle_id': element.vehicle_id.id,
+                'default_cost_type': element.cost_type.id,
+                'default_amount': element.amount,
+                'default_odometer': element.odometer,
+                #'default_insurer_id': element.insurer_id,
+            }
+        #res['domain']=[('vehicle_id','=', ids[0])]
+        return res
+        #return None
 
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
