@@ -677,7 +677,7 @@ openerp.mail = function(session) {
             // event: click on 'Vote' button
             this.$el.on('click', '.oe_msg_vote', this.on_vote);
             // event: click on 'starred/favorite' button
-            this.$el.on('click', '.oe_mail_starbox', this.on_star);
+            this.$el.on('click', '.oe_star', this.on_star);
         },
 
         /**
@@ -847,15 +847,16 @@ openerp.mail = function(session) {
          * add or remove a favorite (or starred) for a message and change class on the DOM
         */
         on_star: function (event) {
+            console.log('on_star');
             event.stopPropagation();
             var self=this;
-            var button = self.$('button.oe_mail_starbox:first');
+            var button = self.$('.oe_star:first');
             return this.ds_message.call('favorite_toggle', [[self.id]]).pipe(function(star){
                 self.is_favorite=star;
                 if(self.is_favorite){
-                    button.addClass('oe_stared');
+                    button.addClass('oe_starred');
                 } else {
-                    button.removeClass('oe_stared');
+                    button.removeClass('oe_starred');
                     if( self.options.typeof_thread == 'stared' ) {
                         self.animated_destroy({fadeTime:250});
                     }
