@@ -635,36 +635,34 @@ class sale_order_line(osv.osv):
 class sale_advance_payment_inv(osv.osv_memory):
     _inherit = "sale.advance.payment.inv"
 
-    def create_invoices(self, cr, uid, ids, context=None):
-        """ create invoices for the active sale orders """
+    def _create_invoices(self, cr, uid, inv_values, sale_id, context=None):
+        result = super(sale_advance_payment_inv, self)._create_invoices(cr, uid, inv_values, sale_id, context=context)
         sale_obj = self.pool.get('sale.order')
         sale_line_obj = self.pool.get('sale.order.line')
-        wizard = self.browse(cr, uid, ids[0], context)
+        wizard = self.browse(cr, uid, [result], context)
+        sale = sale_obj.browse(cr, uid, sale_id, context=context)
+        if sale.order_policy == 'postpaid':
+            raise osv.except_osv(
+                _('Error!'),
+                _("You cannot make an advance on a sales order \
+                     that is defined as 'Automatic Invoice after delivery'."))
 
-        for sale_id, inv_values in self._prepare_advance_invoice_vals(cr, uid, ids, context=context):
-            sale = sale_obj.browse(cr, uid, sale_id, context=context)
-            if sale.order_policy == 'postpaid':
-                raise osv.except_osv(
-                    _('Error!'),
-                    _("You cannot make an advance on a sales order \
-                         that is defined as 'Automatic Invoice after delivery'."))
-
-            # If invoice on picking: add the cost on the SO
-            # If not, the advance will be deduced when generating the final invoice
-            line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
-            line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
-            if sale.order_policy == 'picking':
-                vals = {
-                    'order_id': sale.id,
-                    'name': line_name,
-                    'price_unit': -inv_amount,
-                    'product_uom_qty': wizard.qtty or 1.0,
-                    'product_uos_qty': wizard.qtty or 1.0,
-                    'product_uos': res.get('uos_id', False),
-                    'product_uom': res.get('uom_id', False),
-                    'product_id': wizard.product_id.id or False,
-                    'discount': False,
-                    'tax_id': line_tax,
-                }
-                sale_line_obj.create(cr, uid, vals, context=context)
-        return super(sale_advance_payment_inv, self).create_invoices(cr, uid, ids, context=context)
+        # If invoice on picking: add the cost on the SO
+        # If not, the advance will be deduced when generating the final invoice
+        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
+        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
+        if sale.order_policy == 'picking':
+            vals = {
+                'order_id': sale.id,
+                'name': line_name,
+                'price_unit': -inv_amount,
+                'product_uom_qty': wizard.qtty or 1.0,
+                'product_uos_qty': wizard.qtty or 1.0,
+                'product_uos': res.get('uos_id', False),
+                'product_uom': res.get('uom_id', False),
+                'product_id': wizard.product_id.id or False,
+                'discount': False,
+                'tax_id': line_tax,
+            }
+            sale_line_obj.create(cr, uid, vals, context=context)
+        return result
