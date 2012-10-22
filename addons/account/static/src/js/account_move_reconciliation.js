@@ -102,7 +102,6 @@ openerp.account = function (instance) {
                     action_id: result[1],
                     context: additional_context
                 }).then(function (result) {
-                    result = result.result;
                     result.context = _.extend(result.context || {}, additional_context);
                     result.flags = result.flags || {};
                     result.flags.new_window = true;
