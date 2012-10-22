@@ -124,7 +124,7 @@
                                     <field name="note" placeholder="Free Notes"/>
                                 </div>
                                 <group class="oe_subtotal_footer">
-                                    <field name="amount"/>
+                                    <field name="amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 </group>
                             </group>
                         </page>
@@ -196,10 +196,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="purchase_ok" position="before">
+                <div name="options" position="inside">
                     <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>
                     <label for="hr_expense_ok"/>
-                </field>
+                </div>
             </field>
         </record>
 

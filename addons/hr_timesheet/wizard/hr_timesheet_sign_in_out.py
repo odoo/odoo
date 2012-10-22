@@ -147,7 +147,7 @@ class hr_si_project(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'hr.sign.%s.project' % in_out,
-            'views': [(False,'tree'), (resource_id,'form')],
+            'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new'
         }
