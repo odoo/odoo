@@ -746,7 +746,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             this.on_invalid(search.errors);
             return;
         }
-        return this.trigger('search_data', search.domains, search.contexts, search.groupbys);
+        this.trigger('search_data', search.domains, search.contexts, search.groupbys);
     },
     /**
      * Triggered after the SearchView has collected all relevant domains and
@@ -777,6 +777,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      */
     on_invalid: function (errors) {
         this.do_notify(_t("Invalid Search"), _t("triggered from search view"));
+        this.trigger('invalid_search', errors);
     }
 });
 
