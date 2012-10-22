@@ -7,7 +7,7 @@ openerp.mail = function(session) {
     openerp_mail_followers(session, mail);        // import mail_followers.js
 
     /**
-     * ------------------------------------------------------------
+         * ------------------------------------------------------------
      * FormView
      * ------------------------------------------------------------
      * 
@@ -38,7 +38,7 @@ openerp.mail = function(session) {
 
 
     /**
-     * ------------------------------------------------------------
+         * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 
@@ -51,17 +51,20 @@ openerp.mail = function(session) {
 
     mail.ChatterUtils = {
 
-        /** Get an image in /web/binary/image?... */
+        /**
+         *Get an image in /web/binary/image?... */
         get_image: function(session, model, field, id) {
             return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
 
-        /** Get the url of an attachment {'id': id} */
+        /**
+         *Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, attachment) {
             return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
         },
 
-        /** Replaces some expressions
+        /**
+         *Replaces some expressions
          * - :name - shortcut to an image
          */
         do_replace_expressions: function (string) {
@@ -91,7 +94,7 @@ openerp.mail = function(session) {
 
 
     /**
-     * ------------------------------------------------------------
+         * ------------------------------------------------------------
      * ComposeMessage widget
      * ------------------------------------------------------------
      * 
@@ -420,8 +423,8 @@ openerp.mail = function(session) {
         }
     });
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * Thread Message Expandable Widget
      * ------------------------------------------------------------
      *
@@ -493,13 +496,13 @@ openerp.mail = function(session) {
             this.flag_used = true;
 
             this.animated_destroy({'fadeTime':300});
-            this.parent_thread.message_fetch(false, this.domain, this.context);
+            this.parent_thread.message_fetch(this.domain, this.context);
             return false;
         },
     });
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * Thread Message Widget
      * ------------------------------------------------------------
      * This widget handles the display of a messages in a thread. 
@@ -554,7 +557,7 @@ openerp.mail = function(session) {
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
             this.thread_level = datasets.thread_level ||  0,
-            this.to_read = datasets.to_read ||  true,
+            this.to_read = datasets.to_read || false,
             this.author_id = datasets.author_id ||  [],
             this.attachment_ids = datasets.attachment_ids ||  [],
             this._date = datasets.date;
@@ -585,6 +588,9 @@ openerp.mail = function(session) {
             this.ds_follow = new session.web.DataSetSearch(this, 'mail.followers');
         },
 
+        /**
+         *Convert date, timerelative and avatar in displayable data.
+        */
         formating_data: function(){
 
             //formating and add some fields for render
@@ -634,6 +640,9 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_mail_starbox', this.on_star);
         },
 
+        /**
+         * call the on_compose_message on the thread of this message.
+         */
         on_message_reply:function(event){
             event.stopPropagation();
             this.thread.on_compose_message();
@@ -651,6 +660,10 @@ openerp.mail = function(session) {
                 });
         },
 
+        /**
+         * instantiate the thread object of this message.
+         * Each message have only one thread.
+         */
         create_thread: function(){
             if(this.thread){
                 return false;
@@ -670,6 +683,10 @@ openerp.mail = function(session) {
             this.thread.insertAfter(this.$el);
         },
         
+        /**
+         * Fade out the message and his child thread.
+         * Then this object is destroyed.
+         */
         animated_destroy: function(options) {
             var self=this;
             //graphic effects  
@@ -683,6 +700,10 @@ openerp.mail = function(session) {
             }
         },
 
+        /**
+         * Wait a confirmation for delete the message on the DB.
+         * Make an animate destroy
+         */
         on_message_delete: function (event) {
             event.stopPropagation();
             if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
@@ -715,7 +736,9 @@ openerp.mail = function(session) {
             return false;
         },
 
-        /** browse message
+        /**
+         * search a message in all thread and child thread.
+         * This method return an object message.
          * @param {object}{int} option.id
          * @param {object}{string} option.model
          * @param {object}{boolean} option._go_thread_wall
@@ -745,7 +768,8 @@ openerp.mail = function(session) {
             return false;
         },
 
-        /* get all child message/thread id linked
+        /* get all child message id linked.
+         * @return array of id
         */
         get_child_ids: function(){
             var res=[]
@@ -756,6 +780,9 @@ openerp.mail = function(session) {
             return res;
         },
 
+        /**
+         * add or remove a vote for a message and display the result
+        */
         on_vote: function (event) {
             event.stopPropagation();
             var self=this;
@@ -768,7 +795,9 @@ openerp.mail = function(session) {
             return false;
         },
 
-        // Render vote Display template.
+        /**
+         * Display the render of this message's vote
+        */
         display_vote: function () {
             var self = this;
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': self});
@@ -776,7 +805,9 @@ openerp.mail = function(session) {
             self.$(".oe_mail_vote_count:first").replaceWith(vote_element);
         },
 
-        // Stared/unstared + Render star.
+        /**
+         * add or remove a favorite (or starred) for a message and change class on the DOM
+        */
         on_star: function (event) {
             event.stopPropagation();
             var self=this;
@@ -797,8 +828,8 @@ openerp.mail = function(session) {
 
     });
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * Thread Widget
      * ------------------------------------------------------------
      *
@@ -871,6 +902,9 @@ openerp.mail = function(session) {
             this.bind_events();
         },
 
+        /* instantiate the compose message object and insert this on the DOM.
+        * The compose message is display in compact form.
+        */
         instantiate_ComposeMessage: function(){
             // add message composition form view
             this.ComposeMessage = new mail.ThreadComposeMessage(this, this, {
@@ -916,19 +950,26 @@ openerp.mail = function(session) {
             self.$el.on('click', '.oe_mail_compose_textarea .oe_more_hidden', self.on_hide_recipients);
         },
 
+        /**
+         *show all the partner list of this parent message
+        */
         on_show_recipients: function(){
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').show(); 
             p.find('.oe_more').hide(); 
         },
 
+        /**
+         *hide a part of the partner list of this parent message
+        */
         on_hide_recipients: function(){
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').hide(); 
             p.find('.oe_more').show(); 
         },
 
-        /* get all child message/thread id linked
+        /* get all child message/thread id linked.
+         * @return array of id
         */
         get_child_ids: function(){
             var res=[];
@@ -936,7 +977,9 @@ openerp.mail = function(session) {
             return res;
         },
 
-        /* get all child message/thread linked
+        /* get all child message/thread linked.
+         * @param {int} nb_thread_level, number of traversed thread level for this search
+         * @return array of thread object
         */
         get_childs: function(nb_thread_level){
             var res=[];
@@ -951,7 +994,9 @@ openerp.mail = function(session) {
             return res;
         },
 
-        /** browse thread
+        /**
+         *search a thread in all thread and child thread.
+         * This method return an object thread.
          * @param {object}{int} option.id
          * @param {object}{string} option.model
          * @param {object}{boolean} option._go_thread_wall
@@ -987,19 +1032,24 @@ openerp.mail = function(session) {
             return false;
         },
 
-        /** browse message
+        /**
+         *search a message in all thread and child thread.
+         * This method return an object message.
          * @param {object}{int} option.id
          * @param {object}{string} option.model
          * @param {object}{boolean} option._go_thread_wall
          *      private for check the top thread
-         * @return thread object
+         * @return message object
          */
         browse_message: function(options){
             if(this.options._parents[0].messages[0])
                 return this.options._parents[0].messages[0].browse_message(options);
         },
 
-        /* this function is launch when a user click on "Reply" button
+        /**
+         *If ComposeMessage doesn't exist, instantiate the compose message.
+        * Call the on_compose_expandable method to allow the user to write his message.
+        * (Is call when a user click on "Reply" button)
         */
         on_compose_message: function(){
             if(!this.ComposeMessage){
@@ -1010,17 +1060,22 @@ openerp.mail = function(session) {
             this.ComposeMessage.on_compose_expandable();
         },
 
-        /* display the no message on the thread
+        /**
+         *display the message "there are no message" on the thread
         */
         no_message: function(){
             $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$el);
         },
 
-        /** Fetch messages
+        /**
+         *make a request to read the message (calling RPC to "message_read").
+         * The result of this method is send to the switch message for sending ach message to
+         * his parented object thread.
          * @param {Array} replace_domain: added to this.domain
          * @param {Object} replace_context: added to this.context
+         * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
-        message_fetch: function (initial_mode, replace_domain, replace_context, ids, callback) {
+        message_fetch: function (replace_domain, replace_context, ids) {
             var self = this;
 
             // domain and context: options + additional
@@ -1032,7 +1087,11 @@ openerp.mail = function(session) {
                 ).then(this.proxy('switch_new_message'));
         },
 
-        /* create record object and linked him
+        /**
+         *create the message object and attached on this thread.
+         * When the message object is create, this method call insert_message for,
+         * displaying this message on the DOM.
+         * @param : {object} data from calling RPC to "message_read"
          */
         create_message_object: function (data) {
             var self = this;
@@ -1074,7 +1133,15 @@ openerp.mail = function(session) {
             self.messages.push( message );
         },
 
-        /** Displays a message or an expandable message  */
+        /**
+         *insert the message on the DOM.
+         * All message (and expandable message) are sorted. The method get the
+         * older and newer message to insert the message (before, after).
+         * If there are no older or newer, the message is prepend or append to
+         * the thread (parent object or on root thread for flat view).
+         * The sort is define by the thread_level (O for newer on top).
+         * @param : {object} ThreadMessage object
+         */
         insert_message: function (message) {
             var self=this;
 
@@ -1143,7 +1210,11 @@ openerp.mail = function(session) {
             return message
         },
         
-        /*  Send the records to his parent thread */
+        /**
+         *get the parent thread of the messages.
+         * Each message is send to his parent object for creating the object message.
+         * @param : {Array} datas from calling RPC to "message_read"
+         */
         switch_new_message: function(records) {
             var self=this;
             _(records).each(function(record){
@@ -1155,8 +1226,8 @@ openerp.mail = function(session) {
         },
     });
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * mail : root Widget
      * ------------------------------------------------------------
      *
@@ -1224,9 +1295,12 @@ openerp.mail = function(session) {
             this.bind_events();
         },
 
+        
         /**
-         * Display the threads
-          */
+         *Create the root thread and display this object in the DOM.
+         * Call the no_message method then c all the message_fetch method 
+         * of this root thread to display the messages.
+         */
         message_render: function (search) {
 
             this.thread = new mail.Thread(this, {}, {
@@ -1254,8 +1328,8 @@ openerp.mail = function(session) {
     });
 
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * mail_thread Widget
      * ------------------------------------------------------------
      *
@@ -1321,8 +1395,8 @@ openerp.mail = function(session) {
     });
 
 
-    /** 
-     * ------------------------------------------------------------
+    /**
+         * ------------------------------------------------------------
      * Wall Widget
      * ------------------------------------------------------------
      *
@@ -1397,7 +1471,7 @@ openerp.mail = function(session) {
 
 
         /**
-         * Display the threads
+         *Create the root thread widget and display this object in the DOM
           */
         message_render: function (search) {
             var domain = this.options.domain.concat(this.search_results['domain']);
@@ -1426,7 +1500,7 @@ openerp.mail = function(session) {
 
 
     /**
-     * ------------------------------------------------------------
+         * ------------------------------------------------------------
      * UserMenu
      * ------------------------------------------------------------
      * 
