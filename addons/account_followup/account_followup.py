@@ -126,14 +126,13 @@ class res_partner(osv.osv):
             res[partner.id] = latest_date
         return res
 
-    def _test_latestfollowup(self, cr, uid, ids, name, args, context = None):
+    def _test_latestfollowup(self, cr, uid, ids, name, arg, context = None):
         res = {}
         for partner in self.browse(cr, uid, ids, context = context):
             res[partner.id] = 5
         return res
 
-    def _dummyfollowup(self, cr, uid, ids, context = None):
-        return {}
+   
 
     
     def _get_latest_followup_level_id(self, cr, uid, ids, context = None):
@@ -150,14 +149,13 @@ class res_partner(osv.osv):
 
     _inherit = "res.partner"
     _columns = {
-        'payment_responsible_id':fields.many2one('res.partner', ondelete='set null'), 
+        #'payment_responsible_id':fields.many2one('res.partner', ondelete='set null'), 
         'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
         'payment_note':fields.text('Payment note', help="Payment note"),
         'payment_new_action':fields.text('New action'), #one2many?
-        'aml_ids':fields.one2many('account.move.line', 'partner_id'),
-
-        #'latest_followup_date':fields.function('_dummy_followup', type='integer', string="latest_followup_date"),
-        #'latest_followup_level_id':fields.function('_get_followup_level_id', type='one2many'),
+        'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id'),
+        'latest_followup_date':fields.function(_test_latestfollowup, method=True, type='integer', string="latest followup date"),
+        #'latest_followup_level_id':fields.function(_get_followup_level_id, type='one2many'),
     }
 res_partner()
 

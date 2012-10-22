@@ -8,21 +8,23 @@
  			<field name="name">eee</field>
  			<field name="model">res.partner</field>
  			<field name="type">form</field>
+ 			<field name="priority" eval="20"/>
  			<field name="arch" type="xml">
  				<form string="Customer FollowUp form">
- 					<field name="name"/>
- 					<field name="phone"/>
+ 					<group col="4" colspan="4">
+ 						<field name="name"/>
+ 						<field name="phone"/>
+ 					</group>
  					<separator name="Detail of accounts"/>	
- 					<field name="aml_ids"/>
+ 					<!--<field name="accountmoveline_ids"/>-->
  					<separator name="Payment Followup Remarks"/>
- 					<field name="payment_responsible_id"/>
- 					<field name="payment_note"/>
- 					<field name="payment_followup_level_id"/>
- 					<field name="payment_new_action"/>
-
- 					
-
-
+ 					<!--<field name="payment_responsible_id"/>-->
+ 					<group col="4" colspan="4">
+ 						<field name="payment_note"/>
+ 						<field name="payment_followup_level_id"/>
+ 						<field name="payment_new_action"/>
+ 						<field name="latest_followup_date"/>
+ 					</group>
  				</form>
  			</field>
  		</record>
@@ -30,7 +32,8 @@
  		<record id="customer_followup_tree" model="ir.ui.view">
  			<field name="name">ddd</field>
  			<field name="model">res.partner</field>
- 			<field name="type">tree</field>
+ 			<!--<field name="type">tree</field>-->
+ 			<field name="priority" eval="20"/>
  			<field name="arch" type="xml">
  				<tree string="Customer Followup">
  					<field name="name"/>
@@ -38,8 +41,7 @@
  					<field name="payment_new_action"/>
  					<field name="email"/>
  					<field name="phone"/>
-
- 				<!--	<field name="latest_followup_date"/>-->
+ 				<!--<field name="latest_followup_date"/>-->
  				</tree>
  			</field>
  		</record>
@@ -50,8 +52,9 @@
  			<field name="name">Customer Follow Up</field>
  			<field name="view_id" ref="customer_followup_tree"/>
  			<field name="res_model">res.partner</field>
- 			<field name="view_type">tree</field>
- 			
+ 			<field name="view_type">form</field>
+ 			<field name="view_mode">tree,form</field>
+ 			<field name="domain">[('customer', '=', True)]</field>
  		</record>
 
 
