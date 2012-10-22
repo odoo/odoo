@@ -107,6 +107,7 @@ Dashboard for CRM will include:
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
+        'crm_action_rule_demo.xml',
     ],
     'test': [
         'test/process/communication_with_customer.yml',
