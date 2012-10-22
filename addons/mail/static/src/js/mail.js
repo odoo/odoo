@@ -23,7 +23,7 @@ openerp.mail = function(session) {
                  */
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_subtype', 'active_id', 'lang',
+                    'default_res_id', 'default_content_subtype', 'active_id', 'lang',
                     'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids']
                 for (var key in action.context) {
                     if (_.indexOf(context_keys, key) == -1) {
@@ -290,11 +290,14 @@ openerp.mail = function(session) {
             for(var i in this.datasets.attachment_ids){
                 attachments.push(this.datasets.attachment_ids[i].id);
             }
+            /* TDE note: I think this is not necessary, because
+             * 1/ post on a document: followers added server-side in _notify
+             * 2/ reply to a message: mail.compose.message should add the previous partners
+             */
             var partner_ids=[];
             for(var i in this.datasets.partner_ids){
                 partner_ids.push(this.datasets.partner_ids[i][0]);
             }
-
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -702,6 +705,8 @@ openerp.mail = function(session) {
         * @param {object} mouse envent
         */
         on_message_read_unread: function (event) {
+            // TDE note: code here seems complicated... just check that current message is read (value coming from server)
+            // and send its opposite to set_message_read
             event.stopPropagation();
             // if this message is read, all childs message display is read
             var ids = [this.datasets.id].concat( this.get_child_ids() );
@@ -712,7 +717,7 @@ openerp.mail = function(session) {
                 (!read && this.options.typeof_thread == 'archives')) {
                 this.animated_destroy({fadeTime:250});
             }
-
+            // TDE note: should have a context here
             this.ds_notification.call('set_message_read', [ids, read]);
             return false;
         },
@@ -762,7 +767,7 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
             return this.ds_message.call('vote_toggle', [[self.datasets.id]]).pipe(function(vote){
-
+                // TDE note: to update, because vote_user_ids is about to disappear to be replaced by vote_nb (number of votes)
                 self.datasets.has_voted=vote;
                 self.datasets.vote_nb += self.datasets.has_voted ? 1 : -1;
                 self.display_vote();
@@ -1288,6 +1293,7 @@ openerp.mail = function(session) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
         render_value: function() {
+            var self = this;
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;

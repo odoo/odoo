@@ -39,6 +39,7 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.reinit();
             this.bind_events();
+            this._super();
         },
 
         _check_visibility: function() {
@@ -72,7 +73,7 @@ openerp_mail_followers = function(session, mail) {
                     target: 'new',
                     context: {
                         'default_res_model': self.view.dataset.model,
-                        'default_res_id': self.view.dataset.ids[0]
+                        'default_res_id': self.view.datarecord.id,
                     },
                 }
                 self.do_action(action, {
@@ -85,16 +86,9 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function () {
             var self = this;
-            return this.ds_model.read_ids([this.view.dataset.ids[0]], ['message_follower_ids']).pipe(function (results) {
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
-        },
-
-        set_value: function (value_) {
-            this._super(value_);
-            // TDE FIXME: render_value is never called... ask to niv
-            // TDE TODO: in start, call this._super(), should resolve this issue
-            this.render_value();
         },
 
         render_value: function () {
@@ -189,7 +183,6 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             var subtype_list_ul = this.$('.oe_subtypes');
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
-
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
@@ -209,7 +202,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked',false);
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.dataset.ids[0]], [this.session.uid], context]).pipe(this.proxy('read_value'));
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).pipe(this.proxy('read_value'));
         },
 
         do_update_subscription: function (event) {

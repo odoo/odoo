@@ -581,11 +581,19 @@ class test_mail(TestMailMockups):
         reply_msg = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: 1',
                                          extra='In-Reply-To: %s' % msg1.message_id)
         self.mail_group.message_process(cr, uid, None, reply_msg)
+        # TDE note: temp various asserts because of the random bug about msg1.child_ids
+        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
+        new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
+        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message (%d) should have msg1 as parent' % (new_msg.id))
 
         # 2. References header
         reply_msg2 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: Re: 1',
                                          extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % msg1.message_id)
         self.mail_group.message_process(cr, uid, None, reply_msg2)
+        # TDE note: temp various asserts because of the random bug about msg1.child_ids
+        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
+        new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
+        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message should have msg1 as parent')
 
         # 3. Subject contains [<ID>] + model passed to message+process -> only attached to group, not to mail
         reply_msg3 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com',
@@ -595,6 +603,12 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         msg1.refresh()
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
+        # TDE note: python test + debug because of the random error we see with the next assert
+        if len(msg1.child_ids) != 2:
+            msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=10)
+            for new_msg in self.mail_message.browse(cr, uid, msg_ids):
+                print new_msg.subject, '(id', new_msg.id, ')', 'parent_id:', new_msg.parent_id
+                print '\tchild_ids', [child.id for child in new_msg.child_ids]
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
 
     def test_60_message_vote(self):
