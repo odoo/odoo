@@ -3351,23 +3351,13 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     controller.on('edit:before', self, function (e) {
                         e.cancel = true;
                     });
-                    var has_handle = _(controller.columns).find(function (column) {
+                    _(controller.columns).find(function (column) {
                         if (!column instanceof instance.web.list.Handle) {
                             return false;
                         }
-                        column.modifiers.tree_invisible = true;
-                        column.invisible = '1';
-                        // remove from visibles
-                        controller.visible_columns.splice(
-                            controller.visible_columns.indexOf(column),
-                            1);
+                        column.modifiers.invisible = true;
                         return true;
                     });
-                    if (has_handle) {
-                        // recompute aggregates
-                        controller.aggregate_columns =
-                            _(controller.visible_columns).invoke('to_aggregate');
-                    }
                 }
             } else if (view_type === "form") {
                 if (self.get("effective_readonly")) {
