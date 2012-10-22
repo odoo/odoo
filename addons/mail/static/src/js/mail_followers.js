@@ -39,6 +39,7 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.reinit();
             this.bind_events();
+            this._super();
         },
 
         _check_visibility: function() {
@@ -72,7 +73,7 @@ openerp_mail_followers = function(session, mail) {
                     target: 'new',
                     context: {
                         'default_res_model': self.view.dataset.model,
-                        'default_res_id': self.view.datarecord.id
+                        'default_res_id': self.view.datarecord.id,
                     },
                 }
                 self.do_action(action, {
@@ -88,12 +89,6 @@ openerp_mail_followers = function(session, mail) {
             return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
-        },
-
-        set_value: function (value_) {
-            this._super(value_);
-            // TDE FIXME: render_value is never called... ask to niv
-            this.render_value();
         },
 
         render_value: function () {
@@ -139,6 +134,7 @@ openerp_mail_followers = function(session, mail) {
         /** Display the followers */
         display_followers: function (records) {
             var self = this;
+            records = records || [];
             this.message_is_follower = this.set_is_follower(records);
             // clean and display title
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
@@ -186,7 +182,7 @@ openerp_mail_followers = function(session, mail) {
         display_subtypes:function (data) {
             var self = this;
             var subtype_list_ul = this.$('.oe_subtypes');
-            var records = (data[this.view.datarecord.id] || data[null]).message_subtype_data;
+            var records = data[this.view.datarecord.id].message_subtype_data;
 
             _(records).each(function (record, record_name) {
                 record.name = record_name;
