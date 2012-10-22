@@ -184,7 +184,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_lvl_#{widget.thread_level} oe_msg_#{widget.type} oe_msg_#{widget.to_read?'unread':'read'}">
+        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type} oe_msg_#{widget.to_read?'unread':'read'}">
 
             <div class='oe_msg_left'>
                 <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">

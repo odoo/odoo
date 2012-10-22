@@ -769,7 +769,7 @@ openerp.mail = function(session) {
 
             // if this message is read, all childs message display is read
             this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function(){
-                self.$el.removeClass(this.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
+                self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
                 self.to_read = !self.to_read;
             });
             return false;
@@ -934,7 +934,7 @@ openerp.mail = function(session) {
             this.thread_level =  (datasets.thread_level+1) || 0,
             this.partner_ids =  _.filter(datasets.partner_ids, function(partner){ return partner[0]!=datasets.author_id[0]; } ) 
             this.messages = [];
-            this.show_compose_message = this.options.show_compose_message && this.options.show_reply_button > this.thread_level;
+            this.show_compose_message = this.options.show_compose_message && (this.options.show_reply_button > this.thread_level || !this.thread_level);
 
             // object compose message
             this.ComposeMessage = false;
@@ -1464,7 +1464,7 @@ openerp.mail = function(session) {
             this.thread.no_message();
             this.thread.message_fetch();
 
-            if(this.options.show_compose_message){
+            if(this.options.show_compose_message && this.thread.ComposeMessage){
                 this.thread.ComposeMessage.do_show_compact();
             }
         },
@@ -1535,7 +1535,7 @@ openerp.mail = function(session) {
                 'context' : this.options.context,
                 'typeof_thread': this.options.context['typeof_thread'] || 'other',
                 'display_indented_thread': -1,
-                'show_reply_button': 10,
+                'show_reply_button': 0,
                 'show_read_unread_button': -1,
                 'show_compose_message': show_compose_message
                 }
