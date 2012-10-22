@@ -312,7 +312,6 @@ class mail_message(osv.Model):
                 'type': 'expandable',
                 'parent_id': parent_id,
                 'id': -1,
-                'max_limit': True,
             })
 
         return message_list
