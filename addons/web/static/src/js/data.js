@@ -135,6 +135,8 @@ instance.web.Query = instance.web.Class.extend({
         }).pipe(function (results) {
             return _(results).map(function (result) {
                 // FIX: querygroup initialization
+                result.__context = result.__context || {};
+                result.__context.group_by = result.__context.group_by || [];
                 _.defaults(result.__context, ctx);
                 return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
