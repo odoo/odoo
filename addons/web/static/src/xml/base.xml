@@ -10,6 +10,27 @@
         Loading...
     </div>
 </t>
+<t t-name="Resolution">
+    <div class="resolution">
+        <table>
+            <tr>
+                <td colspan="2"><label>Resolution:</label></td>
+            </tr>
+            <tr>
+                <td><a awidth="150" aheight="60" imgw="100" imgh="30">150 x 60</a></td>
+                <td><a awidth="250" aheight="90" imgw="200" imgh="60">250 x 90</a></td>
+            </tr>
+            <tr>
+                <td><a awidth="290" aheight="90" imgw="225" imgh="60">290 x 90</a></td>
+                <td><a awidth="320" aheight="100" imgw="257" imgh="70">320 x 100</a></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td style="float:right;"><a awidth="220" aheight="70" imgw="157" imgh="40">Original</a></td>
+            </tr>
+        </table>
+    </div>
+</t>
 <t t-name="Notification">
     <div class="oe_notification" t-translation="off">
         <div id="oe_notification_default">
@@ -404,7 +425,7 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" href="#"><img onContextMenu="return false;" t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
                     Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
@@ -1090,7 +1111,7 @@
         <div class="oe_form_field_image_controls oe_edit_only">
             <t t-call="HiddenInputFile">
                 <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                Edit 
+                Edit
             </t>
             <div class="oe_form_binary_progress" style="display: none">
                 <img t-att-src='_s + "/web/static/src/img/throbber.gif"' width="16" height="16"/>
