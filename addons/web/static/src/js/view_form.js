@@ -3234,6 +3234,12 @@ var commands = {
         return [6, false, ids];
     }
 };
+/**
+    widget options:
+    - reload_on_button: Reload the whole form view if click on a button in a list view.
+        If you see this options, do not use it, it's basically a dirty hack to make one
+        precise o2m to behave the way we want.
+*/
 instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
@@ -3689,7 +3695,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             readonly: !this.is_action_enabled('edit') || self.o2m.get("effective_readonly")
         });
     },
-    do_button_action: function (name, id, callback) {
+    handle_button: function(name, id, call) {
+        var _sup = _.bind(this._super, this);
         if (!_.isNumber(id)) {
             instance.webclient.notification.warn(
                 _t("Action Button"),
@@ -3700,14 +3707,22 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var self = this;
         this.ensure_saved().pipe(function () {
             if (parent_form)
-                return parent_form.save();
+                return parent_form.recursive_save();
             else
                 return $.when();
-        }).then(function () {
-            self.handle_button(name, id, callback);
+        }).pipe(function () {
+            var call;
+            debugger;
+            if (! self.o2m.options.reload_on_button) {
+                call = callback;
+            } else {
+                call = function() {
+                    self.o2m.view.recursive_reload();
+                };
+            }
+            _sup(name, id, call);
         });
     },
-
     _before_edit: function () {
         this.__ignore_blur = false;
         this.editor.form.on('blurred', this, this._on_form_blur);
