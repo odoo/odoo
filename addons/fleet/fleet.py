@@ -944,21 +944,35 @@ class fleet_vehicle_log_contract(osv.Model):
 
     def act_renew_contract(self,cr,uid,ids,context=None):
         contracts = self.browse(cr,uid,ids,context=context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract_wizard', context)
         for element in contracts:
-            print '--------------------------'
-            print element.vehicle_id.id
-            print element.cost_type.id
-            print element.amount
-            print element.odometer
-            print element.insurer_id
-            res['context'] = {
-                'default_vehicle_id': element.vehicle_id.id,
-                'default_cost_type': element.cost_type.id,
-                'default_amount': element.amount,
-                'default_odometer': element.odometer,
-                #'default_insurer_id': element.insurer_id,
-            }
+            temp = []
+            temp.append(('default_vehicle_id',element.vehicle_id.id))
+            temp.append(('default_cost_type',element.cost_type.id))
+            temp.append(('default_amount',element.amount))
+            temp.append(('default_odometer_id',element.odometer_id.id))
+            temp.append(('default_odometer_unit',element.odometer_unit))
+            temp.append(('default_insurer_id',element.insurer_id.id))
+            cost_temp = []
+            for costs in element.cost_ids:
+                cost_temp.append(costs.id)
+            temp.append(('default_cost_ids',cost_temp))
+            temp.append(('default_date',time.strftime('%Y-%m-%d')))
+            temp.append(('default_start_date',element.expiration_date))
+            temp.append(('default_purchaser_id',element.purchaser_id.id))
+            temp.append(('default_ins_ref',element.ins_ref))
+            temp.append(('default_state','open'))
+            temp.append(('default_notes',element.notes))
+
+            res['context'] = dict(temp)
+            #res['context']['default_vehicle_id'] = element.vehicle_id.id
+            #res['context'] = {
+            #    'default_vehicle_id': element.vehicle_id.id,
+            #    'default_cost_type': element.cost_type.id,
+            #    'default_amount': element.amount,
+            #    'default_odometer': element.odometer,
+            #    'default_insurer_id': element.insurer_id.id,
+            #}
         #res['domain']=[('vehicle_id','=', ids[0])]
         return res
         #return None
