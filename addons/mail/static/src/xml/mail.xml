@@ -184,16 +184,7 @@
 
     <!-- default layout -->
     <t t-name="mail.thread.message">
-        <div t-attf-class="oe_msg oe_with_buttons oe_msg_#{widget.type} oe_msg_#{widget.to_read?'unread':'read'}">
-            <!-- message actions (read/unread, reply, delete...) -->
-            <div class='oe_msg_right'>
-                <div class="oe_msg_icons">
-                    <t t-call="mail.thread.message.star"/>
-                    <a t-if="widget.show_read_unread_button" title="Read" class="oe_read oe_e">W</a>
-                    <a t-if="widget.show_read_unread_button" title="Set back to unread" class="oe_unread oe_e">h</a>
-                    <a t-if="widget.show_reply_button" title="Reply" class="oe_reply oe_e">)</a>
-                </div>
-            </div>
+        <div t-attf-class="oe_msg oe_lvl_#{widget.thread_level} oe_msg_#{widget.type} oe_msg_#{widget.to_read?'unread':'read'}">
 
             <div class='oe_msg_left'>
                 <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
@@ -202,6 +193,12 @@
             </div>
 
             <div class="oe_msg_center">
+                <div class='oe_msg_icons'>
+                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
+                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">W</a></span>
+                    <span class='oe_reply' t-if="widget.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
+                    <span class='oe_star'><a t-attf-class="oe_e oe_mail_starbox #{widget.has_stared?'oe_stared':''}">7</a></span>
+                </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
                     <h1 t-if="widget.subject" class="oe_msg_title">
@@ -218,7 +215,7 @@
                     </t>
                 </div>
                 <div class="oe_msg_footer">
-                    <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    from <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                         <a t-if="widget.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
                             <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
@@ -253,6 +250,7 @@
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
+        <!--
         <span class="oe_left oe_mail_vote_count">
             <t t-if='widget.has_voted'>
                 You
@@ -272,12 +270,10 @@
                 <t t-if="widget.has_voted">Respectfully disagree</t>
             </span>
         </button>
+        -->
     </span>
 
     <!-- mail.thread.message.star
         Template used to display stared/unstared message in a mail.message
     -->
-    <t t-name="mail.thread.message.star">
-         <a t-attf-class="oe_mail_starbox #{widget.has_stared?'oe_stared':''}">*</a>
-    </t>
 </template>

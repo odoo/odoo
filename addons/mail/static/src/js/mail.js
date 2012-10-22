@@ -110,6 +110,8 @@ openerp.mail = function(session) {
                 domain.unshift('&');
             }
 
+            console.log( JSON.stringify(domain) );
+
             return domain;
         }
     };
@@ -480,7 +482,7 @@ openerp.mail = function(session) {
             this.type = 'expandable',
             this.max_limit = this.id < 0 || false,
             this.flag_used = false,
-            this.parent_thread= parent.messages!= undefined ? parent : options.options._parents[0] ;
+            this.parent_thread= parent.messages!= undefined ? parent : options.options._parents[0];
         },
 
         
@@ -656,18 +658,18 @@ openerp.mail = function(session) {
                 self.$('.oe_msg_attachments:first').toggle();
             });
             // event: click on icone 'Read' in header
-            this.$el.on('click', 'a.oe_read', this.on_message_read_unread);
+            this.$el.on('click', '.oe_read', this.on_message_read_unread);
             // event: click on icone 'UnRead' in header
-            this.$el.on('click', 'a.oe_unread', this.on_message_read_unread);
+            this.$el.on('click', '.oe_unread', this.on_message_read_unread);
             // event: click on 'Delete' in msg side menu
-            this.$el.on('click', 'a.oe_msg_delete', this.on_message_delete);
+            this.$el.on('click', '.oe_msg_delete', this.on_message_delete);
 
             // event: click on 'Reply' in msg
-            this.$el.on('click', 'a.oe_reply', this.on_message_reply);
+            this.$el.on('click', '.oe_reply', this.on_message_reply);
             // event: click on 'Vote' button
-            this.$el.on('click', 'button.oe_msg_vote', this.on_vote);
+            this.$el.on('click', '.oe_msg_vote', this.on_vote);
             // event: click on 'starred/favorite' button
-            this.$el.on('click', 'a.oe_mail_starbox', this.on_star);
+            this.$el.on('click', '.oe_mail_starbox', this.on_star);
         },
 
         /**
@@ -1213,7 +1215,8 @@ openerp.mail = function(session) {
             if (sort) {
                 if (parent_older) {
 
-                    message.insertAfter(parent_older.$el);
+                    //warning : insert after the thread of the message !
+                    message.insertAfter(parent_older.thread ? parent_older.thread.$el : parent_older.$el);
 
                 } else if(parent_newer) {
 
@@ -1234,7 +1237,8 @@ openerp.mail = function(session) {
 
                 } else if(parent_newer) {
 
-                    message.insertAfter(parent_newer.$el);
+                    //warning : insert after the thread of the message !
+                    message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
 
                 } else if(message.id < 0) {
 
@@ -1246,11 +1250,6 @@ openerp.mail = function(session) {
 
                 }
             }
-
-            self.$('.oe_msg_first:first').removeClass("oe_msg_first");
-            self.$('.oe_msg_last:last').removeClass("oe_msg_last");
-            self.$('.oe_msg_comment:first, .oe_msg_comment:first-child').addClass("oe_msg_first");
-            self.$('.oe_msg_comment:last, .oe_msg_comment:last-child').addClass("oe_msg_last");
 
             return message
         },
