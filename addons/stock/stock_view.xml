@@ -551,9 +551,9 @@
                             <field name="posx"/>
                             <field name="posy"/>
                             <field name="posz"/>
-                        </group><group string="Accounting Information">
-                            <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                            <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
+                        </group><group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
+                            <field name="valuation_in_account_id"/>
+                            <field name="valuation_out_account_id"/>
                         </group>
                     </group>
                     <separator string="Additional Information"/>
