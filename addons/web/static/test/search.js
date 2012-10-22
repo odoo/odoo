@@ -197,7 +197,8 @@ $(document).ready(function () {
 
         var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
         var view = new instance.web.SearchView(null, dataset, false, defaults);
-        view.on_invalid.add(function () {
+        var self = this;
+        view.on('invalid_search', self, function () {
             ok(false, JSON.stringify([].slice(arguments)));
         });
         return view;

@@ -3352,6 +3352,23 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     controller.on('edit:before', self, function (e) {
                         e.cancel = true;
                     });
+                    var has_handle = _(controller.columns).find(function (column) {
+                        if (!column instanceof instance.web.list.Handle) {
+                            return false;
+                        }
+                        column.modifiers.tree_invisible = true;
+                        column.invisible = '1';
+                        // remove from visibles
+                        controller.visible_columns.splice(
+                            controller.visible_columns.indexOf(column),
+                            1);
+                        return true;
+                    });
+                    if (has_handle) {
+                        // recompute aggregates
+                        controller.aggregate_columns =
+                            _(controller.visible_columns).invoke('to_aggregate');
+                    }
                 }
             } else if (view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -3587,6 +3604,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _template: 'One2Many.listview',
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, _.extend(options || {}, {
+            GroupsType: instance.web.form.One2ManyGroups,
             ListType: instance.web.form.One2ManyList
         }));
         this.on('edit:before', this, this.proxy('_before_edit'));
@@ -3765,6 +3783,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 window.confirm = confirm;
             }
         });
+    }
+});
+instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
+    setup_resequence_rows: function () {
+        if (!this.view.o2m.get('effective_readonly')) {
+            this._super.apply(this, arguments);
+        }
     }
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
@@ -4535,7 +4560,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_list", self.$el));
+        this.searchview.appendTo($(".oe_popup_search", self.$el));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
