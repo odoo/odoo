@@ -89,6 +89,30 @@ openerp.mail = function(session) {
             return text
                 .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
+        },
+
+        /**
+         * return the complete domain with "&"
+         */
+        expend_domain: function (domain) {
+            var new_domain = [];
+            var nb_and = -1;
+            
+            for ( var k = domain.length-1; k >= 0 ; k-- ) {
+                if ( typeof domain[k] != 'array' ) {
+                    nb_and -= 2;
+                    continue;
+                }
+                nb_and += 1;
+            }
+
+            for (var k = 0; k < nb_and ; k++){
+                domain.unshift('&');
+            }
+
+            console.log( JSON.stringify(domain) );
+
+            return domain;
         }
     };
 
@@ -134,6 +158,7 @@ openerp.mail = function(session) {
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
             this.ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
+            this.show_delete_attachment = true;
 
             this.fileupload_id = _.uniqueId('oe_fileupload_temp');
             $(window).on(self.fileupload_id, self.on_attachment_loaded);
@@ -365,6 +390,7 @@ openerp.mail = function(session) {
                     ]).then(function(records){
                         self.parent_thread.switch_new_message(records);
                         self.on_cancel();
+                        self.do_show_compact();
                         //session.web.unblockUI();
                     });
                 return true;
@@ -454,9 +480,9 @@ openerp.mail = function(session) {
             this.nb_messages = datasets.nb_messages || 0,
             this.thread_level = datasets.thread_level || 0,
             this.type = 'expandable',
-            this.max_limit = datasets.max_limit || false,
+            this.max_limit = this.id < 0 || false,
             this.flag_used = false,
-            this.parent_thread= parent.messages!= undefined ? parent : options.options._parents[0] ;
+            this.parent_thread= parent.messages!= undefined ? parent : options.options._parents[0];
         },
 
         
@@ -465,12 +491,18 @@ openerp.mail = function(session) {
             this.bind_events();
         },
 
+        reinit: function () {
+            var $render = $(session.web.qweb.render('mail.thread.expandable', {'widget': this}));
+            this.$el.replaceWith( $render );
+            this.$el = $render;
+            this.bind_events();
+        },
+
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
         bind_events: function() {
-            var self = this;
-            this.$el.on('click', 'a.oe_msg_fetch_more', self.on_expandable);
+            this.$el.on('click', 'a.oe_msg_fetch_more', this.on_expandable);
         },
 
         animated_destroy: function(options) {
@@ -692,11 +724,11 @@ openerp.mail = function(session) {
             //graphic effects  
             if(options && options.fadeTime) {
                 self.$el.fadeOut(options.fadeTime, function(){
-                    self.destroy();
+                    self.parent_thread.message_to_expandable(self);
                 });
                 self.thread.$el.fadeOut(options.fadeTime);
             } else {
-                self.destroy();
+                self.parent_thread.message_to_expandable(self);
             }
         },
 
@@ -719,20 +751,19 @@ openerp.mail = function(session) {
         * @param {object} mouse envent
         */
         on_message_read_unread: function (event) {
-            // TDE note: code here seems complicated... just check that current message is read (value coming from server)
-            // and send its opposite to set_message_read
             event.stopPropagation();
-            // if this message is read, all childs message display is read
-            var ids = [this.id].concat( this.get_child_ids() );
-            var read = $(event.srcElement).hasClass("oe_read");
-            this.$el.removeClass(read ? 'oe_msg_unread':'oe_msg_read').addClass(read ? 'oe_msg_read':'oe_msg_unread');
+            var self=this;
 
-            if( (read && this.options.typeof_thread == 'inbox') ||
-                (!read && this.options.typeof_thread == 'archives')) {
+            if( (this.to_read && this.options.typeof_thread == 'inbox') ||
+                (!this.to_read && this.options.typeof_thread == 'archives')) {
                 this.animated_destroy({fadeTime:250});
             }
-            // TDE note: should have a context here
-            this.ds_notification.call('set_message_read', [ids, read]);
+
+            // if this message is read, all childs message display is read
+            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function(){
+                self.$el.removeClass(this.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
+                self.to_read = !self.to_read;
+            });
             return false;
         },
 
@@ -787,8 +818,7 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
             return this.ds_message.call('vote_toggle', [[self.id]]).pipe(function(vote){
-                // TDE note: to update, because vote_user_ids is about to disappear to be replaced by vote_nb (number of votes)
-                self.has_voted=vote;
+                self.has_voted = vote;
                 self.vote_nb += self.has_voted ? 1 : -1;
                 self.display_vote();
             });
@@ -929,7 +959,7 @@ openerp.mail = function(session) {
             this.$('.oe_msg_expandable:last');
 
             var message = this.messages[this.messages.length-1];
-            if(message && message.type=="expandable" && message.max_limit){
+            if(message && message.type=="expandable" && message.max_limit) {
                 var pos = message.$el.position();
                 if(pos.top){
                     /* bottom of the screen */
@@ -1016,11 +1046,12 @@ openerp.mail = function(session) {
                 return this;
             }
 
-            if(options.id)
-            for(var i in this.messages){
-                if(this.messages[i].thread){
-                    var res=this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
-                    if(res) return res;
+            if(options.id){
+                for(var i in this.messages){
+                    if(this.messages[i].thread){
+                        var res=this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
+                        if(res) return res;
+                    }
                 }
             }
 
@@ -1167,13 +1198,11 @@ openerp.mail = function(session) {
             if(message.id > 0){
                 for(var i in thread_messages){
                     if(thread_messages[i].id > message.id){
-                        if(!parent_newer || 
-                            parent_newer.id > thread_messages[i].id) {
+                        if(!parent_newer || parent_newer.id > thread_messages[i].id) {
                             parent_newer = thread_messages[i];
                         }
                     } else if(thread_messages[i].id > 0 && thread_messages[i].id < message.id) {
-                        if(!parent_older || 
-                            parent_older.id < thread_messages[i].id) {
+                        if(!parent_older || parent_older.id < thread_messages[i].id) {
                             parent_older = thread_messages[i];
                         }
                     }
@@ -1182,23 +1211,43 @@ openerp.mail = function(session) {
 
             var sort = (!!self.thread_level || message.id<0);
 
-            if(parent_older){
-                if(sort){
+
+            if (sort) {
+                if (parent_older) {
+
+                    //warning : insert after the thread of the message !
                     message.insertAfter(parent_older.thread ? parent_older.thread.$el : parent_older.$el);
-                } else {
-                    message.insertBefore(parent_older.$el);
-                }
-            } else if(parent_newer){
-                if(sort || parent_newer.id<0){
+
+                } else if(parent_newer) {
+
                     message.insertBefore(parent_newer.$el);
+
+                } else if(message.id < 0) {
+
+                    message.appendTo(thread.$el);
+
                 } else {
-                    message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
+
+                    message.prependTo(thread.$el);
                 }
             } else {
-                if(sort && message.id>0) {
+                if (parent_older) {
+
+                    message.insertBefore(parent_older.$el);
+
+                } else if(parent_newer) {
+
+                    //warning : insert after the thread of the message !
+                    message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
+
+                } else if(message.id < 0) {
+
                     message.prependTo(thread.$el);
+
                 } else {
+
                     message.appendTo(thread.$el);
+
                 }
             }
 
@@ -1218,6 +1267,88 @@ openerp.mail = function(session) {
                     'default_return_top_thread':true
                 }).create_message_object( record );
             });
+        },
+
+        /**
+         * Convert a destroyed message into a expandable message
+         */
+        message_to_expandable: function (message) {
+
+            if(!this.thread_level || message.isDestroyed()) {
+                message.destroy();
+                return false;
+            }
+
+            var messages = _.sortBy( _.filter(this.messages, function (val) { return !val.isDestroyed(); }), function (val) { return val.id; });
+            var it = _.indexOf( messages, message );
+
+            var msg_up = messages[it-1];
+            var msg_down = messages[it+1];
+
+            var message_dom = [ '&', ["id","in",[message.id]], ['parent_id', '=', message.parent_id] ];
+
+            if ( msg_up && msg_up.type == "expandable" && msg_down && msg_down.type == "expandable") {
+                // concat two expandable message and add this message to this dom
+                msg_up.domain = mail.ChatterUtils.expend_domain( msg_up.domain );
+                msg_down.domain = mail.ChatterUtils.expend_domain( msg_down.domain );
+
+                msg_down.domain = ['|','|'].concat( msg_up.domain ).concat( message_dom ).concat( msg_down.domain );
+
+                if( !msg_down.max_limit ){
+                    msg_down.nb_messages += 1 + msg_up.nb_messages;
+                }
+
+                msg_up.$el.remove();
+                msg_up.destroy();
+
+                msg_down.reinit();
+
+            } else if ( msg_up && msg_up.type == "expandable") {
+                // concat preview expandable message and this message to this dom
+                msg_up.domain = mail.ChatterUtils.expend_domain( msg_up.domain );
+                msg_up.domain = ['|'].concat( msg_up.domain ).concat( message_dom );
+                
+                msg_up.nb_messages++;
+
+                msg_up.reinit();
+
+            } else if ( msg_down && msg_down.type == "expandable") {
+                // concat next expandable message and this message to this dom
+                msg_down.domain = mail.ChatterUtils.expend_domain( msg_down.domain );
+                msg_down.domain = ['|'].concat( msg_down.domain ).concat( message_dom );
+                
+                // it's maybe a message expandable for the max limit read message
+                if( !msg_down.max_limit ){
+                    msg_down.nb_messages++;
+                }
+                
+                msg_down.reinit();
+
+            } else {
+                // create a expandable message
+                var expandable = new mail.ThreadExpandable(this, {
+                    'id': message.id,
+                    'model': message.model,
+                    'parent_id': message.parent_id,
+                    'nb_messages': 1,
+                    'thread_level': message.thread_level,
+                    }, {
+                    'domain': message_dom,
+                    'context': {
+                        'default_model': message.model || this.context.default_model,
+                        'default_res_id': message.res_id || this.context.default_res_id,
+                        'default_parent_id': this.id },
+                });
+
+                // add object on array and DOM
+                this.messages.push(expandable);
+                expandable.insertAfter(message.$el);
+            }
+
+            // destroy message
+            message.destroy();
+
+            return true;
         },
     });
 

@@ -230,8 +230,6 @@ class mail_message(osv.Model):
             # TDE note: is this useful ? to check
             'partner_ids': partner_ids,
             'parent_id': message['parent_id'] and message['parent_id'][0] or False,
-            # TDE note: see with CHM about votes, how they are displayed (only number, or name_get ?)
-            # vote: should only use number of votes
             'vote_nb': len(message['vote_user_ids']),
             'has_voted': has_voted,
             'is_private': message['model'] and message['res_id'],
@@ -310,7 +308,6 @@ class mail_message(osv.Model):
                 'type': 'expandable',
                 'parent_id': parent_id,
                 'id': -1,
-                'max_limit': True,
             })
 
         return message_list
