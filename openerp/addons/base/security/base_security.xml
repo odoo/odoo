@@ -87,7 +87,10 @@
 	    <field name="name">Partner bank company rule</field>
 	    <field name="model_id" ref="model_res_partner_bank"/>
 	    <field name="global" eval="True"/>
-	    <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+            <!--
+                Same as res_partner above.
+            -->
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
 	</record>
 
     </data>
