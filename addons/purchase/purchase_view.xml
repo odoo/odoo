@@ -451,7 +451,7 @@
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines">
+                <tree string="Purchase Order Lines" create="false">
                     <field name="order_id"/>
                     <field name="name"/>
                     <field name="partner_id" string="Supplier" />
@@ -471,7 +471,7 @@
             <field name="model">purchase.order.line</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0">
+                <form string="Purchase Order Line" version="7.0" create="false">
                     <sheet>
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>
