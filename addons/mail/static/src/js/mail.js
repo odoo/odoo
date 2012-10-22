@@ -144,12 +144,6 @@ openerp.mail = function(session) {
         start: function(){
             this.$render_compact = this.$el;
 
-            if(this.options.show_compact_message) {
-                this.$render_compact.show();
-            } else {
-                this.$render_compact.hide();
-            }
-
             this.bind_events();
         },
 
@@ -687,6 +681,7 @@ openerp.mail = function(session) {
                 self.$el.fadeOut(options.fadeTime, function(){
                     self.destroy();
                 });
+                self.thread.$el.fadeOut(options.fadeTime);
             } else {
                 self.destroy();
             }
@@ -700,7 +695,6 @@ openerp.mail = function(session) {
             // delete this message and his childs
             var ids = [this.datasets.id].concat( this.get_child_ids() );
             this.ds_message.unlink(ids);
-            this.animated_destroy();
             return false;
         },
 
@@ -864,7 +858,7 @@ openerp.mail = function(session) {
                 'partner_ids' : _.filter(datasets.partner_ids, function(partner){ return partner[0]!=datasets.author_id[0]; } ) 
             };
 
-            this.datasets.show_compose_message = this.options.show_compose_message && this.options.show_reply_button>this.datasets.thread_level;
+            this.datasets.show_compose_message = this.options.show_compose_message && this.options.show_reply_button > this.datasets.thread_level;
 
             this.messages = [];
             this.ComposeMessage = false;
@@ -1088,7 +1082,8 @@ openerp.mail = function(session) {
         insert_message: function (message) {
             var self=this;
 
-            if(this.datasets.show_compose_message && this.options.display_indented_thread > self.datasets.thread_level && this.options.show_compact_message){
+            if(this.datasets.show_compose_message && 
+                this.options.display_indented_thread > self.datasets.thread_level){
                 this.ComposeMessage.do_show_compact();
             }
 
@@ -1103,7 +1098,7 @@ openerp.mail = function(session) {
                 _(thread.get_childs()).each(function (val, key) { thread_messages.push(val.parent_message); });
             }
 
-            // check older and newer message for insert
+            // check older and newer message for insertion
             var parent_newer = false;
             var parent_older = false;
             if(message.datasets.id > 0){
@@ -1122,7 +1117,7 @@ openerp.mail = function(session) {
                 }
             }
 
-            var sort = (!!message.datasets.thread_level || message.datasets.id<0);
+            var sort = (!!self.datasets.thread_level || message.datasets.id<0);
 
             if(parent_older){
                 if(sort){
@@ -1417,7 +1412,8 @@ openerp.mail = function(session) {
                 'display_indented_thread': 2,
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
-                'show_compose_message': true
+                'show_compose_message': true,
+                'show_compact_message': true
                 }
             );
 
