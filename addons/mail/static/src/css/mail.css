@@ -51,10 +51,6 @@
     display: block;
     margin-left: 40px;
 }
-.openerp .oe_mail .oe_msg .oe_msg_right{
-    float: right;
-    height: 24px;
-}
 .openerp .oe_mail .oe_msg .oe_msg_footer{
     height: 16px;
     padding-left: 4px;
@@ -73,21 +69,46 @@
     padding: 4px;
     padding-bottom:1px;
 }
-.openerp .oe_mail .oe_msg .oe_msg_right .oe_msg_icons span{
+.openerp .oe_mail .oe_msg .oe_msg_icons{
+    float: right;
+    margin-top: 4px;
+    margin-right: 8px;
+    height: 24px;
+    -webkit-user-select: none;
+}
+.openerp .oe_mail .oe_msg .oe_msg_icons span{
     float:right;
     width:24px;
     height:24px;
     line-height:24px;
     text-align: center;
-    opacity: 0.2;
-    -webkit-transition: opacity 0.2s linear;
 }
-.openerp .oe_mail .oe_msg:hover .oe_msg_right .oe_msg_icons span{
-    opacity: 1;
-    -webkit-transition: opacity 0.1s linear;
-}
-.openerp .oe_mail .oe_msg .oe_msg_right .oe_msg_icons a{
+.openerp .oe_mail .oe_msg .oe_msg_icons a {
     text-decoration: none;
+    /*opacity: 0.2;*/
+    color: #FFF;
+    text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.2);
+    -webkit-transition: all 0.2s linear;
+}
+.openerp .oe_mail .oe_msg:hover .oe_msg_icons a{
+    opacity: 1;
+    -webkit-transition: all 0.1s linear;
+}
+.openerp .oe_mail .oe_msg:hover .oe_msg_icons .oe_star a{
+    color: #FFE41F;
+    text-shadow: 0px 1px #DF6200,0px -1px #DF6200, -1px 0px #DF6200, 1px 0px #DF6200, 0px 3px 3px rgba(0,0,0,0.2);
+}
+.openerp .oe_mail .oe_msg:hover .oe_msg_icons .oe_reply a{
+    color: #1fc0ff;
+    text-shadow: 0px 1px #184fc5,0px -1px #184fc5, -1px 0px #184fc5, 1px 0px #184fc5, 0px 3px 3px rgba(0,0,0,0.2);
+}
+.openerp .oe_mail .oe_msg:hover .oe_msg_icons .oe_read a{
+    color: #c2ff00;
+    text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.2);
+}
+.openerp .oe_mail .oe_msg:hover .oe_msg_icons .oe_unread a{
+    color: #c2ff00;
+    text-shadow: 0px 1px #009441,0px -1px #009441, -1px 0px #009441, 1px 0px #009441, 0px 3px 3px rgba(0,0,0,0.2);
 }
 .openerp .oe_mail .oe_msg .oe_msg_content textarea{
     width: 100%;
