@@ -211,17 +211,17 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="amount_untaxed"/>
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
                                     <button name="button_reset_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
-                                <field name="amount_tax" nolabel="1"/>
-                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
 
-                                <field name="residual"/>
+                                <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="reconciled" invisible="1"/>
                             </group>
                             <div style="width: 50%%">
@@ -322,7 +322,7 @@
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}"
-                                options='{"always_reload": true}'/>
+                                options='{"always_reload": True}'/>
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
@@ -368,16 +368,16 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="amount_untaxed"/>
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
                                     <button name="button_reset_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
-                                <field name="amount_tax" nolabel="1"/>
-                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                <field name="residual" groups="account.group_account_user"/>
+                                <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="reconciled" invisible="1"/>
                             </group>
                             <group>
