@@ -561,10 +561,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a procurement to bring the Forecasted Quantity to the Max Quantity."),
         'product_max_qty': fields.float('Maximum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity, OpenERP generates "\
-            "a procurement to bring the virtual stock to the Quantity specified as Max Quantity."),
+            "a procurement to bring the Forecasted Quantity to the Quantity specified as Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),
