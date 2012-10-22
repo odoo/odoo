@@ -189,10 +189,10 @@
             <!-- message actions (read/unread, reply, delete...) -->
             <div class='oe_msg_right'>
                 <div class="oe_msg_icons">
-                    <t t-call="mail.thread.message.star"/>
-                    <span class='oe_read' t-if="widget.datasets.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
-                    <span class='oe_unread' t-if="widget.datasets.show_read_unread_button"><a title="Set back to unread" class="oe_e">h</a></span>
+                    <span class='oe_unread' t-if="widget.datasets.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
+                    <span class='oe_read' t-if="widget.datasets.show_read_unread_button"><a title="Set back to unread" class="oe_e">h</a></span>
                     <span class='oe_reply' t-if="widget.datasets.show_reply_button"><a title="Reply" class="oe_e">)</a></span>
+                    <t t-call="mail.thread.message.star"/>
                 </div>
             </div>
 
