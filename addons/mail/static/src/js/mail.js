@@ -626,18 +626,18 @@ openerp.mail = function(session) {
                 self.$('.oe_msg_attachments:first').toggle();
             });
             // event: click on icone 'Read' in header
-            this.$el.on('click', 'a.oe_read', this.on_message_read_unread);
+            this.$el.on('click', '.oe_read', this.on_message_read_unread);
             // event: click on icone 'UnRead' in header
-            this.$el.on('click', 'a.oe_unread', this.on_message_read_unread);
+            this.$el.on('click', '.oe_unread', this.on_message_read_unread);
             // event: click on 'Delete' in msg side menu
-            this.$el.on('click', 'a.oe_msg_delete', this.on_message_delete);
+            this.$el.on('click', '.oe_msg_delete', this.on_message_delete);
 
             // event: click on 'Reply' in msg
-            this.$el.on('click', 'a.oe_reply', this.on_message_reply);
+            this.$el.on('click', '.oe_reply', this.on_message_reply);
             // event: click on 'Vote' button
-            this.$el.on('click', 'button.oe_msg_vote', this.on_vote);
+            this.$el.on('click', '.oe_msg_vote', this.on_vote);
             // event: click on 'starred/favorite' button
-            this.$el.on('click', 'a.oe_mail_starbox', this.on_star);
+            this.$el.on('click', '.oe_mail_starbox', this.on_star);
         },
 
         /**
@@ -1201,11 +1201,6 @@ openerp.mail = function(session) {
                     message.appendTo(thread.$el);
                 }
             }
-
-            self.$('.oe_msg_first:first').removeClass("oe_msg_first");
-            self.$('.oe_msg_last:last').removeClass("oe_msg_last");
-            self.$('.oe_msg_comment:first, .oe_msg_comment:first-child').addClass("oe_msg_first");
-            self.$('.oe_msg_comment:last, .oe_msg_comment:last-child').addClass("oe_msg_last");
 
             return message
         },
