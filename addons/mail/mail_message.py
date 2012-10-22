@@ -263,6 +263,7 @@ class mail_message(osv.Model):
                 ('parent_id', '=', message['id']),
                 ('id', 'not in', message_loaded_ids),
                 ], context=context, limit=self._message_read_more_limit)
+            # TDE note: avoid using dummy None values, maybe id_min 0, id_max max(list)
             # group childs not read
             id_min = None
             id_max = None
@@ -331,7 +332,7 @@ class mail_message(osv.Model):
         except (orm.except_orm, osv.except_osv):
             return False
 
-    def message_read(self, cr, uid, ids=False, domain=[], message_unload_ids=[], context=None, parent_id=False, limit=None):
+    def message_read(self, cr, uid, ids=False, domain=None, message_unload_ids=None, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured
             messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
@@ -353,6 +354,8 @@ class mail_message(osv.Model):
                 ancestors and expandables
             :return list: list of message structure for the Chatter widget
         """
+        domain = domain if domain is not None else []
+        message_unload_ids = message_unload_ids if message_unload_ids is not None else []
         if message_unload_ids:
             domain += [('id', 'not in', message_unload_ids)]
         limit = limit or self._message_read_limit
