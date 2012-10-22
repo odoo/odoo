@@ -106,8 +106,10 @@ openerp.account = function (instance) {
                     result.context = _.extend(result.context || {}, additional_context);
                     result.flags = result.flags || {};
                     result.flags.new_window = true;
-                    return self.do_action(result, function () {
-                        self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                    return self.do_action(result, {
+                        on_close: function () {
+                            self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                        }
                     });
                 });
             });
