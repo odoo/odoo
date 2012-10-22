@@ -415,10 +415,10 @@
                             <field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Add a Description..."/>
                             <field name="work_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
-                                    <field name="date"/>
                                     <field name="name"/>
-                                    <field name="user_id"/>
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
                                 </tree>
                             </field>
                             <group>
