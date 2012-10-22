@@ -47,11 +47,11 @@ class base_module_upgrade(osv.osv_memory):
         ids = self.get_module_list(cr, uid, context=context)
         if not ids:
             res['arch'] = '''<form string="Upgrade Completed" version="7.0">
+                                <separator string="Upgrade Completed" colspan="4"/>
                                 <footer>
                                     <button name="config" string="Start configuration" type="object"/>
                                     <button special="cancel" string="Close"/>
                                 </footer>
-                                <separator string="Upgrade Completed" colspan="4"/>
                              </form>'''
 
         return res
