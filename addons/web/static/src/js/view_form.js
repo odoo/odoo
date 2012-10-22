@@ -209,11 +209,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         //bounce effect on red button when click on statusbar.
         $(".oe_highlight:not(.oe_form_invisible)").wrap("<span style='margin:0;float:left;white-space:nowrap'>");
         $(".oe_form_field_status:not(.oe_form_status_clickable)").on('click',function (e) {
-          //  if((self.get("actual_mode") == "view")) { 
-                var $button = $(".oe_highlight:not(.oe_form_invisible)")/*.css({'float':'left','white-space':'nowrap'})*/;
+                var $button = $(".oe_highlight:not(.oe_form_invisible)");
                 $button.effect('bounce', {distance:18, times: 5}, 150);
                 e.stopPropagation();
-          //  }
          });
         this.trigger('form_view_loaded', data);
         return $.when();
