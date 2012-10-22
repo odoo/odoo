@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -26,6 +26,7 @@ import logging
 from lxml import etree
 from lxml.builder import E
 import netsvc
+from openerp import SUPERUSER_ID
 import openerp
 import openerp.exceptions
 from osv import fields,osv
@@ -52,6 +53,18 @@ class groups(osv.osv):
                 res[g.id] = g.name
         return res
 
+    def _search_group(self, cr, uid, obj, name, args, context=None):
+        operand = args[0][2]
+        operator = args[0][1]
+        values = operand.split('/')
+        group_name = values[0]
+        where = [('name', operator, group_name)]
+        if len(values) > 1:
+            application_name = values[0]
+            group_name = values[1]
+            where = ['|',('category_id.name', operator, application_name)] + where
+        return where
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -61,7 +74,7 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
     }
 
     _sql_constraints = [
@@ -125,7 +138,7 @@ class res_users(osv.osv):
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
-    
+
     _columns = {
         'id': fields.integer('ID'),
         'login_date': fields.date('Latest connection', select=1),
@@ -180,21 +193,6 @@ class res_users(osv.osv):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
 
-    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        def override_password(o):
-            if 'password' in o and ( 'id' not in o or o['id'] != uid ):
-                o['password'] = '********'
-            return o
-        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
-        if not canwrite:
-            if isinstance(ids, (int, float)):
-                result = override_password(result)
-            else:
-                result = map(override_password, result)
-        return result
-
-
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
@@ -205,11 +203,6 @@ class res_users(osv.osv):
     _sql_constraints = [
         ('login_key', 'UNIQUE (login)',  'You can not have two users with the same login !')
     ]
-
-    def _get_default_image(self, cr, uid, context=None):
-        """ Override of res.partner: multicolor avatars ! """
-        image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'avatar%d.png' % random.randint(0, 6))
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _get_company(self,cr, uid, context=None, uid2=False):
         if not uid2:
@@ -238,9 +231,9 @@ class res_users(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         result = []
         try:
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_user')
+            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
             result.append(group_id)
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_partner_manager')
+            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
             result.append(group_id)
         except ValueError:
             # If these groups does not exists anymore
@@ -248,14 +241,14 @@ class res_users(osv.osv):
         return result
 
     _defaults = {
-        'password' : '',
-        'active' : True,
+        'password': '',
+        'active': True,
         'customer': False,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context),
+        'image': lambda self, cr, uid, ctx={}: self.pool.get('res.partner')._get_default_image(cr, uid, False, ctx, colorize=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -268,8 +261,34 @@ class res_users(osv.osv):
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
-    # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
+    # User can write on a few of his own fields (but not his groups for example)
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    # User can read a few of his own fields
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id', '__last_update']
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        def override_password(o):
+            if 'password' in o and ('id' not in o or o['id'] != uid):
+                o['password'] = '********'
+            return o
+
+        if fields and (ids == [uid] or ids == uid):
+            for key in fields:
+                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
+                    break
+            else:
+                # safe fields only, so we read as super-user to bypass access rights
+                uid = SUPERUSER_ID
+
+        result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
+        if not canwrite:
+            if isinstance(ids, (int, long)):
+                result = override_password(result)
+            else:
+                result = map(override_password, result)
+
+        return result
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -280,7 +299,7 @@ class res_users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, 1, uid, ['company_ids'], context=context)['company_ids']):
+                    if not (values['company_id'] in self.read(cr, SUPERUSER_ID, uid, ['company_ids'], context=context)['company_ids']):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
@@ -315,24 +334,22 @@ class res_users(osv.osv):
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
-        return self.name_get(cr, user, ids)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
-        if default is None:
-            default = {}
-        copy_pattern = _("%s (copy)")
-        copydef = dict(login=(copy_pattern % user2copy['login']),
-                       name=(copy_pattern % user2copy['name']),
-                       )
-        copydef.update(default)
-        return super(res_users, self).copy(cr, uid, id, copydef, context)
+        default = dict(default or {})
+        if ('name' not in default) and ('partner_id' not in default):
+            default['name'] = _("%s (copy)") % user2copy['name']
+        if 'login' not in default:
+            default['login'] = _("%s (copy)") % user2copy['login']
+        return super(res_users, self).copy(cr, uid, id, default, context)
 
     def context_get(self, cr, uid, context=None):
-        user = self.browse(cr, uid, uid, context)
+        user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
         for k in self._all_columns.keys():
             if k.startswith('context_'):
@@ -350,7 +367,7 @@ class res_users(osv.osv):
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
+        data_id = dataobj._get_id(cr, SUPERUSER_ID, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
     def check_super(self, passwd):
@@ -361,7 +378,7 @@ class res_users(osv.osv):
 
     def check_credentials(self, cr, uid, password):
         """ Override this method to plug additional authentication methods"""
-        res = self.search(cr, 1, [('id','=',uid),('password','=',password)])
+        res = self.search(cr, SUPERUSER_ID, [('id','=',uid),('password','=',password)])
         if not res:
             raise openerp.exceptions.AccessDenied()
 
@@ -377,7 +394,7 @@ class res_users(osv.osv):
             # of them rolled back due to a concurrent access.)
             cr.autocommit(True)
             # check if user exists
-            res = self.search(cr, 1, [('login','=',login)])
+            res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
             if res:
                 user_id = res[0]
                 # check credentials
@@ -392,8 +409,8 @@ class res_users(osv.osv):
                 # prevent/delay login in that case. It will also have been logged
                 # as a SQL error, if anyone cares.
                 try:
-                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", str(user_id))
-                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", str(user_id))
+                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", (user_id,))
+                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
                 except Exception, e:
                     _logger.exception("Failed to update last_login for db:%s login:%s", db, login)
         except openerp.exceptions.AccessDenied:
@@ -487,14 +504,14 @@ class res_users(osv.osv):
         """
         assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
         module, ext_id = group_ext_id.split('.')
-        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN 
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
 
 #
-# Extension of res.groups and res.users with a relation for "implied" or 
+# Extension of res.groups and res.users with a relation for "implied" or
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs
 # to the implied groups (transitively).
 #
@@ -542,7 +559,7 @@ class groups_implied(osv.osv):
             return memo[g]
 
         res = {}
-        for g in self.browse(cr, 1, ids, context):
+        for g in self.browse(cr, SUPERUSER_ID, ids, context):
             res[g.id] = map(int, computed_set(g))
         return res
 
@@ -687,7 +704,7 @@ class groups_view(osv.osv):
 
     def get_user_groups_view(self, cr, uid, context=None):
         try:
-            view = self.pool.get('ir.model.data').get_object(cr, 1, 'base', 'user_groups_view', context)
+            view = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
             assert view and view._table_name == 'ir.ui.view'
         except Exception:
             view = False
@@ -810,7 +827,7 @@ class users_view(osv.osv):
         for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
-                tips = ['%s: %s' % (g.name, g.comment or '') for g in gs]
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
                 res[name_selection_groups(map(int, gs))] = {
                     'type': 'selection',
                     'string': app and app.name or _('Other'),

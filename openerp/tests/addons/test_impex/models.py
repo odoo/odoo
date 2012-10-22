@@ -17,11 +17,12 @@ models = [
     ('float', fields.float()),
     ('decimal', fields.float(digits=(16, 3))),
     ('string.bounded', fields.char('unknown', size=16)),
+    ('string.required', fields.char('unknown', size=None, required=True)),
     ('string', fields.char('unknown', size=None)),
     ('date', fields.date()),
     ('datetime', fields.datetime()),
     ('text', fields.text()),
-    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
+    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
     ('selection.function', fields.selection(selection_fn)),
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
@@ -67,6 +68,12 @@ class One2ManyChild(orm.Model):
     def name_get(self, cr, uid, ids, context=None):
         return [(record.id, "%s:%s" % (self._name, record.value))
             for record in self.browse(cr, uid, ids, context=context)]
+    def name_search(self, cr, user, name='', args=None, operator='ilike', context=None, limit=100):
+        return (self.name_get(cr, user,
+                self.search(cr, user, [['value', operator, int(name.split(':')[1])]])
+                , context=context)
+            if isinstance(name, basestring) and name.split(':')[0] == self._name
+            else [])
 
 class One2ManyMultiple(orm.Model):
     _name = 'export.one2many.multiple'
@@ -116,3 +123,15 @@ class Many2ManyChild(orm.Model):
                     , context=context)
                 if isinstance(name, basestring) and name.split(':')[0] == self._name
                 else [])
+
+class SelectionWithDefault(orm.Model):
+    _name = 'export.selection.withdefault'
+
+    _columns = {
+        'const': fields.integer(),
+        'value': fields.selection([(1, "Foo"), (2, "Bar")]),
+    }
+    _defaults = {
+        'const': 4,
+        'value': 2,
+    }

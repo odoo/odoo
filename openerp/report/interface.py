@@ -44,8 +44,8 @@ class report_int(netsvc.Service):
     def __init__(self, name):
         assert not self.exists(name), 'The report "%s" already exists!' % name
         super(report_int, self).__init__(name)
-        if name[0:7]<>'report.':
-            raise Exception, 'ConceptionError, bad report name, should start with "report."'
+        if not name.startswith('report.'):
+            raise Exception('ConceptionError, bad report name, should start with "report."')
         self.name = name
         self.id = 0
         self.name2 = '.'.join(name.split('.')[1:])
@@ -181,7 +181,7 @@ class report_rml(report_int):
 
     def create_pdf(self, rml, localcontext = None, logo=None, title=None):
         if not localcontext:
-           localcontext={}
+            localcontext = {}
         localcontext.update({'internal_header':self.internal_header})
         if logo:
             self.bin_datas['logo'] = logo

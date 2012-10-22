@@ -44,7 +44,6 @@ class view_custom(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
-view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
@@ -60,7 +59,7 @@ class view(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('View Name',size=64,  required=True),
+        'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection', selection=[
@@ -78,6 +77,8 @@ class view(osv.osv):
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
+        'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
+            string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
@@ -86,11 +87,17 @@ class view(osv.osv):
     _order = "priority,name"
 
     # Holds the RNG schema
-    _relaxng_validator = None  
+    _relaxng_validator = None
 
     def create(self, cr, uid, values, context=None):
         if 'type' in values:
             _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
+        if not values.get('name'):
+            if values.get('inherit_id'):
+                inferred_type = self.browse(cr, uid, values['inherit_id'], context).type
+            else:
+                inferred_type = etree.fromstring(values['arch'].encode('utf8')).tag
+            values['name'] = "%s %s" % (values['model'], inferred_type)
         return super(osv.osv, self).create(cr, uid, values, context)
 
     def _relaxng(self):
@@ -104,8 +111,7 @@ class view(osv.osv):
             finally:
                 frng.close()
         return self._relaxng_validator
-        
-        
+
     def _check_render_view(self, cr, uid, view, context=None):
         """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
            its inherited views, by rendering it using ``fields_view_get()``.
@@ -167,25 +173,29 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
-            query = """SELECT v.arch, v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
                        ORDER BY priority"""
             query_params = (view_id, model, tuple(self.pool._init_modules))
         else:
             # Modules fully loaded, consider all views
-            query = """SELECT v.arch, v.id FROM ir_ui_view v
+            query = """SELECT v.id FROM ir_ui_view v
                        WHERE v.inherit_id=%s AND v.model=%s  
                        ORDER BY priority"""
             query_params = (view_id, model)
         cr.execute(query, query_params)
-        return cr.fetchall()
+        view_ids = [v[0] for v in cr.fetchall()]
+        # filter views based on user groups
+        return [(view.arch, view.id)
+                for view in self.browse(cr, 1, view_ids, context)
+                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
-        result = super(view, self).write(cr, uid, ids, vals, context)
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -193,7 +203,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        return result
+        return super(view, self).write(cr, uid, ids, vals, context)
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         nodes=[]
@@ -261,7 +271,6 @@ class view(osv.osv):
                 'label' : labels,
                 'blank_nodes': blank_nodes,
                 'node_parent_field': _Model_Field,}
-view()
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
@@ -297,8 +306,6 @@ class view_sc(osv.osv):
     _sql_constraints = [
         ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
-
-view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

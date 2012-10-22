@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.report.render.rml2pdf import utils
-from lxml import etree
 import copy
 
 class odt2odt(object):
