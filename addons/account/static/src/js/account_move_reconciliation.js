@@ -5,7 +5,7 @@ openerp.account = function (instance) {
     
     instance.web.account = {};
     
-    instance.web.views.add('account_reconciliation_list', 'instance.web.account.ReconciliationListView');
+    instance.web.views.add('tree_account_reconciliation', 'instance.web.account.ReconciliationListView');
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
         init: function() {
             this._super.apply(this, arguments);
@@ -101,13 +101,15 @@ openerp.account = function (instance) {
                 return self.rpc("/web/action/load", {
                     action_id: result[1],
                     context: additional_context
-                }, function (result) {
+                }).then(function (result) {
                     result = result.result;
                     result.context = _.extend(result.context || {}, additional_context);
                     result.flags = result.flags || {};
                     result.flags.new_window = true;
-                    return self.do_action(result, function () {
-                        self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                    return self.do_action(result, {
+                        on_close: function () {
+                            self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                        }
                     });
                 });
             });
