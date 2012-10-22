@@ -120,7 +120,7 @@ $sheet-max-width: 860px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
-    font-weight: normal 
+    font-weight: normal
     &:before
         font: 21px "mnmliconsRegular"
         content: $icon-name
@@ -130,7 +130,7 @@ $sheet-max-width: 860px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
-    font-weight: normal 
+    font-weight: normal
     &:before
         font: $size "entypoRegular"
         content: $icon-name
@@ -611,7 +611,7 @@ $sheet-max-width: 860px
         vertical-align: top
         margin-top: 8px
         //margin-left set at 3px to avoid a strange overflow
-        margin-left: 3px 
+        margin-left: 3px
         border-left: 4px solid transparent
         border-right: 4px solid transparent
         border-top: 4px solid#404040
@@ -804,7 +804,7 @@ $sheet-max-width: 860px
             display: none
     // }}}
     // Top Menu {{{
-    
+
     .oe_topbar
         width: 100%
         height: 32px
@@ -977,7 +977,7 @@ $sheet-max-width: 860px
         .oe_menu_counter
             float: right
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            margin: 1px 
+            margin: 1px
             padding: 1px 4px
             border: none
             &:hover
@@ -1069,7 +1069,7 @@ $sheet-max-width: 860px
     // ViewManager common {{{
     .oe_view_manager
         .oe_view_manager_body
-            height: inherit 
+            height: inherit
         .oe_view_manager_view_kanban
             height: inherit
 
@@ -1579,7 +1579,7 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
-    // Sheet and padding 
+    // Sheet and padding
     .oe_form_nosheet
         margin: 16px
         > header
@@ -1625,7 +1625,7 @@ $sheet-max-width: 860px
                 margin-left: 6px
     // }}}
     // FormView.custom tags and classes {{{
-    .oe_form 
+    .oe_form
         header
             .oe_tags
                 margin: 5px 0 0 5px
@@ -1788,7 +1788,7 @@ $sheet-max-width: 860px
             display: none
         .oe_datepicker_root
             display: inline-block
-        .oe_form_required 
+        .oe_form_required
             input:not([disabled]):not([readonly]), select:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])
                 background-color: #D2D2FF !important
         .oe_form_invalid
@@ -1824,10 +1824,10 @@ $sheet-max-width: 860px
             position: relative
             width: 600px
             margin-left: 130px
-            margin-top: 32px 
+            margin-top: 32px
             margin-bottom: 32px
             text-align: justify
-            
+
     .oe_form_editable
         .oe_form
             .oe_form_field_integer input
@@ -1905,7 +1905,7 @@ $sheet-max-width: 860px
         display: inline-block
         margin: 0
         padding: 0 18px 0 0
-        li 
+        li
             display: inline-block
             list-style-type: none
             // It is probably a bad idea to modify this margin
@@ -1935,7 +1935,7 @@ $sheet-max-width: 860px
                 vertical-align: top
                 overflow: hidden
                 margin-left: -5px
-                span 
+                span
                     position: relative
                     width: 24px
                     height: 24px
@@ -1948,7 +1948,7 @@ $sheet-max-width: 860px
                     @include transform(rotate(45deg))
         li.oe_active
             @include vertical-gradient(#729fcf, #3465a4)
-            .arrow span 
+            .arrow span
                 @include skew-gradient(#729fcf, #3465a4)
             .label
                 color: white
@@ -1956,20 +1956,20 @@ $sheet-max-width: 860px
     ul.oe_form_status_clickable
         li
             cursor: pointer
-            &:hover 
+            &:hover
                 @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
                 .label
                     text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
-                .arrow span 
+                .arrow span
                     @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
             .label
                 color: $link-color
         li.oe_active
-            &:hover 
+            &:hover
                 @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
                 .label
                     text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
-                .arrow span 
+                .arrow span
                     @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
     // }}}
     // FormView.one2many {{{
@@ -2186,7 +2186,6 @@ $sheet-max-width: 860px
     .oe_list_cannot_delete
         .oe_list_record_delete
             display: none !important
-
     // }}}
     // Tree view {{{
     .tree_header
@@ -2237,7 +2236,6 @@ $sheet-max-width: 860px
             background-image: url(/web/static/src/img/collapse.gif)
         .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
             margin-left: 16px
-
     // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
@@ -2280,7 +2278,6 @@ $sheet-max-width: 860px
     background-attachment: fixed
     >*
         opacity: 0.70
-
 // }}}
 
 // The jQuery-ui overlay and Autocomplete are outside the .openerp div, please don't add indentation !!!
@@ -2302,7 +2299,7 @@ div.ui-widget-overlay
         width: 100%
         padding: 0
         a
-            padding: 1px 16px 
+            padding: 1px 16px
         a.ui-corner-all
             @include radius(0)
         a.ui-state-active
