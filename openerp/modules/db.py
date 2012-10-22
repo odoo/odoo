@@ -74,12 +74,12 @@ def initialize(cr):
 
         cr.execute('INSERT INTO ir_module_module \
                 (author, website, name, shortdesc, description, \
-                    category_id, auto_install, state, certificate, web, license, application, icon, sequence, summary) \
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
+                    category_id, auto_install, state, web, license, application, icon, sequence, summary) \
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s) RETURNING id', (
             info['author'],
             info['website'], i, info['name'],
             info['description'], category_id,
-            info['auto_install'], state, info['certificate'],
+            info['auto_install'], state,
             info['web'],
             info['license'],
             info['application'], info['icon'],

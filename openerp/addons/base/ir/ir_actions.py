@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-import ast
-import copy
 import logging
 import os
 import re
 import time
 import tools
-from xml import dom
 
 import netsvc
 from osv import fields,osv
@@ -44,9 +41,12 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64),
+        'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
+            translate=True),
     }
     _defaults = {
         'usage': lambda *a: False,
@@ -107,6 +107,7 @@ class report_xml(osv.osv):
                         r['report_xsl'] and opj('addons',r['report_xsl']))
 
     _name = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
@@ -155,6 +156,7 @@ report_xml()
 class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
@@ -245,9 +247,6 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'help': fields.text('Action description',
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-            translate=True),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
@@ -329,8 +328,9 @@ class act_wizard(osv.osv):
 act_wizard()
 
 class act_url(osv.osv):
-    _name = 'ir.actions.url'
+    _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
@@ -432,6 +432,7 @@ class actions_server(osv.osv):
 
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
     _columns = {
@@ -573,7 +574,7 @@ class actions_server(osv.osv):
     #   ids : original ids
     #   id  : current id of the object
     # OUT:
-    #   False : Finnished correctly
+    #   False : Finished correctly
     #   ACTION_ID : Action to launch
 
     # FIXME: refactor all the eval() calls in run()!
@@ -770,7 +771,7 @@ class ir_actions_todo(osv.osv):
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
 Automatic: Runs whenever the system is reconfigured.
-Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
+Launch Manually Once: after having been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
     }
@@ -861,11 +862,10 @@ class act_client(osv.osv):
     _order = 'name'
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
-        return dict([
-            ((record.id, ast.literal_eval(record.params_store))
-             if record.params_store else (record.id, False))
-            for record in self.browse(cr, uid, ids, context=context)
-        ])
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
+        return result
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         if isinstance(field_value, dict):
@@ -874,10 +874,15 @@ class act_client(osv.osv):
             self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
+        'name': fields.char('Action Name', required=True, size=64, translate=True),
         'tag': fields.char('Client action tag', size=64, required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
+        'res_model': fields.char('Destination Model', size=64, 
+            help="Optional model, mostly used for needactions."),
+        'context': fields.char('Context Value', size=250, required=True,
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 
                                   string="Supplementary arguments",
@@ -887,6 +892,7 @@ class act_client(osv.osv):
     }
     _defaults = {
         'type': 'ir.actions.client',
+        'context': '{}',
 
     }
 act_client()

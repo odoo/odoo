@@ -515,7 +515,8 @@ class one2many(_column):
         for id in ids:
             res[id] = []
 
-        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+        domain = self._domain(obj) if callable(self._domain) else self._domain
+        ids2 = obj.pool.get(self._obj).search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
@@ -557,7 +558,8 @@ class one2many(_column):
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
-                extra_domain = self._domain if isinstance(getattr(self, '_domain', None), list) else [] 
+                domain = self._domain(obj) if callable(self._domain) else self._domain
+                extra_domain = domain or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
@@ -575,7 +577,8 @@ class one2many(_column):
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
+        domain = self._domain(obj) if callable(self._domain) else self._domain
+        return obj.pool.get(self._obj).name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
     
     @classmethod
@@ -1540,9 +1543,7 @@ def field_to_dict(model, cr, user, field, context=None):
     """
 
     res = {'type': field._type}
-    # This additional attributes for M2M and function field is added
-    # because we need to display tooltip with this additional information
-    # when client is started in debug mode.
+    # some attributes for m2m/function field are added as debug info only
     if isinstance(field, function):
         res['function'] = field._fnct and field._fnct.func_name or False
         res['store'] = field.store
@@ -1551,23 +1552,15 @@ def field_to_dict(model, cr, user, field, context=None):
         res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
         res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
-        res['func_obj'] = field._obj or False
     if isinstance(field, many2many):
         (table, col1, col2) = field._sql_names(model)
-        res['related_columns'] = [col1, col2]
-        res['third_table'] = table
-    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-            'change_default', 'translate', 'help', 'select', 'selectable', 'groups'):
-        if getattr(field, arg):
-            res[arg] = getattr(field, arg)
-    for arg in ('digits', 'invisible', 'filters'):
+        res['m2m_join_columns'] = [col1, col2]
+        res['m2m_join_table'] = table
+    for arg in ('string', 'readonly', 'states', 'size', 'group_operator', 'required',
+            'change_default', 'translate', 'help', 'select', 'selectable', 'groups',
+            'deprecated', 'digits', 'invisible', 'filters'):
         if getattr(field, arg, None):
             res[arg] = getattr(field, arg)
-
-    if field.string:
-        res['string'] = field.string
-    if field.help:
-        res['help'] = field.help
 
     if hasattr(field, 'selection'):
         if isinstance(field.selection, (tuple, list)):
@@ -1577,7 +1570,7 @@ def field_to_dict(model, cr, user, field, context=None):
             res['selection'] = field.selection(model, cr, user, context)
     if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
-        res['domain'] = field._domain
+        res['domain'] = field._domain(model) if callable(field._domain) else field._domain
         res['context'] = field._context
 
     if isinstance(field, one2many):
@@ -1587,19 +1580,32 @@ def field_to_dict(model, cr, user, field, context=None):
 
 
 class column_info(object):
-    """Struct containing details about an osv column, either one local to
-       its model, or one inherited via _inherits.
+    """ Struct containing details about an osv column, either one local to
+        its model, or one inherited via _inherits.
 
-       :attr name: name of the column
-       :attr column: column instance, subclass of osv.fields._column
-       :attr parent_model: if the column is inherited, name of the model
-                           that contains it, None for local columns.
-       :attr parent_column: the name of the column containing the m2o
-                            relationship to the parent model that contains
-                            this column, None for local columns.
-       :attr original_parent: if the column is inherited, name of the original
-                            parent model that contains it i.e in case of multilevel
-                            inheritence, None for local columns.
+        .. attribute:: name
+
+            name of the column
+
+        .. attribute:: column
+
+            column instance, subclass of :class:`_column`
+
+        .. attribute:: parent_model
+
+            if the column is inherited, name of the model that contains it,
+            ``None`` for local columns.
+
+        .. attribute:: parent_column
+
+            the name of the column containing the m2o relationship to the
+            parent model that contains this column, ``None`` for local columns.
+
+        .. attribute:: original_parent
+
+            if the column is inherited, name of the original parent model that
+            contains it i.e in case of multilevel inheritance, ``None`` for
+            local columns.
     """
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
@@ -1607,6 +1613,11 @@ class column_info(object):
         self.parent_model = parent_model
         self.parent_column = parent_column
         self.original_parent = original_parent
+
+    def __str__(self):
+        return '%s(%s, %s, %s, %s, %s)' % (
+            self.__name__, self.name, self.column,
+            self.parent_model, self.parent_column, self.original_parent)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -210,7 +210,7 @@ class ir_sequence(openerp.osv.osv.osv):
 
     def next_by_id(self, cr, uid, sequence_id, context=None):
         """ Draw an interpolated string using the specified sequence."""
-        self.check_read(cr, uid)
+        self.check_access_rights(cr, uid, 'read')
         company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
         ids = self.search(cr, uid, ['&',('id','=', sequence_id),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)
@@ -227,7 +227,7 @@ class ir_sequence(openerp.osv.osv.osv):
                 sequence selection. A matching sequence for that
                 specific company will get higher priority. 
         """
-        self.check_read(cr, uid)
+        self.check_access_rights(cr, uid, 'read')
         company_ids = self.pool.get('res.company').search(cr, uid, [], order='company_id', context=context) + [False]
         ids = self.search(cr, uid, ['&',('code','=', sequence_code),('company_id','in',company_ids)])
         return self._next(cr, uid, ids, context)

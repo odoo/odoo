@@ -186,7 +186,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
-        assert all(str(x) == f() for x in xrange(1,1000))
+        assert all(str(x) == f() for x in xrange(1,10))
         cr.commit()
         cr.close()
 
@@ -204,7 +204,7 @@ class test_ir_sequence_generate(unittest2.TestCase):
 
         cr = cursor()
         f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
-        assert all(str(x) == f() for x in xrange(1,1000))
+        assert all(str(x) == f() for x in xrange(1,10))
         cr.commit()
         cr.close()
 
