@@ -113,20 +113,24 @@ instance.web.DiagramView = instance.web.View.extend({
 
     on_diagram_loaded: function(record) {
         var id_record = record['id'];
-        if(id_record) {
+        if (id_record) {
             this.id = id_record;
             this.get_diagram_info();
-            this.do_push_state({id:record.id});
+            this.do_push_state({id: id_record});
+        } else {
+            this.do_push_state({});
         }
     },
 
     do_load_state: function(state, warm) {
-        if (state && !this.dataset.get_id_index(state.id)) {
-            this.dataset.ids.push(state.id);
-        }
-        this.dataset.select_id(state.id);
-        if (warm) {
-            this.do_show();
+        if (state && state.id) {
+            if (!this.dataset.get_id_index(state.id)) {
+                this.dataset.ids.push(state.id);
+            }
+            this.dataset.select_id(state.id);
+            if (warm) {
+                this.do_show();
+            }
         }
      },
 
