@@ -64,7 +64,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_event_event_unread" model="ir.values">
             <field name="name">action_event_event_unread</field>
@@ -82,7 +82,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_event_event_read" model="ir.values">
             <field name="name">action_event_event_read</field>
@@ -384,7 +384,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_event_registration_unread" model="ir.values">
             <field name="name">action_event_registration_unread</field>
@@ -402,7 +402,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_event_registration_read" model="ir.values">
             <field name="name">action_event_registration_read</field>
