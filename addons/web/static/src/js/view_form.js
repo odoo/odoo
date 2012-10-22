@@ -127,6 +127,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.init_pager();
         });
         self.on("load_record", self, self.load_record);
+        this.on('view_loaded', self, self.load_form);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
@@ -143,13 +144,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this._super();
     },
-    on_loaded: function(data) {
+    load_form: function(data) {
         var self = this;
         if (!data) {
             throw new Error("No data provided.");
         }
         if (this.arch) {
-            throw "Form view does not support multiple calls to on_loaded";
+            throw "Form view does not support multiple calls to load_form";
         }
         this.fields_order = [];
         this.fields_view = data;
@@ -213,7 +214,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 e.stopPropagation();
             }
          });
-
+        this.trigger('form_view_loaded', data);
         return $.when();
     },
     widgetFocused: function() {
@@ -982,6 +983,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     open_defaults_dialog: function () {
         var self = this;
+        var display = function (field, value) {
+            if (field instanceof instance.web.form.FieldSelection) {
+                return _(field.values).find(function (option) {
+                    return option[0] === value;
+                })[1];
+            } else if (field instanceof instance.web.form.FieldMany2One) {
+                return field.get_displayed();
+            }
+            return value;
+        }
         var fields = _.chain(this.fields)
             .map(function (field, name) {
                 var value = field.get_value();
@@ -995,29 +1006,28 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         || field.field.type === 'binary') {
                     return false;
                 }
-                var displayed = value;
-                if (field instanceof instance.web.form.FieldSelection) {
-                    displayed = _(field.values).find(function (option) {
-                            return option[0] === value;
-                        })[1];
-                } else if (field instanceof instance.web.form.FieldMany2One) {
-                    displayed = field.get_displayed();
-                }
 
                 return {
                     name: name,
                     string: field.string,
                     value: value,
-                    displayed: displayed,
-                    // convert undefined to false
-                    change_default: !!field.field.change_default
+                    displayed: display(field, value),
                 }
             })
             .compact()
             .sortBy(function (field) { return field.string; })
             .value();
-        var conditions = _.chain(fields)
-            .filter(function (field) { return field.change_default; })
+        var conditions = _.chain(self.fields)
+            .filter(function (field) { return field.field.change_default; })
+            .map(function (field, name) {
+                var value = field.get_value();
+                return {
+                    name: name,
+                    string: field.string,
+                    value: value,
+                    displayed: display(field, value),
+                }
+            })
             .value();
 
         var d = new instance.web.Dialog(this, {
@@ -2143,6 +2153,20 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             self.do_action(r);
         });
     },
+
+    set_dimensions: function (height, width) {
+        // remove width css property
+        this.$el.css('width', '');
+        // extract style (without width)
+        var old_style = this.$el.attr('style');
+        // jQuery doesn't understand/use !important
+        var style = 'width:' + width + 'px !important;';
+        if (old_style) {
+            style += old_style
+        }
+        this.$el.attr('style', style);
+        this.$el.css('minHeight', height);
+    }
 });
 
 /**
@@ -2520,6 +2544,13 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function($el) {
         this.$textarea.focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super();
+        this.$textarea.css({
+            width: width,
+            minHeight: height
+        });
     },
 });
 
@@ -3141,7 +3172,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         return ! this.get("value");
     },
     focus: function () {
-        this.$input.focus();
+        if (!this.get('effective_readonly')) {
+            this.$input.focus();
+        }
     },
     _quick_create: function() {
         this.no_ed = true;
@@ -3318,6 +3351,23 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     controller.on('edit:before', self, function (e) {
                         e.cancel = true;
                     });
+                    var has_handle = _(controller.columns).find(function (column) {
+                        if (!column instanceof instance.web.list.Handle) {
+                            return false;
+                        }
+                        column.modifiers.tree_invisible = true;
+                        column.invisible = '1';
+                        // remove from visibles
+                        controller.visible_columns.splice(
+                            controller.visible_columns.indexOf(column),
+                            1);
+                        return true;
+                    });
+                    if (has_handle) {
+                        // recompute aggregates
+                        controller.aggregate_columns =
+                            _(controller.visible_columns).invoke('to_aggregate');
+                    }
                 }
             } else if (view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -3553,6 +3603,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _template: 'One2Many.listview',
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, _.extend(options || {}, {
+            GroupsType: instance.web.form.One2ManyGroups,
             ListType: instance.web.form.One2ManyList
         }));
         this.on('edit:before', this, this.proxy('_before_edit'));
@@ -3733,6 +3784,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         });
     }
 });
+instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
+    setup_resequence_rows: function () {
+        if (!this.view.o2m.get('effective_readonly')) {
+            this._super.apply(this, arguments);
+        }
+    }
+});
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
         if (!this.view.is_action_enabled('create')) {
@@ -3793,7 +3851,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
 
 instance.web.form.One2ManyFormView = instance.web.FormView.extend({
     form_template: 'One2Many.formview',
-    on_loaded: function(data) {
+    load_form: function(data) {
         this._super(data);
         var self = this;
         this.$buttons.find('button.oe_form_button_create').click(function() {
@@ -4003,7 +4061,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         }
         this.list_view.m2m_field = this;
         var loaded = $.Deferred();
-        this.list_view.on_loaded.add_last(function() {
+        this.list_view.on("list_view_loaded", self, function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4048,13 +4106,17 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
         );
         var self = this;
         pop.on("elements_selected", self, function(element_ids) {
-            _.each(element_ids, function(one_id) {
-                if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
-                    self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
+            var reload = false;
+            _(element_ids).each(function (id) {
+                if(! _.detect(self.dataset.ids, function(x) {return x == id;})) {
+                    self.dataset.set_ids(self.dataset.ids.concat([id]));
                     self.m2m_field.dataset_changed();
-                    self.reload_content();
+                    reload = true;
                 }
             });
+            if (reload) {
+                self.reload_content();
+            }
         });
     },
     do_activate_record: function(index, id) {
@@ -4123,7 +4185,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this.kanban_view.m2m = this;
         var loaded = $.Deferred();
-        this.kanban_view.on_loaded.add_last(function() {
+        this.kanban_view.on("kanban_view_loaded",self,function() {
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
@@ -4347,7 +4409,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.view_form.set_embedded_view(this.options.alternative_form_view);
         }
         this.view_form.appendTo(this.$el.find(".oe_popup_form"));
-        this.view_form.on_loaded.add_last(function() {
+        this.view_form.on("form_view_loaded", self, function() {
             var multi_select = self.row_id === null && ! self.options.disable_multiple_selection;
             self.$buttonpane.html(QWeb.render("AbstractFormPopup.buttons", {
                 multi_select: multi_select,
@@ -4458,7 +4520,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         }
         this.searchview = new instance.web.SearchView(this,
                 this.dataset, false,  search_defaults);
-        this.searchview.on_search.add(function(domains, contexts, groupbys) {
+        this.searchview.on('search_data', self, function(domains, contexts, groupbys) {
             if (self.initial_ids) {
                 self.do_search(domains.concat([[["id", "in", self.initial_ids]], self.domain]),
                     contexts, groupbys);
@@ -4467,7 +4529,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 self.do_search(domains.concat([self.domain]), contexts.concat(self.context), groupbys);
             }
         });
-        this.searchview.on_loaded.add_last(function () {
+        this.searchview.on("search_view_loaded", self, function() {
             self.view_list = new instance.web.form.SelectCreateListView(self,
                     self.dataset, false,
                     _.extend({'deletable': false,
@@ -4484,7 +4546,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             }).pipe(function() {
                 self.searchview.do_search();
             });
-            self.view_list.on_loaded.add_last(function() {
+            self.view_list.on("list_view_loaded", self, function() {
                 self.$buttonpane.html(QWeb.render("SelectCreatePopup.search.buttons", {widget:self}));
                 var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-close");
                 $cbutton.click(function() {
@@ -4497,7 +4559,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_list", self.$el));
+        this.searchview.appendTo($(".oe_popup_search", self.$el));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
@@ -4633,14 +4695,19 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         var self = this;
         this._super(field_manager, node);
         this.binary_value = false;
-        this.fileupload_id = _.uniqueId('oe_fileupload');
-        $(window).on(this.fileupload_id, function() {
-            var args = [].slice.call(arguments).slice(1);
-            self.on_file_uploaded.apply(self, args);
-        });
+        this.useFileAPI = !!window.FileReader;
+        if (!this.useFileAPI) {
+            this.fileupload_id = _.uniqueId('oe_fileupload');
+            $(window).on(this.fileupload_id, function() {
+                var args = [].slice.call(arguments).slice(1);
+                self.on_file_uploaded.apply(self, args);
+            });
+        }
     },
     stop: function() {
-        $(window).off(this.fileupload_id);
+        if (!this.useFileAPI) {
+            $(window).off(this.fileupload_id);
+        }
         this._super.apply(this, arguments);
     },
     initialize_content: function() {
@@ -4658,13 +4725,22 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         return size.toFixed(2) + ' ' + units[i];
     },
     on_file_change: function(e) {
-        // TODO: on modern browsers, we could directly read the file locally on client ready to be used on image cropper
-        // http://www.html5rocks.com/tutorials/file/dndfiles/
-        // http://deepliquid.com/projects/Jcrop/demos.php?demo=handler
-
-        if ($(e.target).val() !== '') {
-            this.$el.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
-            this.$el.find('form.oe_form_binary_form').submit();
+        var self = this;
+        var file_node = e.target;
+        if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
+            if (this.useFileAPI) {
+                var file = file_node.files[0];
+                var filereader = new FileReader();
+                filereader.readAsDataURL(file);
+                filereader.onloadend = function(upload) {
+                    var data = upload.target.result;
+                    data = data.split(',')[1];
+                    self.on_file_uploaded(file.size, file.name, file.type, data);
+                };
+            } else {
+                this.$el.find('form.oe_form_binary_form input[name=session_id]').val(this.session.session_id);
+                this.$el.find('form.oe_form_binary_form').submit();
+            }
             this.$el.find('.oe_form_binary_progress').show();
             this.$el.find('.oe_form_binary').hide();
         }

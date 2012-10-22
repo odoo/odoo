@@ -14,6 +14,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     number_of_color_schemes: 10,
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, options);
+        var self = this;
         _.defaults(this.options, {
             "quick_creatable": true,
             "creatable": true,
@@ -41,6 +42,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.currently_dragging = {};
         this.limit = options.limit || 40;
         this.add_group_mutex = new $.Mutex();
+        this.on('view_loaded', self, self.load_kanban);
     },
     start: function() {
         var self = this;
@@ -55,7 +57,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this._super.apply(this, arguments);
         $('html').off('click.kanban');
     },
-    on_loaded: function(data) {
+    load_kanban: function(data) {
         this.fields_view = data;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.$buttons = $(QWeb.render("KanbanView.buttons", {'widget': this}));
@@ -71,7 +73,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
-        this._super.apply(this, arguments);
+        this.trigger('kanban_view_loaded', data);
         return $.when();
     },
     _is_quick_create_enabled: function() {
@@ -246,6 +248,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var remaining = groups.length - 1,
                 groups_array = [];
             return $.when.apply(null, _.map(groups, function (group, index) {
+                self.do_clear_groups();
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
@@ -259,14 +262,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 });
             }));
         });
-        self.do_clear_groups();
     },
     do_process_dataset: function() {
         var self = this;
-        this.$el.remove('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
+        this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
             self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
+                self.do_clear_groups();
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
                 self.do_add_groups([kgroup]).then(function() {
                     if (_.isEmpty(records)) {
@@ -279,7 +282,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             });
             return def;
         });
-        self.do_clear_groups();
     },
     do_reload: function() {
         this.do_search(this.search_domain, this.search_context, this.search_group_by);

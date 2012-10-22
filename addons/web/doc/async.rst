@@ -1,5 +1,5 @@
-Don't stop the world now: asynchronous development and Javascript
-=================================================================
+Asynchronous Operations
+=======================
 
 As a language (and runtime), javascript is fundamentally
 single-threaded. This means any blocking request or computation will
