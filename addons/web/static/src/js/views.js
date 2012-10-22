@@ -1142,7 +1142,7 @@ instance.web.View = instance.web.Widget.extend({
     start: function () {
         return this.load_view();
     },
-    load_view: function() {
+    load_view: function(context) {
         var self = this;
         if (this.embedded_view) {
             var def = $.Deferred();
@@ -1151,7 +1151,7 @@ instance.web.View = instance.web.Widget.extend({
                 self.trigger('view_loaded', r);
             });
         } else {
-            var context = new instance.web.CompoundContext(this.dataset.get_context());
+            var context = this.dataset.get_context(context || {});
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
             return this.rpc("/web/view/load", {
