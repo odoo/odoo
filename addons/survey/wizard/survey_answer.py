@@ -153,9 +153,9 @@ class survey_question_wiz(osv.osv_memory):
                     if pag_rec:
                         title = pag_rec.title
                         note = pag_rec.note
-                        question_ids=pag_rec.question_ids
+                        question_ids = pag_rec.question_ids
                     else:
-                        title=sur_rec.title
+                        title = sur_rec.title
                     xml_form = etree.Element('form', {'string': tools.ustr(title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})

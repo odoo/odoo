@@ -152,8 +152,7 @@ class survey(osv.osv):
             pages = sur['page_ids']
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            else:
-                context.update({'active':False,'survey_id': ids[0]})
+            context.update({'active':False,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -170,8 +169,7 @@ class survey(osv.osv):
             pages = sur['page_ids']
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
-            else:
-                context.update({'active':True,'survey_id': ids[0]})
+            context.update({'active':True,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',

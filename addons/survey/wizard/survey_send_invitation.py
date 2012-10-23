@@ -67,14 +67,19 @@ class survey_send_invitation(osv.osv_memory):
             name += "\t --> " + sur.title + "\n"
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
-            data['mail_subject'] = "Invitation for " + sur.title
-            data['mail_subject_existing'] = "Invitation for " + sur.title
+            data['mail_subject'] = _("Invitation for %s") % (sur.title)
+            data['mail_subject_existing'] = "_(Invitation for %s") % (sur.title)
             data['mail_from'] = sur.responsible_id.email
         if msg:
             raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
-        data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
-                    \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
-                    \n '''+ self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context) + '''\n\n Thanks,'''
+        data['mail'] = _('''
+Hello %(name)s, \n\n
+Please find hereby a survey that we would like you to fill: %s\n
+You can access this survey with the following parameters:
+ Your login ID: %(login)s,\n
+ Your password: %(passwd)s\n
+%s\n\n
+Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context))
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
