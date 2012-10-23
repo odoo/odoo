@@ -1161,6 +1161,11 @@ instance.web.View = instance.web.Widget.extend({
         }
         return view_loaded.pipe(function(r) {
             self.trigger('view_loaded', r);
+            // add css classes that reflect the (absence of) access rights
+            self.$el.addClass('oe_view')
+                .toggleClass('oe_cannot_create', !self.is_action_enabled('create'))
+                .toggleClass('oe_cannot_edit', !self.is_action_enabled('edit'))
+                .toggleClass('oe_cannot_delete', !self.is_action_enabled('delete'));
         });
     },
     set_default_options: function(options) {

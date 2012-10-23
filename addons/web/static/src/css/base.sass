@@ -1547,7 +1547,9 @@ $sheet-max-width: 860px
             padding: 100px 0 0 137px
             min-height: 327px
             margin-left: -15px
-
+    .oe_view.oe_cannot_create
+        .oe_view_nocontent_create
+            display: none
     // }}}
     // FormView.base and dynamic tags {{{
     .oe_formview
@@ -2081,6 +2083,14 @@ $sheet-max-width: 860px
                 visibility: visible
 
     .oe_list
+        &.oe_cannot_edit
+            .oe_list_header_handle, .oe_list_field_handle
+                display: none !important
+                padding: 0 !important
+        &.oe_cannot_delete
+            .oe_list_record_delete
+                display: none !important
+
         .oe_form
             .oe_form_nosheet
                 margin: 0 // FIXME: either class or border should not be by default
@@ -2178,16 +2188,6 @@ $sheet-max-width: 860px
             .oe_list_handle
                 @include text-to-entypo-icon("}",#E0E0E0,18px)
                 margin-right: 7px
-    .oe_list_cannot_create
-        .oe_view_nocontent_create
-            display: none
-    .oe_list_cannot_edit
-        .oe_list_header_handle, .oe_list_field_handle
-            display: none !important
-            padding: 0 !important
-    .oe_list_cannot_delete
-        .oe_list_record_delete
-            display: none !important
     // }}}
     // Tree view {{{
     .tree_header
