@@ -1,8 +1,9 @@
+# -*- coding: utf-8 -*-
 from itertools import chain
 from osv import osv, fields
 import time
-import tools
 import datetime
+import tools
 from osv.orm import except_orm
 from tools.translate import _
 ############################
@@ -63,10 +64,8 @@ class fleet_vehicle_cost(osv.Model):
             data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
             data['date'] = self.browse(cr, uid, data['parent_id'], context=context).date
         if 'contract_id' in data and data['contract_id']:
-            print str(data)
             data['vehicle_id'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).vehicle_id.id
             data['cost_type'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).cost_type.id
-            print 'Contract : '+ str(data['contract_id']) +  ' Add generated cost for vehicle ' + str(data['vehicle_id']) + ' with cost type : ' + str(data['cost_type']) 
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -849,6 +848,39 @@ class fleet_service_type(osv.Model):
 class fleet_vehicle_log_contract(osv.Model):
 
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
+
+    def run_scheduler(self,cr,uid,context=None):
+
+        d = datetime.datetime.now()
+        #d = datetime.date(2001, 01, 01)
+
+        frequencies = []
+        if d.day == 1 and d.month == 1:
+            frequencies.append(('cost_frequency','=','yearly'))
+        if d.day == 1:
+            frequencies.append(('cost_frequency','=','monthly'))
+        if d.isoweekday() == 1:
+            frequencies.append(('cost_frequency','=','weekly'))
+        frequencies.append(('cost_frequency','=','daily')) 
+
+        frequencies_size = len(frequencies)
+        for i in range(frequencies_size-1):
+            frequencies.insert(0,'|')
+
+        condition = ['&','&','&',('state','=','open',),('start_date','<=',d),('expiration_date','>=',d)]
+        condition.extend(frequencies)
+
+        print str(condition)
+        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, condition, offset=0, limit=None, order=None,context=None, count=False)
+        for contract_id in contract_ids:
+
+            nbr = self.pool.get('fleet.vehicle.cost').search(cr,uid,['&',('contract_id','=',contract_id),('date','=',d)],context=context,count=True)
+
+            if not nbr:
+                contract = self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_id,context=context)
+                data = {'amount' : contract.amount,'date' : d,'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract_id}
+                cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context) 
+        return True
     
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
