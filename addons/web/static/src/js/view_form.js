@@ -3987,9 +3987,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     },
 });
 
-/*
- * TODO niv: clean those deferred stuff, it could be better
- */
+/**
+    widget options:
+    - reload_on_button: Reload the whole form view if click on a button in a list view.
+        If you see this options, do not use it, it's basically a dirty hack to make one
+        precise o2m to behave the way we want.
+*/
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
@@ -4118,7 +4121,20 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             readonly: this.getParent().get("effective_readonly")
         });
         pop.on('write_completed', self, self.reload_content);
-    }
+    },
+    do_button_action: function(name, id, callback) {
+        var self = this;
+        var _sup = _.bind(this._super, this);
+        if (! this.m2m_field.options.reload_on_button) {
+            return _sup(name, id, callback);
+        } else {
+            return this.m2m_field.view.save().pipe(function() {
+                return _sup(name, id, function() {
+                    self.m2m_field.view.reload();
+                });
+            });
+        }
+     },
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {
