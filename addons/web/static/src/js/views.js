@@ -174,6 +174,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if(this.inner_action.type == 'ir.actions.act_window') {
                     state['model'] = this.inner_action.res_model;
                 }
+                if (this.inner_action.menu_id) {
+                    state['menu_id'] = this.inner_action.menu_id;
+                }
                 if (this.inner_action.id) {
                     state['action'] = this.inner_action.id;
                 } else if (this.inner_action.type == 'ir.actions.client') {
@@ -241,6 +244,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
             on_close: function() {},
+            action_menu_id: null,
         });
         if (_.isString(action) && instance.web.client_actions.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action };
@@ -266,6 +270,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             pager : !popup && !inline,
             display_title : !popup
         }, action.flags || {});
+        action.menu_id = options.action_menu_id;
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
