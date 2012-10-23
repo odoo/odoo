@@ -349,16 +349,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
                             return [x, key, res];
                         }));
                     });
-                    return $.when.apply($, defs).pipe(function(res) {
-                        var x = res[0];
-                        var key = res[1];
-                        res = res[2];
-                        result.push({
-                            'data': _.map(res, function(record) {
-                                return _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] || 0);
-                            }),
-                            'label': _convert(xaxis[0], key, false)
-                        })
+                    return $.when.apply($, defs).pipe(function() {
+                        _.each(_.toArray(arguments), function(res) {
+                            var x = res[0];
+                            var key = res[1];
+                            res = res[2];
+                            result.push({
+                                'data': _.map(res, function(record) {
+                                    return _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] || 0);
+                                }),
+                                'label': _convert(xaxis[0], key, false)
+                            })
+                        });
                     });
                 });
             }
