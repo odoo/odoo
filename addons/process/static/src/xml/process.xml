@@ -16,7 +16,7 @@
                    <div class="oe_view_manager_header" style="padding: 8px;">
                        <div class="oe_header_row">
                             <h2 class="oe_view_title">
-                                <span class="oe_view_title_text oe_breadcrumb_title"><t t-esc="action.name"/> (<t t-esc="action.res_model"/>)</span>
+                                <span class="oe_view_title_text oe_breadcrumb_title"><t t-esc="action.name"/> (<a t-attf-href="http://doc.openerp.com/v6.1/index.php?model=#{action.res_model}"><t t-esc="action.res_model"/></a>)</span>
                             </h2>
                        </div>
                     </div>
@@ -25,7 +25,7 @@
         </tr>
         <tr>
             <td style="padding-left:10px;">
-                <p><t t-esc="process_help"/></p>
+                <p><t t-raw="process_help"/></p>
             </td>
         </tr>
         <tr>
