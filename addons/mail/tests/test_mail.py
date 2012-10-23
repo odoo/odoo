@@ -635,9 +635,9 @@ class test_mail(TestMailMockups):
         # TDE note: temp various asserts because of the random bug about msg1.child_ids
         msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
         new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
-        if new_msg.parent_id.id != msg1.id:
-            import pdb
-            pdb.set_trace()
+        # if new_msg.parent_id.id != msg1.id:
+        #     import pdb
+        #     pdb.set_trace()
         self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message (%d) should have msg1 as parent (msg2 is %d)' % (new_msg.id, msg2.id))
 
         # 2. References header
