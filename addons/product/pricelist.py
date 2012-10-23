@@ -95,7 +95,7 @@ class product_pricelist(osv.osv):
     _description = "Pricelist"
     _columns = {
         'name': fields.char('Pricelist Name',size=64, required=True, translate=True),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the pricelist without removing it."),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the pricelist without removing it."),
         'type': fields.selection(_pricelist_type_get, 'Pricelist Type', required=True),
         'version_id': fields.one2many('product.pricelist.version', 'pricelist_id', 'Pricelist Versions'),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
@@ -319,8 +319,8 @@ class product_pricelist_version(osv.osv):
             "and reactivate the pricelist"),
         'items_id': fields.one2many('product.pricelist.item',
             'price_version_id', 'Price List Items', required=True),
-        'date_start': fields.date('Start Date', help="Starting date for this pricelist version to be valid."),
-        'date_end': fields.date('End Date', help="Ending date for this pricelist version to be valid."),
+        'date_start': fields.date('Start Date', help="First valid date for the version."),
+        'date_end': fields.date('End Date', help="Last valid date for the version."),
         'company_id': fields.related('pricelist_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
@@ -403,13 +403,13 @@ class product_pricelist_item(osv.osv):
     _columns = {
         'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
-        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Set a template if this rule only apply to a template of product. Keep empty for all products"),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
-        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his children. Keep empty for all products"),
+        'product_tmpl_id': fields.many2one('product.template', 'Product Template', ondelete='cascade', help="Specify a template if this rule only applies to one product template. Keep empty otherwise."),
+        'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Specify a product if this rule only applies to one product. Keep empty otherwise."),
+        'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Specify a product category if this rule only applies to products belonging to this category or its children categories. Keep empty otherwise."),
 
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells equal to or more than this quantity."),
+        'min_quantity': fields.integer('Min. Quantity', required=True, help="Specify the minimum quantity that needs to be bought/sold for the rule to apply."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
-        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode for computing the price for this rule."),
+        'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="Base price for computation."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
