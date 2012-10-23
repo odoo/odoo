@@ -145,6 +145,8 @@ openerp.mail = function(session) {
             this.context = options.context || {};
             this.options = options.options;
 
+            this.show_compact_message = this.options.show_compact_message || false;
+
             // data of this compose message
             this.attachment_ids = [];
             this.id = datasets.id;
@@ -167,6 +169,12 @@ openerp.mail = function(session) {
 
         start: function(){
             this.$render_compact = this.$el;
+
+            if( this.options.show_compact_message ) {
+                this.$render_compact.show();
+            } else {
+                this.$render_compact.hide();
+            }
 
             this.bind_events();
         },
@@ -395,13 +403,9 @@ openerp.mail = function(session) {
             }
         },
 
-        /* convert the compact mode into the compose message
+        /* create the compose on expandable form
         */
-        on_compose_expandable: function(event){
-            if(event) event.stopPropagation();
-
-            var self = this;
-
+        instantiate_expandable: function() {
             if(!this.$render_expandable) {
                 this.$render_expandable = $(session.web.qweb.render('mail.compose_message', {'widget': this}));
                 this.$render_expandable.hide();
@@ -411,6 +415,16 @@ openerp.mail = function(session) {
 
                 this.bind_events();
             }
+        },
+
+        /* convert the compact mode into the compose message
+        */
+        on_compose_expandable: function(event){
+            if(event) event.stopPropagation();
+
+            var self = this;
+
+            this.instantiate_expandable();
 
             if(this.$render_expandable.is(':hidden')){
 
@@ -423,7 +437,7 @@ openerp.mail = function(session) {
                 // do not close the box if there are some text
                 if(!this.$render_expandable.find('textarea').val().match(/\S+/)){
                     this.$render_expandable.hide();
-                    if(this.options.show_compact_message) {
+                    if(this.options.show_compact_message && this.show_compact_message) {
                         this.$render_compact.show();
                     } else {
                         this.$render_compact.hide();
@@ -436,14 +450,14 @@ openerp.mail = function(session) {
 
         do_hide_compact: function() {
             this.$render_compact.hide();
-            this.options.show_compact_message = false;
+            this.show_compact_message = false;
         },
 
         do_show_compact: function() {
-            if(!this.$render_expandable || this.$render_expandable.is(':hidden')){
+            if(this.options.show_compact_message && (!this.$render_expandable || this.$render_expandable.is(':hidden'))) {
                 this.$render_compact.show();
             }
-            this.options.show_compact_message = true;
+            this.show_compact_message = true;
         }
     });
 
@@ -1132,7 +1146,10 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             var message_loaded_ids = this.id ? [this.id].concat( self.get_child_ids() ) : self.get_child_ids();
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, fetch_context, this.context.default_parent_id || undefined]
+            // CHM note : option for sending in flat mode by server
+            var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
+
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, /*nb_indented_thread,*/ fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
@@ -1189,7 +1206,7 @@ openerp.mail = function(session) {
             var self=this;
 
             if(this.show_compose_message && 
-                this.options.display_indented_thread > self.thread_level){
+                this.options.display_indented_thread >= self.thread_level){
                 this.ComposeMessage.do_show_compact();
             }
 
@@ -1464,8 +1481,12 @@ openerp.mail = function(session) {
             this.thread.no_message();
             this.thread.message_fetch(null, null, this.options.message_ids);
 
-            if(this.options.show_compose_message){
-                this.thread.ComposeMessage.do_show_compact();
+            if(this.options.show_compose_message) {
+                if(this.options.show_compact_message) {
+                    this.thread.ComposeMessage.do_show_compact();
+                } else {
+                    this.thread.ComposeMessage.do_hide_compact();
+                }
             }
         },
 
@@ -1637,7 +1658,7 @@ openerp.mail = function(session) {
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
                 'show_compose_message': true,
-                'show_compact_message': false
+                'show_compact_message': true
                 }
             );
 
