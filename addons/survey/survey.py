@@ -425,7 +425,7 @@ class survey_question(osv.osv):
             if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
                              'matrix_of_drop_down_menus', 'rating_scale']:
                 if not col_len:
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more column headings for question %s of page %s.") % (question['question'], question['page_id'][1]))
+                    raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
             ans_len = len(question['answer_choice_ids'])
 
             if vals.has_key('answer_choice_ids'):
@@ -437,7 +437,7 @@ class survey_question(osv.osv):
 
             if que_type not in ['descriptive_text', 'single_textbox', 'comment','table']:
                 if not ans_len:
-                    raise osv.except_osv(_('Warning!'),_("You must enter one or more Answers for question %s of page %s.") % (question['question'], question['page_id'][1]))
+                    raise osv.except_osv(_('Warning!'),_('You must enter one or more Answers for question "%s" of page %s.') % (question['question'], question['page_id'][1]))
             req_type = ""
 
             if vals.has_key('required_type'):
@@ -506,13 +506,14 @@ class survey_question(osv.osv):
     def create(self, cr, uid, vals, context=None):
         minimum_ans = 0
         maximum_ans = 0
+        page = self.pool.get('survey.page').browse(cr, uid, vals['page_id'], context=context).title
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
             if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                raise osv.except_osv(_('Warning!'),_("You must enter one or more answers for question %s.") % (vals['question']))
+                raise osv.except_osv(_('Warning!'),_('You must enter one or more answers for question "%s" of page %s .') % (vals['question'], page))
 
         if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
             if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
-                raise osv.except_osv(_('Warning!'),_("You must enter one or more column heading for question %s.")% (vals['question']))
+                raise osv.except_osv(_('Warning!'),_('You must enter one or more column headings for question "%s" of page %s.')% (vals['question'], page))
 
         if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
