@@ -419,7 +419,11 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_type" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <field name="amount" string="Invoice Amount"/>
+                                <label for="amount"/>
+                                <div>
+                                    <field name="amount" string="Invoice Amount" class="oe_inline"/>
+                                    <field name="cost_frequency" class="oe_inline"/>
+                                </div>
                             </group>
                             <group string="Odometer details">
                                 <label for="odometer"/>
@@ -441,14 +445,28 @@
                                 <field name="ins_ref" />
                             </group>
                         </group>
-                        <group string="Included services">
-                            <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
-                                <tree version="7.0" editable="bottom">
-                                    <field name="cost_type" domain="[('category','=','service')]"/>
-                                    <field name="amount" sum="Price" string="Indicative Cost" />
-                                </tree>
-                            </field>
-                        </group>
+                        <notebook>
+                            <page string="Included Services">
+                                <group>
+                                    <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
+                                        <tree version="7.0" editable="bottom">
+                                            <field name="cost_type" domain="[('category','=','service')]"/>
+                                            <field name="amount" sum="Price" string="Indicative Cost" />
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                            <page string="Generated Costs">
+                                <group>
+                                    <field name="generated_cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
+                                        <tree version="7.0" editable="bottom">
+                                            <field name="date" />
+                                            <field name="amount" />
+                                        </tree>
+                                    </field>
+                                </group>
+                            </page>
+                        </notebook>
                         <group string="Terms and Conditions">
                             <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                         </group>
@@ -481,6 +499,7 @@
                     <field name="warning_date" invisible="1"/>
                     <field name="insurer_id" />
                     <field name="amount"/>
+                    <field name="cost_frequency"/>
                     <field name="notes" />
                 </tree>
             </field>
@@ -719,11 +738,8 @@
                                     <field name="cost_type" domain="[('category','=','service')]"/>
                                     <field name="amount" sum="Price" string="Cost"/>
                                 </tree>
-                                
                             </field>
-                            
                         </group>
-                        
                         <group string="Notes">
                             <field nolabel="1" name="notes" placeholder="Write here any other information related to the service completed."/>
                         </group>

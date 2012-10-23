@@ -48,6 +48,8 @@ class fleet_vehicle_cost(osv.Model):
         'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
 
         'date' :fields.date('Date',help='Date when the cost has been executed'),
+
+        'contract_id' : fields.many2one('fleet.vehicle.log.contract', 'Contract', required=False, help='Contract attached to this cost'),
     }
 
     _default ={
@@ -60,6 +62,11 @@ class fleet_vehicle_cost(osv.Model):
         if 'parent_id' in data and data['parent_id']:
             data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
             data['date'] = self.browse(cr, uid, data['parent_id'], context=context).date
+        if 'contract_id' in data and data['contract_id']:
+            print str(data)
+            data['vehicle_id'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).vehicle_id.id
+            data['cost_type'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).cost_type.id
+            print 'Contract : '+ str(data['contract_id']) +  ' Add generated cost for vehicle ' + str(data['vehicle_id']) + ' with cost type : ' + str(data['cost_type']) 
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -999,6 +1006,8 @@ class fleet_vehicle_log_contract(osv.Model):
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
+        'cost_frequency': fields.selection([('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
+        'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
