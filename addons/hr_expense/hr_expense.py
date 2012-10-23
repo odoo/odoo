@@ -100,6 +100,12 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
+    def unlink(self, cr, uid, ids, context=None):
+        for rec in self.browse(cr, uid, ids, context=context):
+            if rec.state != 'draft':
+                raise osv.except_osv(_('Warning!'),_('You cannot delete an expense which is in %s state!')%(rec.state))
+        return super(hr_expense_expense, self).unlink(cr, uid, ids, context)
+
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
         res =  {'value': {'journal_id': False}}
         journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)], context=context)
