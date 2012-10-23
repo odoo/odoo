@@ -6,6 +6,7 @@ import datetime
 import tools
 from osv.orm import except_orm
 from tools.translate import _
+from dateutil.relativedelta import relativedelta
 ############################
 ############################
 #Vehicle.cost class
@@ -51,10 +52,12 @@ class fleet_vehicle_cost(osv.Model):
         'date' :fields.date('Date',help='Date when the cost has been executed'),
 
         'contract_id' : fields.many2one('fleet.vehicle.log.contract', 'Contract', required=False, help='Contract attached to this cost'),
+        'auto_generated' : fields.boolean('automatically generated',readonly=True,required=True)
     }
 
     _default ={
         'parent_id':None,
+        'auto_generated' : False,
     }
 
     
@@ -851,40 +854,56 @@ class fleet_vehicle_log_contract(osv.Model):
 
     def run_scheduler(self,cr,uid,context=None):
 
-        #d = datetime.datetime.now()
-        d = datetime.date(2012, 8, 01)
+        d = datetime.datetime.now()
+        #d = datetime.datetime(2012, 12, 01)
 
-        frequencies = []
-        if d.day == 1 and d.month == 1:
-            frequencies.append(('cost_frequency','=','yearly'))
-        if d.day == 1:
-            frequencies.append(('cost_frequency','=','monthly'))
-        if d.isoweekday() == 1:
-            frequencies.append(('cost_frequency','=','weekly'))
-        frequencies.append(('cost_frequency','=','daily')) 
+        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','=','open')], offset=0, limit=None, order=None,context=None, count=False)
+        for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_ids,context=context):
+            if contract.generated_cost_ids != []:
+                last_cost_id = self.pool.get('fleet.vehicle.cost').search(cr, uid, ['&',('contract_id','=',contract.id),('auto_generated','=',True)], offset=0, limit=1, order='date desc',context=None, count=False)
+                last_cost_date = self.pool.get('fleet.vehicle.cost').browse(cr,uid,last_cost_id[0],context=None).date
+            else : 
+                last_cost_date = False
 
-        frequencies_size = len(frequencies)
-        for i in range(frequencies_size-1):
-            frequencies.insert(0,'|')
-
-        condition = ['&','&','&',('state','=','open',),('start_date','<=',d.strftime('%Y-%m-%d')),('expiration_date','>=',d.strftime('%Y-%m-%d'))]
-        condition.extend(frequencies)
-
-        print str(condition)
-        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, condition, offset=0, limit=None, order=None,context=None, count=False)
-        for contract_id in contract_ids:
-
-            nbr = self.pool.get('fleet.vehicle.cost').search(cr,uid,['&',('contract_id','=',contract_id),('date','=',d)],context=context,count=True)
-
-            if not nbr:
-                contract = self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_id,context=context)
-                data = {'amount' : contract.cost_generated,'date' : d,'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract_id}
-                cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context) 
+            if contract.cost_frequency == 'yearly':
+                delta = relativedelta(years=+1)
+                if last_cost_date:
+                    startdate = datetime.datetime(int(last_cost_date[:4]),1,1) + relativedelta(years=+1)
+                else:
+                    startdate = datetime.datetime(int(contract.start_date[:4]),1,1)
+                enddate = datetime.datetime(d.year,1,1)
+            if contract.cost_frequency == 'monthly':
+                delta = relativedelta(months=+1)
+                if last_cost_date:
+                    startdate = datetime.datetime(int(last_cost_date[:4]),int(last_cost_date[5:7]),1) + relativedelta(months=+1)
+                else:
+                    startdate = datetime.datetime(int(contract.start_date[:4]),int(contract.start_date[5:7]),1)
+                enddate = datetime.datetime(d.year,d.month,1)
+            if contract.cost_frequency == 'weekly':
+                delta = relativedelta(weeks=+1)
+                if last_cost_date:
+                    startdate = datetime.datetime.strptime(last_cost_date[:4]+'-'+last_cost_date[5:7]+'-'+str(self.str_to_date(last_cost_date).weekday()),'%Y-%m-%w') + relativedelta(weeks=+1)
+                else:
+                    startdate = datetime.datetime.strptime(contract.start_date[:4]+'-'+contract.start_date[5:7]+'-'+str(self.str_to_date(contract.start_date).weekday()),'%Y-%m-%w')
+                enddate = datetime.datetime.strptime(d.year+'-'+d.month+'-'+d.weekday(),'%Y-%m-%w')
+            if contract.cost_frequency == 'daily':
+                delta = relativedelta(days=+1)
+                if last_cost_date:
+                    startdate = datetime.datetime.strptime(last_cost_date,'%Y-%m-%d') + relativedelta(days=+1)
+                else:
+                    startdate = datetime.datetime.strptime(contract.start_date,'%Y-%m-%d')
+                enddate = d
+            print 'Start : '+str(startdate)+', End : '+str(enddate)
+            while startdate <= enddate:
+                data = {'amount' : contract.cost_generated,'date' : startdate,'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract.id,'auto_generated' : True}
+                print data
+                cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context)
+                startdate += delta
         return True
     
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
-            context = {}
+            context = {} 
         if not ids:
             return []
         reads = self.browse(cr, uid, ids, context=context)
