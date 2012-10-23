@@ -872,21 +872,21 @@ class fleet_vehicle_log_contract(osv.Model):
                 else:
                     startdate = datetime.datetime(int(contract.start_date[:4]),1,1)
                 enddate = datetime.datetime(d.year,1,1)
-            if contract.cost_frequency == 'monthly':
+            elif contract.cost_frequency == 'monthly':
                 delta = relativedelta(months=+1)
                 if last_cost_date:
                     startdate = datetime.datetime(int(last_cost_date[:4]),int(last_cost_date[5:7]),1) + relativedelta(months=+1)
                 else:
                     startdate = datetime.datetime(int(contract.start_date[:4]),int(contract.start_date[5:7]),1)
                 enddate = datetime.datetime(d.year,d.month,1)
-            if contract.cost_frequency == 'weekly':
+            elif contract.cost_frequency == 'weekly':
                 delta = relativedelta(weeks=+1)
                 if last_cost_date:
                     startdate = datetime.datetime.strptime(last_cost_date[:4]+'-'+last_cost_date[5:7]+'-'+str(self.str_to_date(last_cost_date).weekday()),'%Y-%m-%w') + relativedelta(weeks=+1)
                 else:
                     startdate = datetime.datetime.strptime(contract.start_date[:4]+'-'+contract.start_date[5:7]+'-'+str(self.str_to_date(contract.start_date).weekday()),'%Y-%m-%w')
-                enddate = datetime.datetime.strptime(d.year+'-'+d.month+'-'+d.weekday(),'%Y-%m-%w')
-            if contract.cost_frequency == 'daily':
+                enddate = datetime.datetime.strptime(str(d.year)+'-'+d.strftime('%W')+'-'+d.strftime('%w'),'%Y-%W-%w')
+            elif contract.cost_frequency == 'daily':
                 delta = relativedelta(days=+1)
                 if last_cost_date:
                     startdate = datetime.datetime.strptime(last_cost_date,'%Y-%m-%d') + relativedelta(days=+1)
