@@ -777,7 +777,6 @@ class task(base_stage, osv.osv):
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
-        'state': 'draft',
         'kanban_state': 'normal',
         'priority': '2',
         'progress': 0,
@@ -1030,7 +1029,6 @@ class task(base_stage, osv.osv):
                 'user_id': delegate_data['user_id'] and delegate_data['user_id'][0] or False,
                 'planned_hours': delegate_data['planned_hours'] or 0.0,
                 'parent_ids': [(6, 0, [task.id])],
-                'state': 'draft',
                 'description': delegate_data['new_task_description'] or '',
                 'child_ids': [],
                 'work_ids': []
