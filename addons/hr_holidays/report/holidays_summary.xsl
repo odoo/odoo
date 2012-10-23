@@ -183,7 +183,7 @@
                 <td> </td>
             </tr>
             <tr>
-                <td><para>
+                <td><para t="1">
                         <xsl:attribute name="style">employee</xsl:attribute>
                                 Departments and Employees
                     </para>

@@ -97,8 +97,11 @@ class report_custom(report_rml):
         date_today=time.strftime('%Y-%m-%d %H:%M:%S')
         date_xml +=['<res name="%s" today="%s" />' % (res,date_today)]
 
-        cr.execute("SELECT id, name, color_name FROM hr_holidays_status ORDER BY id")
-        legend=cr.fetchall()
+        holidays_status_obj = pooler.get_pool(cr.dbname).get('hr.holidays.status')
+        holidays_status_ids_all = holidays_status_obj.search(cr, uid, [], order='id', context=context)
+        holidays_status_values = dict(((x['id'], x) for x in holidays_status_obj.read(cr, uid, holidays_status_ids_all, ['id','name','color_name'], context=context) ))
+        holidays_status_values = [ holidays_status_values[id] for id in holidays_status_ids_all ]
+        legend=holidays_status_values
         today=datetime.datetime.today()
 
         first_date=data['form']['date_from']
@@ -107,13 +110,14 @@ class report_custom(report_rml):
         day_diff=eom-som
 
         if data['form']['holiday_type']!='both':
-            type=data['form']['holiday_type']
             if data['form']['holiday_type']=='Confirmed':
+                type = _('Confirmed')
                 holiday_type=('confirm')
             else:
+                type = _('Validated')
                 holiday_type=('validate')
         else:
-            type="Confirmed and Validated"
+            type = _("Confirmed and Validated")
             holiday_type=('confirm','validate')
         date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
@@ -121,7 +125,7 @@ class report_custom(report_rml):
 
 #        date_xml=[]
         for l in range(0,len(legend)):
-            date_xml += ['<legend row="%d" id="%d" name="%s" color="%s" />' % (l+1,legend[l][0],_(legend[l][1]),legend[l][2])]
+            date_xml += ['<legend row="%d" id="%d" name="%s" color="%s" />' % (l+1,legend[l]['id'],_(legend[l]['name']),legend[l]['color_name'])]
         date_xml += ['<date month="%s" year="%d" />' % (som.strftime('%B'), som.year),'<days>']
 
         cell=1
@@ -208,7 +212,7 @@ class report_custom(report_rml):
         
         if data['model']=='hr.employee':
             for id in data['form']['emp']:
-                 items = obj_emp.read(cr, uid, id, ['id','name'])
+                 items = obj_emp.read(cr, uid, id, ['id','name'], context=context)
                  
                  emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, items['id'], items['name'], som, eom)
                  row_id = row_id +1
@@ -222,7 +226,7 @@ class report_custom(report_rml):
                 if emp_ids==[]:
                     continue
                 dept_done=0
-                for item in obj_emp.read(cr, uid, emp_ids, ['id', 'name']):
+                for item in obj_emp.read(cr, uid, emp_ids, ['id', 'name'], context=context):
                     if dept_done==0:
                         emp_xml += emp_create_xml(self, cr, uid, 1, holiday_type, row_id, dept.id, dept.name, som, eom)
                         row_id = row_id +1
@@ -235,7 +239,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid, context=context).company_id.name)
 
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>

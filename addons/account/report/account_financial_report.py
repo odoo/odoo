@@ -35,6 +35,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             'get_account': self._get_account,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period,
+            'has_filter': self._has_filter,
             'get_filter': self._get_filter,
             'get_start_date':self._get_start_date,
             'get_end_date':self._get_end_date,
@@ -53,7 +54,8 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
         account_obj = self.pool.get('account.account')
         currency_obj = self.pool.get('res.currency')
         ids2 = self.pool.get('account.financial.report')._get_children_by_order(self.cr, self.uid, [data['form']['account_report_id'][0]], context=data['form']['used_context'])
-        for report in self.pool.get('account.financial.report').browse(self.cr, self.uid, ids2, context=data['form']['used_context']):
+        new_context = dict(data['form']['used_context'], lang=self.context.get('lang', 'en_US'))
+        for report in self.pool.get('account.financial.report').browse(self.cr, self.uid, ids2, context=new_context):
             vals = {
                 'name': report.name,
                 'balance': report.balance * report.sign or 0.0,
@@ -76,7 +78,7 @@ class report_account_common(report_sxw.rml_parse, common_report_header):
             elif report.type == 'account_type' and report.account_type_ids:
                 account_ids = account_obj.search(self.cr, self.uid, [('user_type','in', [x.id for x in report.account_type_ids])])
             if account_ids:
-                for account in account_obj.browse(self.cr, self.uid, account_ids, context=data['form']['used_context']):
+                for account in account_obj.browse(self.cr, self.uid, account_ids, context=new_context):
                     #if there are accounts to display, we add them to the lines with a level equals to their level in
                     #the COA + 1 (to avoid having them with a too low level that would conflicts with the level of data
                     #financial reports for Assets, liabilities...)

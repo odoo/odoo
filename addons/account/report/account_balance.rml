@@ -232,10 +232,13 @@
         <td>
           <para style="terp_default_Centre_8">[[ get_fiscalyear(data) or '' ]]</para>
         </td>
-          <para style="terp_default_Centre_7">All[[ data['form']['display_account']=='all' and ' ' or removeParentNode('para') ]]</para>
-          <para style="terp_default_Centre_7">With movements[[ data['form']['display_account']=='movement' and ' ' or removeParentNode('para') ]]</para>
-          <para style="terp_default_Centre_7">With balance is not equal to 0[[ data['form']['display_account']=='not_zero' and ' ' or removeParentNode('para') ]]</para>
-        <td>  <para style="terp_default_Centre_8">[[ not has_filter(data) and get_filter(data) or removeParentNode('para') ]] </para>
+        <td>
+          <para style="terp_default_Centre_8">All[[ data['form']['display_account']=='all' and ' ' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">With movements[[ data['form']['display_account']=='movement' and ' ' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">With balance is not equal to 0[[ data['form']['display_account']=='not_zero' and ' ' or removeParentNode('para') ]]</para>
+        </td>
+        <td>
+          <para style="terp_default_Centre_8">[[ data['form']['filter']=='filter_no' and get_filter(data) or removeParentNode('para') ]] </para>  
           <blockTable colWidths="60.0,60.0" style="Table5">[[ data['form']['filter']=='filter_date' or removeParentNode('blockTable') ]]
             <tr>
               <td>
