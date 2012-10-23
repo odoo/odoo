@@ -168,7 +168,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
-            this.options.$buttons.children().remove();
             this.$buttons.appendTo(this.options.$buttons);
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
@@ -3123,8 +3122,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
-            if(this.is_false()){
+            if (this.is_false()) {
                 this.$('.oe_m2o_cm_button').css({'display':'none'});
+            } else {
+                this.$('.oe_m2o_cm_button').css({'display':'inline'});
             }
         } else {
             var lines = _.escape(str).split("\n");
@@ -3354,23 +3355,13 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     controller.on('edit:before', self, function (e) {
                         e.cancel = true;
                     });
-                    var has_handle = _(controller.columns).find(function (column) {
+                    _(controller.columns).find(function (column) {
                         if (!column instanceof instance.web.list.Handle) {
                             return false;
                         }
-                        column.modifiers.tree_invisible = true;
-                        column.invisible = '1';
-                        // remove from visibles
-                        controller.visible_columns.splice(
-                            controller.visible_columns.indexOf(column),
-                            1);
+                        column.modifiers.invisible = true;
                         return true;
                     });
-                    if (has_handle) {
-                        // recompute aggregates
-                        controller.aggregate_columns =
-                            _(controller.visible_columns).invoke('to_aggregate');
-                    }
                 }
             } else if (view_type === "form") {
                 if (self.get("effective_readonly")) {
@@ -4173,6 +4164,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this._super(value_);
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.kanban_view = new instance.web.form.Many2ManyKanbanView(this, this.dataset, false, {
@@ -4206,7 +4200,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
     open_popup: function(type, unused) {
         if (type !== "form")
