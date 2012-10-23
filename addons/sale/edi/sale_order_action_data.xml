@@ -26,6 +26,8 @@
             <field name="email_to">${object.partner_invoice_id.email}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
+            <field name="report_template" ref="report_sale_order"/>
+            <field name="report_name">${(object.name or '').replace('/','_')}_${object.state == 'draft' and 'draft' or ''}</field>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
@@ -44,7 +46,9 @@
        % if object.client_order_ref:
        &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />
        % endif
+       % if object.user_id:
        &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
+       % endif
     </p>
 
     % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state not in ('draft', 'sent'):
