@@ -344,8 +344,8 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)],
-                                {context: context}).pipe(function(res) {
+                        defs.push(obj.call("read_group", [new instance.web.CompoundDomain(domain, [[xaxis[0], '=' ,_convert_key(xaxis[0], key)]]),
+                                yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).pipe(function(res) {
                             return [x, key, res];
                         }));
                     });
