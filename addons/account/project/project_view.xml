@@ -141,7 +141,7 @@
                             </div>
                         </group>
                         <group string="Product Information">
-                            <field name="product_id"/>
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
                             <label for="unit_amount"/>
                             <div>
                                 <field name="unit_amount" class="oe_inline"/>
