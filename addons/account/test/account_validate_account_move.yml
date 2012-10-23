@@ -11,21 +11,18 @@
 -
   !record {model: account.move, id: account_move_0}:
     date: !eval time.strftime('%Y-%m-%d')
+    period_id: account.period_6
     journal_id: account.bank_journal
     line_id:
       - account_id: account.cash
         amount_currency: 0.0
         credit: 2000.0
-        date: !eval time.strftime('%Y-%m-%d')
         debit: 0.0
-        journal_id: account.bank_journal
         name: Basic Computer
         partner_id: base.res_partner_12
-        period_id: account.period_6
         ref: '2011010'
         tax_amount: 0.0
     name: /
-    period_id: account.period_6
     ref: '2011010'
     state: draft
 -
