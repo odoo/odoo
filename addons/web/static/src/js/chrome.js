@@ -242,6 +242,58 @@ instance.web.Loading = instance.web.Widget.extend({
         this.session.on("request", this, this.request_call);
         this.session.on("response", this, this.response_call);
         this.session.on("response_failed", this, this.response_call);
+        this.draw_favicon(50);
+    },
+    draw_favicon: function(percentage){
+        var self = this;
+        var canvas = this.get_canvas();
+        var faviconImage = new Image();
+        var context = canvas.getContext("2d");
+        faviconImage.onload = function() {
+            console.log("Image Loaded");
+            if (context) {
+                context.clearRect(0, 0, 16, 16);
+                // Draw shadow
+                context.beginPath();
+                context.moveTo(canvas.width / 2, canvas.height / 2);
+                context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2), 0, Math.PI * 2, false);
+                context.fillStyle = "red";
+                context.fill();
+                // Draw background
+                context.beginPath();
+                context.moveTo(canvas.width / 2, canvas.height / 2);
+                context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) - 2, 0, Math.PI * 2, false);
+                context.fillStyle = "yellow";
+                context.fill();
+                // Draw pie
+                if (percentage > 0) {
+                    context.beginPath();
+                    context.moveTo(canvas.width / 2, canvas.height / 2);
+                    context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) - 2, (-0.5) * Math.PI, (-0.5 + 2 * percentage / 100) * Math.PI, false);
+                    context.lineTo(canvas.width / 2, canvas.height / 2);
+                    context.fillStyle = "white";
+                    context.fill();
+                }
+                var link = document.createElement('link');
+                link.type = 'image/x-icon';
+                link.rel = 'icon';
+                link.href = canvas.toDataURL();
+                var src = $('link[type="image/x-icon"]').attr("href");
+                if (!src.match(/^data/)) {
+                    faviconImage.crossOrigin = 'anonymous';
+                }
+                document.getElementsByTagName('head')[0].appendChild(link);
+                console.log("canvas to url",canvas.toDataURL());
+            }
+        }
+        faviconImage.src = $('link[type="image/x-icon"]').attr("href");
+        console.log("favicon",faviconImage);
+    },
+    get_canvas: function(){
+        canvas = document.createElement("canvas");
+        canvas.width = 16;
+        canvas.height = 16;
+        return canvas;
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
