@@ -269,12 +269,12 @@ class mail_message(osv.Model):
                 easily have access to their values, given their ID
             :return bool: True
         """
-        def _get_expandable(domain, message_nb, parent_id, id, model):
+        def _get_expandable(domain, message_nb, ancestor_id, id, model):
             return {
                 'domain': domain,
                 'nb_messages': message_nb,
                 'type': 'expandable',
-                'parent_id': parent_id,
+                'ancestor_id': ancestor_id,
                 'id':  id,
                 # TDE note: why do we need model sometimes, and sometimes not ???
                 'model': model,
@@ -367,8 +367,10 @@ class mail_message(osv.Model):
             :param list domain: optional domain for searching ids if ids not set
             :param list message_unload_ids: optional ids we do not want to fetch,
                 because i.e. they are already displayed somewhere
-            :param int parent_id: if parent_id reached when adding ancestors,
-                stop going further in the ancestor search
+            :param int parent_id: context of parent_id
+                - if parent_id reached when adding ancestors, stop going further
+                  in the ancestor search
+                - if set in flat mode, ancestor_id is set to parent_id
             :param int limit: number of messages to fetch, before adding the
                 ancestors and expandables
             :return list: list of message structure for the Chatter widget
@@ -400,12 +402,14 @@ class mail_message(osv.Model):
 
                 # get the older ancestor the user can read, update its ancestor field
                 if not thread_level:
+                    message_list[-1]['ancestor_id'] = parent_id
                     continue
                 parent = self._get_parent(cr, uid, message, context=context)
                 while parent and parent.get('id') != parent_id:
                     message_list[-1]['ancestor_id'] = parent.get('id')
                     message = parent
                     parent = self._get_parent(cr, uid, message, context=context)
+                # if in thread: add its ancestor to the list of messages
                 if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
                     read_messages[message.get('id')] = message
                     message_list.append(self._message_get_dict(cr, uid, message, context=context))
