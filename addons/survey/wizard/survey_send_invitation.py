@@ -68,7 +68,7 @@ class survey_send_invitation(osv.osv_memory):
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
             data['mail_subject'] = _("Invitation for %s") % (sur.title)
-            data['mail_subject_existing'] = "_(Invitation for %s") % (sur.title)
+            data['mail_subject_existing'] = _("Invitation for %s") % (sur.title)
             data['mail_from'] = sur.responsible_id.email
         if msg:
             raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
