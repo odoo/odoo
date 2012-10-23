@@ -77,7 +77,7 @@ class survey(osv.osv):
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
         'response_user': lambda * a:1,
-        'date_open': strftime("%Y-%m-%d %H:%M:%S"),
+        'date_open': fields.datetime.now,
     }
 
     def survey_open(self, cr, uid, ids, arg):

@@ -64,7 +64,7 @@ class survey_send_invitation(osv.osv_memory):
         msg = ""
         name = ""
         for sur in survey_obj.browse(cr, uid, context.get('active_ids', []), context=context):
-            name += "\t --> " + sur.title + "\n"
+            name += "\n --> " + sur.title + "\n"
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
             data['mail_subject'] = _("Invitation for %s") % (sur.title)
@@ -74,11 +74,12 @@ class survey_send_invitation(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _('The following surveys are not in open state: %s') % msg)
         data['mail'] = _('''
 Hello %%(name)s, \n\n
-Please find hereby a survey that we would like you to fill: %s\n
+Would you please spent some of your time to fill-in our survey: \n%s\n
 You can access this survey with the following parameters:
- Your login ID: %%(login)s,\n
+ URL: %s
+ Your login ID: %%(login)s\n
  Your password: %%(passwd)s\n
-%s\n\n
+\n\n
 Thanks,''') % (name, self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context))
         return data
 
