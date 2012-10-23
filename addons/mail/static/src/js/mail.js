@@ -1047,7 +1047,7 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             var message_loaded = [this.datasets.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded, fetch_context, this.context.default_parent_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded, 1, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
