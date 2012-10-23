@@ -30,14 +30,14 @@ class product_category(osv.osv):
             relation='account.account',
             string="Income Account",
             view_load=True,
-            help="This account will be used for invoices to value sales for the current product category."),
+            help="This account will be used for invoices to value sales."),
         'property_account_expense_categ': fields.property(
             'account.account',  
             type='many2one',
             relation='account.account',
             string="Expense Account",
             view_load=True,
-            help="This account will be used for invoices to value expenses for the current product category."),
+            help="This account will be used for invoices to value expenses."),
     }
 product_category()
 
