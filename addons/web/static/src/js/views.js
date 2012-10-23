@@ -300,7 +300,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 this.dialog_widget.destroy();
             if (this.dialog === null || this.dialog.isDestroyed()) {
                 this.dialog = new instance.web.Dialog(this, {
-                    buttons: {"Close": function() {$(this).dialog("close")}},
                     dialogClass: executor.klass,
                 });
                 this.dialog.on("closing", null, options.on_close);
@@ -1068,9 +1067,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                     additional_context);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
-                self.do_action(result, function () {
-                    // reload view
-                    self.getParent().reload();
+                self.do_action(result, {
+                    on_close: function() {
+                        // reload view
+                        self.getParent().reload();
+                    },
                 });
             });
         });
@@ -1216,7 +1217,9 @@ instance.web.View = instance.web.Widget.extend({
                     /* niv: previously we were overriding once more with action_data.context,
                      * I assumed this was not a correct behavior and removed it
                      */
-                    return self.do_action(action, result_handler);
+                    return self.do_action(action, {
+                        on_close: result_handler,
+                    });
                 }, null);
             } else {
                 return result_handler();
