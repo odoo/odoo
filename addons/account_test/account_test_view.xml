@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+    <record model="ir.ui.view" id="account_assert_tree">
+        <field name="name">Tests</field>
+        <field name="model">accounting.assert.test</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Tests">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                    <field name="desc"/>
+                </tree>
+            </field>
+        </record>
+
+    <record model="ir.ui.view" id="account_assert_form">
+        <field name="name">Tests</field>
+        <field name="model">accounting.assert.test</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Tests">
+                <group colspan="4" col="4">
+                    <field name="name"/>
+                    <field name="active"/>
+                    <field name="sequence"/>
+                    <newline/>
+                    <field name="desc" colspan="4" height="50" /> 
+                </group>
+                <separator string="Expression to evaluate" colspan="4"/>
+                <group colspan="4" col="4">
+                    <separator string="Python Code" colspan="4" />
+                    <newline />
+                    <field colspan="4" name="code_exec" nolabel="1" width="100" height="400" />
+                    <separator string="Code Help" colspan="4"/>
+                    <newline />
+                    <label colspan="4"><![CDATA[Example:
+sql = "select id, name, ref, date from account_move_line where account_id in (select id from account_account where type = 'view')"
+cr.execute(sql)
+result = cr.dictfetchall()]]></label>
+                </group>
+                </form>
+            </field>
+        </record>
+
+    <record model="ir.actions.act_window" id="action_accounting_assert">
+        <field name="name">Accounting Tests</field>
+        <field name="res_model">accounting.assert.test</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem name="Accounting Tests" parent="account.menu_finance_reporting" id="menu_action_license" action="action_accounting_assert"/>
+
+</data>
+</openerp>

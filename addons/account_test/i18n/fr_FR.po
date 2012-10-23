@@ -1,0 +1,264 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* account_test
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 5.0.16\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2011-11-13 15:05:26+0000\n"
+"PO-Revision-Date: 2011-11-13 15:05:26+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_test
+#: field:accounting.assert.test,desc:0
+msgid "Test Description"
+msgstr "Test Description"
+
+#. module: account_test
+#: constraint:ir.model:0
+msgid "The Object name must start with x_ and not contain any special character !"
+msgstr "Le nom de l'object doit commencer par x_ et ne doit pas contenir de caractères spéciaux !"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_02
+msgid "Test 2: Opening a fiscal year"
+msgstr "Test 2: Ouverture d'une année fiscale"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_03
+msgid "Check if movement lines are balanced and have the same date and period"
+msgstr "Vérifier que les lignes d'un même mouvement sont balancées, avec la même période et la même date"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_09_1
+msgid "Test 9.1 : Gap in Invoices sequence"
+msgstr "Test 9: Trous dans la numérotation des factures"
+
+#. module: account_test
+#: model:ir.actions.report.xml,name:account_test.account_assert_test_report
+msgid "Accounting Tests"
+msgstr "Tests Comptables"
+
+#. module: account_test
+#: field:accounting.assert.test,name:0
+msgid "Test Name"
+msgstr "Nom du test"
+
+#. module: account_test
+#: constraint:ir.actions.act_window:0
+msgid "Invalid model name in the action definition."
+msgstr "Modèle non valide pour le définition de l'action"
+
+#. module: account_test
+#: field:accounting.assert.test,code_exec:0
+msgid "Python code or SQL query"
+msgstr "Code Python ou requête SQL"
+
+#. module: account_test
+#: rml:account.test.assert.print:0
+msgid "Accouting tests on"
+msgstr "Tests comptables sur"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06
+msgid "Check that paid/reconciled invoices are not in 'Open' state"
+msgstr "Vérifier que les factures paid/reconcilied ne sont pas 'open'"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_11_2
+msgid "Test 11.2: Analytical moves"
+msgstr "Test 11.2: Lignes analytiques"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_09_2
+msgid "Check that there's no gap in Bank Stetement sequence"
+msgstr "Test 9: Trous dans la numérotation des extraits de comptes"
+
+#. module: account_test
+#: view:accounting.assert.test:0
+msgid "Tests"
+msgstr "Tests"
+
+#. module: account_test
+#: view:accounting.assert.test:0
+msgid "Expression to evaluate"
+msgstr "Expression à évaluer"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_06_1
+msgid "Check that there's no move for any account with « View » account type"
+msgstr "Vérifier qu'il n'y a pas de mouvements sur des comptes de type 'vue'"
+
+#. module: account_test
+#: model:ir.actions.act_window,name:account_test.action_accounting_assert
+#: model:ir.ui.menu,name:account_test.menu_action_license
+msgid "Accounting Tests"
+msgstr "Tests Comptables"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_09_2
+msgid "Test 9.2 : Gap in Bank Statement sequence"
+msgstr "Test 9.2 : Trous dans la numérotation des extraits de comptes"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_01
+msgid "Test 1: General balance"
+msgstr "Test 1: Balance Générale"
+
+#. module: account_test
+#: model:ir.module.module,description:account_test.module_meta_information
+msgid "Asserts on accounting"
+msgstr "Asserts on accounting"
+
+#. module: account_test
+#: code:addons/account_test/report/account_test_report.py:0
+#, python-format
+msgid "The test was passed successfully"
+msgstr "Le test est passé avec succès"
+
+#. module: account_test
+#: field:accounting.assert.test,active:0
+msgid "Active"
+msgstr "Active"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06
+msgid "Test 6 : Invoices status"
+msgstr "Test 6: vérifier les factures"
+
+#. module: account_test
+#: model:ir.model,name:account_test.model_accounting_assert_test
+msgid "accounting.assert.test"
+msgstr "accounting.assert.test"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05_2
+msgid "Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices"
+msgstr "Vérifier que les lignes de factures d'achat/vente réconciliées ont des écritures pour les comptes payables et recevables réconciliées"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_11_2
+msgid "Check that amounts by analytical plan are equals to the amount of account move line"
+msgstr "Vérifier que les montants par plan analytique sont égaux au montant de la ligne du mouvement comptable"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_11_1
+msgid "Check that each account move line has at least 3 analytical moves"
+msgstr "Vérifier que chaque ligne d'un mouvement comptable a au moins 3 lignes analytiques"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_07
+msgid "Test 8 : Closing balance on bank statements"
+msgstr "Test 8 : Vérification des lignes financières des extraits de comptes"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_07
+msgid "Check on bank statement that the Closing Balance = Starting Balance + sum of statement lines"
+msgstr "Vérifier que le solde de fin est égal au solde de début + la somme des mouvements"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05
+msgid "Test 5.1 : Payable and Receivable lines accounts of reconciled invoices"
+msgstr "Test 5.1 : Vérification des lignes des comptes payables et recevables des factures réconciliées"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_03
+msgid "Test 3: Movement lines"
+msgstr "Test 3: Mouvements comptables"
+
+#. module: account_test
+#: constraint:ir.ui.view:0
+msgid "Invalid XML for View Architecture!"
+msgstr "XML Invalide pour cette vue"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_11_1
+msgid "Test 11.1: Analytical moves"
+msgstr "Test 11.1: Mouvements analytiques"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_05_2
+msgid "Test 5.2 : Reconcilied invoices and Payable/Receivable accounts"
+msgstr "Test 5.2 : Factures réconciliées et les lignes des comptes payables et recevables non réconciliées "
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_15
+msgid "Test 15 : Analytical moves for Analytic multi plan"
+msgstr "Test 15 : Mouvements analytiques"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_15
+msgid "Check that analytic accounts used on lines are present in analytic sections of different plans"
+msgstr "Vérifier que les centres de coûts présents dans les lignes sont bien présents dans les sections analytiques des différents plans"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_04
+msgid "Test 4: Totally reconciled mouvements"
+msgstr "Test 4: Vérification des reconcile complets"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_04
+msgid "Check if the totally reconciled movements are balanced"
+msgstr "Vérification des reconcile complets"
+
+#. module: account_test
+#: field:accounting.assert.test,sequence:0
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_02
+msgid "Check if the balance of the new opened fiscal year matches with last year's balance"
+msgstr "Vérifier que l'ouverture d'une année fiscale correspond au solde de l'année passée"
+
+#. module: account_test
+#: view:accounting.assert.test:0
+msgid "Python Code"
+msgstr "Code Python"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_08
+msgid "Test 9 : Accounts and partners on account moves"
+msgstr "Test 9 : Comptes et partenaires sur les mouvements comptables"
+
+#. module: account_test
+#: model:accounting.assert.test,name:account_test.account_test_06_1
+msgid "Test 7: « View  » account type"
+msgstr "Test 7: mouvements sur comptes type 'vue'"
+
+#. module: account_test
+#: model:ir.module.module,shortdesc:account_test.module_meta_information
+msgid "OpenERP"
+msgstr "OpenERP"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_05
+msgid "Check that reconciled invoice for Sales/Purchases has reconciled entries for Payable and Receivable Accounts"
+msgstr "Vérifier que les factures réconcilées ont des écritures comptables sur les comptes payables ou recevables réconciliées"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_09_1
+msgid "Check that there's no gap in invoices sequence"
+msgstr "Vérifier que les factures n'ont pas de trous dans leur numérotation"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_01
+msgid "Check the balance: Debit sum = Credit sum"
+msgstr "Vérifier la balance générale: somme débit = somme crédit"
+
+#. module: account_test
+#: model:accounting.assert.test,desc:account_test.account_test_14
+msgid "Check that general accounts and partners on account moves are active"
+msgstr "Vérifier que les comptes généraux ainsi que les partenaires renseignés sur les mouvements comptables sont actifs"
+
+#. module: account_test
+#: view:accounting.assert.test:0
+msgid "Code Help"
+msgstr "Code Help"
+

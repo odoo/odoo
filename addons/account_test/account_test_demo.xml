@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+
+    <record model="accounting.assert.test" id="account_test_demo_01">
+        <field name="name">Test 1</field>
+        <field name="desc">Test 1</field>
+        <field name="domain_exec"></field>
+        <field name="code_exec"><![CDATA[sql="""SELECT
+    sum(debit) as sum_debit,
+    sum(credit) as sum_credit,
+    sum(debit-credit) as balance,
+    am.id as move_id,
+    am.state,
+    am.period_id
+  FROM account_move am, account_move_line ml
+  WHERE
+       ml.move_id = am.id
+     AND
+       ml.state = 'valid'
+  GROUP BY am.name, am.id, am.state, am.period_id
+  HAVING abs(sum(ml.debit-ml.credit)) <> 0"""
+cr.execute(sql)
+result = cr.dictfetchall()
+]]></field>
+    </record>
+
+</data>
+</openerp>
