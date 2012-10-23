@@ -916,7 +916,8 @@ class fleet_vehicle_log_contract(osv.Model):
         nextyear=curdate+oneyear#int(strdate[:4])+1
         return str(nextyear)#+strdate[4:]
 
-    def on_change_start_date(self, cr, uid, ids, strdate, context=None):
+    def on_change_start_date(self, cr, uid, ids, strdate, enddate, context=None):
+        
         if (strdate):
            
             return {'value' : {'expiration_date' : self.compute_next_year_date(strdate),}}
@@ -951,7 +952,7 @@ class fleet_vehicle_log_contract(osv.Model):
 
     def act_renew_contract(self,cr,uid,ids,context=None):
         contracts = self.browse(cr,uid,ids,context=context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract_wizard', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract', context)
         for element in contracts:
             temp = []
             temp.append(('default_vehicle_id',element.vehicle_id.id))
@@ -965,24 +966,29 @@ class fleet_vehicle_log_contract(osv.Model):
                 cost_temp.append(costs.id)
             temp.append(('default_cost_ids',cost_temp))
             temp.append(('default_date',time.strftime('%Y-%m-%d')))
-            temp.append(('default_start_date',element.expiration_date))
+            temp.append(('default_start_date',str(self.str_to_date(element.expiration_date)+datetime.timedelta(days=1))))
             temp.append(('default_purchaser_id',element.purchaser_id.id))
             temp.append(('default_ins_ref',element.ins_ref))
             temp.append(('default_state','open'))
             temp.append(('default_notes',element.notes))
+            temp.append(('default_cost_frequency',element.cost_frequency))
+            generated_cost = []
+            for gen_cost in element.generated_cost_ids:
+                generated_cost.append(gen_cost.id)
+            temp.append(('default_generated_cost_ids',generated_cost))
+
+            #compute end date
+            startdate = self.str_to_date(element.start_date)
+            enddate = self.str_to_date(element.expiration_date)
+            diffdate = (enddate-startdate)
+            newenddate = enddate+diffdate
+            temp.append(('default_expiration_date',str(newenddate)))
 
             res['context'] = dict(temp)
-            #res['context']['default_vehicle_id'] = element.vehicle_id.id
-            #res['context'] = {
-            #    'default_vehicle_id': element.vehicle_id.id,
-            #    'default_cost_type': element.cost_type.id,
-            #    'default_amount': element.amount,
-            #    'default_odometer': element.odometer,
-            #    'default_insurer_id': element.insurer_id.id,
-            #}
-        #res['domain']=[('vehicle_id','=', ids[0])]
+            
         return res
-        #return None
+
+        
 
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
@@ -1014,13 +1020,14 @@ class fleet_vehicle_log_contract(osv.Model):
         'date' : time.strftime('%Y-%m-%d'),
         'start_date' : time.strftime('%Y-%m-%d'),
         'state':'open',
-        #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
+        'expiration_date' : lambda self,cr,uid,ctx: self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         current_object = self.browse(cr,uid,id,context)
+        default['date'] = time.strftime('%Y-%m-%d')
         default['start_date'] = time.strftime('%Y-%m-%d')
         default['expiration_date'] = self.compute_next_year_date(time.strftime('%Y-%m-%d'))
         #default['name'] = current_object.name

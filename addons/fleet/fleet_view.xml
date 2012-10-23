@@ -45,8 +45,8 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new model.
               </p><p>
-                Here you can add the different model for a 
-                particular brand of vehicle. Like Audi A3,
+                Specify the different model for a particular
+                brand of vehicle. For example Audi A3,
                 Audi A4, ...
               </p>
             </field>
@@ -147,7 +147,6 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new state.
               </p><p>
-                Here you can create and organize the state for a vehicle.
                 A state can help you knowing in what condition your
                 vehicle is. In reparation, Sold, Active, ...
               </p>
@@ -258,6 +257,7 @@
                     <field name="tag_ids"/>
                     <field name="location"/>
                     <field name="state" />
+
                </search>
             </field>
         </record>
@@ -436,7 +436,7 @@
                         <group col="2">
                             <group>
                                 <field name="date" string="Invoice Date"/>
-                                <field name="start_date" on_change="on_change_start_date(start_date)"/>
+                                <field name="start_date"/>
                                 <field name="expiration_date" />
                             </group>
                             <group>
