@@ -56,8 +56,9 @@
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <field name="author_id"/>
+                    <field name="partner_ids"/>
                     <filter string="Unread"
-                            name="messages_unread" help="Show messages to read"
+                            name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
                     <filter string="Comments"
                             name="comments" help="Comments"
@@ -84,25 +85,5 @@
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
-        <record id="action_mail_inbox_feeds" model="ir.actions.client">
-            <field name="name">Inbox</field>
-            <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
-        </record>
-
-        <record id="action_mail_archives_feeds" model="ir.actions.client">
-            <field name="name">Archives</field>
-            <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', False)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
-        </record>
-
-        <record id="action_mail_sent_feeds" model="ir.actions.client">
-            <field name="name">Sent</field>
-            <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
-        </record>
     </data>
 </openerp>
