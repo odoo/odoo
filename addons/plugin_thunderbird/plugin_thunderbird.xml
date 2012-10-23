@@ -20,19 +20,22 @@
                         </group>
                         <separator string="Installation and Configuration Steps"/>
                         <p>Thunderbird plugin installation:</p>
-                        <ul>
-                            <li>1. Save the Thunderbird plug-in.</li>
-                            <li>2. From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
-                            <li>3. Select the plug-in (the file named openerp_plugin.xpi).</li>
-                            <li>4. Click "Install Now".</li>
-                            <li>5. Restart Thunderbird.</li>
-                            <li>6. From the Thunderbird menubar: OpenERP -> Configuration.</li>
-                            <li>7. Configure your openerp server.</li>
-                        </ul>
+                        <ol>
+                            <li> Save the Thunderbird plug-in.</li>
+                            <li> From the Thunderbird menubar: Tools ­> Add-ons -> Screwdriver/Wrench Icon -> Install add-on from file...</li>
+                            <li> Select the plug-in (the file named openerp_plugin.xpi).</li>
+                            <li> Click "Install Now".</li>
+                            <li> Restart Thunderbird.</li>
+                            <li> From the Thunderbird menubar: OpenERP -> Configuration.</li>
+                            <li> Configure your openerp server.</li>
+                        </ol>
                     </xpath>
                     <separator string="title" position="attributes">
                         <attribute name="string"></attribute>
                     </separator>
+                    <group><footer>
+                        <button string="Close" special="Cancel" class="oe_highlight"/></footer>
+                    </group>
                 </data>
             </field>
         </record>
