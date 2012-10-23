@@ -24,10 +24,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     dialog_stop: function () {
         if (this.dialog) {
-            this.dialog_widget.destroy();
-            this.dialog_widget = null;
             this.dialog.destroy();
-            this.dialog = null;
         }
     },
     /**
@@ -299,15 +296,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
+            if (this.dialog_widget && ! this.dialog_widget.isDestroyed())
+                this.dialog_widget.destroy();
             if (this.dialog === null || this.dialog.isDestroyed()) {
                 this.dialog = new instance.web.Dialog(this, {
-                    buttons: {"Close": function() {$(this).dialog("close")}},
                     dialogClass: executor.klass,
                 });
                 this.dialog.on("closing", null, options.on_close);
                 this.dialog.init_dialog();
-            } else {
-                this.dialog_widget.destroy();
             }
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
@@ -317,6 +313,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 });
             }
             this.dialog_widget = widget;
+            this.dialog_widget.setParent(this.dialog);
             var initialized = this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
             return initialized;
@@ -898,9 +895,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super.apply(this, arguments)).then(function () {
-            var controller = self.views[self.active_view].controller,
-                fvg = controller.fields_view,
-                view_id = (fvg && fvg.view_id) || '--';
+            var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
                 view_manager: self
@@ -914,8 +909,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         view.set({ 'title': this.action.name });
         return r;
     },
+    get_action_manager: function() {
+        var cur = this;
+        while (cur = cur.getParent()) {
+            if (cur instanceof instance.web.ActionManager) {
+                return cur;
+            }
+        }
+        return undefined;
+    },
     set_title: function(title) {
-        this.$el.find('.oe_breadcrumb_title:first').html(this.getParent().get_title());
+        this.$el.find('.oe_breadcrumb_title:first').html(this.get_action_manager().get_title());
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -1061,9 +1065,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                     additional_context);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
-                self.do_action(result, function () {
-                    // reload view
-                    self.getParent().reload();
+                self.do_action(result, {
+                    on_close: function() {
+                        // reload view
+                        self.getParent().reload();
+                    },
                 });
             });
         });
@@ -1134,28 +1140,28 @@ instance.web.View = instance.web.Widget.extend({
     start: function () {
         return this.load_view();
     },
-    load_view: function() {
+    load_view: function(context) {
         var self = this;
+        var view_loaded;
         if (this.embedded_view) {
-            var def = $.Deferred();
-            $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.pipe(function(r) {
-                self.trigger('view_loaded', r);
+            view_loaded = $.Deferred();
+            $.async_when().then(function() {
+                view_loaded.resolve(self.embedded_view);
             });
         } else {
-            var context = new instance.web.CompoundContext(this.dataset.get_context());
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            return this.rpc("/web/view/load", {
+            view_loaded = this.rpc("/web/view/load", {
                 "model": this.dataset.model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
-                context: context
-                }).pipe(function(r) {
-                    self.trigger('view_loaded', r);
+                context: this.dataset.get_context(context)
             });
         }
+        return view_loaded.pipe(function(r) {
+            self.trigger('view_loaded', r);
+        });
     },
     set_default_options: function(options) {
         this.options = options || {};
@@ -1209,7 +1215,9 @@ instance.web.View = instance.web.Widget.extend({
                     /* niv: previously we were overriding once more with action_data.context,
                      * I assumed this was not a correct behavior and removed it
                      */
-                    return self.do_action(action, result_handler);
+                    return self.do_action(action, {
+                        on_close: result_handler,
+                    });
                 }, null);
             } else {
                 return result_handler();
