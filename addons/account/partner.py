@@ -209,7 +209,7 @@ class res_partner(osv.osv):
             relation='account.fiscal.position',
             string="Fiscal Position",
             view_load=True,
-            help="The fiscal position will determine taxes and the accounts used for the partner.",
+            help="The fiscal position will determine taxes and accounts used for the partner.",
         ),
         'property_payment_term': fields.property(
             'account.payment.term',
