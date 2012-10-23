@@ -169,7 +169,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.$buttons = $(QWeb.render("FormView.buttons", {'widget':self}));
         if (this.options.$buttons) {
-            this.options.$buttons.children().remove();
             this.$buttons.appendTo(this.options.$buttons);
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
@@ -3131,8 +3130,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
-            if(this.is_false()){
+            if (this.is_false()) {
                 this.$('.oe_m2o_cm_button').css({'display':'none'});
+            } else {
+                this.$('.oe_m2o_cm_button').css({'display':'inline'});
             }
         } else {
             var lines = _.escape(str).split("\n");
@@ -3361,6 +3362,13 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 if (self.get("effective_readonly")) {
                     controller.on('edit:before', self, function (e) {
                         e.cancel = true;
+                    });
+                    _(controller.columns).find(function (column) {
+                        if (!column instanceof instance.web.list.Handle) {
+                            return false;
+                        }
+                        column.modifiers.invisible = true;
+                        return true;
                     });
                 }
             } else if (view_type === "form") {
@@ -3597,6 +3605,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     _template: 'One2Many.listview',
     init: function (parent, dataset, view_id, options) {
         this._super(parent, dataset, view_id, _.extend(options || {}, {
+            GroupsType: instance.web.form.One2ManyGroups,
             ListType: instance.web.form.One2ManyList
         }));
         this.on('edit:before', this, this.proxy('_before_edit'));
@@ -3775,6 +3784,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 window.confirm = confirm;
             }
         });
+    }
+});
+instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
+    setup_resequence_rows: function () {
+        if (!this.view.o2m.get('effective_readonly')) {
+            this._super.apply(this, arguments);
+        }
     }
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
@@ -4156,6 +4172,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         }
         this._super(value_);
     },
+    get_value: function() {
+        return [commands.replace_with(this.get('value'))];
+    },
     load_view: function() {
         var self = this;
         this.kanban_view = new instance.web.form.Many2ManyKanbanView(this, this.dataset, false, {
@@ -4189,7 +4208,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         });
     },
     dataset_changed: function() {
-        this.set({'value': [commands.replace_with(this.dataset.ids)]});
+        this.set({'value': this.dataset.ids});
     },
     open_popup: function(type, unused) {
         if (type !== "form")
@@ -4545,7 +4564,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
             });
         });
-        this.searchview.appendTo($(".oe_popup_list", self.$el));
+        this.searchview.appendTo($(".oe_popup_search", self.$el));
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
