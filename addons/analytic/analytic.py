@@ -255,8 +255,8 @@ class account_analytic_account(osv.osv):
         if context is None:
             context={}
         if context.get('current_model') == 'project.project':
-            cr.execute("select analytic_account_id from project_project")
-            project_ids = [x[0] for x in cr.fetchall()]
+            project_obj = self.pool.get("account.analytic.account")
+            project_ids = project_obj.search(cr, uid, args)
             return self.name_get(cr, uid, project_ids, context=context)
         if name:
             account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
