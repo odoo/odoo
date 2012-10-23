@@ -85,6 +85,7 @@ class pos_make_payment(osv.osv_memory):
             'target': 'new',
             'views': False,
             'type': 'ir.actions.act_window',
+            'context': context,
         }
 
     def print_report(self, cr, uid, ids, context=None):
