@@ -229,13 +229,13 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
     graph_get_data: function () {
         var model = this.dataset.model,
-            domain = new instance.web.CompoundDomain(this.domain),
-            context = new instance.web.CompoundContext(this.context),
-            group_by = this.group_by,
-            view_id = this.view_id,
-            mode = this.mode,
-            orientation = this.orientation,
-            stacked = this.stacked;
+            domain = new instance.web.CompoundDomain(this.domain || []),
+            context = new instance.web.CompoundContext(this.context || {}),
+            group_by = this.group_by || [],
+            view_id = this.view_id  || false,
+            mode = this.mode || 'bar',
+            orientation = this.orientation || false,
+            stacked = this.stacked || false;
 
         var obj = new instance.web.Model(model);
         var view_get;
@@ -259,12 +259,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var pos = 0;
             var xaxis = group_by || [];
             var yaxis = [];
-            debugger;
             tree.find("field").each(function() {
                 var field = $(this);
                 if (! field.attr("name"))
                     return;
-                if ((! group_by) && ((! pos) || field.attr('group'))) {
+                if ((group_by.length == 0) && ((! pos) || field.attr('group'))) {
                     xaxis.push(field.attr('name'));
                 }
                 if (pos && ! field.attr('group')) {
@@ -312,7 +311,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
 
             if (mode === "pie") {
-                return obj.call("read_group", [domain, yaxis+[xaxis[0]], [xaxis[0]]], {context: context}).pipe(function(res) {
+                return obj.call("read_group", [domain, yaxis.concat([xaxis[0]]), [xaxis[0]]], {context: context}).pipe(function(res) {
                     _.each(res, function(record) {
                         result.push({
                             'data': [[_convert(xaxis[0], record[xaxis[0]]), record[yaxis[0]]]],
@@ -323,14 +322,12 @@ instance.web_graph.GraphView = instance.web.View.extend({
             } else if ((! stacked) || (xaxis.length < 2)) {
                 var defs = [];
                 _.each(xaxis, function(x) {
-                    defs.push(obj.call("read_group", [domain, yaxis+[x], [x]], {context: context}).pipe(function(res) {
+                    defs.push(obj.call("read_group", [domain, yaxis.concat([x]), [x]], {context: context}).pipe(function(res) {
                         return [x, res];
                     }));
                 });
                 return $.when.apply($, defs).pipe(function() {
                     _.each(_.toArray(arguments), function(res) {
-                        // TODO: must convert res
-                        debugger;
                         var x = res[0];
                         res = res[1];
                         result.push({
@@ -343,24 +340,22 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 });
             } else {
                 xaxis.reverse();
-                return obj.call("read_group", [domain, yaxis + xaxis.slice(0, 1), xaxis.slice(0, 1)], {context: context}).pipe(function(axis) {
+                return obj.call("read_group", [domain, yaxis.concat(xaxis.slice(0, 1)), xaxis.slice(0, 1)], {context: context}).pipe(function(axis) {
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis + xaxis.slice(1, 2), xaxis.slice(1, 2)],
+                        defs.push(obj.call("read_group", [domain+[(xaxis[0],'=',_convert_key(xaxis[0], key))], yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)],
                                 {context: context}).pipe(function(res) {
                             return [x, key, res];
                         }));
                     });
                     return $.when.apply($, defs).pipe(function(res) {
-                        // TODO: must convert res
-                        debugger;
                         var x = res[0];
                         var key = res[1];
                         res = res[2];
                         result.push({
                             'data': _.map(res, function(record) {
-                                return _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] or 0);
+                                return _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] || 0);
                             }),
                             'label': _convert(xaxis[0], key, false)
                         })
