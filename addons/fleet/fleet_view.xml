@@ -419,9 +419,10 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                 <field name="cost_type" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
-                                <label for="amount"/>
+                                <field name="amount" string="Activation Cost"/>
+                                <label for="cost_generated"/>
                                 <div>
-                                    <field name="amount" string="Invoice Amount" class="oe_inline"/>
+                                    <field name="cost_generated" class="oe_inline"/>
                                     <field name="cost_frequency" class="oe_inline"/>
                                 </div>
                             </group>

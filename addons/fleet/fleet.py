@@ -878,7 +878,7 @@ class fleet_vehicle_log_contract(osv.Model):
 
             if not nbr:
                 contract = self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_id,context=context)
-                data = {'amount' : contract.amount,'date' : d,'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract_id}
+                data = {'amount' : contract.cost_generated,'date' : d,'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract_id}
                 cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context) 
         return True
     
@@ -1026,9 +1026,6 @@ class fleet_vehicle_log_contract(osv.Model):
     _order='state,expiration_date'
     _columns = {
         'name' : fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
-        #'name' : fields.char('Name',size=64),
-
-        #'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
 
         'start_date' : fields.date('Contract Start Date', required=False, help='Date when the coverage of the contract begins'),
         'expiration_date' : fields.date('Contract Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
@@ -1044,6 +1041,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
+        'cost_generated': fields.float('Generated costs amount'),
         'cost_frequency': fields.selection([('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
         'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
     }
