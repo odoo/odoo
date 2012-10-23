@@ -111,9 +111,11 @@ class account_invoice_line(osv.osv):
 
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
                 item = res_dict['item_id'].get(pricelist,False)
-                item_base = item_obj.read(cr, uid, [item], ['base'])[0]['base']
-                if item_base > 0:
-                    field_name = price_type_obj.browse(cr, uid, item_base).field
+                item_read = item_obj.read(cr, uid, [item], ['base'])
+                if item_read:
+                    item_base = item_read[0]['base']
+                    if item_base > 0:
+                        field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
             product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
