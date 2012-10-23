@@ -270,12 +270,12 @@ class mail_message(osv.Model):
                 easily have access to their values, given their ID
             :return bool: True
         """
-        def _get_expandable(domain, message_nb, parent_id, id, model):
+        def _get_expandable(domain, message_nb, ancestor_id, id, model):
             return {
                 'domain': domain,
                 'nb_messages': message_nb,
                 'type': 'expandable',
-                'parent_id': parent_id,
+                'ancestor_id': ancestor_id,
                 'id':  id,
                 # TDE note: why do we need model sometimes, and sometimes not ???
                 'model': model,
@@ -400,14 +400,13 @@ class mail_message(osv.Model):
                 message_list.append(self._message_get_dict(cr, uid, message, context=context))
 
                 # get the older ancestor the user can read, update its ancestor field
-                if not thread_level:
-                    continue
                 parent = self._get_parent(cr, uid, message, context=context)
                 while parent and parent.get('id') != parent_id:
                     message_list[-1]['ancestor_id'] = parent.get('id')
                     message = parent
                     parent = self._get_parent(cr, uid, message, context=context)
-                if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
+                # if in thread: add its ancestor to the list of messages
+                if thread_level and not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
                     read_messages[message.get('id')] = message
                     message_list.append(self._message_get_dict(cr, uid, message, context=context))
 
