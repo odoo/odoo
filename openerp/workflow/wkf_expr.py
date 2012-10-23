@@ -44,7 +44,7 @@ class Env(dict):
 def _eval_expr(cr, ident, workitem, action):
     ret=False
     assert action, 'You used a NULL action in a workflow, use dummy node instead.'
-    for line in filter(lambda action: action != "", action.split('\n')):
+    for line in filter(None, action.split('\n')):
         line = line.strip()
         uid=ident[0]
         model=ident[1]
