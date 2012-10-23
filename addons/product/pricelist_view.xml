@@ -92,7 +92,7 @@
                     </group>
                     <group col="4" string="Price Computation">
                         <field name="base"/>
-                        <field name="base_pricelist_id" attrs="{'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
+                        <field name="base_pricelist_id" attrs="{'invisible':[('base', '!=', -1)],'required': [('base','=', -1)], 'readonly': [('base','!=', -1)]}"/>
                     </group>
                     <group col="6" colspan="5">
                         <label string="New Price ="/>
