@@ -851,8 +851,8 @@ class fleet_vehicle_log_contract(osv.Model):
 
     def run_scheduler(self,cr,uid,context=None):
 
-        d = datetime.datetime.now()
-        #d = datetime.date(2001, 01, 01)
+        #d = datetime.datetime.now()
+        d = datetime.date(2012, 8, 01)
 
         frequencies = []
         if d.day == 1 and d.month == 1:
@@ -867,7 +867,7 @@ class fleet_vehicle_log_contract(osv.Model):
         for i in range(frequencies_size-1):
             frequencies.insert(0,'|')
 
-        condition = ['&','&','&',('state','=','open',),('start_date','<=',d),('expiration_date','>=',d)]
+        condition = ['&','&','&',('state','=','open',),('start_date','<=',d.strftime('%Y-%m-%d')),('expiration_date','>=',d.strftime('%Y-%m-%d'))]
         condition.extend(frequencies)
 
         print str(condition)

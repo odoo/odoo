@@ -729,6 +729,50 @@
         <field name="parent_id" ref="log_service_2_fleet_vehicle_cost" />
       </record>
 
+      <record id="log_service_3" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_1" />
+        <field name="amount">513</field>
+        <field name="cost_type" ref="type_service_service_8"/>
+        <field name="date">2012-10-15</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">124</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_4" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_3" />
+        <field name="amount">412</field>
+        <field name="cost_type" ref="type_service_service_8"/>
+        <field name="date">2012-10-08</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">20984</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_5" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_4" />
+        <field name="amount">275</field>
+        <field name="cost_type" ref="type_service_service_8"/>
+        <field name="date">2012-09-25</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">241</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
+      <record id="log_service_6" model="fleet.vehicle.log.services" >
+        <field name="vehicle_id" ref="vehicle_5" />
+        <field name="amount">302</field>
+        <field name="cost_type" ref="type_service_service_8"/>
+        <field name="date">2012-09-15</field>
+        <field name="purchaser_id" ref="base.res_partner_address_18" />
+        <field name="inv_ref">22513</field>
+        <field name="vendor_id" ref="base.res_partner_13" />
+        <field name="notes">Maintenance</field>
+      </record>
+
       <record id="log_contract_1" model="fleet.vehicle.log.contract" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">0</field>
@@ -771,7 +815,7 @@
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">0</field>
         <field name="cost_generated">400</field>
-        <field name="cost_frequency">weekly</field>
+        <field name="cost_frequency">monthly</field>
         <field name="cost_type" ref="type_service_56"/>
         <field name="date">2012-01-01</field>
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
@@ -809,7 +853,7 @@
         <field name="vehicle_id" ref="vehicle_3" />
         <field name="amount">0</field>
         <field name="cost_generated">400</field>
-        <field name="cost_frequency">daily</field>
+        <field name="cost_frequency">monthly</field>
         <field name="cost_type" ref="type_service_56"/>
         <field name="date">2012-01-01</field>
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
@@ -847,7 +891,7 @@
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">0</field>
         <field name="cost_generated">400</field>
-        <field name="cost_frequency">yearly</field>
+        <field name="cost_frequency">monthly</field>
         <field name="cost_type" ref="type_service_56"/>
         <field name="date">2012-01-01</field>
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
