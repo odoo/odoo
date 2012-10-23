@@ -1148,7 +1148,7 @@ openerp.mail = function(session) {
             // CHM note : option for sending in flat mode by server
             var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, /*nb_indented_thread,*/ fetch_context, this.context.default_ancestor_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_ancestor_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
