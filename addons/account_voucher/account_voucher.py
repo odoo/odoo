@@ -1422,7 +1422,7 @@ class account_voucher_line(osv.osv):
     }
 
     def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
-        vals = { 'amount': 0.0}
+        vals = {'amount': 0.0}
         if reconcile:
             vals = { 'amount': amount_unreconciled}
         return {'value': vals}
