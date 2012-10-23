@@ -61,7 +61,8 @@ class google_docs_ir_attachment(osv.osv):
         #login with the base account google module
         client = self._auth(cr, uid, context=context)
         # create the document in google docs
-        local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL)
+        title = context.get("name","Untitled Document.")
+        local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL,title=title)
         #create a new doc in Google Docs 
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
         # create an ir.attachment into the db
@@ -149,7 +150,7 @@ This is the id of the template document, on google side. You can find it thanks 
 *for a presentation (slide show) document with url like `https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id.p`, the ID is `presentation:123456789`
 *for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
 ...
-'''),
+''', required=True),
         'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side', required=True),
     }
 

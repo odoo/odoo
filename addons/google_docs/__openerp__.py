@@ -28,6 +28,7 @@
     'installable': True,
     'auto_install': False,
     'js': ['static/src/js/gdocs.js'],
+    'qweb': ['static/src/xml/gdocs.xml'],
     'data': [
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
