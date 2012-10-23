@@ -304,7 +304,7 @@ openerp.mail = function(session) {
                 this.$render_expandable.on('blur', 'textarea', this.on_compose_expandable);
 
                 /* stack for don't close the compose form if the user click on a button */
-                this.$render_expandable.on('focus', 'textarea', function () { self.stay_open = false; });
+                this.$render_expandable.on('focus, mouseup', 'textarea', function () { self.stay_open = false; });
                 this.$render_expandable.on('mousedown', function () { self.stay_open = true; });
             }
         },
@@ -847,7 +847,6 @@ openerp.mail = function(session) {
          * add or remove a favorite (or starred) for a message and change class on the DOM
         */
         on_star: function (event) {
-            console.log('on_star');
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
@@ -1170,14 +1169,8 @@ openerp.mail = function(session) {
 
             // check if the message is already create
             for(var i in self.messages){
-                if(self.messages[i].id == message.id){
+                if(self.messages[i] && self.messages[i].id == message.id){
                     self.messages[i].destroy();
-                    if(message.id>0){
-                        self.messages[i] = message;
-                        return true;
-                    } else {
-                        delete self.messages[i];
-                    }
                 }
             }
             self.messages.push( message );
@@ -1288,6 +1281,10 @@ openerp.mail = function(session) {
             });
         },
 
+        /**
+         * this method is call when the widget of a message or an expandable message is destroy
+         * in this thread. The this.messages array is filter to remove this message
+         */
         on_message_detroy: function (message) {
 
             this.messages = _.filter(this.messages, function (val) { return !val.isDestroyed(); });
@@ -1410,6 +1407,8 @@ openerp.mail = function(session) {
          *...  @param {Boolean} [show_compose_message] allow to display the composer
          *...  @param {Boolean} [show_compact_message] display the compact message on the thread
          *      when the user clic on this compact mode, the composer is open
+         *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
+         *      When you use this option, the domain is not used for the fetch root.
          */
         init: function (parent, options) {
             this._super(parent);
@@ -1425,7 +1424,8 @@ openerp.mail = function(session) {
                 'truncate_limit' : 250,
                 'show_record_name' : false,
                 'show_compose_message' : false,
-                'show_compact_message' : false 
+                'show_compact_message' : false,
+                'message_ids': []
             }, options);
 
             if(this.display_indented_thread === false) {
@@ -1462,9 +1462,9 @@ openerp.mail = function(session) {
 
             this.thread.appendTo( this.$el );
             this.thread.no_message();
-            this.thread.message_fetch();
+            this.thread.message_fetch(null, null, this.options.message_ids);
 
-            if(this.options.show_compose_message && this.thread.ComposeMessage){
+            if(this.options.show_compose_message){
                 this.thread.ComposeMessage.do_show_compact();
             }
         },
@@ -1522,9 +1522,10 @@ openerp.mail = function(session) {
             // update domain
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
 
-            // TDE note: replace message_is_follower by a check in message_follower_ids, as message_is_follower is not used in views anymore
             var show_compose_message = this.view.is_action_enabled('edit') ||
                 (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
+
+            var message_ids = this.getParent().fields.message_ids && this.getParent().fields.message_ids.get_value();
 
             if(this.root){
                 this.root.destroy();
@@ -1537,7 +1538,8 @@ openerp.mail = function(session) {
                 'display_indented_thread': -1,
                 'show_reply_button': 0,
                 'show_read_unread_button': -1,
-                'show_compose_message': show_compose_message
+                'show_compose_message': show_compose_message,
+                'message_ids': message_ids
                 }
             );
 
@@ -1631,11 +1633,11 @@ openerp.mail = function(session) {
                 'domain' : domain,
                 'context' : context,
                 'typeof_thread': context['typeof_thread'] || 'other',
-                'display_indented_thread': 2,
+                'display_indented_thread': 1,
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
                 'show_compose_message': true,
-                'show_compact_message': true
+                'show_compact_message': false
                 }
             );
 
