@@ -77,6 +77,16 @@
             <field name="domain_force">[('user_id','=',user.id)]</field>
         </record>
 
+	<record id="res_partner_bank_rule" model="ir.rule">
+	    <field name="name">Partner bank company rule</field>
+	    <field name="model_id" ref="model_res_partner_bank"/>
+	    <field name="global" eval="True"/>
+            <!--
+                Same as res_partner above.
+            -->
+            <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
+	</record>
+
     </data>
 </openerp>
 

@@ -334,10 +334,10 @@ class res_users(osv.osv):
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
-        return self.name_get(cr, user, ids)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
@@ -484,13 +484,6 @@ class res_users(osv.osv):
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
-        }
-
-    def preference_change_password(self, cr, uid, ids, context=None):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'change_password',
-            'target': 'new',
         }
 
     def has_group(self, cr, uid, group_ext_id):

@@ -4357,7 +4357,20 @@ class BaseModel(object):
                 upd0 = upd0 + ',"' + field + '"'
                 upd1 = upd1 + ',' + self._columns[field]._symbol_set[0]
                 upd2.append(self._columns[field]._symbol_set[1](vals[field]))
+                #for the function fields that receive a value, we set them directly in the database 
+                #(they may be required), but we also need to trigger the _fct_inv()
+                if (hasattr(self._columns[field], '_fnct_inv')) and not isinstance(self._columns[field], fields.related):
+                    #TODO: this way to special case the related fields is really creepy but it shouldn't be changed at
+                    #one week of the release candidate. It seems the only good way to handle correctly this is to add an
+                    #attribute to make a field `really readonly´ and thus totally ignored by the create()... otherwise
+                    #if, for example, the related has a default value (for usability) then the fct_inv is called and it
+                    #may raise some access rights error. Changing this is a too big change for now, and is thus postponed
+                    #after the release but, definitively, the behavior shouldn't be different for related and function
+                    #fields.
+                    upd_todo.append(field)
             else:
+                #TODO: this `if´ statement should be removed because there is no good reason to special case the fields
+                #related. See the above TODO comment for further explanations.
                 if not isinstance(self._columns[field], fields.related):
                     upd_todo.append(field)
             if field in self._columns \

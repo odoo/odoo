@@ -223,7 +223,7 @@ class module(osv.osv):
             ('to upgrade','To be upgraded'),
             ('to remove','To be removed'),
             ('to install','To be installed')
-        ], string='State', readonly=True, select=True),
+        ], string='Status', readonly=True, select=True),
         'demo': fields.boolean('Demo Data', readonly=True),
         'license': fields.selection([
                 ('GPL-2', 'GPL Version 2'),
@@ -671,7 +671,7 @@ class module_dependency(osv.osv):
             ('to remove','To be removed'),
             ('to install','To be installed'),
             ('unknown', 'Unknown'),
-            ], string='State', readonly=True, select=True),
+            ], string='Status', readonly=True, select=True),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
