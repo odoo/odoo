@@ -394,6 +394,10 @@
   .openerp .oe_image_medium > img {
     max-width: 180px;
     max-height: 180px; }
+  .openerp .oe_view_manager_current .accessactive:first-letter{
+   text-decoration:underline;
+   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+   font-weight:bold; }
   .openerp .oe_button.oe_link {
     border: none;
     padding: 0;
@@ -2386,7 +2390,13 @@ div.ui-widget-overlay {
   .ui-menu .ui-menu-item a.ui-state-hover, .ui-menu .ui-menu-item a.ui-state-active {
     background: #7c7bad; }
 
-.ui-corner-all {
-  -moz-border-radius: 3px;
-  -webkit-border-radius: 3px;
-  border-radius: 3px; }
+  .ui-corner-all {
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px; }
+
+  .resolution table {
+    width: 100%;
+    line-height: 20px; }
+  .resolution table td {
+    valign: middle; }

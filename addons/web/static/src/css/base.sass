@@ -434,6 +434,10 @@ $sheet-max-width: 860px
     .oe_image_medium > img
         max-width: 180px
         max-height: 180px
+    .oe_view_manager_current .accessactive:first-letter
+        text-decoration: underline
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2)
+        font-weight: bold
     .oe_button.oe_link
         @include reset()
         img
@@ -2314,5 +2318,10 @@ div.ui-widget-overlay
 .ui-corner-all
     @include radius(3px)
 
+.resolution table
+    width: 100%
+    line-height: 20px
+    td
+        valign: middle
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

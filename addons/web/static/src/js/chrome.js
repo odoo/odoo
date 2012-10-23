@@ -987,7 +987,21 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
-            self.$el.on('click', '.oe_logo', function() {
+            self.$el.on('contextmenu','.oe_logo',function(e) {
+                instance.web.dialog($(QWeb.render('Resolution')),{
+                    title: "OpenERP Resolution" });
+
+                $(self.$el).click(function(){
+                    $('.resolution').dialog('close');
+                })
+                $('.resolution a').click(function() {
+                    self.$el.find('.oe_logo').css('width', $(this).attr('awidth')+"px");
+                    self.$el.find('.oe_logo').css('height', $(this).attr('aheight')+"px");
+                    self.$el.find('.oe_logo img').css('width', $(this).attr('imgw')+"px");
+                    self.$el.find('.oe_logo img').css('height', $(this).attr('imgh')+"px");
+                })
+            })
+            self.$el.on('click', '.oe_logo', function(e) {
                 self.action_manager.do_action('home');
             });
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
