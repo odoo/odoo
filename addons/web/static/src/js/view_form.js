@@ -4620,16 +4620,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this._super(field_manager, node);
         this.reference_ready = true;
     },
-    on_nop: function() {
-    },
-    on_selection_changed: function() {
-        if (this.reference_ready) {
-            var sel = this.selection.get_value();
-            this.m2o.field.relation = sel;
-            this.m2o.set_value(false);
-            this.m2o.$el.toggle(sel !== false);
-        }
-    },
     destroy_content: function() {
         if (this.fm) {
             this.fm.destroy();
@@ -4670,32 +4660,37 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('focused', null, function () {self.trigger('focused')})
             .on('blurred', null, function () {self.trigger('blurred')});
     },
-    is_false: function() {
-        return typeof(this.get_value()) !== 'string';
+    on_selection_changed: function() {
+        if (this.reference_ready) {
+            this.internal_set_value([this.selection.get_value(), false]);
+            this.render_value();
+        }
+    },
+    data_changed: function() {
+        if (this.reference_ready) {
+            this.internal_set_value([this.selection.get_value(), this.m2o.get_value()]);
+        }
+    },
+    set_value: function(val) {
+        if (val) {
+            val = val.split(',');
+            val[0] = val[0] || false;
+            val[1] = val[0] ? (val[1] ? parseInt(val[1], 10) : val[1]) : false;
+        }
+        this._super(val || [false, false]);
+    },
+    get_value: function() {
+        return this.get('value')[0] && this.get('value')[1] ? (this.get('value')[0] + ',' + this.get('value')[1]) : false;
     },
     render_value: function() {
         this.reference_ready = false;
-        var vals = [], sel_val, m2o_val;
-        if (typeof(this.get('value')) === 'string') {
-            vals = this.get('value').split(',');
-        }
-        sel_val = vals[0] || false;
-        m2o_val = vals[1] ? parseInt(vals[1], 10) : vals[1];
         if (!this.get("effective_readonly")) {
-            this.selection.set_value(sel_val);
+            this.selection.set_value(this.get('value')[0]);
         }
-        this.m2o.field.relation = sel_val;
-        this.m2o.set_value(m2o_val);
+        this.m2o.field.relation = this.get('value')[0];
+        this.m2o.set_value(this.get('value')[1]);
+        this.m2o.$el.toggle(!!this.get('value')[0]);
         this.reference_ready = true;
-    },
-    data_changed: function() {
-        var model = this.selection.get_value(),
-            id = this.m2o.get_value();
-        if (typeof(model) === 'string' && typeof(id) === 'number') {
-            this.internal_set_value(model + ',' + id);
-        } else {
-            this.internal_set_value(false);
-        }
     },
 });
 

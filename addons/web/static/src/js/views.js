@@ -174,6 +174,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if(this.inner_action.type == 'ir.actions.act_window') {
                     state['model'] = this.inner_action.res_model;
                 }
+                if (this.inner_action.menu_id) {
+                    state['menu_id'] = this.inner_action.menu_id;
+                }
                 if (this.inner_action.id) {
                     state['action'] = this.inner_action.id;
                 } else if (this.inner_action.type == 'ir.actions.client') {
@@ -241,6 +244,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             clear_breadcrumbs: false,
             on_reverse_breadcrumb: function() {},
             on_close: function() {},
+            action_menu_id: null,
         });
         if (_.isString(action) && instance.web.client_actions.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action };
@@ -266,6 +270,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             pager : !popup && !inline,
             display_title : !popup
         }, action.flags || {});
+        action.menu_id = options.action_menu_id;
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
             return $.Deferred().reject();
@@ -895,9 +900,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super.apply(this, arguments)).then(function () {
-            var controller = self.views[self.active_view].controller,
-                fvg = controller.fields_view,
-                view_id = (fvg && fvg.view_id) || '--';
+            var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
                 view_manager: self
@@ -1144,26 +1147,31 @@ instance.web.View = instance.web.Widget.extend({
     },
     load_view: function(context) {
         var self = this;
+        var view_loaded;
         if (this.embedded_view) {
-            var def = $.Deferred();
-            $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.pipe(function(r) {
-                self.trigger('view_loaded', r);
+            view_loaded = $.Deferred();
+            $.async_when().then(function() {
+                view_loaded.resolve(self.embedded_view);
             });
         } else {
-            var context = this.dataset.get_context(context || {});
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            return this.rpc("/web/view/load", {
+            view_loaded = this.rpc("/web/view/load", {
                 "model": this.dataset.model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
-                context: context
-                }).pipe(function(r) {
-                    self.trigger('view_loaded', r);
+                context: this.dataset.get_context(context)
             });
         }
+        return view_loaded.pipe(function(r) {
+            self.trigger('view_loaded', r);
+            // add css classes that reflect the (absence of) access rights
+            self.$el.addClass('oe_view')
+                .toggleClass('oe_cannot_create', !self.is_action_enabled('create'))
+                .toggleClass('oe_cannot_edit', !self.is_action_enabled('edit'))
+                .toggleClass('oe_cannot_delete', !self.is_action_enabled('delete'));
+        });
     },
     set_default_options: function(options) {
         this.options = options || {};

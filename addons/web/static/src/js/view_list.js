@@ -22,6 +22,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'reorderable': true,
         'action_buttons': true,
     },
+    view_type: 'tree',
     /**
      * Core class for list-type displays.
      *
@@ -83,7 +84,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
-        this.on('view_load', self, self.load_list);
+        this.grouped = false;
+        this.on('view_loaded', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -145,7 +147,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     start: function() {
         this.$el.addClass('oe_list');
-        return this.start();
+        return this._super();
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -250,11 +252,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
-        // add css classes that reflect the (absence of) access rights
-        this.$el.toggleClass('oe_list_cannot_create', !this.is_action_enabled('create'))
-                .toggleClass('oe_list_cannot_edit', !this.is_action_enabled('edit'))
-                .toggleClass('oe_list_cannot_delete', !this.is_action_enabled('delete'));
-
         // Head hook
         // Selecting records
         this.$el.find('.oe_list_record_selector').click(function(){
@@ -282,7 +279,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Add button
         if (!this.$buttons) {
-            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':this}));
+            this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
             } else {
@@ -295,7 +292,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         // Pager
         if (!this.$pager) {
-            this.$pager = $(QWeb.render("ListView.pager", {'widget':this}));
+            this.$pager = $(QWeb.render("ListView.pager", {'widget':self}));
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
@@ -462,6 +459,16 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this._super();
     },
     /**
+     * Reloads the list view based on the current settings (dataset & al)
+     *
+     * @deprecated
+     * @param {Boolean} [grouped] Should the list be displayed grouped
+     * @param {Object} [context] context to send the server while loading the view
+     */
+    reload_view: function (grouped, context, initial) {
+        return this.load_view(context);
+    },
+    /**
      * re-renders the content of the list view
      *
      * @returns {$.Deferred} promise to content reloading
@@ -543,7 +550,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        this.load_view(context).then(this.proxy('reload_content'));
+        return this.load_view(context).pipe(
+            this.proxy('reload_content'));
     },
     /**
      * Handles the signal to delete lines from the records list
