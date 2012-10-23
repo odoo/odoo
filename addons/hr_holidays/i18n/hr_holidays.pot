@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
-"PO-Revision-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
+"PO-Revision-Date: 2012-10-23 11:49+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -172,11 +172,9 @@ msgid "You cannot validate leaves for employee %s: too few remaining days (%s)."
 msgstr ""
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid "The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.            \n"
-"The state is 'Refused', when holiday request is refused by manager.            \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
 
 #. module: hr_holidays
@@ -276,8 +274,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr ""
 
@@ -387,6 +387,14 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
+msgstr ""
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid "The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.            \n"
+"The state is 'Refused', when holiday request is refused by manager.            \n"
+"The state is 'Approved', when holiday request is approved by manager."
 msgstr ""
 
 #. module: hr_holidays
@@ -651,9 +659,11 @@ msgid "This color will be used in the leaves summary located in Reporting\\Leave
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr ""
 
