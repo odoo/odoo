@@ -6,14 +6,14 @@
             <field name="model">mail.compose.message</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
-                    <!-- truly invisible fields for control and options -->
-                    <field name="composition_mode" nolabel="1" invisible="0"/>
-                    <field name="model" nolabel="1" invisible="0"/>
-                    <field name="res_id" nolabel="1" invisible="0"/>
-                    <field name="parent_id" nolabel="1" invisible="0"/>
-                    <field name="content_subtype" nolabel="1" invisible="0"/>
-                    <!-- visible wizard -->
                     <group>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="content_subtype" invisible="1"/>
+                        <!-- visible wizard -->
                         <field name="subject" placeholder="Subject..."
                                 attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>/>
                         <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
