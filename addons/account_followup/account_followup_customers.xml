@@ -13,16 +13,32 @@
  				<form string="Customer FollowUp form">
  					<group col="4" colspan="4">
  						<field name="name"/>
- 						<field name="phone"/>
+ 						<field name="phone" />
  					</group>
- 					<separator name="Detail of accounts"/>	
- 					<!--<field name="accountmoveline_ids"/>-->
- 					<separator name="Payment Followup Remarks"/>
+ 					<separator string="Detail of accounts" />	
+ 					<field name="accountmoveline_ids" nolabel="1" domain="[('debit', '&gt;', 0)]">
+ 						<tree string="Account Move line" editable="bottom">
+ 							<field name="date" readonly="True"/>
+                    		<field name="move_id" readonly="True"/>
+                    		<field name="ref" readonly="True"/>
+                    			
+ 							<field name="debit" readonly="True"/>					
+ 							<field name="credit" readonly="True"/>
+ 							<field name="followup_date" readonly="True"/>
+ 							<field name="followup_line_id" readonly="True"/>
+ 							<field name="blocked" string="Litigation"/>
+ 							<field name="payment_commitment"/>
+ 							<field name="payment_date"/>
+ 						</tree>
+ 					</field>
+ 					<newline/>
+ 					<separator string="Payment Followup Remarks"/>
  					<!--<field name="payment_responsible_id"/>-->
  					<group col="4" colspan="4">
  						<field name="payment_note"/>
- 						<field name="payment_followup_level_id"/>
+ 						<!--<field name="payment_followup_level_id"/>-->
  						<field name="payment_new_action"/>
+ 						<field name="latest_followup_level_id"/>
  						<field name="latest_followup_date"/>
  					</group>
  				</form>
@@ -36,12 +52,14 @@
  			<field name="priority" eval="20"/>
  			<field name="arch" type="xml">
  				<tree string="Customer Followup">
- 					<field name="name"/>
- 					<field name="payment_note"/>
- 					<field name="payment_new_action"/>
- 					<field name="email"/>
- 					<field name="phone"/>
- 				<!--<field name="latest_followup_date"/>-->
+ 					<field name="name"/> 					
+ 				<field name="latest_followup_level_id"/>
+ 				<field name="latest_followup_date"/>
+ 				<field name="payment_new_action"/>
+ 				<field name="payment_note"/>
+ 				<field name="phone"/>
+ 				<field name="email"/>
+ 				   <!-- <field name="latest_followup_date"/>-->
  				</tree>
  			</field>
  		</record>
@@ -56,6 +74,7 @@
  			<field name="view_mode">tree,form</field>
  			<field name="domain">[('customer', '=', True)]</field>
  		</record>
+
 
 
 

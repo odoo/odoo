@@ -31,7 +31,7 @@ class account_followup_print(osv.osv_memory):
     _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
-        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True),
+        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -155,6 +155,7 @@ class account_followup_print_all(osv.osv_memory):
             data = self.browse(cr, uid, ids, context=context)[0]
         company_id = 'company_id' in context and context['company_id'] or data.company_id.id
 
+
         cr.execute(
             "SELECT l.partner_id, l.followup_line_id,l.date_maturity, l.date, l.id "\
             "FROM account_move_line AS l "\
@@ -193,8 +194,19 @@ class account_followup_print_all(osv.osv_memory):
         partner_list = []
         to_update = {}
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
+            
             if not partner_id:
                 continue
+            #part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)            
+            #print "Respartner: " + part.send_letter
+
+            #if not partns[0].send_letter:
+            #    continue
+
+            #if not partner_id.send_letter:
+            #    continue
+
+
             if followup_line_id not in fups:
                 continue
             stat_line_id = partner_id * 10000 + company_id
@@ -207,6 +219,7 @@ class account_followup_print_all(osv.osv_memory):
                 if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
+
         return {'partner_ids': partner_list, 'to_update': to_update}
 
     def do_mail(self, cr, uid, ids, context=None):
@@ -221,70 +234,71 @@ class account_followup_print_all(osv.osv_memory):
         partners = [stat_by_partner_line / 10000 for stat_by_partner_line in stat_by_partner_line_ids]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        if data.email_conf:
+        if True: #should not depend on this
             msg_sent = ''
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
             for partner in self.pool.get('res.partner').browse(cr, uid, partners, context=context):
-                ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
-                data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
-                total_amt = 0.0
-                for line in data_lines:
-                    total_amt += line.debit - line.credit
-                dest = False
-                if partner:
-                    dest = [partner.email]
-                if not data.partner_lang:
-                    body = data.email_body
-                else:
-                    cxt = context.copy()
-                    cxt['lang'] = partner.lang
-                    body = user_obj.browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
-                move_line = ''
-                subtotal_due = 0.0
-                subtotal_paid = 0.0
-                subtotal_maturity = 0.0
-                balance = 0.0
-                l = '--------------------------------------------------------------------------------------------------------------------------'
-                head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Due date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
-                for i in data_lines:
-                    maturity = 0.00
-                    if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
-                        maturity = i.debit - i.credit
-                    subtotal_due = subtotal_due + i.debit
-                    subtotal_paid = subtotal_paid + i.credit
-                    subtotal_maturity = subtotal_maturity + int(maturity)
-                    balance = balance + (i.debit - i.credit)
-                    move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
-                move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
-                move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
-                val = {
-                    'partner_name':partner.name,
-                    'followup_amount':total_amt,
-                    'user_signature':data_user.name,
-                    'company_name':data_user.company_id.name,
-                    'company_currency':data_user.company_id.currency_id.name,
-                    'line':move_line,
-                    'heading': head,
-                    'date':time.strftime('%Y-%m-%d'),
-                }
-                body = body%val
-                sub = tools.ustr(data.email_subject)
-                msg = ''
-                if dest:
-                    try:
-                        vals = {'state': 'outgoing',
-                                'subject': sub,
-                                'body_html': '<pre>%s</pre>' % body,
-                                'email_to': dest,
-                                'email_from': data_user.email or tools.config.options['email_from']}
-                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
-                        msg_sent += partner.name + '\n'
-                    except Exception, e:
-                        raise osv.except_osv('Error !', e )
-                else:
-                    msg += partner.name + '\n'
-                    msg_unsent += msg
+                if True: #partner.latest_followup_level_id.send_email:
+                    ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
+                    data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
+                    total_amt = 0.0
+                    for line in data_lines:
+                        total_amt += line.debit - line.credit
+                    dest = False
+                    if partner:
+                        dest = [partner.email]
+                    if not data.partner_lang:
+                        body = data.email_body 
+                    else:
+                        cxt = context.copy()
+                        cxt['lang'] = partner.lang
+                        body = user_obj.browse(cr, uid, uid, context=cxt).company_id.follow_up_msg
+                    move_line = ''
+                    subtotal_due = 0.0
+                    subtotal_paid = 0.0
+                    subtotal_maturity = 0.0
+                    balance = 0.0
+                    l = '--------------------------------------------------------------------------------------------------------------------------'
+                    head = l+ '\n' + 'Date'.rjust(10) + '\t' + 'Description'.rjust(10) + '\t' + 'Ref'.rjust(10) + '\t' + 'Due date'.rjust(10) + '\t' + 'Due'.rjust(10) + '\t' + 'Paid'.rjust(10) + '\t' + 'Maturity'.rjust(10) + '\t' + 'Litigation'.rjust(10) + '\n' + l
+                    for i in data_lines:
+                        maturity = 0.00
+                        if i.date_maturity < time.strftime('%Y-%m-%d') and (i.debit - i.credit):
+                            maturity = i.debit - i.credit
+                        subtotal_due = subtotal_due + i.debit
+                        subtotal_paid = subtotal_paid + i.credit
+                        subtotal_maturity = subtotal_maturity + int(maturity)
+                        balance = balance + (i.debit - i.credit)
+                        move_line = move_line + (i.date).rjust(10) + '\t'+ (i.name).rjust(10) + '\t'+ (i.ref or '').rjust(10) + '\t' + (i.date_maturity or '').rjust(10) + '\t' + str(i.debit).rjust(10)  + '\t' + str(i.credit).rjust(10)  + '\t' + str(maturity).rjust(10) + '\t' + str(i.blocked).rjust(10) + '\n'
+                    move_line = move_line + l + '\n'+ '\t\t\t' + 'Sub total'.rjust(35) + '\t' + (str(subtotal_due) or '').rjust(10) + '\t' + (str(subtotal_paid) or '').rjust(10) + '\t' + (str(subtotal_maturity) or '').rjust(10)+ '\n'
+                    move_line = move_line + '\t\t\t' + 'Balance'.rjust(33) + '\t' + str(balance).rjust(10) + '\n' + l
+                    val = {
+                        'partner_name':partner.name,
+                        'followup_amount':total_amt,
+                        'user_signature':data_user.name,
+                        'company_name':data_user.company_id.name,
+                        'company_currency':data_user.company_id.currency_id.name,
+                        'line':move_line,
+                        'heading': head,
+                        'date':time.strftime('%Y-%m-%d'),
+                    }
+                    body = body%val
+                    sub = tools.ustr(data.email_subject)
+                    msg = ''
+                    if dest:
+                        try:
+                            vals = {'state': 'outgoing',
+                                    'subject': sub,
+                                    'body_html': '<pre>%s</pre>' % body,
+                                    'email_to': dest,
+                                    'email_from': data_user.email or tools.config.options['email_from']}
+                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
+                            msg_sent += partner.name + '\n'
+                        except Exception, e:
+                            raise osv.except_osv('Error !', e )
+                    else:
+                        msg += partner.name + '\n'
+                        msg_unsent += msg
             if not msg_unsent:
                 summary = _("All Emails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
@@ -312,8 +326,9 @@ class account_followup_print_all(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids, [], context=context)[0]
-        res = self._get_partners_followp(cr, uid, ids, context)['to_update']
+        res = self._get_partners_followp(cr, uid, ids, context)['to_update'] #-> only to_update part
         to_update = res
+        
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
         if not data['test_print']:
@@ -326,6 +341,7 @@ class account_followup_print_all(osv.osv_memory):
                         (to_update[id]['level'],
                         date, int(id),))
         data.update({'date': context['date']})
+        print data
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
@@ -336,6 +352,7 @@ class account_followup_print_all(osv.osv_memory):
             'report_name': 'account_followup.followup.print',
             'datas': datas,
         }
+
 
 account_followup_print_all()
 
