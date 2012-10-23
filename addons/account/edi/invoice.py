@@ -148,7 +148,6 @@ class account_invoice(osv.osv, EDIMixin):
         edi_document['partner_id'] = partner_edi_m2o
         edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
 
-
         return partner_id
 
     def edi_import(self, cr, uid, edi_document, context=None):
