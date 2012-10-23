@@ -1469,6 +1469,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         return this.get_value();
     },
     update_dom: function(show_invalid) {
+        console.log('update_dom: show_invalid', show_invalid);
         this._super.apply(this, arguments);
         if (this.field.translate) {
             this.$element.find('.oe_field_translate').toggle(!!this.view.datarecord.id);
@@ -1476,7 +1477,7 @@ openerp.web.form.Field = openerp.web.form.Widget.extend(/** @lends openerp.web.f
         if (!this.disable_utility_classes) {
             this.$element.toggleClass('disabled', this.readonly);
             this.$element.toggleClass('required', this.required);
-            if (show_invalid) {
+            if (show_invalid || this.$element.hasClass('invalid')) {
                 this.$element.toggleClass('invalid', !this.is_valid());
             }
         }
