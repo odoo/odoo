@@ -1280,25 +1280,12 @@ openerp.mail = function(session) {
          */
         switch_new_message: function(records) {
             var self=this;
+            console.log(records);
             _(records).each(function(record){
                 var thread = self.browse_thread({
                     'id': record.ancestor_id, 
                     'default_return_top_thread':true
                 });
-
-                /*
-                record.thread_level = thread.thread_level;
-                record.options = {'_parents' : thread.options._parents };
-
-                // check for flat mode
-                var nb_level = thread.options.display_indented_thread - thread.thread_level;
-
-                if(nb_level <= 0){
-                    var thread = thread.options._parents[ thread.options._parents.length - 1 + nb_level ];
-                }
-                */
-
-
                 thread.create_message_object( record );
             });
         },
@@ -1376,6 +1363,7 @@ openerp.mail = function(session) {
                     'ancestor_id': message.ancestor_id,
                     'nb_messages': 1,
                     'thread_level': message.thread_level,
+                    'ancestor_id': message.ancestor_id
                     }, {
                     'domain': message_dom,
                     'context': {
