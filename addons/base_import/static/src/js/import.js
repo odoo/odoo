@@ -38,7 +38,7 @@ openerp.base_import = function (instance) {
     // if true, the 'Import', 'Export', etc... buttons will be shown
     instance.web.ListView.prototype.defaults.import_enabled = true;
     instance.web.ListView.include({
-        on_loaded: function () {
+        load_list: function () {
             var self = this;
             var add_button = false;
             if (!this.$buttons) {
