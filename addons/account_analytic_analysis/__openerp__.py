@@ -36,14 +36,17 @@ Adds menu to show relevant information to each manager.You can also view the rep
     'depends': ['hr_timesheet_invoice', 'sale'], #although sale is technically not required to install this module, all menuitems are located under 'Sales' application
     'data': [
         'security/ir.model.access.csv',
+        'security/account_analytic_analysis_security.xml',
         'account_analytic_analysis_view.xml',
         'account_analytic_analysis_menu.xml',
         'account_analytic_analysis_cron.xml',
     ],
+    'css': [
+        'static/src/css/analytic.css'
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0042927202589',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

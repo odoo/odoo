@@ -26,16 +26,19 @@
     'category': 'Human Resources',
     'sequence': 12,
     'website': 'http://www.openerp.com',
-    'summary': 'All Infos on Employees',
+    'summary': 'Jobs, Departments, Employees Details',
     'description': """
-Module for Human Resource Management.
-=====================================
+Human Resources Management
+=========================
+
+This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
+
 
 You can manage:
 ---------------
-    * Employees and hierarchies : You can define your employee with User and display hierarchies
-    * HR Departments
-    * HR Jobs
+* Employees and hierarchies : You can define your employee with User and display hierarchies
+* HR Departments
+* HR Jobs
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -65,7 +68,6 @@ You can manage:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0086710558965',
     'css': [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

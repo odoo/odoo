@@ -77,7 +77,7 @@ class fetchmail_server(osv.osv):
                                                                                              "emails to the existing conversations (documents)."),
         'priority': fields.integer('Server Priority', readonly=True, states={'draft':[('readonly', False)]}, help="Defines the order of processing, "
                                                                                                                   "lower values mean higher priority"),
-        'message_ids': fields.one2many('mail.message', 'fetchmail_server_id', 'Messages', readonly=True),
+        'message_ids': fields.one2many('mail.mail', 'fetchmail_server_id', 'Messages', readonly=True),
         'configuration' : fields.text('Configuration'),
         'script' : fields.char('Script', readonly=True, size=64),
     }
@@ -195,7 +195,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", False)})
                             imap_server.store(num, '+FLAGS', '\\Seen')
                             cr.commit()
                         count += 1
@@ -220,7 +220,7 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
                                                              strip_attachments=(not server.attach),
                                                              context=context)
                         if res_id and server.action_id:
-                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id]})
+                            action_pool.run(cr, uid, [server.action_id.id], {'active_id': res_id, 'active_ids':[res_id], 'active_model': context.get("thread_model", False)})
                         pop_server.dele(num)
                         cr.commit()
                     _logger.info("fetched/processed %s email(s) on %s server %s", numMsgs, server.type, server.name)
@@ -232,8 +232,8 @@ openerp_mailgate.py -u %(uid)d -p PASSWORD -o %(model)s -d %(dbname)s --host=HOS
             server.write({'date': time.strftime(tools.DEFAULT_SERVER_DATETIME_FORMAT)})
         return True
 
-class mail_message(osv.osv):
-    _inherit = "mail.message"
+class mail_mail(osv.osv):
+    _inherit = "mail.mail"
     _columns = {
         'fetchmail_server_id': fields.many2one('fetchmail.server', "Inbound Mail Server",
                                                readonly=True,
@@ -247,7 +247,7 @@ class mail_message(osv.osv):
         fetchmail_server_id = context.get('fetchmail_server_id')
         if fetchmail_server_id:
             values['fetchmail_server_id'] = fetchmail_server_id
-        res = super(mail_message,self).create(cr, uid, values, context=context)
+        res = super(mail_mail,self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
@@ -256,7 +256,7 @@ class mail_message(osv.osv):
         fetchmail_server_id = context.get('fetchmail_server_id')
         if fetchmail_server_id:
             values['fetchmail_server_id'] = server_id
-        res = super(mail_message,self).write(cr, uid, ids, values, context=context)
+        res = super(mail_mail,self).write(cr, uid, ids, values, context=context)
         return res
 
 

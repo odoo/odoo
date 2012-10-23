@@ -72,7 +72,8 @@
                     <h1><label for="number" string="Sale Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
                     <group>
                         <group>
-                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
+                            <field name="type" invisible="True"/>
+                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": True}'/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                         <group>
@@ -80,9 +81,9 @@
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
+                            <field name="paid_amount_in_company_currency" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <field name="type" invisible="True"/>
                     </group>
                     <notebook>
                         <page string="Sales Information">
@@ -235,6 +236,7 @@
                                 widget="selection"
                                 on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
                                 groups="account.group_account_user"/>
+                            <field name="paid_amount_in_company_currency" invisible="1"/>
                         </group>
                     </group>
                     <notebook>

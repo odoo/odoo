@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Leaves Management',
+    'name': 'Leave Management',
     'version': '1.5',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
@@ -29,33 +29,20 @@
     'summary': 'Holidays, Allocation and Leave Requests',
     'website': 'http://www.openerp.com',
     'description': """
-This module allows you to manage leaves and leave's requests.
-=============================================================
+Manage leaves and allocation requests
+=====================================
 
-Implements a dashboard for human resource management that includes:
--------------------------------------------------------------------
-    * Leaves
+This application controls the holiday schedule of your company. It allows employees to request holidays. Then, managers can review requests for holidays and approve or reject them. This way you can control the overall holiday planning for the company or department.
 
-Note that:
-~~~~~~~~~~
-    - A synchronisation with an internal agenda (use of the CRM module) is
-      possible: in order to automatically create a case when an holiday request
-      is accepted, you have to link the holidays status to a case section. You
-      can setup this info and your colour preferences in
-      
-          **Human Resources** / **Configuration** / **Leave Type**
-    - An employee can make an ask for more off-days by making a new Allocation. It will increase his total of that leave type available (if the request is accepted).
-    - There are two ways to print the employee's holidays:
-        * The first will allow to choose employees by department and is used by clicking the menu item located in
-                **Reporting** / **Human Resources** / **Leaves** / **Leaves by Department**
-        * The second will allow you to choose the holidays report for specific employees. Go on the list
-                **Human Resources** / **Human Resources** / **Employees**
-                then select the ones you want to choose, click on the print icon and select the option
-                'Leaves Summary'
-    - The wizard allows you to choose if you want to print either the Approved & Confirmed holidays or both. These states must be set up by a user from the group 'HR'. You can define these features in the security tab from the user data in
-                **Settings** / **Users** / **Users**
-                
-                for example, you maybe will do it for the user 'admin'.
+You can configure several kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
+
+You can keep track of leaves in different ways by following reports: 
+
+* Leaves Summary
+* Leaves by Department
+* Leaves Analysis
+
+A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a holiday request is accepted by setting up a type of meeting in Leave Type.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
     'depends': ['hr', 'base_calendar', 'process', 'resource'],
@@ -79,6 +66,5 @@ Note that:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0086579209325',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

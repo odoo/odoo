@@ -15,7 +15,7 @@ openerp.share = function(session) {
         self.rpc('/web/session/eval_domain_and_context', {
             domains: [domain],
             contexts: [view.dataset.context]
-        }, function (result) {
+        }).then(function (result) {
             Share.create({
                 name: action.name,
                 record_name: rec_name,
@@ -24,9 +24,8 @@ openerp.share = function(session) {
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
                 invite: invite || false,
-            }, function(result) {
-                var share_id = result.result;
-                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+            }).then(function(share_id) {
+                var step1 = Share.call('go_step_1', [[share_id]]).then(function(result) {
                     var action = result;
                     self.do_action(action);
                 });
@@ -89,7 +88,7 @@ openerp.share = function(session) {
         start: function() {
             start_res = this._super.apply(this, arguments);
             if (has_action_id) {
-                this.$element.find('button.oe_share_invite').show();
+                this.$el.find('button.oe_share_invite').show();
             }
             return start_res;
         }
@@ -100,7 +99,7 @@ openerp.share = function(session) {
             var self = this;
             this.check_if_action_is_defined();
             has_share(function() {
-                self.$element.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
+                self.$el.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
             });
             return this._super.apply(this, arguments);
         },

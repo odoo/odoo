@@ -27,18 +27,16 @@ import urllib
 import werkzeug.urls
 import werkzeug.exceptions
 
-from openerp.modules.registry import RegistryManager
-from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
-try:
-    import openerp.addons.web.common.http as openerpweb
-except ImportError:
-    import web.common.http as openerpweb    # noqa
-
 from openid import oidutil
 from openid.store import filestore
 from openid.consumer import consumer
 from openid.cryptutil import randomString
 from openid.extensions import ax, sreg
+
+import openerp
+from openerp import SUPERUSER_ID
+from openerp.modules.registry import RegistryManager
+from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
 
 from .. import utils
 
@@ -69,7 +67,7 @@ class GoogleAppsAwareConsumer(consumer.GenericConsumer):
         return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to)
 
 
-class OpenIDController(openerpweb.Controller):
+class OpenIDController(openerp.addons.web.http.Controller):
     _cp_path = '/auth_openid/login'
 
     _store = filestore.FileOpenIDStore(_storedir)
@@ -117,7 +115,7 @@ class OpenIDController(openerpweb.Controller):
     def _get_realm(self, req):
         return req.httprequest.host_url
 
-    @openerpweb.httprequest
+    @openerp.addons.web.http.httprequest
     def verify_direct(self, req, db, url):
         result = self._verify(req, db, url)
         if 'error' in result:
@@ -126,7 +124,7 @@ class OpenIDController(openerpweb.Controller):
             return werkzeug.utils.redirect(result['value'])
         return result['value']
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def verify(self, req, db, url):
         return self._verify(req, db, url)
 
@@ -156,7 +154,7 @@ class OpenIDController(openerpweb.Controller):
             form_html = request.htmlMarkup(realm, redirect_to)
             return {'action': 'post', 'value': form_html, 'session_id': req.session_id}
 
-    @openerpweb.httprequest
+    @openerp.addons.web.http.httprequest
     def process(self, req, **kw):
         session = getattr(req.session, 'openid_session', None)
         if not session:
@@ -176,7 +174,7 @@ class OpenIDController(openerpweb.Controller):
             with registry.cursor() as cr:
                 Modules = registry.get('ir.module.module')
 
-                installed = Modules.search_count(cr, 1, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
+                installed = Modules.search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
                 if installed:
 
                     Users = registry.get('res.users')
@@ -196,13 +194,13 @@ class OpenIDController(openerpweb.Controller):
 
                     domain += [('openid_url', '=', openid_url), ('active', '=', True)]
 
-                    ids = Users.search(cr, 1, domain)
+                    ids = Users.search(cr, SUPERUSER_ID, domain)
                     assert len(ids) < 2
                     if ids:
                         user_id = ids[0]
-                        login = Users.browse(cr, 1, user_id).login
+                        login = Users.browse(cr, SUPERUSER_ID, user_id).login
                         key = randomString(utils.KEY_LENGTH, '0123456789abcdef')
-                        Users.write(cr, 1, [user_id], {'openid_key': key})
+                        Users.write(cr, SUPERUSER_ID, [user_id], {'openid_key': key})
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
@@ -224,7 +222,7 @@ class OpenIDController(openerpweb.Controller):
 
         return set_cookie_and_redirect(req, '/#action=login&loginerror=1')
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def status(self, req):
         session = getattr(req.session, 'openid_session', {})
         return {'status': session.get('status'), 'message': session.get('message')}

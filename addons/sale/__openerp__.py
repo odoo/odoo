@@ -26,51 +26,45 @@
     'sequence': 14,
     'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
-The base module to manage quotations and sales orders.
-======================================================
+Manage sales quotations and orders
+==================================
 
-Workflow with validation steps:
--------------------------------
-    * **Quotation** -> **Sales order** -> **Invoice**
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-Create Invoice:
----------------
-    * Invoice on Demand
-    * Invoice on Delivery Order
-    * Invoice Before Delivery
+It handles the full sales workflow:
 
-Partners preferences:
----------------------
-    * Incoterm
-    * Shipping
-    * Invoicing
+* **Quotation** -> **Sales order** -> **Invoice**
 
-Products stocks and prices:
----------------------------
+Preferences (only with Warehouse Management installed)
+-----------
+If you also installed the Warehouse Management, you can deal with the following preferences:
 
-Delivery method:
-----------------
-    * The Poste
-    * Free Delivery Charges
-    * Normal Delivery Charges
-    * Based on the Delivery Order(if not Add to sale order) 
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
 
-Dashboard for Sales Manager that includes:
-------------------------------------------
-    * My Quotations
-    * Monthly Turnover (Graph)
+You can choose flexible invoicing methods:
+
+* *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
+
+
+The Dashboard for the Sales Manager will include
+------------------------------------------------
+* My Quotations
+* Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['stock', 'procurement', 'board', 'account_voucher'],
+    'images': ['images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
+    'depends': ['account_voucher'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'company_view.xml',
         'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_report.xml',
@@ -78,7 +72,6 @@ Dashboard for Sales Manager that includes:
         'sale_view.xml',
         'res_partner_view.xml',
         'report/sale_report_view.xml',
-        'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
         'edi/sale_order_action_data.xml',
@@ -87,9 +80,7 @@ Dashboard for Sales Manager that includes:
     'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
-        'test/picking_order_policy.yml',
         'test/manual_order_policy.yml',
-        'test/prepaid_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
@@ -97,6 +88,5 @@ Dashboard for Sales Manager that includes:
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '0058103601429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

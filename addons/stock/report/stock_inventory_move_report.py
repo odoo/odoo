@@ -30,7 +30,7 @@ class stock_inventory_move(report_sxw.rml_parse):
              'qty_total':self._qty_total
         })
 
-    def _qty_total(self,objects):
+    def _qty_total(self, objects):
         total = 0.0
         uom = objects[0].product_uom.name
         for obj in objects:

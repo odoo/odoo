@@ -48,7 +48,6 @@ with the effect of creating, editing and deleting either ways.
         'test/work_timesheet.yml',
     ],
     'installable': True,
-    'auto_install': False,
-    'certificate': '0075123647453',
+    'auto_install': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -30,10 +30,11 @@ Create a claim from a delivery order.
 
 Adds a Claim link to the delivery order.
 """,
-    'data' : ['claim_delivery_view.xml'],
+    'data' : [
+              'claim_delivery_view.xml',
+              'claim_delivery_data.xml',],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001101649349223746957',
     'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 
