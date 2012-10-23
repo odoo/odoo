@@ -32,7 +32,7 @@
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
     ],
-    'depends': ['google_base_account'],
+    'depends': ['google_base_account','document'],
     'description': """
 Module to attach a google document to any model.
 ================================================
