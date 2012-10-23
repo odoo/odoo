@@ -895,9 +895,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         var self = this;
 
         return $.when(this._super.apply(this, arguments)).then(function () {
-            var controller = self.views[self.active_view].controller,
-                fvg = controller.fields_view,
-                view_id = (fvg && fvg.view_id) || '--';
+            var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
                 view_manager: self
@@ -1142,28 +1140,28 @@ instance.web.View = instance.web.Widget.extend({
     start: function () {
         return this.load_view();
     },
-    load_view: function() {
+    load_view: function(context) {
         var self = this;
+        var view_loaded;
         if (this.embedded_view) {
-            var def = $.Deferred();
-            $.async_when().then(function() {def.resolve(self.embedded_view);});
-            return def.pipe(function(r) {
-                self.trigger('view_loaded', r);
+            view_loaded = $.Deferred();
+            $.async_when().then(function() {
+                view_loaded.resolve(self.embedded_view);
             });
         } else {
-            var context = new instance.web.CompoundContext(this.dataset.get_context());
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            return this.rpc("/web/view/load", {
+            view_loaded = this.rpc("/web/view/load", {
                 "model": this.dataset.model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
-                context: context
-                }).pipe(function(r) {
-                    self.trigger('view_loaded', r);
+                context: this.dataset.get_context(context)
             });
         }
+        return view_loaded.pipe(function(r) {
+            self.trigger('view_loaded', r);
+        });
     },
     set_default_options: function(options) {
         this.options = options || {};
