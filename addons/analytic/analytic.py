@@ -259,23 +259,23 @@ class account_analytic_account(osv.osv):
             project_ids = project_obj.search(cr, uid, args)
             return self.name_get(cr, uid, project_ids, context=context)
         if name:
-            account = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
-            if not account:
+            account_ids = self.search(cr, uid, [('code', '=', name)] + args, limit=limit, context=context)
+            if not account_ids:
                 names=map(lambda i : i.strip(),name.split('/'))
                 for i in range(len(names)):
                     dom=[('name', operator, names[i])]
                     if i>0:
-                        dom+=[('id','child_of',account)]
-                    account = self.search(cr, uid, dom, limit=limit, context=context)
-                newacc = account
+                        dom+=[('id','child_of',account_ids)]
+                    account_ids = self.search(cr, uid, dom, limit=limit, context=context)
+                newacc = account_ids
                 while newacc:
                     newacc = self.search(cr, uid, [('parent_id', 'in', newacc)], limit=limit, context=context)
-                    account += newacc
+                    account_ids += newacc
                 if args:
-                    account = self.search(cr, uid, [('id', 'in', account)] + args, limit=limit, context=context)
+                    account_ids = self.search(cr, uid, [('id', 'in', account_ids)] + args, limit=limit, context=context)
         else:
-            account = self.search(cr, uid, args, limit=limit, context=context)
-        return self.name_get(cr, uid, account, context=context)
+            account_ids = self.search(cr, uid, args, limit=limit, context=context)
+        return self.name_get(cr, uid, account_ids, context=context)
 
     def create(self, cr, uid, vals, context=None):
         contract =  super(account_analytic_account, self).create(cr, uid, vals, context=context)
