@@ -85,7 +85,6 @@ Dashboard for CRM will include:
         'crm_lead_view.xml',
         'crm_lead_menu.xml',
 
-        'crm_meeting_view.xml',
         'crm_meeting_menu.xml',
         'crm_meeting_shortcut_data.xml',
 
@@ -107,6 +106,7 @@ Dashboard for CRM will include:
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
+        'crm_action_rule_demo.xml',
     ],
     'test': [
         'test/process/communication_with_customer.yml',
