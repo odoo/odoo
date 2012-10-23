@@ -120,7 +120,7 @@ class report_custom(report_rml):
         <title>%s</title>
         %s
         </report>
-        ''' % (header_xml,_('Attendances By Week'),'\n'.join(user_xml))
+        ''' % (header_xml,_('Attendances by Week'),'\n'.join(user_xml))
         xml = tools.ustr(xml).encode('utf8')
         return self.post_process_xml_data(cr, uid, xml, context)
 

@@ -189,7 +189,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,_('Attendances By Month'),'\n'.join(user_xml),date_xml)
+        ''' % (header_xml,_('Attendances by Month'),'\n'.join(user_xml),date_xml)
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')
