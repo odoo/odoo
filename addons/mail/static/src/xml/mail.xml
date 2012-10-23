@@ -194,8 +194,8 @@
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons'>
-                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">W</a></span>
-                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">W</a></span>
+                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">X</a></span>
+                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">v</a></span>
                     <span class='oe_reply' t-if="widget.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
                     <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Add To Favorites" class="oe_e">7</a></span>
                 </div>
@@ -231,7 +231,8 @@
     <t t-name="mail.thread.expandable">
         <div t-attf-class="oe_msg oe_msg_#{widget.type} oe_msg_unread">
             <div class="oe_msg_content oe_msg_more_message">
-                <a class="oe_msg_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> messages not display)</span>...</a>
+                <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">load one more message</a>
+                <a t-if="widget.nb_messages !== 1" class="oe_msg_fetch_more">load <t t-raw="widget.nb_messages" /> more messages</a>
             </div>
         </div>
     </t>
