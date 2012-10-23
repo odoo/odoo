@@ -234,7 +234,7 @@ class report_custom(report_rml):
                     emp_xml += emp_create_xml(self, cr, uid, 0, holiday_type, row_id, item['id'], item['name'], som, eom)
                     row_id = row_id +1
                     
-        header_xml = '''
+        header_xml = u'''
         <header>
         <date>%s</date>
         <company>%s</company>
@@ -249,7 +249,10 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,months_xml,date_xml, ustr(emp_xml))
+        ''' % (header_xml,
+                u''.join((ustr(m) for m in months_xml)),
+                u''.join((ustr(d) for d in date_xml)),
+                u''.join((ustr(e) for e in emp_xml)))
 
         return xml
 
