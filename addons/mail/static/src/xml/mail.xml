@@ -21,14 +21,14 @@
             </div>
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
-                    <textarea class="field_text" placeholder="Add your comment here..."/>
+                    <t t-call="mail.thread.list_recipients"/>
+                    <textarea class="field_text" placeholder=""/>
                 </div><div class="oe_msg_footer">
                     <div class="oe_msg_attachment_list"/>
                     <button class="oe_post">Post</button>
                     <t t-call="mail.compose_message.add_attachment"/>
-                    <t t-call="mail.thread.list_recipients"/>
                     <!--<a class="oe_cancel oe_e">X</a>-->
-                    <button class="oe_full oe_right">Full</button>
+                    <button class="oe_full"><span class='oe_e'>&amp;ograve</span></button>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
         -->
     <t t-name="mail.compose_message.compact">
         <div class="oe_msg oe_msg_composer_compact">
-            <textarea class="field_text oe_compact" placeholder="Add your comment here..."/>
+            <textarea class="field_text oe_compact" placeholder="Write a reply..."/>
         </div>
     </t>
 
@@ -50,10 +50,10 @@
         Small template to be inserted in the composition for add attachments
         -->
     <t t-name="mail.compose_message.add_attachment">
-        <div class="oe_attachment_file">
-            <div class="oe_add">
+        <span class="oe_attachment_file">
+            <span class="oe_add">
                 <!-- uploader of file -->
-                <button><span class="oe_e">p</span></button>
+                <button class="oe_attach"><span class="oe_e">'</span></button>
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                     <t t-set="fileupload_action">/web/binary/upload_attachment</t>
@@ -61,8 +61,8 @@
                     <input type="hidden" name="id" value="0"/>
                     <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
                 </t>
-            </div>
-        </div>
+            </span>
+        </span>
     </t>
 
     <!--
@@ -70,9 +70,9 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <ul t-attf-class="oe_msg_attachments #{widget.attachment_ids[0]?'':'oe_hidden'}">
+        <div t-attf-class="oe_msg_attachments #{widget.attachment_ids[0]?'':'oe_hidden'}">
             <t t-foreach="widget.attachment_ids" t-as="attachment">
-                <li>
+                <div class="oe_attachment">
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
                             <span>...Upload in progress...</span>
@@ -83,11 +83,11 @@
                         <t t-raw="attachment.name || attachment.filename"/>
                     </a>
                     <t t-if="(widget.show_delete_attachment and (!attachment.upload or attachment.percent_loaded&gt;=100))">
-                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachment" t-attf-data-id="{attachment.id}">x</a>
+                        <a class="oe_right oe_mail_attachment_delete oe_e" title="Delete this attachment" t-attf-data-id="{attachment.id}">[</a>
                     </t>
-                </li>
+                </div>
             </t>
-        </ul>
+        </div>
     </t>
 
     <t t-name="mail.thread.message.private">
@@ -103,8 +103,8 @@
         -->
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
-            Post to:
-            <span t-if="!widget.is_private" class="oe_all_follower">All Followers</span> 
+            To:
+            <span t-if="!widget.is_private" class="oe_all_follower">Everyone</span> 
             <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
             <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>

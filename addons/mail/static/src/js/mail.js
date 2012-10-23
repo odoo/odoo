@@ -198,6 +198,7 @@ openerp.mail = function(session) {
         /* when a user click on the upload button, send file read on_attachment_loaded
         */
         on_attachment_change: function (event) {
+            console.log('attach');
             event.stopPropagation();
             var self = this;
             var $target = $(event.target);
@@ -304,9 +305,9 @@ openerp.mail = function(session) {
                 // set the function called when attachments are added
                 this.$render_expandable.on('change', 'input.oe_form_binary_file', self.on_attachment_change );
 
-                this.$render_expandable.on('click', 'a.oe_cancel', self.on_cancel );
-                this.$render_expandable.on('click', 'button.oe_post', function(){self.on_message_post()} );
-                this.$render_expandable.on('click', 'button.oe_full', function(){self.on_compose_fullmail()} );
+                this.$render_expandable.on('click', '.oe_cancel', self.on_cancel );
+                this.$render_expandable.on('click', '.oe_post', function(){self.on_message_post()} );
+                this.$render_expandable.on('click', '.oe_full', function(){self.on_compose_fullmail()} );
 
                 // auto close
                 this.$render_expandable.on('blur', 'textarea', this.on_compose_expandable);
@@ -365,6 +366,7 @@ openerp.mail = function(session) {
 
         /*post a message and fetch the message*/
         on_message_post: function (body) {
+            console.log('post');
             var self = this;
 
             if (! body) {
