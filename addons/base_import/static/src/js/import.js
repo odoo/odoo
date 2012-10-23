@@ -38,7 +38,7 @@ openerp.base_import = function (instance) {
     // if true, the 'Import', 'Export', etc... buttons will be shown
     instance.web.ListView.prototype.defaults.import_enabled = true;
     instance.web.ListView.include({
-        on_loaded: function () {
+        load_list: function () {
             var self = this;
             var add_button = false;
             if (!this.$buttons) {
@@ -53,8 +53,10 @@ openerp.base_import = function (instance) {
                         params: {
                             model: self.dataset.model
                         }
-                    }, void 0, void 0, function () {
-                        self.reload();
+                    }, {
+                        on_reverse_breadcrumb: function () {
+                            self.reload();
+                        },
                     });
                     return false;
                 });
