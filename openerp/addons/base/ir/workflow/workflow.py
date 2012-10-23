@@ -136,7 +136,7 @@ class wkf_instance(osv.osv):
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'res_id': fields.integer('Resource ID'),
         'res_type': fields.char('Resource Object', size=64),
-        'state': fields.char('State', size=32),
+        'state': fields.char('Status', size=32),
     }
     def _auto_init(self, cr, context=None):
         super(wkf_instance, self)._auto_init(cr, context)
@@ -159,7 +159,7 @@ class wkf_workitem(osv.osv):
         'wkf_id': fields.related('act_id','wkf_id', type='many2one', relation='workflow', string='Workflow'),
         'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
         'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
-        'state': fields.char('State', size=64, select=True),
+        'state': fields.char('Status', size=64, select=True),
     }
 wkf_workitem()
 

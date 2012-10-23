@@ -97,6 +97,7 @@ setuptools.setup(
           'gdata',
           'lxml < 3',
           'mako',
+          'psutil',
           'psycopg2',
           'pydot',
           'python-dateutil < 2',
@@ -116,6 +117,7 @@ setuptools.setup(
       extras_require = {
           'SSL' : ['pyopenssl'],
       },
+      tests_require = ['unittest2'],
       **py2exe_options()
 )
 

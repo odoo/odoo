@@ -27,7 +27,6 @@ class m(openerp.osv.osv.Model):
         return True
 
     def consume_cpu_time(self, cr, uid, seconds, context=None):
-        import os
         t0 = time.clock()
         t1 = time.clock()
         while t1 - t0 < seconds:
