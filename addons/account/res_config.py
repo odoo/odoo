@@ -120,6 +120,8 @@ class account_config_settings(osv.osv_memory):
         'group_analytic_accounting': fields.boolean('Analytic accounting',
             implied_group='analytic.group_analytic_accounting',
             help="Allows you to use the analytic accounting."),
+        'group_check_supplier_invoice_total': fields.boolean('Check the Total of Supplier Invoices', 
+            implied_group="account.group_supplier_inv_check_total"),
     }
 
     def _default_company(self, cr, uid, context=None):
