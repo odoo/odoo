@@ -1555,7 +1555,8 @@ openerp.mail = function(session) {
                 'show_reply_button': 0,
                 'show_read_unread_button': -1,
                 'show_compose_message': show_compose_message,
-                'message_ids': message_ids
+                'message_ids': message_ids,
+                'show_compact_message': true,
                 }
             );
 
@@ -1653,7 +1654,7 @@ openerp.mail = function(session) {
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
                 'show_compose_message': true,
-                'show_compact_message': true
+                'show_compact_message': true,
                 }
             );
 
