@@ -19,34 +19,7 @@
 #
 ##############################################################################
 
-{
-    'name': 'Lunch Orders',
-    'author': 'OpenERP SA',
-    'version': '0.1',
-    'depends': [],
-    'category' : 'Tools',
-    'description': """
-The base module to manage lunch.
-================================
-
-keep track for the Lunch Order, Cash Moves, CashBox, Product. Apply Different
-Category for the product.
-    """,
-    'data': [
-        'security/lunch_security.xml',
-        'security/ir.model.access.csv',
-        'wizard/lunch_order_cancel_view.xml',
-        'wizard/lunch_order_confirm_view.xml',
-        'wizard/lunch_cashbox_clean_view.xml',
-        'lunch_view.xml',
-        'lunch_report.xml',
-        'report/report_lunch_order_view.xml',
-        'lunch_installer_view.xml'
-    ],
-    'demo': ['lunch_demo.xml'],
-    'test': ['test/test_lunch.yml', 'test/lunch_report.yml'],
-    'installable': True,
-    'images': ['images/cash_moves.jpeg','images/lunch_orders.jpeg','images/products.jpeg'],
-}
-
+import order
+import report_lunch_order
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+
