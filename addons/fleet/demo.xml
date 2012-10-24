@@ -776,15 +776,15 @@
       <record id="log_contract_1" model="fleet.vehicle.log.contract" >
         <field name="vehicle_id" ref="vehicle_2" />
         <field name="amount">0</field>
-        <field name="cost_generated">450</field>
-        <field name="cost_frequency">monthly</field>
+        <field name="cost_generated">20</field>
+        <field name="cost_frequency">daily</field>
         <field name="cost_type" ref="type_service_56"/>
-        <field name="date">2012-01-01</field>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(5)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_13" />
-        <field name="notes">Usual leasing contract</field>
+        <field name="notes">Daily leasing contract</field>
       </record>
 
       <record id="contract_cost_11" model="fleet.vehicle.cost" >
@@ -814,15 +814,15 @@
       <record id="log_contract_2" model="fleet.vehicle.log.contract" >
         <field name="vehicle_id" ref="vehicle_1" />
         <field name="amount">0</field>
-        <field name="cost_generated">400</field>
-        <field name="cost_frequency">monthly</field>
+        <field name="cost_generated">150</field>
+        <field name="cost_frequency">weekly</field>
         <field name="cost_type" ref="type_service_56"/>
-        <field name="date">2012-01-01</field>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="(DateTime.now() + timedelta(-1)).strftime('%Y-%m-%d')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_13" />
-        <field name="notes">Usual leasing contract</field>
+        <field name="notes">Weekly leasing contract</field>
       </record>
 
       <record id="contract_cost_21" model="fleet.vehicle.cost" >
@@ -855,12 +855,12 @@
         <field name="cost_generated">400</field>
         <field name="cost_frequency">monthly</field>
         <field name="cost_type" ref="type_service_56"/>
-        <field name="date">2012-01-01</field>
+        <field name="date" eval="time.strftime('%Y-01-01')"/>
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_13" />
-        <field name="notes">Usual leasing contract</field>
+        <field name="notes">Monthly leasing contract</field>
       </record>
 
       <record id="contract_cost_31" model="fleet.vehicle.cost" >
@@ -890,15 +890,15 @@
       <record id="log_contract_4" model="fleet.vehicle.log.contract" >
         <field name="vehicle_id" ref="vehicle_4" />
         <field name="amount">0</field>
-        <field name="cost_generated">400</field>
-        <field name="cost_frequency">monthly</field>
+        <field name="cost_generated">4000</field>
+        <field name="cost_frequency">yearly</field>
         <field name="cost_type" ref="type_service_56"/>
-        <field name="date">2012-01-01</field>
+        <field name="date" eval="time.strftime('%Y-01-01')" />
         <field name="start_date" eval="time.strftime('%Y-01-01')" />
         <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_13" />
-        <field name="notes">Usual leasing contract</field>
+        <field name="notes">Yearly leasing contract</field>
       </record>
 
       <record id="contract_cost_41" model="fleet.vehicle.cost" >
@@ -928,15 +928,15 @@
       <record id="log_contract_5" model="fleet.vehicle.log.contract" >
         <field name="vehicle_id" ref="vehicle_5" />
         <field name="amount">0</field>
-        <field name="cost_generated">400</field>
-        <field name="cost_frequency">monthly</field>
+        <field name="cost_generated">17000</field>
+        <field name="cost_frequency">unique</field>
         <field name="cost_type" ref="type_service_56"/>
-        <field name="date">2012-01-01</field>
-        <field name="start_date" eval="time.strftime('%Y-01-01')" />
-        <field name="expiration_date" eval="time.strftime('%Y-12-31')" />
+        <field name="date" eval="time.strftime('2012-01-01')" />
+        <field name="start_date" eval="time.strftime('2012-01-01')" />
+        <field name="expiration_date" eval="time.strftime('2016-12-31')" />
         <field name="purchaser_id" ref="base.res_partner_address_18" />
         <field name="insurer_id" ref="base.res_partner_13" />
-        <field name="notes">Usual leasing contract</field>
+        <field name="notes">Unique leasing contract</field>
       </record>
 
       <record id="contract_cost_51" model="fleet.vehicle.cost" >

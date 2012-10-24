@@ -859,6 +859,8 @@ class fleet_vehicle_log_contract(osv.Model):
 
         contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','=','open')], offset=0, limit=None, order=None,context=None, count=False)
         for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_ids,context=context):
+            if not contract.start_date:
+                break;
             if contract.generated_cost_ids != []:
                 last_cost_id = self.pool.get('fleet.vehicle.cost').search(cr, uid, ['&',('contract_id','=',contract.id),('auto_generated','=',True)], offset=0, limit=1, order='date desc',context=None, count=False)
                 last_cost_date = self.pool.get('fleet.vehicle.cost').browse(cr,uid,last_cost_id[0],context=None).date
@@ -881,10 +883,10 @@ class fleet_vehicle_log_contract(osv.Model):
             elif contract.cost_frequency == 'weekly':
                 delta = relativedelta(weeks=+1)
                 if last_cost_date:
-                    startdate = datetime.datetime.strptime(last_cost_date[:4]+'-'+self.str_to_date(last_cost_date[5:7]).strftime('%W')+'-'+str(self.str_to_date(last_cost_date).weekday()),'%Y-%W-%w').date() + relativedelta(weeks=+1)
+                    startdate = datetime.datetime.strptime(last_cost_date[:4]+'-'+self.str_to_date(last_cost_date).strftime('%W')+'-'+str(self.str_to_date(last_cost_date).weekday()),'%Y-%W-%w').date() + relativedelta(weeks=+1)
                 else:
-                    startdate = datetime.date.strptime(contract.start_date[:4]+'-'+self.str_to_date(contract.start_date[5:7]).strftime('%W')+'-'+str(self.str_to_date(contract.start_date).weekday()).date(),'%Y-%W-%w')
-                enddate = datetime.date.strptime(str(d.year)+'-'+d.strftime('%W')+'-'+d.strftime('%w'),'%Y-%W-%w')
+                    startdate = datetime.datetime.strptime(contract.start_date[:4]+'-'+self.str_to_date(contract.start_date).strftime('%W')+'-'+str(self.str_to_date(contract.start_date).weekday()),'%Y-%W-%w').date()
+                enddate = datetime.datetime.strptime(str(d.year)+'-'+d.strftime('%W')+'-'+d.strftime('%w'),'%Y-%W-%w').date()
             elif contract.cost_frequency == 'daily':
                 delta = relativedelta(days=+1)
                 if last_cost_date:
@@ -892,6 +894,13 @@ class fleet_vehicle_log_contract(osv.Model):
                 else:
                     startdate = datetime.datetime.strptime(contract.start_date,'%Y-%m-%d').date()
                 enddate = d
+            elif contract.cost_frequency == 'unique':
+                delta = relativedelta(days=+1)
+                if not last_cost_date:
+                    enddate = startdate = datetime.datetime.strptime(contract.start_date,'%Y-%m-%d').date()
+                else:
+                    startdate = 1
+                    enddate = 0
             print 'Start : '+str(startdate)+', End : '+str(enddate)
             while startdate <= enddate:
                 data = {'amount' : contract.cost_generated,'date' : startdate.strftime('%Y-%m-%d'),'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract.id,'auto_generated' : True}
@@ -1059,8 +1068,8 @@ class fleet_vehicle_log_contract(osv.Model):
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
-        'cost_generated': fields.float('Generated costs amount'),
-        'cost_frequency': fields.selection([('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
+        'cost_generated': fields.float('Recuring Costs Amount',help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
+        'cost_frequency': fields.selection([('unique','Unique'),('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
         'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
     }
     _defaults = {
