@@ -85,6 +85,7 @@ class mail_notification(osv.Model):
 
     def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
         """ TDE note: add a comment, verify method calls, because js seems obfuscated. """
+        # TDE note: child_of to set unread ?
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_ids = self.search(cr, uid, [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)], context=context)
 
