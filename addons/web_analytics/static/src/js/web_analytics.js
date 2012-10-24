@@ -22,12 +22,23 @@ openerp.web_analytics = function(instance) {
         // _gaq.push(['_setDomainName', '.openerp.com']);
 
         _gaq.push(['_setAccount', 'UA-35793871-1']);    // vta@openerp.com localhost
-        _gaq.push(['setDomainName', 'none']);
+        _gaq.push(['_setDomainName', 'none']);
         _gaq.push(['_trackPageview']);
+        _gaq.push(['_deleteCustomVar', 1]);
+        _gaq.push(['_deleteCustomVar', 2]);
+        _gaq.push(['_deleteCustomVar', 3]);
+        _gaq.push(['_deleteCustomVar', 4]);
+        _gaq.push(['_deleteCustomVar', 5]);
 
-        // var connection = instance.session.connection;
-        _gaq.push(['_setCustomVar', 1, 'Normal User', String(instance.session.uid === 1), 1]);
-        _gaq.push(['_setCustomVar', 2, 'Admin User', String(instance.session.uid === 1), 1]);
+        if (instance.session.uid !== 1) {
+            if ((/\.demo.openerp.com/).test(instance.session.server)) {
+                _gaq.push(['_setCustomVar', 1, 'User Type', 'Demo User', 1]);
+            } else {
+                _gaq.push(['_setCustomVar', 1, 'User Type', 'Normal User', 1]);
+            }
+        } else {
+            _gaq.push(['_setCustomVar', 1, 'User Type', 'Admin User', 1]);
+        }
 
         // Google Analytics Code snippet
         (function() {
@@ -41,16 +52,31 @@ openerp.web_analytics = function(instance) {
 
         var self = this;
         instance.webclient.on('state_pushed', self, function(state) {
-            var model_whitelist = {'sale.order':'', 'purchase.order':'', 'crm.lead':''};
-            var view_type_blacklist = {'default':''};
-            var model     = state["model"]  || "no_model";
+            var url = '/' + window.location.hash;
+            _gaq.push(['_trackPageview', url]);
+            var model = state["model"]  || "no_model";
             var view_type = state["view_type"] || "default";
-            if ((model in model_whitelist) && !(view_type in view_type_blacklist)) {
-                var vurl = "web_analytics/redirect/"+ model + "/" + view_type
-                console.log(vurl);
-                _gaq.push(['_trackPageview',vurl]);
-            }
+            _gaq.push(['_setCustomVar', 2, 'Object', model, 3]);
+            _gaq.push(['_setCustomVar', 3, 'View Type', view_type, 3]);
         });
     }
+
+    instance.web.FormView = instance.web.FormView.extend({
+        save: function(prepend_on_create) {
+            if (!this.datarecord.id) {
+                _gaq.push(['_trackEvent', this.model, 'on_button_save', 'Save']);
+            } else {
+                _gaq.push(['_trackEvent', this.model, 'on_button_edit', 'Save']);
+            }
+            return this._super.apply(this, arguments);
+        }
+    });
+
+    instance.web.form.WidgetButton = instance.web.form.WidgetButton.extend({
+        on_confirmed: function() {
+            _gaq.push(['_trackEvent', this.view.model, this.node.attrs.name, this.node.attrs.string]);
+            return this._super.apply(this, arguments);
+        },
+    });
 
 };
