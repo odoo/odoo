@@ -1,6 +1,6 @@
 /*
 This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
-to use it in not GPL project. Please contact sales@dhtmlx.com for details
+to use it in non-GPL project. Please contact sales@dhtmlx.com for details
 */
 scheduler.expand=function(){var a=scheduler._obj;do a._position=a.style.position||"",a.style.position="static";while((a=a.parentNode)&&a.style);a=scheduler._obj;a.style.position="absolute";a._width=a.style.width;a._height=a.style.height;a.style.width=a.style.height="100%";a.style.top=a.style.left="0px";var b=document.body;b.scrollTop=0;if(b=b.parentNode)b.scrollTop=0;document.body._overflow=document.body.style.overflow||"";document.body.style.overflow="hidden";scheduler._maximize()};
 scheduler.collapse=function(){var a=scheduler._obj;do a.style.position=a._position;while((a=a.parentNode)&&a.style);a=scheduler._obj;a.style.width=a._width;a.style.height=a._height;document.body.style.overflow=document.body._overflow;scheduler._maximize()};scheduler.attachEvent("onTemplatesReady",function(){var a=document.createElement("DIV");a.className="dhx_expand_icon";scheduler.toggleIcon=a;scheduler._obj.appendChild(a);a.onclick=function(){scheduler.expanded?scheduler.collapse():scheduler.expand()}});
