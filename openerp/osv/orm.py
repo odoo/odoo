@@ -4766,6 +4766,7 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
+        order = order or self._order
         self.check_access_rights(cr, access_rights_uid or user, 'read')
 
         # For transient models, restrict acces to the current user, except for the super-user
