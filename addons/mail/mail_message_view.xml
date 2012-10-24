@@ -63,6 +63,9 @@
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
+                    <filter string="Has attachments"
+                            name="attachments"
+                            domain="[('attachment_ids', '!=', False)]"/>
                     <filter string="Notifications"
                             name="notifications" help="Notifications"
                             domain="[('type', '=', 'notification')]"/>
