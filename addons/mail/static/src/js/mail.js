@@ -175,7 +175,6 @@ openerp.mail = function(session) {
             } else {
                 this.$render_compact.hide();
             }
-
             this.bind_events();
         },
 
@@ -198,7 +197,6 @@ openerp.mail = function(session) {
         /* when a user click on the upload button, send file read on_attachment_loaded
         */
         on_attachment_change: function (event) {
-            console.log('attach');
             event.stopPropagation();
             var self = this;
             var $target = $(event.target);
@@ -347,7 +345,6 @@ openerp.mail = function(session) {
 
         /*post a message and fetch the message*/
         on_message_post: function (body) {
-            console.log('post');
             var self = this;
 
             if (! body) {
@@ -639,16 +636,33 @@ openerp.mail = function(session) {
             }
             for (var l in this.attachment_ids) {
                 var attach = this.attachment_ids[l];
+                if((attach.filename || attach.name).match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
+                    attach.is_image = true;
+
+                }
                 attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
             }
+
         },
         
         start: function() {
             this._super.apply(this, arguments);
             this.expender();
             this.$el.hide().fadeIn(750);
+            this.resize_img();
             this.bind_events();
             this.create_thread();
+        },
+
+        resize_img: function() {
+            this.$("img").load(function() {
+                var h = $(this).height();
+                var w = $(this).width();
+                if( h > 100 || w >100 ) {
+                    var ratio = 100 / (h > w ? h : w);
+                    $(this).attr("width", parseInt( w*ratio )).attr("height", parseInt( h*ratio ));
+                }
+            });
         },
 
         /**

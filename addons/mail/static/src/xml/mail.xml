@@ -70,8 +70,8 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <div t-attf-class="oe_msg_attachments #{widget.attachment_ids[0]?'':'oe_hidden'}">
-            <t t-foreach="widget.attachment_ids" t-as="attachment">
+        <span t-attf-class="oe_msg_attachments">
+            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image">
                 <div class="oe_attachment">
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
@@ -79,15 +79,24 @@
                         </div>
                         <t t-raw="attachment.name || attachment.filename"/>
                     </span>
-                    <a t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)" t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
-                        <t t-raw="attachment.name || attachment.filename"/>
-                    </a>
+                    <t t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)">
+                        <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
+                            <t t-raw="attachment.name || attachment.filename"/>
+                        </a>
+                    </t>
                     <t t-if="(widget.show_delete_attachment and (!attachment.upload or attachment.percent_loaded&gt;=100))">
                         <a class="oe_right oe_mail_attachment_delete oe_e" title="Delete this attachment" t-attf-data-id="{attachment.id}">[</a>
                     </t>
                 </div>
             </t>
-        </div>
+        </span>
+        <span t-attf-class="oe_msg_images">
+            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="attachment.is_image">
+                <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
+                    <img t-if="attachment.is_image" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-att-src="attachment.url"/>
+                </a>
+            </t>
+        </span>
     </t>
 
     <t t-name="mail.thread.message.private">
