@@ -433,13 +433,68 @@ class mail_message(osv.Model):
     #     return attachment_list
 
     #------------------------------------------------------
-    # Email api
+    # mail_message internals
     #------------------------------------------------------
 
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
+
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
+        context=None, count=False, access_rights_uid=None):
+        """ Override that adds specific access rights of mail.message, to remove
+            ids uid could not see according to our custom rules. Please refer
+            to check_access_rule for more details about those rules.
+
+            After having received ids of a classic search, keep only:
+            - if author_id == pid, uid is the author, OR
+            - a notification (id, pid) exists, uid has been notified, OR
+            - uid have read access to the related document is model, res_id
+            - otherwise: remove the id
+        """
+        # Rules do not apply to administrator
+        if uid == SUPERUSER_ID:
+            return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+            context=context, count=count, access_rights_uid=access_rights_uid)
+        # Perform a super with count as False, to have the ids, not a counter
+        ids = super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+            context=context, count=False, access_rights_uid=access_rights_uid)
+        if not ids and count:
+            return 0
+        elif not ids:
+            return ids
+
+        author_ids = set([])
+        partner_ids = set([])
+        allowed_ids = set([])
+        model_ids = {}
+
+        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'])['partner_id'][0]
+        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'partner_ids'])
+        for message in messages:
+            if message.get('author_id') and message.get('author_id')[0] == pid:
+                author_ids.add(message.get('id'))
+            elif pid in message.get('partner_ids'):
+                partner_ids.add(message.get('id'))
+            elif message.get('model') and message.get('res_id'):
+                model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
+        # print '_search', ids, author_ids, partner_ids, model_ids
+
+        model_access_obj = self.pool.get('ir.model.access')
+        for doc_model, doc_dict in model_ids.iteritems():
+            # print '>>>>', doc_model, doc_dict
+            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
+                continue
+            doc_ids = doc_dict.keys()
+            allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+            allowed_ids |= set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+
+        final_ids = author_ids | partner_ids | allowed_ids
+        if count:
+            return len(final_ids)
+        else:
+            return list(final_ids)
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Access rules of mail.message:
@@ -449,7 +504,7 @@ class mail_message(osv.Model):
                 - I can read the related document if res_model, res_id
                 - Otherwise: raise
             - create: if
-                - I am in the document message_follower_ids OR
+                - I am in the document message_follower_ids if res_model, res_id OR
                 - I can write on the related document if res_model, res_id OR
                 - I create a private message (no model, no res_id)
                 - Otherwise: raise
@@ -568,6 +623,10 @@ class mail_message(osv.Model):
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
+    #------------------------------------------------------
+    # Messaging API
+    #------------------------------------------------------
+
     def _notify_followers(self, cr, uid, newid, message, context=None):
         """ Add the related record followers to the destination partner_ids.
         """
@@ -606,7 +665,7 @@ class mail_message(osv.Model):
         self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
-        """Overridden to avoid duplicating fields that are unique to each email"""
+        """ Overridden to avoid duplicating fields that are unique to each email """
         if default is None:
             default = {}
         default.update(message_id=False, headers=False)
