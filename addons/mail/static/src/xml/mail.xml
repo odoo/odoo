@@ -71,7 +71,7 @@
         -->
     <t t-name="mail.thread.message.attachments">
         <span t-attf-class="oe_msg_attachments">
-            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image">
+            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image and !attachment.is_document">
                 <div class="oe_attachment">
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
@@ -95,6 +95,14 @@
                 <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
                     <img t-if="attachment.is_image" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-att-src="attachment.url"/>
                 </a>
+            </t>
+        </span>
+        <span t-attf-class="oe_msg_document">
+            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="attachment.is_document">
+                <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
+                    <t t-raw="attachment.name || attachment.filename"/>
+                </a>
+                <iframe t-attf-src="http://docs.google.com/viewer?url=#{ attachment.url_escape }&amp;embedded=true" width="600" height="400" style="border: none;"></iframe>
             </t>
         </span>
     </t>

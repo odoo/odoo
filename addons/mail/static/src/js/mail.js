@@ -636,11 +636,16 @@ openerp.mail = function(session) {
             }
             for (var l in this.attachment_ids) {
                 var attach = this.attachment_ids[l];
+                attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
+                
                 if((attach.filename || attach.name).match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
                     attach.is_image = true;
 
                 }
-                attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
+                if((attach.filename || attach.name).match(/[.](pdf|doc|docx|xls|xlsx|ppt|pptx|psd|tiff|dxf|svg)$/i)) {
+                    attach.is_document = true;
+                    attach.url_escape = escape(attach.url);
+                }
             }
 
         },
