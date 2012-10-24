@@ -2414,32 +2414,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        <record id="ir_actions_server_action_wizard_multi_chart" model="ir.actions.server">
-            <field name="type">ir.actions.server</field>
-            <field name="condition">True</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="base.model_ir_actions_todo"/>
-            <field eval="5" name="sequence"/>
-            <field name="code">
-# check for unconfigured companies
-account_installer_obj = self.pool.get('account.installer')
-account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
-action_ids = []
-# fetch the act_window actions related to chart of account configuration
-# we use ir.actions.todo to enable the possibility for other modules to insert their own
-# wizards during the configuration process
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
-if ref:
-    action_ids += [ref[1]]
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
-if ref:
-    action_ids += [ref[1]]
-todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', action_ids)], context=context)
-pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
-action = pool.get('res.config').next(cr, uid, [], context)
-</field>
-           <field name="name">New Company Financial Setting</field>
-        </record>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
