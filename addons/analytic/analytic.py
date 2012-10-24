@@ -305,8 +305,15 @@ class account_analytic_line(osv.osv):
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
+
+    def _get_default_datum(self, cr, uid, context=None):
+        import pprint; PP = pprint.PrettyPrinter()
+        import pdb; pdb.set_trace()
+        print 'dans analytic'
+        return fields.date.context_today()
+
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': _get_default_datum,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }

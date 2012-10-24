@@ -210,4 +210,15 @@ class account_analytic_account(osv.osv):
 
 account_analytic_account()
 
+class account_analytic_line(osv.osv):
+    _inherit = 'account.analytic.line'
+
+    def _get_default_date(self, cr, uid, context=None):
+        print 'not called'
+        if context is None:
+            context = {}
+        if context.get('timesheet_date'):
+            return context.get('timesheet_date')
+        return super(account_analytic_line, self)._get_default_date(cr, uid, context=context)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
