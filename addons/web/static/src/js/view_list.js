@@ -22,6 +22,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'reorderable': true,
         'action_buttons': true,
     },
+    view_type: 'tree',
     /**
      * Core class for list-type displays.
      *
@@ -83,7 +84,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
-        this.on('view_load', self, self.load_list);
+        this.grouped = false;
+        this.on('view_loaded', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -145,7 +147,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     start: function() {
         this.$el.addClass('oe_list');
-        return this.reload_view(null, null, true);
+        return this._super();
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -219,7 +221,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    load_list: function(data, grouped) {
+    load_list: function(data) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -245,15 +247,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 }).value();
         }
 
-        this.setup_columns(this.fields_view.fields, grouped);
+        this.setup_columns(this.fields_view.fields, this.grouped);
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-
-        // add css classes that reflect the (absence of) access rights
-        this.$el.toggleClass('oe_list_cannot_create', !this.is_action_enabled('create'))
-                .toggleClass('oe_list_cannot_edit', !this.is_action_enabled('edit'))
-                .toggleClass('oe_list_cannot_delete', !this.is_action_enabled('delete'));
 
         // Head hook
         // Selecting records
@@ -290,7 +287,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped);
+                    .prop('disabled', this.grouped);
         }
 
         // Pager
@@ -359,7 +356,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
-        this.trigger('list_view_loaded', data, grouped);
+        this.trigger('list_view_loaded', data, this.grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -464,25 +461,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     /**
      * Reloads the list view based on the current settings (dataset & al)
      *
+     * @deprecated
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
     reload_view: function (grouped, context, initial) {
-        var self = this;
-        var callback = function (field_view_get) {
-            self.load_list(field_view_get, grouped);
-        };
-        if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve(this.embedded_view);
-        } else {
-            return this.rpc('/web/view/load', {
-                model: this.model,
-                view_id: this.view_id,
-                view_type: "tree",
-                context: this.dataset.get_context(context),
-                toolbar: !!this.options.$sidebar
-            }).then(callback);
-        }
+        return this.load_view(context);
     },
     /**
      * re-renders the content of the list view
@@ -564,8 +548,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             group_by = null;
         }
         this.no_leaf = !!context['group_by_no_leaf'];
+        this.grouped = !!group_by;
 
-        this.reload_view(!!group_by, context).then(
+        return this.load_view(context).pipe(
             this.proxy('reload_content'));
     },
     /**

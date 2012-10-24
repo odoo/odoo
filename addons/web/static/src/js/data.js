@@ -135,6 +135,8 @@ instance.web.Query = instance.web.Class.extend({
         }).pipe(function (results) {
             return _(results).map(function (result) {
                 // FIX: querygroup initialization
+                result.__context = result.__context || {};
+                result.__context.group_by = result.__context.group_by || [];
                 _.defaults(result.__context, ctx);
                 return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
@@ -557,8 +559,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         return this._model.call('name_create', [name], {context: this._model.context()});
     },
     exec_workflow: function (id, signal) {
-        return this._model.exec_workflow(id, signal)
-            .pipe(function (result) { return { result: result }; });
+        return this._model.exec_workflow(id, signal);
     },
     get_context: function(request_context) {
         return this._model.context(request_context);

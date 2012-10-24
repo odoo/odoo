@@ -430,71 +430,16 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     init: function() {
         instance.web.PropertiesMixin.init.call(this);
         var self = this;
-        var callback_maker = function(obj, name, method) {
-            var callback = function() {
-                var args = Array.prototype.slice.call(arguments);
-                self.trigger.apply(self, [name].concat(args));
-                var r;
-                for(var i = 0; i < callback.callback_chain.length; i++)  {
-                    var c = callback.callback_chain[i];
-                    if(c.unique) {
-                        callback.callback_chain.splice(i, 1);
-                        i -= 1;
-                    }
-                    var result = c.callback.apply(c.self, c.args.concat(args));
-                    if (c.callback === method) {
-                        // return the result of the original method
-                        r = result;
-                    }
-                    // TODO special value to stop the chain
-                    // instance.web.callback_stop
-                }
-                return r;
-            };
-            callback.callback_chain = [];
-            callback.add = function(f) {
-                if(typeof(f) == 'function') {
-                    f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
-                }
-                f.self = f.self || null;
-                f.args = f.args || [];
-                f.unique = !!f.unique;
-                if(f.position == 'last') {
-                    callback.callback_chain.push(f);
-                } else {
-                    callback.callback_chain.unshift(f);
-                }
-                return callback;
-            };
-            callback.add_first = function(f) {
-                return callback.add.apply(null,arguments);
-            };
-            callback.add_last = function(f) {
-                return callback.add({
-                    callback: f,
-                    args: Array.prototype.slice.call(arguments, 1),
-                    position: "last"
-                });
-            };
-            callback.remove = function(f) {
-                callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
-                    return el.callback === f;
-                }));
-                return callback;
-            };
-
-            return callback.add({
-                callback: method,
-                self:obj,
-                args:Array.prototype.slice.call(arguments, 3)
-            });
-        };
         // Transform on_/do_* methods into callbacks
+        var callback_maker = function(fn) {
+            return function() {
+                return fn.apply(self, arguments);
+            }
+        };
         for (var name in this) {
             if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
                 if((/^on_|^do_/).test(name)) {
-                    this[name] = callback_maker(this, name, this[name]);
+                    this[name] = callback_maker(this[name]);
                 }
             }
         }

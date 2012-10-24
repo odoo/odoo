@@ -27,7 +27,6 @@
 }
 .openerp.openerp_webclient_container {
   height: 100%;
-  position: relative;
 }
 
 .text-tag .text-button {
@@ -197,6 +196,9 @@
 }
 .openerp .oe_bounce_container {
   display: inline-block;
+}
+.openerp .ui-tabs {
+  position: static;
 }
 .openerp.ui-dialog {
   display: none;
@@ -1928,6 +1930,9 @@
   min-height: 327px;
   margin-left: -15px;
 }
+.openerp .oe_view.oe_cannot_create .oe_view_nocontent_create {
+  display: none;
+}
 .openerp .oe_formview {
   background: white;
 }
@@ -2621,8 +2626,12 @@
 .openerp .oe_list_buttons.oe_editing .oe_alternative {
   visibility: visible;
 }
-.openerp .oe_list {
-  position: relative;
+.openerp .oe_list.oe_cannot_edit .oe_list_header_handle, .openerp .oe_list.oe_cannot_edit .oe_list_field_handle {
+  display: none !important;
+  padding: 0 !important;
+}
+.openerp .oe_list.oe_cannot_delete .oe_list_record_delete {
+  display: none !important;
 }
 .openerp .oe_list .oe_form .oe_form_nosheet {
   margin: 0;
@@ -2765,13 +2774,6 @@
   font: 18px "entypoRegular";
   content: "}";
   color: #e0e0e0;
-}
-.openerp .oe_list_cannot_edit .oe_list_header_handle, .openerp .oe_list_cannot_edit .oe_list_field_handle {
-  display: none !important;
-  padding: 0 !important;
-}
-.openerp .oe_list_cannot_delete .oe_list_record_delete {
-  display: none !important;
 }
 .openerp .tree_header {
   background-color: #f0f0f0;

@@ -150,7 +150,7 @@ openerp.web.list_editable = function (instance) {
                 if (!id && done.created) {
                     id = done.record.get('id');
                 }
-                self.handle_button.call(self, name, id, callback);
+                self.handle_button(name, id, callback);
             });
         },
         /**
