@@ -176,6 +176,11 @@ instance.web.ViewManager.include({
                 var notes = new_notes.substring(0,60) +'..';
             }
             r.text(nodes.x+60, nodes.y+30, (notes || new_notes)).attr({"title":nodes.notes,"cursor": "default"});
+            r['image']('/web/static/src/img/icons/gtk-info.png', nodes.x, nodes.y+75, 16, 16)
+              .attr({"cursor": "pointer", "title": "Help"})
+              .click(function() {
+                   window.open(nodes.url || "http://doc.openerp.com/v6.1/index.php?model=" + nodes.model);
+              });
             if(nodes.menu) {
                  r['image']('/web/static/src/img/icons/gtk-jump-to.png', nodes.x+100, nodes.y+75, 16, 16)
                     .attr({"cursor": "pointer", "title": nodes.menu.name})
