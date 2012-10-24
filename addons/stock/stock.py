@@ -3084,7 +3084,7 @@ class stock_picking_out(osv.osv):
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
             ('cancel', 'Cancelled'),],
-            'State', readonly=True, select=True,
+            'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n
