@@ -232,7 +232,7 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: the service log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_services', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_services_act', context)
         res['context'] = {
             'default_vehicle_id': ids[0]
         }
@@ -243,7 +243,7 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: the contract log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_contract', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_contract_act', context)
         res['context'] = {
             'default_vehicle_id': ids[0]
         }
@@ -254,7 +254,7 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: the fuel log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_fuel', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_fuel_act', context)
         res['context'] = {
             'default_vehicle_id': ids[0]
         }
@@ -265,9 +265,10 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: the costs log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_cost', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_costs_act', context)
         res['context'] = {
-            'default_vehicle_id': ids[0]
+            'default_vehicle_id': ids[0],
+            'search_default_parent_false' : True
         }
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
@@ -276,7 +277,7 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: the odometer log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_odometer', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_odometer_act', context)
         res['context'] = {
             'default_vehicle_id': ids[0]
         }

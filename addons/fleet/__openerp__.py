@@ -21,7 +21,6 @@ Vehicle, leasing, insurances, cost
         'fleet_view.xml',
         'data.xml',
         'board_fleet_view.xml',
-        'wizard/renew_contract_view.xml',
     ],
     'update_xml' : ['security/ir.model.access.csv'],
 
