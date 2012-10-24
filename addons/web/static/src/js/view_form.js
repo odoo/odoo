@@ -3472,7 +3472,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     get_value: function() {
         var self = this;
-        console.log("get_value one2many");
         if (!this.dataset)
             return [];
         this.save_any_view();
@@ -3488,11 +3487,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             return commands.link_to(id);
         }));
-
-        console.log( val.concat(_.map(
-            this.dataset.to_delete, function(x) {
-                return commands['delete'](x.id);})) );
-
         return val.concat(_.map(
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
