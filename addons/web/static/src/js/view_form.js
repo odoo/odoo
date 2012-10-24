@@ -4918,6 +4918,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this._super(this);
         this.$list_file = this.$('.oe_placeholder_files');
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
+        this.display_files();
     },
     set_value: function(value_) {
         var values = this.files = (value_ && !this.files) ? value_ : this.files;
@@ -4934,8 +4935,8 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         if(this.$list_file) {
             var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
             this.$list_file.replaceWith( render );
-            this.$list_file = this.$(".oe_fileuploader_files");
-            this.$list_file.on('click', '.oe_fileuploader_delete', this.on_file_delete);
+            this.$list_file = this.$(".oe_files");
+            this.$list_file.on('click', '.oe_delete', this.on_file_delete);
         }
     },
     on_file_change: function (event) {
@@ -4966,9 +4967,11 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 instance.web.blockUI();
             }
 
+            // TODO : unactivate send on wizard and form
+
             // submit file
-            self.$('form.oe_form_binary_form').submit();
-            this.$(".oe_fileuploader_form").hide();
+            this.$('form.oe_form_binary_form').submit();
+            this.$(".oe_fileuploader").hide();
 
             // add file on result
             this.files.push({
@@ -4987,6 +4990,8 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
             instance.web.unblockUI();
         }
 
+        // TODO : activate send on wizard and form
+
         for(var i in this.files){
             if(this.files[i].filename == result.filename && this.files[i].upload) {
                 this.files[i] = {
@@ -5001,7 +5006,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
 
         var $input = this.$('input.oe_form_binary_file');
         $input.after($input.clone(true)).remove();
-        this.$(".oe_fileuploader_form").show();
+        this.$(".oe_fileuploader").show();
     },
     on_file_delete: function (event) {
         event.stopPropagation();

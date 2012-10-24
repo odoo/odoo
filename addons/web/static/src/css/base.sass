@@ -2273,6 +2273,65 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
+
+.openerp .oe_fileuploader .oe_add .oe_hidden_input_file input.oe_form_binary_file {
+    width: 300px;
+    left: -100px;
+    top: 1px;
+    height: 24px;
+    width: 300px;
+    background: transparent;
+    border: 0;
+    margin: 0px;
+    padding: 0px;
+    color: transparent;
+}
+.openerp .oe_fileuploader .oe_add button span {
+    position: relative;
+    bottom: +4px;
+    font-size: 30px;
+}
+
+.openerp .oe_fileuploader {
+    clear: both;
+}
+
+    .oe_fileuploader
+        display: inline-block
+        clear: both
+        .oe_add
+            float: left
+            width: 24px
+            height: 24px
+            position: relative
+            z-index: 10
+            left: +2px
+            top: +7px
+            overflow: hidden
+            button
+                position: absolute
+                bottom: +0px
+                left: +0px
+                height: 24px
+                width: 24px
+                margin: 0px
+                padding: 0px
+            input.oe_form_binary_file
+                width: 300px
+                left: -100px
+                top: 1px
+                height: 24px
+                width: 300px
+                background: transparent
+                border: 0
+                margin: 0px
+                padding: 0px
+                color: transparent
+        button span
+            position: relative
+            bottom: +4px
+            font-size: 30px
+
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
