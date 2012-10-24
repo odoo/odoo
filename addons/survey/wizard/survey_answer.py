@@ -134,6 +134,8 @@ class survey_question_wiz(osv.osv_memory):
                         page_number += 1
                     if sur_name_rec.page_no > - 1:
                         pre_button = True
+                    else:
+                        flag = True
                 else:
                     if sur_name_rec.page_no != 0:
                         p_id = p_id[sur_name_rec.page_no - 1]
@@ -146,7 +148,15 @@ class survey_question_wiz(osv.osv_memory):
                         pre_button = True
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                    xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title or sur_rec.title)})
+                    note = False
+                    question_ids = []
+                    if pag_rec:
+                        title = pag_rec.title
+                        note = pag_rec.note
+                        question_ids = pag_rec.question_ids
+                    else:
+                        title = sur_rec.title
+                    xml_form = etree.Element('form', {'string': tools.ustr(title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
@@ -174,10 +184,10 @@ class survey_question_wiz(osv.osv_memory):
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
                         etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
-                    if pag_rec.note:
-                        for que_test in pag_rec.note.split('\n'):
+                    if note:
+                        for que_test in note.split('\n'):
                             etree.SubElement(xml_form, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
-                    que_ids = pag_rec.question_ids
+                    que_ids = question_ids
                     qu_no = 0
 
                     for que in que_ids:
@@ -429,13 +439,13 @@ class survey_question_wiz(osv.osv_memory):
                                 vals['attachment_ids'] = [(0,0,{'name': a_name,
                                                                 'datas_fname': a_name,
                                                                 'datas': str(a_content).encode('base64')})
-                                                                for a_name, a_content in attachments]
+                                                                for a_name, a_content in attachments.items()]
                             self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
 
-                    etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
+                    etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
                     etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
@@ -1008,7 +1018,7 @@ class survey_question_wiz(osv.osv_memory):
 
         return survey_question_wiz_id
 
-    def action_new_question(self,cr, uid, ids, context=None):
+    def action_new_question(self, cr, uid, ids, context=None):
         """
         New survey.Question form.
         """
@@ -1050,7 +1060,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_page(self,cr, uid, ids, context=None):
+    def action_edit_page(self, cr, uid, ids, context=None):
         """
         Edit survey.page.
         """
@@ -1072,7 +1082,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_page(self,cr, uid, ids, context=None):
+    def action_delete_page(self, cr, uid, ids, context=None):
         """
         Delete survey.page.
         """
@@ -1098,7 +1108,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_question(self,cr, uid, ids, context=None):
+    def action_edit_question(self, cr, uid, ids, context=None):
         """
         Edit survey.question.
         """
@@ -1120,7 +1130,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_question(self,cr, uid, ids, context=None):
+    def action_delete_question(self, cr, uid, ids, context=None):
         """
         Delete survey.question.
         """

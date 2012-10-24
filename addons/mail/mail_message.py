@@ -20,12 +20,10 @@
 ##############################################################################
 
 import logging
-import openerp
 import tools
 
 from email.header import decode_header
 from openerp import SUPERUSER_ID
-from operator import itemgetter
 from osv import osv, orm, fields
 from tools.translate import _
 
@@ -48,7 +46,10 @@ class mail_message(osv.Model):
     _order = 'id desc'
 
     _message_read_limit = 10
+    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read',
+        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
     _message_record_name_length = 18
+    _message_read_more_limit = 1024
 
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length + 3):
@@ -56,20 +57,22 @@ class mail_message(osv.Model):
         return name[:self._message_record_name_length] + '...'
 
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
-        """ Return the related document name, using get_name. """
-        result = dict.fromkeys(ids, '')
-        for message in self.browse(cr, uid, ids, context=context):
-            if not message.model or not message.res_id:
+        """ Return the related document name, using name_get. It is included in
+            a try/except statement, because if uid cannot read the related
+            document, he should see a void string instead of crashing. """
+        result = dict.fromkeys(ids, False)
+        for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
+            if not message['model'] or not message['res_id']:
                 continue
             try:
-                result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+                result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, uid, [message['res_id']], context=context)[0][1])
             except (orm.except_orm, osv.except_osv):
                 pass
         return result
 
-    def _get_unread(self, cr, uid, ids, name, arg, context=None):
+    def _get_to_read(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
-        res = dict((id, {'unread': False}) for id in ids)
+        res = dict((id, False) for id in ids)
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
@@ -78,16 +81,16 @@ class mail_message(osv.Model):
             ('read', '=', False)
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id]['unread'] = True
+            res[notif.message_id.id] = not notif.read
         return res
 
-    def _search_unread(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages unread by the current user. Condition is
+    def _search_to_read(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
         if domain[0][2]:
-            read_cond = '(read = false or read is null)'
+            read_cond = "(read = False OR read IS NULL)"
         else:
-            read_cond = 'read = true'
+            read_cond = "read = True"
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         cr.execute("SELECT message_id FROM mail_notification "\
                         "WHERE partner_id = %%s AND %s" % read_cond,
@@ -128,21 +131,25 @@ class mail_message(osv.Model):
         'date': fields.datetime('Date'),
         'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
         'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
-        'unread': fields.function(_get_unread, fnct_search=_search_unread,
-            type='boolean', string='Unread',
-            help='Functional field to search for unread messages linked to uid'),
-        'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
+        'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
+            type='boolean', string='To read',
+            help='Functional field to search for messages the current user has to read'),
+        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
+        'vote_user_ids': fields.many2many('res.users', 'mail_vote',
+            'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
+        'favorite_user_ids': fields.many2many('res.users', 'mail_favorite',
+            'message_id', 'user_id', string='Favorite',
+            help='Users that set this message in their favorites'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
-            return [('unread', '=', True)]
+            return [('to_read', '=', True)]
         return []
 
     def _get_default_author(self, cr, uid, context=None):
-        # remove context to avoid possible hack in browse with superadmin using context keys that could trigger a specific behavior
-        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
+        return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
     _defaults = {
         'type': 'email',
@@ -155,151 +162,236 @@ class mail_message(osv.Model):
     # Vote/Like
     #------------------------------------------------------
 
-    def vote_toggle(self, cr, uid, ids, user_ids=None, context=None):
-        ''' Toggles voting. Done as SUPERUSER_ID because of write access on
-            mail.message not always granted. '''
-        if not user_ids:
-            user_ids = [uid]
+    def vote_toggle(self, cr, uid, ids, context=None):
+        ''' Toggles vote. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may vote for a message he cannot modify. '''
         for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
-            for user_id in user_ids:
-                has_voted = user_id in message.get('vote_user_ids')
-                if not has_voted:
-                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
-                else:
-                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
-        return True
+            new_has_voted = not (uid in message.get('vote_user_ids'))
+            if new_has_voted:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, uid)]}, context=context)
+            else:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
+        return new_has_voted or False
+
+    #------------------------------------------------------
+    # Favorite
+    #------------------------------------------------------
+
+    def favorite_toggle(self, cr, uid, ids, context=None):
+        ''' Toggles favorite. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may star a message he cannot modify. '''
+        for message in self.read(cr, uid, ids, ['favorite_user_ids'], context=context):
+            new_is_favorite = not (uid in message.get('favorite_user_ids'))
+            if new_is_favorite:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
+            else:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
+        return new_is_favorite or False
 
     #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
 
-    def _message_dict_get(self, cr, uid, msg, context=None):
-        """ Return a dict representation of the message browse record. A read
-            is performed to because of access rights issues (reading many2one
-            fields allow to have the foreign record name without having
-            to check external access rights).
+    def _message_get_dict(self, cr, uid, message, context=None):
+        """ Return a dict representation of the message. This representation is
+            used in the JS client code, to display the messages.
+
+            :param dict message: read result of a mail.message
         """
         has_voted = False
-        vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
-        for vote in vote_ids:
-            if vote[0] == uid:
-                has_voted = True
-                break
+        if uid in message['vote_user_ids']:
+            has_voted = True
+
+        is_favorite = False
+        if uid in message['favorite_user_ids']:
+            is_favorite = True
+
         try:
-            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
+            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, message['attachment_ids'], context=context)]
         except (orm.except_orm, osv.except_osv):
             attachment_ids = []
+
         try:
-            author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
-            is_author = uid in msg.author_id.user_ids
-        except (orm.except_orm, osv.except_osv):
-            author_id = False
-            is_author = False
-        try:
-            partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+            partner_ids = self.pool.get('res.partner').name_get(cr, uid, message['partner_ids'], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
+
         return {
-            'id': msg.id,
-            'type': msg.type,
+            'id': message['id'],
+            'type': message['type'],
             'attachment_ids': attachment_ids,
-            'body': msg.body,
-            'model': msg.model,
-            'res_id': msg.res_id,
-            'record_name': msg.record_name,
-            'subject': msg.subject,
-            'date': msg.date,
-            'author_id': author_id,
-            'is_author': is_author,
+            'body': message['body'],
+            'model': message['model'],
+            'res_id': message['res_id'],
+            'record_name': message['record_name'],
+            'subject': message['subject'],
+            'date': message['date'],
+            'author_id': message['author_id'],
+            'is_author': message['author_id'] and message['author_id'][0] == uid,
+            # TDE note: is this useful ? to check
             'partner_ids': partner_ids,
-            'child_ids': [],
-            'vote_user_ids': vote_ids,
-            'has_voted': has_voted
+            'parent_id': message['parent_id'] and message['parent_id'][0] or False,
+            # TDE note: see with CHM about votes, how they are displayed (only number, or name_get ?)
+            # vote: should only use number of votes
+            'vote_nb': len(message['vote_user_ids']),
+            'has_voted': has_voted,
+            'is_private': message['model'] and message['res_id'],
+            'is_favorite': is_favorite,
+            'to_read': message['to_read'],
         }
 
-    def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
-        """ Given a tree with several roots of following structure :
-            [   {'id': 1, 'child_ids': [
-                    {'id': 11, 'child_ids': [...] },],
-                {...}   ]
-            Flatten it to have a maximum number of levels, 0 being flat and
-            sort messages in a level according to a key of the messages.
-            Perform the flattening at leafs if above the maximum depth, then get
-            back in the tree.
-            :param context: ``sort_key``: key for sorting (id by default)
-            :param context: ``sort_reverse``: reverser order for sorting (True by default)
-        """
-        def _flatten(msg_dict):
-            """ from    {'id': x, 'child_ids': [{child1}, {child2}]}
-                get     [{'id': x, 'child_ids': []}, {child1}, {child2}]
-            """
-            child_ids = msg_dict.pop('child_ids', [])
-            msg_dict['child_ids'] = []
-            return [msg_dict] + child_ids
-            # return sorted([msg_dict] + child_ids, key=itemgetter('id'), reverse=True)
-        context = context or {}
-        # Depth-first flattening
-        for message in messages:
-            if message.get('type') == 'expandable':
-                continue
-            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level + 1, level, context=context)
-        # Flatten if above maximum depth
-        if current_level < level:
-            return_list = messages
-        else:
-            return_list = []
-            for message in messages:
-                for flat_message in _flatten(message):
-                    return_list.append(flat_message)
-        return sorted(return_list, key=itemgetter(context.get('sort_key', 'id')), reverse=context.get('sort_reverse', True))
+    def _message_read_expandable(self, cr, uid, message_list, read_messages,
+            message_loaded_ids=[], domain=[], context=None, parent_id=False, limit=None):
+        """ Create the expandable message for all parent message read
+            this function is used by message_read
 
-    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
-        """ If IDs are provided, fetch these records. Otherwise use the domain
-            to fetch the matching records.
-            After having fetched the records provided by IDs, it will fetch the
-            parents to have well-formed threads.
+            :param list message_list: list of messages given by message_read to
+                which we have to add expandables
+            :param dict read_messages: dict [id]: read result of the messages to
+                easily have access to their values, given their ID
+        """
+        # sort for group items / TDE: move to message_read
+        # result = sorted(result, key=lambda k: k['id'])
+        tree_not = []
+        # expandable for not show message
+        id_list = sorted(read_messages.keys())
+        for message_id in id_list:
+            message = read_messages[message_id]
+
+            # TDE note: check search is correctly implemented in mail.message
+            not_loaded_ids = self.search(cr, uid, [
+                ('parent_id', '=', message['id']),
+                ('id', 'not in', message_loaded_ids),
+                ], context=context, limit=self._message_read_more_limit)
+            # group childs not read
+            id_min = None
+            id_max = None
+            nb = 0
+
+            for not_loaded_id in not_loaded_ids:
+                if not read_messages.get(not_loaded_id):
+                    nb += 1
+                    if id_min == None or id_min > not_loaded_id:
+                        id_min = not_loaded_id
+                    if id_max == None or id_max < not_loaded_id:
+                        id_max = not_loaded_id
+                    tree_not.append(not_loaded_id)
+                else:
+                    if nb > 0:
+                        message_list.append({
+                            'domain': [('id', '>=', id_min), ('id', '<=', id_max), ('parent_id', '=', message_id)],
+                            'nb_messages': nb,
+                            'type': 'expandable',
+                            'parent_id': message_id,
+                            'id':  id_min,
+                            'model':  message['model']
+                        })
+                    id_min = None
+                    id_max = None
+                    nb = 0
+            if nb > 0:
+                message_list.append({
+                    'domain': [('id', '>=', id_min), ('id', '<=', id_max), ('parent_id', '=', message_id)],
+                    'nb_messages': nb,
+                    'type': 'expandable',
+                    'parent_id': message_id,
+                    'id':  id_min,
+                    'model':  message['model'],
+                })
+
+        for msg_id in read_messages.keys() + tree_not:
+            message_loaded_ids.append(msg_id)
+
+        # expandable for limit max
+        ids = self.search(cr, uid, domain + [('id', 'not in', message_loaded_ids)], context=context, limit=1)
+        if len(ids) > 0:
+            message_list.append({
+                'domain': domain,
+                'nb_messages': 0,
+                'type': 'expandable',
+                'parent_id': parent_id,
+                'id': -1,
+                'max_limit': True,
+            })
+
+        return message_list
+
+    def _get_parent(self, cr, uid, message, context=None):
+        """ Tools method that tries to get the parent of a mail.message. If
+            no parent, or if uid has no access right on the parent, False
+            is returned.
+
+            :param dict message: read result of a mail.message
+        """
+        if not message['parent_id']:
+            return False
+        parent_id = message['parent_id'][0]
+        try:
+            return self.read(cr, uid, parent_id, self._message_read_fields, context=context)
+        except (orm.except_orm, osv.except_osv):
+            return False
+
+    def message_read(self, cr, uid, ids=False, domain=[], message_loaded_ids=[], context=None, parent_id=False, limit=None):
+        """ Read messages from mail.message, and get back a structured tree
+            of messages to be displayed as discussion threads. If IDs is set,
+            fetch these records. Otherwise use the domain to fetch messages.
+            After having fetch messages, their parents & child will be added to obtain
+            well formed threads.
+
+            TDE note: update this comment after final method implementation
+
+            :param domain: optional domain for searching ids
+            :param limit: number of messages to fetch
+            :param parent_id: if parent_id reached, stop searching for
+                further parents
             :return list: list of trees of messages
         """
+        if message_loaded_ids:
+            domain += [('id', 'not in', message_loaded_ids)]
         limit = limit or self._message_read_limit
-        context = context or {}
-        if not ids:
-            ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
-        messages = self.browse(cr, uid, ids, context=context)
+        read_messages = {}
+        message_list = []
 
-        result = []
-        tree = {} # key: ID, value: record
-        for msg in messages:
-            if len(result) < (limit - 1):
-                record = self._message_dict_get(cr, uid, msg, context=context)
-                if thread_level and msg.parent_id:
-                    while msg.parent_id:
-                        if msg.parent_id.id in tree:
-                            record_parent = tree[msg.parent_id.id]
-                        else:
-                            record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
-                            if msg.parent_id.parent_id:
-                                tree[msg.parent_id.id] = record_parent
-                        if record['id'] not in [x['id'] for x in record_parent['child_ids']]:
-                            record_parent['child_ids'].append(record)
-                        record = record_parent
-                        msg = msg.parent_id
-                if msg.id not in tree:
-                    result.append(record)
-                    tree[msg.id] = record
-            else:
-                result.append({
-                    'type': 'expandable',
-                    'domain': [('id', '<=', msg.id)] + domain,
-                    'context': context,
-                    'thread_level': thread_level,  # should be improve accodting to level of records
-                    'id': -1,
-                })
-                break
+        # specific IDs given: fetch those ids and return directly the message list
+        if ids:
+            for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
+                message_list.append(self._message_get_dict(cr, uid, message, context=context))
+            message_list = sorted(message_list, key=lambda k: k['id'])
+            return message_list
 
-        # Flatten the result
-        if thread_level > 0:
-            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
-        return result
+        # TDE FIXME: check access rights on search are implemented for mail.message
+        # fetch messages according to the domain, add their parents if uid has access to
+        ids = self.search(cr, uid, domain, context=context, limit=limit)
+        for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
+            # if not in tree and not in message_loded list
+            if not read_messages.get(message.get('id')) and message.get('id') not in message_loaded_ids:
+                read_messages[message.get('id')] = message
+                message_list.append(self._message_get_dict(cr, uid, message, context=context))
+
+                # get all parented message if the user have the access
+                parent = self._get_parent(cr, uid, message, context=context)
+                while parent and parent.get('id') != parent_id:
+                    if not read_messages.get(parent.get('id')) and parent.get('id') not in message_loaded_ids:
+                        read_messages[parent.get('id')] = parent
+                        message_list.append(self._message_get_dict(cr, uid, parent, context=context))
+                    parent = self._get_parent(cr, uid, parent, context=context)
+
+        # get the child expandable messages for the tree
+        message_list = sorted(message_list, key=lambda k: k['id'])
+        message_list = self._message_read_expandable(cr, uid, message_list, read_messages,
+            message_loaded_ids=message_loaded_ids, domain=domain, context=context, parent_id=parent_id, limit=limit)
+
+        # message_list = sorted(message_list, key=lambda k: k['id'])
+        return message_list
+
+    # TDE Note: do we need this ?
+    # def user_free_attachment(self, cr, uid, context=None):
+    #     attachment = self.pool.get('ir.attachment')
+    #     attachment_list = []
+    #     attachment_ids = attachment.search(cr, uid, [('res_model', '=', 'mail.message'), ('create_uid', '=', uid)])
+    #     if len(attachment_ids):
+    #         attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
+    #     return attachment_list
 
     #------------------------------------------------------
     # Email api
@@ -319,7 +411,8 @@ class mail_message(osv.Model):
                 - Otherwise: raise
             - create: if
                 - I am in the document message_follower_ids OR
-                - I can write on the related document if res_model, res_id
+                - I can write on the related document if res_model, res_id OR
+                - I create a private message (no model, no res_id)
                 - Otherwise: raise
             - write: if
                 - I can write on the related document if res_model, res_id
@@ -357,6 +450,10 @@ class mail_message(osv.Model):
         if operation == 'read':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
+        # Create: Check messages you create that are private messages -> ir.rule ?
+        elif operation == 'create':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if not message.get('model') and not message.get('res_id')]
         else:
             author_ids = []
 
@@ -407,21 +504,22 @@ class mail_message(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
-            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self.notify(cr, uid, newid, context=context)
+        self._notify(cr, SUPERUSER_ID, newid, context=context)
         return newid
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         """ Override to explicitely call check_access_rule, that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
-        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         self.check_access_rule(cr, uid, ids, 'read', context=context)
+        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
@@ -431,26 +529,42 @@ class mail_message(osv.Model):
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify_followers(self, cr, uid, newid, message, context=None):
         """ Add the related record followers to the destination partner_ids.
-            Call mail_notification.notify to manage the email sending
         """
-        message = self.browse(cr, uid, newid, context=context)
         partners_to_notify = set([])
-        # add all partner_ids of the message
+        # message has no subtype_id: pure log message -> no partners, no one notified
+        if not message.subtype_id:
+            message.write({'partner_ids': [5]})
+            return True
+        # all partner_ids of the mail.message have to be notified
         if message.partner_ids:
             partners_to_notify |= set(partner.id for partner in message.partner_ids)
-        # add all followers and set add them in partner_ids
+        # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
-            record = self.pool.get(message.model).browse(cr, SUPERUSER_ID, message.res_id, context=context)
-            extra_notified = set(partner.id for partner in record.message_follower_ids)
+            fol_obj = self.pool.get("mail.followers")
+            fol_ids = fol_obj.search(cr, uid, [('res_model', '=', message.model), ('res_id', '=', message.res_id), ('subtype_ids', 'in', message.subtype_id.id)], context=context)
+            fol_objs = fol_obj.browse(cr, uid, fol_ids, context=context)
+            extra_notified = set(fol.partner_id.id for fol in fol_objs)
             missing_notified = extra_notified - partners_to_notify
             if missing_notified:
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
-            partners_to_notify |= extra_notified
-        # # remove uid from partners
-        self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, uid)]}, context=context)
-        self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
+
+    def _notify(self, cr, uid, newid, context=None):
+        """ Add the related record followers to the destination partner_ids if is not a private message.
+            Call mail_notification.notify to manage the email sending
+        """
+        message = self.browse(cr, uid, newid, context=context)
+        if message.model and message.res_id:
+            self._notify_followers(cr, uid, newid, message, context=context)
+
+        # add myself if I wrote on my wall, otherwise remove myself author
+        if ((message.model == "res.partner" and message.res_id == message.author_id.id)):
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
+        else:
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
+
+        self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         """Overridden to avoid duplicating fields that are unique to each email"""

@@ -29,12 +29,12 @@ class bank(osv.osv):
         'currency_id': fields.related('journal_id', 'currency', type="many2one", relation='res.currency', readonly=True,
             string="Currency", help="Currency of the related account journal."),
     }
-    def create(self, cr, uid, data, context={}):
+    def create(self, cr, uid, data, context=None):
         result = super(bank, self).create(cr, uid, data, context=context)
         self.post_write(cr, uid, [result], context=context)
         return result
 
-    def write(self, cr, uid, ids, data, context={}):
+    def write(self, cr, uid, ids, data, context=None):
         result = super(bank, self).write(cr, uid, ids, data, context=context)
         self.post_write(cr, uid, ids, context=context)
         return result
@@ -53,7 +53,7 @@ class bank(osv.osv):
             data['currency_name'] = data['currency_id'] and currency_name[data['currency_id'][0]] or ''
         return super(bank, self)._prepare_name_get(cr, uid, bank_dicts, context=context)
 
-    def post_write(self, cr, uid, ids, context={}):
+    def post_write(self, cr, uid, ids, context=None):
         if isinstance(ids, (int, long)):
           ids = [ids]
 

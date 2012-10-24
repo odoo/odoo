@@ -272,7 +272,7 @@
             </field>
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
-            sequence="3" groups="stock.group_tracking_lot,stock.group_production_lot"/>
+            sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
             groups="product.group_stock_packaging"
             sequence="6"
@@ -746,16 +746,14 @@
             <field name="arch" type="xml">
                 <form string="Internal Picking List" version="7.0">
                 <header>
-                    <span groups="base.group_user">
-                        <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-                        <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight"/>
-                        <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
-                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight"/>
-                        <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
-                        <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice/Refund"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight"/>
-                        <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action"/>
-                        <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel"/>
-                    </span>
+                    <button name="draft_force_assign" states="draft" string="Confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="draft_validate" states="draft" string="Confirm &amp; Transfer" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <!-- <button name="action_assign" states="confirmed" string="Check Availability" type="object"/> -->
+                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_process" states="assigned" string="Confirm &amp; Transfer" groups="stock.group_stock_user" type="object" class="oe_highlight"/>
+                    <button name="%(action_stock_invoice_onshipping)d" string="Create Invoice/Refund"  attrs="{'invisible': ['|','|',('state','&lt;&gt;','done'),('invoice_state','=','invoiced'),('invoice_state','=','none')]}"  type="action" class="oe_highlight" groups="base.group_user"/>
+                    <button name="%(act_stock_return_picking)d" string="Reverse Transfer" states="done" type="action" groups="base.group_user"/>
+                    <button name="button_cancel" states="assigned,confirmed,draft" string="_Cancel" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
@@ -777,7 +775,7 @@
                     </group>
                     <notebook>
                         <page string="Products">
-                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                            <field name="move_lines" context="{'address_in_id': partner_id, 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree', 'picking_type': 'internal'}"/>
                             <field name="note" placeholder="Add an internal note..." class="oe_inline"/>
                         </page>
                         <page string="Additional Info">
@@ -914,7 +912,6 @@
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
-                            <field name="message_is_follower" invisible="1"/>
                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                             <field name="message_follower_ids" widget="mail_followers"/>
                         </div>
@@ -1041,7 +1038,6 @@
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
-                            <field name="message_is_follower" invisible="1"/>
                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                             <field name="message_follower_ids" widget="mail_followers"/>
                         </div>
@@ -1284,11 +1280,9 @@
             <field name="arch" type="xml">
             <form string="Stock Moves" version="7.0">
                 <header>
-                    <span groups="base.group_user">
-                        <button name="force_assign" states="confirmed" string="Force Availability" type="object"/>
-                        <button name="action_confirm" states="draft" string="Confirm" type="object"/>
-                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object"/>
-                    </span>
+                        <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_user"/>
+                        <button name="action_confirm" states="draft" string="Confirm" type="object" groups="base.group_user"/>
+                        <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
                 </header>
                 <group>
@@ -1418,7 +1412,7 @@
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
         <!--
             Reception Picking (By Stock Move)

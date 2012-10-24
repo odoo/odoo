@@ -26,14 +26,14 @@ from osv import osv
 
 class order(report_sxw.rml_parse):
 
-    def get_lines(self, user, objects):
+    def get_lines(self, user,objects):
         lines=[]
         for obj in objects:
             if user.id==obj.user_id.id:
                 lines.append(obj)
         return lines
 
-    def get_total(self, user, objects):
+    def get_total(self, user,objects):
         lines=[]
         for obj in objects:
             if user.id==obj.user_id.id:
@@ -54,6 +54,12 @@ class order(report_sxw.rml_parse):
                 users.append(obj.user_id)
         return users
 
+    def get_note(self,objects):
+        notes=[]
+        for obj in objects:
+            notes.append(obj.note)
+        return notes
+        
     def __init__(self, cr, uid, name, context):
         super(order, self).__init__(cr, uid, name, context)
         self.net_total=0.0
@@ -63,9 +69,10 @@ class order(report_sxw.rml_parse):
             'get_users': self.get_users,
             'get_total': self.get_total,
             'get_nettotal': self.get_nettotal,
+            'get_note': self.get_note,
         })
 
-report_sxw.report_sxw('report.lunch.order', 'lunch.order',
+report_sxw.report_sxw('report.lunch.order.line', 'lunch.order.line',
         'addons/lunch/report/order.rml',parser=order, header='external')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

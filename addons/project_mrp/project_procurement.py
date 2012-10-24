@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
@@ -42,7 +43,7 @@ class procurement_order(osv.osv):
                 return False
         return True
 
-    def check_produce_service(self, cr, uid, procurement, context=None):    
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
@@ -83,9 +84,14 @@ class procurement_order(osv.osv):
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running', 'message':'from project: task created.'}, context=context)
-        self.running_send_note(cr, uid, ids, context=None)
+            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running', 'message':_('Task created.')}, context=context)            
+        self.project_task_create_note(cr, uid, ids, context=context)
         return task_id
+
+    def project_task_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = _("Task created")
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
 

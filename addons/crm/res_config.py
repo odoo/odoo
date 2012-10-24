@@ -29,21 +29,16 @@ class crm_configuration(osv.osv_memory):
         'fetchmail_lead': fields.boolean("Create leads from incoming mails",
             fetchmail_model='crm.lead', fetchmail_name='Incoming Leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
-        'module_crm_caldav': fields.boolean("Applications with Caldav protocol",
-            help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
-                This installs the module crm_caldav."""),
-        'module_import_sugarcrm': fields.boolean("SugarCRM",
-            help="""Import SugarCRM leads, opportunities, users, accounts, contacts, employees, meetings, phonecalls, emails, project and project tasks data.
-                This installs the module import_sugarcrm."""),
-        'module_import_google': fields.boolean("Google (contacts and calendar)",
-            help="""Import google contact in partner address and add google calendar events details in Meeting.
-                This installs the module import_google."""),
-        'module_google_map': fields.boolean("Add google maps on customers",
-            help="""Locate customers on Google Map.
-                This installs the module google_map."""),
         'group_fund_raising': fields.boolean("Manage Fund Raising",
             implied_group='crm.group_fund_raising',
             help="""Allows you to trace and manage your activities for fund raising."""),
+        'module_crm_claim':fields.boolean("Manage Customer Claims",
+            help="""Allows you to track your customers/suppliers claims and grievances.
+                    This installs the module crm_claim."""),
+        'module_crm_helpdesk':fields.boolean("Manage Helpdesk and Support",
+            help="""Allows you to communicate with Customer,  process Customer query, and provide better help and support. This installs the module crm_helpdesk."""),
+        
+        
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

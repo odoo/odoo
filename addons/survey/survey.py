@@ -77,6 +77,7 @@ class survey(osv.osv):
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
         'response_user': lambda * a:1,
+        'date_open': fields.datetime.now,
     }
 
     def survey_open(self, cr, uid, ids, arg):
@@ -151,8 +152,7 @@ class survey(osv.osv):
             pages = sur['page_ids']
             if not pages:
                 raise osv.except_osv(_('Warning!'), _('This survey has no question defined. Please define the questions and answers first.'))
-            else:
-                context.update({'active':False,'survey_id': ids[0]})
+            context.update({'active':False,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -163,9 +163,12 @@ class survey(osv.osv):
             'context': context
         }
     def test_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        sur_obj = self.read(cr, uid, ids,['title','page_ids'], context=context)
         for sur in sur_obj:
             name = sur['title']
+            pages = sur['page_ids']
+            if not pages:
+                raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
             context.update({'active':True,'survey_id': ids[0]})
         return {
             'view_type': 'form',
@@ -548,7 +551,7 @@ class survey_question_column_heading(osv.osv):
     _description = 'Survey Question Column Heading'
     _rec_name = 'title'
 
-    def _get_in_visible_rating_weight(self,cr, uid, context=None):
+    def _get_in_visible_rating_weight(self, cr, uid, context=None):
         if context is None:
             context = {}
         if context.get('in_visible_rating_weight', False):
@@ -601,7 +604,7 @@ class survey_answer(osv.osv):
             }
         return val
 
-    def _get_in_visible_answer_type(self,cr, uid, context=None):
+    def _get_in_visible_answer_type(self, cr, uid, context=None):
         if context is None:
             context = {}
         return context.get('in_visible_answer_type', False)

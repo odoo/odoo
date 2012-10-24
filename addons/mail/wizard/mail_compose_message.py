@@ -81,7 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -102,9 +102,9 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.many2many('ir.attachment',
-            'mail_compose_message_ir_attachments_rel',
-            'wizard_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
+            domain=lambda self: [('res_model', '=', self._name)],
+            string='Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
@@ -121,7 +121,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -245,9 +245,11 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
+
             # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
-            self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {'res_id': wizard.id}, context=context)
+            # self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
+            #     'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

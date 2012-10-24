@@ -90,6 +90,7 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.function(_no_of_employee, string='Total Employees',
@@ -229,7 +230,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
+            return {'value': {'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):

@@ -105,6 +105,7 @@ class test_mail_access_rights(test_mail.TestMailMockups):
     def test_10_mail_flow_access_rights(self):
         """ Test a Chatter-looks alike flow. """
         cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
         partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
         user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
 
@@ -119,6 +120,7 @@ class test_mail_access_rights(test_mail.TestMailMockups):
         self.assertRaises(except_orm,
                           self.mail_group.create,
                           cr, user_bert_id, {'name': 'Bert\'s Group'})
+
         # Do: Bert reads Jobs basic fields, ok because public = read access on the group
         self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['name', 'description'])
         # Do: Bert browse Pigs, ok (no direct browse of partners)
@@ -145,8 +147,22 @@ class test_mail_access_rights(test_mail.TestMailMockups):
                           self.mail_group.read,
                           cr, user_bert_id, self.group_pigs_id)
 
+        # Do: Bert create a mail.compose.message record, because he uses the wizard
+        compose_id = mail_compose.create(cr, user_bert_id,
+            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
+        mail_compose.send_mail(cr, user_bert_id, [compose_id])
+
+        self.user_demo_id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+        compose_id = mail_compose.create(cr, self.user_demo_id,
+            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
+        mail_compose.send_mail(cr, self.user_demo_id, [compose_id])
+
         # ----------------------------------------
-        # CASE1: Raoul, employee
+        # CASE2: Raoul, employee
         # ----------------------------------------
         # Do: Bert read Pigs, ok because public
         self.mail_group.read(cr, user_raoul_id, self.group_pigs_id)
