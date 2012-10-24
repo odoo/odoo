@@ -22,7 +22,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.view_id = view_id;
         this.view_type = 'calendar';
         this.has_been_loaded = $.Deferred();
-        this.creating_event_id = null;
         this.dataset_events = [];
         this.form_dialog = new instance.web_calendar.CalendarFormDialog(this, {
                 destroy_on_close: false,
@@ -75,7 +74,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         if (this.color_field && this.selected_filters.length === 0) {
             var default_filter;
-            if (default_filter = this.dataset.context['calendar_default_' + this.color_field]) {
+            if ((default_filter = this.dataset.context['calendar_default_' + this.color_field])) {
                 this.selected_filters.push(default_filter + '');
             }
         }
@@ -175,34 +174,25 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         scheduler.init(this.$el.find('.oe_calendar')[0], null, this.mode || 'month');
         scheduler.detachAllEvents();
-        //scheduler.attachEvent('onEventAdded', this.do_create_event);
-        //scheduler.attachEvent('onEventDeleted', this.do_delete_event);
-        //scheduler.attachEvent('onEventChanged', this.do_save_event);
-        //scheduler.attachEvent('onClick', this.do_edit_event);
-        //scheduler.attachEvent('onLightbox', this.do_edit_event);
         scheduler.attachEvent('onViewChange', this.on_view_changed);
         scheduler.attachEvent('onEventChanged', this.proxy('quick_save'));
         scheduler.attachEvent('onEventAdded', this.proxy('quick_create'));
-        scheduler.attachEvent('onEventDeleted', function() {
-            eval(3)
-            debugger
+        scheduler.attachEvent('onEventDeleted', this.proxy('delete_event'));
+        scheduler.attachEvent('onClick', function(event_id, mouse_event) {
+            if (!self.$el.find('.dhx_cal_editor').length) {
+                self.open_event(event_id);
+            }
         });
-        scheduler.attachEvent('onEmptyClick', function(ev) {
-            eval(3)
-            debugger
-        });
-        scheduler.attachEvent('onClick', function(ev) {
-            eval(3)
-            debugger
-        });
-        scheduler.attachEvent('onLightbox', function(event_id) {
+        scheduler.attachEvent("onBeforeLightbox", function (event_id) {
             var index = self.dataset.get_id_index(event_id);
             if (index !== null) {
                 self.open_event(self.dataset.ids[index]);
             } else {
-                self.slow_create(event_id);
+                self.slow_create(event_id, scheduler.getEvent(event_id));
             }
+           return false;
         });
+
         this.refresh_scheduler();
 
         // Remove hard coded style attributes from dhtmlx scheduler
@@ -323,115 +313,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
         return r;
     },
-
-
-    quick_save: function(event_id, event_obj) {
-        var self = this;
-        var data = this.get_event_data(event_obj);
-        delete(data.name);
-        var index = this.dataset.get_id_index(event_id);
-        if (index !== null) {
-            event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).then(function() {
-                self.refresh_minical();
-            });
-        }
-    },
-    quick_create: function(event_id, event_obj) {
-        var self = this;
-        var data = this.get_event_data(event_obj);
-        this.dataset.create(data).then(function(r) {
-            var id = r;
-            self.dataset.ids.push(id);
-            scheduler.changeEventId(event_id, id);
-            self.refresh_minical();
-            self.reload_event(id);
-        }, function(r, event) {
-            event.preventDefault();
-            self.slow_create(event_id, event_obj);
-        });
-    },
-    slow_create: function(event_id, event_obj) {
-        var self = this;
-        event_obj = event_obj || scheduler.getEvent(event_id);
-        var data = this.get_event_data(event_obj);
-        //self.creating_event_id = event_id;
-        var set_values = {};
-        _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
-            var field_name = self[field];
-            set_values[field_name] = data[field_name];
-            console.log(set_values);
-        });
-        this.open_form_popup(null, set_values);
-    },
-    open_event: function(event_id) {
-        this.open_form_popup(event_id);
-    },
-
-    open_form_popup: function(id, set_values) {
-        var pop = new instance.web.form.FormOpenPopup(this);
-        debugger
-        pop.show_element(this.dataset.model, id, this.dataset.get_context(), {
-            title: _t("Calendar entry: ") // + title
-        });
-        //_.each(['date_start', 'date_delay', 'date_stop'], function(field) {
-        //    var field_name = self[field];
-        //    if (field_name && self.form_dialog.form.fields[field_name]) {
-        //        var ffield = self.form_dialog.form.fields[field_name];
-        //        ffield._dirty_flag = false;
-        //        $.when(ffield.set_value(data[field_name])).then(function() {
-        //            ffield._dirty_flag = true;
-        //            self.form_dialog.form.do_onchange(ffield);
-        //        });
-        //    }
-        //});
-        pop.on('write_completed', self, function() {
-            debugger
-            //self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
-        });
-        return pop;
-    },
-    do_delete_event: function(event_id, event_obj) {
-        // dhtmlx sends this event even when it does not exist in openerp.
-        // Eg: use cancel in dhtmlx new event dialog
-        var self = this,
-            index = this.dataset.get_id_index(event_id);
-        if (index !== null) {
-            this.dataset.unlink(event_id).then(function() {
-                self.refresh_minical();
-            });
-        }
-    },
-    do_edit_event: function(event_id, evt) {
-        debugger
-        var self = this;
-        var index = this.dataset.get_id_index(event_id);
-        if (index !== null) {
-            //this.dataset.index = index;
-            //this.do_switch_view('form');
-            this.open_form_popup(this.dataset.ids[index]);
-        } else if (scheduler.getState().mode === 'month') {
-            var event_obj = scheduler.getEvent(event_id);
-            if (event_obj._length === 1) {
-                event_obj['start_date'].addHours(8);
-                event_obj['end_date'] = new Date(event_obj['start_date']);
-                event_obj['end_date'].addHours(1);
-            } else {
-                event_obj['start_date'].addHours(8);
-                event_obj['end_date'].addHours(-4);
-            }
-            this.slow_create(event_id, event_obj);
-            // return false;
-            // Theorically, returning false should prevent the lightbox to open.
-            // It works, but then the scheduler is in a buggy state where drag'n drop
-            // related internal Event won't be fired anymore.
-            // I tried scheduler.editStop(event_id); but doesn't work either
-            // After losing one hour on this, here's a quick and very dirty fix :
-            $(".dhx_cancel_btn").click();
-        } else {
-            scheduler.editStop($(evt.target).hasClass('icon_save'));
-        }
-    },
     get_event_data: function(event_obj) {
         var data = {
             name: event_obj.text
@@ -481,7 +362,66 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     get_selected_ids: function() {
         // no way to select a record anyway
         return [];
-    }
+    },
+
+    quick_save: function(event_id, event_obj) {
+        var self = this;
+        var data = this.get_event_data(event_obj);
+        delete(data.name);
+        var index = this.dataset.get_id_index(event_id);
+        if (index !== null) {
+            event_id = this.dataset.ids[index];
+            this.dataset.write(event_id, data, {}).then(function() {
+                self.refresh_minical();
+            });
+        }
+    },
+    quick_create: function(event_id, event_obj) {
+        var self = this;
+        var data = this.get_event_data(event_obj);
+        this.dataset.create(data).then(function(r) {
+            var id = r;
+            self.dataset.ids.push(id);
+            scheduler.changeEventId(event_id, id);
+            self.refresh_minical();
+            self.reload_event(id);
+        }, function(r, event) {
+            event.preventDefault();
+            self.slow_create(event_id, event_obj);
+        });
+    },
+    slow_create: function(event_id, event_obj) {
+        var self = this;
+        if (scheduler.getState().mode === 'month') {
+            if (event_obj._length === 1) {
+                event_obj['start_date'].addHours(8);
+                event_obj['end_date'] = new Date(event_obj['start_date']);
+                event_obj['end_date'].addHours(1);
+            } else {
+                event_obj['start_date'].addHours(8);
+                event_obj['end_date'].addHours(-4);
+            }
+        }
+        var set_values = {};
+        var data = this.get_event_data(event_obj);
+        this.form_dialog.create_record(data, event_id);
+    },
+    open_event: function(event_id) {
+        this.form_dialog.open_record(event_id);
+    },
+    delete_event: function(event_id, event_obj) {
+        // dhtmlx sends this event even when it does not exist in openerp.
+        // Eg: use cancel in dhtmlx new event dialog
+        var self = this;
+        var index = this.dataset.get_id_index(event_id);
+        if (index !== null) {
+            this.dataset.unlink(event_id).then(function() {
+                self.refresh_minical();
+            });
+        }
+    },
+
+
 });
 
 instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
@@ -490,16 +430,18 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.dataset = dataset;
         this.view_id = view_id;
         this.view = view;
+        this.creating_event_id = null;
         this.on("closing", this, function() {
-            if (this.view.creating_event_id) {
-                scheduler.deleteEvent(this.view.creating_event_id);
-                this.view.creating_event_id = null;
+            if (this.creating_event_id) {
+                scheduler.deleteEvent(this.creating_event_id);
+                this.creating_event_id = null;
             }
         });
+        this.ready = $.when(!this.dialog_inited ? this.init_dialog() : true);
     },
     start: function() {
         var self = this;
-        this._super();
+        this._super.apply(this, arguments);
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false,
             $buttons: this.$buttons,
@@ -509,14 +451,46 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.form.on('record_saved', self, this.on_form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();
-        }
+        };
         return def;
+    },
+    create_record: function(data, dhtmlx_event_id) {
+        var self = this;
+        this.ready.then(function() {
+            self.view.dataset.index = null;
+            self.creating_event_id = dhtmlx_event_id;
+            self.form.do_show().then(function() {
+                _.each(data, function(val, field_name) {
+                    var ffield = self.form.fields[field_name];
+                    if (ffield) {
+                        ffield._dirty_flag = false;
+                        $.when(ffield.set_value(val)).then(function() {
+                            ffield._dirty_flag = true;
+                            self.form.do_onchange(ffield);
+                        });
+                    }
+                });
+                self.open();
+            });
+        });
+    },
+    open_record: function(id) {
+        var self = this;
+        this.ready.then(function() {
+            if (self.dataset.select_id(id)) {
+                self.form.do_show().then(function() {
+                    self.open();
+                });
+            } else {
+                console.error("Calendar could not find event id", event_id);
+            }
+        });
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
-        if (this.view.creating_event_id) {
-            scheduler.changeEventId(this.view.creating_event_id, id);
-            this.view.creating_event_id = null;
+        if (this.creating_event_id) {
+            scheduler.changeEventId(this.creating_event_id, id);
+            this.creating_event_id = null;
         }
         this.view.reload_event(id);
         this.close();
@@ -578,5 +552,4 @@ instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
 
 };
 
-// DEBUG_RPC:rpc.request:('execute', 'addons-dsh-l10n_us', 1, '*', ('ir.filters', 'get_filters', u'res.partner'))
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
