@@ -275,26 +275,6 @@ openerp.mail = function(session) {
             }
         },
 
-        /* to avoid having unsorted file on the server.
-            we will show the users files of the first message post
-            TDE note: unnecessary call to server I think
-         */
-        // set_free_attachments: function(){
-        //     var self=this;
-        //     this.parent_thread.ds_message.call('user_free_attachment').then(function(attachments){
-        //         this.attachment_ids=[];
-        //         for(var i in attachments){
-        //             self.attachment_ids[i]={
-        //                 'id': attachments[i].id,
-        //                 'name': attachments[i].name,
-        //                 'filename': attachments[i].filename,
-        //                 'url': mail.ChatterUtils.get_attachment_url(self.session, attachments[i])
-        //             };
-        //         }
-        //         self.display_attachments();
-        //     });
-        // },
-
         bind_events: function() {
             var self = this;
 
@@ -318,10 +298,6 @@ openerp.mail = function(session) {
         },
 
         on_compose_fullmail: function(){
-            var attachments=[];
-            for(var i in this.attachment_ids){
-                attachments.push(this.attachment_ids[i].id);
-            }
             /* TDE note: I think this is not necessary, because
              * 1/ post on a document: followers added server-side in _notify
              * 2/ reply to a message: mail.compose.message should add the previous partners
@@ -340,15 +316,20 @@ openerp.mail = function(session) {
                 target: 'new',
                 context: {
                     'default_model': this.context.default_model,
+                    'default_res_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
-                    'default_ancestor_id': this.id,
+                    'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable ? (this.$render_expandable.find('textarea').val() || '') : ''),
-                    'default_attachment_ids': attachments,
+                    'default_attachment_ids': this.attachment_ids,
                     'default_partner_ids': partner_ids
                 },
             };
             this.do_action(action);
+
+            if(this.$render_expandable) {
+                this.on_cancel();
+            }
         },
 
         on_cancel: function(event){
@@ -390,7 +371,7 @@ openerp.mail = function(session) {
                         false, 
                         'comment', 
                         'mail.mt_comment',
-                        this.context.default_ancestor_id, 
+                        this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
                     ]).then(function(records){
@@ -482,7 +463,7 @@ openerp.mail = function(session) {
             this.context = _.extend({
                 default_model: 'mail.thread',
                 default_res_id: 0,
-                default_ancestor_id: false }, options.context || {});
+                default_parent_id: false }, options.context || {});
 
             // data of this expandable message
             this.id = datasets.id || -1,
@@ -620,7 +601,7 @@ openerp.mail = function(session) {
             this.context = _.extend({
                 default_model: 'mail.thread',
                 default_res_id: 0,
-                default_ancestor_id: false }, options.context || {});
+                default_parent_id: false }, options.context || {});
 
             // record options
             this.options = options.options;
@@ -727,7 +708,7 @@ openerp.mail = function(session) {
                     'context':{
                         'default_model': this.model,
                         'default_res_id': this.res_id,
-                        'default_ancestor_id': this.id
+                        'default_parent_id': this.id
                     },
                     'options': this.options
                 }
@@ -929,7 +910,7 @@ openerp.mail = function(session) {
             this.context = _.extend({
                 default_model: 'mail.thread',
                 default_res_id: 0,
-                default_ancestor_id: false }, options.context || {});
+                default_parent_id: false }, options.context || {});
 
             this.options = options.options;
             this.options._parents = (options.options._parents != undefined ? options.options._parents : []).concat( [this] );
@@ -1148,7 +1129,7 @@ openerp.mail = function(session) {
             // CHM note : option for sending in flat mode by server
             var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_ancestor_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
@@ -1167,7 +1148,7 @@ openerp.mail = function(session) {
                     'context': {
                         'default_model': data.model || self.context.default_model,
                         'default_res_id': data.res_id || self.context.default_res_id,
-                        'default_ancestor_id': self.id },
+                        'default_parent_id': self.id },
                 });
             } else {
                 var message = new mail.ThreadMessage(self, _.extend(data, {'thread_level': data.thread_level ? data.thread_level : self.thread_level}), {
@@ -1175,7 +1156,7 @@ openerp.mail = function(session) {
                     'context': {
                         'default_model': data.model,
                         'default_res_id': data.res_id,
-                        'default_ancestor_id': data.id },
+                        'default_parent_id': data.id },
                     'options': _.extend(self.options, data.options)
                 });
             }
@@ -1280,7 +1261,6 @@ openerp.mail = function(session) {
          */
         switch_new_message: function(records) {
             var self=this;
-            console.log(records);
             _(records).each(function(record){
                 var thread = self.browse_thread({
                     'id': record.ancestor_id, 
@@ -1369,7 +1349,7 @@ openerp.mail = function(session) {
                     'context': {
                         'default_model': message.model || this.context.default_model,
                         'default_res_id': message.res_id || this.context.default_res_id,
-                        'default_ancestor_id': this.id },
+                        'default_parent_id': this.id },
                 });
 
                 // add object on array and DOM
@@ -1703,7 +1683,11 @@ openerp.mail = function(session) {
                 action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: this.options.context,
+                context: _.extend(this.options.context, {
+                    'default_model': this.context.default_model,
+                    'default_res_id': this.context.default_res_id,
+                    'default_content_subtype': 'html',
+                }),
             };
             session.client.action_manager.do_action(action);
         },

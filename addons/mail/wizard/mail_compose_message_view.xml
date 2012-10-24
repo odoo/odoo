@@ -16,14 +16,14 @@
                         <!-- visible wizard -->
                         <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
                                 context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)"/>
+                                on_change="onchange_partner_ids(partner_ids)" required="1"/>
                         <field name="subject" placeholder="Subject..."
-                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>/>
-                        <field name="attachment_ids" colspan="4" nolabel="1" widget="one2many_binary" blockui="1"/>
-                        <field name="body" colspan="4" nolabel="1"/>
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                     </group>
+                    <field name="body"/>
+                    <field name="attachment_ids" widget="one2many_binary" blockui="0"/>
                     <footer>
-                        <button string="Send" name="send_mail" type="object" class="oe_highlight"  />
+                        <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>

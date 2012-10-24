@@ -703,7 +703,7 @@ class mail_thread(osv.AbstractModel):
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
             mail_message = self.pool.get('mail.message')
-            attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
+            attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.compose.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
