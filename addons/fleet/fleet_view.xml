@@ -155,8 +155,8 @@
 
         <menuitem name="Fleet" id="menu_root" sequence="30" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" />
-        <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
-        <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" />
+        <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
+        <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
@@ -379,8 +379,9 @@
                                 <field name="amount" string="Activation Cost"/>
                                 <label for="cost_generated"/>
                                 <div>
-                                    <field name="cost_generated" class="oe_inline"/>
-                                    <field name="cost_frequency" class="oe_inline"/>
+                                    <field name="hide_generated_cost" />
+                                    <field name="cost_generated" class="oe_inline" invisible="context.get('hide_generated_cost',True)" />
+                                    <field name="cost_frequency" class="oe_inline"  />
                                 </div>
                             </group>
                             <group string="Odometer details">
@@ -784,7 +785,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" />
+        <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" groups="base.group_no_one"/>
 
 
         <record model='ir.ui.view' id='fleet_vehicle_costs_tree'>
