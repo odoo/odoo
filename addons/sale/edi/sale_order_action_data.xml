@@ -51,7 +51,7 @@
        % endif
     </p>
 
-    % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state not in ('draft', 'sent'):
+    % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state != 'draft':
     <%
     comp_name = quote(object.company_id.name)
     order_name = quote(object.name)
