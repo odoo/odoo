@@ -45,7 +45,7 @@ class fleet_vehicle_cost(osv.Model):
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
-
+        'cost_category' : fields.selection([('contract', 'Contract'),('services','Services'),('fuel','Fuel'),('other','Other')], 'Category of the cost', help='For internal purpose only',required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
         'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
 
@@ -58,17 +58,24 @@ class fleet_vehicle_cost(osv.Model):
     _default ={
         'parent_id':None,
         'auto_generated' : False,
+        'cost_category' : 'other',
     }
 
     
 
     def create(self, cr, uid, data, context=None):
         if 'parent_id' in data and data['parent_id']:
-            data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
-            data['date'] = self.browse(cr, uid, data['parent_id'], context=context).date
+            parent = self.browse(cr, uid, data['parent_id'], context=context)
+            data['vehicle_id'] = parent.vehicle_id.id
+            data['date'] = parent.date
+            data['cost_category'] = parent.cost_category
         if 'contract_id' in data and data['contract_id']:
-            data['vehicle_id'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).vehicle_id.id
-            data['cost_type'] = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context).cost_type.id
+            contract = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context)
+            data['vehicle_id'] = contract.vehicle_id.id
+            data['cost_type'] = contract.cost_type.id
+            data['cost_category'] = contract.cost_category
+        if not('cost_category' in data and data['cost_category']):
+            data['cost_category'] = 'other'
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -758,6 +765,10 @@ class fleet_vehicle_log_fuel(osv.Model):
         'date' : time.strftime('%Y-%m-%d'),
         'cost_type': _get_default_service_type,
     }
+    def create(self, cr, uid, data, context=None):
+        data['cost_category'] = 'fuel'
+        cost_id = super(fleet_vehicle_log_fuel, self).create(cr, uid, data, context=context)
+        return cost_id
 
 ############################
 ############################
@@ -828,6 +839,10 @@ class fleet_vehicle_log_services(osv.Model):
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date' : time.strftime('%Y-%m-%d'),
     }
+    def create(self, cr, uid, data, context=None):
+        data['cost_category'] = 'services'
+        cost_id = super(fleet_vehicle_log_services, self).create(cr, uid, data, context=context)
+        return cost_id
 
 ############################
 ############################
@@ -1093,6 +1108,10 @@ class fleet_vehicle_log_contract(osv.Model):
     def contract_open(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
+    def create(self, cr, uid, data, context=None):
+        data['cost_category'] = 'contract'
+        cost_id = super(fleet_vehicle_log_contract, self).create(cr, uid, data, context=context)
+        return cost_id
 
 
 ############################
