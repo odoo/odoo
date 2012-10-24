@@ -2,6 +2,18 @@
 <openerp>
     <data>
 
+        <record model="ir.ui.view" id="sale_order_form_payment">
+                <field name="name">sale.order.form.payment</field>
+                <field name="model">sale.order</field>
+                <field name="inherit_id" ref="sale.view_order_form"/>
+                <field name="arch" type="xml">
+                    <notebook version="7.0" position="before">
+                        <field name="portal_payment_options"/>
+                    </notebook>
+                </field>
+        </record>
+
+
         <!--
             Override the original action to set another help field and/or
             another context field, more suited for portal members
