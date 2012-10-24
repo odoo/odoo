@@ -406,11 +406,13 @@ class fleet_vehicle(osv.Model):
             return dict([])
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
-
         for record in reads:
-            ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],limit=1,order='expiration_date asc')
-            if len(ids) > 0:
-                res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_type.name))
+            if (record.log_contracts):
+                ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],limit=1,order='expiration_date asc')
+                if len(ids) > 0:
+                    res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_type.name))
+            else:
+                res.append((record.id,''))
         return dict(res)
 
     def get_total_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):

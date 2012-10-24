@@ -335,51 +335,95 @@
             </field>
         </record>
 
-        <act_window
-            
-            id="act_show_log_services"
-            name="Services Logs"
-            res_model="fleet.vehicle.log.services"
-            src_model="fleet.vehicle"
-            view_mode="tree,form"
-            view_type="form"/>
 
-        <act_window
-            
-            id="act_show_log_fuel"
-            name="Fuel Logs"
-            res_model="fleet.vehicle.log.fuel"
-            src_model="fleet.vehicle"
-            view_mode="tree,form,graph"
-            view_type="form"/>
+        <record model='ir.actions.act_window' id='act_show_log_services'>
+            <field name="name">Services Logs</field>
+            <field name="res_model">fleet.vehicle.log.services</field>
+            <field name="src_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new service entry. 
+              </p><p>
+                OpenERP helps you keeping track of all the services done
+                on your vehicle. Services can be of many type, occasional
+                repair, fixed maintenance, etc.
+              </p>
+            </field>
+        </record>
 
-        <act_window
-            
-            id="act_show_log_contract"
-            name="Contract"
-            res_model="fleet.vehicle.log.contract"
-            src_model="fleet.vehicle"
-            view_mode="tree,form"
-            view_type="form"/>
+        <record model='ir.actions.act_window' id='act_show_log_fuel'>
+            <field name="name">Fuel Logs</field>
+            <field name="res_model">fleet.vehicle.log.fuel</field>
+            <field name="src_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new fuel log. 
+              </p><p>
+                Here you can add refuelling entries for all vehicles.
+                You can also show the log for a particular vehicle using
+                the search field.
+              </p>
+            </field>
+        </record>
 
-        <act_window
-            
-            id="act_show_log_cost"
-            name="Costs"
-            res_model="fleet.vehicle.cost"
-            src_model="fleet.vehicle"
-            view_mode="tree,form,graph"
-            view_type="form"/>
+        <record model='ir.actions.act_window' id='act_show_log_contract'>
+            <field name="name">Contract</field>
+            <field name="res_model">fleet.vehicle.log.contract</field>
+            <field name="src_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new contract. 
+              </p><p>
+                OpenERP helps you managing all the contracts for your
+                vehicle, leasing, insurance, or any other type of contract.
+            </p><p>
+                The contract form includes all sort of details, like the
+                activation cost, recurrent cost, the services included in
+                the contract, beginning and possibly ending date, etc.
+              </p>
+            </field>
+        </record>
 
-        <act_window
-            
-            id="act_show_log_odometer"
-            name="Costs"
-            res_model="fleet.vehicle.odometer"
-            src_model="fleet.vehicle"
-            view_mode="tree,form,graph"
-            view_type="form"
-            />
+        <record model='ir.actions.act_window' id='act_show_log_cost'>
+            <field name="name">Costs</field>
+            <field name="res_model">fleet.vehicle.cost</field>
+            <field name="src_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="context">{"search_default_parent_false" : True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new cost.
+              </p><p>
+                OpenERP helps you managing the costs for your different vehicles
+                Costs are generally created from services and contract and appears here.
+            </p><p>
+                Thanks to the different filters, OpenERP can only print the effective
+                costs, sort them by type and by vehicle.
+              </p>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='act_show_log_odometer'>
+            <field name="name">Odometer</field>
+            <field name="res_model">fleet.vehicle.odometer</field>
+            <field name="src_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+              <p>
+                Here you can add various odometer entries for all vehicles.
+                You can also show odometer value for a particular vehicle using
+                the search field.
+              </p>
+            </field>
+        </record>
         
 
         <record model='ir.actions.act_window' id='fleet_vehicle_act'>
@@ -391,10 +435,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new vehicle. 
               </p><p>
-                Here you can create and add new vehicles to your fleet.
-                You can associate a driver, add tags, contracts, services
-                and other informations to a vehicle. You can also sort 
-                them by brand, plate number, driver, location, tags, status.
+                OpenERP will help you manage your fleet by keeping
+                track of the contracts, services, costs, fuel logs associated
+                to a particular vehicle.
+            </p><p>
+                When a contract arrives near expiration date, a visual warning
+                will show you that you need to renew that particular contract.
               </p>
             </field>
         </record>
@@ -530,10 +576,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new contract. 
               </p><p>
-                Here you can create new contracts and show all existing
-                contracts. Contracts can be of various type, from insurance
-                contracts to leasing contracts. Each contract is associated
-                to an existing vehicle and can also be associated to a user.
+                OpenERP helps you managing all the contracts for your
+                vehicle, leasing, insurance, or any other type of contract.
+            </p><p>
+                The contract form includes all sort of details, like the
+                activation cost, recurrent cost, the services included in
+                the contract, beginning and possibly ending date, etc.
               </p>
             </field>
         </record>
@@ -787,12 +835,11 @@
             <field name="view_mode">tree,form,graph</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new service log entry. 
+                Click to create a new service entry. 
               </p><p>
-                Here you can create new services entries and show all past and
-                future services. A service can be an occasional repair on a
-                vehicle or a fixed maintenance. A service is associated to
-                an existing vehicle.
+                OpenERP helps you keeping track of all the services done
+                on your vehicle. Services can be of many type, occasional
+                repair, fixed maintenance, etc.
               </p>
             </field>
         </record>
@@ -819,10 +866,9 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new type of service.
               </p><p>
-                Here you can add new services, each service
-                belong to a category. <br />
+                Each service belongs to a category. <br />
                 - contract if this service is used in a contract (ie: leasing, ...). <br />
-                - service if it is used as a service (ie: repair, ...). <br />
+                - service if it is used as a service (ie: repair, change tire...). <br />
                 - both if it is used in both case.
               </p>
             </field>
@@ -901,6 +947,17 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
             <field name="context">{"search_default_parent_false" : True}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new cost.
+              </p><p>
+                OpenERP helps you managing the costs for your different vehicles
+                Costs are generally created from services and contract and appears here.
+            </p><p>
+                Thanks to the different filters, OpenERP can only print the effective
+                costs, sort them by type and by vehicle.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" />
