@@ -465,13 +465,11 @@ class mail_message(osv.Model):
         elif not ids:
             return ids
 
-        author_ids = set([])
-        partner_ids = set([])
-        allowed_ids = set([])
+        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'])['partner_id'][0]
+        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
-        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'])['partner_id'][0]
-        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'partner_ids'])
+        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'partner_ids'], context=context)
         for message in messages:
             if message.get('author_id') and message.get('author_id')[0] == pid:
                 author_ids.add(message.get('id'))
@@ -499,20 +497,20 @@ class mail_message(osv.Model):
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """ Access rules of mail.message:
             - read: if
-                - notification exist (I receive pushed message) OR
-                - author_id = pid (I am the author) OR
-                - I can read the related document if res_model, res_id
-                - Otherwise: raise
+                - author_id == pid, uid is the author, OR
+                - mail_notification (id, pid) exists, uid has been notified, OR
+                - uid have read access to the related document if model, res_id
+                - otherwise: raise
             - create: if
-                - I am in the document message_follower_ids if res_model, res_id OR
-                - I can write on the related document if res_model, res_id OR
-                - I create a private message (no model, no res_id)
-                - Otherwise: raise
+                - no model, no res_id, I create a private message
+                - pid in message_follower_ids if model, res_id OR
+                - uid have write access on the related document if model, res_id, OR
+                - otherwise: raise
             - write: if
-                - I can write on the related document if res_model, res_id
+                - uid has write access on the related document if model, res_id
                 - Otherwise: raise
             - unlink: if
-                - I can write on the related document if res_model, res_id
+                - uid has write access on the related document if model, res_id
                 - Otherwise: raise
         """
         if uid == SUPERUSER_ID:
@@ -522,15 +520,25 @@ class mail_message(osv.Model):
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
 
         # Read mail_message.ids to have their values
-        model_record_ids = {}
         message_values = dict.fromkeys(ids)
+        model_record_ids = {}
         cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, author_id in cr.fetchall():
             message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
             if rmod:
-                model_record_ids.setdefault(rmod, set()).add(rid)
+                model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
 
-        # Read: Check for received notifications -> could become an ir.rule, but not till we do not have a many2one variable field
+        # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
+        if operation == 'read':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if message.get('author_id') and message.get('author_id') == partner_id]
+        elif operation == 'create':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if not message.get('model') and not message.get('res_id')]
+        else:
+            author_ids = []
+
+        # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
         if operation == 'read':
             not_obj = self.pool.get('mail.notification')
             not_ids = not_obj.search(cr, SUPERUSER_ID, [
@@ -538,38 +546,24 @@ class mail_message(osv.Model):
                 ('message_id', 'in', ids),
             ], context=context)
             notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
-        else:
-            notified_ids = []
-        # Read: Check messages you are author -> could become an ir.rule, but not till we do not have a many2one variable field
-        if operation == 'read':
-            author_ids = [mid for mid, message in message_values.iteritems()
-                if message.get('author_id') and message.get('author_id') == partner_id]
-        # Create: Check messages you create that are private messages -> ir.rule ?
         elif operation == 'create':
-            author_ids = [mid for mid, message in message_values.iteritems()
-                if not message.get('model') and not message.get('res_id')]
-        else:
-            author_ids = []
-
-        # Create: Check message_follower_ids
-        if operation == 'create':
-            doc_follower_ids = []
-            for model, mids in model_record_ids.items():
+            notified_ids = []
+            for doc_model, doc_dict in model_record_ids.items():
                 fol_obj = self.pool.get('mail.followers')
                 fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
-                    ('res_model', '=', model),
-                    ('res_id', 'in', list(mids)),
+                    ('res_model', '=', doc_model),
+                    ('res_id', 'in', list(doc_dict.keys())),
                     ('partner_id', '=', partner_id),
                     ], context=context)
                 fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
-                doc_follower_ids += [mid for mid, message in message_values.iteritems()
-                    if message.get('res_model') == model and message.get('res_id') in fol_mids]
+                notified_ids += [mid for mid, message in message_values.iteritems()
+                    if message.get('res_model') == doc_model and message.get('res_id') in fol_mids]
         else:
-            doc_follower_ids = []
+            notified_ids = []
 
         # Calculate remaining ids, and related model/res_ids
         model_record_ids = {}
-        other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids))
+        other_ids = set(ids).difference(set(author_ids), set(notified_ids))
         for id in other_ids:
             if message_values[id]['res_model']:
                 model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
@@ -589,7 +583,7 @@ class mail_message(osv.Model):
                 if message.get('res_model') == model and message.get('res_id') in mids]
 
         # Calculate remaining ids: if not void, raise an error
-        other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids), set(document_related_ids))
+        other_ids = other_ids - set(document_related_ids)
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),
