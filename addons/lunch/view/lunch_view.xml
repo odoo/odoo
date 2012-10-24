@@ -287,38 +287,38 @@
 			<field name="name">Orders Form</field>
 			<field name="model">lunch.order</field>
 			<field name="arch" type="xml">
-				<form string="Orders Form" version="7.0">
+				<form string='Orders Form' version='7.0'>
                     <header>
-                        <field name="state" widget="statusbar" statusbar_visible="new,confirmed"/>
+                        <field name='state' widget='statusbar' statusbar_visible='new,confirmed'/>
                     </header>
                     <sheet>
                         <group>
                             <group>
-                                <field name="user_id"/>
+                                <field name='user_id'/>
                             </group>
                             <group> 
-                                <field name="date"/>
+                                <field name='date'/>
                             </group>
                         </group>
-                        <img src="/lunch/static/src/img/warning.png" width="30" height="30" class="oe_left oe_avatar" attrs="{'invisible': [('state','!=','new')]}"/>
-                        <div class="oe_title">
-                            <field name="alerts" attrs="{'invisible': [('state','!=','new')]}"/> 
+                        <img src='/lunch/static/src/img/warning.png' width='30' height='30' class='oe_left oe_avatar' attrs="{'invisible': [('state','!=','new')]}"/>
+                        <div class='oe_title'>
+                            <field name='alerts' attrs="{'invisible': [('state','!=','new')]}"/> 
                         </div>
-                        <separator name="pref" string="Quick Select a Product"/>
-                        <group name="pref">
+                        <separator name='pref' string='Quick Select a Product'/>
+                        <group name='pref'>
                         </group>
-                        <separator string="Select Products"/>
-                        <field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
-                            <tree string="List" editable="bottom">
-                                <field name="product" colspan="2" on_change="onchange_price(product)"/>
-                                <field name="note" />
+                        <separator string='Select Products'/>
+                        <field name='products' colspan='4' nolabel='1' on_change='onchange_price(products)'>
+                            <tree string='List' editable='bottom'>
+                                <field name='product' colspan='2' on_change='onchange_price(product)'/>
+                                <field name='note' />
                                 <field name='supplier'/>
-                                <field name="state" invisible="1"/>
-                                <field name="price"/>
+                                <field name='state' invisible='1'/>
+                                <field name='price'/>
                             </tree>
                         </field> 
-                        <group class="oe_subtotal_footer oe_right">
-                            <field name="total"/>
+                        <group class='oe_subtotal_footer oe_right'>
+                            <field name='total'/>
                         </group>
                         <br/><br/>
                     </sheet>

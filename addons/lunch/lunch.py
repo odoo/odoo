@@ -185,46 +185,42 @@ class lunch_order(osv.Model):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            doc = etree.XML(res['arch'])
-            for sheet in doc:
-                elements = sheet.xpath("//group[@name='pref']")
-                for element in elements:
-                    pref_ref = self.pool.get("lunch.preference")
-                    pref_ids = pref_ref.search(cr,uid,[],context=context)
-                    for pref in pref_ref.browse(cr,uid,pref_ids,context):
-                        if pref['user_id'].id == uid:
-                            function_name = "add_preference_"
-                            function_name += str(pref.id)
-                            new_element = etree.Element("button")
-                            new_element.set('name',function_name)
-                            new_element.set('icon','gtk-add')
-                            new_element.set('type','object')
-                            ##### title  #####
-                            title = etree.Element('h3')
-                            title.text = pref['product_name']
-                            ##### price #####
-                            price_element=etree.Element("font")
-                            text = "Price: "
-                            text+= str(pref['price'])
-                            text+= "&#8364; "
-                            price_element.text = str(text)
-                            #####  note #####
-                            note = etree.Element('i')
-                            note.text = "Note: "+str(pref['note'])
-                            #####  div  #####
-                            div_element = etree.Element("group")
-                            element.append(div_element)
-                            div_element.append(title)
-                            div_element.append(etree.Element("br"))
-                            div_element.append(price_element)
-                            div_element.append(etree.Element("br"))
-                            div_element.append(new_element)
-                            div_element.append(etree.Element("br"))
-                            div_element.append(note)
-                            div_element.append(etree.Element("br"))
-                            div_element.append(etree.Element("br"))
-                res['arch'] = etree.tostring(doc)
-                return res
+            pref_ref = self.pool.get("lunch.preference")
+            pref_ids = pref_ref.search(cr,uid,[],context=context)
+            text=""
+            for pref in pref_ref.browse(cr,uid,pref_ids,context):
+                if pref['user_id'].id == uid:
+                    print "*************TEST***************"
+            res['arch'] = ('''<form string=\"Orders Form\" version=\"7.0\">
+                    <header>
+                        <field name=\"state\" widget=\"statusbar\" statusbar_visible=\"new,confirmed\" modifiers=\"{&quot;readonly&quot;: true}\"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name=\"user_id\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
+                            </group>
+                            <group> 
+                                <field name=\"date\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
+                            </group>
+                        </group>
+                        <img src=\"/lunch/static/src/img/warning.png\" width=\"30\" height=\"30\" class=\"oe_left oe_avatar\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]]}\"/>
+                        <div class=\"oe_title\">
+                            <field name=\"alerts\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]], &quot;readonly&quot;: true}\"/> 
+                        </div>
+                        <separator name=\"pref\" string=\"Quick Select a Product\"/>
+                        <group name=\"pref\">'''+text+'''
+                        </group>
+                        <separator string=\"Select Products\"/>
+                        <field name=\"products\" colspan=\"4\" nolabel=\"1\" on_change=\"onchange_price(products)\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]]}\">
+                            </field> 
+                        <group class=\"oe_subtotal_footer oe_right\">
+                            <field name=\"total\" modifiers=\"{&quot;readonly&quot;: true}\"/>
+                        </group>
+                        <br/><br/>
+                    </sheet>
+                </form>''')
+            print res['arch']
         return res
 
     _columns = {
@@ -470,4 +466,3 @@ class lunch_validation(osv.Model):
             if isconfirmed == True:
                 orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
         return {}
-        
