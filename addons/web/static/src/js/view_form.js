@@ -3472,6 +3472,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
     },
     get_value: function() {
         var self = this;
+        console.log("get_value one2many");
         if (!this.dataset)
             return [];
         this.save_any_view();
@@ -3487,6 +3488,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             return commands.link_to(id);
         }));
+
+        console.log( val.concat(_.map(
+            this.dataset.to_delete, function(x) {
+                return commands['delete'](x.id);})) );
+
         return val.concat(_.map(
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
@@ -4750,6 +4756,8 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         }
         this.$el.find('.oe_form_binary_progress').hide();
         this.$el.find('.oe_form_binary').show();
+
+        console.log("upload ok");
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
     },
@@ -4889,6 +4897,135 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this.render_value();
         this.set_filename('');
     }
+});
+
+/**
+ * Widget for (one2many field) to upload one or more file in same time and display in list.
+ * The user can delete his files.
+ * Options on attribute ; "blockui" {Boolean} block the UI or not
+ * during the file is uploading
+ */
+instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+    template: "FieldBinaryFileUploader",
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        this.field_manager = field_manager;
+        this.node = node;
+        if(this.field.type != "one2many" || this.field.relation != 'ir.attachment') {
+            console.log("The type of the field '"+this.field.string+"' must be a one2many field with a relation to 'ir.attachment' model.");
+        }
+        this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
+        this.fileupload_id = _.uniqueId('oe_fileupload_temp');
+        $(window).on(this.fileupload_id, this.on_file_loaded);
+
+        this.files = false;
+    },
+    start: function() {
+        this._super(this);
+        this.$list_file = this.$('.oe_placeholder_files');
+        this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
+    },
+    set_value: function(value_) {
+        var values = this.files = (value_ && !this.files) ? value_ : this.files;
+        this._super( values );
+        this.display_files();
+    },
+    get_value: function() {
+        return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
+    },
+    get_file_url: function (attachment) {
+        return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+    },
+    display_files: function(){
+        if(this.$list_file) {
+            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
+            this.$list_file.replaceWith( render );
+            this.$list_file = this.$(".oe_fileuploader_files");
+            this.$list_file.on('click', '.oe_fileuploader_delete', this.on_file_delete);
+        }
+    },
+    on_file_change: function (event) {
+        event.stopPropagation();
+        var self = this;
+        var $target = $(event.target);
+        if ($target.val() !== '') {
+
+            var filename = $target.val().replace(/.*[\\\/]/,'');
+
+            // if the files is currently uploded, don't send again
+            if( !isNaN(_.find(this.files, function (file) { return (file.filename || file.name) == filename && file.upload; } )) ) {
+                return false;
+            }
+
+            // if the files exits for this answer, delete the file before upload
+            this.files = _.filter(this.files, function (file) {
+                if((file.filename || file.name) == filename) {
+                    self.ds_file.unlink([file.id]);
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            // block UI or not
+            if(this.node.attrs.blockui) {
+                instance.web.blockUI();
+            }
+
+            // submit file
+            self.$('form.oe_form_binary_form').submit();
+            this.$(".oe_fileuploader_form").hide();
+
+            // add file on result
+            this.files.push({
+                'id': 0,
+                'name': filename,
+                'filename': filename,
+                'url': '',
+                'upload': true
+            });
+            this.set_value();
+        }
+    },
+    on_file_loaded: function (event, result) {
+        // unblock UI
+        if(this.node.attrs.blockui) {
+            instance.web.unblockUI();
+        }
+
+        for(var i in this.files){
+            if(this.files[i].filename == result.filename && this.files[i].upload) {
+                this.files[i] = {
+                    'id': result.id,
+                    'name': result.name,
+                    'filename': result.filename,
+                    'url': this.get_file_url(result)
+                };
+            }
+        }
+        this.set_value();
+
+        var $input = this.$('input.oe_form_binary_file');
+        $input.after($input.clone(true)).remove();
+        this.$(".oe_fileuploader_form").show();
+    },
+    on_file_delete: function (event) {
+        event.stopPropagation();
+        var file_id=$(event.target).data("id");
+        if (file_id) {
+            var files=[];
+            for(var i in this.files){
+                if(file_id!=this.files[i].id){
+                    files.push(this.files[i]);
+                }
+                else {
+                    this.ds_file.unlink([file_id]);
+                }
+            }
+            this.files = files;
+            this.set_value();
+        }
+    },
 });
 
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
@@ -5043,6 +5180,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
+    'one2many_binary': 'instance.web.form.FieldOne2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
 });
