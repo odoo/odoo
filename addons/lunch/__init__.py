@@ -21,10 +21,4 @@
 
 import lunch
 import partner
-import wizard
-import lunch_preference
-import lunch_product
-import lunch_alert
-import lunch_cashmove
-import lunch_order_line
 import report
