@@ -152,9 +152,10 @@ class purchase_order(osv.osv):
     _columns = {
         'name': fields.char('Order Reference', size=64, required=True, select=True, help="Unique number of the purchase order, computed automatically when the purchase order is created."),
         'origin': fields.char('Source Document', size=64,
-            help="Reference of the document that generated this purchase order request."
+            help="Reference of the document that generated this purchase order request; a sale order or an internal procurement request."
         ),
-        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64),
+        'partner_ref': fields.char('Supplier Reference', states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, size=64,
+            help="Reference of the sale order or quotation sent by your supplier. It's mainly used to do the matching when you receive the products as this reference is usually written on the delivery order sent by your supplier."),
         'date_order':fields.date('Order Date', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}, select=True, help="Date on which this document has been created."),
         'date_approve':fields.date('Date Approved', readonly=1, select=True, help="Date on which purchase order has been approved"),
         'partner_id':fields.many2one('res.partner', 'Supplier', required=True, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)],'done':[('readonly',True)]}, change_default=True),
@@ -889,10 +890,10 @@ class purchase_order_line(osv.osv):
         account_tax = self.pool.get('account.tax')
 
         # - check for the presence of partner_id and pricelist_id
-        if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
         if not partner_id:
             raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        if not pricelist_id:
+            raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
