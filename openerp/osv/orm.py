@@ -684,9 +684,6 @@ class BaseModel(object):
 
     # Transience
     _transient = False # True in a TransientModel
-    _transient_max_count = None
-    _transient_max_hours = None
-    _transient_check_time = 20
 
     # structure:
     #  { 'parent_model': 'm2o_field', ... }
@@ -5067,20 +5064,26 @@ class BaseModel(object):
 
     def _transient_clean_rows_older_than(self, cr, seconds):
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
-        cr.execute("SELECT id FROM " + self._table + " WHERE"
-            " COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp <"
-            " ((now() at time zone 'UTC') - interval %s)", ("%s seconds" % seconds,))
-        ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, SUPERUSER_ID, ids)
-
-    def _transient_clean_old_rows(self, cr, count):
-        assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        '''Never delete rows used in last 5 minutes'''
+        seconds = max(seconds, 600)
+        now_str = "(now() at time zone 'UTC')"
         cr.execute(
-            "SELECT id, COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp"
-            " AS t FROM " + self._table +
-            " ORDER BY t LIMIT %s", (count,))
+        "SELECT id FROM " + self._table + " WHERE"
+        " COALESCE(write_date, create_date, " + now_str + ")::timestamp"
+        "< (" + now_str + " - interval %s)", ("%s seconds" % seconds,))
         ids = [x[0] for x in cr.fetchall()]
-        self.unlink(cr, SUPERUSER_ID, ids)
+        if  ids:
+            self.unlink(cr, SUPERUSER_ID, ids)
+
+    def _transient_clean_old_rows(self, cr, max_count):
+        # Check how many rows we have in the table
+        cr.execute(
+            "SELECT count(*) as row_count FROM %s", (self._table, ))
+        res = cr.fetchall()
+        row_count = res[0][0]
+        if  row_count <= max_count:
+            return  # max not reached, nothing to do
+        self._transient_clean_rows_older_than(cr, 600)
 
     def _transient_vacuum(self, cr, uid, force=False):
         """Clean the transient records.
@@ -5092,10 +5095,12 @@ class BaseModel(object):
         a new record is created).
         """
         assert self._transient, "Model %s is not transient, it cannot be vacuumed!" % self._name
+        _transient_check_time = 20  # arbitrary limit on vacuum executions
         self._transient_check_count += 1
-        if (not force) and (self._transient_check_count % self._transient_check_time):
-            self._transient_check_count = 0
-            return True
+        if ((not force)
+        and (self._transient_check_count >= _transient_check_time)):
+            return True  # no vacuum cleaning this time
+        self._transient_check_count = 0
 
         # Age-based expiration
         if self._transient_max_hours:
