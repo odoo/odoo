@@ -4,9 +4,9 @@
     	<!--Menu and Title-->
     	<menuitem id='menu_lunch' name='Lunch' />
     	<menuitem name="Lunch Menu" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
-    	<menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="51" />
-        <menuitem name="Administrate Cash Moves" parent="menu_lunch" id="menu_lunch_cash" sequence="52" />
-    	<menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" />
+    	<menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
+        <menuitem name="Administrate Cash Moves" parent="menu_lunch" id="menu_lunch_cash" sequence="52" groups="group_lunch_manager"/>
+    	<menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" groups="group_lunch_manager"/>
     	
          <!--View Search to group by Supplier and time-->
         <record model="ir.ui.view" id="supplier_group_by_month_search_view">
@@ -20,7 +20,6 @@
                     <filter name="comfirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                     <filter name="group_by_date" string="By Date" context="{'group_by':'date'}"/>
-                   <!-- <filter name="thisMonth" string="This Month" domain="[('date','>=',time.strftime('%%m-01-%%Y')),('date','&lt;=',time.strftime('%%m-31-%%Y'))]"/> -->
                 </search>
             </field>
         </record>
@@ -79,6 +78,13 @@
 		<record model="ir.actions.act_window" id="action_lunch_order_form">
             <field name="name">Your Orders</field>
             <field name="res_model">lunch.order</field>
+            <field name="view_mode">form</field>
+        </record>
+        <menuitem name="Your Orders" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" sequence="1"/>
+
+        <record model="ir.actions.act_window" id="action_lunch_order_tree">
+            <field name="name">Your Orders</field>
+            <field name="res_model">lunch.order</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_search_my_order"/>
             <field name="context">{"search_default_is_mine":1}</field>
@@ -91,7 +97,7 @@
               </p>
             </field>
         </record>
-        <menuitem name="Your Orders" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" />
+        <menuitem name="Previous Orders" parent="menu_lunch_title" id="menu_lunch_order_tree" action="action_lunch_order_tree" sequence="2"/>
 
         <!--Action for Lunch cashmoves-->
         <record model="ir.actions.act_window" id="action_lunch_cashmove_form">
@@ -106,7 +112,7 @@
               </p>
             </field>
         </record>
-        <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="menu_lunch_cashmove_form" action="action_lunch_cashmove_form" />
+        <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="menu_lunch_cashmove_form" action="action_lunch_cashmove_form" sequence="3"/>
 
         <!--Action for Administrate Orders group by supplier-->
         <record model="ir.actions.act_window" id="action_lunch_order_by_supplier_form">
@@ -180,7 +186,7 @@
         <record model="ir.actions.act_window" id="action_lunch_products">
             <field name="name">Products</field>
             <field name="res_model">lunch.product</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">tree,form</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to create a product for lunch. 
@@ -206,6 +212,24 @@
               </p>
             </field>
         </record>
+
+        <record model="ir.ui.view" id="product_category_form_view">
+            <field name="name">Product category Form</field>
+            <field name="model">lunch.product.category</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Products Form" version="7.0">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group>
+                        <field name='name' string="Product Category: "/>
+                    </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
         <menuitem name="Product Categories" parent="menu_lunch_config" id="menu_lunch_product_categories" action="action_lunch_product_categories" />
 
         <!--Action for Alert-->
@@ -238,8 +262,8 @@
                     <field name='note'/>
                     <field name='state'/>
                     <field name='price' sum="Total"/>
-                    <button name="confirm" string="Confirm" type="object" icon="gtk-apply"/>
-                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel"/>
+                    <button name="confirm" string="Confirm" type="object" icon="gtk-apply" attrs="{'invisible': [('state','=','confirmed')]}"/>
+                    <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}"/>
                 </tree>
             </field>
         </record>
@@ -252,7 +276,7 @@
                 <tree string="Orders Tree">
                     <field name="date"/>
                     <field name="products"/>
-                    <field name="state" invisible='1'/>
+                    <field name="state" />
                     <field name="total" sum="Total"/>
                     <field name="preferences" invisible="1"/>
                 </tree>
@@ -264,60 +288,39 @@
 			<field name="model">lunch.order</field>
 			<field name="arch" type="xml">
 				<form string="Orders Form" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" statusbar_visible="new,confirmed"/>
+                    </header>
                     <sheet>
-                <field name="state" invisible='1'/>
-                <group col="2">
-                    <field name="user_id"/>
-                </group>
-                <group col="2"> 
-                    <field name="date"/>
-                </group>
-                    <group colspan="4" col="2">
-                        <img src="/lunch_new/static/src/img/warning.png" width="30" height="30" attrs="{'invisible': [('state','!=','new')]}"/>
-                        <field name="alerts" nolabel="1" attrs="{'invisible': [('state','!=','new')]}"/> 
-                    </group>
-                    <group colspan="2" col="2">
-                    </group>
-					<separator string="Products" colspan="4"/>	
-                    <field name="preferences" colspan="4" nolabel="1">
-                        <kanban default_group_by="category_id">
-                            <templates>
-                                <t t-name="kanban-box">
-                                    <div class="oe_kanban_color_0 oe_kanban_card oe_kanban_global_click oe_kanban_draghandle">
-                                    <div class="oe_kanban_vignette oe_semantic_html_override"> 
-                                        <div class="oe_kanban_details">
-                                            <h3 class="oe_partner_heading">
-                                                <a type="open">
-                                                    <u><field name="name"/><br/></u>
-                                                </a>
-                                            </h3> 
-                                            <h4>
-                                                <a type="open">
-                                                    Price:
-                                                    <field name="price"/>
-                                                    €
-                                                    <br/>
-                                                </a>
-                                            </h4> 
-                                            Supplier: <field name="supplier"/><br/>
-                                            <font size="2" color="gray"><field name="description"/></font>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </t>
-                            </templates>
-                        </kanban>
-                    </field>
-					<separator string="Your Order" colspan="4"/>
-					<field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
-						<tree string="List" editable="bottom">
-							<field name="product" colspan="2" on_change="onchange_price(product)"/>
-							<field name="note" />
-                            <field name="state"/>
-							<field name="price"/>
-						</tree>
-					</field> 
-					<field name="total"/>
+                        <group>
+                            <group>
+                                <field name="user_id"/>
+                            </group>
+                            <group> 
+                                <field name="date"/>
+                            </group>
+                        </group>
+                        <img src="/lunch_new/static/src/img/warning.png" width="30" height="30" class="oe_left oe_avatar" attrs="{'invisible': [('state','!=','new')]}"/>
+                        <div class="oe_title">
+                            <field name="alerts" attrs="{'invisible': [('state','!=','new')]}"/> 
+                        </div>
+                        <separator name="pref" string="Quick Select a Product"/>
+                        <group name="pref">
+                        </group>
+                        <separator string="Select Products"/>
+                        <field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
+                            <tree string="List" editable="bottom">
+                                <field name="product" colspan="2" on_change="onchange_price(product)"/>
+                                <field name="note" />
+                                <field name='supplier'/>
+                                <field name="state" invisible="1"/>
+                                <field name="price"/>
+                            </tree>
+                        </field> 
+                        <group class="oe_subtotal_footer oe_right">
+                            <field name="total"/>
+                        </group>
+                        <br/><br/>
                     </sheet>
 				</form>
 			</field>
@@ -345,7 +348,10 @@
             <field name="model">lunch.product</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Products Form">
+                <form string="Products Form" version="7.0">
+                    <header>
+                    </header>
+                    <sheet>
                         <group colspan="2" col="2">
                             <field name='name'/>
                             <field name='category_id'/>
@@ -355,42 +361,11 @@
                         </group>
                         <group colspan="2" col="2">
                         </group>
+                        <group>
                         <field name='description'/>
+                    </group>
+                    </sheet>
                 </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="products_kanban_view">
-            <field name="name">Products Kanban</field>
-            <field name="model">lunch.product</field>
-            <field name="arch" type="xml">
-                <kanban default_group_by="category_id">
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_kanban_color_0 oe_kanban_card oe_kanban_global_click oe_kanban_draghandle">
-                            <div class="oe_kanban_vignette oe_semantic_html_override"> 
-                                <div class="oe_kanban_details">
-                                    <h3 class="oe_partner_heading">
-                                        <a type="open">
-                                            <u><field name="name"/><br/></u>
-                                        </a>
-                                    </h3> 
-                                    <h4>
-                                        <a type="open">
-                                            Price:
-                                            <field name="price"/>
-                                            €
-                                            <br/>
-                                        </a>
-                                    </h4> 
-                                    Supplier: <field name="supplier"/><br/>
-                                    <font size="2" color="gray"><field name="description"/></font>
-                                </div>
-                            </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
             </field>
         </record>
 
@@ -414,15 +389,21 @@
             <field name="model">lunch.cashmove</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="cashmove form">
-                    <group colspan="2" col="2">
-                        <field name="user_id"/>
-                        <field name="date"/>
-                        <field name="amount"/>
-                    </group>
-                     <group colspan="2" col="2">
-                    </group>
-                    <field name="description"/>
+                <form string="cashmove form" version="7.0">
+                    <header>
+                    </header>
+                    <sheet>
+                        <group colspan="2" col="2">
+                            <field name="user_id"/>
+                            <field name="date"/>
+                            <field name="amount"/>
+                        </group>
+                         <group colspan="2" col="2">
+                        </group>
+                        <group>
+                            <field name="description"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -443,12 +424,15 @@
             </field>
         </record>
 
-         <record model="ir.ui.view" id="alert_form_view">
+        <record model="ir.ui.view" id="alert_form_view">
             <field name="name">alert tree</field>
             <field name="model">lunch.alert</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="alert tree">
+                <form string="alert tree" version="7.0">
+                    <header>
+                    </header>
+                    <sheet>
                     <separator string="Schedule Date" colspan="4"/>
                         <group col="2" colspan="2">
                             <field name="day"/>
@@ -481,6 +465,7 @@
                     </group>
                     <group col="2" colspan="2">
                     </group>
+                </sheet>
                 </form>
             </field>
         </record>

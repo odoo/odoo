@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,26 +19,7 @@
 #
 ##############################################################################
 
-{
-    'name': 'Lunch Orders',
-    'author': 'OpenERP SA',
-    'version': '0.2',
-    'depends': ['base'],
-    'category' : 'Tools',
-    'description': """
-The base module to manage lunch.
-================================
+import order
+import report_lunch_order
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
-keep track for the Lunch Order, Cash Moves and Product. Apply Different
-Category for the product.
-    """,
-    'data': ['security/groups.xml','view/lunch_view.xml','view/partner_view.xml','wizard/lunch_validation_view.xml','wizard/lunch_cancel_view.xml','lunch_report.xml',
-        'report/report_lunch_order_view.xml',
-        'security/ir.model.access.csv',],
-    'demo': ['lunch_demo.xml',],
-    'test': [],
-    'installable': True,
-    'application' : True,
-    'certificate' : '001292377792581874189',
-    'images': [],
-}

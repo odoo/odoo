@@ -22,8 +22,8 @@
 import tools
 from osv import fields,osv
 
-class report_lunch_order_line(osv.osv):
-    _name = "report.lunch.order"
+class report_lunch_order(osv.osv):
+    _name = "report.lunch.order.line"
     _description = "Lunch Orders Statistics"
     _auto = False
     _rec_name = 'date'
@@ -35,15 +35,14 @@ class report_lunch_order_line(osv.osv):
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
         'user_id': fields.many2one('res.users', 'User Name'),
-        'box_name': fields.char('Name', size=30),
         'price_total':fields.float('Total Price', readonly=True),
+        'note' : fields.text('Note',size=256,readonly=True),
     }
     _order = 'date desc'
-
     def init(self, cr):
-        tools.drop_view_if_exists(cr, 'report_lunch_order')
+        tools.drop_view_if_exists(cr, 'report_lunch_order_line')
         cr.execute("""
-            create or replace view report_lunch_order as (
+            create or replace view report_lunch_order_line as (
                select
                    min(lo.id) as id,
                    lo.date as date,
@@ -51,14 +50,16 @@ class report_lunch_order_line(osv.osv):
                    to_char(lo.date, 'MM') as month,
                    to_char(lo.date, 'YYYY-MM-DD') as day,
                    lo.user_id,
+                   lo.note as note,
                    sum(lp.price) as price_total
-            from
-                   lunch_order as lo
-                   left join lunch_product as lp on (lo.product = lp.id)
 
+            from
+                   lunch_order_line as lo
+                   left join lunch_product as lp on (lo.product = lp.id)
             group by
-                   lo.date,lo.user_id
+                   lo.date,lo.user_id,lo.note
             )
             """)
+report_lunch_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

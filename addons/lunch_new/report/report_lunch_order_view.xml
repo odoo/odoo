@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
        <record id="view_report_lunch_order_tree" model="ir.ui.view">
         <field name="name">report.lunch.order.tree</field>
-        <field name="model">report.lunch.order</field>
+        <field name="model">report.lunch.order.line</field>
         <field name="arch" type="xml">
             <tree string="Sales Analysis">
                 <field name="date" invisible="1"/>
@@ -11,7 +12,7 @@
                 <field name="day" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="user_id" />
-                <field name="box_name"/>
+                <field name="note" />
                 <field name="price_total"/>
             </tree>
         </field>
@@ -19,7 +20,7 @@
 
     <record id="view_report_lunch_order_search" model="ir.ui.view">
         <field name="name">report.lunch.order.search</field>
-        <field name="model">report.lunch.order</field>
+        <field name="model">report.lunch.order.line</field>
         <field name="arch" type="xml">
             <search string="Lunch Order Analysis">
                 <field name="date"/>
@@ -36,15 +37,12 @@
 
     <record id="action_report_lunch_order_all" model="ir.actions.act_window">
         <field name="name">Lunch Order Analysis</field>
-        <field name="res_model">report.lunch.order</field>
+        <field name="res_model">report.lunch.order.line</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree</field>
         <field name="search_view_id" ref="view_report_lunch_order_search"/>
         <field name="context">{'search_default_month':1,'search_default_User':1}</field>
     </record>
-
-<!--    <menuitem name="Lunch Order Analysis" parent="menu_lunch_reporting_order"-->
-<!--              id="menu_lunch_order_analysis" action="action_report_lunch_order_all"  sequence="1" />-->
 
     </data>
 </openerp>

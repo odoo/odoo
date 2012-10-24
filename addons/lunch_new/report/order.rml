@@ -107,7 +107,7 @@
         </td>
       </tr>
     </blockTable>
-    <para style="terp_header">Lunch Orders</para>
+    <para style="terp_header">Lunch Order</para>
     <blockTable colWidths="149.0,114.0,201.0,63.0" style="Table5">
       <tr>
         <td>
@@ -152,7 +152,7 @@
               <para style="terp_default_9">[[ (lines.product and lines.product.name) or '' ]]</para>
             </td>
             <td>
-              <para style="terp_default_9">[[ lines.note]]</para>
+              <para style="terp_default_9">[[ lines.descript]]</para>
             </td>
             <td>
               <para style="terp_default_9_right">[[ lines.price ]] [[ (o.company_id and o.company_id.currency_id and o.company_id.currency_id.symbol) or '' ]]</para>

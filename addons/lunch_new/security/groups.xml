@@ -1,0 +1,137 @@
+<?xml version="1.0" ?>
+<openerp>
+    <data>
+        <record id="group_lunch_manager" model="res.groups">
+            <field name="name">Lunch / Manager</field>
+        </record>
+        <record id="group_lunch_user" model="res.groups">
+            <field name="name">Lunch / User</field>
+        </record>
+        <record id="ir_model_access_lunchorders0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_order"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch orders</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchorders1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_order"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch orders</field>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchorder_lines0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_order_line"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch order lines</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchorder_lines1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_order_line"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch order lines</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchcashmoves0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_cashmove"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch cashmoves</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchcashmoves1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_cashmove"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch cashmoves</field>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchproducts0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_product"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch products</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchproducts1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_product"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch products</field>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchproductcategories0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_product_category"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch products</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchproductcategories1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_product_category"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch products</field>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchalerts0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_alert"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch alerts</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchalerts1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_alert"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch alerts</field>
+            <field eval="0" name="perm_unlink"/>
+            <field eval="0" name="perm_write"/>
+            <field eval="0" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+        <record id="ir_model_access_lunchpreferences0" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_preference"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch preferences</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / Manager')]"/>
+        </record>
+        <record id="ir_model_access_lunchpreferences1" model="ir.model.access">
+            <field name="model_id" ref="model_lunch_preference"/>
+            <field eval="1" name="perm_read"/>
+            <field name="name">lunch preferences</field>
+            <field eval="1" name="perm_unlink"/>
+            <field eval="1" name="perm_write"/>
+            <field eval="1" name="perm_create"/>
+            <field model="res.groups" name="group_id" search="[('full_name', '=', u'lunch / User')]"/>
+        </record>
+    </data>
+</openerp>

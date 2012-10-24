@@ -1,3 +1,4 @@
+
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -24,6 +25,7 @@ import pytz
 import time
 from osv import osv, fields
 from datetime import datetime, timedelta
+from lxml import etree
 
 class lunch_order(osv.Model):
     """ lunch order """
@@ -40,6 +42,27 @@ class lunch_order(osv.Model):
                     value+=product.product.price
                     result[order.id]=value
         return result
+
+    def add_preference(self,cr,uid,ids,pref_id,context=None):
+        pref_ref = self.pool.get("lunch.preference")
+        orderline_ref = self.pool.get('lunch.order.line')
+        order = self.browse(cr,uid,ids,context=context)[0]
+        pref = pref_ref.browse(cr,uid,pref_id,context=context)
+        prod_ref = self.pool.get('lunch.product')
+        if pref["user_id"].id == uid:
+            new_order_line = {}
+            new_order_line['date'] = order["date"]
+            new_order_line['user_id'] = uid
+            new_order_line['product'] = pref["product"].id
+            new_order_line['note'] = pref["note"]
+            new_order_line['order_id'] = order.id
+            new_order_line['price'] = pref["price"]
+            new_order_line['supplier'] = prod_ref.browse(cr,uid,pref["product"].id,context=context)['supplier'].id
+            new_id = orderline_ref.create(cr,uid,new_order_line)
+            order.products.append(new_id)
+            total = self._price_get(cr,uid,ids," "," ",context=context)
+            self.write(cr,uid,ids,{'total':total},context)
+        return True
 
     def _alerts_get(self,cr,uid,ids,name,arg,context=None):
         orders = self.browse(cr,uid,ids,context=context)
@@ -89,7 +112,7 @@ class lunch_order(osv.Model):
                             min_from = int((alert.active_from-hour_from)*60)
                             from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
                             if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
-                                alert_msg+=" * "
+                                alert_msg+="* "
                                 alert_msg+=alert.message
                                 alert_msg+='\n'
         return alert_msg
@@ -99,18 +122,110 @@ class lunch_order(osv.Model):
         if products:
             tot = 0.0
             for prod in products:
-                #price = self.pool.get('lunch.product').read(cr, uid, prod, ['price'])['price']
-                #tot += price
-                res = {'value':{'total':2.0}}
-        #    prods = self.pool.get('lunch.order.line').read(cr,uid,products,['price'])['price']
-        #    res = {'value':{'total': self._price_get(cr,uid,ids,products,context),}}
+                orderline = {}
+                if isinstance(prod[1],bool): 
+                    orderline = prod[2]
+                    tot += orderline['price']
+                else:
+                    orderline = self.pool.get('lunch.order.line').browse(cr,uid,prod[1],context=context)
+                    tot += orderline.price
+                res = {'value':{'total':tot}}
         return res
 
-    def _default_product_get(self,cr,uid,arg,context=None):
-        cr.execute('''SELECT lp.name, lp.description, lp.price, lp.supplier, lp.active, lp.category_id FROM lunch_product AS lp''')
+    def _default_product_get(self,cr,uid,args,context=None):
+        cr.execute('''SELECT lol.id, lol.date, lol.user_id, lol.product, lol.note, lol.price, lol.write_date FROM lunch_order_line AS lol ORDER BY write_date''')
         res = cr.dictfetchall()
-        return res
+        result = []
+        i=0
+        pref_ref = self.pool.get('lunch.preference')
+        for temp in res:
+            if i==20:
+                break
+            if temp['user_id'] == uid:
+                prod = self.pool.get('lunch.product').browse(cr, uid, temp['product'])
+                temp['product_name'] = prod.name
+                temp['date'] = temp['write_date']
+                new_id = pref_ref.create(cr,uid,temp)
+                result.append(new_id)
+                i+=1
+        return result
+
+    def create(self, cr, uid, values, context=None):
+        pref_ref = self.pool.get('lunch.preference')
+        pref_ids = pref_ref.search(cr,uid,[],context=context)
+        prod_ref = self.pool.get('lunch.product')
+        new_id = super(lunch_order, self).create(cr, uid, values, context=context)
+        already_exists = False
+        if len(values['products'])>0 and values['user_id']==uid:
+            for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
+                if pref['product'].id == values['products'][0][2]['product']:
+                    if pref['note'] == values['products'][0][2]['note']:
+                        if pref['price'] == values['products'][0][2]['price']:
+                            already_exists = True
+        if already_exists == False and len(values['products'])>0:
+            new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product':values['products'][0][2]['product'], 'product_name':prod_ref.browse(cr,uid,values['products'][0][2]['product'])['name'], 'note':values['products'][0][2]['note'], 'price':values['products'][0][2]['price']},context=context)
+        return new_id
             
+    def _default_preference_get(self,cr,uid,args,context=None):
+        pref_ref = self.pool.get('lunch.preference')
+        pref_ids = pref_ref.search(cr,uid,[],order='date desc',limit=20,context=context)
+        result = []
+        for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
+            result.append(pref.id)
+        return result
+
+    def __getattr__(self, attr):
+        if attr.startswith('add_preference_'):
+            pref_id = int(attr[15:])
+            def specific_function(cr, uid, ids, context=None):
+                return self.add_preference(cr, uid, ids, pref_id, context=context)
+            return specific_function
+        return super(lunch_order,self).__getattr__(self,attr)
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            for sheet in doc:
+                elements = sheet.xpath("//group[@name='pref']")
+                for element in elements:
+                    pref_ref = self.pool.get("lunch.preference")
+                    pref_ids = pref_ref.search(cr,uid,[],context=context)
+                    for pref in pref_ref.browse(cr,uid,pref_ids,context):
+                        if pref['user_id'].id == uid:
+                            function_name = "add_preference_"
+                            function_name += str(pref.id)
+                            new_element = etree.Element("button")
+                            new_element.set('name',function_name)
+                            new_element.set('icon','gtk-add')
+                            new_element.set('type','object')
+                            ##### title  #####
+                            title = etree.Element('h3')
+                            title.text = pref['product_name']
+                            ##### price #####
+                            price_element=etree.Element("font")
+                            text = "Price: "
+                            text+= str(pref['price'])
+                            text+= "&#8364; "
+                            price_element.text = str(text)
+                            #####  note #####
+                            note = etree.Element('i')
+                            note.text = "Note: "+str(pref['note'])
+                            #####  div  #####
+                            div_element = etree.Element("group")
+                            element.append(div_element)
+                            div_element.append(title)
+                            div_element.append(etree.Element("br"))
+                            div_element.append(price_element)
+                            div_element.append(etree.Element("br"))
+                            div_element.append(new_element)
+                            div_element.append(etree.Element("br"))
+                            div_element.append(note)
+                            div_element.append(etree.Element("br"))
+                            div_element.append(etree.Element("br"))
+                res['arch'] = etree.tostring(doc)
+                return res
+        return res
 
     _columns = {
         'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True, states={'new':[('readonly', False)]}),
@@ -120,7 +235,7 @@ class lunch_order(osv.Model):
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Parcially Confirmed')], \
             'Status', readonly=True, select=True),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
-        'preferences': fields.one2many("lunch.product",'order_id',readonly=True),
+        'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'),
     }
 
     _defaults = {
@@ -128,150 +243,6 @@ class lunch_order(osv.Model):
         'date': fields.date.context_today,
         'state': lambda self, cr, uid, context: 'new',
         'alerts': _default_alerts_get,
-        'preferences': _default_product_get,
+        'preferences': _default_preference_get,
     }
-
-class lunch_order_line(osv.Model): #define each product that will be in one ORDER.
-    """ lunch order line """
-    _name = 'lunch.order.line'
-    _description = 'lunch order line'
-
-    def _price_get(self,cr,uid,ids,name,arg,context=None):
-        orderLines = self.browse(cr,uid,ids,context=context)
-        result={}
-        for orderLine in orderLines:
-            result[orderLine.id]=orderLine.product.price
-        return result
-
-    def onchange_price(self,cr,uid,ids,product,context=None):
-        if product:
-            price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-            return {'value': {'price': price}}
-        return {'value': {'price': 0.0}} 
-
-
-    def confirm(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        orders_ref = self.pool.get('lunch.order')
-
-        for order in self.browse(cr,uid,ids,context=context):
-            if order.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product.name, 'order_id':order.id, 'state':'order', 'date':order.date})
-                self.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
-        for order in self.browse(cr,uid,ids,context=context):
-            isconfirmed = True
-            for product in order.order_id.products:
-                if product.state == 'new':
-                    isconfirmed = False
-                if product.state == 'cancelled':
-                    isconfirmed = False
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-            if isconfirmed == True:
-                orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
-        return {}
-
-    def cancel(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        orders_ref = self.pool.get('lunch.order')
-
-        for order in self.browse(cr,uid,ids,context=context):
-            self.write(cr,uid,[order.id],{'state':'cancelled'},context)
-            for cash in order.cashmove:
-                cashmove_ref.unlink(cr,uid,cash.id,context)
-        for order in self.browse(cr,uid,ids,context=context):
-            hasconfirmed = False
-            hasnew = False
-            for product in order.order_id.products:
-                if product.state=='confirmed':
-                    hasconfirmed= True
-                if product.state=='new':
-                    hasnew= True
-            if hasnew == False:
-                if hasconfirmed == False:
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'cancelled'},context)
-                    return {}
-            orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-        return {}
-
-    _columns = {
-        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
-        'supplier' : fields.related('product','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
-        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True),
-        'product' : fields.many2one('lunch.product','Product',required=True), #one offer can have more than one product and one product can be in more than one offer.
-        'note' : fields.text('Note',size=256,required=False),
-        'order_id' : fields.many2one('lunch.order','Order',required=True,ondelete='cascade'),
-        'price' : fields.function(_price_get, string="Price",store=True),
-        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
-            'Status', readonly=True, select=True),
-        'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
-    }
-    _defaults = {
-        'state': lambda self, cr, uid, context: 'new',
-    }
-
-class lunch_product(osv.Model):
-    """ lunch product """
-    _name = 'lunch.product'
-    _description = 'lunch product'
-    _columns = {
-        'name' : fields.char('Product',required=True, size=64),
-        'category_id': fields.many2one('lunch.product.category', 'Category'),
-        'description': fields.text('Description', size=256, required=False),
-        'price': fields.float('Price', digits=(16,2)),
-        'active': fields.boolean('Active'), #If this product isn't offered anymore, the active boolean is set to false. This will allow to keep trace of previous orders and cashmoves.
-        'supplier' : fields.many2one('res.partner','Supplier',required=True, domain=[('supplier_lunch','=',True)]), 
-        'order_id' : fields.many2one('lunch.order','Order'),
-    }
-
-class lunch_product_category(osv.Model):
-    """ lunch product category """
-    _name = 'lunch.product.category'
-    _description = 'lunch product category'
-    _columns = {
-        'name' : fields.char('Category', required=True, size=64), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
-    }
-
-class lunch_cashmove(osv.Model):
-    """ lunch cashmove => order or payment """
-    _name = 'lunch.cashmove'
-    _description = 'lunch description'
-    _columns = {
-        'user_id' : fields.many2one('res.users','User Name',required=True),
-        'date' : fields.date('Date', required=True),
-        'amount' : fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
-        'description' : fields.text('Description',size=256), #the description can be an order or a payment
-        'order_id' : fields.many2one('lunch.order.line','Order',required=False,ondelete='cascade'),
-        'state' : fields.selection([('order','Order'),('payment','Payment')],'Is an order or a Payment'),
-    }
-    _defaults = {
-        'user_id': lambda self, cr, uid, context: uid,
-        'date': fields.date.context_today,
-        'state': lambda self, cr, uid, context: 'payment',
-    }
-
-
-class lunch_alert(osv.Model):
-    """ lunch alert """
-    _name = 'lunch.alert'
-    _description = 'lunch alert'
-    _columns = {
-        'message' : fields.text('Message',size=256, required=True),
-        'active' : fields.boolean('Active'),
-        'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], 'Recurrency'),
-        'specific' : fields.date('Day'),
-        'monday' : fields.boolean('Monday'),
-        'tuesday' : fields.boolean('Tuesday'),
-        'wednesday' : fields.boolean('Wednesday'),
-        'thursday' : fields.boolean('Thursday'),
-        'friday' : fields.boolean('Friday'),
-        'saturday' : fields.boolean('Saturday'),
-        'sunday' :  fields.boolean('Sunday'),
-        'active_from': fields.float('Between',required=True),
-        'active_to': fields.float('And',required=True),
-        #'active_from' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'Between',required=True), #defines from when (hours) the alert will be displayed
-        #'active_to' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'and',required=True), # to when (hours) the alert will be disabled
-    }
-
 
