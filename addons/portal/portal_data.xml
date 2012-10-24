@@ -27,6 +27,30 @@
             <field name="res_id" ref="company_jobs"/>
             <field name="view_mode">form</field>
         </record>
+        
+
+        <record id="paypal_acquirer" model="portal.payment.acquirer">
+            <field name="name">Paypal</field>
+            <field name="form_template"><![CDATA[
+% if object.company_id.paypal_account:
+<%
+kind = quote(kind.title())
+comp_name = quote(object.company_id.name)
+ref = quote(reference)
+paypal_account = quote(object.company_id.paypal_account)
+amount = quote(str(object.amount_total))
+cur_code = quote(currency.name)
+paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20%s%%20%s" \
+   "&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=services&amp;no_note=1" \
+   "&amp;bn=OpenERP_Portal_PayNow_%s" % \
+   (paypal_account,comp_name,kind,ref,ref,amount,cur_code,cur_code)
+%>
+<a style="margin-left: 120px;" href="${paypal_url}">
+    <img class="oe_edi_paypal_button" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+</a>
+% endif
+            ]]></field>
+        </record>
 
     </data>
 </openerp>
