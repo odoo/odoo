@@ -418,13 +418,12 @@ class module(osv.osv):
         _, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
         config = pool.get('res.config').next(cr, uid, [], context=context) or {}
-        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
+        if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
         menu_obj = self.pool.get('ir.ui.menu')
         menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
-
         return {
             'type' : 'ir.actions.client',
             'tag' : 'reload',

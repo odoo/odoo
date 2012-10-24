@@ -186,7 +186,7 @@ class res_partner(osv.osv, format_address):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Company'),
+        'parent_id': fields.many2one('res.partner', 'Related Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
@@ -229,7 +229,7 @@ class res_partner(osv.osv, format_address):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
+        'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
