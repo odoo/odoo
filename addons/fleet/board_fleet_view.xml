@@ -55,7 +55,7 @@
         <field name="name">board.fleet.form</field>
         <field name="model">board.board</field>
         <field name="arch" type="xml">
-            <form string="Human Resources Dashboard"  version="7.0">
+            <form string="Fleet Dashboard"  version="7.0">
                 <board style="2-1">
                     <column>
                       <action string="Vehicles" name="%(fleet.action_fleet_vehicle_kanban)d" view_mode="kanban"/>
@@ -72,7 +72,7 @@
     </record>
 
     <record id="open_board_fleet" model="ir.actions.act_window">
-        <field name="name">Dashboard</field>
+        <field name="name">Fleet</field>
         <field name="res_model">board.board</field>
         <field name="view_type">form</field>
         <field name="view_mode">form</field>
@@ -93,11 +93,9 @@
               </div>
             </field>
     </record>
-
-    <menuitem name="Dashboard" parent="menu_root" id="fleet_dashboard" sequence="1"/>
     
     <menuitem id="menu_fleet_dashboard_in_module" 
-              parent="fleet_dashboard" 
+              parent="base.menu_reporting_dashboard" 
               action="open_board_fleet" 
               sequence="50"/>
 

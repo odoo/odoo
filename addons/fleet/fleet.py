@@ -966,12 +966,6 @@ class fleet_vehicle_log_contract(osv.Model):
             }
         }
 
-    def _hide_generated_cost(self, cursor, user, ids, name, arg, context=None):
-        res = {}
-        for contract in self.browse(cursor, user, ids, context=context):
-            res[contract.id] = (contract.cost_frequency == 'no')
-        return res
-
     def compute_next_year_date(self, strdate):
         oneyear=datetime.timedelta(days=365)
         curdate = self.str_to_date(strdate)
@@ -1074,7 +1068,6 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_generated': fields.float('Recuring Costs Amount',help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
         'cost_frequency': fields.selection([('no','No'),('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
         'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
-        'hide_generated_cost': fields.function(_hide_generated_cost, string='Frequency', type='boolean', help='This field is for internal purpose. It is used to decide if the field generated_cost lot has to be shown on the moves or not.'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,

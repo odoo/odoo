@@ -379,8 +379,7 @@
                                 <field name="amount" string="Activation Cost"/>
                                 <label for="cost_generated"/>
                                 <div>
-                                    <field name="hide_generated_cost" />
-                                    <field name="cost_generated" class="oe_inline" invisible="context.get('hide_generated_cost',True)" />
+                                    <field name="cost_generated" class="oe_inline" attrs="{'invisible': [('cost_frequency','=','no')]}" />
                                     <field name="cost_frequency" class="oe_inline"  />
                                 </div>
                             </group>
@@ -812,8 +811,10 @@
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
-                    <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
-                    <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    <group expand="1" string="Group By...">
+                        <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
+                        <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                    </group>
                 </search>
             </field>
         </record>
