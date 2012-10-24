@@ -113,6 +113,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'demo_xml'):
                 noupdate = True
             try:
+                ext = ext.lower()
                 if ext == '.csv':
                     if kind in ('init', 'init_xml'):
                         noupdate = True
@@ -121,8 +122,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
                     tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
-                else:
+                elif ext == '.xml':
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                else:
+                    _logger.debug("Ignoring %s due to unknown type", filename)
             finally:
                 fp.close()
 

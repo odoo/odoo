@@ -28,15 +28,9 @@ import sys
 import types
 import zipimport
 
-import openerp
-
-import openerp.osv as osv
 import openerp.tools as tools
 import openerp.tools.osutil as osutil
 from openerp.tools.safe_eval import safe_eval as eval
-from openerp.tools.translate import _
-
-import openerp.netsvc as netsvc
 
 import zipfile
 import openerp.release as release
@@ -47,9 +41,6 @@ from zipfile import PyZipFile, ZIP_DEFLATED
 from cStringIO import StringIO
 
 import logging
-
-import openerp.modules.db
-import openerp.modules.graph
 
 _logger = logging.getLogger(__name__)
 
@@ -335,7 +326,6 @@ def load_information_from_description_file(module):
                 'description': '',
                 'icon': get_module_icon(module),
                 'installable': True,
-                'auto_install': False,
                 'license': 'AGPL-3',
                 'name': False,
                 'post_load': None,
