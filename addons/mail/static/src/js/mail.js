@@ -640,12 +640,13 @@ openerp.mail = function(session) {
 
                 if((attach.filename || attach.name).match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
                     attach.is_image = true;
-
+                    attach['url'] = mail.ChatterUtils.get_image(this.session, 'ir.attachment', 'datas', attach.id); 
                 }
-                if((attach.filename || attach.name).match(/[.](pdf|doc|docx|xls|xlsx|ppt|pptx|psd|tiff|dxf|svg)$/i)) {
-                    attach.is_document = true;
-                    attach.url_escape = encodeURIComponent(attach.url);
-                }
+                //To do
+                // if((attach.filename || attach.name).match(/[.](pdf|doc|docx|xls|xlsx|ppt|pptx|psd|tiff|dxf|svg)$/i)) {
+                //     attach.is_document = true;
+                //     attach.url_escape = encodeURIComponent(attach.url);
+                // }
             }
 
         },
