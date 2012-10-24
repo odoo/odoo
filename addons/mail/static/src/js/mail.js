@@ -1560,7 +1560,7 @@ openerp.mail = function(session) {
                 }
             );
 
-            return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
+            return this.root.replace(this.$('.oe_mail-placeholder'));
         },
     });
 
@@ -1658,7 +1658,7 @@ openerp.mail = function(session) {
                 }
             );
 
-            return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
+            return this.root.replace(this.$('.oe_mail-placeholder'));
         },
 
         bind_events: function(){
