@@ -127,8 +127,7 @@ class res_partner(osv.osv):
             #    if (accountmoveline.followup_date != False) and (latest_date < accountmoveline.followup_date):
             #        latest_date = accountmoveline.followup_date
             #if accountmovelines:
-            amls2 = filter(lambda a: (a.state != 'draft') and (a.account_id.type is 'receivable') 
-                and (a.debit > 0), accountmovelines)
+            amls2 = filter(lambda a: (a.state != 'draft') and (a.debit > 0), accountmovelines)
             res[partner.id] = max(x.followup_date for x in amls2) if len(amls2) else False
             #else:
             #    res[partner.id] = False
@@ -149,23 +148,58 @@ class res_partner(osv.osv):
             res[partner.id] = False
 
             for accountmoveline in amls:
-                if (accountmoveline.followup_line_id != False) and (level_days < accountmoveline.followup_line_id.delay) and (accountmoveline.state != "draft"): # and (accountmoveline.debit > 0):
+                if (accountmoveline.followup_line_id != False) and (level_days < accountmoveline.followup_line_id.delay): 
+                # and (accountmoveline.debit > 0):   (accountmoveline.state != "draft") and
+                #and  (accountmoveline.reconcile_id == None)
                     level_days = accountmoveline.followup_line_id.delay
                     latest_level = accountmoveline.followup_line_id.id
                     res[partner.id] = latest_level
             #res[partner.id] = max(x.followup_line_id.delay for x in amls) if len(amls) else False
         return res
 
+    def get_latest_followup_level(self):
+        amls = self.accountmoveline_ids
+
+
+    def _get_next_followup_level_id(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids):            
+            latest_id = self._get_latest_followup_level_id(cr, uid, [partner.id], name, arg, context)[partner.id]
+            latest = self.pool.get('account_followup.followup.line').browse(cr, uid, [latest_id], context)[0]
+            delay = False
+            newlevel = False
+            if latest: #if latest exists
+                newlevel = latest.id
+                old_delay = latest.delay
+            else:
+                old_delay = False
+
+            for fl in self.pool.get('account_followup.followup.line').search(cr, uid, []):  #('followup_id.company_id','=',latest.followup_id.company_id)
+                fl_obj = self.pool.get('account_followup.followup.line').browse(cr, uid, [fl])[0]
+                if not old_delay: 
+                    if not delay or fl_obj.delay < delay: 
+                        delay = fl_obj.delay
+                        newlevel = fl_obj.id
+                else:
+                    if (not delay and (fl_obj.delay > old_delay)) or ((fl_obj.delay < delay) and (fl_obj.delay > old_delay)):
+                        delay = fl_obj.delay
+                        newlevel = fl_obj.id
+            res[partner.id] = newlevel
+            #Now search one level higher
+        return res
+
     _inherit = "res.partner"
     _columns = {
-        'payment_responsible_id':fields.many2one('res.users', ondelete='set null'), 
+        'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Responsible', help="Responsible"), 
         #'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
-        'payment_note':fields.text('Payment note', help="Payment note"),
+        'payment_note':fields.text('Payment note', help="Payment note"), 
         'payment_new_action':fields.text('New action'), #one2many/selection?
-        'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id'), 
-        'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="latest followup date"),
+        'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('debit', '>', 0.0), '&', ('reconcile_id', '=', False), '&', 
+            ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
+        'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="latest followup date", store=True), 
         'latest_followup_level_id':fields.function(_get_latest_followup_level_id, method=True, 
-            type='many2one', relation='account_followup.followup.line', string="latest followup level"), 
+            type='many2one', relation='account_followup.followup.line', string="latest followup level", store=True), 
+        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="next level"),
     }
 
 

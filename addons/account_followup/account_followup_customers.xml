@@ -16,30 +16,37 @@
  						<field name="phone" />
  					</group>
  					<separator string="Detail of accounts" />	
- 					<field name="accountmoveline_ids" nolabel="1" domain="[('debit', '&gt;', 0)]">
+ 					<field name="accountmoveline_ids" nolabel="1" domain="[('reconcile_id', '=', False)]"> <!--domain does not work-->
  						<tree string="Account Move line" editable="bottom">
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/>
                     		<field name="ref" readonly="True"/>
-                    			
- 							<field name="debit" readonly="True"/>					
+ 							<field name="debit" readonly="True"/>
  							<field name="credit" readonly="True"/>
  							<field name="followup_date" readonly="True"/>
  							<field name="followup_line_id" readonly="True"/>
  							<field name="blocked" string="Litigation"/>
  							<field name="payment_commitment"/>
  							<field name="payment_date"/>
+ 							<field name="reconcile_id" invisible="True"/>
+ 							<field name="reconcile_partial_id" readonly="True"/>
+ 							<field name="invoice"/>
  						</tree>
  					</field>
  					<newline/>
- 					<separator string="Payment Followup Remarks"/>
- 					<!--<field name="payment_responsible_id"/>-->
- 					<group col="4" colspan="4">
+ 					<separator string="Payment Followup Remarks" colspan="4"/>
+ 					<newline/> 					
+ 					<group col="6" colspan="6">
+ 						<field name="payment_next_action"/>
+ 						
  						<field name="payment_note"/>
+ 						<field name="payment_responsible_id"/>
+
  						<!--<field name="payment_followup_level_id"/>-->
- 						<field name="payment_new_action"/>
+ 						
  						<field name="latest_followup_level_id"/>
  						<field name="latest_followup_date"/>
+ 						<field name="next_followup_level_id"/>
  					</group>
  				</form>
  			</field>
@@ -48,23 +55,38 @@
  		<record id="customer_followup_tree" model="ir.ui.view">
  			<field name="name">ddd</field>
  			<field name="model">res.partner</field>
- 			<!--<field name="type">tree</field>-->
+ 		<!--<field name="type">tree</field>-->
  			<field name="priority" eval="20"/>
  			<field name="arch" type="xml">
  				<tree string="Customer Followup">
  					<field name="name"/> 					
  				<field name="latest_followup_level_id"/>
  				<field name="latest_followup_date"/>
- 				<field name="payment_new_action"/>
+ 				<field name="payment_next_action"/>
  				<field name="payment_note"/>
  				<field name="phone"/>
+ 				<field name="payment_responsible_id"/>
  				<field name="email"/>
+ 				<field name="next_followup_level_id"/>
  				   <!-- <field name="latest_followup_date"/>-->
  				</tree>
  			</field>
  		</record>
 
-
+ 		
+ 		<record id ="customer_followup_search_view" model="ir.ui.view">
+ 			<field name="name">Search</field>
+ 			<field name="model">res.partner</field>
+ 			<field name="type">search</field>
+ 			<field name="arch" type="xml">
+ 				<search string="Search view">
+ 					<filter string="Actions to be taken" domain="[('payment_next_action', '!=', '')]"/>
+ 					<filter string="Follow-up sent" domain="[('latest_followup_level_id', '!=', '')]"/>
+ 					<filter string="Without responsible" domain="[('payment_responsible_id', '=', False)]"/>
+ 					<filter string="I am responsible" domain="[('payment_responsible_id','=', uid)]"/>
+ 				</search>
+ 			</field>
+ 		</record>
 
  		<record id="action_customer_followup" model="ir.actions.act_window">
  			<field name="name">Customer Follow Up</field>
@@ -72,8 +94,11 @@
  			<field name="res_model">res.partner</field>
  			<field name="view_type">form</field>
  			<field name="view_mode">tree,form</field>
- 			<field name="domain">[('customer', '=', True)]</field>
+ 			<!--<field name="domain">[('latest_followup_date','!=', False)]</field>-->  <!--('customer', '=', True), -->
+ 			<field name="search_view_id" ref="customer_followup_search_view"/>
  		</record>
+
+
 
 
 

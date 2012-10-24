@@ -188,7 +188,6 @@ class account_followup_print_all(osv.osv_memory):
             if result['start'] == 'end_of_month':
                 fups[old][0].replace(day=1)
             old = result['id']
-
         fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old)
 
         partner_list = []
@@ -239,7 +238,7 @@ class account_followup_print_all(osv.osv_memory):
             msg_unsent = ''
             data_user = user_obj.browse(cr, uid, uid, context=context)
             for partner in self.pool.get('res.partner').browse(cr, uid, partners, context=context):
-                if True: #partner.latest_followup_level_id.send_email:
+                if partner.next_followup_level_id.send_email:
                     ids_lines = move_obj.search(cr,uid,[('partner_id','=',partner.id),('reconcile_id','=',False),('account_id.type','in',['receivable']),('company_id','=',context.get('company_id', False))])
                     data_lines = move_obj.browse(cr, uid, ids_lines, context=context)
                     total_amt = 0.0
@@ -352,6 +351,31 @@ class account_followup_print_all(osv.osv_memory):
             'report_name': 'account_followup.followup.print',
             'datas': datas,
         }
+
+    def do_process(self, cr, uid, ids, context=None):
+        resu = self.do_mail(cr,uid,ids,context)        
+        mod_obj = self.pool.get('ir.model.data')
+        move_obj = self.pool.get('account.move.line')
+        user_obj = self.pool.get('res.users')
+        if context is None:
+            context = {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        stat_by_partner_line_ids = [partner_id.id for partner_id in data.partner_ids]
+        partners = [stat_by_partner_line / 10000 for stat_by_partner_line in stat_by_partner_line_ids]
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        print "start changeof new action..."
+
+        partnersfilt = []
+        partner_obj = self.pool.get('res.partner')
+        for partner in partner_obj.browse(cr, uid, partners, context):
+            if partner.next_followup_level_id.phonecall:
+                partnersfilt.append(partner.id)            
+            print "Should have been changed"
+            print partner.name
+        partner_obj = self.pool.get('res.partner').write(cr, uid, partnersfilt, {'payment_new_action': "Take your phone and call him, please!!!"})
+        resu2 = self.do_print(cr,uid,ids,context)
+        return resu2
 
 
 account_followup_print_all()
