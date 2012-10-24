@@ -167,7 +167,7 @@ class ir_translation(osv.osv):
             [('to_translate','To Translate'),
              ('inprogress','Translation in Progress'),
              ('translated','Translated')],
-            string="State",
+            string="Status",
             help="Automatically set to let administators find new terms that might need to be translated"),
 
         # aka gettext extracted-comments - we use them to flag openerp-web translation
@@ -408,7 +408,7 @@ class ir_translation(osv.osv):
                 if trans_file:
                     _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
                     tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
-                elif lang_code != 'en':
+                elif lang_code != 'en_US':
                     _logger.warning('module %s: no translation for language %s', module_name, lang_code)
         return True
 
