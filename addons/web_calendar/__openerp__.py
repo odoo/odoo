@@ -15,8 +15,8 @@ OpenERP Web Calendar view.
     ],
     'css': [
         #'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css',
-        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_dhx_terrace.css',
-        #'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css',
+        #'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_dhx_terrace.css',
+        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css',
         'static/src/css/web_calendar.css'
     ],
     'qweb' : [
