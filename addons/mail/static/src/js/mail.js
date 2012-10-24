@@ -644,7 +644,7 @@ openerp.mail = function(session) {
                 }
                 if((attach.filename || attach.name).match(/[.](pdf|doc|docx|xls|xlsx|ppt|pptx|psd|tiff|dxf|svg)$/i)) {
                     attach.is_document = true;
-                    attach.url_escape = escape(encodeURI(attach.url));
+                    attach.url_escape = encodeURIComponent(attach.url);
                 }
             }
 
