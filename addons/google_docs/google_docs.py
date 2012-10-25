@@ -151,7 +151,7 @@ This is the id of the template document, on google side. You can find it thanks 
 *for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
 ...
 ''', required=True),
-        'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side', required=True),
+        'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side. Eg. gdoc_%(field_name)s', required=True),
     }
 
     _defaults = {
