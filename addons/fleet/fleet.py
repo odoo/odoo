@@ -641,7 +641,7 @@ class fleet_vehicle_odometer(osv.Model):
     _columns = {
         'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
-        'date' : fields.date('Purchase Date'),
+        'date' : fields.date('Date'),
         'value' : fields.float('Odometer Value',group_operator="max"),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
         'unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
