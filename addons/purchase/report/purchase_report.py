@@ -40,7 +40,7 @@ class purchase_report(osv.osv):
                                       ('except_picking', 'Shipping Exception'),
                                       ('except_invoice', 'Invoice Exception'),
                                       ('done', 'Done'),
-                                      ('cancel', 'Cancelled')],'Order State', readonly=True),
+                                      ('cancel', 'Cancelled')],'Order Status', readonly=True),
         'product_id':fields.many2one('product.product', 'Product', readonly=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', readonly=True),
         'location_id': fields.many2one('stock.location', 'Destination', readonly=True),
