@@ -95,7 +95,7 @@ class payment_order(osv.osv):
             ('cancel', 'Cancelled'),
             ('open', 'Confirmed'),
             ('done', 'Done')], 'Status', select=True,
-            help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
+            help='When an order is placed the status is \'Draft\'.\n Once the bank is confirmed the status is set to \'Confirmed\'.\n Then the order is paid the status is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
         'total': fields.function(_total, string="Total", type='float'),
         'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'done': [('readonly', True)]}),
