@@ -23,11 +23,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.view_type = 'calendar';
         this.has_been_loaded = $.Deferred();
         this.dataset_events = [];
-        this.form_dialog = new instance.web_calendar.CalendarFormDialog(this, {
-                destroy_on_close: false,
-                width: '80%',
-                min_width: 850
-            }, this.options.action_views_ids.form, dataset);
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -189,7 +184,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 scheduler.addEvent({
                     start_date: start_date,
                     end_date: end_date,
-                    text: _t("New event"),
                     _force_slow_create: true,
                 });
             }
@@ -412,12 +406,32 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 event_obj['end_date'].addHours(-4);
             }
         }
-        var set_values = {};
-        var data = this.get_event_data(event_obj);
-        this.form_dialog.create_record(data, event_id);
+        var defaults = {};
+        _.each(this.get_event_data(event_obj), function(val, field_name) {
+            defaults['default_' + field_name] = val;
+        });
+        var something_saved = false;
+        var pop = new instance.web.form.FormOpenPopup(this);
+        pop.show_element(this.dataset.model, null, this.dataset.get_context(defaults), {
+            title: _t("Create: ") + ' ' + this.name,
+            disable_multiple_selection: true,
+        });
+        pop.on('closed', self, function() {
+            if (!something_saved) {
+                scheduler.deleteEvent(event_id);
+            }
+        });
+        pop.on('create_completed', self, function(id) {
+            something_saved = true;
+            self.dataset.ids.push(id);
+            scheduler.changeEventId(event_id, id);
+            self.reload_event(id);
+        });
     },
     open_event: function(event_id) {
-        if (this.dataset.get_id_index(event_id) === null) {
+        var self = this;
+        var index = this.dataset.get_id_index(event_id);
+        if (index === null) {
             // Some weird behaviour in dhtmlx scheduler could lead to this case
             // eg: making multiple days event in week view, dhtmlx doesn't trigger eventAdded !!??
             // so the user clicks back on the orphan event and we land here. We have to duplicate
@@ -431,7 +445,14 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 _force_slow_create: true,
             });
         } else {
-            this.form_dialog.open_record(event_id);
+            var pop = new instance.web.form.FormOpenPopup(this);
+            var id_for_buggy_addons = this.dataset.ids[index]; // ids could be non numeric
+            pop.show_element(this.dataset.model, id_for_buggy_addons, this.dataset.get_context(), {
+                title: _t("Edit: ") + this.name
+            });
+            pop.on('write_completed', self, function(){
+                self.reload_event(event_id);
+            });
         }
     },
     delete_event: function(event_id, event_obj) {
@@ -444,76 +465,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 self.refresh_minical();
             });
         }
-    },
-});
-
-instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
-    init: function(view, options, view_id, dataset) {
-        this._super(view, options);
-        this.dataset = dataset;
-        this.view_id = view_id;
-        this.view = view;
-        this.creating_event_id = null;
-        this.on("closing", this, function() {
-            if (this.creating_event_id) {
-                scheduler.deleteEvent(this.creating_event_id);
-                this.creating_event_id = null;
-            }
-        });
-        this.ready = $.when(!this.dialog_inited ? this.init_dialog() : true);
-    },
-    start: function() {
-        var self = this;
-        this._super.apply(this, arguments);
-        this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false,
-            $buttons: this.$buttons,
-        });
-        var def = this.form.appendTo(this.$el);
-        this.form.on('record_created', self, this.form_dialog_saved);
-        this.form.on('record_saved', self, this.form_dialog_saved);
-        this.form.on_button_cancel = function() {
-            self.close();
-        };
-        return def;
-    },
-    create_record: function(data, dhtmlx_event_id) {
-        var self = this;
-        this.ready.then(function() {
-            self.view.dataset.index = null;
-            self.creating_event_id = dhtmlx_event_id;
-            self.form.do_show().then(function() {
-                _.each(data, function(val, field_name) {
-                    var ffield = self.form.fields[field_name];
-                    if (ffield) {
-                        ffield._dirty_flag = false;
-                        $.when(ffield.set_value(val)).then(function() {
-                            ffield._dirty_flag = true;
-                            self.form.do_onchange(ffield);
-                        });
-                    }
-                });
-                self.open();
-            });
-        });
-    },
-    open_record: function(id) {
-        var self = this;
-        this.ready.then(function() {
-            self.dataset.select_id(id);
-            self.form.do_show({ mode: 'edit' }).then(function() {
-                self.open();
-            });
-        });
-    },
-    form_dialog_saved: function() {
-        var id = this.dataset.ids[this.dataset.index];
-        if (this.creating_event_id) {
-            scheduler.changeEventId(this.creating_event_id, id);
-            this.creating_event_id = null;
-        }
-        this.view.reload_event(id);
-        this.close();
     },
 });
 
