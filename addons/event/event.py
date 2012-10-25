@@ -338,7 +338,7 @@ class event_registration(osv.osv):
         'date_closed': fields.datetime('Attended Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
         'reply_to': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
-        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
+        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
         'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
