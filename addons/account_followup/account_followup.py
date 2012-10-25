@@ -79,7 +79,7 @@ class account_move_line(osv.osv):
         'payment_commitment':fields.text('Commitment'),
         'payment_date':fields.date('Date'),
         #'payment_note':fields.text('Payment note'),
-        'payment_new_action':fields.text('New action'),
+        'payment_next_action':fields.text('New action'),
     }
 
 account_move_line()
@@ -193,7 +193,8 @@ class res_partner(osv.osv):
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Responsible', help="Responsible"), 
         #'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
         'payment_note':fields.text('Payment note', help="Payment note"), 
-        'payment_new_action':fields.text('New action'), #one2many/selection?
+        'payment_next_action':fields.text('Next action', help="Write here the comments of your customer"), #Just a note
+        'payment_next_action_date':fields.date('Next action date', help="Next date to take action"), # next action date
         'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('debit', '>', 0.0), '&', ('reconcile_id', '=', False), '&', 
             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="latest followup date", store=True), 
