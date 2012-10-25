@@ -12,7 +12,7 @@
                             <t t-esc="date.toString('MMM d')"/>
                         </th>
                     </t>
-                    <th class="oe_timesheet_weekly_date_head">TOTAL</th>
+                    <th class="oe_timesheet_weekly_date_head">Total</th>
                 </tr>
                 <tr t-foreach="widget.accounts" t-as="account">
                     <td class="oe_timesheet_weekly_account"><t t-esc="widget.account_names[account.account]"/></td>
@@ -36,8 +36,8 @@
                 <tr>
                     <td>
                         <div class="oe_timesheet_weekly_adding_tot">
-                            <div class="oe_timesheet_weekly_adding"><button>Add Row</button></div>
-                            <div class="oe_timesheet_weekly_tottot"><span>TOTAL</span></div>
+                            <div class="oe_timesheet_weekly_adding"><button>Add a Project</button></div>
+                            <div class="oe_timesheet_weekly_tottot"><span>Total</span></div>
                         </div>
                     </td>
                     <t t-set="day_count" t-value="0"/>
