@@ -36,22 +36,6 @@
         <field name="name">ENCAISSE</field>
     </record>
 
-    <record id="chart1111_fr" model="account.account.template">
-        <field name="code">1111</field>
-        <field name="parent_id" ref="chart111_fr"/>
-        <field name="type">liquidity</field>
-        <field name="user_type" ref="account.data_account_type_bank"/>
-        <field name="name">Compte chèque</field>
-    </record>
-
-    <record id="chart1112_fr" model="account.account.template">
-        <field name="code">1112</field>
-        <field name="parent_id" ref="chart111_fr"/>
-        <field name="type">liquidity</field>
-        <field name="user_type" ref="account.data_account_type_cash"/>
-        <field name="name">Petite caisse</field>
-    </record>
-
     <record id="chart112_fr" model="account.account.template">
         <field name="code">112</field>
         <field name="parent_id" ref="chart11_fr"/>
@@ -74,6 +58,22 @@
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">STOCKS</field>
+    </record>
+
+    <record id="chart1141_fr" model="account.account.template">
+        <field name="code">1141</field>
+        <field name="parent_id" ref="chart114_fr"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_asset"/>
+        <field name="name">Stock</field>
+    </record>
+
+    <record id="chart1145_fr" model="account.account.template">
+        <field name="code">1145</field>
+        <field name="parent_id" ref="chart114_fr"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_asset"/>
+        <field name="name">Stock expédié non-facturé</field>
     </record>
 
     <record id="chart115_fr" model="account.account.template">
@@ -292,6 +292,22 @@
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">PASSIFS LIÉS AUX ACTIFS DÉTENUS EN VUE DE LEUR CESSION</field>
+    </record>
+
+    <record id="chart216_fr" model="account.account.template">
+        <field name="code">216</field>
+        <field name="parent_id" ref="chart21_fr"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">PASSIFS DE STOCK</field>
+    </record>
+
+    <record id="chart2161_fr" model="account.account.template">
+        <field name="code">2161</field>
+        <field name="parent_id" ref="chart216_fr"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Stock reçu non facturé</field>
     </record>
 
     <record id="chart25_fr" model="account.account.template">

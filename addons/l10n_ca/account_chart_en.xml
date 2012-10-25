@@ -36,14 +36,6 @@
         <field name="name">CASH</field>
     </record>
 
-    <record id="chart1111_en" model="account.account.template">
-        <field name="code">1111</field>
-        <field name="parent_id" ref="chart111_en"/>
-        <field name="type">liquidity</field>
-        <field name="user_type" ref="account.data_account_type_bank"/>
-        <field name="name">Checking Account</field>
-    </record>
-
     <record id="chart112_en" model="account.account.template">
         <field name="code">112</field>
         <field name="parent_id" ref="chart11_en"/>
@@ -66,6 +58,22 @@
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">STOCKS</field>
+    </record>
+
+    <record id="chart1141_en" model="account.account.template">
+        <field name="code">1141</field>
+        <field name="parent_id" ref="chart114_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_asset"/>
+        <field name="name">Stock In Hand</field>
+    </record>
+
+    <record id="chart1145_en" model="account.account.template">
+        <field name="code">1145</field>
+        <field name="parent_id" ref="chart114_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_asset"/>
+        <field name="name">Stock Delivered But Not Billed</field>
     </record>
 
     <record id="chart115_en" model="account.account.template">
@@ -268,6 +276,22 @@
         <field name="type">view</field>
         <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CURRENT FINANCIAL DEBTS</field>
+    </record>
+
+    <record id="chart214_en" model="account.account.template">
+        <field name="code">214</field>
+        <field name="parent_id" ref="chart21_en"/>
+        <field name="type">view</field>
+        <field name="user_type" ref="account.data_account_type_view"/>
+        <field name="name">STOCK LIABILITIES</field>
+    </record>
+
+    <record id="chart2141_en" model="account.account.template">
+        <field name="code">2141</field>
+        <field name="parent_id" ref="chart214_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_liability"/>
+        <field name="name">Stock Received But Not Billed</field>
     </record>
 
     <record id="chart25_en" model="account.account.template">
