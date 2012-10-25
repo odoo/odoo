@@ -43,7 +43,7 @@ class fleet_vehicle_cost(osv.Model):
         'name' : fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
         #'name' : fields.char('Name',size=32),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
-        'cost_subtype': fields.many2one('fleet.service.type', 'Cost type', required=False, help='Cost type purchased with this cost'),
+        'cost_subtype': fields.many2one('fleet.service.type', 'Type', required=False, help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'cost_type' : fields.selection([('contract', 'Contract'),('services','Services'),('fuel','Fuel'),('other','Other')], 'Category of the cost', help='For internal purpose only',required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
@@ -1061,8 +1061,8 @@ class fleet_vehicle_log_contract(osv.Model):
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'cost_amount': fields.related('cost_id','amount',type="float",string="Amount",store=True, readonly=True),
-        'cost_generated': fields.float('Recuring Costs Amount',help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
-        'cost_frequency': fields.selection([('no','No'),('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Cost Frequency', help='Frequency of the costs',required=True),
+        'cost_generated': fields.float('Recurring Cost Amount',help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
+        'cost_frequency': fields.selection([('no','No'),('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost',required=True),
         'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
     }
     _defaults = {
@@ -1071,7 +1071,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'start_date' : time.strftime('%Y-%m-%d'),
         'state':'open',
         'expiration_date' : lambda self,cr,uid,ctx: self.compute_next_year_date(time.strftime('%Y-%m-%d')),
-    
+        'cost_frequency' : 'no',
     }
 
     def copy(self, cr, uid, id, default=None, context=None):

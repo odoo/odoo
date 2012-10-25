@@ -376,7 +376,7 @@
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_subtype" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                                <field name="cost_subtype" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
                                 <field name="amount" string="Activation Cost"/>
                                 <label for="cost_generated"/>
                                 <div>
@@ -409,7 +409,7 @@
                                 <group>
                                     <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                         <tree version="7.0" editable="bottom">
-                                            <field name="cost_subtype" domain="[('category','=','service')]"/>
+                                            <field name="cost_subtype" string="Service" domain="[('category','=','service')]"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
                                         </tree>
                                     </field>
@@ -451,13 +451,13 @@
             <field name="arch" type="xml">
                 <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0;grey:state=='closed'">
                     <field name="vehicle_id" />
-                    <field name="cost_subtype" />
+                    <field name="cost_subtype"/>
                     <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="warning_date" invisible="1"/>
                     <field name="insurer_id" />
-                    <field name="amount" string="Activation Costs" help="Costs paid the day of the contract realization. The costb will be logged at the invoice date"/>
+                    <field name="amount" string="Activation Cost"/>
                     <field name="cost_generated"/>
                     <field name="cost_frequency"/>
                     <field name="notes" />
