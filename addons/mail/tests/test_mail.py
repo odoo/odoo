@@ -94,6 +94,8 @@ class TestMailMockups(common.TransactionCase):
         self._build_email_kwargs_list = []
 
     def _mock_build_email(self, *args, **kwargs):
+        """ Mock build_email to be able to test its values. Store them into
+            some internal variable for latter processing. """
         self._build_email_args_list.append(args)
         self._build_email_kwargs_list.append(kwargs)
         return self._build_email(*args, **kwargs)
@@ -140,7 +142,9 @@ class test_mail(TestMailMockups):
         group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         group_employee_id = group_employee_ref and group_employee_ref[1] or False
         # Test users
-        self.user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
+        self.user_raoul_id = self.res_users.create(cr, uid,
+            {'name': 'Raoul Grosbedon', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
+        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.user_admin = self.res_users.browse(cr, uid, uid)
 
         # Mock send_get_mail_body to test its functionality without other addons override
@@ -795,34 +799,46 @@ class test_mail(TestMailMockups):
 
     def test_60_message_vote(self):
         """ Test designed for the vote/unvote feature. """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        msg1 = group_pigs.message_post(body='My Body', subject='1')
-        msg1 = self.mail_message.browse(cr, uid, msg1)
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        # Data: post a message on Pigs
+        msg_id = group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
 
-        # Create user Bert Tartopoils
-        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert', 'login': 'bert'})
-        user_bert = self.res_users.browse(cr, uid, user_bert_id)
-
-        # Test: msg1 and msg2 have void vote_user_ids
-        self.assertFalse(msg1.vote_user_ids, 'newly created message msg1 has not void vote_user_ids')
-        # Do: Admin vote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id])
-        msg1.refresh()
-        # Test: msg1 has Admin as voter
-        self.assertEqual(set(msg1.vote_user_ids), set([user_admin]), 'after voting, Admin is not the voter')
-        # Do: Bert vote for msg1
-        self.mail_message.vote_toggle(cr, user_bert_id, [msg1.id])
-        msg1.refresh()
-        # Test: msg1 has Admin and Bert as voters
-        self.assertEqual(set(msg1.vote_user_ids), set([user_admin, user_bert]), 'after voting, Admin and Bert are not the voters')
-        # Do: Admin unvote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id])
-        msg1.refresh()
-        # Test: msg1 has Bert as voter
-        self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
+        # Do: Admin vote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg has Admin as voter
+        self.assertEqual(set(msg.vote_user_ids), set([user_admin]), 'mail_message vote: after voting, Admin should be in the voter')
+        # Do: Bert vote for msg
+        self.mail_message.vote_toggle(cr, user_raoul.id, [msg.id])
+        msg.refresh()
+        # Test: msg has Admin and Bert as voters
+        self.assertEqual(set(msg.vote_user_ids), set([user_admin, user_raoul]), 'mail_message vote: after voting, Admin and Bert should be in the voters')
+        # Do: Admin unvote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg has Bert as voter
+        self.assertEqual(set(msg.vote_user_ids), set([user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
 
     def test_70_message_favorite(self):
         """ Tests for favorites. """
-        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        # Data: post a message on Pigs
+        msg_id = group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
+
+        # Do: Admin stars msg
+        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Admin
+        self.assertEqual(set(msg.favorite_user_ids), set([user_admin]), 'mail_message favorite: after starring, Admin should be in favorite_user_ids')
+        # Do: Bert stars msg
+        self.mail_message.favorite_toggle(cr, user_raoul.id, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Admin and Raoul
+        self.assertEqual(set(msg.favorite_user_ids), set([user_admin, user_raoul]), 'mail_message favorite: after starring, Admin and Raoul should be in favorite_user_ids')
+        # Do: Admin unvote for msg
+        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Raoul
+        self.assertEqual(set(msg.favorite_user_ids), set([user_raoul]), 'mail_message favorite: after unstarring, Raoul should be in favorite_user_ids')
