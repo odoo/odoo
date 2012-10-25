@@ -57,17 +57,13 @@ class mail_message(osv.Model):
         return name[:self._message_record_name_length] + '...'
 
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
-        """ Return the related document name, using name_get. It is included in
-            a try/except statement, because if uid cannot read the related
-            document, he should see a void string instead of crashing. """
+        """ Return the related document name, using name_get. It is done using
+            SUPERUSER_ID, to be sure to have the record name correctly stored. """
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
-            if not message['model'] or not message['res_id']:
+            if not message.get('model') or not message.get('res_id'):
                 continue
-            try:
-                result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, uid, [message['res_id']], context=context)[0][1])
-            except (orm.except_orm, osv.except_osv):
-                pass
+            result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1])
         return result
 
     def _get_to_read(self, cr, uid, ids, name, arg, context=None):
@@ -128,8 +124,8 @@ class mail_message(osv.Model):
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
         'model': fields.char('Related Document Model', size=128, select=1),
         'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(_get_record_name, type='string',
-            string='Message Record Name',
+        'record_name': fields.function(_get_record_name, type='char',
+            store=True, string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id', 'Notifications'),
         'subject': fields.char('Subject'),

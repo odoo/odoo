@@ -676,6 +676,14 @@ class mail_thread(osv.AbstractModel):
         if self._mail_flat_thread and not parent_id and thread_id:
             message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
+        # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
+        elif parent_id:
+            message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
+            _counter, _counter_max = 0, 200
+            while (message_ids and (_counter <= _counter_max)):
+                parent_id = message_ids[0]
+                message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
+                _counter += 1
 
         values = kwargs
         values.update({
