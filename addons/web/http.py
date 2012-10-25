@@ -537,7 +537,7 @@ class Root(object):
         :rtype: ``Controller | None``
         """
         if l:
-            ps = '/' + '/'.join(l)
+            ps = '/' + '/'.join(filter(None, l))
             meth = 'index'
             while ps:
                 c = controllers_path.get(ps)

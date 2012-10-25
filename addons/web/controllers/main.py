@@ -800,8 +800,7 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
-        dbs = db_list(req)
-        return {"db_list": dbs}
+        return db_list(req)
 
     @openerpweb.jsonrequest
     def create(self, req, fields):
@@ -922,10 +921,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
         try:
-            return {
-                'lang_list': (req.session.proxy("db").list_lang() or []),
-                'error': ""
-            }
+            return req.session.proxy("db").list_lang() or []
         except Exception, e:
             return {"error": e, "title": "Languages"}
 

@@ -24,6 +24,8 @@ Contents:
 
     guides/client-action
 
+    testing
+
 Indices and tables
 ==================
 

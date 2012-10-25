@@ -296,14 +296,14 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).pipe(
             function(result) {
-                self.db_list = result.db_list;
+                self.db_list = result;
             },
             function (_, ev) {
                 ev.preventDefault();
                 self.db_list = null;
             });
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).then(function(result) {
-            self.lang_list = result.lang_list;
+            self.lang_list = result;
         });
         return $.when(fetch_db, fetch_langs).then(self.do_render);
     },
