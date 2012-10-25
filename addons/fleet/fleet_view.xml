@@ -299,7 +299,7 @@
                                     </h4>
                                     <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
                                         <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                            <span class="oe_kanban_button oe_kanban_color_3"><field name="contract_renewal_name" />
+                                            <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
                                         </a>
@@ -307,7 +307,7 @@
 
                                     <t t-if="record.contract_renewal_overdue.raw_value > 0">
                                         <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                            <span class="oe_kanban_button oe_kanban_color_2"><field name="contract_renewal_name" />
+                                            <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
                                                 <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
                                         </a>
@@ -816,10 +816,10 @@
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By...">
                         <filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
-                        <filter name="groupby_parent_id" context="{'group_by' : 'parent_id'}" string="Parent"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype" context="{'group_by' : 'cost_subtype'}" string="Cost Subtype"/>
                         <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                        <filter name="groupby_parent_id" context="{'group_by' : 'parent_id'}" string="Parent"/>
                     </group>
                 </search>
             </field>
