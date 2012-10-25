@@ -25,6 +25,7 @@ from urllib import quote as quote
 from openerp.osv import osv, fields
 from openerp.tools import ustr
 from openerp.tools.translate import _
+from openerp.tools import float_repr
 
 _logger = logging.getLogger(__name__)
 try:
@@ -74,12 +75,18 @@ class acquirer(osv.Model):
             _logger.exception("failed to render mako template value for payment.acquirer %s: %r", this.name, template)
             return
 
-    def _wrap_payment_block(self, cr, uid, html_block, context=None):
-        payment_header = _('Pay safely online:')
+    def _wrap_payment_block(self, cr, uid, html_block, amount, currency, context=None):
+        payment_header = _('Pay safely online')
+        amount_str = float_repr(amount, self.pool.get('decimal.precision').precision_get(cr, uid, 'Account'))
+        currency_str = currency.symbol or currency.name
+        amount = u"%s %s" % ((currency_str, amount_str) if currency.position == 'before' else (amount_str, currency_str))  
         result =  """<div class="payment_acquirers">
-                         <span class="payment_header">%s</span>
+                         <div class="payment_header">
+                             <div class="payment_amount">%s</div>
+                             %s
+                         </div>
                          %%s
-                     </div>""" % payment_header
+                     </div>""" % (amount, payment_header)
         return result % html_block
 
     def render_payment_block(self, cr, uid, object, reference, currency, amount, context=None, **kwargs):
@@ -92,5 +99,5 @@ class acquirer(osv.Model):
         html_forms = []
         for this in self.browse(cr, uid, acquirer_ids):
             html_forms.append(this.render(object, reference, currency, amount, context=context, **kwargs))
-        html_block = '\n'.join(html_forms)
-        return self._wrap_payment_block(cr, uid, html_block, context=context)  
+        html_block = '\n'.join(filter(None,html_forms))
+        return self._wrap_payment_block(cr, uid, html_block, amount, currency, context=context)  

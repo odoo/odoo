@@ -34,7 +34,7 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool.get('portal.payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
-            if this.state != 'draft':
+            if this.state != 'draft' and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.name,
                     this.pricelist_id.currency_id, this.amount_total, context=context)
         return result
