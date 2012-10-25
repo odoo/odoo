@@ -75,46 +75,73 @@ class lunch_order(osv.Model):
                 result[order.id]=alert_msg
         return result
 
+    def check_day(self,alert):
+        today = datetime.now().isoweekday()
+        if today == 1:
+            if alert.monday == True:
+                return True
+        if today == 2:
+            if alert.tuesday == True:
+                return True
+        if today == 3:
+            if alert.wednesday == True:
+                return True
+        if today == 4:
+            if alert.thursday == True:
+                return True
+        if today == 5:
+            if alert.friday == True:
+                return True
+        if today == 6:
+            if alert.saturday == True:
+                return True
+        if today == 7:
+            if alert.sunday == True:
+                return True
+        return False
+
     def _default_alerts_get(self,cr,uid,arg,context=None):
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[],context=context)
+        alert_ids = alert_ref.search(cr,uid,[('active','=',True)],context=context)
         alert_msg=""
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
             if alert :
                 #there are alerts
-                if alert.active==True:
-                    #the alert is active
-                    if alert.day=='specific':
-                        #the alert is only activated a specific day
-                        if alert.specific==fields.datetime.now().split(' ')[0]:
-                            print alert.specific
-                    elif alert.day=='week':
-                        #the alert is activated during some days of the week
-                        continue
-                    elif alert.day=='days':
-                        #the alert is activated everyday
-                        if alert.active_from==alert.active_to:
-                            #the alert is executing all the day
-                            alert_msg+=" * "
+                display = False
+                if alert.day=='specific':
+                    #the alert is only activated a specific day
+                    if alert.specific==fields.datetime.now().split(' ')[0]:
+                        display = True
+                elif alert.day=='week':
+                    #the alert is activated during some days of the week
+                    display = self.check_day(alert)
+                elif alert.day=='days':
+                    #the alert is activated everyday
+                    display = True
+                #Check if we can display the alert
+                if display == True:
+                    if alert.active_from==alert.active_to:
+                        #the alert is executing all the day
+                        alert_msg+="* "
+                        alert_msg+=alert.message
+                        alert_msg+='\n'
+                    elif alert.active_from<alert.active_to:
+                        #the alert is executing from ... to ...
+                        now = datetime.utcnow()
+                        user = self.pool.get('res.users').browse(cr, uid, uid)
+                        tz = pytz.timezone(user.tz) if user.tz else pytz.utc
+                        tzoffset=tz.utcoffset(now)
+                        mynow = now+tzoffset
+                        hour_to = int(alert.active_to)
+                        min_to = int((alert.active_to-hour_to)*60)
+                        to_alert = datetime.strptime(str(hour_to)+":"+str(min_to),"%H:%M")
+                        hour_from = int(alert.active_from)
+                        min_from = int((alert.active_from-hour_from)*60)
+                        from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
+                        if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
+                            alert_msg+="* "
                             alert_msg+=alert.message
                             alert_msg+='\n'
-                        elif alert.active_from<alert.active_to:
-                            #the alert is executing from ... to ...
-                            now = datetime.utcnow()#.split(' ')[1] 
-                            user = self.pool.get('res.users').browse(cr, uid, uid)
-                            tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-                            tzoffset=tz.utcoffset(now)
-                            mynow = now+tzoffset
-                            hour_to = int(alert.active_to)
-                            min_to = int((alert.active_to-hour_to)*60)
-                            to_alert = datetime.strptime(str(hour_to)+":"+str(min_to),"%H:%M")
-                            hour_from = int(alert.active_from)
-                            min_from = int((alert.active_from-hour_from)*60)
-                            from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
-                            if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
-                                alert_msg+="* "
-                                alert_msg+=alert.message
-                                alert_msg+='\n'
         return alert_msg
 
     def onchange_price(self,cr,uid,ids,products,context=None):
@@ -131,24 +158,6 @@ class lunch_order(osv.Model):
                     tot += orderline.price
                 res = {'value':{'total':tot}}
         return res
-
-    def _default_product_get(self,cr,uid,args,context=None):
-        cr.execute('''SELECT lol.id, lol.date, lol.user_id, lol.product, lol.note, lol.price, lol.write_date FROM lunch_order_line AS lol ORDER BY write_date''')
-        res = cr.dictfetchall()
-        result = []
-        i=0
-        pref_ref = self.pool.get('lunch.preference')
-        for temp in res:
-            if i==20:
-                break
-            if temp['user_id'] == uid:
-                prod = self.pool.get('lunch.product').browse(cr, uid, temp['product'])
-                temp['product_name'] = prod.name
-                temp['date'] = temp['write_date']
-                new_id = pref_ref.create(cr,uid,temp)
-                result.append(new_id)
-                i+=1
-        return result
 
     def create(self, cr, uid, values, context=None):
         pref_ref = self.pool.get('lunch.preference')
@@ -190,7 +199,19 @@ class lunch_order(osv.Model):
             text=""
             for pref in pref_ref.browse(cr,uid,pref_ids,context):
                 if pref['user_id'].id == uid:
-                    print "*************TEST***************"
+                    function_name = "add_preference_"+str(pref.id)
+                    price_text = "Price: "+str(pref['price'])
+                    text += ('''
+                        <group>
+                            <h3>''')+pref['product_name']+('''</h3>
+                            <br/>
+                            <font>''')+price_text+('''</font>
+                            <br/>
+                            <button name="''')+function_name+('''" type="object" icon="gtk-add"/>
+                            <br/>
+                            <font>''')+"Note: "+str(pref['note'])+('''</font>
+                        </group>
+                        ''')
             res['arch'] = ('''<form string=\"Orders Form\" version=\"7.0\">
                     <header>
                         <field name=\"state\" widget=\"statusbar\" statusbar_visible=\"new,confirmed\" modifiers=\"{&quot;readonly&quot;: true}\"/>
@@ -220,7 +241,6 @@ class lunch_order(osv.Model):
                         <br/><br/>
                     </sheet>
                 </form>''')
-            print res['arch']
         return res
 
     _columns = {
