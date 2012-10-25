@@ -59,17 +59,15 @@ class res_users(osv.Model):
         # create aliases for all users and avoid constraint errors
         self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init, and fetch the mail.mt_comment subtype
-        ref = self.pool.get('ir.model.data').get_object_reference(cr, SUPERUSER_ID, 'mail', 'mt_comment')
-        subtype_id = ref and ref[0] or False
+        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
         cr.execute("""  SELECT p.id FROM res_partner p
                         LEFT JOIN mail_followers n
                         ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
                         WHERE n.id IS NULL
                     """)
-        params = [(res[0], res[0], subtype_id) for res in cr.fetchall()]
-        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id, subtype_id)
-                            VALUES (%s, 'res.partner', %s, %s)
+        params = [(res[0], res[0]) for res in cr.fetchall()]
+        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
+                            VALUES (%s, 'res.partner', %s)
                         """, params)
 
     def create(self, cr, uid, data, context=None):
