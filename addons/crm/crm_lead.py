@@ -896,6 +896,13 @@ class crm_lead(base_stage, format_address, osv.osv):
         lead.message_post(body=message)
         return True
 
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        country_id = False
+        if state_id:
+            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+        return {'value':{'state_id':state_id,
+        'country_id':country_id,
+        'zip':False}}
 crm_lead()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

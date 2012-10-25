@@ -336,7 +336,7 @@ class calendar_attendee(osv.osv):
                     ('non-participant', 'For information Purpose')], 'Role', \
                     help='Participation role for the calendar user'),
         'state': fields.selection([('needs-action', 'Needs Action'),
-                        ('tentative', 'Tentative'),
+                        ('tentative', 'Uncertain'),
                         ('declined', 'Declined'),
                         ('accepted', 'Accepted'),
                         ('delegated', 'Delegated')], 'Status', readonly=True, \
@@ -559,7 +559,8 @@ property or property parameter."),
         for vals in self.browse(cr, uid, ids, context=context):
             if vals.ref and vals.ref.user_id:
                 mod_obj = self.pool.get(vals.ref._name)
-                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id}
+                res=mod_obj.read(cr,uid,[vals.ref.id],['duration','class'],context)
+                defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id,'duration':res[0]['duration'],'class':res[0]['class']}
                 mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
 
@@ -1012,7 +1013,7 @@ class calendar_event(osv.osv):
                                                 'Show Time as', states={'done': [('readonly', True)]}),
         'base_calendar_url': fields.char('Caldav URL', size=264),
         'state': fields.selection([
-            ('tentative', 'Tentative'),
+            ('tentative', 'Uncertain'),
             ('cancelled', 'Cancelled'),
             ('confirmed', 'Confirmed'),
             ], 'Status', readonly=True),
