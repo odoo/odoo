@@ -648,8 +648,19 @@ class account_account(osv.osv):
                     raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from '%s' to '%s' type as it contains journal items!") % (old_type,new_type,))
         return True
 
-    def write(self, cr, uid, ids, vals, context=None):
 
+    # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
+    # the code of an account if journal entries have been already posted on this account. This cannot be simply 
+    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    def _check_allow_code_change(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+                raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
+        return True
+
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if not ids:
@@ -669,6 +680,8 @@ class account_account(osv.osv):
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
+        if 'code' in vals.keys():
+            self._check_allow_code_change(cr, uid, ids, context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
