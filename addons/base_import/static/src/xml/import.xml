@@ -1,21 +1,39 @@
 <templates>
     <t t-name="ImportView">
+        <div class="oe_view_manager oe_view_manager_current">
+        <table class="oe_view_manager_header">
+            <tbody>
+            <tr class="oe_header_row oe_header_row_top">
+                <td colspan="2">
+                    <h2 class="oe_view_title">
+                        <span class="oe_view_title_text oe_breadcrumb_title">
+                            <span class="oe_breadcrumb_item">Upload your file</span>
+                        </span>
+                    </h2>
+                </td>
+                <td colspan="2"></td>
+            </tr>
+            <tr class="oe_header_row oe_header_row_top oe_view_title">
+                <td colspan="2">
+                        <button type="button" disabled="disabled"
+                                class="oe_button oe_import_button oe_import_validate oe_highlight"
+                            >Validate</button>
+                        <button type="button" disabled="disabled"
+                                class="oe_button oe_import_button oe_import_import"
+                            >Import</button>
+                        <span class="oe_fade">or</span>
+                        <a class="oe_import_cancel" href="#">Cancel</a>
+                </td>
+                <td colspan="2">
+                    <input type="hidden" name="session_id"
+                           t-att-value="widget.session.session_id"/>
+                    <input type="hidden" name="import_id"/>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
-            <header>
-                <button type="button" disabled="disabled"
-                        class="oe_button oe_import_button oe_import_validate oe_highlight"
-                    >Validate</button>
-                <button type="button" disabled="disabled"
-                        class="oe_button oe_import_button oe_import_import"
-                    >Import</button>
-                <span class="oe_fade">or</span>
-                <a class="oe_import_cancel" href="#">Cancel</a>
-            </header>
-            <input type="hidden" name="session_id"
-                   t-att-value="widget.session.session_id"/>
-            <input type="hidden" name="import_id"/>
-            <h2>Upload your file</h2>
             <p>Select the <a
                     href="http://en.wikipedia.org/wiki/Comma-separated_values"
                     class="oe_import_csv" target="_blank">.CSV</a>
@@ -25,7 +43,7 @@
                 <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
                 <input type="file" id-attf-id="file_#{_id}"
                        name="file" class="oe_import_file"/>
-                <button type="button" class="oe_import_file_reload">
+                <button type="button" class="oe_import_file_reload" title="Reload data to check changes.">
                     <img src="/web/static/src/img/icons/gtk-refresh.png"/>
                 </button>
                 <div class="oe_import_with_file">
@@ -80,7 +98,9 @@
                 </dl>
             </div>
         </form>
+        </div> 
     </t>
+
     <t t-name="ImportView.preview">
         <tr t-if="headers" class="oe_import_grid-header">
             <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
