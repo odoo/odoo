@@ -22,9 +22,10 @@
             <div class="oe_msg_center">
                 <div class="oe_msg_content">
                     <t t-call="mail.thread.list_recipients"/>
-                    <textarea class="field_text" placeholder=""/>
-                </div><div class="oe_msg_footer">
-                    <div class="oe_msg_attachment_list"/>
+                    <textarea class="field_text"></textarea>
+                </div>
+                <div class="oe_msg_footer">
+                    <div class="oe_msg_attachment_list"></div>
                     <button class="oe_post">Post</button>
                     <t t-call="mail.compose_message.add_attachment"/>
                     <!--<a class="oe_cancel oe_e">X</a>-->
@@ -53,7 +54,8 @@
         <span class="oe_attachment_file">
             <span class="oe_add">
                 <!-- uploader of file -->
-                <button class="oe_attach"><span class="oe_e">'</span></button>
+                <button class="oe_attach"><span class="oe_e">'</span></button> 
+                <span class='oe_attach_label'>File</span>
                 <t t-call="HiddenInputFile">
                     <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                     <t t-set="fileupload_action">/web/binary/upload_attachment</t>
@@ -154,19 +156,15 @@
                     <button type="button" class="oe_write_full oe_highlight">
                         Compose a new message
                     </button>
-                    or
-                    <button type="button" class="oe_write_onwall" help="Your followers can read this message">
-                        Write to your followers
-                    </button>
+                    <span class='oe_alternative'>
+                        or
+                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write to your followers</a>
+                    </span>
                 </td>
             </tr>
           </tbody>
         </table>
-        <!-- placeholder for the wall threads -->
-        <div class="oe_mail_wall_threads"/>
-        <div class="oe_mail_wall_aside">
-                <!-- contains currently nothing -->
-        </div>
+        <div class="oe_mail-placeholder"></div>
     </div>
 
     <!--
@@ -181,12 +179,10 @@
         Template used to display the communication history in documents
         form view.
         -->
-    <div t-name="mail.record_thread" class="oe_mail_record_wall">
-        <!-- <h4>History and Comments</h4> -->
-        <div class="oe_mail_wall_threads">
-            <!-- contains the document thread -->
+    <span t-name="mail.record_thread" class="oe_record_thread">
+        <div class="oe_mail-placeholder">
         </div>
-    </div>
+    </span>
 
     <t t-name="mail.thread">
         <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>
@@ -225,12 +221,14 @@
                     </t>
                 </div>
                 <div class="oe_msg_footer">
-                    from <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
+                    <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                         <a t-if="widget.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
                             <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
                             <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
                         </a>
+                    <span class='oe_subtle'>•</span>
                     <t t-call="mail.thread.message.vote"/>
                 </div>
             </div>
@@ -261,27 +259,24 @@
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
-        <!--
-        <span class="oe_left oe_mail_vote_count">
+        
+        <span class="oe_mail_vote_count">
             <t t-if='widget.has_voted'>
                 You
             </t>
             <t t-if='(widget.vote_nb - (widget.has_voted ? 1 : 0)) > 0'>
                 <t t-if='widget.has_voted'> and </t>
+                <t t-raw="(widget.vote_nb - (widget.has_voted ? 1 : 0))"/>
                 <t t-esc="widget.vote_nb"/> people
             </t>
-            <t t-if='(widget.vote_nb - (widget.has_voted ? 1 : 0)) > 0'>
-                <t t-raw="(widget.vote_nb - (widget.has_voted ? 1 : 0))"/>
-                concur
+            <t t-if='widget.vote_nb'>
+                like
             </t>
         </span>
-        <button t-attf-class="oe_msg_vote oe_tag">
-            <span>
-                <t t-if="!widget.has_voted">Concur</t>
-                <t t-if="widget.has_voted">Respectfully disagree</t>
-            </span>
-        </button>
-        -->
+        <a href='#' t-attf-class="oe_msg_vote">
+            <t t-if="!widget.has_voted">like</t>
+            <t t-if="widget.has_voted">unlike</t>
+        </a>
     </span>
 
     <!-- mail.thread.message.star

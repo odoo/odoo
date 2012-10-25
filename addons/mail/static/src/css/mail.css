@@ -1,6 +1,3 @@
-.oe_mail_wall_threads{
-    padding: 16px;
-}
 
 /* ------------ MAIL WIDGET --------------- */
 .openerp .oe_mail, .openerp .oe_mail *{
@@ -9,7 +6,7 @@
 .openerp .oe_mail {
     display: inline-block;
     position: relative;
-    width: 740px;
+    width: 720px;
     margin: 0px;
 }
 .openerp .oe_mail .oe_thread{
@@ -27,6 +24,7 @@
     border-radius: 2px;
     margin-bottom: 2px;
     min-height: 40px;
+    border: solid 1px rgba(0,0,0,0.03);
 }
 .openerp .oe_mail .oe_msg_indented{
     background: #FFF;
@@ -38,6 +36,9 @@
     width:32px;
     margin:1px;
     border-radius:2px;
+}
+.openerp .oe_mail .oe_msg .oe_subtle{
+    color: #B7B7D5;
 }
 .openerp .oe_mail .oe_msg_indented .oe_msg_center{
     margin-left:34px;
@@ -58,19 +59,10 @@
     margin-left: 40px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_footer{
-    height: 16px;
     padding-left: 4px;
     overflow: hidden;
-    font-size: 11px;
     opacity:0.8;
     -webkit-transition: opacity 0.2s linear;
-}
-.openerp .oe_mail .oe_thread:hover .oe_msg_footer{
-    opacity: 1;
-    -webkit-transition: opacity 0.2s linear;
-}
-.openerp .oe_mail .oe_msg.oe_msg_composer .oe_msg_footer{
-    height: auto;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content{
     display: block;
@@ -79,7 +71,7 @@
     padding-bottom:1px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_title{
-    font-size: 16px;
+    font-size: 13px;
     margin-bottom: 0px;
     margin-top: 2px;
 }
@@ -130,10 +122,11 @@
 }
 .openerp .oe_mail .oe_msg .oe_msg_content textarea{
     width: 100%;
-    height: 100%;
+    height: 32px;
     margin: 0px;
     padding: 0px;
     resize: vertical;
+    
     padding: 4px;
 }
 .openerp .oe_mail .oe_msg.oe_msg_composer_compact, .openerp .oe_mail .oe_msg.oe_msg_expandable{
@@ -228,11 +221,15 @@
     border: none;
     text-shadow: none;
 }
+.openerp .oe_mail .oe_attach_label{
+    color: #7C7BAD;
+    margin-left: -3px;
+}
 .openerp .oe_mail .oe_msg_footer .oe_attachment_file .oe_form_binary_file{
     display: inline-block;
-    margin-left: -23px;
-    height: 24px;
-    width: 24px;
+    margin-left: -47px;
+    height: 28px;
+    width: 52px;
     margin-top: -6px;
 }
 .openerp .oe_mail .oe_mail_list_recipients{
@@ -254,11 +251,82 @@
     -webkit-transition: opacity 0.2s linear;
 }
 
-/* ---------------- MESSAGES BODY ------------------ */
+/* ---------------- FOLLOWERS ------------------ */
 
+.openerp .oe_followers{
+    position: relative;
+    display: inline-block;
+    padding-top: 4px;
+    width: 120px;
+    float: right;
+}
+
+/*  a) THE FOLLOW BUTTON */
+
+.openerp .oe_followers button.oe_follower{
+    display: block;
+    text-align: center;
+    width:100%;
+}
+.openerp .oe_followers button.oe_follower.oe_following{
+    background-color: #3465A4;
+    background-image: -webkit-linear-gradient(top, #729FCF, #3465A4);
+    color: white;
+}
+
+.openerp .oe_followers button.oe_follower .oe_follow, 
+.openerp .oe_followers button.oe_follower .oe_unfollow, 
+.openerp .oe_followers button.oe_follower .oe_following{
+    display: none;
+}
+/*  a.1) when following, show 'following' */
+.openerp .oe_followers button.oe_follower.oe_following .oe_following{
+    display: inline;
+}
+/*  a.2) when following and hovering, show 'unfollow' */
+.openerp .oe_followers button.oe_follower.oe_following:hover .oe_following{
+    display: none;
+}
+.openerp .oe_followers button.oe_follower.oe_following:hover .oe_unfollow{
+    display: inline;
+}
+/*  a.3) when not following  show 'follow' */
+.openerp .oe_followers button.oe_follower.oe_notfollow .oe_follow{
+    display: inline;
+}
+
+.openerp .oe_followers .oe_subtype_list{
+    margin-bottom: 4px;
+}
+
+/*  b) THE FOLLOWERS */
+.openerp .oe_followers .oe_follower_title{
+    margin-top: 4px;
+}
+.openerp .oe_followers .oe_partner {
+    height: 32px;
+    overflow: hidden;
+}
+.openerp .oe_followers .oe_partner img{
+    width: 32px;
+    margin-right:4px;
+    border-radius: 2px;
+}
+
+/* ---------------- MESSAGES BODY ------------------ */
 .openerp .oe_mail .oe_msg_content .oe_blockquote,
 .openerp .oe_mail .oe_msg_content blockquote {
     padding: 4px;
     border-radius: 2px;
     border: solid 1px rgba(124,123,173,0.14);
+}
+
+/* ----------- FORM INTEGRATION ------------ */
+
+            /* Nothing to do yay! */
+
+/* ----------- INBOX INTEGRATION ----------- */
+
+.openerp .oe_mail_wall .oe_mail{
+    margin: 16px;
 }
