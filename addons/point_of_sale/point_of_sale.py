@@ -66,7 +66,7 @@ class pos_config(osv.osv):
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
@@ -197,7 +197,7 @@ class pos_session(osv.osv):
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
-        'state' : fields.selection(POS_SESSION_STATE, 'State',
+        'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
 
