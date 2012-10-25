@@ -365,11 +365,11 @@ class test_mail(TestMailMockups):
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
             self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
-        # Test: mail_message: partner_ids = group followers
-        message_pids = set([partner.id for partner in message.partner_ids])
+        # Test: mail_message: notified_partner_ids = group followers
+        message_pids = set([partner.id for partner in message.notified_partner_ids])
         test_pids = set([p_b_id, p_c_id])
         self.assertEqual(test_pids, message_pids, 'mail.message partners incorrect')
-        # Test: notification linked to this message = group followers = partner_ids
+        # Test: notification linked to this message = group followers = notified_partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
@@ -398,11 +398,11 @@ class test_mail(TestMailMockups):
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
             self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
             self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
-        # Test: mail_message: partner_ids = group followers
-        message_pids = set([partner.id for partner in message.partner_ids])
+        # Test: mail_message: notified_partner_ids = group followers
+        message_pids = set([partner.id for partner in message.notified_partner_ids])
         test_pids = set([p_b_id, p_c_id, p_d_id])
         self.assertEqual(message_pids, test_pids, 'mail.message partners incorrect')
-        # Test: notifications linked to this message = group followers = partner_ids
+        # Test: notifications linked to this message = group followers = notified_partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
@@ -466,12 +466,12 @@ class test_mail(TestMailMockups):
         # Test: mail.message: subject, body inside pre
         self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
         self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
-        # Test: mail.message: partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
-        msg_pids = [partner.id for partner in message.partner_ids]
+        # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
+        msg_pids = [partner.id for partner in message.notified_partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         self.assertEqual(len(notif_ids), 3, 'mail.message: too much notifications created')
-        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
+        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message notified_partner_ids incorrect')
 
         # ----------------------------------------
         # CASE2: reply to last comment with attachments

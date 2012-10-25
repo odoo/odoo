@@ -115,8 +115,13 @@ class mail_message(osv.Model):
                         ], 'Type',
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
-        'author_id': fields.many2one('res.partner', 'Author', required=True),
-        'partner_ids': fields.many2many('res.partner', 'mail_notification', 'message_id', 'partner_id', 'Recipients'),
+        'from': fields.char('From',
+            help="Email address of the sender, to use if it does not match any partner."),
+        'author_id': fields.many2one('res.partner', 'Author',
+            help="Partner that did write the message. If not set, try to use the From field instead."),
+        'partner_ids': fields.many2many('res.partner', string='Recipients'),
+        'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
+            'message_id', 'partner_id', 'Recipients'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
             'message_id', 'attachment_id', 'Attachments'),
         'parent_id': fields.many2one('mail.message', 'Parent Message', select=True, ondelete='set null', help="Initial thread message."),
@@ -201,6 +206,9 @@ class mail_message(osv.Model):
         is_author = False
         if message['author_id']:
             is_author = message['author_id'][0] == self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
+            author_id = message['author_id']
+        elif message['from']:
+            author_id = (0, message['from'])
 
         has_voted = False
         if uid in message.get('vote_user_ids'):
@@ -210,9 +218,9 @@ class mail_message(osv.Model):
         if uid in message.get('favorite_user_ids'):
             is_favorite = True
 
-        is_private = False
+        is_private = True
         if message.get('model') and message.get('res_id'):
-            is_private = True
+            is_private = False
 
         try:
             attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, message['attachment_ids'], context=context)]
@@ -236,9 +244,8 @@ class mail_message(osv.Model):
             'record_name': message['record_name'],
             'subject': message['subject'],
             'date': message['date'],
-            'author_id': message['author_id'],
+            'author_id': author_id,
             'is_author': is_author,
-            # TDE note: is this useful ? to check
             'partner_ids': partner_ids,
             'ancestor_id': False,
             'vote_nb': len(message['vote_user_ids']),
@@ -463,11 +470,11 @@ class mail_message(osv.Model):
         author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
         model_ids = {}
 
-        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'partner_ids'], context=context)
+        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'notified_partner_ids'], context=context)
         for message in messages:
             if message.get('author_id') and message.get('author_id')[0] == pid:
                 author_ids.add(message.get('id'))
-            elif pid in message.get('partner_ids'):
+            elif pid in message.get('notified_partner_ids'):
                 partner_ids.add(message.get('id'))
             elif message.get('model') and message.get('res_id'):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
@@ -615,40 +622,36 @@ class mail_message(osv.Model):
     # Messaging API
     #------------------------------------------------------
 
-    def _notify_followers(self, cr, uid, newid, message, context=None):
-        """ Add the related record followers to the destination partner_ids.
-        """
-        partners_to_notify = set([])
-        # message has no subtype_id: pure log message -> no partners, no one notified
-        if not message.subtype_id:
-            message.write({'partner_ids': [5]})
-            return True
-        # all partner_ids of the mail.message have to be notified
-        if message.partner_ids:
-            partners_to_notify |= set(partner.id for partner in message.partner_ids)
-        # all followers of the mail.message document have to be added as partners and notified
-        if message.model and message.res_id:
-            fol_obj = self.pool.get("mail.followers")
-            fol_ids = fol_obj.search(cr, uid, [('res_model', '=', message.model), ('res_id', '=', message.res_id), ('subtype_ids', 'in', message.subtype_id.id)], context=context)
-            fol_objs = fol_obj.browse(cr, uid, fol_ids, context=context)
-            extra_notified = set(fol.partner_id.id for fol in fol_objs)
-            missing_notified = extra_notified - partners_to_notify
-            if missing_notified:
-                self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
-
     def _notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
-        message = self.browse(cr, uid, newid, context=context)
-        if message.model and message.res_id:
-            self._notify_followers(cr, uid, newid, message, context=context)
+        message = self.read(cr, uid, newid, ['model', 'res_id', 'author_id', 'subtype_id', 'partner_ids'], context=context)
 
+        partners_to_notify = set([])
+        # message has no subtype_id: pure log message -> no partners, no one notified
+        if not message.get('subtype_id'):
+            return True
+        # all partner_ids of the mail.message have to be notified
+        if message.get('partner_ids'):
+            partners_to_notify |= set(message.get('partner_ids'))
+        # all followers of the mail.message document have to be added as partners and notified
+        if message.get('model') and message.get('res_id'):
+            fol_obj = self.pool.get("mail.followers")
+            fol_ids = fol_obj.search(cr, uid, [
+                ('res_model', '=', message.get('model')),
+                ('res_id', '=', message.get('res_id')),
+                ('subtype_ids', 'in', message.get('subtype_id')[0])
+                ], context=context)
+            fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
+            partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
         # add myself if I wrote on my wall, otherwise remove myself author
-        if ((message.model == "res.partner" and message.res_id == message.author_id.id)):
-            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
+        if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
+            partners_to_notify |= set([message.get('author_id')[0]])
         else:
-            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
+            partners_to_notify = partners_to_notify - set([message.get('author_id')[0]])
+        if partners_to_notify:
+            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
 
         self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 

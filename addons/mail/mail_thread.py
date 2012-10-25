@@ -554,7 +554,10 @@ class mail_thread(osv.AbstractModel):
                                       ('file2', 'bytes')}
                     }
         """
-        msg_dict = {}
+        msg_dict = {
+            'type': 'email',
+            'subtype': 'mail.mt_comment',
+        }
         if not isinstance(message, Message):
             if isinstance(message, unicode):
                 # Warning: message_from_string doesn't always work correctly on unicode,
@@ -581,6 +584,8 @@ class mail_thread(osv.AbstractModel):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
+            else:
+                msg_dict['from'] = message.get('from')
         partner_ids = self._message_find_partners(cr, uid, message, ['From', 'To', 'Cc'], context=context)
         msg_dict['partner_ids'] = partner_ids
 
@@ -690,14 +695,14 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        subtype=None, parent_id=False, attachment_ids=None, context=None):
+                        parent_id=False, attachment_ids=None, context=None):
         """ Wrapper on message_post, used only in Chatter (JS). The purpose is
             to handle attachments.
 
             # TDE FIXME: body is plaintext: convert it into html
         """
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
-                        subtype=subtype, parent_id=parent_id, context=context)
+                        subtype='mail.mt_comment', parent_id=parent_id, context=context)
 
         # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
