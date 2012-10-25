@@ -826,7 +826,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
             if ((type === 'edit' || type === 'delete') && ! self.view.is_action_enabled(type)) {
-                self.view.open_record(self.id);
+                self.view.open_record(self.id, true);
             } else if (_.str.startsWith(type, 'switch_')) {
                 self.view.do_switch_view(type.substr(7));
             } else if (typeof self[method] === 'function') {

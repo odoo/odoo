@@ -7,3 +7,11 @@
     position: absolute;
     top: 5px;
 }
+@media print {
+    .oe_gantt button {
+        display: none;
+    }
+    .oe_gantt > table > tbody > tr > td > div > div {
+        overflow: hidden !important;
+    }
+}

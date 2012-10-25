@@ -1551,7 +1551,9 @@ $sheet-max-width: 860px
             padding: 100px 0 0 137px
             min-height: 327px
             margin-left: -15px
-
+    .oe_view.oe_cannot_create
+        .oe_view_nocontent_create
+            display: none
     // }}}
     // FormView.base and dynamic tags {{{
     .oe_formview
@@ -2085,6 +2087,14 @@ $sheet-max-width: 860px
                 visibility: visible
 
     .oe_list
+        &.oe_cannot_edit
+            .oe_list_header_handle, .oe_list_field_handle
+                display: none !important
+                padding: 0 !important
+        &.oe_cannot_delete
+            .oe_list_record_delete
+                display: none !important
+
         .oe_form
             .oe_form_nosheet
                 margin: 0 // FIXME: either class or border should not be by default
@@ -2182,16 +2192,6 @@ $sheet-max-width: 860px
             .oe_list_handle
                 @include text-to-entypo-icon("}",#E0E0E0,18px)
                 margin-right: 7px
-    .oe_list_cannot_create
-        .oe_view_nocontent_create
-            display: none
-    .oe_list_cannot_edit
-        .oe_list_header_handle, .oe_list_field_handle
-            display: none !important
-            padding: 0 !important
-    .oe_list_cannot_delete
-        .oe_list_record_delete
-            display: none !important
     // }}}
     // Tree view {{{
     .tree_header
@@ -2323,5 +2323,35 @@ div.ui-widget-overlay
     line-height: 20px
     td
         valign: middle
+
+@media print
+    .openerp
+        .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default
+            display: none
+        .oe_list_content
+            button, input[type=checkbox]
+                visibility: hidden
+        .tree_header button, .oe_mail .oe_mail_thread_msg .oe_mail_unread, .oe_mail_fetch_more, .oe_m2o_drop_down_button img, .oe_form_field_one2many_list_row_add
+            visibility: hidden
+        a
+            &.oe_m2o_cm_button, &.oe_e
+                visibility: hidden
+        .oe_form
+            .oe_form_field_date img, .oe_form_field_datetime img
+                visibility: hidden
+        .oe_notebook > li.ui-tabs-selected
+            display: block
+        .oe_application
+            .oe_form_sheet, .oe_form_sheetbg
+                border: 0px !important
+                box-shadow: 0px 0px 0px
+        .oe_view_manager_current > .oe_view_manager_header
+            border: 0px !important
+            box-shadow: 0px 0px 0px
+        text-shadow: none
+        .text-core .text-wrap .text-arrow
+            background: none
+        .openerp div.oe_mail_wall
+            overflow: hidden !important
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
