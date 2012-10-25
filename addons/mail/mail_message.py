@@ -352,7 +352,7 @@ class mail_message(osv.Model):
         except (orm.except_orm, osv.except_osv):
             return False
 
-    def message_read(self, cr, uid, ids=False, domain=None, message_unload_ids=None, thread_level=0, context=None, parent_id=False, limit=None):
+    def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None, thread_level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a list of structured
             messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
@@ -385,16 +385,10 @@ class mail_message(osv.Model):
         read_messages = {}
         message_list = []
 
-        # specific IDs given: fetch those ids and return directly the message list
-        if ids:
-            for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
-                message_list.append(self._message_get_dict(cr, uid, message, context=context))
-            message_list = sorted(message_list, key=lambda k: k['id'])
-            return message_list
-
         # TDE FIXME: check access rights on search are implemented for mail.message
-        # fetch messages according to the domain, add their parents if uid has access to
-        ids = self.search(cr, uid, domain, context=context, limit=limit)
+        # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
+        if ids is None:
+            ids = self.search(cr, uid, domain, context=context, limit=limit)
         for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
             # if not in tree and not in message_loaded list
             if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
