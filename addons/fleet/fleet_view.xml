@@ -675,7 +675,7 @@
                         <group col="2">
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_subtype" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
+                                <field name="cost_subtype" string="Service Type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
                                 <field name="amount" string="Price"/>
                             </group>
                             <group string="Odometer Details">
@@ -697,7 +697,7 @@
                         <group string="Included Services">
                             <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
-                                    <field name="cost_subtype" domain="[('category','=','service')]"/>
+                                    <field name="cost_subtype" string="Service" domain="[('category','=','service')]"/>
                                     <field name="amount" sum="Price" string="Cost"/>
                                 </tree>
                             </field>

@@ -55,7 +55,7 @@ class fleet_vehicle_cost(osv.Model):
         'auto_generated' : fields.boolean('automatically generated',readonly=True,required=True)
     }
 
-    _default ={
+    _defaults ={
         'parent_id':None,
         'auto_generated' : False,
         'cost_type' : 'other',
@@ -820,6 +820,10 @@ class fleet_vehicle_log_services(osv.Model):
         self.write(cr, uid, id, {'odometer_id': ''})
         return False
 
+    def _get_default_service_type(self, cr, uid, context):
+        model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_service_8')
+        return model_id
+
     _name = 'fleet.vehicle.log.services'
     _columns = {
 
@@ -838,6 +842,7 @@ class fleet_vehicle_log_services(osv.Model):
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date' : time.strftime('%Y-%m-%d'),
+        'cost_subtype' : _get_default_service_type
     }
     def create(self, cr, uid, data, context=None):
         data['cost_type'] = 'services'
