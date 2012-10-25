@@ -1,4 +1,4 @@
-openerp.mail = function(session) {
+openerp.mail = function (session) {
     var _t = session.web._t,
        _lt = session.web._lt;
 
@@ -16,7 +16,9 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
-        do_action: function(action) {
+        do_action: function (action) {
+            console.log(action);
+
             if (action.res_model == 'mail.compose.message') {
                 /* hack for stop context propagation of wrong value
                  * delete this hack when a global method to clean context is create
@@ -24,7 +26,7 @@ openerp.mail = function(session) {
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
                     'default_res_id', 'default_content_subtype', 'active_id', 'lang',
-                    'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids']
+                    'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids', 'default_subject']
                 for (var key in action.context) {
                     if (_.indexOf(context_keys, key) == -1) {
                         action.context[key] = null;
@@ -53,7 +55,7 @@ openerp.mail = function(session) {
 
         /**
          *Get an image in /web/binary/image?... */
-        get_image: function(session, model, field, id) {
+        get_image: function (session, model, field, id) {
             return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
 
@@ -85,7 +87,7 @@ openerp.mail = function(session) {
          * (add <p>, <a>)
          * TDE note : should not be here, but server-side I think ...
         */
-        get_text2html: function(text){
+        get_text2html: function (text) {
             return text
                 .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
@@ -106,7 +108,7 @@ openerp.mail = function(session) {
                 nb_and += 1;
             }
 
-            for (var k = 0; k < nb_and ; k++){
+            for (var k = 0; k < nb_and ; k++) {
                 domain.unshift('&');
             }
 
@@ -168,10 +170,10 @@ openerp.mail = function(session) {
             this.$render_compact = false;
         },
 
-        start: function(){
+        start: function () {
             this.$render_compact = this.$el;
 
-            if( this.options.show_compact_message ) {
+            if ( this.options.show_compact_message ) {
                 this.$render_compact.show();
             } else {
                 this.$render_compact.hide();
@@ -181,10 +183,10 @@ openerp.mail = function(session) {
 
         /* upload the file on the server, add in the attachments list and reload display
          */
-        display_attachments: function(){
+        display_attachments: function () {
             var self = this;
             var render = $(session.web.qweb.render('mail.thread.message.attachments', {'widget': self}));
-            if(!this.list_attachment){
+            if (!this.list_attachment) {
                 this.$render_expandable.find('.oe_msg_attachment_list').replaceWith( render );
             } else {
                 this.list_attachment.replaceWith( render );
@@ -207,9 +209,9 @@ openerp.mail = function(session) {
 
                 // if the files exits for this answer, delete the file before upload
                 var attachments=[];
-                for(var i in this.attachment_ids){
-                    if((this.attachment_ids[i].filename || this.attachment_ids[i].name) == filename){
-                        if(this.attachment_ids[i].upload){
+                for (var i in this.attachment_ids) {
+                    if ((this.attachment_ids[i].filename || this.attachment_ids[i].name) == filename) {
+                        if (this.attachment_ids[i].upload) {
                             return false;
                         }
                         this.ds_attachment.unlink([this.attachment_ids[i].id]);
@@ -238,8 +240,8 @@ openerp.mail = function(session) {
         /* when the file is uploaded 
         */
         on_attachment_loaded: function (event, result) {
-            for(var i in this.attachment_ids){
-                if(this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
+            for (var i in this.attachment_ids) {
+                if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
                     this.attachment_ids[i]={
                         'id': result.id,
                         'name': result.name,
@@ -262,8 +264,8 @@ openerp.mail = function(session) {
             var attachment_id=$(event.target).data("id");
             if (attachment_id) {
                 var attachments=[];
-                for(var i in this.attachment_ids){
-                    if(attachment_id!=this.attachment_ids[i].id){
+                for (var i in this.attachment_ids) {
+                    if (attachment_id!=this.attachment_ids[i].id) {
                         attachments.push(this.attachment_ids[i]);
                     }
                     else {
@@ -275,18 +277,18 @@ openerp.mail = function(session) {
             }
         },
 
-        bind_events: function() {
+        bind_events: function () {
             var self = this;
 
             this.$render_compact.find('textarea').unbind().on('focus', self.on_compose_expandable);
 
-            if(this.$render_expandable){
+            if (this.$render_expandable) {
                 // set the function called when attachments are added
                 this.$render_expandable.on('change', 'input.oe_form_binary_file', self.on_attachment_change );
 
                 this.$render_expandable.on('click', '.oe_cancel', self.on_cancel );
-                this.$render_expandable.on('click', '.oe_post', function(){self.on_message_post()} );
-                this.$render_expandable.on('click', '.oe_full', function(){self.on_compose_fullmail()} );
+                this.$render_expandable.on('click', '.oe_post', function () {self.on_message_post()} );
+                this.$render_expandable.on('click', '.oe_full', function () {self.on_compose_fullmail('reply')} );
 
                 // auto close
                 this.$render_expandable.on('blur', 'textarea', this.on_compose_expandable);
@@ -297,14 +299,36 @@ openerp.mail = function(session) {
             }
         },
 
-        on_compose_fullmail: function(){
+        on_compose_fullmail: function (default_composition_mode) {
             /* TDE note: I think this is not necessary, because
              * 1/ post on a document: followers added server-side in _notify
              * 2/ reply to a message: mail.compose.message should add the previous partners
              */
-            var partner_ids=[];
-            for(var i in this.partner_ids){
+            var partner_ids = [];
+            for (var i in this.partner_ids) {
                 partner_ids.push(this.partner_ids[i][0]);
+            }
+
+            if (default_composition_mode == 'reply') {
+                var context = {
+                    'default_composition_mode': 'reply',
+                    'default_parent_id': this.id,
+                    'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable ? (this.$render_expandable.find('textarea').val() || '') : ''),
+                    'default_attachment_ids': this.attachment_ids,
+                    'default_partner_ids': [], //partner_ids
+                };
+            } else {
+                var context = {
+                    'default_model': this.context.default_model,
+                    'default_res_model': this.context.default_model,
+                    'default_res_id': this.context.default_res_id,
+                    'default_content_subtype': 'html',
+                    'default_composition_mode': 'comment',
+                    'default_parent_id': this.id,
+                    'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable ? (this.$render_expandable.find('textarea').val() || '') : ''),
+                    'default_attachment_ids': this.attachment_ids,
+                    'default_partner_ids': [], //partner_ids
+                };
             }
             var action = {
                 type: 'ir.actions.act_window',
@@ -314,26 +338,18 @@ openerp.mail = function(session) {
                 action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: {
-                    'default_model': this.context.default_model,
-                    'default_res_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
-                    'default_content_subtype': 'html',
-                    'default_parent_id': this.id,
-                    'default_body': mail.ChatterUtils.get_text2html(this.$render_expandable ? (this.$render_expandable.find('textarea').val() || '') : ''),
-                    'default_attachment_ids': this.attachment_ids,
-                    'default_partner_ids': partner_ids
-                },
+                context: context,
             };
+
             this.do_action(action);
 
-            if(this.$render_expandable) {
+            if (this.$render_expandable) {
                 this.on_cancel();
             }
         },
 
-        on_cancel: function(event){
-            if(event) event.stopPropagation();
+        on_cancel: function (event) {
+            if (event) event.stopPropagation();
             this.$render_expandable.find('textarea').val("");
             this.$render_expandable.find('input[data-id]').remove();
 
@@ -355,15 +371,15 @@ openerp.mail = function(session) {
             }
 
             var attachments=[];
-            for(var i in this.attachment_ids){
-                if(this.attachment_ids[i].upload){
+            for (var i in this.attachment_ids) {
+                if (this.attachment_ids[i].upload) {
                     session.web.dialog($('<div>' + session.web.qweb.render('CrashManager.warning', {message: 'Please, wait while the file is uploading.'}) + '</div>'));
                     return false;
                 }
                 attachments.push(this.attachment_ids[i].id);
             }
 
-            if(body.match(/\S+/)) {
+            if (body.match(/\S+/)) {
                 //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_api', [
                         this.context.default_res_id, 
@@ -374,8 +390,13 @@ openerp.mail = function(session) {
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
-                    ]).then(function(message_id) {
-                        self.parent_thread.message_fetch([['id', '=', message_id]]);
+                    ]).then(function (record) {
+                        var thread = self.parent_thread;
+                        // create object and attach to the thread object
+                        var message = thread.create_message_object( record[0] );
+                        // insert the message on dom
+                        thread.insert_message( message, self.thread_level > self.options.display_indented_thread ? self.parent_thread.$el : self.$el );
+                        // clean compose message
                         self.on_cancel();
                         //session.web.unblockUI();
                     });
@@ -385,8 +406,8 @@ openerp.mail = function(session) {
 
         /* create the compose on expandable form
         */
-        instantiate_expandable: function() {
-            if(!this.$render_expandable) {
+        instantiate_expandable: function () {
+            if (!this.$render_expandable) {
                 this.$render_expandable = $(session.web.qweb.render('mail.compose_message', {'widget': this}));
                 this.$render_expandable.hide();
 
@@ -399,25 +420,25 @@ openerp.mail = function(session) {
 
         /* convert the compact mode into the compose message
         */
-        on_compose_expandable: function(event){
-            if(event) event.stopPropagation();
+        on_compose_expandable: function (event) {
+            if (event) event.stopPropagation();
 
             var self = this;
 
             this.instantiate_expandable();
 
-            if(this.$render_expandable.is(':hidden')){
+            if (this.$render_expandable.is(':hidden')) {
 
                 this.$render_expandable.css('display', '');
                 this.$render_compact.hide();
                 this.$render_expandable.find('textarea').focus();
 
-            } else if(!this.stay_open){
+            } else if (!this.stay_open) {
 
                 // do not close the box if there are some text
-                if(!this.$render_expandable.find('textarea').val().match(/\S+/)){
+                if (!this.$render_expandable.find('textarea').val().match(/\S+/)) {
                     this.$render_expandable.hide();
-                    if(this.options.show_compact_message && this.show_compact_message) {
+                    if (this.options.show_compact_message && this.show_compact_message) {
                         this.$render_compact.css('display', '');
                     } else {
                         this.$render_compact.hide();
@@ -428,13 +449,13 @@ openerp.mail = function(session) {
             return true;
         },
 
-        do_hide_compact: function() {
+        do_hide_compact: function () {
             this.$render_compact.hide();
             this.show_compact_message = false;
         },
 
-        do_show_compact: function() {
-            if(this.options.show_compact_message && (!this.$render_expandable || this.$render_expandable.is(':hidden'))) {
+        do_show_compact: function () {
+            if (this.options.show_compact_message && (!this.$render_expandable || this.$render_expandable.is(':hidden'))) {
                 this.$render_compact.css('display', '');
             }
             this.show_compact_message = true;
@@ -457,7 +478,7 @@ openerp.mail = function(session) {
     mail.ThreadExpandable = session.web.Widget.extend({
         template: 'mail.thread.expandable',
 
-        init: function(parent, datasets, context) {
+        init: function (parent, datasets, context) {
             this._super(parent);
             this.domain = datasets.domain || [];
             this.options = datasets.options;
@@ -479,7 +500,7 @@ openerp.mail = function(session) {
         },
 
         
-        start: function() {
+        start: function () {
             this._super.apply(this, arguments);
             this.bind_events();
         },
@@ -494,15 +515,15 @@ openerp.mail = function(session) {
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
-        bind_events: function() {
+        bind_events: function () {
             this.$el.on('click', 'a.oe_msg_fetch_more', this.on_expandable);
         },
 
-        animated_destroy: function(options) {
+        animated_destroy: function (options) {
             var self=this;
             //graphic effects
-            if(options && options.fadeTime) {
-                self.$el.fadeOut(options.fadeTime, function(){
+            if (options && options.fadeTime) {
+                self.$el.fadeOut(options.fadeTime, function () {
                     self.destroy();
                 });
             } else {
@@ -514,8 +535,8 @@ openerp.mail = function(session) {
         * @param {object} mouse envent
         */
         on_expandable: function (event) {
-            if(event)event.stopPropagation();
-            if(this.flag_used) {
+            if (event)event.stopPropagation();
+            if (this.flag_used) {
                 return false
             }
             this.flag_used = true;
@@ -528,7 +549,7 @@ openerp.mail = function(session) {
         /**
          * call on_message_delete on his parent thread
         */
-        destroy: function() {
+        destroy: function () {
 
             this._super();
             this.parent_thread.on_message_detroy(this);
@@ -573,7 +594,7 @@ openerp.mail = function(session) {
          *...  @param {int} [show_reply_button] number thread level to display the reply button
          *...  @param {int} [show_read_unread_button] number thread level to display the read/unread button
          */
-        init: function(parent, datasets, context) {
+        init: function (parent, datasets, context) {
             this._super(parent);
 
             // record domain and context
@@ -585,7 +606,7 @@ openerp.mail = function(session) {
 
             // record options
             this.options = datasets.options;
-            
+
             // data of this message
             this.id = datasets.id ||  -1,
             this.model = datasets.model ||  false,
@@ -615,7 +636,7 @@ openerp.mail = function(session) {
             this.parent_thread= parent.messages!= undefined ? parent : this.options._parents[0];
             this.thread = false;
 
-            if( this.id > 0 ) {
+            if ( this.id > 0 ) {
                 this.formating_data();
             }
 
@@ -627,7 +648,7 @@ openerp.mail = function(session) {
         /**
          *Convert date, timerelative and avatar in displayable data.
         */
-        formating_data: function(){
+        formating_data: function () {
 
             //formating and add some fields for render
             this.date = session.web.format_value(this._date, {type:"datetime"});
@@ -641,28 +662,28 @@ openerp.mail = function(session) {
                 var attach = this.attachment_ids[l];
                 attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
 
-                if((attach.filename || attach.name).match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
+                if ((attach.filename || attach.name).match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
                     attach.is_image = true;
                     attach['url'] = mail.ChatterUtils.get_image(this.session, 'ir.attachment', 'datas', attach.id); 
                 }
             }
         },
         
-        start: function() {
+        start: function () {
             this._super.apply(this, arguments);
             this.expender();
-            this.$el.hide().fadeIn(750, function() {$(this).css('display', '');});
+            this.$el.hide().fadeIn(750, function () {$(this).css('display', '');});
             this.resize_img();
             this.bind_events();
             this.create_thread();
             this.$('.oe_msg_attachments, .oe_msg_images').addClass("oe_hidden");
         },
 
-        resize_img: function() {
-            var resize = function() {
+        resize_img: function () {
+            var resize = function () {
                 var h = $(this).height();
                 var w = $(this).width();
-                if( h > 100 || w >100 ) {
+                if ( h > 100 || w >100 ) {
                     var ratio = 100 / (h > w ? h : w);
                     $(this).attr("width", parseInt( w*ratio )).attr("height", parseInt( h*ratio ));
                 }
@@ -673,13 +694,13 @@ openerp.mail = function(session) {
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
-        bind_events: function() {
+        bind_events: function () {
             var self = this;
 
             // event: click on 'Attachment(s)' in msg
             this.$('.oe_mail_msg_view_attachments').on('click', function (event) {
                 var attach = self.$('.oe_msg_attachments:first, .oe_msg_images:first');
-                if( self.$('.oe_msg_attachments:first').hasClass("oe_hidden") ) {
+                if ( self.$('.oe_msg_attachments:first').hasClass("oe_hidden") ) {
                     attach.removeClass("oe_hidden");
                 } else {
                     attach.addClass("oe_hidden");
@@ -704,13 +725,13 @@ openerp.mail = function(session) {
         /**
          * call the on_compose_message on the thread of this message.
          */
-        on_message_reply:function(event){
+        on_message_reply:function (event) {
             event.stopPropagation();
             this.thread.on_compose_message();
             return false;
         },
 
-        expender: function(){
+        expender: function () {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
@@ -725,8 +746,8 @@ openerp.mail = function(session) {
          * instantiate the thread object of this message.
          * Each message have only one thread.
          */
-        create_thread: function(){
-            if(this.thread){
+        create_thread: function () {
+            if (this.thread) {
                 return false;
             }
             /*create thread*/
@@ -748,11 +769,11 @@ openerp.mail = function(session) {
          * Fade out the message and his child thread.
          * Then this object is destroyed.
          */
-        animated_destroy: function(options) {
+        animated_destroy: function (options) {
             var self=this;
             //graphic effects  
-            if(options && options.fadeTime) {
-                self.$el.fadeOut(options.fadeTime, function(){
+            if (options && options.fadeTime) {
+                self.$el.fadeOut(options.fadeTime, function () {
                     self.parent_thread.message_to_expandable(self);
                 });
                 self.thread.$el.fadeOut(options.fadeTime);
@@ -783,13 +804,13 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
 
-            if( (this.to_read && this.options.typeof_thread == 'inbox') ||
+            if ( (this.to_read && this.options.typeof_thread == 'inbox') ||
                 (!this.to_read && this.options.typeof_thread == 'archives')) {
                 this.animated_destroy({fadeTime:250});
             }
 
             // if this message is read, all childs message display is read
-            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function(){
+            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function () {
                 self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
                 self.to_read = !self.to_read;
             });
@@ -805,23 +826,23 @@ openerp.mail = function(session) {
          *      private for check the top thread
          * @return thread object
          */
-        browse_message: function(options){
+        browse_message: function (options) {
             // goto the wall thread for launch browse
-            if(!options._go_thread_wall) {
+            if (!options._go_thread_wall) {
                 options._go_thread_wall = true;
-                for(var i in this.options._parents[0].messages){
+                for (var i in this.options._parents[0].messages) {
                     var res=this.options._parents[0].messages[i].browse_message(options);
-                    if(res) return res;
+                    if (res) return res;
                 }
             }
 
-            if(this.id==options.id)
+            if (this.id==options.id)
                 return this;
 
-            for(var i in this.thread.messages){
-                if(this.thread.messages[i].thread){
+            for (var i in this.thread.messages) {
+                if (this.thread.messages[i].thread) {
                     var res=this.thread.messages[i].browse_message(options);
-                    if(res) return res;
+                    if (res) return res;
                 }
             }
 
@@ -831,10 +852,10 @@ openerp.mail = function(session) {
         /* get all child message id linked.
          * @return array of id
         */
-        get_child_ids: function(){
+        get_child_ids: function () {
             var res=[]
-            if(arguments[0]) res.push(this.id);
-            if(this.thread){
+            if (arguments[0]) res.push(this.id);
+            if (this.thread) {
                 res = res.concat( this.thread.get_child_ids(true) );
             }
             return res;
@@ -846,7 +867,7 @@ openerp.mail = function(session) {
         on_vote: function (event) {
             event.stopPropagation();
             var self=this;
-            return this.ds_message.call('vote_toggle', [[self.id]]).pipe(function(vote){
+            return this.ds_message.call('vote_toggle', [[self.id]]).pipe(function (vote) {
                 self.has_voted = vote;
                 self.vote_nb += self.has_voted ? 1 : -1;
                 self.display_vote();
@@ -871,13 +892,13 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
-            return this.ds_message.call('favorite_toggle', [[self.id]]).pipe(function(star){
+            return this.ds_message.call('favorite_toggle', [[self.id]]).pipe(function (star) {
                 self.is_favorite=star;
-                if(self.is_favorite){
+                if (self.is_favorite) {
                     button.addClass('oe_starred');
                 } else {
                     button.removeClass('oe_starred');
-                    if( self.options.typeof_thread == 'stared' ) {
+                    if ( self.options.typeof_thread == 'stared' ) {
                         self.animated_destroy({fadeTime:250});
                     }
                 }
@@ -888,7 +909,7 @@ openerp.mail = function(session) {
         /**
          * call on_message_delete on his parent thread
         */
-        destroy: function() {
+        destroy: function () {
 
             this._super();
             this.parent_thread.on_message_detroy(this);
@@ -931,7 +952,7 @@ openerp.mail = function(session) {
          *          @param {Array} [parents] liked with the parents thread
          *              use with browse, fetch... [O]= top parent
          */
-        init: function(parent, datasets, options) {
+        init: function (parent, datasets, options) {
             this._super(parent);
             this.domain = options.domain || [];
             this.context = _.extend({
@@ -952,7 +973,7 @@ openerp.mail = function(session) {
             this.is_private =  datasets.is_private || false,
             this.author_id =  datasets.author_id || false,
             this.thread_level =  (datasets.thread_level+1) || 0,
-            this.partner_ids =  _.filter(datasets.partner_ids, function(partner){ return partner[0]!=datasets.author_id[0]; } ) 
+            this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
             this.messages = [];
             this.show_compose_message = this.options.show_compose_message && (this.options.show_reply_button > this.thread_level || !this.thread_level);
 
@@ -963,9 +984,9 @@ openerp.mail = function(session) {
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
         },
         
-        start: function() {
+        start: function () {
             this._super.apply(this, arguments);
-            if(this.show_compose_message){
+            if (this.show_compose_message) {
                 this.instantiate_ComposeMessage();
             }
             this.bind_events();
@@ -974,14 +995,14 @@ openerp.mail = function(session) {
         /* instantiate the compose message object and insert this on the DOM.
         * The compose message is display in compact form.
         */
-        instantiate_ComposeMessage: function(){
+        instantiate_ComposeMessage: function () {
             // add message composition form view
             this.ComposeMessage = new mail.ThreadComposeMessage(this, this, {
                 'context': this.context,
                 'options': this.options,
             });
 
-            if(this.thread_level){
+            if (this.thread_level) {
                 this.ComposeMessage.appendTo(this.$el);
             } else {
                 // root view
@@ -993,17 +1014,17 @@ openerp.mail = function(session) {
         /* When the expandable object is visible on screen (with scrolling)
          * then the on_expandable function is launch
         */
-        on_scroll: function(event){
-            if(event)event.stopPropagation();
+        on_scroll: function (event) {
+            if (event)event.stopPropagation();
             this.$('.oe_msg_expandable:last');
 
             var message = this.messages[this.messages.length-1];
-            if(message && message.type=="expandable" && message.max_limit) {
+            if (message && message.type=="expandable" && message.max_limit) {
                 var pos = message.$el.position();
-                if(pos.top){
+                if (pos.top) {
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
-                    if(bottom > pos.top){
+                    if (bottom > pos.top) {
                         message.on_expandable();
                     }
                 }
@@ -1013,7 +1034,7 @@ openerp.mail = function(session) {
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
-        bind_events: function() {
+        bind_events: function () {
             var self = this;
             self.$el.on('click', '.oe_mail_list_recipients .oe_more', self.on_show_recipients);
             self.$el.on('click', '.oe_mail_compose_textarea .oe_more_hidden', self.on_hide_recipients);
@@ -1022,7 +1043,7 @@ openerp.mail = function(session) {
         /**
          *show all the partner list of this parent message
         */
-        on_show_recipients: function(){
+        on_show_recipients: function () {
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').show(); 
             p.find('.oe_more').hide(); 
@@ -1031,7 +1052,7 @@ openerp.mail = function(session) {
         /**
          *hide a part of the partner list of this parent message
         */
-        on_hide_recipients: function(){
+        on_hide_recipients: function () {
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').hide(); 
             p.find('.oe_more').show(); 
@@ -1040,7 +1061,7 @@ openerp.mail = function(session) {
         /* get all child message/thread id linked.
          * @return array of id
         */
-        get_child_ids: function(){
+        get_child_ids: function () {
             var res=[];
             _(this.get_childs()).each(function (val, key) { res.push(val.id); });
             return res;
@@ -1050,12 +1071,12 @@ openerp.mail = function(session) {
          * @param {int} nb_thread_level, number of traversed thread level for this search
          * @return array of thread object
         */
-        get_childs: function(nb_thread_level){
+        get_childs: function (nb_thread_level) {
             var res=[];
-            if(arguments[1]) res.push(this);
-            if(isNaN(nb_thread_level) || nb_thread_level>0){
+            if (arguments[1]) res.push(this);
+            if (isNaN(nb_thread_level) || nb_thread_level>0) {
                 _(this.messages).each(function (val, key) {
-                    if(val.thread) {
+                    if (val.thread) {
                         res = res.concat( val.thread.get_childs((isNaN(nb_thread_level) ? undefined : nb_thread_level-1), true) );
                     }
                 });
@@ -1074,28 +1095,28 @@ openerp.mail = function(session) {
          *      return the top thread (wall) if no thread found
          * @return thread object
          */
-        browse_thread: function(options){
+        browse_thread: function (options) {
             // goto the wall thread for launch browse
-            if(!options._go_thread_wall) {
+            if (!options._go_thread_wall) {
                 options._go_thread_wall = true;
                 return this.options._parents[0].browse_thread(options);
             }
 
-            if(this.id==options.id){
+            if (this.id==options.id) {
                 return this;
             }
 
-            if(options.id){
-                for(var i in this.messages){
-                    if(this.messages[i].thread){
+            if (options.id) {
+                for (var i in this.messages) {
+                    if (this.messages[i].thread) {
                         var res=this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
-                        if(res) return res;
+                        if (res) return res;
                     }
                 }
             }
 
             //if option default_return_top_thread, return the top if no found thread
-            if(options.default_return_top_thread){
+            if (options.default_return_top_thread) {
                 return this;
             }
 
@@ -1111,8 +1132,8 @@ openerp.mail = function(session) {
          *      private for check the top thread
          * @return message object
          */
-        browse_message: function(options){
-            if(this.options._parents[0].messages[0])
+        browse_message: function (options) {
+            if (this.options._parents[0].messages[0])
                 return this.options._parents[0].messages[0].browse_message(options);
         },
 
@@ -1121,8 +1142,8 @@ openerp.mail = function(session) {
         * Call the on_compose_expandable method to allow the user to write his message.
         * (Is call when a user click on "Reply" button)
         */
-        on_compose_message: function(){
-            if(!this.ComposeMessage){
+        on_compose_message: function () {
+            if (!this.ComposeMessage) {
                 this.instantiate_ComposeMessage();
                 this.ComposeMessage.do_hide_compact();
             }
@@ -1133,7 +1154,7 @@ openerp.mail = function(session) {
         /**
          *display the message "there are no message" on the thread
         */
-        no_message: function(){
+        no_message: function () {
             $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$el);
         },
 
@@ -1172,7 +1193,7 @@ openerp.mail = function(session) {
             var data = _.extend(data, {'thread_level': data.thread_level ? data.thread_level : self.thread_level});
             data.options = _.extend(self.options, data.options);
 
-            if(data.type=='expandable'){
+            if (data.type=='expandable') {
                 var message = new mail.ThreadExpandable(self, data, {
                     'default_model': data.model || self.context.default_model,
                     'default_res_id': data.res_id || self.context.default_res_id,
@@ -1186,16 +1207,15 @@ openerp.mail = function(session) {
                 });
             }
 
-            // insert the message on dom
-            self.insert_message( message );
-
             // check if the message is already create
-            for(var i in self.messages){
-                if(self.messages[i] && self.messages[i].id == message.id){
+            for (var i in self.messages) {
+                if (self.messages[i] && self.messages[i].id == message.id) {
                     self.messages[i].destroy();
                 }
             }
             self.messages.push( message );
+
+            return message;
         },
 
         /**
@@ -1207,27 +1227,32 @@ openerp.mail = function(session) {
          * The sort is define by the thread_level (O for newer on top).
          * @param : {object} ThreadMessage object
          */
-        insert_message: function (message) {
+        insert_message: function (message, dom_insert_after) {
             var self=this;
 
-            if(this.show_compose_message /*&& 
-                this.options.display_indented_thread >= self.thread_level*/){
+            if (this.show_compose_message) {
                 this.ComposeMessage.do_show_compact();
             }
 
             this.$('.oe_wall_no_message').remove();
 
+
+            if (dom_insert_after) {
+                message.insertAfter(dom_insert_after);
+                return message
+            } 
+
             // check older and newer message for insertion
             var parent_newer = false;
             var parent_older = false;
-            if(message.id > 0){
-                for(var i in self.messages){
-                    if(self.messages[i].id > message.id){
-                        if(!parent_newer || parent_newer.id > self.messages[i].id) {
+            if (message.id > 0) {
+                for (var i in self.messages) {
+                    if (self.messages[i].id > message.id) {
+                        if (!parent_newer || parent_newer.id > self.messages[i].id) {
                             parent_newer = self.messages[i];
                         }
-                    } else if(self.messages[i].id > 0 && self.messages[i].id < message.id) {
-                        if(!parent_older || parent_older.id < self.messages[i].id) {
+                    } else if (self.messages[i].id > 0 && self.messages[i].id < message.id) {
+                        if (!parent_older || parent_older.id < self.messages[i].id) {
                             parent_older = self.messages[i];
                         }
                     }
@@ -1243,11 +1268,11 @@ openerp.mail = function(session) {
                     //warning : insert after the thread of the message !
                     message.insertAfter(parent_older.thread ? parent_older.thread.$el : parent_older.$el);
 
-                } else if(parent_newer) {
+                } else if (parent_newer) {
 
                     message.insertBefore(parent_newer.$el);
 
-                } else if(message.id < 0) {
+                } else if (message.id < 0) {
 
                     message.appendTo(self.$el);
 
@@ -1260,12 +1285,12 @@ openerp.mail = function(session) {
 
                     message.insertBefore(parent_older.$el);
 
-                } else if(parent_newer) {
+                } else if (parent_newer) {
 
                     //warning : insert after the thread of the message !
                     message.insertAfter(parent_newer.thread ? parent_newer.thread.$el : parent_newer.$el);
 
-                } else if(message.id < 0) {
+                } else if (message.id < 0) {
 
                     message.prependTo(self.$el);
 
@@ -1284,14 +1309,17 @@ openerp.mail = function(session) {
          * Each message is send to his parent object (or parent thread flat mode) for creating the object message.
          * @param : {Array} datas from calling RPC to "message_read"
          */
-        switch_new_message: function(records) {
+        switch_new_message: function (records) {
             var self=this;
-            _(records).each(function(record){
+            _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.ancestor_id, 
                     'default_return_top_thread':true
                 });
-                thread.create_message_object( record );
+                // create object and attach to the thread object
+                var message = thread.create_message_object( record );
+                // insert the message on dom
+                thread.insert_message( message );
             });
         },
 
@@ -1310,7 +1338,7 @@ openerp.mail = function(session) {
          */
         message_to_expandable: function (message) {
 
-            if(!this.thread_level || message.isDestroyed()) {
+            if (!this.thread_level || message.isDestroyed()) {
                 message.destroy();
                 return false;
             }
@@ -1330,7 +1358,7 @@ openerp.mail = function(session) {
 
                 msg_down.domain = ['|','|'].concat( msg_up.domain ).concat( message_dom ).concat( msg_down.domain );
 
-                if( !msg_down.max_limit ){
+                if ( !msg_down.max_limit ) {
                     msg_down.nb_messages += 1 + msg_up.nb_messages;
                 }
 
@@ -1354,7 +1382,7 @@ openerp.mail = function(session) {
                 msg_down.domain = ['|'].concat( msg_down.domain ).concat( message_dom );
                 
                 // it's maybe a message expandable for the max limit read message
-                if( !msg_down.max_limit ){
+                if ( !msg_down.max_limit ) {
                     msg_down.nb_messages++;
                 }
                 
@@ -1370,6 +1398,7 @@ openerp.mail = function(session) {
                     'thread_level': message.thread_level,
                     'ancestor_id': message.ancestor_id,
                     'domain': message_dom,
+                    'options': message.options,
                     }, {
                     'default_model': message.model || this.context.default_model,
                     'default_res_id': message.res_id || this.context.default_res_id,
@@ -1442,13 +1471,13 @@ openerp.mail = function(session) {
                 'message_ids': []
             }, options);
 
-            if(this.display_indented_thread === false) {
+            if (this.display_indented_thread === false) {
                 this.display_indented_thread = -1;
             }
-            if(this.show_reply_button === false) {
+            if (this.show_reply_button === false) {
                 this.show_reply_button = -1;
             }
-            if(this.show_read_unread_button === false) {
+            if (this.show_read_unread_button === false) {
                 this.show_read_unread_button = -1;
             }
             
@@ -1478,8 +1507,8 @@ openerp.mail = function(session) {
             this.thread.no_message();
             this.thread.message_fetch(null, null, this.options.message_ids);
 
-            if(this.options.show_compose_message) {
-                if(this.options.show_compact_message) {
+            if (this.options.show_compose_message) {
+                if (this.options.show_compact_message) {
                     this.thread.ComposeMessage.do_show_compact();
                 } else {
                     this.thread.ComposeMessage.do_hide_compact();
@@ -1487,8 +1516,8 @@ openerp.mail = function(session) {
             }
         },
 
-        bind_events: function(){
-            if(this.context['typeof_thread']!='other'){
+        bind_events: function () {
+            if (this.context['typeof_thread']!='other') {
                 $(document).scroll( this.thread.on_scroll );
                 $(window).resize( this.thread.on_scroll );
                 window.setTimeout( this.thread.on_scroll, 500 );
@@ -1510,23 +1539,23 @@ openerp.mail = function(session) {
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 
-        init: function() {
+        init: function () {
             this._super.apply(this, arguments);
             this.options.domain = this.options.domain || [];
             this.options.context = {'default_model': 'mail.thread', 'default_res_id': false};
         },
 
-        start: function() {
+        start: function () {
             this._super.apply(this, arguments);
             // NB: check the actual_mode property on view to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
         },
 
-        _check_visibility: function() {
+        _check_visibility: function () {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-        render_value: function() {
+        render_value: function () {
             var self = this;
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
@@ -1545,7 +1574,7 @@ openerp.mail = function(session) {
 
             var message_ids = this.getParent().fields.message_ids && this.getParent().fields.message_ids.get_value();
 
-            if(this.root){
+            if (this.root) {
                 this.root.destroy();
             }
             // create and render Thread widget
@@ -1625,7 +1654,7 @@ openerp.mail = function(session) {
          * @param {Array} contexts
          * @param {Array} groupbys
          */
-        do_searchview_search: function(domains, contexts, groupbys) {
+        do_searchview_search: function (domains, contexts, groupbys) {
             var self = this;
             this.rpc('/web/session/eval_domain_and_context', {
                 domains: domains || [],
@@ -1654,17 +1683,17 @@ openerp.mail = function(session) {
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
                 'show_compose_message': true,
-                'show_compact_message': true,
+                'show_compact_message': false,
                 }
             );
 
             return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
         },
 
-        bind_events: function(){
+        bind_events: function () {
             var self=this;
-            this.$("button.oe_write_full:first").click(function(){ self.root.thread.ComposeMessage.on_compose_fullmail(); });
-            this.$("button.oe_write_onwall:first").click(function(){ self.root.thread.on_compose_message(); });
+            this.$("button.oe_write_full:first").click(function () { self.root.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$("button.oe_write_onwall:first").click(function () { self.root.thread.on_compose_message(); });
         }
     });
 
@@ -1690,13 +1719,13 @@ openerp.mail = function(session) {
             };
         },
 
-        start: function(parent, params) {
+        start: function (parent, params) {
             var self = this;
             this.$el.on('click', 'button', self.on_compose_message );
             this._super(parent, params);
         },
 
-        on_compose_message: function(event){
+        on_compose_message: function (event) {
             event.stopPropagation();
             var action = {
                 type: 'ir.actions.act_window',
@@ -1718,7 +1747,7 @@ openerp.mail = function(session) {
     });
 
     session.web.UserMenu = session.web.UserMenu.extend({
-        start: function(parent, params) {
+        start: function (parent, params) {
             var render = new session.web.ComposeMessageTopButton();
             render.insertAfter(this.$el);
             this._super(parent, params);

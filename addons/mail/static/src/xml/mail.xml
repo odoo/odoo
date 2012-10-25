@@ -211,7 +211,7 @@
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
-                    <h1 t-if="widget.subject" class="oe_msg_title">
+                    <h1 t-if="widget.subject and !widget.thread_level" class="oe_msg_title">
                         <t t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
