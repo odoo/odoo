@@ -4536,6 +4536,10 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.select_elements(self.selected_ids);
                     self.destroy();
                 });
+                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
+                $cbutton.click(function() {
+                    self.new_object();
+                });
             });
         });
         this.searchview.appendTo($(".oe_popup_search", self.$el));
