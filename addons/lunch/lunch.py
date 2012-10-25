@@ -346,15 +346,7 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
 class lunch_preference(osv.Model):
     _name = 'lunch.preference'
     _description= "user preferences"
-
-    def onclick_preference(self,cr,uid,ids,context=None):
-        print cr
-        print uid
-        print ids
-        print context
-        print self.pool.get('lunch.preference').browse(cr,uid,ids,context)[0]['product_name']
-        return True
-
+    
     _columns = {
         'date' : fields.date('Date', required=True,readonly=True),
         'color': fields.integer('Color'),
