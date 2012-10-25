@@ -223,7 +223,7 @@ class module(osv.osv):
             ('to upgrade','To be upgraded'),
             ('to remove','To be removed'),
             ('to install','To be installed')
-        ], string='State', readonly=True, select=True),
+        ], string='Status', readonly=True, select=True),
         'demo': fields.boolean('Demo Data', readonly=True),
         'license': fields.selection([
                 ('GPL-2', 'GPL Version 2'),
@@ -418,13 +418,12 @@ class module(osv.osv):
         _, pool = pooler.restart_pool(cr.dbname, update_module=True)
 
         config = pool.get('res.config').next(cr, uid, [], context=context) or {}
-        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
+        if config.get('type') not in ('ir.actions.act_window_close',):
             return config
 
         # reload the client; open the first available root menu
         menu_obj = self.pool.get('ir.ui.menu')
         menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
-
         return {
             'type' : 'ir.actions.client',
             'tag' : 'reload',
@@ -671,7 +670,7 @@ class module_dependency(osv.osv):
             ('to remove','To be removed'),
             ('to install','To be installed'),
             ('unknown', 'Unknown'),
-            ], string='State', readonly=True, select=True),
+            ], string='Status', readonly=True, select=True),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
