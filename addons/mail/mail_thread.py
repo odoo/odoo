@@ -708,8 +708,7 @@ class mail_thread(osv.AbstractModel):
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
-        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], context=context)
-        return new_message
+        return new_message_id
 
     #------------------------------------------------------
     # Followers API
