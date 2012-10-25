@@ -1,16 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-
-    <act_window
-        id="crm_case_categ_phone_create_partner"
-        name="Schedule a Call"
-        res_model="crm.phonecall"
-        view_mode="tree,form,calendar"
-        context="{'search_default_partner_id': active_id, 'default_duration': 1.0, 'default_partner_id': active_id}"
-        groups="base.group_sale_salesman"
-        />
-
+    <record model="ir.actions.act_window" id="crm_case_categ_phone_create_partner">
+        <field name="name">Schedule a Call</field>
+        <field name="res_model">crm.phonecall</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{'search_default_partner_id': active_id, 'default_duration': 1.0, 'default_partner_id': active_id}</field>
+        <field name="groups">base.group_sale_salesman</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+            No call for this contact found.
+    OpenERP allows you to easily define all the calls to be done by your sales team and follow up based on their summary.
+            </p>
+        </field>
+    </record>
     <!-- TO CONFIRM: This is fine -->
     <!-- act_window
             id="act_crm_phonecall_crm_meeting_new"
