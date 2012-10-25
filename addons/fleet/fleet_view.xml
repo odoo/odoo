@@ -258,7 +258,8 @@
                     <field name="tag_ids"/>
                     <field name="location"/>
                     <field name="state" />
-
+                    <field name="state" />
+                    <filter name="alert_true" domain="['|',('contract_renewal_due_soon','>',0),('contract_renewal_overdue','>',0)]" string="Has Alert(s)"/>
                </search>
             </field>
         </record>
