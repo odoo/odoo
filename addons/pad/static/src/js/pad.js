@@ -13,7 +13,8 @@ openerp.pad = function(instance) {
                         object_id: self.view.datarecord.id
                     }}).then(function(data) {
                     if(data&&data.url){
-                        _super.apply(self,[data.url]);
+                        // is there any reason to call super here ? why ?
+                       // _super.apply(self,[data.url]);
                         self.renderElement();
                     }
                 });
