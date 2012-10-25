@@ -436,6 +436,11 @@ class test_mail(TestMailMockups):
             self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
                 'mail.message attachment name / data incorrect')
 
+        # 3. Reply to the last message, check that its parent will be the first message
+        msg_id3 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Test', parent_id=msg_id2)
+        message = self.mail_message.browse(cr, uid, msg_id3)
+        self.assertEqual(message.parent_id.id, msg_id, 'message_post did not flatten the thread structure')
+
     def test_25_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
