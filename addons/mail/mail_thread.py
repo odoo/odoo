@@ -692,14 +692,10 @@ class mail_thread(osv.AbstractModel):
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         # TDE FIXME: body is plaintext: convert it into html
-        # when writing on res.partner, without specific thread_id -> redirect to the user's partner
-        if self._name == 'res.partner' and not thread_id:
-            thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, context=context)
 
-        # Chatter: attachments linked to the document (not done JS-side), load the message
+        # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
             mail_message = self.pool.get('mail.message')
@@ -708,7 +704,7 @@ class mail_thread(osv.AbstractModel):
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
-        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], context=context)
+        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], parent_id=parent_id, context=context)
         return new_message
 
     #------------------------------------------------------
