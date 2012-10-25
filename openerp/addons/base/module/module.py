@@ -20,7 +20,10 @@
 ##############################################################################
 
 import base64
+from docutils import io, nodes
 from docutils.core import publish_string
+from docutils.transforms import Transform, writer_aux
+from docutils.writers.html4css1 import Writer
 import imp
 import logging
 import re
@@ -80,6 +83,32 @@ class module_category(osv.osv):
         'visible' : 1,
     }
 
+class MyFilterMessages(Transform):
+    """
+    Custom docutils transform to remove `system message` for a document and
+    generate warnings.
+
+    (The standard filter removes them based on some `report_level` passed in
+    the `settings_override` dictionary, but if we use it, we can't see them
+    and generate warnings.)
+    """
+
+    default_priority = 870
+
+    def apply(self):
+        for node in self.document.traverse(nodes.system_message):
+            _logger.warning("docutils' system message present: %s", str(node))
+            node.parent.remove(node)
+
+class MyWriter(Writer):
+    """
+    Custom docutils html4ccs1 writer that doesn't add the warnings to the
+    output document.
+    """
+
+    def get_transforms(self):
+        return [MyFilterMessages, writer_aux.Admonitions]
+
 class module(osv.osv):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
@@ -100,7 +129,7 @@ class module(osv.osv):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
             overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=module.description, writer_name='html', settings_overrides=overrides)
+            output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
             res[module.id] = output
         return res
 
