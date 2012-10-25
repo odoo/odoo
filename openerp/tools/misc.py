@@ -597,7 +597,7 @@ def get_iso_codes(lang):
 
 ALL_LANGUAGES = {
         'ab_RU': u'Abkhazian / аҧсуа',
-        'ar_AR': u'Arabic / الْعَرَبيّة',
+        'ar_SY': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
         'bs_BS': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
