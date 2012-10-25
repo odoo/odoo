@@ -562,6 +562,9 @@ class res_partner(osv.osv, format_address):
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
 
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        state=self.pool.get('res.country.state').browse(cr, uid, state_id, context)
+        return {'value':{'country_id':state.country_id.id,'zip':''}}
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):
     _table = "res_partner"
