@@ -306,14 +306,14 @@ class account_analytic_line(osv.osv):
 
     }
 
-    def _get_default_datum(self, cr, uid, context=None):
-        import pprint; PP = pprint.PrettyPrinter()
-        import pdb; pdb.set_trace()
-        print 'dans analytic'
-        return fields.date.context_today()
+    def _get_default_date(self, cr, uid, context=None):
+        return fields.date.context_today(self, cr, uid, context=context)
+
+    def __get_default_date(self, cr, uid, context=None):
+        return self._get_default_date(cr, uid, context=context)
 
     _defaults = {
-        'date': _get_default_datum,
+        'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }
