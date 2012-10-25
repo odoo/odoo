@@ -207,14 +207,17 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
         //bounce effect on red button when click on statusbar.
-        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
-            if((self.get("actual_mode") == "view")) { 
-                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
-                $button.effect('bounce', {distance:18, times: 5}, 150);
-                e.stopPropagation();
-            }
-         });
+        this.on('load_record',this,function(){ 
+            var $button = self.$el.find(".oe_button.oe_form_button.oe_highlight:not(.oe_form_invisible)").css({'margin-left':'2px','float':'left','white-space':'nowrap'});
+	        self.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click',function (e) {
+	        if(self.get("actual_mode") == "view") {
+		        $button.effect('bounce', {distance:18, times: 5}, 150);
+		        e.stopImmediatePropagation();	
+	        }
+	        });
+        })
         this.trigger('form_view_loaded', data);
+        
         return $.when();
     },
     widgetAccesskey:function(){
