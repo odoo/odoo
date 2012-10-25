@@ -557,6 +557,7 @@ class mail_thread(osv.AbstractModel):
         msg_dict = {
             'type': 'email',
             'subtype': 'mail.mt_comment',
+            'author_id': False,
         }
         if not isinstance(message, Message):
             if isinstance(message, unicode):
@@ -575,7 +576,7 @@ class mail_thread(osv.AbstractModel):
         if 'Subject' in message:
             msg_dict['subject'] = decode(message.get('Subject'))
 
-        # Envelope fields not stored in  mail.message but made available for message_new()
+        # Envelope fields not stored in mail.message but made available for message_new()
         msg_dict['from'] = decode(message.get('from'))
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
@@ -585,7 +586,7 @@ class mail_thread(osv.AbstractModel):
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
             else:
-                msg_dict['from'] = message.get('from')
+                msg_dict['email_from'] = message.get('from')
         partner_ids = self._message_find_partners(cr, uid, message, ['From', 'To', 'Cc'], context=context)
         msg_dict['partner_ids'] = partner_ids
 

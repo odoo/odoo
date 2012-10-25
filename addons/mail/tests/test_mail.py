@@ -143,7 +143,7 @@ class test_mail(TestMailMockups):
         group_employee_id = group_employee_ref and group_employee_ref[1] or False
         # Test users
         self.user_raoul_id = self.res_users.create(cr, uid,
-            {'name': 'Raoul Grosbedon', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
+            {'name': 'Raoul Grosbedon', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.user_admin = self.res_users.browse(cr, uid, uid)
 
@@ -167,7 +167,7 @@ class test_mail(TestMailMockups):
 
     def test_00_message_process(self):
         """ Testing incoming emails processing. """
-        cr, uid = self.cr, self.uid
+        cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
         # Incoming mail creates a new mail_group "frogs"
         self.assertEqual(self.mail_group.search(cr, uid, [('name', '=', 'frogs')]), [])
         mail_frogs = MAIL_TEMPLATE.format(to='groups@example.com, other@gmail.com', subject='frogs', extra='')
@@ -204,6 +204,26 @@ class test_mail(TestMailMockups):
         new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
                          'plaintext mail incorrectly parsed')
+
+        # Do: post a new message, with a known partner
+        test_msg_id = '<deadcafe.1337-2@smtp.agrolait.com>'
+        TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', user_raoul.email)
+        mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='extra news', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_new)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
+        # Test: author_id set, not email_from
+        self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
+        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+
+        # Do: post a new message, with a unknown partner
+        test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
+        TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', '_abcd_')
+        mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='super news', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_new)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
+        # Test: author_id set, not email_from
+        self.assertFalse(new_mail.author_id, 'message process shnould not have found a partner for _abcd_ email address')
+        self.assertIn('_abcd_', new_mail.email_from, 'message process should set en email_from when not finding a partner_id')
 
     def test_10_followers_function_field(self):
         """ Tests designed for the many2many function field 'follower_ids'.

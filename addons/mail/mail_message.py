@@ -46,7 +46,7 @@ class mail_message(osv.Model):
     _order = 'id desc'
 
     _message_read_limit = 10
-    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read',
+    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
     _message_record_name_length = 18
     _message_read_more_limit = 1024
@@ -115,7 +115,7 @@ class mail_message(osv.Model):
                         ], 'Type',
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
-        'from': fields.char('From',
+        'email_from': fields.char('From',
             help="Email address of the sender, to use if it does not match any partner."),
         'author_id': fields.many2one('res.partner', 'Author',
             help="Partner that did write the message. If not set, try to use the From field instead."),
@@ -207,8 +207,8 @@ class mail_message(osv.Model):
         if message['author_id']:
             is_author = message['author_id'][0] == self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
             author_id = message['author_id']
-        elif message['from']:
-            author_id = (0, message['from'])
+        elif message['email_from']:
+            author_id = (0, message['email_from'])
 
         has_voted = False
         if uid in message.get('vote_user_ids'):
@@ -397,9 +397,11 @@ class mail_message(osv.Model):
         if ids is None:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
         for message in self.read(cr, uid, ids, self._message_read_fields, context=context):
+            message_id = message['id']
+
             # if not in tree and not in message_loaded list
-            if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
-                read_messages[message.get('id')] = message
+            if not message_id in read_messages and not message_id in message_unload_ids:
+                read_messages[message_id] = message
                 message_list.append(self._message_get_dict(cr, uid, message, context=context))
 
                 # get the older ancestor the user can read, update its ancestor field
@@ -412,8 +414,8 @@ class mail_message(osv.Model):
                     message = parent
                     parent = self._get_parent(cr, uid, message, context=context)
                 # if in thread: add its ancestor to the list of messages
-                if not read_messages.get(message.get('id')) and message.get('id') not in message_unload_ids:
-                    read_messages[message.get('id')] = message
+                if not message['id'] in read_messages and not message['id'] in message_unload_ids:
+                    read_messages[message['id']] = message
                     message_list.append(self._message_get_dict(cr, uid, message, context=context))
 
         # get the child expandable messages for the tree
@@ -645,11 +647,12 @@ class mail_message(osv.Model):
                 ], context=context)
             fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
             partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
-        # add myself if I wrote on my wall, otherwise remove myself author
+        # when writing to a wall
         if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
             partners_to_notify |= set([message.get('author_id')[0]])
-        else:
+        elif message.get('author_id'):
             partners_to_notify = partners_to_notify - set([message.get('author_id')[0]])
+
         if partners_to_notify:
             self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
 
