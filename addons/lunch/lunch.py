@@ -177,7 +177,7 @@ class lunch_order(osv.Model):
             
     def _default_preference_get(self,cr,uid,args,context=None):
         pref_ref = self.pool.get('lunch.preference')
-        pref_ids = pref_ref.search(cr,uid,[],order='date desc',limit=20,context=context)
+        pref_ids = pref_ref.search(cr,uid,[('user_id','=',uid)],order='date desc',limit=15,context=context)
         result = []
         for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
             result.append(pref.id)
@@ -195,52 +195,66 @@ class lunch_order(osv.Model):
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             pref_ref = self.pool.get("lunch.preference")
-            pref_ids = pref_ref.search(cr,uid,[],context=context)
-            text=""
-            for pref in pref_ref.browse(cr,uid,pref_ids,context):
-                if pref['user_id'].id == uid:
-                    function_name = "add_preference_"+str(pref.id)
-                    price_text = "Price: "+str(pref['price'])
-                    text += ('''
-                        <group>
-                            <h3>''')+pref['product_name']+('''</h3>
-                            <br/>
-                            <font>''')+price_text+('''</font>
-                            <br/>
-                            <button name="''')+function_name+('''" type="object" icon="gtk-add"/>
-                            <br/>
-                            <font>''')+"Note: "+str(pref['note'])+('''</font>
-                        </group>
-                        ''')
-            res['arch'] = ('''<form string=\"Orders Form\" version=\"7.0\">
-                    <header>
-                        <field name=\"state\" widget=\"statusbar\" statusbar_visible=\"new,confirmed\" modifiers=\"{&quot;readonly&quot;: true}\"/>
-                    </header>
-                    <sheet>
-                        <group>
-                            <group>
-                                <field name=\"user_id\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
-                            </group>
-                            <group> 
-                                <field name=\"date\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
-                            </group>
-                        </group>
-                        <img src=\"/lunch/static/src/img/warning.png\" width=\"30\" height=\"30\" class=\"oe_left oe_avatar\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]]}\"/>
-                        <div class=\"oe_title\">
-                            <field name=\"alerts\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]], &quot;readonly&quot;: true}\"/> 
+            pref_ids = pref_ref.search(cr,uid,[('user_id','=',uid)],context=context)
+            prod_ref = self.pool.get("lunch.product")
+            preferences = pref_ref.browse(cr,uid,pref_ids,context=context)
+            categories = {} #store the different categories of products in preference
+            for pref in preferences:
+                categories[pref['product']['category_id']['name']]=[]
+            for pref in preferences:
+                categories[pref['product']['category_id']['name']].append(pref)
+            length = len(categories)
+            text_xml = ""
+            for key,value in categories.items():
+                text_xml+= ('''
+                    <div style=\"width: 33%; display: inline-block;\">
+                    <h1>
+                ''')+str(key)+('''
+                    </h1>
+                ''')
+                for val in value:
+                    function_name = "add_preference_"+str(val.id)
+                    text_xml+= ('''
+                        <div class=\"vignette\">
+                    ''')+val['product_name']+('''
+                        <span class=\"oe_tag\">
+                    ''')+str(val['price'])+('''
+                        </span>
+                        <span class=\"oe_note\">
+                    ''')+val['note']+('''
+                        </span>
+                        <button class='oe_button' name="''')+function_name+('''" type="object" icon="gtk-add"/>
                         </div>
-                        <separator name=\"pref\" string=\"Quick Select a Product\"/>
-                        <group name=\"pref\">'''+text+'''
+                    ''')
+                text_xml+= (''' </div> ''')
+            res['arch'] = ('''<form string=\"Orders Form\" version=\"7.0\">
+                <header>
+                    <field name=\"state\" widget=\"statusbar\" statusbar_visible=\"new,confirmed\" modifiers=\"{&quot;readonly&quot;: true}\"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name=\"user_id\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
                         </group>
-                        <separator string=\"Select Products\"/>
-                        <field name=\"products\" colspan=\"4\" nolabel=\"1\" on_change=\"onchange_price(products)\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]]}\">
-                            </field> 
-                        <group class=\"oe_subtotal_footer oe_right\">
-                            <field name=\"total\" modifiers=\"{&quot;readonly&quot;: true}\"/>
+                        <group> 
+                            <field name=\"date\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]], &quot;required&quot;: true}\"/>
                         </group>
-                        <br/><br/>
-                    </sheet>
-                </form>''')
+                    </group>
+                    <img src=\"/lunch/static/src/img/warning.png\" width=\"30\" height=\"30\" class=\"oe_left oe_avatar\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]]}\"/>
+                    <div class=\"oe_title\">
+                        <field name=\"alerts\" attrs=\"{'invisible': [('state','!=','new')]}\" modifiers=\"{&quot;invisible&quot;: [[&quot;state&quot;, &quot;!=&quot;, &quot;new&quot;]], &quot;readonly&quot;: true}\"/> 
+                    </div>
+                    <separator name=\"pref\" string=\"Quick Select a Product\"/>
+                    '''+text_xml+'''
+                    <separator string=\"Select Products\"/>
+                    <field name=\"products\" colspan=\"4\" nolabel=\"1\" on_change=\"onchange_price(products)\" modifiers=\"{&quot;readonly&quot;: [[&quot;state&quot;, &quot;not in&quot;, [&quot;new&quot;]]]}\">
+                        </field> 
+                    <group class=\"oe_subtotal_footer oe_right\">
+                        <field name=\"total\" modifiers=\"{&quot;readonly&quot;: true}\"/>
+                    </group>
+                    <br/><br/>
+                </sheet>
+            </form>''')
         return res
 
     _columns = {
@@ -346,7 +360,7 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
 class lunch_preference(osv.Model):
     _name = 'lunch.preference'
     _description= "user preferences"
-    
+
     _columns = {
         'date' : fields.date('Date', required=True,readonly=True),
         'color': fields.integer('Color'),

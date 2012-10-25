@@ -305,8 +305,8 @@
                             <field name='alerts' attrs="{'invisible': [('state','!=','new')]}"/> 
                         </div>
                         <separator name='pref' string='Quick Select a Product'/>
-                        <group name='pref'>
-                        </group>
+                        <div name='pref'>
+                        </div>
                         <separator string='Select Products'/>
                         <field name='products' colspan='4' nolabel='1' on_change='onchange_price(products)'>
                             <tree string='List' editable='bottom'>
