@@ -40,10 +40,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.selected_filters = [];
         this.on('view_loaded', self, self.load_calendar);
     },
-    start: function() {
-        this._super();
-        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}).then(this.on_loaded);
-    },
     destroy: function() {
         scheduler.clearAll();
         this._super();
@@ -174,7 +170,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         scheduler.init(this.$el.find('.oe_calendar')[0], null, this.mode || 'month');
         scheduler.detachAllEvents();
-        scheduler.attachEvent('onViewChange', this.on_view_changed);
+        scheduler.attachEvent('onViewChange', this.proxy('view_changed'));
         scheduler.attachEvent('onEventChanged', this.proxy('quick_save'));
         scheduler.attachEvent('onEventDeleted', this.proxy('delete_event'));
         scheduler.attachEvent('onEventAdded', function(event_id, event_obj) {
@@ -216,11 +212,11 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             self.$el.find(".dhx_cal_navline").removeAttr('style');
         });
     },
-    on_view_changed: function(mode, date) {
+    view_changed: function(mode, date) {
         this.$el.find('.oe_calendar').removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
-            this.do_ranged_search();
+            this.ranged_search();
             this.$el.find(".dhx_cal_navline div").removeAttr('style');
         }
         this.ready.resolve();
@@ -238,7 +234,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
     },
     reload_event: function(id) {
-        this.dataset.read_ids([id], _.keys(this.fields)).then(this.on_events_loaded);
+        this.dataset.read_ids([id], _.keys(this.fields)).then(this.proxy('events_loaded'));
     },
     get_color: function(key) {
         if (this.color_map[key]) {
@@ -249,7 +245,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.color_map[key] = color;
         return color;
     },
-    on_events_loaded: function(events, fn_filter, no_filter_reload) {
+    events_loaded: function(events, fn_filter, no_filter_reload) {
         var self = this;
 
         //To parse Events we have to convert date Format
@@ -295,7 +291,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.refresh_scheduler();
         this.refresh_minical();
         if (!no_filter_reload && this.sidebar) {
-            this.sidebar.filter.on_events_loaded(sidebar_items);
+            this.sidebar.filter.events_loaded(sidebar_items);
         }
     },
     convert_event: function(evt) {
@@ -344,9 +340,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     do_search: function(domain, context, group_by) {
         this.last_search = arguments;
-        this.do_ranged_search();
+        this.ranged_search();
     },
-    do_ranged_search: function() {
+    ranged_search: function() {
         var self = this;
         scheduler.clearAll();
         $.when(this.has_been_loaded, this.ready).then(function() {
@@ -356,7 +352,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 context: self.last_search[1]
             }).then(function(events) {
                 self.dataset_events = events;
-                self.on_events_loaded(events);
+                self.events_loaded(events);
             });
         });
     },
@@ -441,7 +437,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     delete_event: function(event_id, event_obj) {
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
-        debugger
         var self = this;
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
@@ -475,8 +470,8 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
             $buttons: this.$buttons,
         });
         var def = this.form.appendTo(this.$el);
-        this.form.on('record_created', self, this.on_form_dialog_saved);
-        this.form.on('record_saved', self, this.on_form_dialog_saved);
+        this.form.on('record_created', self, this.form_dialog_saved);
+        this.form.on('record_saved', self, this.form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();
         };
@@ -511,7 +506,7 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
             });
         });
     },
-    on_form_dialog_saved: function() {
+    form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
         if (this.creating_event_id) {
             scheduler.changeEventId(this.creating_event_id, id);
@@ -540,13 +535,13 @@ instance.web_calendar.Sidebar = instance.web.Widget.extend({
 });
 instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
     events: {
-        'change input:checkbox': 'on_filter_click'
+        'change input:checkbox': 'filter_click'
     },
     init: function(parent, view) {
         this._super(parent);
         this.view = view;
     },
-    on_events_loaded: function(filters) {
+    events_loaded: function(filters) {
         var selected_filters = this.view.selected_filters.slice(0);
         this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
         this.$('div.oe_calendar_responsible input').each(function() {
@@ -555,7 +550,7 @@ instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
             }
         });
     },
-    on_filter_click: function(e) {
+    filter_click: function(e) {
         var self = this,
             responsibles = [],
             $e = $(e.target);
@@ -566,11 +561,11 @@ instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
         });
         scheduler.clearAll();
         if (responsibles.length) {
-            this.view.on_events_loaded(this.view.dataset_events, function(filter_value) {
+            this.view.events_loaded(this.view.dataset_events, function(filter_value) {
                 return _.indexOf(responsibles, filter_value.toString()) > -1;
             }, true);
         } else {
-            this.view.on_events_loaded(this.view.dataset_events, false, true);
+            this.view.events_loaded(this.view.dataset_events, false, true);
         }
     }
 });
