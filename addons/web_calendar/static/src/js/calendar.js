@@ -478,7 +478,7 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         var self = this;
         this.ready.then(function() {
             if (self.dataset.select_id(id)) {
-                self.form.do_show().then(function() {
+                self.form.do_show({ mode: 'edit' }).then(function() {
                     self.open();
                 });
             } else {
