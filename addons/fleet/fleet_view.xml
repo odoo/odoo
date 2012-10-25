@@ -812,7 +812,10 @@
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
+                    <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By...">
+                        <filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
+                        <filter name="groupby_parent_id" context="{'group_by' : 'parent_id'}" string="Parent"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype" context="{'group_by' : 'cost_subtype'}" string="Cost Subtype"/>
                         <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
