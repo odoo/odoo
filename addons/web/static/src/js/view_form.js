@@ -1590,37 +1590,6 @@ instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
     },
 });
 
-instance.web.form.FormDialog = instance.web.Dialog.extend({
-    init: function(parent, options, view_id, dataset) {
-        this._super(parent, options);
-        this.dataset = dataset;
-        this.view_id = view_id;
-        return this;
-    },
-    start: function() {
-        var self = this;
-        this._super();
-        this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false
-        });
-        this.form.appendTo(this.$el);
-        this.form.on('record_created', self, this.on_form_dialog_saved);
-        this.form.on('record_saved', this, this.on_form_dialog_saved);
-        return this;
-    },
-    select_id: function(id) {
-        if (this.form.dataset.select_id(id)) {
-            return this.form.do_show();
-        } else {
-            this.do_warn("Could not find id in dataset");
-            return $.Deferred().reject();
-        }
-    },
-    on_form_dialog_saved: function(r) {
-        this.close();
-    }
-});
-
 instance.web.form.compute_domain = function(expr, fields) {
     if (! (expr instanceof Array))
         return !! expr;
