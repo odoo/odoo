@@ -3987,9 +3987,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     },
 });
 
-/*
- * TODO niv: clean those deferred stuff, it could be better
- */
+/**
+    widget options:
+    - reload_on_button: Reload the whole form view if click on a button in a list view.
+        If you see this options, do not use it, it's basically a dirty hack to make one
+        precise o2m to behave the way we want.
+*/
 instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     multi_selection: false,
     disable_utility_classes: true,
@@ -4118,7 +4121,20 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             readonly: this.getParent().get("effective_readonly")
         });
         pop.on('write_completed', self, self.reload_content);
-    }
+    },
+    do_button_action: function(name, id, callback) {
+        var self = this;
+        var _sup = _.bind(this._super, this);
+        if (! this.m2m_field.options.reload_on_button) {
+            return _sup(name, id, callback);
+        } else {
+            return this.m2m_field.view.save().pipe(function() {
+                return _sup(name, id, function() {
+                    self.m2m_field.view.reload();
+                });
+            });
+        }
+     },
 });
 
 instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, {
@@ -4605,16 +4621,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         this._super(field_manager, node);
         this.reference_ready = true;
     },
-    on_nop: function() {
-    },
-    on_selection_changed: function() {
-        if (this.reference_ready) {
-            var sel = this.selection.get_value();
-            this.m2o.field.relation = sel;
-            this.m2o.set_value(false);
-            this.m2o.$el.toggle(sel !== false);
-        }
-    },
     destroy_content: function() {
         if (this.fm) {
             this.fm.destroy();
@@ -4655,32 +4661,37 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('focused', null, function () {self.trigger('focused')})
             .on('blurred', null, function () {self.trigger('blurred')});
     },
-    is_false: function() {
-        return typeof(this.get_value()) !== 'string';
+    on_selection_changed: function() {
+        if (this.reference_ready) {
+            this.internal_set_value([this.selection.get_value(), false]);
+            this.render_value();
+        }
+    },
+    data_changed: function() {
+        if (this.reference_ready) {
+            this.internal_set_value([this.selection.get_value(), this.m2o.get_value()]);
+        }
+    },
+    set_value: function(val) {
+        if (val) {
+            val = val.split(',');
+            val[0] = val[0] || false;
+            val[1] = val[0] ? (val[1] ? parseInt(val[1], 10) : val[1]) : false;
+        }
+        this._super(val || [false, false]);
+    },
+    get_value: function() {
+        return this.get('value')[0] && this.get('value')[1] ? (this.get('value')[0] + ',' + this.get('value')[1]) : false;
     },
     render_value: function() {
         this.reference_ready = false;
-        var vals = [], sel_val, m2o_val;
-        if (typeof(this.get('value')) === 'string') {
-            vals = this.get('value').split(',');
-        }
-        sel_val = vals[0] || false;
-        m2o_val = vals[1] ? parseInt(vals[1], 10) : vals[1];
         if (!this.get("effective_readonly")) {
-            this.selection.set_value(sel_val);
+            this.selection.set_value(this.get('value')[0]);
         }
-        this.m2o.field.relation = sel_val;
-        this.m2o.set_value(m2o_val);
+        this.m2o.field.relation = this.get('value')[0];
+        this.m2o.set_value(this.get('value')[1]);
+        this.m2o.$el.toggle(!!this.get('value')[0]);
         this.reference_ready = true;
-    },
-    data_changed: function() {
-        var model = this.selection.get_value(),
-            id = this.m2o.get_value();
-        if (typeof(model) === 'string' && typeof(id) === 'number') {
-            this.internal_set_value(model + ',' + id);
-        } else {
-            this.internal_set_value(false);
-        }
     },
 });
 
