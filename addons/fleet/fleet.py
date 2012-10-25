@@ -466,6 +466,13 @@ class fleet_vehicle(osv.Model):
                 self.message_post(cr, uid, [key], body=str(overdues[key]) + ' contract(s) is(are) overdued!', context=context)
         return True
 
+    def _get_default_state(self, cr, uid, context):
+        try:
+            model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'vehicle_state_active')
+        except ValueError:
+            model_id = False
+        return model_id
+
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
     #_order = 'contract_renewal_overdue desc, contract_renewal_due_soon desc'
@@ -515,12 +522,8 @@ class fleet_vehicle(osv.Model):
     _defaults = {
         'doors' : 5,
         'odometer_unit' : 'kilometers',
-        'state' : lambda s,cr,uid,c:s.get_state(cr,uid,'Active',context=c),
+        'state' : _get_default_state,
     }
-
-    def get_state(self,cr,uid,state_name,context=None):
-        states=self.pool.get('fleet.vehicle.state').search(cr,uid,[('name','=',state_name)],context=context,limit=1)
-        return states
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -742,7 +745,10 @@ class fleet_vehicle_log_fuel(osv.Model):
         return False
 
     def _get_default_service_type(self, cr, uid, context):
-        model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_refueling')
+        try:
+            model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_refueling')
+        except ValueError:
+            model_id = False
         return model_id
 
     _name = 'fleet.vehicle.log.fuel'
@@ -821,7 +827,10 @@ class fleet_vehicle_log_services(osv.Model):
         return False
 
     def _get_default_service_type(self, cr, uid, context):
-        model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_service_8')
+        try:
+            model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_service_8')
+        except ValueError:
+            model_id = False
         return model_id
 
     _name = 'fleet.vehicle.log.services'
@@ -1040,7 +1049,12 @@ class fleet_vehicle_log_contract(osv.Model):
             
         return res
 
-        
+    def _get_default_contract_type(self, cr, uid, context):
+        try:
+            model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_contract_leasing')
+        except ValueError:
+            model_id = False
+        return model_id
 
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
@@ -1072,6 +1086,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'state':'open',
         'expiration_date' : lambda self,cr,uid,ctx: self.compute_next_year_date(time.strftime('%Y-%m-%d')),
         'cost_frequency' : 'no',
+        'cost_subtype' : _get_default_contract_type,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
