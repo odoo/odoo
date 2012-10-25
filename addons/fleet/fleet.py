@@ -28,8 +28,8 @@ class fleet_vehicle_cost(osv.Model):
         for record in reads:
             if record.vehicle_id.license_plate:
                 name = record.vehicle_id.license_plate
-            if record.cost_type.name:
-                name = name + ' / '+ record.cost_type.name
+            if record.cost_subtype.name:
+                name = name + ' / '+ record.cost_subtype.name
             if record.date:
                 name = name + ' / '+ record.date
             res.append((record.id, name))
@@ -43,9 +43,9 @@ class fleet_vehicle_cost(osv.Model):
         'name' : fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
         #'name' : fields.char('Name',size=32),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
-        'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
+        'cost_subtype': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
-        'cost_category' : fields.selection([('contract', 'Contract'),('services','Services'),('fuel','Fuel'),('other','Other')], 'Category of the cost', help='For internal purpose only',required=True),
+        'cost_type' : fields.selection([('contract', 'Contract'),('services','Services'),('fuel','Fuel'),('other','Other')], 'Category of the cost', help='For internal purpose only',required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
         'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
 
@@ -58,7 +58,7 @@ class fleet_vehicle_cost(osv.Model):
     _default ={
         'parent_id':None,
         'auto_generated' : False,
-        'cost_category' : 'other',
+        'cost_type' : 'other',
     }
 
     
@@ -68,14 +68,14 @@ class fleet_vehicle_cost(osv.Model):
             parent = self.browse(cr, uid, data['parent_id'], context=context)
             data['vehicle_id'] = parent.vehicle_id.id
             data['date'] = parent.date
-            data['cost_category'] = parent.cost_category
+            data['cost_type'] = parent.cost_type
         if 'contract_id' in data and data['contract_id']:
             contract = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, data['contract_id'], context=context)
             data['vehicle_id'] = contract.vehicle_id.id
-            data['cost_type'] = contract.cost_type.id
-            data['cost_category'] = contract.cost_category
-        if not('cost_category' in data and data['cost_category']):
-            data['cost_category'] = 'other'
+            data['cost_subtype'] = contract.cost_subtype.id
+            data['cost_type'] = contract.cost_type
+        if not('cost_type' in data and data['cost_type']):
+            data['cost_type'] = 'other'
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -418,7 +418,7 @@ class fleet_vehicle(osv.Model):
             if (record.log_contracts):
                 ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],limit=1,order='expiration_date asc')
                 if len(ids) > 0:
-                    res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_type.name))
+                    res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_subtype.name))
             else:
                 res.append((record.id,''))
         return dict(res)
@@ -763,10 +763,10 @@ class fleet_vehicle_log_fuel(osv.Model):
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date' : time.strftime('%Y-%m-%d'),
-        'cost_type': _get_default_service_type,
+        'cost_subtype': _get_default_service_type,
     }
     def create(self, cr, uid, data, context=None):
-        data['cost_category'] = 'fuel'
+        data['cost_type'] = 'fuel'
         cost_id = super(fleet_vehicle_log_fuel, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -840,7 +840,7 @@ class fleet_vehicle_log_services(osv.Model):
         'date' : time.strftime('%Y-%m-%d'),
     }
     def create(self, cr, uid, data, context=None):
-        data['cost_category'] = 'services'
+        data['cost_type'] = 'services'
         cost_id = super(fleet_vehicle_log_services, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -900,7 +900,7 @@ class fleet_vehicle_log_contract(osv.Model):
             if found:
                 startdate += delta
             while startdate < d:
-                data = {'amount' : contract.cost_generated,'date' : startdate.strftime('%Y-%m-%d'),'vehicle_id' : contract.vehicle_id.id,'cost_type' : contract.cost_type.id,'contract_id' : contract.id,'auto_generated' : True}
+                data = {'amount' : contract.cost_generated,'date' : startdate.strftime('%Y-%m-%d'),'vehicle_id' : contract.vehicle_id.id,'cost_subtype' : contract.cost_subtype.id,'contract_id' : contract.id,'auto_generated' : True}
                 print data
                 cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context)
                 startdate += delta
@@ -916,8 +916,8 @@ class fleet_vehicle_log_contract(osv.Model):
         for record in reads:
             if record.vehicle_id.name:
                 name = str(record.vehicle_id.name)
-            if record.cost_type.name:
-                name = name+ ' / '+ str(record.cost_type.name)
+            if record.cost_subtype.name:
+                name = name+ ' / '+ str(record.cost_subtype.name)
             if record.date:
                 name = name+ ' / '+ record.date
             res.append((record.id, name))
@@ -1012,7 +1012,7 @@ class fleet_vehicle_log_contract(osv.Model):
         for element in contracts:
             temp = []
             temp.append(('default_vehicle_id',element.vehicle_id.id))
-            temp.append(('default_cost_type',element.cost_type.id))
+            temp.append(('default_cost_subtype',element.cost_subtype.id))
             temp.append(('default_amount',element.amount))
             temp.append(('default_odometer_id',element.odometer_id.id))
             temp.append(('default_odometer_unit',element.odometer_unit))
@@ -1102,7 +1102,7 @@ class fleet_vehicle_log_contract(osv.Model):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
     def create(self, cr, uid, data, context=None):
-        data['cost_category'] = 'contract'
+        data['cost_type'] = 'contract'
         cost_id = super(fleet_vehicle_log_contract, self).create(cr, uid, data, context=context)
         return cost_id
 

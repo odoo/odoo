@@ -375,7 +375,7 @@
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_type" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
+                                <field name="cost_subtype" string="Contract Type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
                                 <field name="amount" string="Activation Cost"/>
                                 <label for="cost_generated"/>
                                 <div>
@@ -408,7 +408,7 @@
                                 <group>
                                     <field name="cost_ids" context="{'vehicle_id': vehicle_id}" nolabel="1">
                                         <tree version="7.0" editable="bottom">
-                                            <field name="cost_type" domain="[('category','=','service')]"/>
+                                            <field name="cost_subtype" domain="[('category','=','service')]"/>
                                             <field name="amount" sum="Price" string="Indicative Cost" />
                                         </tree>
                                     </field>
@@ -450,7 +450,7 @@
             <field name="arch" type="xml">
                 <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0;grey:state=='closed'">
                     <field name="vehicle_id" />
-                    <field name="cost_type" />
+                    <field name="cost_subtype" />
                     <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
@@ -674,7 +674,7 @@
                         <group col="2">
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
+                                <field name="cost_subtype" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
                                 <field name="amount" string="Price"/>
                             </group>
                             <group string="Odometer Details">
@@ -696,7 +696,7 @@
                         <group string="Included Services">
                             <field name="cost_ids" nolabel="1">
                                 <tree string="Included Services" version="7.0" editable="bottom">
-                                    <field name="cost_type" domain="[('category','=','service')]"/>
+                                    <field name="cost_subtype" domain="[('category','=','service')]"/>
                                     <field name="amount" sum="Price" string="Cost"/>
                                 </tree>
                             </field>
@@ -715,7 +715,7 @@
             <field name="arch" type="xml">
                 <tree string="Services Logs">
                     <field name="vehicle_id" />
-                    <field name="cost_type"/>
+                    <field name="cost_subtype"/>
                     <field name="amount" sum="Total"/>
                     <field name="date" />
                     <field name="purchaser_id"/>
@@ -795,6 +795,7 @@
                     <field name="date"/>
                     <field name="vehicle_id" />
                     <field name="cost_type"/>
+                    <field name="cost_subtype"/>
                     <field name="amount" sum="Total Cost"/>
                     <field name="parent_id" invisible="1" />
                 </tree>
@@ -807,12 +808,13 @@
             <field name="arch" type="xml">
                 <search string="Vehicles costs" >
                     <field name="vehicle_id" />
-                    <field name="cost_type"/>
+                    <field name="cost_subtype"/>
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
                     <group expand="1" string="Group By...">
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
+                        <filter name="groupby_cost_subtype" context="{'group_by' : 'cost_subtype'}" string="Cost Subtype"/>
                         <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
                     </group>
                 </search>
@@ -828,7 +830,7 @@
                         <group col="2" string="Cost Details">
                             <group>
                                 <field name="vehicle_id" />
-                                <field name="cost_type"/>
+                                <field name="cost_subtype"/>
                                 <field name="amount"/>
                             </group>
                             <group>
@@ -858,7 +860,7 @@
             <field name="res_model">fleet.vehicle.cost</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
-            <field name="context">{"search_default_parent_false" : True}</field>
+            <field name="context">{"search_default_parent_false" : True, "search_default_groupby_vehicle_id" : True,}</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new cost.

@@ -7,7 +7,7 @@
       <field name="view_id" ref="fleet_vehicle_costs_graph"></field>
       <field name="view_type">form</field>
       <field name="view_mode">tree</field>
-      <field name="domain">['&amp;',('parent_id','=',False),('cost_category','=','fuel')]</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','fuel')]</field>
     </record>
 
     <record model="ir.actions.act_window" id="action_fleet_vehicle_log_services_graph">
@@ -16,7 +16,7 @@
       <field name="view_id" ref="fleet_vehicle_costs_graph" />
       <field name="view_type">form</field>
       <field name="view_mode">tree</field>
-      <field name="domain">['&amp;',('parent_id','=',False),('cost_category','=','services')]</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','services')]</field>
     </record>
 
     <record model="ir.actions.act_window" id="action_fleet_vehicle_log_contract_graph">
@@ -25,7 +25,7 @@
       <field name="view_id" ref="fleet_vehicle_costs_graph"></field>
       <field name="view_type">form</field>
       <field name="view_mode">tree</field>
-      <field name="domain">['&amp;',('parent_id','=',False),('cost_category','=','contract')]</field>
+      <field name="domain">['&amp;',('parent_id','=',False),('cost_type','=','contract')]</field>
     </record>
 
     <record model="ir.actions.act_window" id="action_fleet_vehicle_costs_graph">
@@ -47,6 +47,25 @@
       <field name="help" type="html">
         <p>
           Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.
+        </p>
+      </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_fleet_reporting_costs">
+      <field name="name">Costs Analysis</field>
+      <field name="res_model">fleet.vehicle.cost</field>
+      <field name="view_id" ref="fleet_vehicle_costs_tree"></field>
+      <field name="view_type">form</field>
+      <field name="view_mode">tree</field>
+      <field name="context">{"search_default_parent_false" : True,"search_default_groupby_cost_type" : True,"search_default_groupby_cost_subtype" : True, "search_default_groupby_vehicle_id" : True,}</field>
+      <field name="help" type="html">
+        <p>
+          OpenERP helps you managing the costs for your different vehicles
+          Costs are generally created from services and contract and appears here.
+        </p>
+        <p>
+          Thanks to the different filters, OpenERP can only print the effective
+          costs, sort them by type and by vehicle.
         </p>
       </field>
     </record>
@@ -94,10 +113,17 @@
             </field>
     </record>
     
-    <menuitem id="menu_fleet_dashboard_in_module" 
+    <menuitem id="menu_fleet_dashboard" 
               parent="base.menu_reporting_dashboard" 
               action="open_board_fleet" 
               sequence="50"/>
+    
+    <menuitem name="Fleet" parent="base.menu_reporting" id="menu_fleet_reporting" sequence="50" />
+
+    <menuitem id="menu_fleet_dashboard_in_module" 
+              parent="menu_fleet_reporting" 
+              action="action_fleet_reporting_costs" 
+              sequence="1"/>
 
 </data>
 </openerp>
