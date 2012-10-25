@@ -176,11 +176,26 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.detachAllEvents();
         scheduler.attachEvent('onViewChange', this.on_view_changed);
         scheduler.attachEvent('onEventChanged', this.proxy('quick_save'));
-        scheduler.attachEvent('onEventAdded', this.proxy('quick_create'));
         scheduler.attachEvent('onEventDeleted', this.proxy('delete_event'));
+        scheduler.attachEvent('onEventAdded', function(event_id, event_obj) {
+            var fn = event_obj._force_slow_create ? 'slow_create' : 'quick_create';
+            self[fn].apply(self, arguments);
+        });
         scheduler.attachEvent('onClick', function(event_id, mouse_event) {
             if (!self.$el.find('.dhx_cal_editor').length) {
                 self.open_event(event_id);
+            }
+        });
+        scheduler.attachEvent('onEmptyClick', function(start_date, mouse_event) {
+            if (!self.$el.find('.dhx_cal_editor').length) {
+                var end_date = new Date(start_date);
+                end_date.addHours(1);
+                scheduler.addEvent({
+                    start_date: start_date,
+                    end_date: end_date,
+                    text: _t("New event"),
+                    _force_slow_create: true,
+                });
             }
         });
         scheduler.attachEvent("onBeforeLightbox", function (event_id) {
@@ -393,12 +408,11 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     slow_create: function(event_id, event_obj) {
         var self = this;
         if (scheduler.getState().mode === 'month') {
+            event_obj['start_date'].addHours(8);
             if (event_obj._length === 1) {
-                event_obj['start_date'].addHours(8);
                 event_obj['end_date'] = new Date(event_obj['start_date']);
                 event_obj['end_date'].addHours(1);
             } else {
-                event_obj['start_date'].addHours(8);
                 event_obj['end_date'].addHours(-4);
             }
         }
@@ -407,11 +421,27 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         this.form_dialog.create_record(data, event_id);
     },
     open_event: function(event_id) {
-        this.form_dialog.open_record(event_id);
+        if (this.dataset.get_id_index(event_id) === null) {
+            // Some weird behaviour in dhtmlx scheduler could lead to this case
+            // eg: making multiple days event in week view, dhtmlx doesn't trigger eventAdded !!??
+            // so the user clicks back on the orphan event and we land here. We have to duplicate
+            // the dhtmlx internal event because it will delete it on next sheduler refresh.
+            var event_obj = scheduler.getEvent(event_id);
+            scheduler.deleteEvent(event_id);
+            scheduler.addEvent({
+                start_date: event_obj.start_date,
+                end_date: event_obj.end_date,
+                text: event_obj.text + ' fix',
+                _force_slow_create: true,
+            });
+        } else {
+            this.form_dialog.open_record(event_id);
+        }
     },
     delete_event: function(event_id, event_obj) {
         // dhtmlx sends this event even when it does not exist in openerp.
         // Eg: use cancel in dhtmlx new event dialog
+        debugger
         var self = this;
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
@@ -420,8 +450,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             });
         }
     },
-
-
 });
 
 instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
@@ -477,13 +505,10 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
     open_record: function(id) {
         var self = this;
         this.ready.then(function() {
-            if (self.dataset.select_id(id)) {
-                self.form.do_show({ mode: 'edit' }).then(function() {
-                    self.open();
-                });
-            } else {
-                console.error("Calendar could not find event id", event_id);
-            }
+            self.dataset.select_id(id);
+            self.form.do_show({ mode: 'edit' }).then(function() {
+                self.open();
+            });
         });
     },
     on_form_dialog_saved: function() {
