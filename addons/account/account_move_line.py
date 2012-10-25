@@ -1234,16 +1234,16 @@ class account_move_line(osv.osv):
                 vals['company_id'] = company_id[0]
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
-        if 'journal_id' in vals:
+        if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
-        if 'period_id' in vals:
+        if 'period_id' in vals and vals['period_id']:
             context['period_id'] = vals['period_id']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
         #we need to treat the case where a value is given in the context for period_id as a string
-        if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
+        if 'period_id' in context and not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
                 raise osv.except_osv(_('Error!'), _('No period found or more than one period found for the given date.'))
@@ -1253,6 +1253,9 @@ class account_move_line(osv.osv):
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
+        vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
+        vals['period_id'] = vals.get('period_id') or context.get('period_id')
+        vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
             if journal.centralisation:
                 #Check for centralisation
