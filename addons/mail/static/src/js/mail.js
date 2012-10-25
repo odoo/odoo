@@ -296,6 +296,7 @@ openerp.mail = function (session) {
                 /* stack for don't close the compose form if the user click on a button */
                 this.$render_expandable.on('focus, mouseup', 'textarea', function () { self.stay_open = false; });
                 this.$render_expandable.on('mousedown', function () { self.stay_open = true; });
+                this.$render_expandable.find('textarea').autosize();
             }
         },
 
@@ -1591,7 +1592,7 @@ openerp.mail = function (session) {
                 }
             );
 
-            return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
+            return this.root.replace(this.$('.oe_mail-placeholder'));
         },
     });
 
@@ -1687,13 +1688,13 @@ openerp.mail = function (session) {
                 }
             );
 
-            return this.root.appendTo( this.$('.oe_mail_wall_threads:first') );
+            return this.root.replace(this.$('.oe_mail-placeholder'));
         },
 
         bind_events: function () {
             var self=this;
-            this.$("button.oe_write_full:first").click(function () { self.root.thread.ComposeMessage.on_compose_fullmail(); });
-            this.$("button.oe_write_onwall:first").click(function () { self.root.thread.on_compose_message(); });
+            this.$(".oe_write_full").click(function(){ self.root.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
 
