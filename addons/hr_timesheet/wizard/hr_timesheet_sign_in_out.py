@@ -33,7 +33,7 @@ class hr_so_project(osv.osv_memory):
         'date': fields.datetime('Closing Date'),
         'analytic_amount': fields.float('Minimum Analytic Amount'),
         'name': fields.char('Employees name', size=32, required=True, readonly=True),
-        'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current Status', type='char', required=True, readonly=True),
         'server_date': fields.datetime('Current Date', required=True, readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
                 }
@@ -111,7 +111,7 @@ class hr_si_project(osv.osv_memory):
     _description = 'Sign In By Project'
     _columns = {
         'name': fields.char('Employees name', size=32,  readonly=True),
-        'state': fields.related('emp_id', 'state', string='Current state', type='char', required=True, readonly=True),
+        'state': fields.related('emp_id', 'state', string='Current Status', type='char', required=True, readonly=True),
         'date': fields.datetime('Starting Date'),
         'server_date': fields.datetime('Current Date',  readonly=True),
         'emp_id': fields.many2one('hr.employee', 'Employee ID')
@@ -147,7 +147,7 @@ class hr_si_project(osv.osv_memory):
             'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'hr.sign.%s.project' % in_out,
-            'views': [(False,'tree'), (resource_id,'form')],
+            'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new'
         }

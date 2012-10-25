@@ -1078,7 +1078,7 @@
                     <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1862,7 +1862,7 @@
                     <field name="model_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-folder-orange" domain="[]" context="{'group_by':'model_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -1980,7 +1980,7 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -2413,32 +2413,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
-        </record>
-        <record id="ir_actions_server_action_wizard_multi_chart" model="ir.actions.server">
-            <field name="type">ir.actions.server</field>
-            <field name="condition">True</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="base.model_ir_actions_todo"/>
-            <field eval="5" name="sequence"/>
-            <field name="code">
-# check for unconfigured companies
-account_installer_obj = self.pool.get('account.installer')
-account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
-action_ids = []
-# fetch the act_window actions related to chart of account configuration
-# we use ir.actions.todo to enable the possibility for other modules to insert their own
-# wizards during the configuration process
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
-if ref:
-    action_ids += [ref[1]]
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
-if ref:
-    action_ids += [ref[1]]
-todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', action_ids)], context=context)
-pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
-action = pool.get('res.config').next(cr, uid, [], context)
-</field>
-           <field name="name">New Company Financial Setting</field>
         </record>
 
         <record id="account_account_graph" model="ir.ui.view">

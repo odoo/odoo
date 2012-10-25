@@ -206,9 +206,9 @@ class hr_timesheet_sheet(osv.osv):
             ('draft','Open'),
             ('confirm','Waiting Approval'),
             ('done','Approved')], 'Status', select=True, required=True, readonly=True,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
-                \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
-                \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
+                \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
+                \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status', readonly=True),
         'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
         'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
@@ -388,7 +388,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
-        return dict([(el, self.on_change_account_id(cr, uid, ids, el)) for el in account_ids])
+        return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
 
 
 hr_timesheet_line()
