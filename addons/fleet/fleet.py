@@ -43,7 +43,7 @@ class fleet_vehicle_cost(osv.Model):
         'name' : fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
         #'name' : fields.char('Name',size=32),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
-        'cost_subtype': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
+        'cost_subtype': fields.many2one('fleet.service.type', 'Cost type', required=False, help='Cost type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'cost_type' : fields.selection([('contract', 'Contract'),('services','Services'),('fuel','Fuel'),('other','Other')], 'Category of the cost', help='For internal purpose only',required=True),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
