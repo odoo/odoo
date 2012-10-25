@@ -32,6 +32,7 @@ The base module to manage lunch.
 keep track for the Lunch Order, Cash Moves and Product. Apply Different
 Category for the product.
     """,
+    #TODO: remove `view´ folder. what's the use of partner_view.xml? what about lunch_validation_view.xml and lunch_cancel_view.xml? Couldn't that be merged in a single file?
     'data': ['security/groups.xml','view/lunch_view.xml','view/partner_view.xml','view/lunch_validation_view.xml','view/lunch_cancel_view.xml','lunch_report.xml',
         'report/report_lunch_order_view.xml',
         'security/ir.model.access.csv',],

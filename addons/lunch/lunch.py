@@ -19,37 +19,51 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import addons
-import tools
+import addons #TODO: not needed
+import tools #TODO: currently not needed, but you may want to import _ from tools.translte
 import pytz
 import time
 from osv import osv, fields
 from datetime import datetime, timedelta
 from lxml import etree
 
+#TODO: try to space more your code for a batter readability (follow PEP8 standards for coding layout is nice (except 80 characters max per line which is outdated))
+#  -  def _price_get(self,cr,uid,ids,name,arg,context=None):
+#  +  def _price_get(self, cr, uid, ids, name, arg, context=None):
+
+#TODO: add some docstrings on methods when it is needed
+
 class lunch_order(osv.Model):
     """ lunch order """
     _name = 'lunch.order'
     _description = 'Lunch Order'
 
-    def _price_get(self,cr,uid,ids,name,arg,context=None):
-        orders = self.browse(cr,uid,ids,context=context)
+    def _price_get(self, cr, uid, ids, name, arg, context=None):
+        #TODO: `orders´ variable is not needed. You can use `for x in self.browse(...):´
+        orders = self.browse(cr, uid, ids, context=context)
         result={}
         for order in orders:
             value = 0.0
-            for product in order.products:
+            for product in order.products: #TODO: use meaningful variable names `for order_line in ...´
                 if product.state != 'cancelled':
                     value+=product.product.price
                     result[order.id]=value
         return result
 
     def add_preference(self,cr,uid,ids,pref_id,context=None):
+        #TODO: docstring
         pref_ref = self.pool.get("lunch.preference")
         orderline_ref = self.pool.get('lunch.order.line')
         order = self.browse(cr,uid,ids,context=context)[0]
         pref = pref_ref.browse(cr,uid,pref_id,context=context)
-        prod_ref = self.pool.get('lunch.product')
-        if pref["user_id"].id == uid:
+        #TODO: get your information on browse_record objects by using `.´ instead of `[]´. 
+        #  e.g: `pref.user_id.id == uid´ instead of `pref['user_id'].id´
+        prod_ref = self.pool.get('lunch.product') #TODO: usually, all the statements for `self.pool.get(...)´ are grouped at the beginning of the method
+        if pref["user_id"].id == uid: #TODO: i don't get the meaning of this line...
+            #TODO: new_order_line = {
+            #          'date': order.date,
+            #          ...
+            #      }
             new_order_line = {}
             new_order_line['date'] = order["date"]
             new_order_line['user_id'] = uid
@@ -58,16 +72,17 @@ class lunch_order(osv.Model):
             new_order_line['order_id'] = order.id
             new_order_line['price'] = pref["price"]
             new_order_line['supplier'] = prod_ref.browse(cr,uid,pref["product"].id,context=context)['supplier'].id
-            new_id = orderline_ref.create(cr,uid,new_order_line)
+            new_id = orderline_ref.create(cr,uid,new_order_line)#TODO: add missing `context´ arg
             order.products.append(new_id)
+            #TODO: total is a computed field, so the write is useless, no?
             total = self._price_get(cr,uid,ids," "," ",context=context)
-            self.write(cr,uid,ids,{'total':total},context)
+            self.write(cr,uid,ids,{'total':total},context) 
         return True
 
     def _alerts_get(self,cr,uid,ids,name,arg,context=None):
         orders = self.browse(cr,uid,ids,context=context)
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[],context=context)
+        alert_ids = alert_ref.search(cr,uid,[],context=context) #TODO: not used
         result={}
         alert_msg= self._default_alerts_get(cr,uid,arg,context)
         for order in orders:
@@ -76,6 +91,7 @@ class lunch_order(osv.Model):
         return result
 
     def check_day(self,alert):
+        #TODO: docstring
         today = datetime.now().isoweekday()
         if today == 1:
             if alert.monday == True:
@@ -101,13 +117,14 @@ class lunch_order(osv.Model):
         return False
 
     def _default_alerts_get(self,cr,uid,arg,context=None):
+        #TODO: docstring
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[('active','=',True)],context=context)
+        alert_ids = alert_ref.search(cr,uid,[('active','=',True)],context=context) #TODO: active=True is automatically added by orm, so this param can be removed
         alert_msg=""
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
-            if alert :
+            if alert : #TODO useless `if´ statement
                 #there are alerts
-                display = False
+                display = False #TODO: should refactor in order to check if there is an alert in one function. Then use `if self.check_alert():...´
                 if alert.day=='specific':
                     #the alert is only activated a specific day
                     if alert.specific==fields.datetime.now().split(' ')[0]:
@@ -126,6 +143,7 @@ class lunch_order(osv.Model):
                         alert_msg+=alert.message
                         alert_msg+='\n'
                     elif alert.active_from<alert.active_to:
+                        #TODO: this part seems overcomplicated, so i skipped it for now :-)
                         #the alert is executing from ... to ...
                         now = datetime.utcnow()
                         user = self.pool.get('res.users').browse(cr, uid, uid)
@@ -150,13 +168,15 @@ class lunch_order(osv.Model):
             tot = 0.0
             for prod in products:
                 orderline = {}
+                #TODO: that's weird. should truy to find another way to compute total on order lines when record is not saved...
+                #   or at least put some comments
                 if isinstance(prod[1],bool): 
                     orderline = prod[2]
                     tot += orderline['price']
                 else:
                     orderline = self.pool.get('lunch.order.line').browse(cr,uid,prod[1],context=context)
                     tot += orderline.price
-                res = {'value':{'total':tot}}
+                res = {'value':{'total':tot}} #TODO: should be outside the loop
         return res
 
     def create(self, cr, uid, values, context=None):
@@ -164,7 +184,7 @@ class lunch_order(osv.Model):
         pref_ids = pref_ref.search(cr,uid,[],context=context)
         prod_ref = self.pool.get('lunch.product')
         new_id = super(lunch_order, self).create(cr, uid, values, context=context)
-        already_exists = False
+        already_exists = False #TODO: what's that trick with already_exists?? it's weird.
         if len(values['products'])>0 and values['user_id']==uid:
             for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
                 if pref['product'].id == values['products'][0][2]['product']:
@@ -178,12 +198,14 @@ class lunch_order(osv.Model):
     def _default_preference_get(self,cr,uid,args,context=None):
         pref_ref = self.pool.get('lunch.preference')
         pref_ids = pref_ref.search(cr,uid,[('user_id','=',uid)],order='date desc',limit=15,context=context)
+        #TODO: heeeuu... return pref_ids ?
         result = []
         for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
             result.append(pref.id)
         return result
 
     def __getattr__(self, attr):
+        #TODO: not reviewed
         if attr.startswith('add_preference_'):
             pref_id = int(attr[15:])
             def specific_function(cr, uid, ids, context=None):
@@ -192,6 +214,7 @@ class lunch_order(osv.Model):
         return super(lunch_order,self).__getattr__(self,attr)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        #TODO: not reviewed
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             pref_ref = self.pool.get("lunch.preference")
@@ -260,23 +283,23 @@ class lunch_order(osv.Model):
     _columns = {
         'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True, states={'new':[('readonly', False)]}),
         'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
-        'products' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}),
+        'products' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
         'total' : fields.function(_price_get, string="Total",store=True),
-        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Parcially Confirmed')], \
-            'Status', readonly=True, select=True),
+        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Parcially Confirmed')], \ 
+            'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
-        'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'),
+        'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'), #TODO: preference_ids
     }
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'date': fields.date.context_today,
-        'state': lambda self, cr, uid, context: 'new',
+        'state': lambda self, cr, uid, context: 'new', #TODO: remove the lambda()
         'alerts': _default_alerts_get,
         'preferences': _default_preference_get,
     }
 
-class lunch_order_line(osv.Model): #define each product that will be in one ORDER.
+class lunch_order_line(osv.Model): #define each product that will be in one ORDER.#TODO :D do not put comments because i said so, but because it's needed ^^
     """ lunch order line """
     _name = 'lunch.order.line'
     _description = 'lunch order line'
@@ -284,13 +307,13 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
     def _price_get(self,cr,uid,ids,name,arg,context=None):
         orderLines = self.browse(cr,uid,ids,context=context)
         result={}
-        for orderLine in orderLines:
+        for orderLine in orderLines: #TODO: get rid of `orderLines´ variable #TODO: usually, we don't use the CamelCase notation. For a better consistency you should use `order_line´
             result[orderLine.id]=orderLine.product.price
         return result
 
     def onchange_price(self,cr,uid,ids,product,context=None):
         if product:
-            price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
+            price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']#TODO: pass `context´ in args or read()
             return {'value': {'price': price}}
         return {'value': {'price': 0.0}} 
 
@@ -304,6 +327,7 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
             if order.state!='confirmed':
                 new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product.name, 'order_id':order.id, 'state':'order', 'date':order.date})
                 self.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
+        #TODO: how can this be working??? self is 'lunch.order.line' object, not 'lunch.order'... refactor
         for order in self.browse(cr,uid,ids,context=context):
             isconfirmed = True
             for product in order.order_id.products:
@@ -313,7 +337,7 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
                     isconfirmed = False
                     orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
             if isconfirmed == True:
-                orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
+                orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context) #TODO: context is a kwarg
         return {}
 
     def cancel(self,cr,uid,ids,context=None):
@@ -321,10 +345,12 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
         cashmove_ref = self.pool.get('lunch.cashmove')
         orders_ref = self.pool.get('lunch.order')
 
+        #TODO: how can this be working??? self is 'lunch.order.line' object, not 'lunch.order'... refactor
         for order in self.browse(cr,uid,ids,context=context):
             self.write(cr,uid,[order.id],{'state':'cancelled'},context)
             for cash in order.cashmove:
                 cashmove_ref.unlink(cr,uid,cash.id,context)
+        #TODO: how can this be working??? self is 'lunch.order.line' object, not 'lunch.order'... refactor
         for order in self.browse(cr,uid,ids,context=context):
             hasconfirmed = False
             hasnew = False
@@ -341,23 +367,26 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
         return {}
 
     _columns = {
-        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
-        'supplier' : fields.related('product','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
-        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
-        'product' : fields.many2one('lunch.product','Product',required=True), #one offer can have more than one product and one product can be in more than one offer.
-        'note' : fields.text('Note',size=256,required=False),
-        'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'),
-        'price' : fields.function(_price_get, string="Price",store=True),
+        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True), #TODO: where is it used?
+        'supplier' : fields.related('product','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),#TODO: where is it used?
+        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),#TODO: where is it used?
+        'product' : fields.many2one('lunch.product','Product',required=True), #one offer can have more than one product and one product can be in more than one offer
+            #TODO remove wrong (what's an `offer´?) and useless comment (people knows what's a many2one)
+        'note' : fields.text('Note',size=256,required=False),#TODO: required is False by default. Can be removed
+        'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'), #TODO: this one should be required=True
+        'price' : fields.function(_price_get, string="Price",store=True), #TODO: isn't it a fields.related?
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
-            'Status', readonly=True, select=True),
+            'Status', readonly=True, select=True), #TODO: labels are confusing. Should be: 'ordered', 'received' or 'not received'
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
         
     }
     _defaults = {
+        #TODO: remove lambda()
         'state': lambda self, cr, uid, context: 'new',        
     }
 
 class lunch_preference(osv.Model):
+#TODO: class not reviewed yet
     _name = 'lunch.preference'
     _description= "user preferences"
 
@@ -376,6 +405,7 @@ class lunch_preference(osv.Model):
     }
 
 class lunch_product(osv.Model):
+#TODO: class not reviewed yet
     """ lunch product """
     _name = 'lunch.product'
     _description = 'lunch product'
@@ -389,6 +419,7 @@ class lunch_product(osv.Model):
     }
 
 class lunch_product_category(osv.Model):
+#TODO: class not reviewed yet
     """ lunch product category """
     _name = 'lunch.product.category'
     _description = 'lunch product category'
@@ -397,6 +428,7 @@ class lunch_product_category(osv.Model):
     }
 
 class lunch_cashmove(osv.Model):
+#TODO: class not reviewed yet
     """ lunch cashmove => order or payment """
     _name = 'lunch.cashmove'
     _description = 'lunch cashmove'
@@ -415,6 +447,7 @@ class lunch_cashmove(osv.Model):
     }
 
 class lunch_alert(osv.Model):
+#TODO: class not reviewed yet
     """ lunch alert """
     _name = 'lunch.alert'
     _description = 'lunch alert'
@@ -435,6 +468,7 @@ class lunch_alert(osv.Model):
     }
 
 class lunch_cancel(osv.Model):
+#TODO: class not reviewed yet
     """ lunch cancel """
     _name = 'lunch.cancel'
     _description = 'cancel lunch order'
@@ -466,6 +500,7 @@ class lunch_cancel(osv.Model):
         return {}
 
 class lunch_validation(osv.Model):
+#TODO: class not reviewed yet
     """ lunch validation """
     _name = 'lunch.validation'
     _description = 'lunch validation for order'
