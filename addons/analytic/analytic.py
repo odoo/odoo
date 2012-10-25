@@ -96,22 +96,29 @@ class account_analytic_account(osv.osv):
                 res[row['id']][field] = row[field]
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            elmt = self.browse(cr, uid, id, context=context)
+            res.append((id, self._get_one_full_name(elmt)))
+        return res
+
     def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
         if context == None:
             context = {}
         res = {}
-        for m in self.browse(cr, uid, ids, context=context):
-            res[m.id] = self._get_one_full_name(m)
+        for elmt in self.browse(cr, uid, ids, context=context):
+            res[elmt.id] = self._get_one_full_name(elmt)
         return res
 
-    def _get_one_full_name(self, menu, level=6):
+    def _get_one_full_name(self, elmt, level=6):
         if level<=0:
             return '...'
-        if menu.parent_id:
-            parent_path = self._get_one_full_name(menu.parent_id, level-1) + "/"
+        if elmt.parent_id:
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
         else:
             parent_path = ''
-        return parent_path + menu.name
+        return parent_path + elmt.name
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         result = {}
