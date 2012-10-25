@@ -690,22 +690,29 @@ class mail_thread(osv.AbstractModel):
         return mail_message.create(cr, uid, values, context=context)
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        # TDE FIXME: body is plaintext: convert it into html
+                        subtype=None, parent_id=False, attachment_ids=None, context=None):
+        """ Wrapper on message_post, used only in Chatter (JS). The purpose is
+            to handle attachments.
+
+            # TDE FIXME: body is plaintext: convert it into html
+        """
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, context=context)
 
         # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
-        if attachments:
+        if attachment_ids:
             ir_attachment = self.pool.get('ir.attachment')
             mail_message = self.pool.get('mail.message')
-            attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
-            if attachment_ids:
+            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
+                ('res_model', '=', 'mail.message'),
+                ('res_id', '=', 0),
+                ('create_uid', '=', uid),
+                ('id', 'in', attachment_ids)], context=context)
+            if filtered_attachment_ids:
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
-        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], parent_id=parent_id, context=context)
-        return new_message
+        return new_message_id
 
     #------------------------------------------------------
     # Followers API

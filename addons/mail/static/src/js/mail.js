@@ -344,9 +344,10 @@ openerp.mail = function(session) {
                         attachments,
                         this.parent_thread.context
                     ]).then(function(records){
-                        self.parent_thread.switch_new_message(records);
-                        self.datasets.attachment_ids=[];
-                        self.on_cancel();
+                        // TDE note: temp deactivation, because this will be fixed in DOM-CHM
+                        // self.parent_thread.switch_new_message(records);
+                        // self.datasets.attachment_ids=[];
+                        // self.on_cancel();
                     });
                 return true;
             }
