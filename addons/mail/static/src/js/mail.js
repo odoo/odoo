@@ -372,8 +372,9 @@ openerp.mail = function(session) {
                         'mail.mt_comment',
                         this.context.default_parent_id, 
                         attachments,
+                        // (this.options.display_indented_thread - this.thread_level),
                         this.parent_thread.context
-                    ]).then(function(records){
+                    ]).then(function(records) {
                         self.parent_thread.switch_new_message(records);
                         self.on_cancel();
                         //session.web.unblockUI();
@@ -407,7 +408,7 @@ openerp.mail = function(session) {
 
             if(this.$render_expandable.is(':hidden')){
 
-                this.$render_expandable.show();
+                this.$render_expandable.css('display', '');
                 this.$render_compact.hide();
                 this.$render_expandable.find('textarea').focus();
 
@@ -417,7 +418,7 @@ openerp.mail = function(session) {
                 if(!this.$render_expandable.find('textarea').val().match(/\S+/)){
                     this.$render_expandable.hide();
                     if(this.options.show_compact_message && this.show_compact_message) {
-                        this.$render_compact.show();
+                        this.$render_compact.css('display', '');
                     } else {
                         this.$render_compact.hide();
                     }
@@ -434,7 +435,7 @@ openerp.mail = function(session) {
 
         do_show_compact: function() {
             if(this.options.show_compact_message && (!this.$render_expandable || this.$render_expandable.is(':hidden'))) {
-                this.$render_compact.show();
+                this.$render_compact.css('display', '');
             }
             this.show_compact_message = true;
         }
@@ -642,33 +643,29 @@ openerp.mail = function(session) {
                     attach.is_image = true;
                     attach['url'] = mail.ChatterUtils.get_image(this.session, 'ir.attachment', 'datas', attach.id); 
                 }
-                //To do
-                // if((attach.filename || attach.name).match(/[.](pdf|doc|docx|xls|xlsx|ppt|pptx|psd|tiff|dxf|svg)$/i)) {
-                //     attach.is_document = true;
-                //     attach.url_escape = encodeURIComponent(attach.url);
-                // }
             }
-
         },
         
         start: function() {
             this._super.apply(this, arguments);
             this.expender();
-            this.$el.hide().fadeIn(750);
+            this.$el.hide().fadeIn(750, function() {$(this).css('display', '');});
             this.resize_img();
             this.bind_events();
             this.create_thread();
+            this.$('.oe_msg_attachments, .oe_msg_images').addClass("oe_hidden");
         },
 
         resize_img: function() {
-            this.$("img").load(function() {
+            var resize = function() {
                 var h = $(this).height();
                 var w = $(this).width();
                 if( h > 100 || w >100 ) {
                     var ratio = 100 / (h > w ? h : w);
                     $(this).attr("width", parseInt( w*ratio )).attr("height", parseInt( h*ratio ));
                 }
-            });
+            };
+            this.$("img").load(resize).each(resize);
         },
 
         /**
@@ -678,8 +675,14 @@ openerp.mail = function(session) {
             var self = this;
 
             // event: click on 'Attachment(s)' in msg
-            this.$('a.oe_msg_view_attachments:first').on('click', function (event) {
-                self.$('.oe_msg_attachments:first').toggle();
+            this.$('.oe_mail_msg_view_attachments').on('click', function (event) {
+                var attach = self.$('.oe_msg_attachments:first, .oe_msg_images:first');
+                if( self.$('.oe_msg_attachments:first').hasClass("oe_hidden") ) {
+                    attach.removeClass("oe_hidden");
+                } else {
+                    attach.addClass("oe_hidden");
+                }
+                self.resize_img();
             });
             // event: click on icone 'Read' in header
             this.$el.on('click', '.oe_read', this.on_message_read_unread);
@@ -1584,8 +1587,6 @@ openerp.mail = function(session) {
          * @param {Array} [options.domain] domain on the Wall
          * @param {Object} [options.context] context, is an object. It should
          *      contain default_model, default_res_id, to give it to the threads.
-         * @param {Number} [options.thread_level] number of thread levels to display
-         *      0 being flat.
          */
         init: function (parent, options) {
             this._super(parent);
