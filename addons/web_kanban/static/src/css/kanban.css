@@ -612,10 +612,9 @@
 
 @media print {
   .oe_kanban_groups button {
-    display: none;
+    visibility: hidden;
   }
-
-  .openerp .oe_kanban_view.oe_kanban_ungrouped .oe_kanban_column .oe_kanban_record > div > a {
-    display: none;
+  .oe_kanban_groups a[data-type=object], .oe_kanban_groups a[data-type=delete] {
+    visibility: hidden;
   }
 }
