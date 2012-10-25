@@ -694,7 +694,13 @@ class mail_thread(osv.AbstractModel):
         # TDE FIXME: body is plaintext: convert it into html
         # when writing on res.partner, without specific thread_id -> redirect to the user's partner
         if self._name == 'res.partner' and not thread_id:
-            thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+            thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id', 'subject'], context=context)['partner_id'][0]
+
+        mail_message = self.pool.get('mail.message')
+
+        if not subject and parent_id:
+            parent = mail_message.read(cr, uid, parent_id, ['subject'], context=context)
+            subject = 'Re: ' + parent['subject']
 
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, context=context)
@@ -702,7 +708,6 @@ class mail_thread(osv.AbstractModel):
         # Chatter: attachments linked to the document (not done JS-side), load the message
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
-            mail_message = self.pool.get('mail.message')
             attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.compose.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)

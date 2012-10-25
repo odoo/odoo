@@ -15,7 +15,7 @@
         for main thread composition form in document form view.
         -->
     <t t-name="mail.compose_message">
-        <div class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_composer">
+        <div t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <div class="oe_msg_left">
                 <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.avatar}"/>
             </div>
@@ -41,7 +41,7 @@
         mail.compose_message when focus on textarea
         -->
     <t t-name="mail.compose_message.compact">
-        <div class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_composer_compact">
+        <div t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <textarea class="field_text oe_compact" placeholder="Write a reply..."/>
         </div>
     </t>
@@ -72,8 +72,8 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <span t-attf-class="oe_msg_attachments">
-            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image and !attachment.is_document">
+        <span class="oe_msg_attachments">
+            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image">
                 <div class="oe_attachment">
                     <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
@@ -92,19 +92,11 @@
                 </div>
             </t>
         </span>
-        <span t-attf-class="oe_msg_images">
+        <span class="oe_msg_images">
             <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="attachment.is_image">
                 <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
                     <img t-if="attachment.is_image" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-att-src="attachment.url"/>
                 </a>
-            </t>
-        </span>
-        <span t-attf-class="oe_msg_document">
-            <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="attachment.is_document">
-                <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
-                    <t t-raw="attachment.name || attachment.filename"/>
-                </a>
-                <iframe t-attf-src="http://docs.google.com/viewer?url=#{ attachment.url_escape }&amp;embedded=true" width="600" height="400" style="border: none;"></iframe>
             </t>
         </span>
     </t>
@@ -215,7 +207,7 @@
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
-                    <h1 t-if="widget.subject" class="oe_msg_title">
+                    <h1 t-if="widget.subject and !widget.thread_level" class="oe_msg_title">
                         <t t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
@@ -245,7 +237,7 @@
 
     <!-- expandable message layout -->
     <t t-name="mail.thread.expandable">
-        <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type} oe_msg_unread">
+        <div t-attf-class="oe_msg oe_msg_#{widget.type} #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_unread">
             <div class="oe_msg_content oe_msg_more_message">
                 <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">load one more message</a>
                 <a t-if="widget.nb_messages !== 1" class="oe_msg_fetch_more">load <t t-raw="widget.nb_messages" /> more messages</a>

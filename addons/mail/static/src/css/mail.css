@@ -151,9 +151,11 @@
     padding-top: 2px;
     padding-bottom:6px;
 }
-.openerp .oe_mail .oe_msg_attachments.oe_hidden{
+.openerp .oe_mail .oe_msg_attachments.oe_hidden,
+.openerp .oe_mail .oe_msg_images.oe_hidden{
     margin:0px;
     border: none;
+    display: none;
 }
 .openerp .oe_mail .oe_msg_attachments{
     margin-bottom: 4px;
@@ -309,6 +311,14 @@
     width: 32px;
     margin-right:4px;
     border-radius: 2px;
+}
+
+/* ---------------- MESSAGES BODY ------------------ */
+.openerp .oe_mail .oe_msg_content .oe_blockquote,
+.openerp .oe_mail .oe_msg_content blockquote {
+    padding: 4px;
+    border-radius: 2px;
+    border: solid 1px rgba(124,123,173,0.14);
 }
 
 /* ----------- FORM INTEGRATION ------------ */
