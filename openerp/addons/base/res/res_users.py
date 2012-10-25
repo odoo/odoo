@@ -122,7 +122,7 @@ class res_users(osv.osv):
     }
     _name = "res.users"
     _description = 'Users'
-    _order = 'partner_id'
+    _order = 'user_name'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -145,6 +145,7 @@ class res_users(osv.osv):
         'partner_id': fields.many2one('res.partner', required=True,
             string='Related Partner', ondelete='cascade',
             help='Partner-related data of the user'),
+        'user_name': fields.related('partner_id','name', type='char', relation="res.partner", store=True),
         'login': fields.char('Login', size=64, required=True,
             help="Used to log into the system"),
         'password': fields.char('Password', size=64, invisible=True,
