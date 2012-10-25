@@ -876,8 +876,9 @@ class fleet_vehicle_log_contract(osv.Model):
         #d = datetime.datetime(2012, 12, 01)
 
         contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','=','open')], offset=0, limit=None, order=None,context=None, count=False)
+        deltas = {'yearly' : relativedelta(years=+1),'monthly' : relativedelta(months=+1),'weekly' : relativedelta(weeks=+1),'daily' : relativedelta(days=+1)}
         for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_ids,context=context):
-            if not contract.start_date:
+            if not contract.start_date or contract.cost_frequency == 'no':
                 break;
             if contract.generated_cost_ids != []:
                 last_cost_id = self.pool.get('fleet.vehicle.cost').search(cr, uid, ['&',('contract_id','=',contract.id),('auto_generated','=',True)], offset=0, limit=1, order='date desc',context=None, count=False)
@@ -887,23 +888,13 @@ class fleet_vehicle_log_contract(osv.Model):
                 found = False
                 last_cost_date = contract.start_date
             startdate = datetime.datetime.strptime(last_cost_date,'%Y-%m-%d').date() 
-            if contract.cost_frequency == 'yearly':
-                delta = relativedelta(years=+1)
-            elif contract.cost_frequency == 'monthly':
-                delta = relativedelta(months=+1)
-            elif contract.cost_frequency == 'weekly':
-                delta = relativedelta(weeks=+1)
-            elif contract.cost_frequency == 'daily':
-                delta = relativedelta(days=+1)
-            elif contract.cost_frequency == 'no':
-                break;
             if found:
-                startdate += delta
-            while startdate < d:
+                startdate += deltas.get(contract.cost_frequency)
+            while (startdate < d) & (startdate < datetime.datetime.strptime(contract.expiration_date,'%Y-%m-%d').date()):
                 data = {'amount' : contract.cost_generated,'date' : startdate.strftime('%Y-%m-%d'),'vehicle_id' : contract.vehicle_id.id,'cost_subtype' : contract.cost_subtype.id,'contract_id' : contract.id,'auto_generated' : True}
                 print data
                 cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context)
-                startdate += delta
+                startdate += deltas.get(contract.cost_frequency)
         return True
     
     def name_get(self, cr, uid, ids, context=None):
