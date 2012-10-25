@@ -37,6 +37,9 @@
     margin:1px;
     border-radius:2px;
 }
+.openerp .oe_mail .oe_msg .oe_subtle{
+    color: #B7B7D5;
+}
 .openerp .oe_mail .oe_msg_indented .oe_msg_center{
     margin-left:34px;
 }
@@ -58,12 +61,7 @@
 .openerp .oe_mail .oe_msg .oe_msg_footer{
     padding-left: 4px;
     overflow: hidden;
-    font-size: 11px;
     opacity:0.8;
-    -webkit-transition: opacity 0.2s linear;
-}
-.openerp .oe_mail .oe_thread:hover .oe_msg_footer{
-    opacity: 1;
     -webkit-transition: opacity 0.2s linear;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content{
@@ -73,7 +71,7 @@
     padding-bottom:1px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_title{
-    font-size: 16px;
+    font-size: 13px;
     margin-bottom: 0px;
     margin-top: 2px;
 }
@@ -124,10 +122,11 @@
 }
 .openerp .oe_mail .oe_msg .oe_msg_content textarea{
     width: 100%;
-    height: 100%;
+    height: 32px;
     margin: 0px;
     padding: 0px;
     resize: vertical;
+    
     padding: 4px;
 }
 .openerp .oe_mail .oe_msg.oe_msg_composer_compact, .openerp .oe_mail .oe_msg.oe_msg_expandable{
@@ -220,11 +219,15 @@
     border: none;
     text-shadow: none;
 }
+.openerp .oe_mail .oe_attach_label{
+    color: #7C7BAD;
+    margin-left: -3px;
+}
 .openerp .oe_mail .oe_msg_footer .oe_attachment_file .oe_form_binary_file{
     display: inline-block;
-    margin-left: -23px;
-    height: 24px;
-    width: 24px;
+    margin-left: -47px;
+    height: 28px;
+    width: 52px;
     margin-top: -6px;
 }
 .openerp .oe_mail .oe_mail_list_recipients{
