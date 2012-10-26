@@ -1313,6 +1313,14 @@ class account_move(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
+    def _check_fiscal_year(self, cursor, user, ids):
+        for move in self.browse(cursor, user, ids):
+            date_start = move.period_id.fiscalyear_id.date_start
+            date_stop = move.period_id.fiscalyear_id.date_stop
+            if move.date < date_start or move.date > date_stop:
+                return False
+        return True
+
     def _check_centralisation(self, cursor, user, ids, context=None):
         for move in self.browse(cursor, user, ids, context=context):
             if move.journal_id.centralisation:
@@ -1328,6 +1336,9 @@ class account_move(osv.osv):
         (_check_centralisation,
             'You cannot create more than one move per period on a centralized journal.',
             ['journal_id']),
+        (_check_fiscal_year,
+            'You cannot create entries with date not in the fiscal year of the chosen period',
+            ['line_id','']),
     ]
 
     def post(self, cr, uid, ids, context=None):
@@ -1686,7 +1697,25 @@ class account_move_reconcile(osv.osv):
     _defaults = {
         'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
+    
+    # Look in the line_id and line_partial_ids to ensure the partner is the same or empty
+    # on all lines
+    def _check_same_partner(self, cr, uid, ids, context=None):
+        for reconcile in self.browse(cr, uid, ids, context=context):
+            if reconcile.line_id:
+                first_partner = reconcile.line_id[0].partner_id.id
+                move_lines = reconcile.line_id
+            elif reconcile.line_partial_ids:
+                first_partner = reconcile.line_partial_ids[0].partner_id.id
+                move_lines = reconcile.line_partial_ids
+            if any([line.partner_id.id != first_partner for line in move_lines]):
+                return False
+        return True
 
+    _constraints = [
+        (_check_same_partner, 'You can only reconcile moves where the partner (we mean ID) is the same or empty on all entries.', ['line_id']),
+    ]
+    
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
         for rec in self.browse(cr, uid, ids, context=context):
