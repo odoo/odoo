@@ -194,6 +194,10 @@ openerp.hr_timesheet_sheet = function(instance) {
                         ['use_timesheets','=',1],
                         ['id', 'not in', _.pluck(self.accounts, "account")],
                     ],
+                    context: {
+                        default_use_timesheets: 1,
+                        default_type: "contract",
+                    },
                     modifiers: '{"required": true}',
                 },
             });
