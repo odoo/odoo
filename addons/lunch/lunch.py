@@ -39,7 +39,7 @@ class lunch_order(osv.Model):
             value = 0.0
             for product in order.products: #TODO: use meaningful variable names `for order_line in ...´
                 if product.state != 'cancelled':
-                    value+=product.product.price
+                    value += product.product.price
                     result[order.id]=value
         return result
 
@@ -51,7 +51,7 @@ class lunch_order(osv.Model):
         prod_ref = self.pool.get('lunch.product')
         order = self.browse(cr,uid,ids,context=context)[0]
         pref = pref_ref.browse(cr,uid,pref_id,context=context)
-       	if pref.user_id.id == uid:
+        if pref.user_id.id == uid:
             new_order_line = {
                 'date': order["date"],
                 'user_id': uid,
@@ -65,8 +65,9 @@ class lunch_order(osv.Model):
             order.products.append(new_id)
             #TODO: total is a computed field, so the write is useless, no?
             # ---> If I remove it, the total for order are not good (I try many times)
+            # use store = {...}
             total = self._price_get(cr,uid,ids," "," ",context=context)
-            self.write(cr,uid,ids,{'total':total},context) 
+            self.write(cr,uid,ids,{},context) 
         return True
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
@@ -265,7 +266,7 @@ class lunch_order(osv.Model):
         'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
         'products' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
         'total' : fields.function(_price_get, string="Total",store=True),
-        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Parcially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
+        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
         'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
