@@ -28,7 +28,7 @@ class hr_config_settings(osv.osv_memory):
     _columns = {
         'module_hr_timesheet_sheet': fields.boolean('Allow timesheets validation by managers',
             help ="""This installs the module hr_timesheet_sheet."""),
-        'module_hr_attendance': fields.boolean('Track attendances',
+        'module_hr_attendance': fields.boolean('Install attendances feature',
             help ="""This installs the module hr_attendance."""),
         'module_hr_timesheet': fields.boolean('Manage timesheets',
             help ="""This installs the module hr_timesheet."""),
