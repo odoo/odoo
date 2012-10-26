@@ -1485,6 +1485,11 @@ class account_move(osv.osv):
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
                                 move['name'])
+            for line in move.line_id:
+                if line.invoice:
+                    raise osv.except_osv(_('User Error!'),
+                            _("Move cannot be deleted if linked to an invoice: %s : Move ID:%s.") % \
+                                    (line.invoice.number,move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
             context['period_id'] = move.period_id.id
