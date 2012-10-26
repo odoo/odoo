@@ -542,7 +542,7 @@ openerp.mail = function (session) {
             }
             this.flag_used = true;
 
-            this.animated_destroy({'fadeTime':300});
+            this.animated_destroy({'fadeTime':200});
             this.parent_thread.message_fetch(this.domain, this.context);
             return false;
         },
@@ -791,7 +791,7 @@ openerp.mail = function (session) {
             event.stopPropagation();
             if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
             
-            this.animated_destroy({fadeTime:250});
+            this.animated_destroy({fadeTime:150});
             // delete this message and his childs
             var ids = [this.id].concat( this.get_child_ids() );
             this.ds_message.unlink(ids);
@@ -807,7 +807,7 @@ openerp.mail = function (session) {
 
             if ( (this.to_read && this.options.typeof_thread == 'inbox') ||
                 (!this.to_read && this.options.typeof_thread == 'archives')) {
-                this.animated_destroy({fadeTime:250});
+                this.animated_destroy({fadeTime:150});
             }
 
             // if this message is read, all childs message display is read
@@ -900,7 +900,7 @@ openerp.mail = function (session) {
                 } else {
                     button.removeClass('oe_starred');
                     if ( self.options.typeof_thread == 'stared' ) {
-                        self.animated_destroy({fadeTime:250});
+                        self.animated_destroy({fadeTime:150});
                     }
                 }
             });
