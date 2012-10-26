@@ -530,7 +530,8 @@ instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which o
 instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
-    '_t' : instance.web._t
+    '_t' : instance.web._t,
+    'JSON': JSON,
 };
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node
