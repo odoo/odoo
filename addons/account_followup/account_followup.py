@@ -165,10 +165,14 @@ class res_partner(osv.osv):
         res = {}
         for partner in self.browse(cr, uid, ids):            
             latest_id = self._get_latest_followup_level_id(cr, uid, [partner.id], name, arg, context)[partner.id]
-            latest = self.pool.get('account_followup.followup.line').browse(cr, uid, [latest_id], context)[0]
+            if latest_id:
+                latest = self.pool.get('account_followup.followup.line').browse(cr, uid, [latest_id], context)[0]
+            else:
+                latest = False
+
             delay = False
             newlevel = False
-            if latest: #if latest exists
+            if latest: #if latest exists                
                 newlevel = latest.id
                 old_delay = latest.delay
             else:
@@ -191,8 +195,10 @@ class res_partner(osv.osv):
 
     def do_partner_phonecall(self, cr, uid, partner_ids, context=None):
         #partners = self.browse(cr, uid, partner_ids, context)
-        print partner_ids
-        self.write(cr, uid, partner_ids, {'payment_next_action': 'Phone...'}, context)
+        print partner_ids        
+        #for partner in self.browse(cr, uid, partner_ids, context):
+        #    print partner.is_company
+        self.write(cr, uid, partner_ids, {'payment_note': 'Phone...'}, context)
 
     def do_partner_print(self, cr, uid, partner_ids, data, context=None):        
         #data.update({'date': context['date']})
@@ -345,7 +351,6 @@ class res_partner(osv.osv):
         'latest_followup_level_id':fields.function(_get_latest_followup_level_id, method=True, 
             type='many2one', relation='account_followup.followup.line', string="latest followup level", store=True), 
         'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="next level"),
-
     }
 
 res_partner()

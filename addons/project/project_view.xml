@@ -378,20 +378,18 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                     <header>
-                        <span groups="base.group_user">
-                            <!--
-                            <button name="do_open" string="Start Task" type="object"
-                                    states="draft,pending" class="oe_highlight"/>
-                            <button name="do_draft" string="Draft" type="object"
-                                    states="cancel,done"/>
-                            -->
-                            <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
-                                    states="cancelled,done" context="{'button_reactivate':True}"/>
-                            <button name="action_close" string="Done" type="object"
-                                    states="draft,open,pending"/>
-                            <button name="do_cancel" string="Cancel" type="object"
-                                    states="draft,open,pending"/>
-                        </span>
+                        <!--
+                        <button name="do_open" string="Start Task" type="object"
+                                states="draft,pending" class="oe_highlight"/>
+                        <button name="do_draft" string="Draft" type="object"
+                                states="cancel,done"/>
+                        -->
+                        <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
+                                states="cancelled,done" context="{'button_reactivate':True}" groups="base.group_user"/>
+                        <button name="action_close" string="Done" type="object"
+                                states="draft,open,pending" groups="base.group_user"/>
+                        <button name="do_cancel" string="Cancel" type="object"
+                                states="draft,open,pending" groups="base.group_user"/>
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
@@ -417,10 +415,10 @@
                             <field name="description" attrs="{'readonly':[('state','=','done')]}" placeholder="Add a Description..."/>
                             <field name="work_ids" groups="project.group_tasks_work_on_tasks">
                                 <tree string="Task Work" editable="top">
-                                    <field name="date"/>
                                     <field name="name"/>
-                                    <field name="user_id"/>
                                     <field name="hours" widget="float_time" sum="Spent Hours"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
                                 </tree>
                             </field>
                             <group>
@@ -788,7 +786,6 @@
         <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>
 
-        <act_window context="{'search_default_user_id': active_id, 'default_user_id': active_id}" id="act_res_users_2_project_project" name="User's projects" res_model="project.project" src_model="res.users" view_mode="tree,form" view_type="form"/>
 
          <record id="task_company" model="ir.ui.view">
             <field name="name">res.company.task.config</field>

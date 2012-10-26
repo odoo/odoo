@@ -81,11 +81,11 @@ class account_followup_print(osv.osv_memory):
         'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
         'company_id':fields.related('followup_id', 'company_id', type='many2one', relation='res.company'), 
-        #'email_conf': fields.boolean('Send Email Confirmation'),
-        #'email_subject': fields.char('Email Subject', size=64),
-        #'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
-        #'email_body': fields.text('Email Body'),
-        'summary': fields.text('Summary', required=True, readonly=True),
+        'email_conf': fields.boolean('Send Email Confirmation'),
+        'email_subject': fields.char('Email Subject', size=64),
+        'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
+        'email_body': fields.text('Email Body'),
+        'summary': fields.text('Summary', readonly=True),
         'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.')
     }
 
@@ -130,13 +130,12 @@ class account_followup_print(osv.osv_memory):
         partner_ids_to_print = []
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
             if partner.max_followup_id.phonecall:
-                partner_obj.do_partner_phonecall(cr, uid, [partner.id], context)
+                partner_obj.do_partner_phonecall(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_email:
-                partner_obj.do_partner_mail(cr, uid, [partner.id], context)
+                partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
-
-        action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data,  context)
+        action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 
 
@@ -162,6 +161,24 @@ class account_followup_print(osv.osv_memory):
         res = self.process_partners(cr, uid, partner_list, data, context=context)
         return res
 
+    def _get_summary(self, cr, uid, context=None):
+       if context is None:
+           context = {}
+       return context.get('summary', '')
+
+    def _get_partners(self, cr, uid, context=None):
+       return self._get_partners_followp(cr, uid, [], context=context)['partner_ids']
+
+    def _get_msg(self, cr, uid, context=None):
+       return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
+
+    _defaults = {
+        'email_body': _get_msg,
+        'email_subject': _('Invoices Reminder'),
+        'partner_lang': True,
+        'partner_ids': _get_partners,
+        'summary': _get_summary,
+      }
 #account_followup_print()
 
 
@@ -263,11 +280,8 @@ class account_followup_print(osv.osv_memory):
                 if stat_line_id not in partner_list:
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
-
         return {'partner_ids': partner_list, 'to_update': to_update}
-
-
-    
+        
 
     def do_print(self, cr, uid, ids, context=None):
         if context is None:
@@ -275,7 +289,6 @@ class account_followup_print(osv.osv_memory):
         data = self.read(cr, uid, ids, [], context=context)[0]
         res = self._get_partners_followp(cr, uid, ids, context)['to_update'] #-> only to_update part
         to_update = res
-        
         data['followup_id'] = 'followup_id' in context and context['followup_id'] or False
         date = 'date' in context and context['date'] or data['date']
         if not data['test_print']:
@@ -288,7 +301,6 @@ class account_followup_print(osv.osv_memory):
                         (to_update[id]['level'],
                         date, int(id),))
         data.update({'date': context['date']})
-        
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
@@ -300,9 +312,7 @@ class account_followup_print(osv.osv_memory):
             'datas': datas,
         }
 
-
-
-
+account_followup_print()
 
 
 #jco tests
