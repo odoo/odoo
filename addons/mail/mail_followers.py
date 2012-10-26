@@ -142,9 +142,14 @@ class mail_notification(osv.Model):
         if not notify_partner_ids:
             return True
 
+        # add the context in the email
+        quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
+
         # add signature
         mail_mail = self.pool.get('mail.mail')
         body_html = msg.body
+        if quote_context:
+            body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
         if signature:
             body_html = tools.append_content_to_html(body_html, signature)

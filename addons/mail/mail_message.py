@@ -24,10 +24,16 @@ import tools
 
 from email.header import decode_header
 from openerp import SUPERUSER_ID
-from osv import osv, orm, fields
-from tools.translate import _
+from openerp.osv import osv, orm, fields
+from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
+
+try:
+    from mako.template import Template as MakoTemplate
+except ImportError:
+    _logger.warning("payment_acquirer: mako templates not available, payment acquirer will not work!")
+
 
 """ Some tools for parsing / creating email fields """
 def decode(text):
@@ -618,9 +624,86 @@ class mail_message(osv.Model):
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        """ Overridden to avoid duplicating fields that are unique to each email """
+        if default is None:
+            default = {}
+        default.update(message_id=False, headers=False)
+        return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
+
     #------------------------------------------------------
     # Messaging API
     #------------------------------------------------------
+
+    MAIL_TEMPLATE = """<div>
+    % if message:
+        ${display_message(message)}
+    % endif
+    % for ctx_msg in context_messages:
+        ${display_message(ctx_msg)}
+    % endfor
+    % if add_expandable:
+        ${display_expandable()}
+    % endif
+    ${display_message(header_message)}
+    </div>
+
+    <%def name="display_message(message)">
+        <div>
+            Subject: ${message.subject}<br />
+            Body: ${message.body}
+        </div>
+    </%def>
+
+    <%def name="display_expandable()">
+        <div>This is an expandable.</div>
+    </%def>
+    """
+
+    def message_quote_context(self, cr, uid, id, context=None, limit=3, add_original=False):
+        """
+            1. message.parent_id = False: new thread, no quote_context
+            2. get the lasts messages in the thread before message
+            3. get the message header
+            4. add an expandable between them
+
+            :param dict quote_context: options for quoting
+            :return string: html quote
+        """
+        add_expandable = False
+
+        message = self.browse(cr, uid, id, context=context)
+        if not message.parent_id:
+            return ''
+        context_ids = self.search(cr, uid, [
+            ('parent_id', '=', message.parent_id.id),
+            ('id', '<', message.id),
+            ], limit=limit, context=context)
+
+        if len(context_ids) >= limit:
+            add_expandable = True
+            context_ids = context_ids[0:-1]
+
+        context_ids.append(message.parent_id.id)
+        context_messages = self.browse(cr, uid, context_ids, context=context)
+        header_message = context_messages.pop()
+
+        try:
+            if not add_original:
+                message = False
+            result = MakoTemplate(self.MAIL_TEMPLATE).render_unicode(message=message,
+                                                        context_messages=context_messages,
+                                                        header_message=header_message,
+                                                        add_expandable=add_expandable,
+                                                        # context kw would clash with mako internals
+                                                        ctx=context,
+                                                        format_exceptions=True)
+            result = result.strip()
+            return result
+        except Exception:
+            _logger.exception("failed to render mako template for quoting message")
+            return ''
+        return result
 
     def _notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids if is not a private message.
@@ -655,13 +738,6 @@ class mail_message(osv.Model):
             self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
 
         self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        """ Overridden to avoid duplicating fields that are unique to each email """
-        if default is None:
-            default = {}
-        default.update(message_id=False, headers=False)
-        return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
     # Tools
