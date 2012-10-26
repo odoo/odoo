@@ -42,6 +42,8 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_contract."""),
         'module_hr_evaluation': fields.boolean('Organize employees periodic evaluation',
             help ="""This installs the module hr_evaluation."""),
+        'module_account_analytic_analysis': fields.boolean('Allow invoicing based on timesheets (will install the sale application)',
+            help ="""This installs the module account_analytic_analysis, which will install sales management too."""),
         'module_hr_payroll': fields.boolean('Manage payroll',
             help ="""This installs the module hr_payroll."""),
     }
