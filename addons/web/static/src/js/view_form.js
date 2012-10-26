@@ -4910,20 +4910,16 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         }
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
-        $(window).on(this.fileupload_id, this.on_file_loaded);
+        $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
 
-        this.files = false;
+        this.list_file = false;
     },
     start: function() {
         this._super(this);
-        this.$list_file = this.$('.oe_placeholder_files');
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
-        this.display_files();
     },
     set_value: function(value_) {
-        var values = this.files = (value_ && !this.files) ? value_ : this.files;
-        this._super( values );
-        this.display_files();
+        this._super( value_ );
     },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
@@ -4931,13 +4927,15 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
     get_file_url: function (attachment) {
         return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
     },
-    display_files: function(){
-        if(this.$list_file) {
-            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
-            this.$list_file.replaceWith( render );
-            this.$list_file = this.$(".oe_files");
-            this.$list_file.on('click', '.oe_delete', this.on_file_delete);
-        }
+    render_value: function () {
+        var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
+        render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
+        this.$('.oe_placeholder_files, .oe_files').replaceWith( render );
+
+        // reinit input type file
+        var $input = this.$('input.oe_form_binary_file');
+        $input.after($input.clone(true)).remove();
+        this.$(".oe_fileuploader").show();
     },
     on_file_change: function (event) {
         event.stopPropagation();
@@ -4948,12 +4946,17 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
             var filename = $target.val().replace(/.*[\\\/]/,'');
 
             // if the files is currently uploded, don't send again
-            if( !isNaN(_.find(this.files, function (file) { return (file.filename || file.name) == filename && file.upload; } )) ) {
+            if( !isNaN(_.find(this.get('value'), function (file) { return (file.filename || file.name) == filename && file.upload; } )) ) {
                 return false;
             }
 
+            // block UI or not
+            if(this.node.attrs.blockui) {
+                instance.web.blockUI();
+            }
+
             // if the files exits for this answer, delete the file before upload
-            this.files = _.filter(this.files, function (file) {
+            var files = _.filter(this.get('value'), function (file) {
                 if((file.filename || file.name) == filename) {
                     self.ds_file.unlink([file.id]);
                     return false;
@@ -4962,11 +4965,6 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 }
             });
 
-            // block UI or not
-            if(this.node.attrs.blockui) {
-                instance.web.blockUI();
-            }
-
             // TODO : unactivate send on wizard and form
 
             // submit file
@@ -4974,14 +4972,15 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
             this.$(".oe_fileuploader").hide();
 
             // add file on result
-            this.files.push({
+            files.push({
                 'id': 0,
                 'name': filename,
                 'filename': filename,
                 'url': '',
                 'upload': true
             });
-            this.set_value();
+
+            this.set({'value': files});
         }
     },
     on_file_loaded: function (event, result) {
@@ -4992,9 +4991,10 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
 
         // TODO : activate send on wizard and form
 
-        for(var i in this.files){
-            if(this.files[i].filename == result.filename && this.files[i].upload) {
-                this.files[i] = {
+        var files = this.get('value');
+        for(var i in files){
+            if(files[i].filename == result.filename && files[i].upload) {
+                files[i] = {
                     'id': result.id,
                     'name': result.name,
                     'filename': result.filename,
@@ -5002,27 +5002,24 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 };
             }
         }
-        this.set_value();
 
-        var $input = this.$('input.oe_form_binary_file');
-        $input.after($input.clone(true)).remove();
-        this.$(".oe_fileuploader").show();
+        this.set({'value': files});
+        this.render_value()
     },
     on_file_delete: function (event) {
         event.stopPropagation();
         var file_id=$(event.target).data("id");
         if (file_id) {
             var files=[];
-            for(var i in this.files){
-                if(file_id!=this.files[i].id){
-                    files.push(this.files[i]);
+            for(var i in this.get('value')){
+                if(file_id != this.get('value')[i].id){
+                    files.push(this.get('value')[i]);
                 }
                 else {
                     this.ds_file.unlink([file_id]);
                 }
             }
-            this.files = files;
-            this.set_value();
+            this.set({'value': files});
         }
     },
 });
