@@ -626,6 +626,12 @@ class account_move_line(osv.osv):
                     return False
         return True
 
+    def _check_currency_company(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.currency_id.id == l.company_id.currency_id.id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You cannot create journal items on an account of type view.', ['account_id']),
         (_check_no_closed, 'You cannot create journal items on closed account.', ['account_id']),
@@ -634,6 +640,7 @@ class account_move_line(osv.osv):
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
         (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
         (_check_currency_amount, 'The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit.', ['amount_currency']),
+        (_check_currency_company, "You can't provide a secondary currency if the same than the company one." , ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
