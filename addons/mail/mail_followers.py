@@ -131,7 +131,8 @@ class mail_notification(osv.Model):
 
     def _notify(self, cr, uid, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
-        context = context or {}
+        if context is None:
+            context = {}
         # mail_noemail (do not send email) or no partner_ids: do not send, return
         if context.get('mail_noemail'):
             return True
@@ -142,6 +143,16 @@ class mail_notification(osv.Model):
             return True
 
         mail_mail = self.pool.get('mail.mail')
+
+        # TMP about thread formation
+        if msg.parent_id.id:
+            # 1. fetch all messages that will form the thread as SUPERUSER, filtering will be done after
+            messages = self.pool.get('mail.message').message_read(cr, SUPERUSER_ID, None, domain=['|', ('id', 'in', [msg.id, msg.parent_id.id]), ('parent_id', '=', msg.parent_id.id)], context=context, limit=5, thread_level=1)
+            for message in messages:
+                print message['body'], message['id'], message['parent_id']
+
+        # END TMP
+
         # add signature
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''

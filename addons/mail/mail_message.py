@@ -243,7 +243,7 @@ class mail_message(osv.Model):
             'author_id': author_id,
             'is_author': is_author,
             'partner_ids': partner_ids,
-            'ancestor_id': False,
+            'parent_id': False,
             'vote_nb': len(message['vote_user_ids']),
             'has_voted': has_voted,
             'is_private': is_private,
@@ -273,12 +273,12 @@ class mail_message(osv.Model):
                 easily have access to their values, given their ID
             :return bool: True
         """
-        def _get_expandable(domain, message_nb, ancestor_id, id, model):
+        def _get_expandable(domain, message_nb, parent_id, id, model):
             return {
                 'domain': domain,
                 'nb_messages': message_nb,
                 'type': 'expandable',
-                'ancestor_id': ancestor_id,
+                'parent_id': parent_id,
                 'id':  id,
                 # TDE note: why do we need model sometimes, and sometimes not ???
                 'model': model,
@@ -286,6 +286,8 @@ class mail_message(osv.Model):
 
         # all_not_loaded_ids = []
         id_list = sorted(read_messages.keys())
+        if not id_list:
+            return message_list
 
         # 1. get the expandable for new threads
         if thread_level == 0:
@@ -402,11 +404,11 @@ class mail_message(osv.Model):
 
                 # get the older ancestor the user can read, update its ancestor field
                 if not thread_level:
-                    message_list[-1]['ancestor_id'] = parent_id
+                    message_list[-1]['parent_id'] = parent_id
                     continue
                 parent = self._get_parent(cr, uid, message, context=context)
                 while parent and parent.get('id') != parent_id:
-                    message_list[-1]['ancestor_id'] = parent.get('id')
+                    message_list[-1]['parent_id'] = parent.get('id')
                     message = parent
                     parent = self._get_parent(cr, uid, message, context=context)
                 # if in thread: add its ancestor to the list of messages
