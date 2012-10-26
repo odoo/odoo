@@ -1012,6 +1012,8 @@ class fleet_vehicle_log_contract(osv.Model):
         return dict(res)
 
     def act_renew_contract(self,cr,uid,ids,context=None):
+        
+        
         contracts = self.browse(cr,uid,ids,context=context)
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_renew_contract', context)
         for element in contracts:
@@ -1030,13 +1032,16 @@ class fleet_vehicle_log_contract(osv.Model):
             temp.append(('default_start_date',str(self.str_to_date(element.expiration_date)+datetime.timedelta(days=1))))
             temp.append(('default_purchaser_id',element.purchaser_id.id))
             temp.append(('default_ins_ref',element.ins_ref))
-            temp.append(('default_state','open'))
+            #temp.append(('default_state','open'))
             temp.append(('default_notes',element.notes))
             temp.append(('default_cost_frequency',element.cost_frequency))
             generated_cost = []
             for gen_cost in element.generated_cost_ids:
                 generated_cost.append(gen_cost.id)
             temp.append(('default_generated_cost_ids',generated_cost))
+            temp.append(('default_parent_id',element.parent_id.id))
+            temp.append(('default_cost_type',element.cost_type))
+            temp.append(('default_cost_subtype',element.cost_subtype.id))
 
             #compute end date
             startdate = self.str_to_date(element.start_date)
@@ -1045,8 +1050,13 @@ class fleet_vehicle_log_contract(osv.Model):
             newenddate = enddate+diffdate
             temp.append(('default_expiration_date',str(newenddate)))
 
-            res['context'] = dict(temp)
-            
+        
+        #data = self.read(cr, uid, ids, ['vehicle_id', 'cost_subtype', 'amount', 'odometer_id', 'odometer_unit', 'insurer_id', 'cost_ids', 'expiration_date', \
+        #                                        'date', 'start_date', 'purchaser_id', 'ins_ref' ,'notes','cost_frequency', 'generated_cost'])
+        
+        
+        res['context'] = dict(temp)
+        #return super(fleet_vehicle_log_contract, self).copy(cr, uid, ids, default={}, context=None)
         return res
 
     def _get_default_contract_type(self, cr, uid, context):
