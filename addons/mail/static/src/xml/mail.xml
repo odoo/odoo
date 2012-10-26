@@ -179,10 +179,10 @@
         Template used to display the communication history in documents
         form view.
         -->
-    <span t-name="mail.record_thread" class="oe_record_thread">
+    <div t-name="mail.record_thread" class="oe_record_thread">
         <div class="oe_mail-placeholder">
         </div>
-    </span>
+    </div>
 
     <t t-name="mail.thread">
         <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>

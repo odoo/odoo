@@ -25,7 +25,6 @@ openerp_mail_followers = function(session, mail) {
         init: function() {
             this._super.apply(this, arguments);
             this.image = this.node.attrs.image || 'image_small';
-            this.title = this.node.attrs.title || 'Followers';
             this.comment = this.node.attrs.help || false;
             this.displayed_nb = this.node.attrs.displayed_nb || 10;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
@@ -115,20 +114,25 @@ openerp_mail_followers = function(session, mail) {
                 self.message_is_follower = (_.indexOf(self.get('value'), pid) != -1);
             }).pipe(self.proxy('display_generic'));
         },
-
+        _format_followers: function(count){
+            console.log('FORMAT FOLLWERS :',count);
+            function _t(str){return str;}
+            var str = '';
+            if(count <= 0){
+                str = _t('No followers');
+            }else if(count === 1){
+                str = _t('One follower');
+            }else{
+                str = ''+count+' '+_t('followers');
+            }
+            console.log('URGH:',str);
+            return str;
+        },
         /* Display generic info about follower, for people not having access to res_partner */
         display_generic: function () {
             var self = this;
             var node_user_list = this.$('.oe_follower_list').empty();
-            // format content: Followers (You and 0 other) // Followers (3)
-            var content = this.title;
-            if (this.message_is_follower) {
-                content += ' (You and ' + (this.get('value').length-1) + ' other)';
-            }
-            else {
-                content += ' (' + this.get('value').length + ')'
-            }
-            this.$('.oe_follower_title').html(content);
+            this.$('.oe_follower_title').html(this._format_followers(this.get('value').length));
         },
 
         /** Display the followers */
@@ -138,7 +142,7 @@ openerp_mail_followers = function(session, mail) {
             this.message_is_follower = this.set_is_follower(records);
             // clean and display title
             var node_user_list = this.$('.oe_follower_list').empty();
-            this.$('.oe_follower_title').html(this.title + ' (' + records.length + ')');
+            this.$('.oe_follower_title').html(this._format_followers(records.length));
             // truncate number of displayed followers
             truncated = records.splice(0, this.displayed_nb);
             _(truncated).each(function (record) {

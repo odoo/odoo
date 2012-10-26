@@ -4,9 +4,8 @@
     box-sizing: border-box;
 }
 .openerp .oe_mail {
-    display: inline-block;
+    display: block;
     position: relative;
-    width: 720px;
     margin: 0px;
 }
 .openerp .oe_mail .oe_thread{
@@ -257,7 +256,7 @@
     position: relative;
     display: inline-block;
     padding-top: 4px;
-    width: 120px;
+    width: 160px;
     float: right;
 }
 
@@ -302,6 +301,11 @@
 /*  b) THE FOLLOWERS */
 .openerp .oe_followers .oe_follower_title{
     margin-top: 4px;
+    margin-bottom: 4px;
+    display: inline;
+}
+.openerp .oe_followers .oe_invite{
+    float: right;
 }
 .openerp .oe_followers .oe_partner {
     height: 32px;
@@ -323,10 +327,14 @@
 
 /* ----------- FORM INTEGRATION ------------ */
 
-            /* Nothing to do yay! */
+.openerp .oe_record_thread{
+    display: block;
+    margin-right: 180px;
+}
 
 /* ----------- INBOX INTEGRATION ----------- */
 
 .openerp .oe_mail_wall .oe_mail{
     margin: 16px;
+    width: 720px;
 }
