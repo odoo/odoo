@@ -700,7 +700,8 @@ class mail_thread(osv.AbstractModel):
 
         if not subject and parent_id:
             parent = mail_message.read(cr, uid, parent_id, ['subject'], context=context)
-            subject = 'Re: ' + parent['subject']
+            if parent['subject'] and not parent['subject'].startswith('Re:'):
+                subject = 'Re: %s' % parent['subject']
 
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, context=context)
