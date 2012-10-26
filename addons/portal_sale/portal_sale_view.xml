@@ -8,7 +8,7 @@
                 <field name="inherit_id" ref="sale.view_order_form"/>
                 <field name="arch" type="xml">
                     <notebook version="7.0" position="before">
-                        <field name="portal_payment_options"/>
+                        <field name="portal_payment_options" groups="portal_sale.group_payment_options"/>
                     </notebook>
                 </field>
         </record>
@@ -29,7 +29,7 @@
         </record>
 
         <record id="action_order_form" model="ir.actions.act_window">
-            <field name="name">Sales Orders</field>
+            <field name="name">Sale Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_mode">tree,form,calendar,graph</field>
@@ -57,11 +57,11 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="product.product_kanban_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="help">No public products.</field>
+            <field name="help">There are no public products.</field>
         </record>
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
-            <field name="name">Customer Invoices</field>
+            <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('type','=','out_invoice')]</field>
@@ -71,7 +71,7 @@
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
-            <field name="name">Customer Payment</field>
+            <field name="name">Refunds/Payments</field>
             <field name="res_model">account.voucher</field>
             <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
             <field name="context">{'type':'receipt'}</field>
@@ -80,19 +80,17 @@
             <field name="help">You don't have any payment.</field>
         </record>
 
-        <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
+        <menuitem id="portal_quotations" parent="portal.portal_orders"
             action="action_order_tree5" sequence="10"/>
-        <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders"
+        <menuitem id="portal_sales_orders" parent="portal.portal_orders"
             action="action_order_form" sequence="20"/>
-        <menuitem name="Delivery Orders" id="portal_delivery" parent="portal.portal_orders"
+        <menuitem id="portal_delivery" parent="portal.portal_orders"
             action="action_picking_tree" sequence="30"/>
-        <menuitem name="Products" id="portal_products" parent="portal.portal_orders"
+        <menuitem id="portal_products" parent="portal.portal_orders"
             action="product_normal_action" sequence="40"/>
-
-        <menuitem name="Invoice" id="portal_invoices" parent="portal.portal_invoices_payements"
+        <menuitem id="portal_invoices" parent="portal.portal_invoices_payements"
             action="action_invoice_tree1" sequence="10"/>
-        <menuitem name="Refund/Payments" id="portal_payments" parent="portal.portal_invoices_payements"
+        <menuitem id="portal_payments" parent="portal.portal_invoices_payements"
             action="action_vendor_receipt" sequence="20"/>
-
     </data>
 </openerp>

@@ -2,6 +2,18 @@
 <openerp>
     <data noupdate="1">
 
+        <record id="group_payment_options" model="res.groups">
+            <field name="name">View Online Payment Options</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="comment">Members of this group see the online payment options
+on Sale Orders and Customer Invoices. These options are meant for customers who are accessing
+their documents through the portal.</field>
+        </record>
+        <!-- Make the payment_options group implied for all portal users -->
+        <record id="portal.group_portal" model="res.groups">
+            <field name="implied_ids" eval="[(4,ref('group_payment_options'))]"/>
+        </record>
+
         <!-- Sale Portal Access Rules -->
         <record id="portal_sale_order_user_rule" model="ir.rule">
             <field name="name">Portal Personal Quotations/Sales Orders</field>
