@@ -4,9 +4,8 @@
     box-sizing: border-box;
 }
 .openerp .oe_mail {
-    display: inline-block;
+    display: block;
     position: relative;
-    width: 720px;
     margin: 0px;
 }
 .openerp .oe_mail .oe_thread{
@@ -31,6 +30,9 @@
     border: none;
     margin-bottom:0px;
     min-height:34px;
+}
+.openerp .oe_msg .oe_msg_intented:last-child(){
+    margin-bottom: 4px;
 }
 .openerp .oe_mail .oe_msg_indented .oe_msg_icon{
     width:32px;
@@ -242,13 +244,25 @@
 
 .openerp .oe_mail .oe_msg_content.oe_msg_more_message{
     text-align: right;
-    padding-right: 300px;
-    opacity: 0.5;
-    -webkit-transition: opacity 0.2s linear;
 }
-.openerp .oe_mail .oe_msg_more_message:hover{
-    opacity: 1;
-    -webkit-transition: opacity 0.2s linear;
+.openerp .oe_mail .oe_msg_content.oe_msg_more_message .oe_separator{
+    height: 0;
+    border-bottom: dashed 1px #e6e6e6;
+    margin-left: -4px;
+    margin-right: 8px;
+    margin-top: 6px;
+    margin-bottom: -9px;
+}
+.openerp .oe_mail .oe_msg_more_message .oe_msg_fetch_more {
+    background: white;
+    margin-right: 280px;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-decoration: none;
+    color: #b4b4b4;
+}
+.openerp .oe_mail .oe_msg_more_message .oe_msg_fetch_more:hover{
+    text-decoration: none;
 }
 
 /* ---------------- FOLLOWERS ------------------ */
@@ -256,8 +270,8 @@
 .openerp .oe_followers{
     position: relative;
     display: inline-block;
-    padding-top: 4px;
-    width: 120px;
+    padding-top: 5px;
+    width: 160px;
     float: right;
 }
 
@@ -296,12 +310,19 @@
 }
 
 .openerp .oe_followers .oe_subtype_list{
-    margin-bottom: 4px;
+    margin-top: 4px;
 }
 
 /*  b) THE FOLLOWERS */
 .openerp .oe_followers .oe_follower_title{
-    margin-top: 4px;
+    display: inline;
+}
+.openerp .oe_followers .oe_follower_title_box{
+    margin-top: 12px;
+    margin-bottom: 4px;
+}
+.openerp .oe_followers .oe_invite{
+    float: right;
 }
 .openerp .oe_followers .oe_partner {
     height: 32px;
@@ -323,10 +344,14 @@
 
 /* ----------- FORM INTEGRATION ------------ */
 
-            /* Nothing to do yay! */
+.openerp .oe_record_thread{
+    display: block;
+    margin-right: 180px;
+}
 
 /* ----------- INBOX INTEGRATION ----------- */
 
 .openerp .oe_mail_wall .oe_mail{
     margin: 16px;
+    width: 720px;
 }
