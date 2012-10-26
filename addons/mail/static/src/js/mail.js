@@ -174,17 +174,10 @@ openerp.mail = function (session) {
         /* upload the file on the server, add in the attachments list and reload display
          */
         display_attachments: function () {
-            var self = this;
-            var render = $(session.web.qweb.render('mail.thread.message.attachments', {'widget': self}));
-            if (!this.list_attachment) {
-                this.$('.oe_msg_attachment_list').replaceWith( render );
-            } else {
-                this.list_attachment.replaceWith( render );
-            }
-            this.list_attachment = this.$(".oe_msg_attachments");
-
+            this.$(".oe_msg_attachment_list").html( 
+                session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
             // event: delete an attachment
-            this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
+            this.$(".oe_msg_attachment_list").on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -270,41 +263,31 @@ openerp.mail = function (session) {
         bind_events: function () {
             var self = this;
 
-            this.$('textarea.oe_compact').on('focus', self.on_compose_expandable);
+            this.$('textarea.oe_compact').on('focus', _.bind( this.on_compose_expandable, this));
 
             // set the function called when attachments are added
-            this.$el.on('change', 'input.oe_form_binary_file', self.on_attachment_change );
+            this.$el.on('change', 'input.oe_form_binary_file', _.bind( this.on_attachment_change, this) );
 
-            this.$el.on('click', '.oe_cancel', self.on_cancel );
+            this.$el.on('click', '.oe_cancel', _.bind( this.on_cancel, this) );
             this.$el.on('click', '.oe_post', _.bind( this.on_message_post, this) );
             this.$el.on('click', '.oe_full', _.bind( this.on_compose_fullmail, this, 'reply') );
 
             /* stack for don't close the compose form if the user click on a button */
-            this.$el.on('mousedown', '.oe_msg_footer', function () { self.stay_open = true; });
-            this.$('textarea:not(.oe_compact):first').on('focus, mouseup, keydown', function () { self.stay_open = false; });
+            this.$el.on('mousedown', '.oe_msg_footer', _.bind( function () { this.stay_open = true; }, this));
+            this.$('textarea:not(.oe_compact):first').on('focus, mouseup, keydown', _.bind( function () { this.stay_open = false; }, this));
             this.$('textarea:not(.oe_compact):first').autosize();
 
             // auto close
-            this.$el.on('blur', 'textarea:not(.oe_compact):first', self.on_compose_expandable);
+            this.$el.on('blur', 'textarea:not(.oe_compact):first', _.bind( this.on_compose_expandable, this));
         },
 
         on_compose_fullmail: function (default_composition_mode) {
-            /* TDE note: I think this is not necessary, because
-             * 1/ post on a document: followers added server-side in _notify
-             * 2/ reply to a message: mail.compose.message should add the previous partners
-             */
-            var partner_ids = [];
-            for (var i in this.partner_ids) {
-                partner_ids.push(this.partner_ids[i][0]);
-            }
-
             if (default_composition_mode == 'reply') {
                 var context = {
                     'default_composition_mode': 'reply',
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': this.attachment_ids,
-                    'default_partner_ids': [], //partner_ids
                 };
             } else {
                 var context = {
@@ -316,7 +299,6 @@ openerp.mail = function (session) {
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': this.attachment_ids,
-                    'default_partner_ids': [], //partner_ids
                 };
             }
             var action = {
@@ -354,14 +336,12 @@ openerp.mail = function (session) {
         },
 
         /*post a message and fetch the message*/
-        on_message_post: function (body) {
+        on_message_post: function (event) {
             var self = this;
 
-            if (! body) {
-                var comment_node =  this.$('textarea:not(.oe_compact)');
-                var body = comment_node.val();
-                comment_node.val('');
-            }
+            var comment_node =  this.$('textarea');
+            var body = comment_node.val();
+            comment_node.val('');
 
             var attachments=[];
             for (var i in this.attachment_ids) {
@@ -404,9 +384,8 @@ openerp.mail = function (session) {
         /* convert the compact mode into the compose message
         */
         on_compose_expandable: function (event) {
-            if (event) event.stopPropagation();
 
-            if (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/)){
+            if (!this.stay_open && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }

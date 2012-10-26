@@ -72,7 +72,7 @@
         <span class="oe_msg_attachments">
             <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image">
                 <div class="oe_attachment">
-                    <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
+                    <span t-if="(attachment.upload and attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
                             <span>...Upload in progress...</span>
                         </div>
