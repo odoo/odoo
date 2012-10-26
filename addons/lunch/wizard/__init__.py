@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,31 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
 
-{
-    'name': 'Lunch Orders',
-    'author': 'OpenERP SA',
-    'version': '0.2',
-    'depends': ['base'],
-    'category' : 'Tools',
-    'description': """
-The base module to manage lunch.
-================================
-
-keep track for the Lunch Order, Cash Moves and Product. Apply Different
-Category for the product.
-    """,
-    'data': ['security/groups.xml','lunch_view.xml','wizard/lunch_validation_view.xml','wizard/lunch_cancel_view.xml','lunch_report.xml',
-        'report/report_lunch_order_view.xml',
-        'security/ir.model.access.csv',],
-    'css':['static/src/css/lunch_style.css'],
-    'demo': ['lunch_demo.xml',],
-    'test': [],
-    'installable': True,
-    'application' : True,
-    'certificate' : '001292377792581874189',
-    'images': [],
-}
+import lunch_validation
+import lunch_cancel

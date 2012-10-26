@@ -275,7 +275,7 @@
             <field name="arch" type="xml">
                 <tree string="Orders Tree">
                     <field name="date"/>
-                    <field name="products"/>
+                    <field name="order_line_ids"/>
                     <field name="state" />
                     <field name="total" sum="Total"/>
                     <field name="preferences" invisible="1"/>
@@ -308,7 +308,7 @@
                         <div name="preferences">
                         </div>
                         <separator string='Your order'/>
-                        <field name='products' colspan='4' nolabel='1' on_change='onchange_price(products)'>
+                        <field name='order_line_ids' colspan='4' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>
                                 <field name='product' colspan='2' on_change='onchange_price(product)'/>
                                 <field name='note' />
@@ -419,7 +419,7 @@
                     <field name="day"/>
                     <field name='active_from' widget='float_time'/>
                     <field name='active_to' widget='float_time'/>
-                    <field name="active"/>
+                    <field name="lunch_active"/>
                 </tree>
             </field>
         </record>
@@ -460,13 +460,25 @@
                     </group>
                     <separator string="Alert Informations" colspan="4"/>
                      <group col="2" colspan="2">
-                        <field name='active'/>
+                        <field name='lunch_active'/>
                         <field name='message' placeholder="Write the message you want to display during the defined period..."/>
                     </group>
                     <group col="2" colspan="2">
                     </group>
                 </sheet>
                 </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='partner_instructor_form_view'>
+            <field name='name'>partner.supplier.name.form</field>
+            <field name='model'>res.partner</field>
+            <field name='type'>form</field>
+            <field name='inherit_id' ref='base.view_partner_form' />
+            <field name='arch' type='xml'>
+                <field name='title' position='after'>
+                    <field name='supplier_lunch'/>
+                </field> 
             </field>
         </record>
     </data>

@@ -37,12 +37,20 @@ class lunch_order(osv.Model):
         result={}
         for order in self.browse(cr, uid, ids, context=context):
             value = 0.0
-            for product in order.products: #TODO: use meaningful variable names `for order_line in ...´
+            for product in order.order_line_ids: #TODO: use meaningful variable names `for order_line in ...´
                 if product.state != 'cancelled':
                     value += product.product.price
                     result[order.id]=value
         return result
 
+    def _compute_total(self, cr, uid, ids, name, context=None):
+        """ compute total"""
+        result=  {}
+        value = 0.0
+        for order_line in self.browse(cr, uid, ids, context=context):
+            value+=order_line.price
+            result[order_line.order_id.id]=value
+        return result
 
     def add_preference(self, cr, uid, ids, pref_id, context=None):
         """ create a new order line based on the preference selected (pref_id)"""
@@ -62,12 +70,7 @@ class lunch_order(osv.Model):
                 'supplier': prod_ref.browse(cr,uid,pref["product"].id,context=context)['supplier'].id
             }
             new_id = orderline_ref.create(cr,uid,new_order_line)
-            order.products.append(new_id)
-            #TODO: total is a computed field, so the write is useless, no?
-            # ---> If I remove it, the total for order are not good (I try many times)
-            # use store = {...}
-            total = self._price_get(cr,uid,ids," "," ",context=context)
-            self.write(cr,uid,ids,{},context) 
+            order.order_line_ids.append(new_id)
         return True
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
@@ -127,7 +130,7 @@ class lunch_order(osv.Model):
     def _default_alerts_get(self,cr,uid,arg,context=None):
         """ get the alerts to display on the order form """
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[('active','=',True)],context=context) #TODO: active=True is automatically added by orm, so this param can be removed
+        alert_ids = alert_ref.search(cr,uid,[('lunch_active','=',True)],context=context) 
         alert_msg=""
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
             if self.can_display_alert(alert):
@@ -155,12 +158,12 @@ class lunch_order(osv.Model):
                         alert_msg+='\n'
         return alert_msg
 
-    def onchange_price(self,cr,uid,ids,products,context=None):
+    def onchange_price(self,cr,uid,ids,order_line_ids,context=None):
         """ Onchange methode that refresh the total price of order"""
         res = {'value':{'total':0.0}}
-        if products:
+        if order_line_ids:
             tot = 0.0
-            for prod in products:
+            for prod in order_line_ids:
                 orderline = {}
                 #TODO: that's weird. should truy to find another way to compute total on order lines when record is not saved...
                 #   or at least put some comments
@@ -179,8 +182,8 @@ class lunch_order(osv.Model):
         prod_ref = self.pool.get('lunch.product')
         new_id = super(lunch_order, self).create(cr, uid, values, context=context)
         #When we create a new order we also create new preference
-        if len(values['products'])>0 and values['user_id']==uid:
-            for prods in values['products']:
+        if len(values['order_line_ids'])>0 and values['user_id']==uid:
+            for prods in values['order_line_ids']:
                 already_exists = False #alreadyexist is used to check if a preferece already exists.
                 for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
                     if pref['product'].id == prods[2]['product']:
@@ -264,8 +267,10 @@ class lunch_order(osv.Model):
     _columns = {
         'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True, states={'new':[('readonly', False)]}),
         'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
-        'products' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
-        'total' : fields.function(_price_get, string="Total",store=True),
+        'order_line_ids' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
+        'total' : fields.function(_price_get, string="Total",store={
+                 'lunch.order.line': (_compute_total, ['price'], 20),
+            }),
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
         'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'),
@@ -313,7 +318,7 @@ class lunch_order_line(osv.Model):
                 self.write(cr,uid,[order_line.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
         for order_line in self.browse(cr,uid,ids,context=context):
             isconfirmed = True
-            for product in order_line.order_id.products:
+            for product in order_line.order_id.order_line_ids:
                 if product.state == 'new':
                     isconfirmed = False
                 if product.state == 'cancelled':
@@ -334,7 +339,7 @@ class lunch_order_line(osv.Model):
         for order_line in self.browse(cr,uid,ids,context=context):
             hasconfirmed = False
             hasnew = False
-            for product in order_line.order_id.products:
+            for product in order_line.order_id.order_line_ids:
                 if product.state=='confirmed':
                     hasconfirmed= True
                 if product.state=='new':
@@ -427,7 +432,7 @@ class lunch_alert(osv.Model):
     _description = 'lunch alert'
     _columns = {
         'message' : fields.text('Message',size=256, required=True),
-        'active' : fields.boolean('Active'),
+        'lunch_active' : fields.boolean('Active'),
         'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], 'Recurrency'),
         'specific' : fields.date('Day'),
         'monday' : fields.boolean('Monday'),
@@ -441,61 +446,8 @@ class lunch_alert(osv.Model):
         'active_to': fields.float('And',required=True),
     }
 
-class lunch_cancel(osv.Model):
-    """ lunch cancel """
-    _name = 'lunch.cancel'
-    _description = 'cancel lunch order'
-
-    def cancel(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        order_lines_ref = self.pool.get('lunch.order.line')
-        orders_ref = self.pool.get('lunch.order')
-        order_ids = context.get('active_ids', [])
-
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            order_lines_ref.write(cr,uid,[order.id],{'state':'cancelled'},context)
-            for cash in order.cashmove:
-                cashmove_ref.unlink(cr,uid,cash.id,context)
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            hasconfirmed = False
-            hasnew = False
-            for product in order.order_id.products:
-                if product.state=='confirmed':
-                    hasconfirmed= True
-                if product.state=='new':
-                    hasnew= True
-            if hasnew == False:
-                if hasconfirmed == False:
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'cancelled'},context)
-                    return {}
-            orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-        return {}
-
-class lunch_validation(osv.Model):
-    """ lunch validation """
-    _name = 'lunch.validation'
-    _description = 'lunch validation for order'
-
-    def confirm(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        order_lines_ref = self.pool.get('lunch.order.line')
-        orders_ref = self.pool.get('lunch.order')
-        order_ids = context.get('active_ids', [])
-
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            if order.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product.name, 'order_id':order.id, 'state':'order', 'date':order.date})
-                order_lines_ref.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            isconfirmed = True
-            for product in order.order_id.products:
-                if product.state == 'new':
-                    isconfirmed = False
-                if product.state == 'cancelled':
-                    isconfirmed = False
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-            if isconfirmed == True:
-                orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
-        return {}
+class res_partner (osv.Model):
+    _inherit = 'res.partner'
+    _columns = {
+        'supplier_lunch': fields.boolean('Lunch Supplier'),
+    }

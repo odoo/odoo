@@ -20,5 +20,5 @@
 ##############################################################################
 
 import lunch
-import partner
 import report
+import wizard
