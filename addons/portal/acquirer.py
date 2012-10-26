@@ -40,7 +40,7 @@ class acquirer(osv.Model):
     
     _columns = {
         'name': fields.char('Name', required=True),
-        'form_template': fields.text('Payment form template (HTML)', translate=True), 
+        'form_template': fields.text('Payment form template (HTML)', translate=True, required=True), 
         'visible': fields.boolean('Visible', help="Whether this payment acquirer is currently displayed in portal forms"),
     }
 
@@ -57,8 +57,7 @@ class acquirer(osv.Model):
             context = {}
         try:
             i18n_kind = _(object._description) # may fail to translate, but at least we try
-            template = ustr(this.form_template)
-            result = MakoTemplate(template).render_unicode(object=object,
+            result = MakoTemplate(this.form_template).render_unicode(object=object,
                                                            reference=reference,
                                                            currency=currency,
                                                            amount=amount,
@@ -67,12 +66,9 @@ class acquirer(osv.Model):
                                                            # context kw would clash with mako internals
                                                            ctx=context,
                                                            format_exceptions=True)
-            result = result.strip()
-            if result == u'False':
-                result = u''
-            return result
+            return result.strip()
         except Exception:
-            _logger.exception("failed to render mako template value for payment.acquirer %s: %r", this.name, template)
+            _logger.exception("failed to render mako template value for payment.acquirer %s: %r", this.name, this.form_template)
             return
 
     def _wrap_payment_block(self, cr, uid, html_block, amount, currency, context=None):
