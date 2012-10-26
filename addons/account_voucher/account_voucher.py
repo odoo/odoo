@@ -1532,7 +1532,17 @@ class account_bank_statement(osv.osv):
             })
 
             return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
-        return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        # We should not be able to change the journal if we already have
+        # bank statement line generated in case we use the voucher. This is because
+        # the import feature will write the current used journal. That lead to crap
+        # cause we should not be able to do that... A bank statement is by definition linked
+        # to one journal !
+        for bk_st in self.browse(cr, uid, ids, context=context):
+            if vals.get('journal_id', False) and bk_st.line_ids:
+                raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal if you already generated lines !'))
+        return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
 
 account_bank_statement()
 
