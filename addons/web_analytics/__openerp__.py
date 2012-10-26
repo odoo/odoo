@@ -31,7 +31,7 @@ Collects web application usage with Google Analytics.
     """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'depends': ['web'],
+    'depends': ['web', 'auth_signup'],
     'data': [],
     'installable': True,
     'active': False,
