@@ -495,7 +495,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        r = $.when(view_promise).then(function () {
+        return $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -511,7 +511,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
         });
-        return r;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views

@@ -417,26 +417,49 @@ Actual RPC
 Testing API
 -----------
 
-.. todo:: implement options on sections
+.. js:function:: openerp.testing.section(name[, options], body)
+
+    :param String name:
+    :param TestOptions options:
+    :param body:
+    :type body: Function<:js:func:`~openerp.testing.case`, void>
+
+.. js:function:: openerp.testing.case(name[, options], callback)
+
+    :param String name:
+    :param TestOptions options:
+    :param callback:
+    :type callback: Function<instance, $, Function<String, Function, void>>
 
 .. js:class:: TestOptions
 
     the various options which can be passed to
     :js:func:`~openerp.testing.section` or
-    :js:func:`~openerp.testing.case`
+    :js:func:`~openerp.testing.case`. Except for
+    :js:attr:`~TestOptions.setup` and
+    :js:attr:`~TestOptions.teardown`, an option on
+    :js:func:`~openerp.testing.case` will overwrite the corresponding
+    option on :js:func:`~openerp.testing.section` so
+    e.g. :js:attr:`~TestOptions.rpc` can be set for a
+    :js:func:`~openerp.testing.section` and then differently set for
+    some :js:func:`~openerp.testing.case` of that
+    :js:func:`~openerp.testing.section`
 
     .. js:attribute:: TestOptions.asserts
-    
+
         An integer, the number of assertions which should run during a
         normal execution of the test. Mandatory for asynchronous tests.
-    
+
     .. js:attribute:: TestOptions.setup
 
-        .. todo:: implement & document setup (async?)
+        Test case setup, run right before each test case. A section's
+        :js:func:`~TestOptions.setup` is run before the case's own, if
+        both are specified.
 
     .. js:attribute:: TestOptions.teardown
 
-        .. todo:: implement & document teardown (async?)
+        Test case teardown, a case's :js:func:`~TestOptions.teardown`
+        is run before the corresponding section if both are present.
 
     .. js:attribute:: TestOptions.fail_on_rejection
 

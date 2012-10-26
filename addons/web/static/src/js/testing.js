@@ -85,23 +85,17 @@ openerp.testing = {};
         };
     };
 
-    var _load = function (instance, module, loaded) {
-        if (!loaded) { loaded = []; }
-
-        var deps = dependencies[module];
-        if (!deps) { throw new Error("Unknown dependencies for " + module); }
-
-        var to_load = _.difference(deps, loaded);
-        while (!_.isEmpty(to_load)) {
-            _load(instance, to_load[0], loaded);
-            to_load = _.difference(deps, loaded);
+    testing.section = function (name, options, body) {
+        if (_.isFunction(options)) {
+            body = options;
+            options = {};
         }
-        openerp.web[module](instance);
-        loaded.push(module);
-    };
+        _.defaults(options, {
+            setup: testing.noop,
+            teardown: testing.noop
+        });
 
-    testing.section = function (name, body) {
-        QUnit.module(testing.current_module + '.' + name);
+        QUnit.module(testing.current_module + '.' + name, {_oe: options});
         body(testing.case);
     };
     testing.case = function (name, options, callback) {
@@ -109,6 +103,10 @@ openerp.testing = {};
             callback = options;
             options = {};
         }
+        _.defaults(options, {
+            setup: testing.noop,
+            teardown: testing.noop
+        });
 
         var module = testing.current_module;
         var module_index = _.indexOf(testing.dependencies, module);
@@ -117,13 +115,66 @@ openerp.testing = {};
             // returns -1 -> index becomes 0 -> replace with ``undefined`` so
             // Array#slice returns a full copy
             0, module_index + 1 || undefined);
-        QUnit.test(name, function (env) {
-            var instance = openerp.init(module_deps);
-            if (_.isNumber(options.asserts)) {
-                expect(options.asserts)
+        QUnit.test(name, function () {
+            // module testing environment
+            var self = this;
+            var opts = _.defaults({
+                // section setup
+                //     case setup
+                //         test
+                //     case teardown
+                // section teardown
+                setup: function () {
+                    if (self._oe.setup.apply(null, arguments)) {
+                        throw new Error("Asynchronous setup not implemented");
+                    }
+                    if (options.setup.apply(null, arguments)) {
+                        throw new Error("Asynchronous setup not implemented");
+                    }
+                },
+                teardown: function () {
+                    if (options.teardown.apply(null, arguments)) {
+                        throw new Error("Asynchronous teardown not implemented");
+                    }
+                    if (self._oe.teardown(null, arguments)) {
+                        throw new Error("Asynchronous teardown not implemented");
+                    }
+                }
+            }, options, this._oe);
+
+            var instance;
+            if (!opts.dependencies) {
+                instance = openerp.init(module_deps);
+            } else {
+                // empty-but-specified dependencies actually allow running
+                // without loading any module into the instance
+
+                // TODO: clean up this mess
+                var d = opts.dependencies.slice();
+                var di = 0;
+                while (di < d.length) {
+                    var m = /^web\.(\w+)$/.exec(d[di]);
+                    if (m) {
+                        d[di] = m[1];
+                    }
+                    d.splice.apply(d, [di+1, 0].concat(
+                        _(dependencies[d[di]]).reverse()));
+                    ++di;
+                }
+
+                instance = openerp.init("fuck your shit, don't load anything you cunt");
+                _(d).chain()
+                    .reverse()
+                    .uniq()
+                    .each(function (module) {
+                        openerp.web[module](instance);
+                    });
+            }
+            if (_.isNumber(opts.asserts)) {
+                expect(opts.asserts);
             }
 
-            if (options.templates) {
+            if (opts.templates) {
                 for(var i=0; i<module_deps.length; ++i) {
                     var dep = module_deps[i];
                     var templates = testing.templates[dep];
@@ -135,8 +186,10 @@ openerp.testing = {};
                 }
             }
 
+            var $fixture = $('#qunit-fixture');
+
             var mock, async = false;
-            switch (options.rpc) {
+            switch (opts.rpc) {
             case 'mock':
                 async = true;
                 testing.mockifyRPC(instance);
@@ -148,25 +201,29 @@ openerp.testing = {};
                 async = true;
             }
 
-            // TODO: explicit dependencies options for web sub-modules (will deprecate _load/instanceFor)
-            var result = callback(instance, $('#qunit-fixture'), mock);
+            // TODO: async setup/teardown
+            opts.setup(instance, $fixture, mock);
 
+            var result = callback(instance, $fixture, mock);
+
+            // TODO: cleanup which works on errors
             if (!(result && _.isFunction(result.then))) {
                 if (async) {
                     ok(false, "asynchronous test cases must return a promise");
                 }
+                opts.teardown(instance, $fixture, mock);
                 return;
             }
 
             stop();
-            if (!_.isNumber(options.asserts)) {
+            if (!_.isNumber(opts.asserts)) {
                 ok(false, "asynchronous test cases must specify the "
                         + "number of assertions they expect");
             }
-            result.then(function () {
+            result.always(function () {
                 start();
-            }, function (error) {
-                start();
+                opts.teardown(instance, $fixture, mock);
+            }).fail(function (error) {
                 if (options.fail_on_rejection === false) {
                     return;
                 }
