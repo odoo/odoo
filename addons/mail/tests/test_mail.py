@@ -434,9 +434,8 @@ class test_mail(TestMailMockups):
         self.assertEqual(len(sent_emails), 2, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
-            # TDE FIXME: fix those tests, difficult to handle with fixed strings
-            # self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
-            # self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
+            self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
+            self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
         # Test: mail_message: notified_partner_ids = group followers
         message_pids = set([partner.id for partner in message.notified_partner_ids])
         test_pids = set([p_b_id, p_c_id, p_d_id])
