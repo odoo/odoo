@@ -163,19 +163,19 @@ class account_followup_print(osv.osv_memory):
            context = {}
        return context.get('summary', '')
 
-    def _get_partners(self, cr, uid, context=None):
-       return self._get_partners_followp(cr, uid, [], context=context)['partner_ids']
+    #def _get_partners(self, cr, uid, context=None):
+    #   return self._get_partners_followp(cr, uid, [], context=context)['partner_ids']
 
     def _get_msg(self, cr, uid, context=None):
        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
 
     _defaults = {
-         'date': lambda *a: time.strftime('%Y-%m-%d'),
-         'followup_id': _get_followup,
-          'email_body': _get_msg,
+        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'followup_id': _get_followup,
+        'email_body': _get_msg,
         'email_subject': _('Invoices Reminder'),
         'partner_lang': True,
-        'partner_ids': _get_partners,
+        #'partner_ids': _get_partners,
         'summary': _get_summary,
     }
 #account_followup_print()
