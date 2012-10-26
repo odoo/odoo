@@ -13,9 +13,13 @@
         an e-mail. It contains by default a textarea, that will be replaced
         by another composition form in the main wall composition form, or
         for main thread composition form in document form view.
+
+        mail.compose_message.compact template
+        This template holds the composition form to write a message, this box is converted into
+        mail.compose_message when focus on textarea
         -->
     <t t-name="mail.compose_message">
-        <div t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_composer" t-attf-class="oe_msg oe_msg_composer #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <div class="oe_msg_left">
                 <img class="oe_msg_icon" alt="User img" t-attf-src="#{widget.avatar}"/>
             </div>
@@ -33,17 +37,10 @@
                 </div>
             </div>
         </div>
-    </t>
-
-    <!--
-        mail.compose_message.compact template
-        This template holds the composition form to write a message, this box is converted into
-        mail.compose_message when focus on textarea
-        -->
-    <t t-name="mail.compose_message.compact">
-        <div t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
+        <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <textarea class="field_text oe_compact" placeholder="Write a reply..."/>
         </div>
+        <span t-if="!widget.show_compact_message and !widget.show_composer" class="oe_placeholder_self"></span>
     </t>
 
     <!--
