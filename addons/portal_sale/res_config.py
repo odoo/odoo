@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,5 +19,14 @@
 #
 ##############################################################################
 
-import portal_sale
-import res_config
+from openerp.osv import fields, osv 
+
+class sale_portal_config_settings(osv.TransientModel):
+    _inherit = 'account.config.settings'
+
+    _columns = {
+        'group_payment_options': fields.boolean('Show payment buttons',
+            implied_group='portal_sale.group_payment_options',
+            help="Show online payment options to all employees on Sale Orders and Customer Invoices. "
+                 "If not enabled, these options will only be visible to portal users"),
+    }
