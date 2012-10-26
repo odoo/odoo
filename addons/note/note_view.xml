@@ -176,6 +176,20 @@
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
       <field name="context">{'search_default_open_true':True}</field>
+      <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a personnal note.
+          </p><p>
+            Use notes to organize personnal tasks or notes. All
+            notes are private; no one else will be able to see them.  But
+            you can share some notes to other people by inviting followers
+            on the note. (very usefull for meeting minutes, especially if
+            you activate the pad feature for collaborative writings).
+          </p><p>
+            You can customize how you process your notes/tasks by adding,
+            removing or modifying columns.
+          </p>
+        </field>
     </record>
 
     <menuitem name="Notes" id="menu_note_notes" parent="mail.mail_my_stuff" sequence="20" action="note.action_note_note"/>
