@@ -276,11 +276,11 @@ openerp.mail = function (session) {
             this.$el.on('change', 'input.oe_form_binary_file', self.on_attachment_change );
 
             this.$el.on('click', '.oe_cancel', self.on_cancel );
-            this.$el.on('click', '.oe_post', function () {self.on_message_post()} );
-            this.$el.on('click', '.oe_full', function () {self.on_compose_fullmail('reply')} );
+            this.$el.on('click', '.oe_post', _.bind( this.on_message_post, this) );
+            this.$el.on('click', '.oe_full', _.bind( this.on_compose_fullmail, this, 'reply') );
 
             /* stack for don't close the compose form if the user click on a button */
-            this.$el.on('mousedown', 'div', function () { self.stay_open = true; });
+            this.$el.on('mousedown', '.oe_msg_footer', function () { self.stay_open = true; });
             this.$('textarea:not(.oe_compact):first').on('focus, mouseup, keydown', function () { self.stay_open = false; });
             this.$('textarea:not(.oe_compact):first').autosize();
 
@@ -389,7 +389,7 @@ openerp.mail = function (session) {
                         var message = thread.create_message_object( record[0] );
                         // insert the message on dom
                         thread.insert_message( message, self.$el );
-                        if (thread.parent_thread) {
+                        if (thread.parent_message) {
                             self.$el.remove();
                             self.parent_thread.compose_message = null;
                         } else {
@@ -410,7 +410,9 @@ openerp.mail = function (session) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }
-            this.$('textarea:not(.oe_compact):first').focus();
+            if (!this.stay_open && this.show_composer) {
+                this.$('textarea:not(.oe_compact):first').focus();
+            }
             return true;
         },
 
@@ -740,10 +742,10 @@ openerp.mail = function (session) {
             var self=this;
             //graphic effects  
             if (fadeTime) {
-                self.$el.fadeOut(options.fadeTime, function () {
+                self.$el.fadeOut(fadeTime, function () {
                     self.parent_thread.message_to_expandable(self);
                 });
-                self.thread.$el.fadeOut(options.fadeTime);
+                self.thread.$el.fadeOut(fadeTime);
             } else {
                 self.parent_thread.message_to_expandable(self);
             }
