@@ -21,6 +21,7 @@
 
 from osv import fields, osv
 from datetime import date
+import time
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -50,6 +51,7 @@ class followup_line(osv.osv):
         'send_email':fields.boolean('Send email', help="When processing, it will send an email"),
         'send_letter':fields.boolean('Print email'),
         'phonecall':fields.boolean('Phone call'), 
+        'email_template_id':fields.many2one('email.template', 'Email template', required = False, ondelete='set null')
     }
     _defaults = {
         'start': 'days',
@@ -143,12 +145,11 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids):
             amls = partner.accountmoveline_ids
             level_id = 0
-            level_days = -1000  #TO BE IMPROVED with boolean checking first time or by using MAX
+            level_days = False  #TO BE IMPROVED with boolean checking first time or by using MAX
             latest_level = False            
             res[partner.id] = False
-
             for accountmoveline in amls:
-                if (accountmoveline.followup_line_id != False) and (level_days < accountmoveline.followup_line_id.delay): 
+                if (accountmoveline.followup_line_id != False) and (not level_days or level_days < accountmoveline.followup_line_id.delay): 
                 # and (accountmoveline.debit > 0):   (accountmoveline.state != "draft") and
                 #and  (accountmoveline.reconcile_id == None)
                     level_days = accountmoveline.followup_line_id.delay
@@ -177,9 +178,9 @@ class res_partner(osv.osv):
                 old_delay = latest.delay
             else:
                 old_delay = False
-
-            for fl in self.pool.get('account_followup.followup.line').search(cr, uid, []):  #('followup_id.company_id','=',latest.followup_id.company_id)
-                fl_obj = self.pool.get('account_followup.followup.line').browse(cr, uid, [fl])[0]
+            fl_ar = self.pool.get('account_followup.followup.line').search(cr, uid, [('followup_id.company_id.id','=', partner.company_id.id)])
+            
+            for fl_obj in self.pool.get('account_followup.followup.line').browse(cr, uid, fl_ar):
                 if not old_delay: 
                     if not delay or fl_obj.delay < delay: 
                         delay = fl_obj.delay
@@ -193,19 +194,18 @@ class res_partner(osv.osv):
         return res
 
 
-    def do_partner_phonecall(self, cr, uid, partner_ids, context=None):
+    def do_partner_phonecall(self, cr, uid, partner_ids, context=None): 
         #partners = self.browse(cr, uid, partner_ids, context)
-        print partner_ids        
-        #for partner in self.browse(cr, uid, partner_ids, context):
-        #    print partner.is_company
-        self.write(cr, uid, partner_ids, {'payment_note': 'Phone...'}, context)
+        #print partner_ids
+        self.write(cr, uid, partner_ids, {'payment_next_date': fields.date.context_today(cr, uid, context), 'payment_next_action':'Phony'}, context)
+
+
 
     def do_partner_print(self, cr, uid, partner_ids, data, context=None):        
         #data.update({'date': context['date']})
         if not partner_ids: 
             return {}
         data['partner_ids'] = partner_ids
-        print data
         datas = {
              'ids': [],
              'model': 'account_followup.followup',
@@ -229,9 +229,12 @@ class res_partner(osv.osv):
         #mtp.email_from = user_obj.browse(cr, uid, uid, context=context)
         for partner in self.browse(cr, uid, partner_ids, context):
             pass
-         #   mtp.send_mail(cr, uid, partner.id, mail_template_id, context=context)
-
-
+            #Get max level of ids
+#            if partner.latest_followup_level_id.email_template_id != False:                
+#                mtp.send_mail(cr, uid, partner.id, partner.latest_followup_level_id.email_template_id.id, context=context)
+#            else:
+#                mtp.send_mail(cr, uid, partner.id, mail_template_id.id, context=context)
+         
         #complete the mail body with partner information
         #(to be discussed with fp) attach the report to the mail or include the move lines in the mail body
         #send the mail (need to check the function name)

@@ -80,7 +80,7 @@ class account_followup_print(osv.osv_memory):
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
         'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
-        'company_id':fields.related('followup_id', 'company_id', type='many2one', relation='res.company'), 
+        'company_id':fields.related('followup_id', 'company_id', type='many2one', relation='res.company', store=True, readonly=True), 
         'email_conf': fields.boolean('Send Email Confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
@@ -132,6 +132,7 @@ class account_followup_print(osv.osv_memory):
                 partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
+            
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 
@@ -154,6 +155,7 @@ class account_followup_print(osv.osv_memory):
         to_update = tmp['to_update']
         date = self.browse(cr, uid, ids, context)[0].date
         data = self.read(cr, uid, ids, [], context)[0]
+        data['followup_id'] = data['followup_id'][0]
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
         res = self.process_partners(cr, uid, partner_list, data, context=context)
         return res
