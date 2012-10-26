@@ -573,20 +573,6 @@ class test_mail(TestMailMockups):
 
     def test_30_message_read(self):
         """ Tests for message_read and expandables. """
-
-        def _print_debug(message, debug=True, prefix=''):
-            if debug:
-                print prefix, message
-
-        def _print_msg(message, debug=True, prefix=''):
-            if not debug:
-                return
-            if message.get('type') == 'expandable':
-                print prefix, 'expandable', message
-            else:
-                print prefix, 'message', message.get('body'), message.get('id'), message.get('ancestor_id')
-
-        _debug = False
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         pigs_domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)]
 
@@ -621,7 +607,6 @@ class test_mail(TestMailMockups):
         # CASE1: message_read with domain, threaded
         # We simulate an entire flow, using the expandables to test them
         # ----------------------------------------
-        _print_debug('\nCASE1: message_read with domain, threaded\n', _debug)
 
         # Do: read last message, threaded
         read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=1, thread_level=1)
@@ -633,7 +618,6 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            _print_msg(msg, _debug)
             if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
@@ -643,15 +627,12 @@ class test_mail(TestMailMockups):
         self.assertIsNotNone(new_msg_exp, 'message_read on last Pigs message should have returned a new messages expandable')
         domain = new_msg_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        _print_debug('Executing %s' % domain, _debug)
         self.assertIn(('id', 'child_of', msg_id2), domain, 'new messages expandable domain should contain a child_of condition')
         self.assertIn(('id', '>=', msg_id4), domain, 'new messages expandable domain should contain an id greater than condition')
         self.assertIn(('id', '<=', msg_id8), domain, 'new messages expandable domain should contain an id less than condition')
         self.assertEqual(new_msg_exp.get('parent_id'), msg_id2, 'new messages expandable should have ancestor_id set to the thread header')
         # Do: message_read with domain, thread_level=0, parent_id=msg_id2 (should be imposed by JS)
         read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=200, thread_level=0, parent_id=msg_id2)
-        for msg in read_msg_list:
-            _print_msg(msg, _debug)
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
         # Test: other message in thread have been fetch
         self.assertEqual(set([msg_id4, msg_id6, msg_id8]), set(read_msg_ids), 'message_read in Pigs thread should return all the previous messages')
@@ -660,7 +641,6 @@ class test_mail(TestMailMockups):
         self.assertIsNotNone(new_threads_exp, 'message_read on last Pigs message should have returned a new threads expandable')
         domain = new_threads_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        _print_debug('Executing %s' % domain, _debug)
         for condition in pigs_domain:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
         self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an ancestor_id')
@@ -674,7 +654,6 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            _print_msg(msg, _debug)
             if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
@@ -684,15 +663,12 @@ class test_mail(TestMailMockups):
         self.assertIsNotNone(new_msg_exp, 'message_read on Pigs message should have returned a new messages expandable')
         domain = new_msg_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        _print_debug('Executing %s' % domain, _debug)
         self.assertIn(('id', 'child_of', msg_id1), domain, 'new messages expandable domain should contain a child_of condition')
         self.assertIn(('id', '>=', msg_id3), domain, 'new messages expandable domain should contain an id greater than condition')
         self.assertIn(('id', '<=', msg_id7), domain, 'new messages expandable domain should contain an id less than condition')
         self.assertEqual(new_msg_exp.get('parent_id'), msg_id1, 'new messages expandable should have ancestor_id set to the thread header')
         # Do: message_read with domain, thread_level=0, parent_id=msg_id1 (should be imposed by JS)
         read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=200, thread_level=0, parent_id=msg_id1)
-        for msg in read_msg_list:
-            _print_msg(msg, _debug)
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
         # Test: other message in thread have been fetch
         self.assertEqual(set([msg_id3, msg_id5, msg_id7]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
@@ -701,7 +677,6 @@ class test_mail(TestMailMockups):
         self.assertIsNotNone(new_threads_exp, 'message_read should have returned a new threads expandable')
         domain = new_threads_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        _print_debug('Executing %s' % domain, _debug)
         for condition in pigs_domain:
             self.assertIn(condition, domain, 'general expandable domain should contain the message_read domain parameter')
         # Do: message_read with domain, thread_level=1 (should be imposed by JS)
@@ -710,13 +685,10 @@ class test_mail(TestMailMockups):
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
         self.assertEqual(len(read_msg_list), 1, 'message_read on Pigs should return 1 message because everything else has been fetched')
         self.assertEqual([msg_id0], read_msg_ids, 'message_read after 2 More should return only 1 last message')
-        for msg in read_msg_list:
-            _print_msg(msg, _debug)
 
         # ----------------------------------------
         # CASE2: message_read with domain, flat
         # ----------------------------------------
-        _print_debug('\nCASE2: message_read with domain, flat\n', _debug)
 
         # Do: read 2 lasts message, flat
         read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=2, thread_level=0)
@@ -729,7 +701,6 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            _print_msg(msg, _debug)
             if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
                 new_threads_exp = msg
 
@@ -737,7 +708,6 @@ class test_mail(TestMailMockups):
         self.assertIsNotNone(new_threads_exp, 'message_read flat on the 2 last Pigs messages should have returns a new threads expandable')
         domain = new_threads_exp.get('domain', [])
         # Test: expandable, conditions in domain
-        _print_debug('Executing %s' % domain, _debug)
         for condition in pigs_domain:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
         # Do: message_read with domain, thread_level=0 (should be imposed by JS)
@@ -747,8 +717,6 @@ class test_mail(TestMailMockups):
         self.assertEqual(len(read_msg_list), 9, 'message_read on Pigs should return 9 messages and 0 expandable')
         self.assertEqual([msg_id0, msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8], read_msg_ids,
             'message_read, More on flat, should return all remaning messages')
-        for msg in read_msg_list:
-            _print_msg(msg, _debug)
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
@@ -807,22 +775,11 @@ class test_mail(TestMailMockups):
         reply_msg = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: 1',
                                          extra='In-Reply-To: %s' % msg1.message_id)
         self.mail_group.message_process(cr, uid, None, reply_msg)
-        # TDE note: temp various asserts because of the random bug about msg1.child_ids
-        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
-        new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
-        # if new_msg.parent_id.id != msg1.id:
-        #     import pdb
-        #     pdb.set_trace()
-        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message (%d) should have msg1 as parent (msg2 is %d)' % (new_msg.id, msg2.id))
 
         # 2. References header
         reply_msg2 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com', subject='Re: Re: 1',
                                          extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % msg1.message_id)
         self.mail_group.message_process(cr, uid, None, reply_msg2)
-        # TDE note: temp various asserts because of the random bug about msg1.child_ids
-        msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=1)
-        new_msg = self.mail_message.browse(cr, uid, msg_ids[0])
-        self.assertEqual(new_msg.parent_id, msg1, 'Newly processed mail_message should have msg1 as parent')
 
         # 3. Subject contains [<ID>] + model passed to message+process -> only attached to group, not to mail
         reply_msg3 = MAIL_TEMPLATE.format(to='Pretty Pigs <group+pigs@example.com>, other@gmail.com',

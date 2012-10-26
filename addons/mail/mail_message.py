@@ -229,8 +229,6 @@ class mail_message(osv.Model):
         except (orm.except_orm, osv.except_osv):
             attachment_ids = []
 
-        # TDE note: should we send partner_ids ?
-        # TDE note: shouldn't we separated followers and other partners ? costly to compute maybe ,
         try:
             partner_ids = self.pool.get('res.partner').name_get(cr, uid, message['partner_ids'], context=context)
         except (orm.except_orm, osv.except_osv):
@@ -396,7 +394,6 @@ class mail_message(osv.Model):
         read_messages = {}
         message_list = []
 
-        # TDE FIXME: check access rights on search are implemented for mail.message
         # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
         if ids is None:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
@@ -484,11 +481,9 @@ class mail_message(osv.Model):
                 partner_ids.add(message.get('id'))
             elif message.get('model') and message.get('res_id'):
                 model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
-        # print '_search', ids, author_ids, partner_ids, model_ids
 
         model_access_obj = self.pool.get('ir.model.access')
         for doc_model, doc_dict in model_ids.iteritems():
-            # print '>>>>', doc_model, doc_dict
             if not model_access_obj.check(cr, uid, doc_model, 'read', False):
                 continue
             doc_ids = doc_dict.keys()

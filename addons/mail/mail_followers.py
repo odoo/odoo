@@ -143,11 +143,11 @@ class mail_notification(osv.Model):
             return True
 
         # add the context in the email
-        # TDE FIXME: comment, to be improved in a future branch
+        # TDE FIXME: commented, to be improved in a future branch
         # quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
 
-        # add signature
         mail_mail = self.pool.get('mail.mail')
+        # add signature
         body_html = msg.body
         # if quote_context:
         #     body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
