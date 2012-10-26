@@ -112,6 +112,8 @@
             <field name="date" eval="time.strftime('2012-10-23')"/>
             <field name="products" eval="[]"/>
             <field name="state">new</field>
+            <field name='company_id'>1</field>
+            <field name='total'>7.70</field>
         </record>
 
         <record model="lunch.order" id="order_2">
@@ -119,6 +121,8 @@
             <field name="date" eval="time.strftime('2012-10-22')"/>
             <field name="products" eval="[]"/>
             <field name="state">confirmed</field>
+            <field name='company_id'>1</field>
+            <field name='total'>7.40</field>
         </record>
 
         <record model="lunch.order" id="order_3">
@@ -126,6 +130,8 @@
             <field name="date" eval="time.strftime('2012-10-24')"/>
             <field name="products" eval="[]"/>
             <field name="state">cancelled</field>
+            <field name='company_id'>1</field>
+            <field name='total'>2.50</field>
         </record>
 
         <record model="lunch.order.line" id="order_line_1">
@@ -136,6 +142,7 @@
             <field name="supplier" ref="partner_pizza_inn"/>
             <field name="note">+Emmental</field>
             <field name="order_id" ref="order_1"/>
+            <field name="price">7.70</field>
         </record>
 
         <record model="lunch.order.line" id="order_line_2">
@@ -146,6 +153,7 @@
             <field name="supplier" ref="partner_pizza_inn"/>
             <field name="note">+Champignons</field>
             <field name="order_id" ref="order_2"/>
+            <field name="price">7.40</field>
         </record>
 
         <record model="lunch.order.line" id="order_line_3">
@@ -156,6 +164,7 @@
             <field name="supplier" ref="partner_coin_gourmand"/>
             <field name="note">+Salade +Tomates +Comcombres</field>
             <field name="order_id" ref="order_3"/>
+            <field name="price">2.50</field>
         </record>
 
         <record model="lunch.preference" id="preference_1">

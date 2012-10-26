@@ -36,6 +36,7 @@ Category for the product.
     'data': ['security/groups.xml','view/lunch_view.xml','view/partner_view.xml','view/lunch_validation_view.xml','view/lunch_cancel_view.xml','lunch_report.xml',
         'report/report_lunch_order_view.xml',
         'security/ir.model.access.csv',],
+    'css':['static/src/css/lunch_style.css'],
     'demo': ['lunch_demo.xml',],
     'test': [],
     'installable': True,
