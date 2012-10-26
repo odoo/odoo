@@ -151,6 +151,9 @@ openerp.testing = {};
 
                 // TODO: clean up this mess
                 var d = opts.dependencies.slice();
+                // dependencies list should be in deps order, reverse to make
+                // loading order from last
+                d.reverse();
                 var di = 0;
                 while (di < d.length) {
                     var m = /^web\.(\w+)$/.exec(d[di]);
