@@ -142,18 +142,8 @@ class mail_notification(osv.Model):
         if not notify_partner_ids:
             return True
 
-        mail_mail = self.pool.get('mail.mail')
-
-        # TMP about thread formation
-        if msg.parent_id.id:
-            # 1. fetch all messages that will form the thread as SUPERUSER, filtering will be done after
-            messages = self.pool.get('mail.message').message_read(cr, SUPERUSER_ID, None, domain=['|', ('id', 'in', [msg.id, msg.parent_id.id]), ('parent_id', '=', msg.parent_id.id)], context=context, limit=5, thread_level=1)
-            for message in messages:
-                print message['body'], message['id'], message['parent_id']
-
-        # END TMP
-
         # add signature
+        mail_mail = self.pool.get('mail.mail')
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
         if signature:
