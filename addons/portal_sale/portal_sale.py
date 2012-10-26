@@ -34,7 +34,26 @@ class sale_order(osv.Model):
         result = dict.fromkeys(ids, False)
         payment_acquirer = self.pool.get('portal.payment.acquirer')
         for this in self.browse(cr, uid, ids, context=context):
-            if this.state != 'draft' and not this.invoiced:
+            if this.state not in ('draft','cancel') and not this.invoiced:
                 result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.name,
                     this.pricelist_id.currency_id, this.amount_total, context=context)
+        return result
+
+
+class account_invoice(osv.Model):
+    _inherit = 'account.invoice'
+
+    _payment_block_proxy = lambda self,*a,**kw: self._portal_payment_block(*a, **kw)
+
+    _columns = {
+        'portal_payment_options': fields.function(_payment_block_proxy, type="html", string="Portal Payment Options"),
+    }
+
+    def _portal_payment_block(self, cr, uid, ids, fieldname, arg, context=None):
+        result = dict.fromkeys(ids, False)
+        payment_acquirer = self.pool.get('portal.payment.acquirer')
+        for this in self.browse(cr, uid, ids, context=context):
+            if this.state not in ('draft','done') and not this.reconciled:
+                result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.number,
+                    this.currency_id, this.residual, context=context)
         return result
