@@ -51,6 +51,18 @@
                     <td class="oe_timesheet_weekly_supertotal oe_timesheet_total"> </td>
                 </tr>
             </table>
+            <div t-if="widget.accounts.length == 0">
+                <div class="oe_view_nocontent">
+                    <p class="oe_view_nocontent_create">
+                        Click to add a project you worked on.
+                    </p><p>
+                        You will be able to register your working hours and
+                        activities on these projects. You can also click on a
+                        selected project/analytic account to setup the
+                        invoicing options.
+                    </p>
+                </div>
+            </div>
         </div>
     </t>
 </templates>
