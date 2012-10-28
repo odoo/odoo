@@ -149,10 +149,8 @@ class hr_analytic_timesheet(osv.osv):
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
     def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
-        print 'Call'
         for grid in account.user_product_ids:
             if grid.user_id.id==user_id:
-                print '***', grid.price
                 return grid.price
         return super(account_analytic_line, self)._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
 
