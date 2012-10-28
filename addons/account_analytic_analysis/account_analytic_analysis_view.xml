@@ -90,9 +90,9 @@
                                         string="⇒ Invoice"/>
                                     or view 
                                 </span>
-                                <div attrs="{'invisible': [('ca_to_invoice','&lt;&gt;',0.0)]}" class="oe_grey">
+                                <span attrs="{'invisible': [('ca_to_invoice','&lt;&gt;',0.0)]}" class="oe_grey">
                                     Nothing to invoice, create 
-                                </div>
+                                </span>
 
                                 <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d"
                                     string="Timesheets" type="action"
