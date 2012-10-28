@@ -29,6 +29,15 @@ from tools.translate import _
 
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+        pro_price_obj = self.pool.get('product.pricelist')
+        if account.pricelist_id:
+            pl = account.pricelist_id.id
+            price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
+        else:
+            price = 0.0
+        return price
+
 
     #
     # data = {
@@ -45,7 +54,6 @@ class account_analytic_line(osv.osv):
         invoice_obj = self.pool.get('account.invoice')
         product_obj = self.pool.get('product.product')
         invoice_factor_obj = self.pool.get('hr_timesheet_invoice.factor')
-        pro_price_obj = self.pool.get('product.pricelist')
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         product_uom_obj = self.pool.get('product.uom')
         invoice_line_obj = self.pool.get('account.invoice.line')
@@ -99,13 +107,13 @@ class account_analytic_line(osv.osv):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
             invoices.append(last_invoice)
 
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id, name " \
+            cr.execute("SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id, name " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
+                    "GROUP BY product_id, user_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
 
-            for product_id, factor_id, qty, uom, line_name in cr.fetchall():
+            for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                 if data.get('product'):
                      product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
@@ -118,11 +126,8 @@ class account_analytic_line(osv.osv):
 
                 ctx =  context.copy()
                 ctx.update({'uom':uom})
-                if account.pricelist_id:
-                    pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
-                else:
-                    price = 0.0
+
+                price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
                 general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
                 if not general_account:
