@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="description"]' position='before'>
                     <group string="Invoice on Timesheets Options" name="invoice_on_timesheets" col="4">
-                        <field name="pricelist_id" />
-                        <field name="to_invoice" widget="selection"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="to_invoice"/>
                     </group>
                  </xpath>
                 <xpath expr="//field[@name='use_timesheets']" position="replace">
