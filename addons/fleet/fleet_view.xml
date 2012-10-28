@@ -45,9 +45,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new model.
               </p><p>
-                Specify the different model for a particular
-                brand of vehicle. For example Audi A3,
-                Audi A4, ...
+                You can define several models (e.g. A3, A4) for each brand (Audi).
               </p>
             </field>
         </record>
@@ -120,8 +118,6 @@
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create a new brand.
-              </p><p>
-                Here you can add vehicle's brands  (BMW, Opel, ...)
               </p>
             </field>
         </record>
@@ -145,10 +141,10 @@
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new state.
+                Click to create a vehicule status.
               </p><p>
-                A state can help you knowing in what condition your
-                vehicle is. In reparation, Sold, Active, ...
+                You can customize available status to track the evolution of
+                each vehicule. Example: Active, Being Repaired, Sold.
               </p>
             </field>
         </record>
@@ -347,12 +343,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new vehicle. 
               </p><p>
-                OpenERP will help you manage your fleet by keeping
-                track of the contracts, services, costs, fuel logs associated
-                to a particular vehicle.
+                You will be able to manage your fleet by keeping track of the
+                contracts, services, fixed and recurring costs, odometers and
+                fuel logs associated to each vehicle.
             </p><p>
-                When a contract arrives near expiration date, a visual warning
-                will show you that you need to renew that particular contract.
+                OpenERP will warn you when services or contract have to be
+                renewed.
               </p>
             </field>
         </record>
@@ -487,12 +483,12 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new contract. 
               </p><p>
-                OpenERP helps you managing all the contracts for your
-                vehicle, leasing, insurance, or any other type of contract.
-            </p><p>
-                The contract form includes all sort of details, like the
-                activation cost, recurrent cost, the services included in
-                the contract, beginning and possibly ending date, etc.
+                Manage all your contracts (leasing, insurances, etc.) with
+                their related services, costs. OpenERP will automatically warn
+                you when some contracts have to be renewed.
+              </p><p>
+                Each contract (e.g.: leasing) may include several services
+                (reparation, insurances, periodic maintenance).
               </p>
             </field>
         </record>
@@ -656,9 +652,9 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new fuel log. 
               </p><p>
-                Here you can add refuelling entries for all vehicles.
-                You can also show the log for a particular vehicle using
-                the search field.
+                Here you can add refuelling entries for all vehicles.  You can
+                also filter logs of a particular vehicle using the search
+                field.
               </p>
             </field>
         </record>
@@ -749,7 +745,7 @@
                 Click to create a new service entry. 
               </p><p>
                 OpenERP helps you keeping track of all the services done
-                on your vehicle. Services can be of many type, occasional
+                on your vehicle. Services can be of many type: occasional
                 repair, fixed maintenance, etc.
               </p>
             </field>
@@ -777,10 +773,7 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new type of service.
               </p><p>
-                Each service belongs to a category. <br />
-                - contract if this service is used in a contract (ie: leasing, ...). <br />
-                - service if it is used as a service (ie: repair, change tire...). <br />
-                - both if it is used in both case.
+                Each service can used in contracts, as a standalone service or both.
               </p>
             </field>
         </record>
@@ -869,11 +862,9 @@
               <p class="oe_view_nocontent_create">
                 Click to create a new cost.
               </p><p>
-                OpenERP helps you managing the costs for your different vehicles
-                Costs are generally created from services and contract and appears here.
-            </p><p>
-                Thanks to the different filters, OpenERP can only print the effective
-                costs, sort them by type and by vehicle.
+                OpenERP helps you managing the costs for your different
+                vehicles. Costs are created automatically from services,
+                contracts (fixed or recurring) and fuel logs.
               </p>
             </field>
         </record>
