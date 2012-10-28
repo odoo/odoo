@@ -116,13 +116,21 @@
                         </tr>
                     </table>
                     <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
-                        <field name="pricelist_id"
-                            class="oe_inline"
-                            attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
-                        <field name="to_invoice"
-                            class="oe_inline"
-                            widget="selection"
-                            attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                        <p class="oe_grey oe_edit_only" colspan="2">
+                            When invoicing on timesheet, OpenERP uses the
+                            pricelist of the contract which uses the price
+                            defined on the product related to each employee to
+                            define the customer invoice price rate.
+                        </p>
+                        <group>
+                            <field name="pricelist_id"
+                                class="oe_inline"
+                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                            <field name="to_invoice"
+                                class="oe_inline"
+                                widget="selection"
+                                attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                        </group>
                     </group>
                  </xpath>
             </field>
