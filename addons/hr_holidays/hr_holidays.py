@@ -206,7 +206,14 @@ class hr_holidays(osv.osv):
                 raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state!')%(rec.state))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
-    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
+    def onchange_date_from(self, cr, uid, ids, date_from):
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
+        date_to = False
+        if date_from:
+            date_to = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
+        return {'value':{'date_to': str(date_to)}}
+
+    def onchange_date_to(self, cr, uid, ids, date_to, date_from):
         result = {}
         if date_to and date_from:
             diff_day = self._get_number_of_days(date_from, date_to)
