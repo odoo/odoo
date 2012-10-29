@@ -358,7 +358,6 @@ openerp.mail = function (session) {
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
-                        'comment', 
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context

@@ -707,13 +707,12 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        parent_id=False, attachment_ids=None, context=None):
+    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
         """ Wrapper on message_post, used only in Chatter (JS). The purpose is
             to handle attachments.
             # TDE FIXME: body is plaintext: convert it into html
         """
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type='comment',
                         subtype='mail.mt_comment', parent_id=parent_id, context=context)
 
         # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
