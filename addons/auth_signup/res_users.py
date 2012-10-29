@@ -138,7 +138,7 @@ class res_users(osv.Model):
                     for user in self.browse(cr, uid, ids, context))
 
     _columns = {
-        'state': fields.function(_get_state, string='State', type='selection',
+        'state': fields.function(_get_state, string='Status', type='selection',
                     selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
     }
 

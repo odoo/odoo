@@ -156,8 +156,6 @@ class mail_compose_message(osv.TransientModel):
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
-        # create the reply in the body
-        reply_body = (context and context.get('default_body') or '')
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
@@ -166,7 +164,6 @@ class mail_compose_message(osv.TransientModel):
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
-            'body': reply_body,
             'subject': reply_subject,
             'partner_ids': partner_ids,
             'content_subtype': 'html',

@@ -358,23 +358,23 @@ openerp.mail = function (session) {
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
-                        'comment', 
-                        'mail.mt_comment',
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
                     ]).then(function (record) {
                         var thread = self.parent_thread;
                         // create object and attach to the thread object
-                        var message = thread.create_message_object( record[0] );
-                        // insert the message on dom
-                        thread.insert_message( message, self.$el );
-                        if (thread.parent_message) {
-                            self.$el.remove();
-                            self.parent_thread.compose_message = null;
-                        } else {
-                            self.on_cancel();
-                        }
+                        thread.message_fetch(false, false, [record], function (arg, data) {
+                            var message = thread.create_message_object( data[0] );
+                            // insert the message on dom
+                            thread.insert_message( message, self.$el );
+                            if (thread.parent_message) {
+                                self.$el.remove();
+                                self.parent_thread.compose_message = null;
+                            } else {
+                                self.on_cancel();
+                            }
+                        });
                         //session.web.unblockUI();
                     });
                 return true;
@@ -438,7 +438,7 @@ openerp.mail = function (session) {
             // data of this expandable message
             this.id = datasets.id || -1,
             this.model = datasets.model || false,
-            this.ancestor_id = datasets.ancestor_id || false,
+            this.parent_id = datasets.parent_id || false,
             this.nb_messages = datasets.nb_messages || 0,
             this.thread_level = datasets.thread_level || 0,
             this.type = 'expandable',
@@ -512,10 +512,10 @@ openerp.mail = function (session) {
      * - record.attachment_ids[].url: url of each attachmentThe
      * thread view :
      * - root thread
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      * - - - - sub sub message (parent id = sub thread)
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      */
     mail.ThreadMessage = session.web.Widget.extend({
@@ -553,7 +553,7 @@ openerp.mail = function (session) {
             // data of this message
             this.id = datasets.id ||  -1,
             this.model = datasets.model ||  false,
-            this.ancestor_id = datasets.ancestor_id ||  false,
+            this.parent_id = datasets.parent_id ||  false,
             this.res_id = datasets.res_id ||  false,
             this.type = datasets.type ||  false,
             this.is_author = datasets.is_author ||  false,
@@ -864,10 +864,10 @@ openerp.mail = function (session) {
      * This widget handles the display of a thread of messages. The
      * thread view:
      * - root thread
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      * - - - - sub sub message (parent id = sub thread)
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      */
     mail.Thread = session.web.Widget.extend({
@@ -907,7 +907,7 @@ openerp.mail = function (session) {
             // data of this thread
             this.id =  datasets.id || false,
             this.model =  datasets.model || false,
-            this.ancestor_id =  datasets.ancestor_id || false,
+            this.parent_id =  datasets.parent_id || false,
             this.is_private =  datasets.is_private || false,
             this.author_id =  datasets.author_id || false,
             this.thread_level =  (datasets.thread_level+1) || 0,
@@ -1108,7 +1108,7 @@ openerp.mail = function (session) {
          * @param {Object} replace_context: added to this.context
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
-        message_fetch: function (replace_domain, replace_context, ids) {
+        message_fetch: function (replace_domain, replace_context, ids, callback) {
             var self = this;
 
             // domain and context: options + additional
@@ -1119,8 +1119,8 @@ openerp.mail = function (session) {
             // CHM note : option for sending in flat mode by server
             var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined]
-                ).then(this.proxy('switch_new_message'));
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined])
+                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
         /**
@@ -1254,7 +1254,7 @@ openerp.mail = function (session) {
             var self=this;
             _(records).each(function (record) {
                 var thread = self.browse_thread({
-                    'id': record.ancestor_id, 
+                    'id': record.parent_id, 
                     'default_return_top_thread':true
                 });
                 // create object and attach to the thread object
@@ -1334,10 +1334,10 @@ openerp.mail = function (session) {
                 var expandable = new mail.ThreadExpandable(this, {
                     'id': message.id,
                     'model': message.model,
-                    'ancestor_id': message.ancestor_id,
+                    'parent_id': message.parent_id,
                     'nb_messages': 1,
                     'thread_level': message.thread_level,
-                    'ancestor_id': message.ancestor_id,
+                    'parent_id': message.parent_id,
                     'domain': message_dom,
                     'options': message.options,
                     }, {
@@ -1410,7 +1410,7 @@ openerp.mail = function (session) {
                 'show_record_name' : false,
                 'show_compose_message' : false,
                 'show_compact_message' : false,
-                'message_ids': [],
+                'message_ids': undefined,
                 'no_message': false
             }, options);
 
