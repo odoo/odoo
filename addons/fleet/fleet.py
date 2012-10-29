@@ -581,38 +581,39 @@ class fleet_vehicle(osv.Model):
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        changes = []
-        if 'driver' in vals:
-            value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
-            olddriver = self.browse(cr, uid, ids, context)[0].driver
-            if olddriver:
-                olddriver = olddriver.name
-            else:
-                olddriver = 'None'
-            changes.append('Driver: from \'' + olddriver + '\' to \'' + value+'\'')
-        if 'state' in vals:
-            value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
-            oldstate = self.browse(cr, uid, ids, context)[0].state
-            if oldstate:
-                oldstate=oldstate.name
-            else:
-                oldstate = 'None'
-            changes.append('State: from \'' + oldstate + '\' to \'' + value+'\'')
-        if 'license_plate' in vals:
-            old_license_plate = self.browse(cr, uid, ids, context)[0].license_plate
-            if not old_license_plate:
-                old_license_plate = 'None'
-            changes.append('License Plate: from \'' + old_license_plate + '\' to \'' + vals['license_plate']+'\'')   
-       
-        vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
+        for vehicle in self.browse(cr, uid, ids, context):
+            changes = []
+            if 'driver' in vals and vehicle.driver.id != vals['driver']:
+                value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
+                olddriver = vehicle.driver
+                if olddriver:
+                    olddriver = olddriver.name
+                else:
+                    olddriver = 'None'
+                changes.append('Driver: from \'' + olddriver + '\' to \'' + value+'\'')
+            if 'state' in vals and vehicle.state.id != vals['state']:
+                value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
+                oldstate = vehicle.state
+                if oldstate:
+                    oldstate=oldstate.name
+                else:
+                    oldstate = 'None'
+                changes.append('State: from \'' + oldstate + '\' to \'' + value+'\'')
+            if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
+                old_license_plate = vehicle.license_plate
+                if not old_license_plate:
+                    old_license_plate = 'None'
+                changes.append('License Plate: from \'' + old_license_plate + '\' to \'' + vals['license_plate']+'\'')   
+           
+            vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
 
-        try:
-            if len(changes) > 0:
-                self.message_post(cr, uid, [self.browse(cr, uid, ids, context)[0].id], body=", ".join(changes), context=context)
-        except Exception as e:
-            print e
-            pass
-        return vehicle_id
+            try:
+                if len(changes) > 0:
+                    self.message_post(cr, uid, [self.browse(cr, uid, ids, context)[0].id], body=", ".join(changes), context=context)
+            except Exception as e:
+                print e
+                pass
+        return True
 
 ############################
 ############################
