@@ -409,6 +409,8 @@ To do this, set the :js:attr:`rpc option <~TestOptions.rpc>` to
     handler containing assertions, it multiplies the effective number
     of assertions)
 
+.. _testing-rpc-rpc:
+
 Actual RPC
 ++++++++++
 
@@ -567,6 +569,19 @@ Testing API
         Whether the current module (and its dependencies)'s templates
         should be loaded into QWeb before starting the test. A
         boolean, ``false`` by default.
+
+The test runner can also use two global configuration values set
+directly on the ``window`` object:
+
+* ``oe_all_dependencies`` is an ``Array`` of all modules with a web
+  component, ordered by dependency (for a module ``A`` with
+  dependencies ``A'``, any module of ``A'`` must come before ``A`` in
+  the array)
+
+* ``oe_db_info`` is an object with 3 keys ``source``, ``supadmin`` and
+  ``password``. It is used to pre-configure :ref:`actual RPC
+  <testing-rpc-rpc>` tests, to avoid a prompt being displayed
+  (especially for headless situations).
 
 Running through Python
 ----------------------
