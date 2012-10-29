@@ -115,10 +115,10 @@ class hr_holidays(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
-            'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
-            \nThe state is \'To Approve\', when holiday request is confirmed by user.\
-            \nThe state is \'Refused\', when holiday request is refused by manager.\
-            \nThe state is \'Approved\', when holiday request is approved by manager.'),
+            'Status', readonly=True, help='The status is set to \'To Submit\', when a holiday request is created.\
+            \nThe status is \'To Approve\', when holiday request is confirmed by user.\
+            \nThe status is \'Refused\', when holiday request is refused by manager.\
+            \nThe status is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
