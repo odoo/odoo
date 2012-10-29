@@ -1094,6 +1094,10 @@ class survey_question_wiz(osv.osv_memory):
                 context.pop(key)
 
         self.pool.get('survey.page').unlink(cr, uid, [context.get('page_id',False)])
+        for survey in self.pool.get('survey').browse(cr, uid, [context.get('survey_id',False)], context=context):
+            if not survey.page_ids:
+                return {'type':'ir.actions.act_window_close'}
+
         search_id = self.pool.get('ir.ui.view').search(cr,uid,[('model','=','survey.question.wiz'),\
                                             ('name','=','Survey Search')])
         surv_name_wiz = self.pool.get('survey.name.wiz')
