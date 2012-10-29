@@ -2,20 +2,28 @@
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
-            <header>
-                <button type="button" disabled="disabled"
-                        class="oe_button oe_import_button oe_import_validate oe_highlight"
-                    >Validate</button>
-                <button type="button" disabled="disabled"
-                        class="oe_button oe_import_button oe_import_import"
-                    >Import</button>
-                <span class="oe_fade">or</span>
-                <a class="oe_import_cancel" href="#">Cancel</a>
-            </header>
-            <input type="hidden" name="session_id"
-                   t-att-value="widget.session.session_id"/>
-            <input type="hidden" name="import_id"/>
-            <h2>Upload your file</h2>
+            <div class="oe_view_manager oe_view_manager_current" >
+                <div class="oe_view_manager_header oe_padding">
+                    <h2 class="oe_view_title">
+                        <span class="oe_view_title_text oe_breadcrumb_title">
+                            <span class="oe_breadcrumb_item">Upload your file</span>
+                        </span>
+                    </h2>
+                    <input type="hidden" name="session_id"
+                       t-att-value="widget.session.session_id"/>
+                    <input type="hidden" name="import_id"/>
+                    <button type="button" disabled="disabled"
+                            class="oe_button oe_import_button oe_import_validate oe_highlight"
+                        >Validate</button>
+                    <button type="button" disabled="disabled"
+                            class="oe_button oe_import_button oe_import_import"
+                        >Import</button>
+                    <span class="oe_fade">or</span>
+                    <a class="oe_import_cancel" href="#">Cancel</a>
+                </div>
+            </div>
+
+
             <p>Select the <a
                     href="http://en.wikipedia.org/wiki/Comma-separated_values"
                     class="oe_import_csv" target="_blank">.CSV</a>
@@ -44,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="oe_import_with_file">
+            <div class="oe_import_with_file oe_padding">
                 <h2>Map your data to OpenERP</h2>
                 <input type="checkbox" class="oe_import_has_header"
                        id="oe_import_has_header" checked="checked"/>
