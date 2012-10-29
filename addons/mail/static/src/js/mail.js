@@ -663,6 +663,7 @@ openerp.mail = function (session) {
         /* Call the on_compose_message on the thread of this message. */
         on_message_reply:function (event) {
             event.stopPropagation();
+            this.create_thread();
             this.thread.on_compose_message();
             return false;
         },
@@ -1105,9 +1106,9 @@ openerp.mail = function (session) {
             var message_loaded_ids = this.id ? [this.id].concat( self.get_child_ids() ) : self.get_child_ids();
 
             // CHM note : option for sending in flat mode by server
-            var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
+            var thread_level = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined])
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, thread_level, fetch_context, this.context.default_parent_id || undefined])
                 .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
