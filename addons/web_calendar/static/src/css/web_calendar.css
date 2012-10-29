@@ -33,3 +33,12 @@
 .openerp .oe_calendar.oe_cal_month .dhx_cal_data table tr td:last-child div.dhx_month_body {
   padding-right: 5px;
 }
+@media print {
+    div.dhx_cal_navline .dhx_cal_tab, div.dhx_cal_navline .dhx_cal_prev_button, div.dhx_cal_navline .dhx_cal_next_button, div.dhx_cal_navline .dhx_cal_today_button{
+        display: none;
+    }
+    .openerp .dhx_cal_data {
+        overflow-y: hidden !important;
+        position: relative;
+    }
+}

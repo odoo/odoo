@@ -1590,37 +1590,6 @@ instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
     },
 });
 
-instance.web.form.FormDialog = instance.web.Dialog.extend({
-    init: function(parent, options, view_id, dataset) {
-        this._super(parent, options);
-        this.dataset = dataset;
-        this.view_id = view_id;
-        return this;
-    },
-    start: function() {
-        var self = this;
-        this._super();
-        this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false
-        });
-        this.form.appendTo(this.$el);
-        this.form.on('record_created', self, this.on_form_dialog_saved);
-        this.form.on('record_saved', this, this.on_form_dialog_saved);
-        return this;
-    },
-    select_id: function(id) {
-        if (this.form.dataset.select_id(id)) {
-            return this.form.do_show();
-        } else {
-            this.do_warn("Could not find id in dataset");
-            return $.Deferred().reject();
-        }
-    },
-    on_form_dialog_saved: function(r) {
-        this.close();
-    }
-});
-
 instance.web.form.compute_domain = function(expr, fields) {
     if (! (expr instanceof Array))
         return !! expr;
@@ -2570,7 +2539,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 468);
+            var width = ((this.node.attrs || {}).editor_width || '100%');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3141,7 +3110,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                         type: 'ir.actions.act_window',
                         res_model: self.field.relation,
                         res_id: self.get("value"),
-                        context: self.build_context(),
                         views: [[false, 'form']],
                         target: 'current'
                     });
@@ -4568,6 +4536,10 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 $sbutton.click(function() {
                     self.select_elements(self.selected_ids);
                     self.destroy();
+                });
+                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
+                $cbutton.click(function() {
+                    self.new_object();
                 });
             });
         });

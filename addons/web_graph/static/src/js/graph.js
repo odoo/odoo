@@ -287,7 +287,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
 
             function _convert(field, data, tick) {
                 tick = tick === undefined ? true : false;
-                data = instance.web.format_value(data, fields[field]);
+                try {
+                    data = instance.web.format_value(data, fields[field]);
+                } catch(e) {
+                    data = "" + data;
+                }
                 if (tick) {
                     if (ticks[data] === undefined)
                         ticks[data] = _.size(ticks);

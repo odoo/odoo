@@ -25,6 +25,7 @@
     display: none !important;
   }
 }
+
 .openerp.openerp_webclient_container {
   height: 100%;
 }
@@ -44,7 +45,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -2518,6 +2519,9 @@
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page, .openerp .oe_form_field_many2many > .oe_view_manager .oe_list_pager_single_page {
   display: none !important;
 }
+.openerp .oe_form_field_one2many > .oe_view_manager .oe_view_manager_view_list, .openerp .oe_form_field_many2many > .oe_view_manager .oe_view_manager_view_list {
+  min-height: 132px;
+}
 .openerp .oe_form_field_one2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_one2many_list_row_add {
   font-weight: bold;
 }
@@ -2926,4 +2930,42 @@ div.ui-widget-overlay {
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
+}
+
+@media print {
+  .openerp {
+    text-shadow: none;
+  }
+  .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default {
+    display: none;
+  }
+  .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox] {
+    visibility: hidden;
+  }
+  .openerp .tree_header button, .openerp .oe_mail .oe_mail_thread_msg .oe_mail_unread, .openerp .oe_mail_fetch_more, .openerp .oe_m2o_drop_down_button img, .openerp .oe_form_field_one2many_list_row_add {
+    visibility: hidden;
+  }
+  .openerp a.oe_m2o_cm_button, .openerp a.oe_e {
+    visibility: hidden;
+  }
+  .openerp .oe_form .oe_form_field_date img, .openerp .oe_form .oe_form_field_datetime img {
+    visibility: hidden;
+  }
+  .openerp .oe_notebook > li.ui-tabs-selected {
+    display: block;
+  }
+  .openerp .oe_application .oe_form_sheet, .openerp .oe_application .oe_form_sheetbg {
+    border: 0px !important;
+    box-shadow: 0px 0px 0px;
+  }
+  .openerp .oe_view_manager_current > .oe_view_manager_header {
+    border: 0px !important;
+    box-shadow: 0px 0px 0px;
+  }
+  .openerp .text-core .text-wrap .text-arrow {
+    background: none;
+  }
+  .openerp .openerp div.oe_mail_wall {
+    overflow: hidden !important;
+  }
 }
