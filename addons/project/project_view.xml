@@ -392,7 +392,7 @@
                                 states="draft,open,pending" groups="base.group_user"/>
                         <button name="do_cancel" string="Cancel Task" type="object"
                                 states="draft,open,pending" groups="base.group_user"/>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" clickable="True" attrs="{'invisible':[('state','in',['cancelled'])]}"/>
                     </header>
                     <sheet string="Task">
                     <label for="name" class="oe_edit_only"/>
