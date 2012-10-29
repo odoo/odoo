@@ -176,10 +176,10 @@
         Template used to display the communication history in documents
         form view.
         -->
-    <span t-name="mail.record_thread" class="oe_record_thread">
+    <div t-name="mail.record_thread" class="oe_record_thread">
         <div class="oe_mail-placeholder">
         </div>
-    </span>
+    </div>
 
     <t t-name="mail.thread">
         <div t-attf-class="oe_thread #{widget.root?'oe_root_thread':''}"/>
@@ -236,8 +236,9 @@
     <t t-name="mail.thread.expandable">
         <div t-attf-class="oe_msg oe_msg_#{widget.type} #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_unread">
             <div class="oe_msg_content oe_msg_more_message">
-                <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">load one more message</a>
-                <a t-if="widget.nb_messages !== 1" class="oe_msg_fetch_more">load <t t-raw="widget.nb_messages" /> more messages</a>
+                <div class='oe_separator'></div>
+                <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
+                <a t-if="widget.nb_messages !== 1" class="oe_msg_fetch_more">show <t t-raw="widget.nb_messages" /> more messages</a>
             </div>
         </div>
     </t>

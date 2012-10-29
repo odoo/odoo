@@ -469,14 +469,9 @@ openerp.mail = function (session) {
 
         animated_destroy: function (fadeTime) {
             var self=this;
-            //graphic effects
-            if (fadeTime) {
-                self.$el.fadeOut(options.fadeTime, function () {
-                    self.destroy();
-                });
-            } else {
+            this.$el.fadeOut(fadeTime, function () {
                 self.destroy();
-            }
+            });
         },
 
         /*The selected thread and all childs (messages/thread) became read
@@ -489,7 +484,7 @@ openerp.mail = function (session) {
             }
             this.flag_used = true;
 
-            this.animated_destroy(300);
+            this.animated_destroy(200);
             this.parent_thread.message_fetch(this.domain, this.context);
             return false;
         },
@@ -719,15 +714,10 @@ openerp.mail = function (session) {
          */
         animated_destroy: function (fadeTime) {
             var self=this;
-            //graphic effects  
-            if (fadeTime) {
-                self.$el.fadeOut(fadeTime, function () {
-                    self.parent_thread.message_to_expandable(self);
-                });
-                self.thread.$el.fadeOut(fadeTime);
-            } else {
+            this.$el.fadeOut(fadeTime, function () {
                 self.parent_thread.message_to_expandable(self);
-            }
+            });
+            this.thread.$el.fadeOut(fadeTime);
         },
 
         /**
@@ -738,7 +728,7 @@ openerp.mail = function (session) {
             event.stopPropagation();
             if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
             
-            this.animated_destroy(250);
+            this.animated_destroy(150);
             // delete this message and his childs
             var ids = [this.id].concat( this.get_child_ids() );
             this.ds_message.unlink(ids);
@@ -754,7 +744,7 @@ openerp.mail = function (session) {
 
             if ( (this.to_read && this.options.typeof_thread == 'inbox') ||
                 (!this.to_read && this.options.typeof_thread == 'archives')) {
-                this.animated_destroy(250);
+                this.animated_destroy(150);
             }
 
             // if this message is read, all childs message display is read
@@ -847,7 +837,7 @@ openerp.mail = function (session) {
                 } else {
                     button.removeClass('oe_starred');
                     if ( self.options.typeof_thread == 'stared' ) {
-                        self.animated_destroy(250);
+                        self.animated_destroy(150);
                     }
                 }
             });
