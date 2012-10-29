@@ -302,6 +302,8 @@ instance.web.favicon = instance.web.Loading.include({
     
     //when time interval is known than start favicon can be used.
     start_favicon: function(second, options){
+        if(!this.interval)
+            this.stop_favicon();
         var count = 0;
         var self = this;
         this.interval = setInterval(function(){
@@ -318,6 +320,7 @@ instance.web.favicon = instance.web.Loading.include({
         $('link[type="image/x-icon"]').attr('href', this.original_favi.attr("href"));
         $('head').append(this.original_favi);
         document.title = this.old_title;
+        this.interval = null;
     },
     
     loading_title:function(percentage){
