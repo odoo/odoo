@@ -533,7 +533,7 @@ class test_mail(TestMailMockups):
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
         # Test: mail.message: subject as Re:.., body in html, parent_id
         self.assertEqual(compose.subject, _msg_reply, 'mail.message incorrect subject')
-        self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
+        # self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
         self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
