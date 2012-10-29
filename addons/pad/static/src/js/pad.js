@@ -6,20 +6,18 @@ openerp.pad = function(instance) {
         content: "",
         render_value: function() {
             var self = this;
-            if (this.get("value") === false || this.get("value") === "") {
+            if (!this.get("value")) {
                 self.view.dataset.call('pad_generate_url',{context:{
                         model: self.view.model,
                         field_name: self.name,
                         object_id: self.view.datarecord.id
                     }}).then(function(data) {
-                    if(data&&data.url){
-                        _super.apply(self,[data.url]);
-                        self.renderElement();
+                    if(data && data.url){
+                        self.set_value(data.url);
                     }
                 });
-            } else {
-                self.renderElement();
             }
+            self.renderElement();
             this._dirty_flag = true;
         },
         renderElement: function(){
