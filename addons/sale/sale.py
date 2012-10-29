@@ -580,6 +580,11 @@ class sale_order(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel'})
         return True
 
+    def action_draft(self, cr, uid, ids, context=None):
+        """Resets Sale Order as draft.
+        """
+        return self.write(cr, uid, ids, {'state':'draft'}, context=context)
+
     def action_button_confirm(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'This option should only be used for a single id at a time.'
         wf_service = netsvc.LocalService('workflow')
