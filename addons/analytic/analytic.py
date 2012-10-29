@@ -141,11 +141,11 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
         'code': fields.char('Reference', size=24, select=True),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True,
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
-                                  "The special type 'Template of Project' allows you to define a template with default data that you can reuse easily."),
+                                  "The special type 'Template of Contract' allows you to define a template with default data that you can reuse easily."),
         'template_id': fields.many2one('account.analytic.account', 'Template of Contract'),
         'description': fields.text('Description'),
         'parent_id': fields.many2one('account.analytic.account', 'Parent Analytic Account', select=2),
@@ -156,7 +156,7 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Prepaid Units', help='Sets the higher limit of time to work on the contract.'),
+        'quantity_max': fields.float('Prepaid Service Units', help='Sets the higher limit of time to work on the contract, based on the timesheet. (for instance, number of hours in a limited support contract.)'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
@@ -305,8 +305,15 @@ class account_analytic_line(osv.osv):
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
+
+    def _get_default_date(self, cr, uid, context=None):
+        return fields.date.context_today(self, cr, uid, context=context)
+
+    def __get_default_date(self, cr, uid, context=None):
+        return self._get_default_date(cr, uid, context=context)
+
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }
