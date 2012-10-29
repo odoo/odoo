@@ -35,6 +35,21 @@ class fleet_vehicle_cost(osv.Model):
             res.append((record.id, name))
         return res
 
+    def year_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            res.append((record.id, str(record.date[:4])))
+        return res
+
+    def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
+        res = self.year_get(cr, uid, ids, context=context)
+        return dict(res)
+
     def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
@@ -52,7 +67,9 @@ class fleet_vehicle_cost(osv.Model):
         'date' :fields.date('Date',help='Date when the cost has been executed'),
 
         'contract_id' : fields.many2one('fleet.vehicle.log.contract', 'Contract', required=False, help='Contract attached to this cost'),
-        'auto_generated' : fields.boolean('automatically generated',readonly=True,required=True)
+        'auto_generated' : fields.boolean('automatically generated',readonly=True,required=True),
+
+        'year' : fields.function(_year_get_fnc, type="char", string='Year', store=True),
     }
 
     _defaults ={
@@ -331,7 +348,7 @@ class fleet_vehicle(osv.Model):
             overdue=0
             if (record.log_contracts):
                 for element in record.log_contracts:
-                    if (element.state=='open' and element.expiration_date):
+                    if ((element.state=='open' or element.state=='toclose') and element.expiration_date):
                         current_date_str=time.strftime('%Y-%m-%d')
                         due_time_str=element.expiration_date
                             #due_time_str=element.browse()
@@ -363,7 +380,7 @@ class fleet_vehicle(osv.Model):
             due_soon=0
             if (record.log_contracts):
                 for element in record.log_contracts:
-                    if (element.state=='open' and element.expiration_date):
+                    if ((element.state=='open' or element.state=='toclose') and element.expiration_date):
                         current_date_str=time.strftime('%Y-%m-%d')
                         due_time_str=element.expiration_date
                             #due_time_str=element.browse()
@@ -416,7 +433,7 @@ class fleet_vehicle(osv.Model):
         res=[]
         for record in reads:
             if (record.log_contracts):
-                ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],limit=1,order='expiration_date asc')
+                ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),'|',('state','=','open'),('state','=','toclose')],limit=1,order='expiration_date asc')
                 if len(ids) > 0:
                     res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_subtype.name))
             else:
@@ -435,7 +452,7 @@ class fleet_vehicle(osv.Model):
             due_soon=0
             if (record.log_contracts):
                 for element in record.log_contracts:
-                    if (element.state=='open' and element.expiration_date):
+                    if ((element.state=='open' or element.state=='toclose') and element.expiration_date):
                         current_date_str=time.strftime('%Y-%m-%d')
                         due_time_str=element.expiration_date
 
@@ -454,16 +471,18 @@ class fleet_vehicle(osv.Model):
         return dict(res)
 
     def run_scheduler(self,cr,uid,context=None):
-        ids = self.pool.get('fleet.vehicle').search(cr, uid, [], offset=0, limit=None, order=None,context=None, count=False)
-        nexts = self.get_next_contract_reminder_fnc(cr,uid,ids,context=context)
-        overdues = self.get_overdue_contract_reminder_fnc(cr,uid,ids,context=context)
-        for key,value in nexts.items():
-            if value > 0 and overdues[key] > 0:
-                self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon and '+str(overdues[key])+' contract(s) is (are) overdued', context=context)
-            elif value > 0:
-                self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon!', context=context)
-            elif overdues[key] > 0 : 
-                self.message_post(cr, uid, [key], body=str(overdues[key]) + ' contract(s) is(are) overdued!', context=context)
+        ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, ['&',('state','=','open'),('expiration_date','<',(datetime.date.today() + relativedelta(days=+15)).strftime('%Y-%m-%d'))], offset=0, limit=None, order=None,context=None, count=False)
+        res = {}
+        for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids,context=context):
+            if contract.vehicle_id.id in res:
+                res[contract.vehicle_id.id] += 1
+            else :
+                res[contract.vehicle_id.id] = 1
+
+        for vehicle,value in res.items():
+            self.message_post(cr, uid, vehicle, body=str(value) + ' contract(s) need(s) to be renewed and/or closed!', context=context)
+
+        self.pool.get('fleet.vehicle.log.contract').write(cr,uid,ids,{'state' : 'toclose'},context=context)
         return True
 
     def _get_default_state(self, cr, uid, context):
@@ -889,7 +908,7 @@ class fleet_vehicle_log_contract(osv.Model):
         d = datetime.date.today()
         #d = datetime.datetime(2012, 12, 01)
 
-        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','=','open')], offset=0, limit=None, order=None,context=None, count=False)
+        contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','!=','closed')], offset=0, limit=None, order=None,context=None, count=False)
         deltas = {'yearly' : relativedelta(years=+1),'monthly' : relativedelta(months=+1),'weekly' : relativedelta(weeks=+1),'daily' : relativedelta(days=+1)}
         for contract in self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,contract_ids,context=context):
             if not contract.start_date or contract.cost_frequency == 'no':
@@ -997,7 +1016,7 @@ class fleet_vehicle_log_contract(osv.Model):
         res=[]
         for record in reads:
             #if (record.reminder==True):
-            if (record.expiration_date and record.state=='open'):
+            if (record.expiration_date and (record.state=='open' or record.state=='toclose')):
                 today=self.str_to_date(time.strftime('%Y-%m-%d'))
                 renew_date = self.str_to_date(record.expiration_date)
                 diff_time=int((renew_date-today).days)
@@ -1078,7 +1097,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'insurer_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Contractor',domain="['|',('customer','=',True),('employee','=',True)]",help='Person to which the contract is signed for'),
         'ins_ref' : fields.char('Contract Reference', size=64),
-        'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
+        'state' : fields.selection([('open', 'In Progress'),('toclose','To Close'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
         #'reminder' : fields.boolean('Renewal Reminder', help="Warn the user a few days before the expiration date of this contract"),
         'notes' : fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),

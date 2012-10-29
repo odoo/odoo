@@ -792,6 +792,7 @@
                     <field name="cost_subtype"/>
                     <field name="amount" sum="Total Cost"/>
                     <field name="parent_id" invisible="1" />
+                    <field name="year" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -803,11 +804,13 @@
                 <search string="Vehicles costs" >
                     <field name="vehicle_id" />
                     <field name="cost_subtype"/>
+                    <field name="year"/>
                     <field name="date"/>
                     <field name="parent_id"/>
                     <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
                     <filter name="parent_true" domain="[('parent_id','!=',False)]" string="Indicative Costs"/>
                     <group expand="1" string="Group By...">
+                        <filter name="groupby_year" context="{'group_by' : 'year'}" string="Year"/>
                         <filter name="groupby_date" context="{'group_by' : 'date'}" string="Date"/>
                         <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
                         <filter name="groupby_cost_subtype" context="{'group_by' : 'cost_subtype'}" string="Cost Subtype"/>
