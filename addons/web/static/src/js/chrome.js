@@ -270,6 +270,8 @@ instance.web.Loading = instance.web.Widget.extend({
             this.draw_favicon(parseInt(this.response_count * 100 / this.request_count));
         } else {
             this.count = 0;
+            this.request_count = 0;
+            this.response_count = 0;
             clearTimeout(this.long_running_timer);
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
