@@ -182,6 +182,13 @@ class hr_holidays(osv.osv):
                 }
         return result
 
+    def onchange_employee(self, cr, uid, ids, employee_id):
+        result = {'value': {'department_id': False}}
+        if employee_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, employee_id)
+            result['value'] = {'department_id': employee.department_id.id}
+        return result
+
     # TODO: can be improved using resource calendar method
     def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
