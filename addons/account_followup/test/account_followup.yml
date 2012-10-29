@@ -10,27 +10,27 @@
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
     {}
--
-  I select the follow-up to send it to the partner.
--
-  !python {model: account.followup.print}: |
-    self.do_continue(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),
-      })
--
-  I select partners whom I want to send follow-ups.
--
-  !record {model: account.followup.print.all, id: account_followup_print_all_0}:
-    email_body: 'Date : %(date)s\n\nDear %(partner_name)s,\n\nPlease find in attachment
-      a reminder of all your unpaid invoices, for a total amount due of:\n\n%(followup_amount).2f
-      %(company_currency)s\n\nThanks,\n--\n%(user_signature)s\n%(company_name)s'
-    email_subject: Invoices Reminder
-    partner_ids:
-      - base.res_partner_12
-    partner_lang: 1
--
-  I send a follow-up mail to partner.
--
-  !python {model: account.followup.print.all}: |
-    import time
-    self.do_mail(cr, uid, [ref("account_followup_print_all_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
-      })
+#-
+#   I select the follow-up to send it to the partner.
+# -
+#   !python {model: account.followup.print}: |
+#     self.do_continue(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),
+#       })
+# -
+#   I select partners whom I want to send follow-ups.
+# -
+#   !record {model: account.followup.print.all, id: account_followup_print_all_0}:
+#     email_body: 'Date : %(date)s\n\nDear %(partner_name)s,\n\nPlease find in attachment
+#       a reminder of all your unpaid invoices, for a total amount due of:\n\n%(followup_amount).2f
+#       %(company_currency)s\n\nThanks,\n--\n%(user_signature)s\n%(company_name)s'
+#     email_subject: Invoices Reminder
+#     partner_ids:
+#       - base.res_partner_12
+#     partner_lang: 1
+# -
+#   I send a follow-up mail to partner.
+# -
+#   !python {model: account.followup.print.all}: |
+#     import time
+#     self.do_mail(cr, uid, [ref("account_followup_print_all_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "date": time.strftime('%Y-%m-%d'), "followup_id": ref("account_followup.demo_followup1"), "active_id": ref("account_followup.account_followup_print_menu"),
+#       })

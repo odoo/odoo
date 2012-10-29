@@ -15,14 +15,12 @@
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
-    ${object.latest_followup_level_id.description}
+    
     <p>Hello${object.name and ' ' or ''},</p>
     
     <p>We see in our books that some accounts are not settled yet:</p>
 
-    <%for aml in ${object.accountmoveline_ids}>
-        ${aml.debit}
-    <%endfor>
+    
 
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
