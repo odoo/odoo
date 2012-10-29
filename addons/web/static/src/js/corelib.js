@@ -809,7 +809,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         return false;
     },
     rpc: function(url, data, success, error) {
-        var def = $.Deferred().then(success, error);
+        var def = $.Deferred().done(success).fail(error);
         var self = this;
         instance.session.rpc(url, data).then(function() {
             if (!self.isDestroyed())
