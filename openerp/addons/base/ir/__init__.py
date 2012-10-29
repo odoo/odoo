@@ -21,6 +21,7 @@
 
 import ir_model
 import ir_sequence
+import ir_needaction
 import ir_ui_menu
 import ir_ui_view
 import ir_default
@@ -37,6 +38,7 @@ import wizard
 import ir_config_parameter
 import osv_memory_autovacuum
 import ir_mail_server
+import ir_fields
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

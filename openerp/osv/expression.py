@@ -22,106 +22,119 @@
 
 """ Domain expression processing
 
-The main duty of this module is to compile a domain expression into a SQL
-query. A lot of things should be documented here, but as a first step in the
-right direction, some tests in test_osv_expression.yml might give you some
-additional information.
+The main duty of this module is to compile a domain expression into a
+SQL query. A lot of things should be documented here, but as a first
+step in the right direction, some tests in test_osv_expression.yml
+might give you some additional information.
 
-For legacy reasons, a domain uses an inconsistent two-levels abstract syntax
-(domains are regular Python data structures). At the first level, a domain
-is an expression made of terms (sometimes called leaves) and (domain) operators
-used in prefix notation. The available operators at this level are '!', '&',
-and '|'. '!' is a unary 'not', '&' is a binary 'and', and '|' is a binary 'or'.
-For instance, here is a possible domain. (<term> stands for an arbitrary term,
-more on this later.)
+For legacy reasons, a domain uses an inconsistent two-levels abstract
+syntax (domains are regular Python data structures). At the first
+level, a domain is an expression made of terms (sometimes called
+leaves) and (domain) operators used in prefix notation. The available
+operators at this level are '!', '&', and '|'. '!' is a unary 'not',
+'&' is a binary 'and', and '|' is a binary 'or'.  For instance, here
+is a possible domain. (<term> stands for an arbitrary term, more on
+this later.)::
 
     ['&', '!', <term1>, '|', <term2>, <term3>]
 
-It is equivalent to this pseudo code using infix notation:
+It is equivalent to this pseudo code using infix notation::
 
     (not <term1>) and (<term2> or <term3>)
 
-The second level of syntax deals with the term representation. A term is
-a triple of the form (left, operator, right). That is, a term uses an infix
-notation, and the available operators, and possible left and right operands
-differ with those of the previous level. Here is a possible term:
+The second level of syntax deals with the term representation. A term
+is a triple of the form (left, operator, right). That is, a term uses
+an infix notation, and the available operators, and possible left and
+right operands differ with those of the previous level. Here is a
+possible term::
 
     ('company_id.name', '=', 'OpenERP')
 
-The left and right operand don't have the same possible values. The left
-operand is field name (related to the model for which the domain applies).
-Actually, the field name can use the dot-notation to traverse relationships.
-The right operand is a Python value whose type should match the used operator
-and field type. In the above example, a string is used because the name field
-of a company has type string, and because we use the '=' operator. When
-appropriate, a 'in' operator can be used, and thus the right operand should be
-a list.
+The left and right operand don't have the same possible values. The
+left operand is field name (related to the model for which the domain
+applies).  Actually, the field name can use the dot-notation to
+traverse relationships.  The right operand is a Python value whose
+type should match the used operator and field type. In the above
+example, a string is used because the name field of a company has type
+string, and because we use the '=' operator. When appropriate, a 'in'
+operator can be used, and thus the right operand should be a list.
 
-Note: the non-uniform syntax could have been more uniform, but this would hide
-an important limitation of the domain syntax. Say that the term representation
-was ['=', 'company_id.name', 'OpenERP']. Used in a complete domain, this would
-look like:
+Note: the non-uniform syntax could have been more uniform, but this
+would hide an important limitation of the domain syntax. Say that the
+term representation was ['=', 'company_id.name', 'OpenERP']. Used in a
+complete domain, this would look like::
 
-  ['!', ['=', 'company_id.name', 'OpenERP']]
+    ['!', ['=', 'company_id.name', 'OpenERP']]
 
-and you would be tempted to believe something like this would be possible:
+and you would be tempted to believe something like this would be
+possible::
 
-  ['!', ['=', 'company_id.name', ['&', ..., ...]]]
+    ['!', ['=', 'company_id.name', ['&', ..., ...]]]
 
-That is, a domain could be a valid operand. But this is not the case. A domain
-is really limited to a two-level nature, and can not take a recursive form: a
-domain is not a valid second-level operand.
+That is, a domain could be a valid operand. But this is not the
+case. A domain is really limited to a two-level nature, and can not
+take a recursive form: a domain is not a valid second-level operand.
 
 Unaccent - Accent-insensitive search
 
-OpenERP will use the SQL function 'unaccent' when available for the 'ilike' and
-'not ilike' operators, and enabled in the configuration.
-Normally the 'unaccent' function is obtained from the PostgreSQL 'unaccent'
-contrib module[0].
+OpenERP will use the SQL function 'unaccent' when available for the
+'ilike' and 'not ilike' operators, and enabled in the configuration.
+Normally the 'unaccent' function is obtained from `the PostgreSQL
+'unaccent' contrib module
+<http://developer.postgresql.org/pgdocs/postgres/unaccent.html>`_.
 
+.. todo: The following explanation should be moved in some external
+         installation guide
 
-..todo: The following explanation should be moved in some external installation
-        guide
+The steps to install the module might differ on specific PostgreSQL
+versions.  We give here some instruction for PostgreSQL 9.x on a
+Ubuntu system.
 
-The steps to install the module might differ on specific PostgreSQL versions.
-We give here some instruction for PostgreSQL 9.x on a Ubuntu system.
+Ubuntu doesn't come yet with PostgreSQL 9.x, so an alternative package
+source is used. We use Martin Pitt's PPA available at
+`ppa:pitti/postgresql
+<https://launchpad.net/~pitti/+archive/postgresql>`_.
 
-Ubuntu doesn't come yet with PostgreSQL 9.x, so an alternative package source
-is used. We use Martin Pitt's PPA available at ppa:pitti/postgresql[1]. See
-[2] for instructions. Basically:
+.. code-block:: sh
 
     > sudo add-apt-repository ppa:pitti/postgresql
     > sudo apt-get update
 
-Once the package list is up-to-date, you have to install PostgreSQL 9.0 and
-its contrib modules.
+Once the package list is up-to-date, you have to install PostgreSQL
+9.0 and its contrib modules.
+
+.. code-block:: sh
 
     > sudo apt-get install postgresql-9.0 postgresql-contrib-9.0
 
 When you want to enable unaccent on some database:
 
+.. code-block:: sh
+
     > psql9 <database> -f /usr/share/postgresql/9.0/contrib/unaccent.sql
 
-Here 'psql9' is an alias for the newly installed PostgreSQL 9.0 tool, together
-with the correct port if necessary (for instance if PostgreSQL 8.4 is running
-on 5432). (Other aliases can be used for createdb and dropdb.)
+Here :program:`psql9` is an alias for the newly installed PostgreSQL
+9.0 tool, together with the correct port if necessary (for instance if
+PostgreSQL 8.4 is running on 5432). (Other aliases can be used for
+createdb and dropdb.)
+
+.. code-block:: sh
 
     > alias psql9='/usr/lib/postgresql/9.0/bin/psql -p 5433'
 
 You can check unaccent is working:
 
+.. code-block:: sh
+
     > psql9 <database> -c"select unaccent('hélène')"
 
 Finally, to instruct OpenERP to really use the unaccent function, you have to
-start the server specifying the --unaccent flag.
-
-[0] http://developer.postgresql.org/pgdocs/postgres/unaccent.html
-[1] https://launchpad.net/~pitti/+archive/postgresql
-[2] https://launchpad.net/+help/soyuz/ppa-sources-list.html
+start the server specifying the ``--unaccent`` flag.
 
 """
 
 import logging
+import traceback
 
 from openerp.tools import flatten, reverse_enumerate
 import fields
@@ -231,7 +244,7 @@ def is_leaf(element, internal=False):
     """ Test whether an object is a valid domain term.
 
     :param internal: allow or not the 'inselect' internal operator in the term.
-    This normally should be always left to False.
+                     This normally should be always left to False.
     """
     INTERNAL_OPS = TERM_OPERATORS + ('inselect',)
     return (isinstance(element, tuple) or isinstance(element, list)) \
@@ -426,6 +439,7 @@ class expression(object):
 
             # If the field is _inherits'd, search for the working_table,
             # and extract the field.
+            field = None
             if field_path[0] in table._inherit_fields:
                 while True:
                     field = working_table._columns.get(field_path[0])
@@ -474,6 +488,13 @@ class expression(object):
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
                     self.__exp[i] = TRUE_LEAF
+                    _logger.error(
+                        "The field '%s' (%s) can not be searched: non-stored "
+                        "function field without fnct_search",
+                        field.string, left)
+                    # avoid compiling stack trace if not needed
+                    if _logger.isEnabledFor(logging.DEBUG):
+                        _logger.debug(''.join(traceback.format_stack()))
                 else:
                     subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
                     if not subexp:
@@ -519,7 +540,8 @@ class expression(object):
                             ids2 = select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator)
                             if ids2:
                                 call_null = False
-                                self.__exp[i] = ('id', 'in', ids2)
+                                o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                                self.__exp[i] = ('id', o2m_op, ids2)
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'

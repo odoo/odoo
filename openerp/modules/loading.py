@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -24,41 +24,26 @@
 
 """
 
-import base64
-import imp
 import itertools
 import logging
 import os
-import re
 import sys
 import threading
-import zipfile
-import zipimport
-
-from cStringIO import StringIO
-from os.path import join as opj
-from zipfile import PyZipFile, ZIP_DEFLATED
-
 
 import openerp
 import openerp.modules.db
 import openerp.modules.graph
 import openerp.modules.migration
-import openerp.netsvc as netsvc
 import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.osutil as osutil
 import openerp.tools.assertion_report as assertion_report
+from openerp import SUPERUSER_ID
 
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
-from openerp.modules.module import \
-    get_modules, get_modules_with_version, \
-    load_information_from_description_file, \
-    get_module_resource, zip_directory, \
-    get_module_path, initialize_sys_path, \
+from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models
 
 _logger = logging.getLogger(__name__)
@@ -76,7 +61,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases, and even raise osv_except if certificate is invalid)
+                              for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
@@ -99,8 +84,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             threading.currentThread().testing = True
             _load_data(cr, module_name, idref, mode, 'test')
             return True
-        except Exception, e:
-            _logger.error(
+        except Exception:
+            _logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -135,7 +120,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                    tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
                 else:
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
             finally:
@@ -170,7 +155,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-
+        pool._init_modules.add(package.name)
         status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
@@ -178,7 +163,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         modobj = pool.get('ir.module.module')
 
         if perform_checks:
-            modobj.check(cr, 1, [module_id])
+            modobj.check(cr, SUPERUSER_ID, [module_id])
 
         idref = {}
 
@@ -189,7 +174,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
-                modobj.write(cr, 1, [module_id], modobj.get_values_from_terp(package.data))
+                modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             load_init_xml(module_name, idref, mode)
             load_update_xml(module_name, idref, mode)
             load_data(module_name, idref, mode)
@@ -218,9 +203,9 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
             ver = release.major_version + '.' + package.data['version']
             # Set new modules and dependencies
-            modobj.write(cr, 1, [module_id], {'state': 'installed', 'latest_version': ver})
+            modobj.write(cr, SUPERUSER_ID, [module_id], {'state': 'installed', 'latest_version': ver})
             # Update translations for all installed languages
-            modobj.update_translations(cr, 1, [module_id], None)
+            modobj.update_translations(cr, SUPERUSER_ID, [module_id], None)
 
             package.state = 'installed'
             for kind in ('init', 'demo', 'update'):
@@ -228,10 +213,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     delattr(package, kind)
 
         cr.commit()
-
-    # mark new res_log records as read
-    cr.execute("update res_log set read=True where create_date >= %s", (dt_before_load,))
-
+    
     cr.commit()
 
     return loaded_modules, processed_modules
@@ -257,7 +239,7 @@ def load_marked_modules(cr, graph, states, force, progressdict, report, loaded_m
     while True:
         cr.execute("SELECT name from ir_module_module WHERE state IN %s" ,(tuple(states),))
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
-        new_modules_in_graph = graph.add_modules(cr, module_list, force)
+        graph.add_modules(cr, module_list, force)
         _logger.debug('Updating graph with %d more modules', len(module_list))
         loaded, processed = load_module_graph(cr, graph, progressdict, report=report, skip_modules=loaded_modules)
         processed_modules.extend(processed)
@@ -315,21 +297,21 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             modobj = pool.get('ir.module.module')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
-                modobj.update_list(cr, 1)
+                modobj.update_list(cr, SUPERUSER_ID)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
             mods = [k for k in tools.config['init'] if tools.config['init'][k]]
             if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
                 if ids:
-                    modobj.button_install(cr, 1, ids)
+                    modobj.button_install(cr, SUPERUSER_ID, ids)
 
             mods = [k for k in tools.config['update'] if tools.config['update'][k]]
             if mods:
-                ids = modobj.search(cr, 1, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
+                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
                 if ids:
-                    modobj.button_upgrade(cr, 1, ids)
+                    modobj.button_upgrade(cr, SUPERUSER_ID, ids)
 
             cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
 
@@ -339,7 +321,11 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         #            partially installed modules (i.e. installed/to upgrade), to
         #            offer a consistent system to the second part: installing
         #            newly selected modules.
-        states_to_load = ['installed', 'to upgrade']
+        #            We include the modules 'to remove' in the first step, because
+        #            they are part of the "currently installed" modules. They will
+        #            be dropped in STEP 6 later, before restarting the loading
+        #            process.
+        states_to_load = ['installed', 'to upgrade', 'to remove']
         processed = load_marked_modules(cr, graph, states_to_load, force, status, report, loaded_modules)
         processed_modules.extend(processed)
         if update_module:
@@ -350,9 +336,9 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         # load custom models
         cr.execute('select model from ir_model where state=%s', ('manual',))
         for model in cr.dictfetchall():
-            pool.get('ir.model').instanciate(cr, 1, model['model'], {})
+            pool.get('ir.model').instanciate(cr, SUPERUSER_ID, model['model'], {})
 
-        # STEP 4: Finish and cleanup
+        # STEP 4: Finish and cleanup installations
         if processed_modules:
             cr.execute("""select model,name from ir_model where id NOT IN (select distinct model_id from ir_model_access)""")
             for (model, name) in cr.fetchall():
@@ -377,33 +363,18 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     _logger.warning("Model %s is declared but cannot be loaded! (Perhaps a module was partially removed or renamed)", model)
 
             # Cleanup orphan records
-            pool.get('ir.model.data')._process_end(cr, 1, processed_modules)
+            pool.get('ir.model.data')._process_end(cr, SUPERUSER_ID, processed_modules)
 
         for kind in ('init', 'demo', 'update'):
             tools.config[kind] = {}
 
         cr.commit()
-        if update_module:
-            # Remove records referenced from ir_model_data for modules to be
-            # removed (and removed the references from ir_model_data).
-            cr.execute("select id,name from ir_module_module where state=%s", ('to remove',))
-            for mod_id, mod_name in cr.fetchall():
-                cr.execute('select model,res_id from ir_model_data where noupdate=%s and module=%s order by id desc', (False, mod_name,))
-                for rmod, rid in cr.fetchall():
-                    uid = 1
-                    rmod_module= pool.get(rmod)
-                    if rmod_module:
-                        # TODO group by module so that we can delete multiple ids in a call
-                        rmod_module.unlink(cr, uid, [rid])
-                    else:
-                        _logger.error('Could not locate %s to remove res=%d' % (rmod,rid))
-                cr.execute('delete from ir_model_data where noupdate=%s and module=%s', (False, mod_name,))
-                cr.commit()
 
-            # Remove menu items that are not referenced by any of other
-            # (child) menu item, ir_values, or ir_model_data.
-            # This code could be a method of ir_ui_menu.
-            # TODO: remove menu without actions of children
+        # STEP 5: Cleanup menus 
+        # Remove menu items that are not referenced by any of other
+        # (child) menu item, ir_values, or ir_model_data.
+        # TODO: This code could be a method of ir_ui_menu. Remove menu without actions of children
+        if update_module:
             while True:
                 cr.execute('''delete from
                         ir_ui_menu
@@ -419,9 +390,19 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                 else:
                     _logger.info('removed %d unused menus', cr.rowcount)
 
-            # Pretend that modules to be removed are actually uninstalled.
-            cr.execute("update ir_module_module set state=%s where state=%s", ('uninstalled', 'to remove',))
-            cr.commit()
+        # STEP 6: Uninstall modules to remove
+        if update_module:
+            # Remove records referenced from ir_model_data for modules to be
+            # removed (and removed the references from ir_model_data).
+            cr.execute("SELECT id FROM ir_module_module WHERE state=%s", ('to remove',))
+            mod_ids_to_remove = [x[0] for x in cr.fetchall()]
+            if mod_ids_to_remove:
+                pool.get('ir.module.module').module_uninstall(cr, SUPERUSER_ID, mod_ids_to_remove)
+                # Recursive reload, should only happen once, because there should be no
+                # modules to remove next time
+                cr.commit()
+                _logger.info('Reloading registry once more after uninstalling modules')
+                return pooler.restart_pool(cr.dbname, force_demo, status, update_module)
 
         if report.failures:
             _logger.error('At least one test failed when loading the modules.')

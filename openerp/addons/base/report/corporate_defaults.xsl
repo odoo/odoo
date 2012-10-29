@@ -22,25 +22,24 @@
 
 		<setFont name="Helvetica" size="10"/>
 		<drawRightString x="20cm" y="28.5cm"><xsl:value-of select="//corporate-header/corporation/rml_header1"/></drawRightString>
-		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/address/street"/></drawString>
+		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/street"/></drawString>
 		<drawString x="1cm" y="26.5cm">
-			<xsl:value-of select="//corporate-header/corporation/address/zip"/>
+			<xsl:value-of select="//corporate-header/corporation/zip"/>
 			<xsl:text> </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/city"/>
+			<xsl:value-of select="//corporate-header/corporation/city"/>
 			<xsl:text> - </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/country"/>
+			<xsl:value-of select="//corporate-header/corporation/country"/>
 		</drawString>
 		<drawString x="1cm" y="26cm">Phone:</drawString>
-		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/address/phone"/></drawRightString>
+		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/phone"/></drawRightString>
 		<drawString x="1cm" y="25.5cm">Mail:</drawString>
-		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/address/email"/></drawRightString>
+		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/email"/></drawRightString>
 
 
 		<!--page bottom-->
 
 		<lines>1.5cm 2.2cm 19.9cm 2.2cm</lines>
-		<drawCentredString x="10.5cm" y="1.7cm"><xsl:value-of select="//corporate-header/corporation/rml_footer1"/></drawCentredString>
-		<drawCentredString x="10.5cm" y="1.25cm"><xsl:value-of select="//corporate-header/corporation/rml_footer2"/></drawCentredString>
+		<drawCentredString x="10.5cm" y="1.7cm"><xsl:value-of select="//corporate-header/corporation/rml_footer"/></drawCentredString>
 		<drawCentredString x="10.5cm" y="0.8cm">Your contact : <xsl:value-of select="//corporate-header/user/name"/></drawCentredString>
 
 	</xsl:template>
@@ -57,24 +56,23 @@
 
 		<setFont name="Helvetica" size="10"/>
 		<drawRightString x="1cm" y="27.5cm"><xsl:value-of select="//corporate-header/corporation/rml_header1"/></drawRightString>
-		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/address/street"/></drawString>
+		<drawString x="1cm" y="27cm"><xsl:value-of select="//corporate-header/corporation/street"/></drawString>
 		<drawString x="1cm" y="26.5cm">
-			<xsl:value-of select="//corporate-header/corporation/address/zip"/>
+			<xsl:value-of select="//corporate-header/corporation/zip"/>
 			<xsl:text> </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/city"/>
+			<xsl:value-of select="//corporate-header/corporation/city"/>
 			<xsl:text> - </xsl:text>
-			<xsl:value-of select="//corporate-header/corporation/address/country"/>
+			<xsl:value-of select="//corporate-header/corporation/country"/>
 		</drawString>
 		<drawString x="1cm" y="26cm">Phone:</drawString>
-		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/address/phone"/></drawRightString>
+		<drawRightString x="7cm" y="26cm"><xsl:value-of select="//corporate-header/corporation/phone"/></drawRightString>
 		<drawString x="1cm" y="25.5cm">Mail:</drawString>
-		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/address/email"/></drawRightString>
+		<drawRightString x="7cm" y="25.5cm"><xsl:value-of select="//corporate-header/corporation/email"/></drawRightString>
 
 		<!--page bottom-->
 
 		<lines>1.5cm 1.2cm 19.9cm 1.2cm</lines>
-		<drawCentredString x="10.5cm" y="1.7cm"><xsl:value-of select="//corporate-header/corporation/rml_footer1"/></drawCentredString>
-		<drawCentredString x="10.5cm" y="1.25cm"><xsl:value-of select="//corporate-header/corporation/rml_footer2"/></drawCentredString>
+		<drawCentredString x="10.5cm" y="1.7cm"><xsl:value-of select="//corporate-header/corporation/rml_footer"/></drawCentredString>
 <!--		<drawCentredString x="10.5cm" y="0.8cm">Your contact : <xsl:value-of select="//corporate-header/user/name"/></drawCentredString>-->
 	</xsl:template>
 

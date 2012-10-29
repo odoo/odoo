@@ -14,33 +14,33 @@
 
 	<tr>
  		<td>
-			% if company['partner_id']['address'] and company['partner_id']['address'][0]['street']:
-				<small>${company.partner_id.address[0].street}</small></br>
+			% if company['partner_id']['street']:
+				<small>${company.partner_id.street}</small></br>
 			%endif
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			% if company['partner_id']['address'] and company['partner_id']['address'][0]['zip']:
-				<small>${company.partner_id.address[0].zip}
-				${company.partner_id.address[0].city}-${company.partner_id.address[0].country_id and company.partner_id.address[0].country_id.name}</small></br>
+			% if company['partner_id']['zip']:
+				<small>${company.partner_id.zip}
+				${company.partner_id.city}-${company.partner_id.country_id and company.partner_id.country_id.name}</small></br>
 			%endif
 		</td>
 	</tr>
 
 	<tr>
  		<td>
-			% if company['partner_id']['address'] and company['partner_id']['address'][0]['phone']:
-				<small><b>Phone:</b>${company.partner_id.address and company.partner_id.address[0].phone}</small></br>
+			% if company['partner_id']['phone']:
+				<small><b>Phone:</b>${company.partner_id.phone}</small></br>
 			%endif
 		</td>
 	</tr>
 
 	<tr>
  		<td>
-			% if company['partner_id']['address'] and company['partner_id']['address'][0]['email']:
-				<small><b>Mail:</b>${company.partner_id.address and company.partner_id.address[0].email}</small></br></<address>
+			% if company['partner_id']['email']:
+				<small><b>Mail:</b>${company.partner_id.email}</small></br></<address>
 			%endif
 		</td>
 	</tr>

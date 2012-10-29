@@ -5,10 +5,9 @@
         <record id="view_currency_search" model="ir.ui.view">
             <field name="name">res.currency.search</field>
             <field name="model">res.currency</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currencies">
-                    <field name="name"/>
+                    <field name="name" string="Currency"/>
                     <field name="active"/>
                 </search>
             </field>
@@ -17,7 +16,6 @@
         <record id="view_currency_tree" model="ir.ui.view">
             <field name="name">res.currency.tree</field>
             <field name="model">res.currency</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Currencies">
                     <field name="name"/>
@@ -35,41 +33,33 @@
         <record id="view_currency_form" model="ir.ui.view">
             <field name="name">res.currency.form</field>
             <field name="model">res.currency</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency">
-                    <group col="6" colspan="4">
+                <form string="Currency" version="7.0">
+                    <group col="4">
                         <field name="name"/>
                         <field name="rate"/>
                         <field name="company_id" groups="base.group_multi_company"/>
                     </group>
 
-                    <group col="6" colspan="4">
-                        <group col="2" colspan="2">
-                            <separator string="Price Accuracy" colspan="2"/>
+                    <group>
+                        <group string="Price Accuracy">
                             <field name="rounding"/>
                             <field name="accuracy"/>
                         </group>
 
-                        <group col="2" colspan="2">
-                            <separator string="Display" colspan="2"/>
+                        <group string="Display">
                             <field name="symbol"/>
                             <field name="position"/>
                         </group>
 
-                        <group col="2" colspan="2">
-                            <separator string="Miscelleanous" colspan="2"/>
+                        <group string="Miscellaneous">
                             <field name="base"/>
-                            <field name="active" select="1"/>
+                            <field name="active"/>
                         </group>
                     </group>
 
-                    <field colspan="4" mode="tree,form" name="rate_ids" nolabel="1" attrs="{'readonly':[('base','=',True)]}">
-                        <form string="Rates">
-                            <field name="name"/>
-                            <field name="rate"/>
-                        </form>
-                        <tree string="Rates">
+                    <field mode="tree" name="rate_ids" attrs="{'readonly':[('base','=',True)]}">
+                        <tree string="Rates" editable="bottom">
                             <field name="name"/>
                             <field name="rate"/>
                         </tree>
@@ -85,7 +75,7 @@
             <field name="search_view_id" ref="view_currency_search"/>
         </record>
 
-        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3"/>
+        <menuitem action="action_currency_form" id="menu_action_currency_form" parent="menu_localisation" sequence="3" groups="base.group_multi_currency"/>
 
         <!-- 
             Currency Rate Type
@@ -93,10 +83,11 @@
         <record id="view_currency_rate_type_form" model="ir.ui.view">
             <field name="name">res.currency.rate.type.form</field>
             <field name="model">res.currency.rate.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Currency Rate Type">
-                    <field name="name"/>
+                <form string="Currency Rate Type" version="7.0">
+                    <group>
+                        <field name="name"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -111,10 +102,9 @@
         <record id="view_currency_rate_type_search" model="ir.ui.view">
             <field name="name">res.currency.rate.type.search</field>
             <field name="model">res.currency.rate.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Currency Rate Type">
-                    <field name="name"/>
+                    <field name="name" string="Name"/>
                 </search>
             </field>
         </record>

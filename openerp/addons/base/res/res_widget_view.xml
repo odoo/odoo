@@ -4,28 +4,29 @@
         <record id="view_res_widget_search" model="ir.ui.view">
             <field name="name">res.widget.search</field>
             <field name="model">res.widget</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Widget">
-                    <field name="title" />
+                    <field name="title" string="Widget"/>
                  </search>
             </field>
         </record>
         <record id="res_widget_form" model="ir.ui.view">
             <field name="name">res.widget.form</field>
             <field name="model">res.widget</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Widgets">
-                    <field name="title" colspan="4"/>
-                    <field name="content" colspan="4" nolabel="1"/>
+                <form string="Widgets" version="7.0">
+                  <sheet>
+                    <group>
+                        <field name="title"/>
+                        <field name="content"/>
+                    </group>
+                  </sheet>
                 </form>
             </field>
         </record>
         <record id="res_widget_tree" model="ir.ui.view">
             <field name="name">res.widget.tree</field>
             <field name="model">res.widget</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Widgets">
                     <field name="title"/>
@@ -41,11 +42,10 @@
             <field name="search_view_id" ref="view_res_widget_search"/>
         </record>
         <menuitem action="res_widget_act_window" id="menu_res_widget_act_window" parent="base.next_id_2" />
-            
+
         <record id="res_widget_user_tree" model="ir.ui.view">
             <field name="name">res.widget.user.tree</field>
             <field name="model">res.widget.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="User Widgets">
                     <field name="sequence" invisible="1"/>
@@ -57,12 +57,15 @@
         <record id="res_widget_user_form" model="ir.ui.view">
             <field name="name">res.widget.user.form</field>
             <field name="model">res.widget.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="User Widgets">
-                    <field name="widget_id"/>
-                    <field name="user_id"/>
-                    <field name="sequence"/>
+                <form string="User Widgets" version="7.0">
+                  <sheet>
+                    <group col="4">
+                        <field name="widget_id"/>
+                        <field name="user_id"/>
+                        <field name="sequence"/>
+                    </group>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -77,17 +80,17 @@
         <record id="view_res_widget_wizard" model="ir.ui.view">
             <field name="name">Homepage Widgets Management</field>
             <field name="model">res.widget.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-              <form string="Widget Wizard" col="4">
-                <field name="widgets_list" colspan="4"/>
-                <newline/>
-                <separator string="" colspan="6"/>
-                <group colspan="6" col="4" >
-                  <button special="cancel" string="Cancel" icon="gtk-cancel" />
-                  <button name="res_widget_add" string="Add" type="object"/>
-                </group>
-            </form>
+                <form string="Widget Wizard" col="4" version="7.0">
+                    <header>
+                        <button name="res_widget_add" string="Add" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </header>
+                    <group>
+                        <field name="widgets_list"/>
+                    </group>
+                </form>
             </field>
         </record>
         <act_window name="Homepage Widgets Management"

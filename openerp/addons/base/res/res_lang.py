@@ -58,9 +58,6 @@ class lang(osv.osv):
         default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
-        default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.users'])
-        if not default_value:
-            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], lang)
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
@@ -80,7 +77,7 @@ class lang(osv.osv):
             _logger.warning(msg, lang, lc)
 
         if not lang_name:
-            lang_name = tools.get_languages().get(lang, lang)
+            lang_name = tools.ALL_LANGUAGES.get(lang, lang)
 
 
         def fix_xa0(s):

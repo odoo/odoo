@@ -23,11 +23,12 @@
 import base64
 import re
 import threading
-
+from tools.safe_eval import safe_eval as eval
 import tools
 import openerp.modules
 from osv import fields, osv
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -59,7 +60,7 @@ class ir_ui_menu(osv.osv):
         """
         with self.cache_lock:
             modelaccess = self.pool.get('ir.model.access')
-            user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
+            user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
             for menu in self.browse(cr, uid, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)
@@ -255,6 +256,24 @@ class ir_ui_menu(osv.osv):
 
         return res
 
+    def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
+        res = {}
+        for menu in self.browse(cr, uid, ids, context=context):
+            res[menu.id] = {
+                'needaction_enabled': False,
+                'needaction_counter': False,
+            }
+            if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
+                obj = self.pool.get(menu.action.res_model)
+                if obj and obj._needaction:
+                    if menu.action.type=='ir.actions.act_window':
+                        dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                    else:
+                        dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
+                    res[menu.id]['needaction_enabled'] = obj._needaction
+                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
+        return res
+
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
@@ -264,20 +283,22 @@ class ir_ui_menu(osv.osv):
             'menu_id', 'gid', 'Groups', help="If you have groups, the visibility of this menu will be based on these groups. "\
                 "If this field is empty, OpenERP will compute visibility based on the related object's read access."),
         'complete_name': fields.function(_get_full_name, 
-            string='Complete Name', type='char', size=128),
+            string='Full Path', type='char', size=128),
         'icon': fields.selection(tools.icons, 'Icon', size=64),
         'icon_pict': fields.function(_get_icon_pict, type='char', size=32),
         'web_icon': fields.char('Web Icon File', size=128),
         'web_icon_hover':fields.char('Web Icon File (hover)', size=128),
         'web_icon_data': fields.function(_get_image_icon, string='Web Icon Image', type='binary', readonly=True, store=True, multi='icon'),
         'web_icon_hover_data':fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
+        'needaction_enabled': fields.function(_get_needaction, string='Target model uses the need action mechanism', type='boolean', help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.', multi='_get_needaction'),
+        'needaction_counter': fields.function(_get_needaction, string='Number of actions the user has to perform', type='integer', help='If the target model uses the need action mechanism, this field gives the number of actions the current user has to perform.', multi='_get_needaction'),
         'action': fields.function(_action, fnct_inv=_action_inv,
             type='reference', string='Action',
             selection=[
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
-                ('ir.actions.url', 'ir.actions.url'),
+                ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),
             ]),
@@ -295,9 +316,5 @@ class ir_ui_menu(osv.osv):
         'sequence' : 10,
     }
     _order = "sequence,id"
-ir_ui_menu()
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

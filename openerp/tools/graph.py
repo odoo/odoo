@@ -313,7 +313,8 @@ class graph(object):
             self.order[level] = self.order[level]+1
 
         for sec_end in self.transitions.get(node, []):
-            self.init_order(sec_end, self.result[sec_end]['x'])
+            if node!=sec_end:
+                self.init_order(sec_end, self.result[sec_end]['x'])
 
 
     def order_heuristic(self):
@@ -438,33 +439,27 @@ class graph(object):
         l.reverse()
         no = len(l)
 
-        if no%2==0:
-            first_half = l[no/2:]
-            factor = 1
-        else:
-            first_half = l[no/2+1:]
-            factor = 0
-
+        rest = no%2
+        first_half = l[no/2+rest:]
         last_half = l[:no/2]
 
-        i=1
-        for child in first_half:
-            self.result[child]['y'] = mid_pos - (i - (factor * 0.5))
-            i += 1
+        for i, child in enumerate(first_half):
+            self.result[child]['y'] = mid_pos - (i+1 - (0 if rest else 0.5))
 
             if self.transitions.get(child, False):
                 if last:
                     self.result[child]['y'] = last + len(self.transitions[child])/2 + 1
                 last = self.tree_order(child, last)
 
-        if no%2:
+        if rest:
             mid_node = l[no/2]
             self.result[mid_node]['y'] = mid_pos
 
             if self.transitions.get((mid_node), False):
                 if last:
                     self.result[mid_node]['y'] = last + len(self.transitions[mid_node])/2 + 1
-                last = self.tree_order(mid_node)
+                if node!=mid_node:
+                    last = self.tree_order(mid_node)
             else:
                 if last:
                     self.result[mid_node]['y'] = last + 1
@@ -474,13 +469,14 @@ class graph(object):
         i=1
         last_child = None
         for child in last_half:
-            self.result[child]['y'] = mid_pos + (i - (factor * 0.5))
+            self.result[child]['y'] = mid_pos + (i - (0 if rest else 0.5))
             last_child = child
             i += 1
             if self.transitions.get(child, False):
                 if last:
                     self.result[child]['y'] = last + len(self.transitions[child])/2 + 1
-                last = self.tree_order(child, last)
+                if node!=child:
+                    last = self.tree_order(child, last)
 
         if last_child:
             last = self.result[last_child]['y']

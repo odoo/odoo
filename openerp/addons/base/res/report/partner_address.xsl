@@ -58,31 +58,17 @@
 
 	<xsl:template match="address" mode="story">
 		<para style="nospace"><xsl:value-of select="company-name"/><xsl:text> </xsl:text><xsl:value-of select="company-title"/></para>
-		<xsl:choose>
-			<xsl:when test="count(contact[type='default']) >= 1">
-				<!-- apply the first 'contact' node with the type 'default' -->
-				<xsl:apply-templates select="contact[type='default'][1]"/>
-			</xsl:when>
-			<xsl:when test="count(contact[type='']) >= 1">
-				<!-- apply the first 'contact' node with an empty type -->
-				<xsl:apply-templates select="contact[type=''][1]"/>
-			</xsl:when>
-			<xsl:otherwise>
-				<!-- apply the first 'contact' node -->	
-				<xsl:apply-templates select="contact[1]"/>
-			</xsl:otherwise>
-		</xsl:choose>
+		<para style="nospace"><xsl:value-of select="street"/></para>
+		<para style="nospace"><xsl:value-of select="street2"/></para>
+		<para style="nospace"><xsl:value-of select="zip"/><xsl:text> </xsl:text><xsl:value-of select="city"/></para>
+		<para style="nospace"><xsl:value-of select="state"/></para>
+		<para style="nospace"><xsl:value-of select="country"/></para>
 		<xsl:if test="position() &lt; last()">
 			<nextFrame/>
 		</xsl:if>
 	</xsl:template>
 	
 	<xsl:template match="contact">
-		<para style="nospace"><xsl:value-of select="title"/><xsl:text> </xsl:text><xsl:value-of select="name"/></para>
-		<para style="nospace"><xsl:value-of select="street"/></para>
-		<para style="nospace"><xsl:value-of select="street2"/></para>
-		<para style="nospace"><xsl:value-of select="zip"/><xsl:text> </xsl:text><xsl:value-of select="city"/></para>
-		<para style="nospace"><xsl:value-of select="state"/></para>
-		<para style="nospace"><xsl:value-of select="country"/></para>
+		
 	</xsl:template>
 </xsl:stylesheet>
