@@ -324,7 +324,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
@@ -332,6 +332,8 @@ class crm_lead(base_stage, format_address, osv.osv):
               be a default stage; if not set, stages must be default
               stages
         """
+        if domain == None:
+            domain = []
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         # collect all section_ids
