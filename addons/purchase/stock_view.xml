@@ -43,7 +43,7 @@
             <field name="inherit_id" ref="stock.view_picking_in_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//button[@name='action_process']" position="after">
-                    <button name="create_draft_invoice" states="assigned" string="Receive &amp; Control Invoice" type="object" class="oe_highlight"/>
+                    <button name="create_draft_invoice" attrs="{'invisible':[('invoice_state', '=', 'none')]}" string="Receive &amp; Control Invoice" type="object" class="oe_highlight"/>
                 </xpath>
             </field>
         </record>
