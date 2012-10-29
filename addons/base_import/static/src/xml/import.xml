@@ -72,19 +72,111 @@
                     <dd>
                         <p>In order to re-create relationships between
                         different records, you should use the unique
-                        identifier from the original application and
+                        identifier from the original application <br/> and
                         map it to the <abbr title="External ID">ID</abbr>
                         column in OpenERP. When you
                         import an other record that links to the first
                         one, use <abbr title="XXX/External ID">XXX/ID</abbr>
-                        to the original unique identifier.</p>
+                        to the <br/> original unique identifier.</p>
                         <p>The <abbr title="External ID">ID</abbr>
                         will also be used to update the original
                         import if you need to re-import modified data
-                        later, it's thus good practice to specify it
+                        later, it's thus good practice to <br/>specify it
                         whenever possible</p>
                     </dd>
                 </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What can I do when the Import preview table isn't displayed correctly?</a></dt>
+                    <dd>
+                        <p>By default the Import preview is set on commas as 
+                        field separators and quotation marks as text 
+                        delimiters. <br/>If your csv file does not have these 
+                        settings, you can modify the File Format Options 
+                        (displayed under the Browse CSV file bar after you 
+                        select your file).</p> <p>Note that if your CSV file 
+                        has a tabulation as separator, OpenERP will not 
+                        detect the separations. You will need to change the 
+                        <br/>file format options in your spreadsheet application. 
+                        See the following question.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How can I change the CSV file format options when saving in my spreadsheet application?</a></dt>
+                    <dd>
+                        <p>If you edit and save CSV files in speadsheet applications, your computer's regional settings will be applied for the separator and delimiter. We suggest you use OpenOffice or LibreOffice Calc as they will allow you to modify all three options (in 'Save As' dialog box > Check the box 'Edit filter settings' > Save).</p> <p>Microsoft Excel will allow you to modify only the encoding when saving (in 'Save As' dialog box > click 'Tools' dropdown list > Encoding tab).</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What's the difference between Database ID and External ID?</a></dt>
+                    <dd>
+                        <p>Some fields define a relationship with another object. For example, the country of a contact is a link to a record of the 'Country' object. When you want to import such fields, OpenERP will have to recreate links between the different records. To help you import such fields, OpenERP provides 3 mechanisms. You must use one and only one mechanism per field you want to import.</p> 
+                            <p>For example, to reference the country of a contact, OpenERP proposes you 3 different fields to import:<br/> <ul>
+  <li>Country: the name or code of the country</li>
+  <li>Country/Database ID: the unique OpenERP ID for a record, defined by the ID postgresql column</li>
+  <li>Country/External ID: the ID of this record referenced in another application (or the .XML file that imported it)</li>
+</ul></p> 
+                            <p>For the country Belgium, you can use one of these 3 ways to import:<br/> <ul>
+  <li>Country: Belgium</li>
+  <li>Country/Database ID: 21</li>
+  <li>Country/External ID: base.be</li>
+</ul></p>
+                            <p>According to your need, you should use one of these 3 ways to reference records in relations. Here is when you should use one or the other, according to your need:<br/> <ul>
+  <li>Use Country: This is the easiest way when your data come from CSV files that have been created manually.</li>
+  <li>Use Country/Database ID: You should rarely use this notation. It's mostly used by developers as it's main advantage is to never have conflicts (you may have several records with the same name, but they always have a unique Database ID)</li>
+  <li>Use Country/External ID: Use External ID when you import data from a third party application.</li>
+</ul></p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What can I do if I have multiple matches for a field?</a></dt>
+                    <dd>
+                        <p>If for example you have two product categories with the child name "Sellable" (ie. "Misc. Products/Sellable" &amp; "Other Products/Sellable"), your validation is halted. You can decide to modify one of the duplicates values.</p> <br/>However if you do not wish to change the duplicates' values, we recommend you use make use of the external ID for this field 'Category'. <p>First  you need to change the field in your CSV file to 'Field / External ID' (ie. 'Category / External ID').<br/>Then you need to replace all the records (ie. categories) with their corresponding External  IDs. You get these IDs by selecting all the records in their list view and clicking the export feature (in More). You receive a CSV file where the first column displays each record's External ID.</p> <p> Then you can concatenate the cells that allow you to make each record unique (ie. Category name and Parent name) and finally make use of a VLOOKUP function to replace the values set in the original CSV file with their corresponding external IDs.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How can I import a many2many relationship field (e.g. a customer that has multiple tags)?</a></dt>
+                    <dd>
+                        <p>The tags should be separated by a comma without any spacing. For example, if you want you customer to be lined to both tags 'Manufacturer' and 'Retailer' then you will encode it as follow "Manufacturer,Retailer" in the same column of your CSV file.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        Can I import several times the same record?</a></dt>
+                    <dd>
+                        <p>If you import a file that contains one of the column "External ID" or "Database ID", records that have already been imported will be modified instead of being created. This is very usefull as it allows you to import several times the same CSV file while having made some changes in between two imports. OpenERP will take care of creating or modifying each record depending if it's new or not.</p> <p> This feature allows you to use the Import/Export tool of OpenERP to modify a batch of records in your favorite spreadsheet application.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        What happens if I do not provide a value for a specific field?</a></dt>
+                    <dd>
+                        <p>If you do not set all fields in your CSV file, OpenERP will assign the default value for every non defined fields. But if you
+set fields with empty values in your CSV file, OpenERP will set the EMPTY value in the field, instead of assigning the default value.</p>
+                    </dd>
+                </dl>
+
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        How to export/import different tables from an SQL application to OpenERP?</a></dt>
+                    <dd>
+                        <p>If you need to import data from different tables, you will have to recreate relations between records belonging to different tables. (e.g. if you import companies and persons, you will have to recreate the link between each person and the company they work for).</p>
+                    </dd>
+                </dl>
+
+
+
             </div>
         </form>
     </t>
@@ -146,4 +238,15 @@
             <a href="#" class="oe_bold oe_list_button_import">Import</a>
         </t>
     </t>
+    <t t-extend="KanbanView.buttons">
+        <t t-jquery="span.oe_alternative" t-operation="after" t-if="widget.options.import_enabled">
+            <span class="oe_alternative">
+                <span class="oe_fade">or</span>
+                <div class="oe_bounce_container">
+                    <a href="#" class="oe_bold oe_kanban_button_import">Import</a>
+                </div>
+            </span>
+        </t>
+    </t>
+
 </templates>

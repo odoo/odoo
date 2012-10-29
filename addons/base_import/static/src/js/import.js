@@ -64,6 +64,34 @@ openerp.base_import = function (instance) {
         }
     });
 
+    instance.web_kanban.KanbanView.prototype.import_enabled = true;
+    instance.web_kanban.KanbanView.include({
+        load_kanban: function (data) {
+            var self = this;
+            var add_button = false;
+            if (!this.$buttons) {
+                add_button = true;
+            }
+            this._super.apply(this, arguments);
+            if(add_button) {
+                this.$buttons.on('click', '.oe_kanban_button_import', function() {
+                    self.do_action({
+                        type: 'ir.actions.client',
+                        tag: 'import',
+                        params: {
+                            model: self.dataset.model
+                        }
+                    }, {
+                        on_reverse_breadcrumb: function () {
+                            self.reload();
+                        },
+                    });
+                    return false;
+                });
+            }
+        }
+    });
+
     instance.web.client_actions.add(
         'import', 'instance.web.DataImport');
     instance.web.DataImport = instance.web.Widget.extend({
