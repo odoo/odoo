@@ -1681,13 +1681,16 @@ openerp.mail = function (session) {
         },
 
     });
-
-    session.web.UserMenu = session.web.UserMenu.extend({
-        start: function (parent, params) {
-            var render = new session.web.ComposeMessageTopButton();
-            render.insertAfter(this.$el);
-            this._super(parent, params);
-        }
+    
+    session.web.UserMenu.include({
+        do_update: function(){
+            var self = this;
+            this._super.apply(this, arguments);
+            this.update_promise.then(function() {
+                var mail_button = new session.web.ComposeMessageTopButton();
+                mail_button.appendTo(session.webclient.$el.find('.oe_systray'));
+            });
+        },
     });
 
 };
