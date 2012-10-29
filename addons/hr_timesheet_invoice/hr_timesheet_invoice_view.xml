@@ -9,8 +9,8 @@
             <field name="arch" type="xml">
                 <xpath expr='//separator[@name="description"]' position='before'>
                     <group string="Invoice on Timesheets Options" name="invoice_on_timesheets" col="4">
-                        <field name="pricelist_id" />
-                        <field name="to_invoice" widget="selection"/>
+                        <field name="pricelist_id" groups="product.group_sale_pricelist"/>
+                        <field name="to_invoice"/>
                     </group>
                  </xpath>
                 <xpath expr="//field[@name='use_timesheets']" position="replace">
@@ -90,6 +90,20 @@
                 </xpath>
             </field>
         </record>
+
+        <record id="view_hr_timesheet_line_search_to_invoice" model="ir.ui.view">
+            <field name="name">hr.analytic.timesheet.search.to_invoice</field>
+            <field name="model">hr.analytic.timesheet</field>
+            <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='account_id']" position="after">
+                    <separator/>
+                    <filter name="to_invoice" string="To Invoice" context="{'to_invoice': 1}" domain="[('invoice_id','=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/>
+                    <filter name="invoiced" string="Invoiced" domain="[('invoice_id','!=',False), ('to_invoice','&lt;&gt;',False)]" icon="terp-dolar"/> 
+                </xpath>
+            </field>
+        </record>
+
 
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
