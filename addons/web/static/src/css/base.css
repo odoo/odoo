@@ -1326,9 +1326,6 @@
 .openerp .oe_view_manager .oe_view_manager_body {
   height: inherit;
 }
-.openerp .oe_view_manager .oe_view_manager_body .oe_view_manager_view_list {
-  min-height: 132px;
-}
 .openerp .oe_view_manager .oe_view_manager_view_kanban {
   height: inherit;
 }
@@ -2521,6 +2518,9 @@
 }
 .openerp .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page, .openerp .oe_form_field_many2many > .oe_view_manager .oe_list_pager_single_page {
   display: none !important;
+}
+.openerp .oe_form_field_one2many > .oe_view_manager .oe_view_manager_view_list, .openerp .oe_form_field_many2many > .oe_view_manager .oe_view_manager_view_list {
+  min-height: 132px;
 }
 .openerp .oe_form_field_one2many .oe_form_field_one2many_list_row_add, .openerp .oe_form_field_many2many .oe_form_field_one2many_list_row_add {
   font-weight: bold;
