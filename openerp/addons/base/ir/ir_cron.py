@@ -240,7 +240,7 @@ class ir_cron(osv.osv):
                     if not acquired_lock:
                         # we're exiting due to an exception while acquiring the lot
                         task_cr.close()
-
+                datetime.strptime('2012-01-01', '%Y-%m-%d')
                 # Got the lock on the job row, now spawn a thread to execute it in the transaction with the lock
                 task_thread = threading.Thread(target=self._run_job, name=job['name'], args=(task_cr, job, now))
                 # force non-daemon task threads (the runner thread must be daemon, and this property is inherited by default)
