@@ -229,71 +229,18 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
         });
     },
 });
-
 instance.web.Loading = instance.web.Widget.extend({
     template: 'Loading',
     init: function(parent) {
         this._super(parent);
+        var self = this;
         this.count = 0;
         this.blocked_ui = false;
-        this.old_title = document.title;
         this.request_count = 0;
         this.response_count = 0;
         this.session.on("request", this, this.request_call);
         this.session.on("response", this, this.response_call);
         this.session.on("response_failed", this, this.response_call);
-        this.draw_favicon(50);
-    },
-    draw_favicon: function(percentage){
-        var self = this;
-        var canvas = this.get_canvas();
-        var faviconImage = new Image();
-        var context = canvas.getContext("2d");
-        faviconImage.onload = function() {
-            console.log("Image Loaded");
-            if (context) {
-                context.clearRect(0, 0, 16, 16);
-                // Draw shadow
-                context.beginPath();
-                context.moveTo(canvas.width / 2, canvas.height / 2);
-                context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2), 0, Math.PI * 2, false);
-                context.fillStyle = "red";
-                context.fill();
-                // Draw background
-                context.beginPath();
-                context.moveTo(canvas.width / 2, canvas.height / 2);
-                context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) - 2, 0, Math.PI * 2, false);
-                context.fillStyle = "yellow";
-                context.fill();
-                // Draw pie
-                if (percentage > 0) {
-                    context.beginPath();
-                    context.moveTo(canvas.width / 2, canvas.height / 2);
-                    context.arc(canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) - 2, (-0.5) * Math.PI, (-0.5 + 2 * percentage / 100) * Math.PI, false);
-                    context.lineTo(canvas.width / 2, canvas.height / 2);
-                    context.fillStyle = "white";
-                    context.fill();
-                }
-                var link = document.createElement('link');
-                link.type = 'image/x-icon';
-                link.rel = 'icon';
-                link.href = canvas.toDataURL();
-                var src = $('link[type="image/x-icon"]').attr("href");
-                if (!src.match(/^data/)) {
-                    faviconImage.crossOrigin = 'anonymous';
-                }
-                document.getElementsByTagName('head')[0].appendChild(link);
-                console.log("canvas to url",canvas.toDataURL());
-            }
-        }
-        faviconImage.src = $('link[type="image/x-icon"]').attr("href");
-        console.log("favicon",faviconImage);
-    },
-    get_canvas: function(){
-        canvas = document.createElement("canvas");
-        canvas.width = 16;
-        canvas.height = 16;
-        return canvas;
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
@@ -307,12 +254,8 @@ instance.web.Loading = instance.web.Widget.extend({
         this.response_count += 1;
         this.on_rpc_event(-1);
     },
-    loading_title:function(percentage){
-        document.title = percentage + "% processed |" + this.old_title;
-    },
     on_rpc_event : function(increment) {
         var self = this;
-        this.loading_title(parseInt(this.response_count * 100 / this.request_count))
         if (!this.count && increment === 1) {
             // Block UI after 3s
             this.long_running_timer = setTimeout(function () {
@@ -323,16 +266,10 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            if (instance.session.debug) {
-                this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
-            } else {
-                this.$el.text(_t("Loading"));
-            }
-            this.$el.show();
+            this.draw_favicon(parseInt(this.response_count * 100 / this.request_count));
             this.getParent().$el.addClass('oe_wait');
         } else {
             this.count = 0;
-            document.title = this.old_title;
             clearTimeout(this.long_running_timer);
             // Don't unblock if blocked by somebody else
             if (self.blocked_ui) {
@@ -341,10 +278,102 @@ instance.web.Loading = instance.web.Widget.extend({
             }
             this.$el.fadeOut();
             this.getParent().$el.removeClass('oe_wait');
+            this.stop_favicon();
         }
     }
 });
-
+instance.web.favicon = instance.web.Loading.include({
+    init: function(parent){
+        this._super(parent);
+        var self = this;
+        this.original_favi = $('link[type="image/x-icon"]');
+        this.canvas = null;
+        this.link = null;
+        this.interval = null;
+        this.old_title = document.title;
+        this.local_counter = 0;
+        this.options = {
+            'border':"white",
+            'background' :"gray",
+            'inner_circle':"white",
+            'fill_color':"red",
+            'width': 5
+        }
+    },
+    start_favicon: function(second, options){
+        var count = 0;
+        var self = this;
+        this.interval = setInterval(function(){
+           if (++count > 100) {self.stop_favicon(); return false;}
+           self.draw_favicon(count, options);
+        }, second || 1);
+    },
+    stop_favicon: function(){
+        if(this.interval)
+            clearInterval(this.interval);
+        $('link[type="image/x-icon"]').attr('href', this.original_favi.attr("href"));
+        $('head').append(this.original_favi);
+        document.title = this.old_title;
+    },
+    loading_title:function(percentage){
+        document.title = percentage + "% processed |" + this.old_title;
+    },
+    draw_favicon: function(percentage, options){
+        var self = this;
+        var options = _.extend(this.options, options || {});
+        var get_canvas =  function(){
+            if(!this.canvas){
+                this.canvas = document.createElement("canvas");
+                this.canvas.width = 16;
+                this.canvas.height = 16;
+            }
+            return this.canvas;
+        };
+        var get_link = function(canvas_url){
+            if(!this.link)
+                this.link =  $('<link></link>').attr({ type : 'image/x-icon',rel : 'icon'});
+            $(this.link).attr('href',canvas_url);
+            return this.link;
+        };
+        var canvas = get_canvas();
+        var src = self.original_favi.attr("href");
+        var faviconImage = new Image();
+        var context = canvas.getContext("2d");
+        var draw_context = function(context, x, y, r, sAngle, eAngle, counterclockwise ,color){
+                context.beginPath();
+                context.moveTo(canvas.width / 2, canvas.height / 2);
+                context.arc(x, y, r, sAngle, eAngle, counterclockwise);
+                context.fillStyle = color ;
+                context.fill();
+                return context
+        }
+        faviconImage.onload = function() {
+            if (context) {
+                context.clearRect(0, 0, 16, 16);
+                // Draw shadow
+                draw_context(context,canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) + 2, 0, Math.PI * 2, false ,options.border)
+                // Draw background
+                draw_context(context, canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) , 0, Math.PI * 2, false,options.background)
+                // Draw pie
+                if (percentage > 0) {
+                    draw_context(context, canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) , (-0.5) * Math.PI, (-0.5 + 2 * percentage / 100) * Math.PI, false,options.fill_color);
+                    context.lineTo(canvas.width / 2, canvas.height / 2)
+                }
+                //Inner Circle
+                draw_context(context, canvas.width / 2, canvas.height / 2, Math.min(canvas.width / 2, canvas.height / 2) - options.width, 0, Math.PI * 2, false, options.inner_circle)
+                if (!src.match(/^data/)) {
+                    faviconImage.crossOrigin = 'anonymous';
+                }
+                if(self.count > 0 ){
+                    $('link[type="image/x-icon"]').remove();
+                    $('head').append(get_link(canvas.toDataURL()));
+                }
+            }
+        }
+        this.loading_title(percentage);
+        faviconImage.src = self.original_favi.attr("href");
+    },
+});
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
         this._super(parent);
