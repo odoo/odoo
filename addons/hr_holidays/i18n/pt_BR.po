@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
 "PO-Revision-Date: 2012-07-30 03:15+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
@@ -15,8 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -190,20 +190,10 @@ msgstr ""
 "(%s)."
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
-"          \n"
-"The state is 'Refused', when holiday request is refused by manager.          "
-"  \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
-"O estado é definido como 'Provisório', quando um pedido de férias é criado.\n"
-"O estado é \"Aguardando Aprovação ', quando o pedido de férias é confirmado "
-"pelo usuário.\n"
-"O estado é 'Recusado', quando o pedido de férias é recusada pelo gerente.\n"
-"O estado é 'Aprovado', quando o pedido de férias é aprovado pelo gerente."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -312,8 +302,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr "Você deve selecionar pelo menos 1 Departamento."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "Confirmado"
 
@@ -438,6 +430,22 @@ msgstr ""
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "Procurar tipo de Folga"
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"O estado é definido como 'Provisório', quando um pedido de férias é criado.\n"
+"O estado é \"Aguardando Aprovação ', quando o pedido de férias é confirmado "
+"pelo usuário.\n"
+"O estado é 'Recusado', quando o pedido de férias é recusada pelo gerente.\n"
+"O estado é 'Aprovado', quando o pedido de férias é aprovado pelo gerente."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -721,9 +729,11 @@ msgstr ""
 "departamento"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "Validado"
 

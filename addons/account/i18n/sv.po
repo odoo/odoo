@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:48+0000\n"
 "PO-Revision-Date: 2012-10-10 15:13+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Svenska <info@openerpsweden.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-11 05:39+0000\n"
-"X-Generator: Launchpad (build 16118)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:48+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -720,7 +720,7 @@ msgstr ""
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:372
 #: code:addons/account/report/account_partner_balance.py:297
-#: code:addons/account/report/account_partner_ledger.py:394
+#: code:addons/account/report/account_partner_ledger.py:395
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
@@ -772,6 +772,7 @@ msgstr "Visa barn i hierarkin"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
+#: selection:account.tax.template,type:0
 msgid "Percent"
 msgstr "Procent"
 
@@ -1843,6 +1844,7 @@ msgid "Separated Journal Sequences"
 msgstr "Separerade nummerserier för böcker"
 
 #. module: account
+#: field:account.bank.statement,user_id:0
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Ansvarig"
@@ -2407,11 +2409,6 @@ msgid "There is no Accounting Journal of type Sale/Purchase defined!"
 msgstr "Kontojournal av typen försäljning/inköp saknas!"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "RIB och/eller IBAN är felaktig"
-
-#. module: account
 #: view:product.category:0
 msgid "Accounting Properties"
 msgstr "Bokföringsegenskaper"
@@ -2524,11 +2521,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Kontotransaktion"
-
-#. module: account
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2771,7 +2763,6 @@ msgid "Account move line reconcile (writeoff)"
 msgstr "Transaktionsavstämning (avskrivning)"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -2941,11 +2932,6 @@ msgstr "Kundreskontra, periodiserad"
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries"
 msgstr "Redovisningstransaktioner"
-
-#. module: account
-#: field:account.invoice,reference_type:0
-msgid "Communication Type"
-msgstr "Kommunikationstyp"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -3544,11 +3530,6 @@ msgid "VAT:"
 msgstr "Moms:"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Ogiltig BBA-strukturerad kommunikation!"
-
-#. module: account
 #: help:account.analytic.line,amount_currency:0
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
@@ -3786,6 +3767,7 @@ msgstr ""
 #: report:account.analytic.account.journal:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3817,6 +3799,8 @@ msgstr ""
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
+#: code:addons/account/report/account_general_ledger.py:305
+#: code:addons/account/report/account_general_ledger.py:308
 #: code:addons/account/report/account_journal.py:195
 #: code:addons/account/report/account_journal.py:198
 #: code:addons/account/report/common_report_header.py:97
@@ -3838,7 +3822,6 @@ msgstr "Oavstäm"
 
 #. module: account
 #: view:account.analytic.line:0
-#: field:account.bank.statement,user_id:0
 #: view:account.journal:0
 #: field:account.journal,user_id:0
 #: view:analytic.entries.report:0
@@ -4322,16 +4305,6 @@ msgid "Cancel the Selected Invoices"
 msgstr "Avbryt de valda fakturorna"
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using sale price"
-msgstr ""
-"Detta konto kommer att användas för att värdera utgående lager för den "
-"aktuella produktkategorin utifrån försäljningspriset"
-
-#. module: account
 #: selection:account.automatic.reconcile,power:0
 msgid "3"
 msgstr "3"
@@ -4543,6 +4516,13 @@ msgstr "Visningsläge"
 #: model:process.node,note:account.process_node_importinvoice0
 msgid "Statement from invoice or payment"
 msgstr "Utdrag från faktura eller betalning"
+
+#. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -5577,7 +5557,6 @@ msgstr "Allmän kontorapport"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
-#: field:account.invoice,reference:0
 msgid "Communication"
 msgstr "Kommunikation"
 
@@ -5711,7 +5690,6 @@ msgid "Customer Invoices And Refunds"
 msgstr "Kundfakturor och kreditfakturor"
 
 #. module: account
-#: field:account.analytic.line,amount_currency:0
 #: field:account.entries.report,amount_currency:0
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
@@ -5740,8 +5718,6 @@ msgstr "Rader att stämma av"
 #: field:account.invoice.line,quantity:0
 #: field:account.model.line,quantity:0
 #: field:account.move.line,quantity:0
-#: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,unit_amount:0
 #: field:report.account.sales,quantity:0
@@ -5849,7 +5825,6 @@ msgstr "Avstäm med avskrivning"
 #. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Fixed Amount"
 msgstr "Fast belopp"
 
@@ -5893,7 +5868,6 @@ msgstr "Redan avstämd!"
 
 #. module: account
 #: help:account.tax,type:0
-#: help:account.tax.template,type:0
 msgid "The computation method for the tax amount."
 msgstr "Beräkningsmetod för moms."
 
@@ -5994,7 +5968,7 @@ msgstr "Värdering"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:376
 #: code:addons/account/report/account_partner_balance.py:301
-#: code:addons/account/report/account_partner_ledger.py:398
+#: code:addons/account/report/account_partner_ledger.py:399
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Fordrings- och skuldkonton"
@@ -6106,11 +6080,6 @@ msgstr "Filtrera efter"
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr "Du har fel uttryck \"%(...)s\" i din mall !"
-
-#. module: account
-#: field:account.bank.statement.line,date:0
-msgid "Entry Date"
-msgstr "Transaktionsdatum"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1170
@@ -6538,12 +6507,13 @@ msgstr "Eget kapital"
 
 #. module: account
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Percentage"
 msgstr "Procent"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
+#: code:addons/account/report/account_general_ledger.py:307
+#, python-format
 msgid "Journal & Partner"
 msgstr "Journal & företag"
 
@@ -6595,6 +6565,7 @@ msgid "Applicable Type"
 msgstr "Tillämplig typ"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
 msgstr "Fakturareferens"
@@ -7240,17 +7211,6 @@ msgid "Account tax chart"
 msgstr "Skattetabell"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Vänligen ange BIC/Swift-kod på bank för banktyp IBAN-konto för korrekta "
-"utbetalningar"
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -7391,7 +7351,7 @@ msgstr "Du kan inte radera ett bokfört verifikat \"%s\"!"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:60
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -7998,7 +7958,7 @@ msgstr "Maj"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:374
 #: code:addons/account/report/account_partner_balance.py:299
-#: code:addons/account/report/account_partner_ledger.py:396
+#: code:addons/account/report/account_partner_ledger.py:397
 #, python-format
 msgid "Payable Accounts"
 msgstr "Skuldkonton"
@@ -8214,6 +8174,11 @@ msgid "Partner Ledger"
 msgstr "Kund/leverantörsreskontra"
 
 #. module: account
+#: selection:account.tax.template,type:0
+msgid "Fixed"
+msgstr "Fast"
+
+#. module: account
 #: code:addons/account/account.py:629
 #: code:addons/account/account.py:642
 #: code:addons/account/account.py:645
@@ -8387,6 +8352,13 @@ msgstr "Automatisk post"
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr "Fel ! Du kan inte skapa rekursiva skattekoder."
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product"
+msgstr ""
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -8725,13 +8697,11 @@ msgid "Ending Balance"
 msgstr "Utgående balans"
 
 #. module: account
-#: help:account.move.line,blocked:0
+#: help:product.category,property_account_income_categ:0
 msgid ""
-"You can check this box to mark this journal item as a litigation with the "
-"associated partner"
+"This account will be used for invoices to value sales for the current "
+"product category"
 msgstr ""
-"Du kan kryssa denna ruta för att märka denna transaktion som tvistig med det "
-"relaterade företaget"
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8849,6 +8819,7 @@ msgstr "Refund Journal"
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
 msgid "Filter By"
 msgstr "Selektera på"
 
@@ -9028,9 +8999,11 @@ msgid "Accounts Allowed (empty for no control)"
 msgstr "Tillåtna konton (lämna blankt om ingen kontroll skall göras)"
 
 #. module: account
-#: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Template Account Fiscal Mapping"
-msgstr "Mallkonto räkenskapsmappning"
+#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
+#: model:ir.actions.act_window,name:account.action_account_analytic_chart
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+msgid "Chart of Analytic Accounts"
+msgstr "Objektkontoplan"
 
 #. module: account
 #: view:board.board:0
@@ -9076,19 +9049,20 @@ msgid "Invoicing & Payments"
 msgstr "Fakturor och betalningar"
 
 #. module: account
+#: help:account.move.line,blocked:0
+msgid ""
+"You can check this box to mark this journal item as a litigation with the "
+"associated partner"
+msgstr ""
+"Du kan kryssa denna ruta för att märka denna transaktion som tvistig med det "
+"relaterade företaget"
+
+#. module: account
 #: help:account.invoice,internal_number:0
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
 "created."
 msgstr "Unikt fakturanummer, uppdateras automatiskt när fakturan skapas."
-
-#. module: account
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Beloppet på bokföringsordern måste överenstämma med beloppet på kontoutdraget"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -9272,6 +9246,11 @@ msgstr ""
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Vänligen definiera ordningen på journalen knuten till fakturan."
+
+#. module: account
+#: field:account.invoice,reference_type:0
+msgid "Reference Type"
+msgstr "Referenstyp"
 
 #. module: account
 #: view:account.move:0
@@ -9698,7 +9677,6 @@ msgstr ""
 "under en viss period."
 
 #. module: account
-#: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Filters By"
 msgstr "Selektera på"
@@ -10594,16 +10572,6 @@ msgid "The code of the journal must be unique per company !"
 msgstr "Journalkoden måste vara unik per bolag!"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using cost price"
-msgstr ""
-"Detta konto kommer att användas för att värdera utgående lager för den "
-"aktuella produktkategorin med självkostnadspris"
-
-#. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
 msgstr "Skapa en kontoplan från en mall"
@@ -10684,6 +10652,13 @@ msgstr "Titel 3 (fet, mindre)"
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Fakturarader"
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid ""
+"This account will be used for invoices to value expenses for the current "
+"product category"
+msgstr ""
 
 #. module: account
 #: constraint:account.account.template:0
@@ -11282,16 +11257,19 @@ msgid "Usually 1 or -1."
 msgstr "Vanligen 1 eller -1."
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
-#: model:ir.actions.act_window,name:account.action_account_analytic_chart
-#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
-msgid "Chart of Analytic Accounts"
-msgstr "Objektkontoplan"
+#: model:ir.model,name:account.model_account_fiscal_position_account_template
+msgid "Template Account Fiscal Mapping"
+msgstr "Mallkonto räkenskapsmappning"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
 msgstr "Expense Account on Product Template"
+
+#. module: account
+#: field:account.analytic.line,amount_currency:0
+msgid "Amount currency"
+msgstr "Belopp valuta"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -11336,14 +11314,20 @@ msgstr ""
 "Återstående belopp på en fordran eller skuld på ett verifikat uttryckt i sin "
 "valuta (kan skilja sig från bolagsvalutan)."
 
-#~ msgid "Fixed"
-#~ msgstr "Fast"
-
 #~ msgid "Starting Date"
 #~ msgstr "Startdatum"
 
 #~ msgid "The description must be unique per company!"
 #~ msgstr "Beskrivningen måste vara unik per bolag"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "RIB och/eller IBAN är felaktig"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Fel ! Du kan inte ansluta medlemmar rekursivt"
+
+#~ msgid "Communication Type"
+#~ msgstr "Kommunikationstyp"
 
 #~ msgid "Ending Date"
 #~ msgstr "Slutdatum"
@@ -11355,6 +11339,41 @@ msgstr ""
 #~ msgstr ""
 #~ "Det här kontot tillåter inte avstämning! Du bör uppdatera kontodefinitionen "
 #~ "för att ändra på detta."
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Ogiltig BBA-strukturerad kommunikation!"
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using sale price"
+#~ msgstr ""
+#~ "Detta konto kommer att användas för att värdera utgående lager för den "
+#~ "aktuella produktkategorin utifrån försäljningspriset"
+
+#~ msgid "Entry Date"
+#~ msgstr "Transaktionsdatum"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Vänligen ange BIC/Swift-kod på bank för banktyp IBAN-konto för korrekta "
+#~ "utbetalningar"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Beloppet på bokföringsordern måste överenstämma med beloppet på kontoutdraget"
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using cost price"
+#~ msgstr ""
+#~ "Detta konto kommer att användas för att värdera utgående lager för den "
+#~ "aktuella produktkategorin med självkostnadspris"
 
 #, python-format
 #~ msgid "Entries are not of the same account or already reconciled ! "

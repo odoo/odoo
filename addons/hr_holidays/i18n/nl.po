@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
 "PO-Revision-Date: 2012-10-10 07:50+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-11 05:39+0000\n"
-"X-Generator: Launchpad (build 16118)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -188,22 +188,10 @@ msgstr ""
 "dagen (%s)."
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
-"          \n"
-"The state is 'Refused', when holiday request is refused by manager.          "
-"  \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
-"De status is ingesteld op 'Concept', wanneer een aanvraag is aangemaakt.\n"
-"De status is ingesteld op 'Wacht op goedkeuring', wanneer een aanvraag is "
-"bevestigd door een gebruiker.\n"
-"De status is ingesteld op 'Afgewezen', wanneer een aanvraag is afgewezen "
-"door een manager.\n"
-"De status is ingesteld op 'Goedgekeurd', wanneer een aanvraag is goedgekeurd "
-"door een manager."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -313,8 +301,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr "U moet tenminste één afdeling selecteren. Probeer nog eens"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "Bevestigd"
 
@@ -440,6 +430,24 @@ msgstr ""
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "Verlofsoort zoeken"
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"De status is ingesteld op 'Concept', wanneer een aanvraag is aangemaakt.\n"
+"De status is ingesteld op 'Wacht op goedkeuring', wanneer een aanvraag is "
+"bevestigd door een gebruiker.\n"
+"De status is ingesteld op 'Afgewezen', wanneer een aanvraag is afgewezen "
+"door een manager.\n"
+"De status is ingesteld op 'Goedgekeurd', wanneer een aanvraag is goedgekeurd "
+"door een manager."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -723,9 +731,11 @@ msgstr ""
 "/ Verlof per afdeling"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "Goedgekeurd"
 

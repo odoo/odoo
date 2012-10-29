@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:24+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -190,20 +190,10 @@ msgstr ""
 "noch verfügbaren Urlaubstage reichen nicht aus (%s)."
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
-"          \n"
-"The state is 'Refused', when holiday request is refused by manager.          "
-"  \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
-"Der Status ist:\n"
-"* \"Entwurf\", wenn der Urlaubsantrag erstellt wird,\n"
-"* \"Wartend auf Bestätigung\", wenn der Antrag von Benutzer bestätigt ist.\n"
-"* \"Zurückgewiesen\", wenn der Manager diesen abweist.\n"
-"* \"Angenommen\", wenn der Manager den Antrag genehmigt"
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -313,8 +303,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr "Sie müssen mindestens eine Abteilung auswählen. Nochmals versuchen!"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "Bestätigt"
 
@@ -441,6 +433,22 @@ msgstr ""
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "Suche Abwesenheitstyp"
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"Der Status ist:\n"
+"* \"Entwurf\", wenn der Urlaubsantrag erstellt wird,\n"
+"* \"Wartend auf Bestätigung\", wenn der Antrag von Benutzer bestätigt ist.\n"
+"* \"Zurückgewiesen\", wenn der Manager diesen abweist.\n"
+"* \"Angenommen\", wenn der Manager den Antrag genehmigt"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -726,9 +734,11 @@ msgstr ""
 "  Auswertungen/Urlaub nach Abteilungen auffinden."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "Bestätigt"
 

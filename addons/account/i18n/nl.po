@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
-"PO-Revision-Date: 2012-10-21 10:32+0000\n"
+"POT-Creation-Date: 2012-10-23 11:48+0000\n"
+"PO-Revision-Date: 2012-10-23 13:53+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-22 04:55+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:44+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -728,7 +728,7 @@ msgstr ""
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:372
 #: code:addons/account/report/account_partner_balance.py:297
-#: code:addons/account/report/account_partner_ledger.py:394
+#: code:addons/account/report/account_partner_ledger.py:395
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
@@ -780,6 +780,7 @@ msgstr "Weergave kinderen met hiërarchie"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
+#: selection:account.tax.template,type:0
 msgid "Percent"
 msgstr "Procent"
 
@@ -1964,6 +1965,7 @@ msgid "Separated Journal Sequences"
 msgstr "Afzonderlijke dagboek reeksen"
 
 #. module: account
+#: field:account.bank.statement,user_id:0
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Verantwoordelijke"
@@ -2532,18 +2534,13 @@ msgstr "Lopend"
 #: field:product.category,property_account_income_categ:0
 #: field:product.template,property_account_income:0
 msgid "Income Account"
-msgstr "Opbrengsten verkoop rekening"
+msgstr "Omzetrekening"
 
 #. module: account
 #: code:addons/account/account_invoice.py:379
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
 msgstr "Er is geen inkoop- of verkoop-dagboek ingesteld!"
-
-#. module: account
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "De RIB en/of IBAN is niet gelding"
 
 #. module: account
 #: view:product.category:0
@@ -2660,12 +2657,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Journaalpost"
-
-#. module: account
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-"Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2905,7 +2896,6 @@ msgid "Account move line reconcile (writeoff)"
 msgstr "Afletteren journaalboeking (met afschrijven)"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -3079,11 +3069,6 @@ msgid "Accounting entries"
 msgstr "Financiële boekingen"
 
 #. module: account
-#: field:account.invoice,reference_type:0
-msgid "Communication Type"
-msgstr "Communicatietype"
-
-#. module: account
 #: field:account.invoice.line,discount:0
 msgid "Discount (%)"
 msgstr "Korting (%)"
@@ -3228,7 +3213,7 @@ msgstr "Verplicht"
 #: field:product.category,property_account_expense_categ:0
 #: field:product.template,property_account_expense:0
 msgid "Expense Account"
-msgstr "Inkoopwaarde verkopen"
+msgstr "Kostenrekening"
 
 #. module: account
 #: help:account.invoice,period_id:0
@@ -3681,11 +3666,6 @@ msgid "VAT:"
 msgstr "BTW:"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "Ongeldige BBA gestructureerde communicatie!"
-
-#. module: account
 #: help:account.analytic.line,amount_currency:0
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
@@ -3924,6 +3904,7 @@ msgstr ""
 #: report:account.analytic.account.journal:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3955,6 +3936,8 @@ msgstr ""
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
+#: code:addons/account/report/account_general_ledger.py:305
+#: code:addons/account/report/account_general_ledger.py:308
 #: code:addons/account/report/account_journal.py:195
 #: code:addons/account/report/account_journal.py:198
 #: code:addons/account/report/common_report_header.py:97
@@ -3976,7 +3959,6 @@ msgstr "Maak afletteren ongedaan"
 
 #. module: account
 #: view:account.analytic.line:0
-#: field:account.bank.statement,user_id:0
 #: view:account.journal:0
 #: field:account.journal,user_id:0
 #: view:analytic.entries.report:0
@@ -4111,7 +4093,7 @@ msgstr "Saldo"
 #: report:account.invoice:0
 #: field:account.invoice.line,price_unit:0
 msgid "Unit Price"
-msgstr "Eenheidsprijs"
+msgstr "Prijs"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tree1
@@ -4464,16 +4446,6 @@ msgid "Cancel the Selected Invoices"
 msgstr "De geselecteerde facturen annuleren"
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using sale price"
-msgstr ""
-"Deze rekening wordt gebruikt om uitgaande voorraad van de huidige "
-"productcategorie te waarderen tegen verkoopprijs"
-
-#. module: account
 #: selection:account.automatic.reconcile,power:0
 msgid "3"
 msgstr "3"
@@ -4690,6 +4662,13 @@ msgstr "Weergavemodus"
 #: model:process.node,note:account.process_node_importinvoice0
 msgid "Statement from invoice or payment"
 msgstr "Afschrift vanaf factuur of betaling"
+
+#. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -4911,7 +4890,7 @@ msgstr ""
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the income account"
-msgstr "Laat leeg om de opbrengsten verkoop rekening te gebruiken"
+msgstr "Laat leeg om de omzetrekening te gebruiken"
 
 #. module: account
 #: code:addons/account/account.py:3316
@@ -5007,7 +4986,7 @@ msgstr "Instellingen"
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr "Opbrengsten verkoop rekening op product sjabloon"
+msgstr "Omzetrekening op product sjabloon"
 
 #. module: account
 #: code:addons/account/account.py:3137
@@ -5299,7 +5278,7 @@ msgstr "Rekening belasting aangifte"
 #. module: account
 #: report:account.invoice:0
 msgid "Price"
-msgstr "Prijs"
+msgstr "Bedrag"
 
 #. module: account
 #: view:account.period:0
@@ -5726,7 +5705,6 @@ msgstr "Algemeen grootboekrekening rapport"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
-#: field:account.invoice,reference:0
 msgid "Communication"
 msgstr "Communicatie"
 
@@ -5862,7 +5840,6 @@ msgid "Customer Invoices And Refunds"
 msgstr "Klant facturen en terugbetalingen"
 
 #. module: account
-#: field:account.analytic.line,amount_currency:0
 #: field:account.entries.report,amount_currency:0
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
@@ -5890,8 +5867,6 @@ msgstr "Af te punten boekingen"
 #: field:account.invoice.line,quantity:0
 #: field:account.model.line,quantity:0
 #: field:account.move.line,quantity:0
-#: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,unit_amount:0
 #: field:report.account.sales,quantity:0
@@ -6002,7 +5977,6 @@ msgstr "Letter af met afboeken verschil"
 #. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Fixed Amount"
 msgstr "Vast Bedrag"
 
@@ -6046,7 +6020,6 @@ msgstr "Al in overeenstemming"
 
 #. module: account
 #: help:account.tax,type:0
-#: help:account.tax.template,type:0
 msgid "The computation method for the tax amount."
 msgstr "Berekeningsmethode voor het belastingbedrag."
 
@@ -6147,7 +6120,7 @@ msgstr "Soort"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:376
 #: code:addons/account/report/account_partner_balance.py:301
-#: code:addons/account/report/account_partner_ledger.py:398
+#: code:addons/account/report/account_partner_ledger.py:399
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Debiteuren en crediteuren rekeningen"
@@ -6259,11 +6232,6 @@ msgstr "Filter op"
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr "U heeft een ongeldinge expressie \"%(...)s\" in uw model!"
-
-#. module: account
-#: field:account.bank.statement.line,date:0
-msgid "Entry Date"
-msgstr "Invoerdatum"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1170
@@ -6693,12 +6661,13 @@ msgstr "Vermogen"
 
 #. module: account
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Percentage"
 msgstr "Percentage"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
+#: code:addons/account/report/account_general_ledger.py:307
+#, python-format
 msgid "Journal & Partner"
 msgstr "Dagboek & Relatie"
 
@@ -6750,6 +6719,7 @@ msgid "Applicable Type"
 msgstr "Van toepassing zijnde type"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
 msgstr "Factuurreferentie"
@@ -7402,17 +7372,6 @@ msgid "Account tax chart"
 msgstr "Belastingschema"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Definieer een BIC/Swift code voor banksoort IBAN rekeningen om geldige "
-"betalingen te maken"
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -7449,7 +7408,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_income
 msgid "Income Accounts"
-msgstr "Opbrengsten verkoop rekening"
+msgstr "Omzetrekening"
 
 #. module: account
 #: help:report.invoice.created,origin:0
@@ -7555,7 +7514,7 @@ msgstr ""
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:60
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -7805,7 +7764,7 @@ msgstr "Standaard belastingen op inkopen"
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
 msgid "Opening Entries Income Account"
-msgstr "Openingsboekingen voor de opbrengsten  rekening"
+msgstr "Openingsboekingen voor de omzetrekening"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -8170,7 +8129,7 @@ msgstr "Mei"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:374
 #: code:addons/account/report/account_partner_balance.py:299
-#: code:addons/account/report/account_partner_ledger.py:396
+#: code:addons/account/report/account_partner_ledger.py:397
 #, python-format
 msgid "Payable Accounts"
 msgstr "Crediteuren"
@@ -8390,6 +8349,11 @@ msgid "Partner Ledger"
 msgstr "Saldilijst per relatie"
 
 #. module: account
+#: selection:account.tax.template,type:0
+msgid "Fixed"
+msgstr "Vastgezet"
+
+#. module: account
 #: code:addons/account/account.py:629
 #: code:addons/account/account.py:642
 #: code:addons/account/account.py:645
@@ -8566,6 +8530,13 @@ msgstr "Automatische boeking"
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr "Fout! U kunt geen herhalende belastingrubrieken maken"
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product"
+msgstr ""
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -8910,13 +8881,11 @@ msgid "Ending Balance"
 msgstr "Eindsaldo"
 
 #. module: account
-#: help:account.move.line,blocked:0
+#: help:product.category,property_account_income_categ:0
 msgid ""
-"You can check this box to mark this journal item as a litigation with the "
-"associated partner"
+"This account will be used for invoices to value sales for the current "
+"product category"
 msgstr ""
-"U kunt deze optie aanvinken om deze boeking te markeren als deze boeking "
-"wordt betwist door uw klant."
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -9032,6 +9001,7 @@ msgstr "Credit factuur dagboek"
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
 msgid "Filter By"
 msgstr "Filter op"
 
@@ -9213,9 +9183,11 @@ msgid "Accounts Allowed (empty for no control)"
 msgstr "Rekeningen toegestaan ( leeg voor geen controle)"
 
 #. module: account
-#: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Template Account Fiscal Mapping"
-msgstr "Sjabloon fiscale toewijzing grootboekrekening"
+#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
+#: model:ir.actions.act_window,name:account.action_account_analytic_chart
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+msgid "Chart of Analytic Accounts"
+msgstr "Kostenplaatsenschema"
 
 #. module: account
 #: view:board.board:0
@@ -9261,6 +9233,15 @@ msgid "Invoicing & Payments"
 msgstr "Facturatie & Betalingen"
 
 #. module: account
+#: help:account.move.line,blocked:0
+msgid ""
+"You can check this box to mark this journal item as a litigation with the "
+"associated partner"
+msgstr ""
+"U kunt deze optie aanvinken om deze boeking te markeren als deze boeking "
+"wordt betwist door uw klant."
+
+#. module: account
 #: help:account.invoice,internal_number:0
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
@@ -9268,15 +9249,6 @@ msgid ""
 msgstr ""
 "Uniek nummer van de factuur, wordt automatisch berekend bij het aanmaken van "
 "de factuur."
-
-#. module: account
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Het bedrag op de bon moet hetzelfde bedrag zijn dat vermeld staat op de "
-"afschriftregel"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -9418,7 +9390,7 @@ msgstr ""
 "teken van de balans om te draaien. Bijvoorbeeld voor de opbrengsten verkoop "
 "rekening. Hetzelfde geld voor rekeningen welke normaliter meer credit zijn "
 "dan debet en welke u wilt afdrukken als positief bedrag in uw rapporten, "
-"bijvoorbeeld de inkomsten rekening."
+"bijvoorbeeld de omzetrekening."
 
 #. module: account
 #: field:res.partner,contract_ids:0
@@ -9463,6 +9435,11 @@ msgstr ""
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Geef de volgorde weer bij het dagboek gerelateerd aan deze factuur."
+
+#. module: account
+#: field:account.invoice,reference_type:0
+msgid "Reference Type"
+msgstr "Referentietype"
 
 #. module: account
 #: view:account.move:0
@@ -9858,9 +9835,9 @@ msgstr ""
 "Dit formulier wordt gebruikt door boekhouders voor het invoeren van grote "
 "hoeveelheden boekingen in OpenERP. Indien u een klantfactuur wilt boeken, "
 "selecteert u het dagboek en de periode in de zoekbalk. Beging vervolgens met "
-"het vastleggen van de regel voor de opbrengsten verkoop rekening, OpenERP "
-"zal u automatisch de een voorstel doen voor de belastingen, gerelateerd aan "
-"deze rekening en de tegenrekening \"Debiteuren\""
+"het vastleggen van de regel voor de omzetrekening, OpenERP zal u automatisch "
+"de een voorstel doen voor de belastingen, gerelateerd aan deze rekening en "
+"de tegenrekening \"Debiteuren\""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
@@ -9891,7 +9868,6 @@ msgstr ""
 "van uw bedrijfsactiviteiten over een specifieke periode."
 
 #. module: account
-#: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Filters By"
 msgstr "Filter op"
@@ -10309,7 +10285,7 @@ msgstr ""
 #: code:addons/account/account.py:181
 #, python-format
 msgid "Profit & Loss (Income account)"
-msgstr "Winst & verlies (Omzet rekening)"
+msgstr "Winst & verlies (Omzetrekening)"
 
 #. module: account
 #: constraint:account.account:0
@@ -10613,7 +10589,7 @@ msgstr "Geen detail"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
-"Er is geen opbrengstrekening gedefinieerd voor dit product: \"%s\" (id:%d)"
+"Er is geen omzetrekening gedefinieerd voor dit product: \"%s\" (id:%d)"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -10794,16 +10770,6 @@ msgid "The code of the journal must be unique per company !"
 msgstr "De code van het dagboek moet uniek zijn per bedrijf !"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using cost price"
-msgstr ""
-"Deze rekening wordt gebruikt om uitgaande voorraad te waarderen voor de "
-"huidige productcategorie, gebruik maken van de kostprijs."
-
-#. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
 msgstr "Genereer grootboekschema vanuit een sjabloon"
@@ -10884,6 +10850,13 @@ msgstr "Titel 3 (vet, kleiner)"
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Factuurregels"
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid ""
+"This account will be used for invoices to value expenses for the current "
+"product category"
+msgstr ""
 
 #. module: account
 #: constraint:account.account.template:0
@@ -11493,16 +11466,19 @@ msgid "Usually 1 or -1."
 msgstr "Meestal 1 of -1"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
-#: model:ir.actions.act_window,name:account.action_account_analytic_chart
-#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
-msgid "Chart of Analytic Accounts"
-msgstr "Kostenplaatsenschema"
+#: model:ir.model,name:account.model_account_fiscal_position_account_template
+msgid "Template Account Fiscal Mapping"
+msgstr "Sjabloon fiscale toewijzing grootboekrekening"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
 msgstr "Kostenrekening op product sjabloon"
+
+#. module: account
+#: field:account.analytic.line,amount_currency:0
+msgid "Amount currency"
+msgstr "Bedrag valuta"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -11549,15 +11525,32 @@ msgstr ""
 "uitgedrukt in zijn eigen valuta (welke verschillend kan zijn van de door het "
 "bedrijf gebruikte valuta)."
 
-#~ msgid "Fixed"
-#~ msgstr "Vastgezet"
-
 #, python-format
 #~ msgid "Entries are not of the same account or already reconciled ! "
 #~ msgstr "Mutaties zijn niet van dezelfde rekening of zijn al afgeletterd ! "
 
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using sale price"
+#~ msgstr ""
+#~ "Deze rekening wordt gebruikt om uitgaande voorraad van de huidige "
+#~ "productcategorie te waarderen tegen verkoopprijs"
+
 #~ msgid "Starting Date"
 #~ msgstr "Startdatum"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr ""
+#~ "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
+
+#~ msgid "Communication Type"
+#~ msgstr "Communicatietype"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "De RIB en/of IBAN is niet gelding"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "Ongeldige BBA gestructureerde communicatie!"
 
 #, python-format
 #~ msgid ""
@@ -11570,5 +11563,31 @@ msgstr ""
 #~ msgid "The description must be unique per company!"
 #~ msgstr "De omschrijving moet uniek zijn per bedrijf!"
 
+#~ msgid "Entry Date"
+#~ msgstr "Invoerdatum"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Definieer een BIC/Swift code voor banksoort IBAN rekeningen om geldige "
+#~ "betalingen te maken"
+
 #~ msgid "Ending Date"
 #~ msgstr "Einddatum"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Het bedrag op de bon moet hetzelfde bedrag zijn dat vermeld staat op de "
+#~ "afschriftregel"
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using cost price"
+#~ msgstr ""
+#~ "Deze rekening wordt gebruikt om uitgaande voorraad te waarderen voor de "
+#~ "huidige productcategorie, gebruik maken van de kostprijs."

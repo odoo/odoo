@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
 "PO-Revision-Date: 2012-05-25 17:54+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:24+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -188,23 +188,10 @@ msgstr ""
 "Nu puteti valida concediul pentru angajatul %s: prea putine zile rămase (%s)."
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
-"          \n"
-"The state is 'Refused', when holiday request is refused by manager.          "
-"  \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
-"Starea este setata ca 'Ciorna', atunci cand este creata o cerede de "
-"concediu.            \n"
-"Starea este 'In asteptarea aprobarii', atunci cand cererea de concediu este "
-"confirmata de utilizator.             \n"
-"Starea este 'Respins', atunci cand cererea de concediu este respinsa de "
-"director.            \n"
-"Starea este 'Aprobat', atunci cand cererea de concediu este aprobata de "
-"director."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -315,8 +302,10 @@ msgstr ""
 "Trebuie sa selectati cel putin un departament.Apoi incercati din nou."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "Confirmat(a)"
 
@@ -444,6 +433,25 @@ msgstr ""
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "Cautati Tipul concediului"
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"Starea este setata ca 'Ciorna', atunci cand este creata o cerede de "
+"concediu.            \n"
+"Starea este 'In asteptarea aprobarii', atunci cand cererea de concediu este "
+"confirmata de utilizator.             \n"
+"Starea este 'Respins', atunci cand cererea de concediu este respinsa de "
+"director.            \n"
+"Starea este 'Aprobat', atunci cand cererea de concediu este aprobata de "
+"director."
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -727,9 +735,11 @@ msgstr ""
 "Rapoarte\\Concedii dupa Departament"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "Validat(a)"
 

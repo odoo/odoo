@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:49+0000\n"
 "PO-Revision-Date: 2012-07-10 03:44+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:24+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:51+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -183,19 +183,10 @@ msgid ""
 msgstr "この従業員 %s の休暇を承認できません：残りの休暇日数が足りません (%s)"
 
 #. module: hr_holidays
-#: help:hr.holidays,state:0
-msgid ""
-"The state is set to 'Draft', when a holiday request is created.            \n"
-"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
-"          \n"
-"The state is 'Refused', when holiday request is refused by manager.          "
-"  \n"
-"The state is 'Approved', when holiday request is approved by manager."
+#: code:addons/hr_holidays/report/holidays_summary_report.py:120
+#, python-format
+msgid "Confirmed and Validated"
 msgstr ""
-"休暇の申請が作られると、それは「草案」状態に設定されます。　　　　　　　　\n"
-"ユーザが休暇申請を確認すると、それは「承認待ち」状態になります。　　　　\n"
-"マネジャが休暇申請を拒否すると、それは「拒否」状態になります。\n"
-"マネジャが休暇申請を承認すると、それは「承認」状態になります。"
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -300,8 +291,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr "少なくとも一つの部門を指定して、やり直して下さい。"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "確認済み"
 
@@ -421,6 +414,21 @@ msgstr ""
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
 msgstr "休暇タイプを検索"
+
+#. module: hr_holidays
+#: help:hr.holidays,state:0
+msgid ""
+"The state is set to 'Draft', when a holiday request is created.            \n"
+"The state is 'Waiting Approval', when holiday request is confirmed by user.  "
+"          \n"
+"The state is 'Refused', when holiday request is refused by manager.          "
+"  \n"
+"The state is 'Approved', when holiday request is approved by manager."
+msgstr ""
+"休暇の申請が作られると、それは「草案」状態に設定されます。　　　　　　　　\n"
+"ユーザが休暇申請を確認すると、それは「承認待ち」状態になります。　　　　\n"
+"マネジャが休暇申請を拒否すると、それは「拒否」状態になります。\n"
+"マネジャが休暇申請を承認すると、それは「承認」状態になります。"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
@@ -694,9 +702,11 @@ msgid ""
 msgstr "部門別休暇報告書の休暇ようやくに、この色が使われます。"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "承諾済み"
 

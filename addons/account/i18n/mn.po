@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"POT-Creation-Date: 2012-10-23 11:48+0000\n"
 "PO-Revision-Date: 2012-10-17 08:21+0000\n"
 "Last-Translator: Jacara <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-18 04:58+0000\n"
-"X-Generator: Launchpad (build 16160)\n"
+"X-Launchpad-Export-Date: 2012-10-24 05:46+0000\n"
+"X-Generator: Launchpad (build 16179)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -719,7 +719,7 @@ msgstr ""
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:372
 #: code:addons/account/report/account_partner_balance.py:297
-#: code:addons/account/report/account_partner_ledger.py:394
+#: code:addons/account/report/account_partner_ledger.py:395
 #: model:ir.actions.act_window,name:account.action_aged_receivable
 #, python-format
 msgid "Receivable Accounts"
@@ -771,6 +771,7 @@ msgstr "Мод хэлбэрийн харагдац"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
+#: selection:account.tax.template,type:0
 msgid "Percent"
 msgstr "Хувь"
 
@@ -1841,6 +1842,7 @@ msgid "Separated Journal Sequences"
 msgstr "Журналын дугаарлалтыг салгах"
 
 #. module: account
+#: field:account.bank.statement,user_id:0
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Хариуцагч"
@@ -2410,11 +2412,6 @@ msgstr ""
 "Борлуулалт/Худалдан авалт төрлийн санхүүгийн журнал тодорхойлогдоогүй байна!"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "RIB болон IBAN бакнны кодууд буруу"
-
-#. module: account
 #: view:product.category:0
 msgid "Accounting Properties"
 msgstr "Санхүү бүртгэлийн хэсэг"
@@ -2526,11 +2523,6 @@ msgstr ""
 #: model:ir.model,name:account.model_account_move
 msgid "Account Entry"
 msgstr "Дансны бичилт"
-
-#. module: account
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2771,7 +2763,6 @@ msgid "Account move line reconcile (writeoff)"
 msgstr "Дансны тулгалтын мөрийн хөдөлгөөн (найдваргүй авлага)"
 
 #. module: account
-#: model:account.account.type,name:account.account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -2942,11 +2933,6 @@ msgstr "Харилцагчийн балансын насжилт"
 #: model:process.transition,name:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries"
 msgstr "Ажил гүйлгээ"
-
-#. module: account
-#: field:account.invoice,reference_type:0
-msgid "Communication Type"
-msgstr "Харилцах төрөл"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -3544,11 +3530,6 @@ msgid "VAT:"
 msgstr "НӨАТ:"
 
 #. module: account
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account
 #: help:account.analytic.line,amount_currency:0
 msgid ""
 "The amount expressed in the related account currency if not equal to the "
@@ -3785,6 +3766,7 @@ msgstr ""
 #: report:account.analytic.account.journal:0
 #: selection:account.balance.report,filter:0
 #: field:account.bank.statement,date:0
+#: field:account.bank.statement.line,date:0
 #: selection:account.central.journal,filter:0
 #: selection:account.common.account.report,filter:0
 #: selection:account.common.journal.report,filter:0
@@ -3816,6 +3798,8 @@ msgstr ""
 #: selection:account.vat.declaration,filter:0
 #: selection:accounting.report,filter:0
 #: selection:accounting.report,filter_cmp:0
+#: code:addons/account/report/account_general_ledger.py:305
+#: code:addons/account/report/account_general_ledger.py:308
 #: code:addons/account/report/account_journal.py:195
 #: code:addons/account/report/account_journal.py:198
 #: code:addons/account/report/common_report_header.py:97
@@ -3837,7 +3821,6 @@ msgstr "Тулгалтыг арилгах"
 
 #. module: account
 #: view:account.analytic.line:0
-#: field:account.bank.statement,user_id:0
 #: view:account.journal:0
 #: field:account.journal,user_id:0
 #: view:analytic.entries.report:0
@@ -4322,16 +4305,6 @@ msgid "Cancel the Selected Invoices"
 msgstr "Сонгосон нэхэмжлэлийг цуцлах"
 
 #. module: account
-#: help:product.category,property_account_income_categ:0
-#: help:product.template,property_account_income:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using sale price"
-msgstr ""
-"Энэ данс нь идэвхтэй барааны ангилалын гарч байгаа барааны зарах үнийг "
-"ашиглаж үнэлэхэд хэрэглэгддэг данс юм."
-
-#. module: account
 #: selection:account.automatic.reconcile,power:0
 msgid "3"
 msgstr "3"
@@ -4543,6 +4516,13 @@ msgstr "Дэлгэцийн горим"
 #: model:process.node,note:account.process_node_importinvoice0
 msgid "Statement from invoice or payment"
 msgstr "Statement from invoice or payment"
+
+#. module: account
+#: help:product.template,property_account_expense:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"expenses for the current product"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -5578,7 +5558,6 @@ msgstr "Дансны Ерөнхий Дансны Тайлан"
 
 #. module: account
 #: field:account.bank.statement.line,name:0
-#: field:account.invoice,reference:0
 msgid "Communication"
 msgstr "Гүйлгээний утга"
 
@@ -5715,7 +5694,6 @@ msgid "Customer Invoices And Refunds"
 msgstr "Захиалагчийн Нэхэмжлэл болон Буцаалтууд"
 
 #. module: account
-#: field:account.analytic.line,amount_currency:0
 #: field:account.entries.report,amount_currency:0
 #: field:account.model.line,amount_currency:0
 #: field:account.move.line,amount_currency:0
@@ -5743,8 +5721,6 @@ msgstr "Тулгах мөрүүд"
 #: field:account.invoice.line,quantity:0
 #: field:account.model.line,quantity:0
 #: field:account.move.line,quantity:0
-#: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,unit_amount:0
 #: field:report.account.sales,quantity:0
@@ -5854,7 +5830,6 @@ msgstr "Тулгалт хасалттайгаар"
 #. module: account
 #: selection:account.payment.term.line,value:0
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Fixed Amount"
 msgstr "Тогтмол дүн"
 
@@ -5898,7 +5873,6 @@ msgstr "Аль хэдий нь тулгагдсан!"
 
 #. module: account
 #: help:account.tax,type:0
-#: help:account.tax.template,type:0
 msgid "The computation method for the tax amount."
 msgstr "Татварын дүнг тооцоолох арга хэлбэр."
 
@@ -5999,7 +5973,7 @@ msgstr "Үнэлгээ"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:376
 #: code:addons/account/report/account_partner_balance.py:301
-#: code:addons/account/report/account_partner_ledger.py:398
+#: code:addons/account/report/account_partner_ledger.py:399
 #, python-format
 msgid "Receivable and Payable Accounts"
 msgstr "Авлага өглөгийн данс"
@@ -6110,11 +6084,6 @@ msgstr "Шүүлтүүр"
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
 msgstr "Танын илэрхийлэл таны моделд буруу байна \"%(...)s\" !"
-
-#. module: account
-#: field:account.bank.statement.line,date:0
-msgid "Entry Date"
-msgstr "Бичилтийн Огноо"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1170
@@ -6541,12 +6510,13 @@ msgstr "Тэгшитгэл"
 
 #. module: account
 #: selection:account.tax,type:0
-#: selection:account.tax.template,type:0
 msgid "Percentage"
 msgstr "Хувь"
 
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
+#: code:addons/account/report/account_general_ledger.py:307
+#, python-format
 msgid "Journal & Partner"
 msgstr "Журнал & Харилцагч"
 
@@ -6598,6 +6568,7 @@ msgid "Applicable Type"
 msgstr "Хэрэглэх төрөл"
 
 #. module: account
+#: field:account.invoice,reference:0
 #: field:account.invoice.line,invoice_id:0
 msgid "Invoice Reference"
 msgstr "Нэхэмжлэлийн дугаарлалт"
@@ -7235,17 +7206,6 @@ msgid "Account tax chart"
 msgstr "Дансны Татварын Мод"
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"IBAN төрлийн банктай дансдад BIC/Swift кодыг тодорхойлж төлбөрийг зөв хийх "
-"боломжийг бүрдүүлнэ үү"
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -7384,7 +7344,7 @@ msgstr "Илгээгдсэн журналын бичилт \"%s\"-ийг уст�
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
-#: code:addons/account/report/account_partner_ledger.py:59
+#: code:addons/account/report/account_partner_ledger.py:60
 #: model:ir.actions.act_window,name:account.act_account_acount_move_line_open_unreconciled
 #, python-format
 msgid "Unreconciled Entries"
@@ -7988,7 +7948,7 @@ msgstr "5 сар"
 #: selection:account.partner.ledger,result_selection:0
 #: code:addons/account/report/account_aged_partner_balance.py:374
 #: code:addons/account/report/account_partner_balance.py:299
-#: code:addons/account/report/account_partner_ledger.py:396
+#: code:addons/account/report/account_partner_ledger.py:397
 #, python-format
 msgid "Payable Accounts"
 msgstr "Өглөгийн данс"
@@ -8208,6 +8168,11 @@ msgid "Partner Ledger"
 msgstr "Харилцагчийн дэвтэр"
 
 #. module: account
+#: selection:account.tax.template,type:0
+msgid "Fixed"
+msgstr "Тогтмол утга"
+
+#. module: account
 #: code:addons/account/account.py:629
 #: code:addons/account/account.py:642
 #: code:addons/account/account.py:645
@@ -8383,6 +8348,13 @@ msgstr "Автомат гүйлгээ"
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
 msgstr "Алдаа ! Тойрог хамааралтай татварын код үүсгэж болохгүй."
+
+#. module: account
+#: help:product.template,property_account_income:0
+msgid ""
+"This account will be used for invoices instead of the default one to value "
+"sales for the current product"
+msgstr ""
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -8719,13 +8691,11 @@ msgid "Ending Balance"
 msgstr "Төгсгөлийн баланс"
 
 #. module: account
-#: help:account.move.line,blocked:0
+#: help:product.category,property_account_income_categ:0
 msgid ""
-"You can check this box to mark this journal item as a litigation with the "
-"associated partner"
+"This account will be used for invoices to value sales for the current "
+"product category"
 msgstr ""
-"Хэрэв журналын бичилт нь холбогдох харилцагчийн хувьд хүлээн зөвшөөрөгдөхгүй "
-"байгаа бол үүнийг сонгоно"
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8843,6 +8813,7 @@ msgstr "Буцаалтын журнал"
 #: report:account.general.ledger:0
 #: report:account.general.ledger_landscape:0
 #: report:account.partner.balance:0
+#: report:account.third_party_ledger:0
 msgid "Filter By"
 msgstr "Шүүлтүүр"
 
@@ -9026,9 +8997,11 @@ msgid "Accounts Allowed (empty for no control)"
 msgstr "Зөвшөөрөгдсөн дансууд (хоосон орхивол бүгдийг зөвшөөрнө)"
 
 #. module: account
-#: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Template Account Fiscal Mapping"
-msgstr "Санхүүгийн харгалзуулалтын загвар"
+#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
+#: model:ir.actions.act_window,name:account.action_account_analytic_chart
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+msgid "Chart of Analytic Accounts"
+msgstr "Аналитик дансны мод"
 
 #. module: account
 #: view:board.board:0
@@ -9074,6 +9047,15 @@ msgid "Invoicing & Payments"
 msgstr "Нэхэмжлэл ба Төлбөр"
 
 #. module: account
+#: help:account.move.line,blocked:0
+msgid ""
+"You can check this box to mark this journal item as a litigation with the "
+"associated partner"
+msgstr ""
+"Хэрэв журналын бичилт нь холбогдох харилцагчийн хувьд хүлээн зөвшөөрөгдөхгүй "
+"байгаа бол үүнийг сонгоно"
+
+#. module: account
 #: help:account.invoice,internal_number:0
 msgid ""
 "Unique number of the invoice, computed automatically when the invoice is "
@@ -9081,15 +9063,6 @@ msgid ""
 msgstr ""
 "Нэхэмжлэлийн давхардалгүй дугаар, нэхэмжлэл үүсэх үед автоматаар "
 "тооцоологдоно."
-
-#. module: account
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Энэ ваучерийн төлбөрийн мөнгөн дүн ордерийн гүйлгээний мөр дээрх дүнтэй ижил "
-"байх ёстой."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_expense
@@ -9272,6 +9245,11 @@ msgstr ""
 #, python-format
 msgid "Please define sequence on the journal related to this invoice."
 msgstr "Энэ нэхэмжлэлд холбогдох журналын дарааллыг тодорхойлно уу."
+
+#. module: account
+#: field:account.invoice,reference_type:0
+msgid "Reference Type"
+msgstr "Дугаарлалтын төрөл"
 
 #. module: account
 #: view:account.move:0
@@ -9697,7 +9675,6 @@ msgstr ""
 "ажиллагаанаас хамааруулан хийх боломжтой."
 
 #. module: account
-#: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "Filters By"
 msgstr "Шүүлт"
@@ -10586,15 +10563,6 @@ msgid "The code of the journal must be unique per company !"
 msgstr "Бүртгэлийн код компанийн хэмжээнд үл давтагдах байх ёстой !"
 
 #. module: account
-#: help:product.category,property_account_expense_categ:0
-#: help:product.template,property_account_expense:0
-msgid ""
-"This account will be used to value outgoing stock for the current product "
-"category using cost price"
-msgstr ""
-"Энэ данс нь гарч байгаа бараануудыг өртөг үнээ үнэлэхэд хэрэглэгдэнэ."
-
-#. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
 msgstr "Дансны Модыг Үлгэрээс Үүсгэх"
@@ -10675,6 +10643,13 @@ msgstr "Гарчиг 3 (тод, арай жижиг)"
 #: field:account.invoice,invoice_line:0
 msgid "Invoice Lines"
 msgstr "Нэхэмжлэлийн мөр"
+
+#. module: account
+#: help:product.category,property_account_expense_categ:0
+msgid ""
+"This account will be used for invoices to value expenses for the current "
+"product category"
+msgstr ""
 
 #. module: account
 #: constraint:account.account.template:0
@@ -11280,16 +11255,19 @@ msgstr ""
 "Тухайн татварын дүн эерэг эсвэл сөрөг утга байхыг тодорхойлно."
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
-#: model:ir.actions.act_window,name:account.action_account_analytic_chart
-#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
-msgid "Chart of Analytic Accounts"
-msgstr "Аналитик дансны мод"
+#: model:ir.model,name:account.model_account_fiscal_position_account_template
+msgid "Template Account Fiscal Mapping"
+msgstr "Санхүүгийн харгалзуулалтын загвар"
 
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
 msgstr "Барааны загвар дээрх зарлагын данс"
+
+#. module: account
+#: field:account.analytic.line,amount_currency:0
+msgid "Amount currency"
+msgstr "Валютаарх дүн"
 
 #. module: account
 #: help:accounting.report,label_filter:0
@@ -11332,17 +11310,48 @@ msgstr ""
 "Журналын бичилтүүдийн авлага, өглөгийн үлдэгдэл дүн өөрийн валютаар "
 "(компаний валютаас ялгаатай байж болно)"
 
-#~ msgid "Fixed"
-#~ msgstr "Тогтмол утга"
-
 #~ msgid "Starting Date"
 #~ msgstr "Эхлэх огноо"
 
 #~ msgid "Ending Date"
 #~ msgstr "Дуусах огноо"
 
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "Алдаа ! Тойрч холбогдсон гишүүдийг үүсгэх боломжгүй."
+
+#~ msgid "Communication Type"
+#~ msgstr "Харилцах төрөл"
+
 #~ msgid "The description must be unique per company!"
 #~ msgstr "Тайлбар компаний хэмжээнд үл давхцах байх ёстой!"
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using sale price"
+#~ msgstr ""
+#~ "Энэ данс нь идэвхтэй барааны ангилалын гарч байгаа барааны зарах үнийг "
+#~ "ашиглаж үнэлэхэд хэрэглэгддэг данс юм."
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "RIB болон IBAN бакнны кодууд буруу"
+
+#~ msgid "Entry Date"
+#~ msgstr "Бичилтийн Огноо"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "IBAN төрлийн банктай дансдад BIC/Swift кодыг тодорхойлж төлбөрийг зөв хийх "
+#~ "боломжийг бүрдүүлнэ үү"
+
+#~ msgid ""
+#~ "This account will be used to value outgoing stock for the current product "
+#~ "category using cost price"
+#~ msgstr ""
+#~ "Энэ данс нь гарч байгаа бараануудыг өртөг үнээ үнэлэхэд хэрэглэгдэнэ."
 
 #, python-format
 #~ msgid "Entries are not of the same account or already reconciled ! "
@@ -11355,3 +11364,10 @@ msgstr ""
 #~ msgstr ""
 #~ "Уг дансанд тулгалт зөвшөөрөгдөөгүй! Та дансны тохиргоог өөрчилснөөр тулгалт "
 #~ "боломжтой болно."
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Энэ ваучерийн төлбөрийн мөнгөн дүн ордерийн гүйлгээний мөр дээрх дүнтэй ижил "
+#~ "байх ёстой."
