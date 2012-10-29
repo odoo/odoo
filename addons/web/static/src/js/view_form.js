@@ -4674,7 +4674,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this.binary_value = false;
         this.useFileAPI = !!window.FileReader;
         if (!this.useFileAPI) {
-            this.fileupload_id = _.uniqueId('oe_fileupload');
+            this.fileupload_id = _.uniqueId('oe_attachmentupload');
             $(window).on(this.fileupload_id, function() {
                 var args = [].slice.call(arguments).slice(1);
                 self.on_file_uploaded.apply(self, args);
@@ -4906,12 +4906,12 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
     render_value: function () {
         var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
         render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
-        this.$('.oe_placeholder_files, .oe_files').replaceWith( render );
+        this.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
 
         // reinit input type file
         var $input = this.$('input.oe_form_binary_file');
         $input.after($input.clone(true)).remove();
-        this.$(".oe_fileuploader").show();
+        this.$(".oe_fileupload").show();
     },
     on_file_change: function (event) {
         event.stopPropagation();
@@ -4945,7 +4945,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
 
             // submit file
             this.$('form.oe_form_binary_form').submit();
-            this.$(".oe_fileuploader").hide();
+            this.$(".oe_fileupload").hide();
 
             // add file on result
             files.push({
