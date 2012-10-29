@@ -34,103 +34,22 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
     _description="Timesheet"
 
-    def _total_attendances(self, cr, uid, ids, name, args, context=None):
-        """ Get the total attendance for the timesheets
-            Returns a dict like :
-                {id: {'total_per_day': {day: timedelta, ...},
-                     },
-                 ...
-                }
-        """
-        context = context or {}
-        attendance_obj = self.pool.get('hr.attendance')
-        res = {}
-        for sheet_id in ids:
-            sheet = self.browse(cr, uid, sheet_id, context=context)
-            # field attendances_ids of hr_timesheet_sheet.sheet only
-            # returns attendances of timesheet's current date
-            attendance_ids = attendance_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
-            attendances = attendance_obj.browse(cr, uid, attendance_ids, context=context)
-            total_attendance = {}
-            for attendance in [att for att in attendances
-                               if att.action in ('sign_in', 'sign_out')]:
-                day = attendance.name[:10]
-                if not total_attendance.get(day, False):
-                    total_attendance[day] = timedelta(seconds=0)
-
-                attendance_in_time = datetime.strptime(attendance.name, '%Y-%m-%d %H:%M:%S')
-                attendance_interval = timedelta(hours=attendance_in_time.hour,
-                                                minutes=attendance_in_time.minute,
-                                                seconds=attendance_in_time.second)
-                if attendance.action == 'sign_in':
-                    total_attendance[day] -= attendance_interval
-                else:
-                    total_attendance[day] += attendance_interval
-
-            res[sheet_id] = {'total_per_day': total_attendance}
-        return res
-
-    def _total_timesheet(self, cr, uid, ids, name, args, context=None):
-        """ Get the total of analytic lines for the timesheets
-            Returns a dict like :
-                {id: {day: timedelta, ...}}
-        """
-        context = context or {}
-        sheet_line_obj = self.pool.get('hr.analytic.timesheet')
-
-        res = {}
-        for sheet_id in ids:
-            # field timesheet_ids of hr_timesheet_sheet.sheet only
-            # returns lines of timesheet's current date
-            sheet_lines_ids = sheet_line_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
-            sheet_lines = sheet_line_obj.browse(cr, uid, sheet_lines_ids, context=context)
-            total_timesheet = {}
-            for line in sheet_lines:
-                day = line.date
-                if not total_timesheet.get(day, False):
-                    total_timesheet[day] = timedelta(seconds=0)
-                total_timesheet[day] += timedelta(hours=line.unit_amount)
-            res[sheet_id] = total_timesheet
-        return res
-
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
         """
-        def sum_all_days(sheet_amounts):
-            if not sheet_amounts:
-                return timedelta(seconds=0)
-            total = reduce(lambda memo, value: memo + value, sheet_amounts.values())
-            return total
-
-        def timedelta_to_hours(delta):
-            hours = 0.0
-            seconds = float(delta.seconds)
-            if delta.microseconds:
-                seconds += float(delta.microseconds) / 100000
-            hours += delta.days * 24
-            if seconds:
-                hours += seconds / 3600
-            return hours
 
         res = {}
-        all_timesheet_attendances = self._total_attendances(cr, uid, ids, name, args, context=context)
-        all_timesheet_lines = self._total_timesheet(cr, uid, ids, name, args, context=context)
-        for id in ids:
-            res[id] = {}
-
-            all_attendances_sheet = all_timesheet_attendances[id]
-
-            total_attendances_sheet = all_attendances_sheet['total_per_day']
-            total_attendances_all_days = sum_all_days(total_attendances_sheet)
-
-            total_timesheets_sheet = all_timesheet_lines[id]
-            total_timesheets_all_days = sum_all_days(total_timesheets_sheet)
-            total_difference_all_days = total_attendances_all_days - total_timesheets_all_days
-
-            res[id]['total_attendance'] = timedelta_to_hours(total_attendances_all_days)
-            res[id]['total_timesheet'] = timedelta_to_hours(total_timesheets_all_days)
-            res[id]['total_difference'] = timedelta_to_hours(total_difference_all_days)
+        for sheet in self.browse(cr, uid, ids, context=context or {}):
+            res.setdefault(sheet.id, {
+                'total_attendance': 0.0,
+                'total_timesheet': 0.0,
+                'total_difference': 0.0,
+            })
+            for period in sheet.period_ids:
+                res[sheet.id]['total_attendance'] += period.total_attendance
+                res[sheet.id]['total_timesheet'] += period.total_timesheet
+                res[sheet.id]['total_difference'] += period.total_attendance - period.total_timesheet
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -206,9 +125,9 @@ class hr_timesheet_sheet(osv.osv):
             ('draft','Open'),
             ('confirm','Waiting Approval'),
             ('done','Approved')], 'Status', select=True, required=True, readonly=True,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
-                \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
-                \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
+                \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
+                \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status', readonly=True),
         'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
         'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
@@ -283,8 +202,8 @@ class hr_timesheet_sheet(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        return [(r['id'], r['date_from'] + ' - ' + r['date_to']) \
-                for r in self.read(cr, uid, ids, ['date_from', 'date_to'],
+        return [(r['id'], _('Week ')+datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U')) \
+                for r in self.read(cr, uid, ids, ['date_from'],
                     context=context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):

@@ -39,7 +39,7 @@ class payslip_report(osv.osv):
             ('draft', 'Draft'),
             ('done', 'Done'),
             ('cancel', 'Rejected'),
-        ], 'State', readonly=True),
+        ], 'Status', readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payslip lines', readonly=True),
         'number': fields.char('Number', size=16, readonly=True),
