@@ -28,6 +28,7 @@ from tools.translate import _
 from itertools import groupby
 from operator import itemgetter
 
+import pytz
 
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
@@ -199,7 +200,7 @@ class resource_calendar(osv.osv):
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
-    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
+    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False, context=None):
         """ Calculates the Total Working hours based on given start_date to 
         end_date, If resource id is supplied that it will consider the source 
         leaves also in calculating the hours.
@@ -212,45 +213,104 @@ class resource_calendar(osv.osv):
         @return : Total number of working hours based dt_from and dt_end and 
                   resource if supplied.
         """
-        if not id:
-            return 0.0
-        dt_leave = self._get_leaves(cr, uid, id, resource)
+         
         hours = 0.0
+         
+        dt_to_hours = dt_to.hour + dt_to.minute / 60.0 + dt_to.second / 3600.0         
 
-        current_hour = dt_from.hour
+        users_obj = self.pool.get('res.users')       
+        user = users_obj.browse(cr, uid, uid, context=context)
+        utc = pytz.timezone('UTC')
+        
+        if user.context_tz:
+            context_tz = pytz.timezone(user.context_tz)
+        else:
+            context_tz = utc     
+    
+        # gap between UTC and user timezone
+        tz_gap = (utc.localize(dt_from) - context_tz.localize(dt_from)).seconds / 3600          
 
-        while (dt_from <= dt_to):
-            cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
-            der =  cr.fetchall()
-            for (hour_from,hour_to) in der:
-                if hours != 0.0:#For first time of the loop only,hours will be 0
-                    current_hour = hour_from
-                leave_flag = False
-                if (hour_to>=current_hour):
-                    dt_check = dt_from.strftime('%Y-%m-%d')
-                    for leave in dt_leave:
-                        if dt_check == leave:
-                            dt_check = datetime.strptime(dt_check, "%Y-%m-%d") + timedelta(days=1)
-                            leave_flag = True
+        orig_dt_from = dt_from
 
-                    if leave_flag:
-                        break
+        while dt_from <= dt_to:
+            # if the working hours are None, use the default ones
+            if id:
+                cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
+                slots = cr.fetchall()
+            elif dt_from.weekday() not in [5, 6]:
+                slots = [(8, 12), (13, 17)]
+            else:
+                slots = []
+                
+            for (hour_from, hour_to) in slots:
+                
+                hour_from = hour_from - tz_gap
+                if hour_from < 0:
+                    hour_from = 0
+                if hour_from > 24:
+                    hour_from = 24
+                hour_to = hour_to - tz_gap
+                if hour_to < 0:
+                    hour_to = 0
+                if hour_to > 24:
+                    hour_to = 24
+                    
+                dt_from_hours = dt_from.hour + dt_from.minute / 60.0 + dt_from.second / 3600.0
+                
+                first_day = dt_from.year == orig_dt_from.year and dt_from.month == orig_dt_from.month and dt_from.day == orig_dt_from.day
+                last_day = dt_from.year == dt_to.year and dt_from.month == dt_to.month and dt_from.day == dt_to.day
+                
+                # special case: the ticket is closed the same day it is opened:
+                if first_day and last_day:
+                    # no overlap (beginning time after end of current slot or ending time before beginning of current slot)
+                    if dt_from_hours >= hour_to or dt_to_hours <= hour_from:
+                        continue
+                    # beginning of working hours is after beginning time and ending time is after end of working hours: add the entire slot
+                    elif dt_from_hours <= hour_from and dt_to_hours >= hour_to:
+                        hours += hour_to - hour_from
+                    # add only the overlap (left)
+                    elif dt_from_hours >= hour_from and dt_to_hours >= hour_to:
+                        hours += hour_to - dt_from_hours
+                    # add only the overlap (right)
+                    elif dt_from_hours <= hour_from and dt_to_hours <= hour_to:
+                        hours += dt_to_hours - hour_from
+                    # add only the overlap (both sides)
                     else:
-                        d1 = dt_from
-                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
+                        hours += dt_to_hours - dt_from_hours 
+                
+                # first day: only add from beginning time to end of working hours
+                elif first_day:
+                    # no overlap (beginning time after end of current slot)
+                    if dt_from_hours >= hour_to:
+                        continue
+                    # beginning of working hours is after beginning time: add the entire slot
+                    elif dt_from_hours <= hour_from:
+                        hours += hour_to - hour_from
+                    # add only the overlap
+                    else:
+                        hours += hour_to - dt_from_hours
 
-                        if hours != 0.0:#For first time of the loop only,hours will be 0
-                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60))
-
-                        if dt_from.day == dt_to.day:
-                            if hour_from <= dt_to.hour <= hour_to:
-                                d2 = dt_to
-                        dt_from = d2
-                        hours += (d2-d1).seconds
-            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60)) + timedelta(days=1)
-            current_hour = 0.0
-
-        return (hours/3600)
+                        
+                # last day: only add from beginning of working hours to ending time
+                elif last_day:
+                    # no overlap (ending time before beginning of current slot)
+                    if dt_to_hours <= hour_from:
+                        continue
+                    # ending time is after end of working hours: add the entire slot
+                    elif dt_to_hours >= hour_to:
+                        hours += hour_to - hour_from
+                    # add only the overlap
+                    else:
+                        hours += dt_to_hours - hour_from
+                        
+                # complete day in the middle: add complete working hours
+                else:
+                    hours += hour_to - hour_from
+                        
+            dt_from += timedelta(days=1)
+            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day)
+            
+        return hours
 
 resource_calendar()
 
