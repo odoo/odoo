@@ -7,7 +7,7 @@ openerp.mail = function (session) {
     openerp_mail_followers(session, mail);        // import mail_followers.js
 
     /**
-         * ------------------------------------------------------------
+     * ------------------------------------------------------------
      * FormView
      * ------------------------------------------------------------
      * 
@@ -17,16 +17,15 @@ openerp.mail = function (session) {
 
     session.web.FormView = session.web.FormView.extend({
         do_action: function (action) {
-            console.log(action);
-
             if (action.res_model == 'mail.compose.message') {
                 /* hack for stop context propagation of wrong value
                  * delete this hack when a global method to clean context is create
                  */
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_content_subtype', 'active_id', 'lang',
-                    'bin_raw', 'tz', 'active_model', 'edi_web_url_view', 'active_ids', 'default_subject']
+                    'default_res_id', 'default_content_subtype', , 'default_subject',
+                    'default_body', 'active_id', 'lang', 'bin_raw', 'tz',
+                    'active_model', 'edi_web_url_view', 'active_ids']
                 for (var key in action.context) {
                     if (_.indexOf(context_keys, key) == -1) {
                         action.context[key] = null;
@@ -40,7 +39,7 @@ openerp.mail = function (session) {
 
 
     /**
-         * ------------------------------------------------------------
+     * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 
@@ -53,20 +52,18 @@ openerp.mail = function (session) {
 
     mail.ChatterUtils = {
 
-        /**
-         *Get an image in /web/binary/image?... */
+        /* Get an image in /web/binary/image?... */
         get_image: function (session, model, field, id) {
             return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
 
-        /**
-         *Get the url of an attachment {'id': id} */
+        /* Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, attachment) {
             return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
         },
 
         /**
-         *Replaces some expressions
+         * Replaces some expressions
          * - :name - shortcut to an image
          */
         do_replace_expressions: function (string) {
@@ -83,23 +80,23 @@ openerp.mail = function (session) {
             return string;
         },
 
-        /* replace textarea text into html text
-         * (add <p>, <a>)
-         * TDE note : should not be here, but server-side I think ...
-        */
+        /**
+         * Replaces textarea text into html text (add <p>, <a>)
+         * TDE note : should be done server-side, in Python -> use mail.compose.message ?
+         */
         get_text2html: function (text) {
             return text
                 .replace(/[\n\r]/g,'<br/>')
                 .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
         },
 
-        /**
-         * return the complete domain with "&"
+        /* Returns the complete domain with "&" 
+         * TDE note: please add some comments to explain how/why
          */
-        expend_domain: function (domain) {
+        expand_domain: function (domain) {
             var new_domain = [];
             var nb_and = -1;
-            
+            // TDE note: smarted code maybe ?
             for ( var k = domain.length-1; k >= 0 ; k-- ) {
                 if ( typeof domain[k] != 'array' && typeof domain[k] != 'object' ) {
                     nb_and -= 2;
@@ -118,16 +115,15 @@ openerp.mail = function (session) {
 
 
     /**
-         * ------------------------------------------------------------
+     * ------------------------------------------------------------
      * ComposeMessage widget
      * ------------------------------------------------------------
      * 
      * This widget handles the display of a form to compose a new message.
      * This form is a mail.compose.message form_view.
-     * On first time : display a compact textarea but is not the compose form.
-     * When the user focus this box, the compose message is intantiate and 
-     * with focus on the textarea.
-    */
+     * On first time : display a compact textarea that is not the compose form.
+     * When the user focuses the textarea, the compose message is instantiated.
+     */
     
     mail.ThreadComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
@@ -284,7 +280,7 @@ openerp.mail = function (session) {
         on_compose_fullmail: function (default_composition_mode) {
             if (default_composition_mode == 'reply') {
                 var context = {
-                    'default_composition_mode': 'reply',
+                    'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': this.attachment_ids,
@@ -292,10 +288,9 @@ openerp.mail = function (session) {
             } else {
                 var context = {
                     'default_model': this.context.default_model,
-                    'default_res_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
-                    'default_composition_mode': 'comment',
+                    'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
                     'default_attachment_ids': this.attachment_ids,
@@ -411,7 +406,7 @@ openerp.mail = function (session) {
     });
 
     /**
-         * ------------------------------------------------------------
+     * ------------------------------------------------------------
      * Thread Message Expandable Widget
      * ------------------------------------------------------------
      *
@@ -501,7 +496,7 @@ openerp.mail = function (session) {
     });
 
     /**
-         * ------------------------------------------------------------
+     * ------------------------------------------------------------
      * Thread Message Widget
      * ------------------------------------------------------------
      * This widget handles the display of a messages in a thread. 
@@ -588,9 +583,7 @@ openerp.mail = function (session) {
             this.ds_follow = new session.web.DataSetSearch(this, 'mail.followers');
         },
 
-        /**
-         *Convert date, timerelative and avatar in displayable data.
-        */
+        /* Convert date, timerelative and avatar in displayable data. */
         formating_data: function () {
 
             //formating and add some fields for render
@@ -665,9 +658,7 @@ openerp.mail = function (session) {
             this.$el.on('click', '.oe_star', this.on_star);
         },
 
-        /**
-         * call the on_compose_message on the thread of this message.
-         */
+        /* Call the on_compose_message on the thread of this message. */
         on_message_reply:function (event) {
             event.stopPropagation();
             this.thread.on_compose_message();
@@ -686,7 +677,7 @@ openerp.mail = function (session) {
         },
 
         /**
-         * instantiate the thread object of this message.
+         * Instantiate the thread object of this message.
          * Each message have only one thread.
          */
         create_thread: function () {
@@ -1294,8 +1285,8 @@ openerp.mail = function (session) {
 
             if ( msg_up && msg_up.type == "expandable" && msg_down && msg_down.type == "expandable") {
                 // concat two expandable message and add this message to this dom
-                msg_up.domain = mail.ChatterUtils.expend_domain( msg_up.domain );
-                msg_down.domain = mail.ChatterUtils.expend_domain( msg_down.domain );
+                msg_up.domain = mail.ChatterUtils.expand_domain( msg_up.domain );
+                msg_down.domain = mail.ChatterUtils.expand_domain( msg_down.domain );
 
                 msg_down.domain = ['|','|'].concat( msg_up.domain ).concat( message_dom ).concat( msg_down.domain );
 
@@ -1310,7 +1301,7 @@ openerp.mail = function (session) {
 
             } else if ( msg_up && msg_up.type == "expandable") {
                 // concat preview expandable message and this message to this dom
-                msg_up.domain = mail.ChatterUtils.expend_domain( msg_up.domain );
+                msg_up.domain = mail.ChatterUtils.expand_domain( msg_up.domain );
                 msg_up.domain = ['|'].concat( msg_up.domain ).concat( message_dom );
                 
                 msg_up.nb_messages++;
@@ -1319,7 +1310,7 @@ openerp.mail = function (session) {
 
             } else if ( msg_down && msg_down.type == "expandable") {
                 // concat next expandable message and this message to this dom
-                msg_down.domain = mail.ChatterUtils.expend_domain( msg_down.domain );
+                msg_down.domain = mail.ChatterUtils.expand_domain( msg_down.domain );
                 msg_down.domain = ['|'].concat( msg_down.domain ).concat( message_dom );
                 
                 // it's maybe a message expandable for the max limit read message

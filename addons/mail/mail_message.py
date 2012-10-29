@@ -65,6 +65,7 @@ class mail_message(osv.Model):
     def _get_record_name(self, cr, uid, ids, name, arg, context=None):
         """ Return the related document name, using name_get. It is done using
             SUPERUSER_ID, to be sure to have the record name correctly stored. """
+        # TDE note: regroup by model/ids, to have less queries to perform
         result = dict.fromkeys(ids, False)
         for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
             if not message.get('model') or not message.get('res_id'):
@@ -79,10 +80,11 @@ class mail_message(osv.Model):
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
-            ('message_id', 'in', ids)
+            ('message_id', 'in', ids),
+            ('read', '=', False),
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.id] = not notif.read
+            res[notif.message_id.id] = True
         return res
 
     def _search_to_read(self, cr, uid, obj, name, domain, context=None):
@@ -117,9 +119,9 @@ class mail_message(osv.Model):
             help="Message type: email for email message, notification for system "\
                  "message, comment for other messages such as user replies"),
         'email_from': fields.char('From',
-            help="Email address of the sender, to use if it does not match any partner."),
+            help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
         'author_id': fields.many2one('res.partner', 'Author',
-            help="Partner that did write the message. If not set, try to use the From field instead."),
+            help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
         'partner_ids': fields.many2many('res.partner', string='Recipients'),
         'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
             'message_id', 'partner_id', 'Recipients'),
@@ -204,6 +206,7 @@ class mail_message(osv.Model):
 
             :param dict message: read result of a mail.message
         """
+        # TDE note: this method should be optimized, to lessen the number of queries, will be done ASAP
         is_author = False
         if message['author_id']:
             is_author = message['author_id'][0] == self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
@@ -321,7 +324,6 @@ class mail_message(osv.Model):
                 ], context=context, limit=self._message_read_more_limit)
             if not not_loaded_ids:
                 continue
-            # print 'not_loaded_ids', not_loaded_ids
 
             # all_not_loaded_ids += not_loaded_ids
             # group childs not read
@@ -386,6 +388,7 @@ class mail_message(osv.Model):
                 ancestors and expandables
             :return list: list of message structure for the Chatter widget
         """
+        # print 'message_read', ids, domain, message_unload_ids, thread_level, context, parent_id, limit
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
@@ -458,9 +461,10 @@ class mail_message(osv.Model):
             - otherwise: remove the id
         """
         # Rules do not apply to administrator
+        # print '_search', uid, args
         if uid == SUPERUSER_ID:
             return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
-            context=context, count=count, access_rights_uid=access_rights_uid)
+                context=context, count=count, access_rights_uid=access_rights_uid)
         # Perform a super with count as False, to have the ids, not a counter
         ids = super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
             context=context, count=False, access_rights_uid=access_rights_uid)
@@ -630,6 +634,8 @@ class mail_message(osv.Model):
     # Messaging API
     #------------------------------------------------------
 
+    # TDE note: this code is not used currently, will be improved in a future merge, when quoted context
+    # will be added to email send for notifications. Currently only WIP.
     MAIL_TEMPLATE = """<div>
     % if message:
         ${display_message(message)}

@@ -115,8 +115,8 @@ openerp_mail_followers = function(session, mail) {
             }).pipe(self.proxy('display_generic'));
         },
         _format_followers: function(count){
-            console.log('FORMAT FOLLWERS :',count);
-            function _t(str){return str;}
+            // TDE note: why redefining _t ?
+            function _t(str) { return str; }
             var str = '';
             if(count <= 0){
                 str = _t('No followers');
@@ -125,7 +125,6 @@ openerp_mail_followers = function(session, mail) {
             }else{
                 str = ''+count+' '+_t('followers');
             }
-            console.log('URGH:',str);
             return str;
         },
         /* Display generic info about follower, for people not having access to res_partner */
@@ -149,7 +148,8 @@ openerp_mail_followers = function(session, mail) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
-            if (truncated.length < records.length) { //FIXME USE A TEMPLATE !
+            // FVA note: be sure it is correctly translated
+            if (truncated.length < records.length) {
                 $('<div class="oe_partner">And ' + (records.length - truncated.length) + ' more.</div>').appendTo(node_user_list);
             }
         },
