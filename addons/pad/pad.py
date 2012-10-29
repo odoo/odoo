@@ -4,6 +4,7 @@ import random
 import re
 import string
 import urllib2
+import logging
 from tools.translate import _
 from openerp.tools.misc import html2plaintext
 from py_etherpad import EtherpadLiteClient
