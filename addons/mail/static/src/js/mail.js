@@ -800,12 +800,12 @@ openerp.mail = function (session) {
         */
         on_vote: function (event) {
             event.stopPropagation();
-            var self=this;
-            return this.ds_message.call('vote_toggle', [[self.id]]).pipe(function (vote) {
-                self.has_voted = vote;
-                self.vote_nb += self.has_voted ? 1 : -1;
-                self.display_vote();
-            });
+            return this.ds_message.call('vote_toggle', [[this.id]]).pipe(
+                _.bind(function (vote) {
+                    this.has_voted = vote;
+                    this.vote_nb += this.has_voted ? 1 : -1;
+                    this.display_vote();
+                }, this));
             return false;
         },
 
@@ -813,10 +813,9 @@ openerp.mail = function (session) {
          * Display the render of this message's vote
         */
         display_vote: function () {
-            var self = this;
-            var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': self});
-            self.$(".oe_msg_vote:first").remove();
-            self.$(".oe_mail_vote_count:first").replaceWith(vote_element);
+            var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': this});
+            this.$(".oe_msg_footer:first .oe_mail_vote_count").remove();
+            this.$(".oe_msg_footer:first .oe_msg_vote").replaceWith(vote_element);
         },
 
         /**
