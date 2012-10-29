@@ -305,8 +305,15 @@ class account_analytic_line(osv.osv):
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
     }
+
+    def _get_default_date(self, cr, uid, context=None):
+        return fields.date.context_today(self, cr, uid, context=context)
+
+    def __get_default_date(self, cr, uid, context=None):
+        return self._get_default_date(cr, uid, context=context)
+
     _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
+        'date': __get_default_date,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.analytic.line', context=c),
         'amount': 0.00
     }
