@@ -159,7 +159,7 @@ class fleet_vehicle_model(osv.Model):
 
         return {
             'value' : {
-                'image' : brand.image,
+                'image_medium' : brand.image,
             }
         }
 
@@ -568,7 +568,7 @@ class fleet_vehicle(osv.Model):
 
         return {
             'value' : {
-                'image' : model.image,
+                'image_medium' : model.image,
             }
         }
     def create(self, cr, uid, data, context=None):
