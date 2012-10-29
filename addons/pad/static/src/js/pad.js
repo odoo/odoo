@@ -12,15 +12,8 @@ openerp.pad = function(instance) {
                         field_name: self.name,
                         object_id: self.view.datarecord.id
                     }}).then(function(data) {
-<<<<<<< TREE
-                    if(data&&data.url){
-                        // is there any reason to call super here ? why ?
-                       // _super.apply(self,[data.url]);
-                        self.renderElement();
-=======
                     if(data && data.url){
                         self.set_value(data.url);
->>>>>>> MERGE-SOURCE
                     }
                 });
             }
