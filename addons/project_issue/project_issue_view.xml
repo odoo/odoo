@@ -159,8 +159,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -378,7 +378,7 @@
                     <field name="issue_count" invisible="1"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_issues.raw_value"
+                    <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
                         <field name="issue_count"/> Issues</a>
                 </xpath>

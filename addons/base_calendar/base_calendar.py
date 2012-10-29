@@ -1023,10 +1023,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, \
                     fnct_inv=_rrule_write, store=True, string='Recurrent Rule'),
         'rrule_type': fields.selection([
-            ('daily', 'Daily'),
-            ('weekly', 'Weekly'),
-            ('monthly', 'Monthly'),
-            ('yearly', 'Yearly')
+            ('daily', 'Day(s)'),
+            ('weekly', 'Week(s)'),
+            ('monthly', 'Month(s)'),
+            ('yearly', 'Year(s)')
             ], 'Recurrency', states={'done': [('readonly', True)]},
             help="Let the event automatically repeat at that interval"),
         'alarm_id': fields.many2one('res.alarm', 'Reminder', states={'done': [('readonly', True)]},
@@ -1151,7 +1151,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
 
         result = []
-        for data in super(calendar_event, self).read(cr, uid, select, context=context):
+        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'exdate', 'exrule', 'date'], context=context):
             if not data['rrule']:
                 result.append(data['id'])
                 continue

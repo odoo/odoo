@@ -29,7 +29,7 @@ _logger = logging.getLogger(__name__)
 try:
     import controllers
 except ImportError:
-    _logger.warn(
+    _logger.warning(
         """Could not load openerp-web section of EDI, EDI will not behave correctly
 
 To fix, launch openerp-web in embedded mode""")
