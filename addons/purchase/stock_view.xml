@@ -59,9 +59,8 @@
                         <button type="object"
                             name="view_picking"
                             string="Incoming Shipments" states="approved"/>
-                        <button type="object"
-                            name="view_invoice"
-                            string="Invoices" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',False) ]}"/>
+                        <button type="object"  name="view_invoice"
+                            string="Invoices" attrs="{'invisible': ['|', ('invoiced','=',True), ('state', '=', 'draft')]}"/> 
                     </div>
                 </xpath>
             </field>
