@@ -10,6 +10,8 @@ $tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
 $link-color: #7C7BAD
 $sheet-max-width: 860px
+$sheet-min-width: 650px
+$sheet-padding: 16px
 // }}}
 // Mixins {{{
 @font-face
@@ -1634,8 +1636,8 @@ $sheet-max-width: 860px
                 width: 400px
                 padding-bottom: 0
         div.oe_chatter
-            min-width: 650px
-            max-width: $sheet-max-width
+            min-width: $sheet-min-width + 2* $sheet-padding
+            max-width: $sheet-max-width + 2* $sheet-padding
             margin: 0 auto
             padding: 16px 0 48px
         div.oe_form_configuration
