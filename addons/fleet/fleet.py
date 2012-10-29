@@ -583,6 +583,14 @@ class fleet_vehicle(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         for vehicle in self.browse(cr, uid, ids, context):
             changes = []
+            if 'model_id' in vals and vehicle.model_id.id != vals['model_id']:
+                value = self.pool.get('fleet.vehicle.model').browse(cr,uid,vals['model_id'],context=context).name
+                oldmodel = vehicle.model_id
+                if oldmodel:
+                    oldmodel = oldmodel.name
+                else:
+                    oldmodel = 'None'
+                changes.append('Model: from \'' + oldmodel + '\' to \'' + value+'\'')
             if 'driver' in vals and vehicle.driver.id != vals['driver']:
                 value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
                 olddriver = vehicle.driver
