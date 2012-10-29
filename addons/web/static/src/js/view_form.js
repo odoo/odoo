@@ -4892,15 +4892,10 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
         $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
-
-        this.list_file = false;
     },
     start: function() {
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
-    },
-    set_value: function(value_) {
-        this._super( value_ );
     },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
