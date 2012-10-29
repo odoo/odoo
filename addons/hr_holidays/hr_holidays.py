@@ -200,10 +200,11 @@ class hr_holidays(osv.osv):
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_from):
+        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
         date_to = False
         if date_from:
-            date_to = date_from
-        return {'value':{'date_to': date_to}}
+            date_to = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
+        return {'value':{'date_to': str(date_to)}}
 
     def onchange_date_to(self, cr, uid, ids, date_to, date_from):
         result = {}
