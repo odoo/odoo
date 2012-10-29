@@ -425,7 +425,7 @@ class stock_location(osv.osv):
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
                     # state, we return False as if the products were not available, and log it:
                     cr.execute("ROLLBACK TO stock_location_product_reserve")
-                    _logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
+                    _logger.warning("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
                     _logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
                     return False
 
@@ -618,7 +618,7 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            seq_obj_name =  'stock.picking.' + context.get('default_type','internal')
+            seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if new_id:
