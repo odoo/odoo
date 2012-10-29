@@ -67,6 +67,10 @@ openerp.project = function(openerp) {
             } else {
                 this._super.apply(this, arguments);
             }
-        }
+        },
+        bind_events: function() {
+            this._super();
+            this.view.project_display_categ_names();
+        },
     });
 };
