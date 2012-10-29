@@ -173,6 +173,13 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             self[fn].apply(self, arguments);
         });
         scheduler.attachEvent('onClick', function(event_id, mouse_event) {
+            if (!self.$el.find('.dhx_cal_editor').length && self.current_mode() === 'month') {
+                self.open_event(event_id);
+            } else {
+                return true;
+            }
+        });
+        scheduler.attachEvent('onDblClick', function(event_id, mouse_event) {
             if (!self.$el.find('.dhx_cal_editor').length) {
                 self.open_event(event_id);
             }
@@ -368,6 +375,9 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         // no way to select a record anyway
         return [];
     },
+    current_mode: function() {
+        return scheduler.getState().mode;
+    },
 
     quick_save: function(event_id, event_obj) {
         var self = this;
@@ -397,7 +407,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     slow_create: function(event_id, event_obj) {
         var self = this;
-        if (scheduler.getState().mode === 'month') {
+        if (this.current_mode() === 'month') {
             event_obj['start_date'].addHours(8);
             if (event_obj._length === 1) {
                 event_obj['end_date'] = new Date(event_obj['start_date']);
