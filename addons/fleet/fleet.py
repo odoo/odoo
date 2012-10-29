@@ -165,6 +165,7 @@ class fleet_vehicle_model(osv.Model):
 
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
+    _order = 'name asc'
 
     _columns = {
         'name' : fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
