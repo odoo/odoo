@@ -197,7 +197,9 @@ class res_partner(osv.osv):
     def do_partner_phonecall(self, cr, uid, partner_ids, context=None): 
         #partners = self.browse(cr, uid, partner_ids, context)
         #print partner_ids
-        self.write(cr, uid, partner_ids, {'payment_next_date': fields.date.context_today(cr, uid, context), 'payment_next_action':'Phony'}, context)
+        print "Testing: " ,  fields.date.context_today(cr, uid, context)
+        self.write(cr, uid, partner_ids, {'payment_next_action_date': fields.date.context_today(cr, uid, context), 'payment_next_action' : 'Phoning'}, context)
+        
 
 
 
@@ -223,18 +225,18 @@ class res_partner(osv.osv):
         mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup')
         mtp = self.pool.get('email.template')
         #mtp.subject = "Invoices overdue"
-
         #user_obj = self.pool.get('res.users')
-
         #mtp.email_from = user_obj.browse(cr, uid, uid, context=context)
         for partner in self.browse(cr, uid, partner_ids, context):
-            pass
+            
             #Get max level of ids
-#            if partner.latest_followup_level_id.email_template_id != False:                
-#                mtp.send_mail(cr, uid, partner.id, partner.latest_followup_level_id.email_template_id.id, context=context)
-#            else:
-#                mtp.send_mail(cr, uid, partner.id, mail_template_id.id, context=context)
-         
+            if partner.latest_followup_level_id.email_template_id != False:                
+                #print "From latest followup level", partner.latest_followup_level_id.email_template_id.id
+                mtp.send_mail(cr, uid, partner.latest_followup_level_id.email_template_id.id, partner.id, context=context)
+            else:
+                #print "From mail template", mail_template_id.id
+                mtp.send_mail(cr, uid, mail_template_id.id, partner.id, context=context)
+
         #complete the mail body with partner information
         #(to be discussed with fp) attach the report to the mail or include the move lines in the mail body
         #send the mail (need to check the function name)
