@@ -179,7 +179,7 @@ class report_custom(report_rml):
                     cell=cell+x
                     width_dict[j]=x
                 day_diff1=day_diff1-x
-        date_xml += ['<dayy number="Total" cell="Total"/>']
+        date_xml += ['<dayy name="Total" cell="Total"/>']
         date_xml.append('</days>')
         date_xml.append('<cols>3.5cm%s,1.2cm</cols>\n' % (',0.74cm' * (int(dy))))
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
