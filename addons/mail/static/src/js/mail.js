@@ -711,7 +711,9 @@ openerp.mail = function (session) {
             this.$el.fadeOut(fadeTime, function () {
                 self.parent_thread.message_to_expandable(self);
             });
-            this.thread.$el.fadeOut(fadeTime);
+            if (this.thread) {
+                this.thread.$el.fadeOut(fadeTime);
+            }
         },
 
         /**
