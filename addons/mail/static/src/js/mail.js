@@ -611,7 +611,9 @@ openerp.mail = function (session) {
             this.$el.hide().fadeIn(750, function () {$(this).css('display', '');});
             this.resize_img();
             this.bind_events();
-            this.create_thread();
+            if(this.thread_level < this.options.display_indented_thread) {
+                this.create_thread();
+            }
             this.$('.oe_msg_attachments, .oe_msg_images').addClass("oe_hidden");
         },
 
@@ -915,11 +917,6 @@ openerp.mail = function (session) {
         
         start: function () {
             this._super.apply(this, arguments);
-
-            if (this.show_compose_message) {
-                this.instantiate_compose_message();
-            }
-
             this.bind_events();
         },
 
@@ -1195,11 +1192,10 @@ openerp.mail = function (session) {
 
             var sort = (!!self.thread_level || message.id<0);
 
-
             if (sort) {
                 if (message_older) {
 
-                    message.insertAfter(message_older.thread.compose_message ? message_older.thread.compose_message.$el : message_older.thread.$el);
+                    message.insertAfter(message_older.thread ? (message_older.thread.compose_message ? message_older.thread.compose_message.$el : message_older.thread.$el) : message_older.$el);
 
                 } else if (message_newer) {
 
@@ -1220,7 +1216,7 @@ openerp.mail = function (session) {
 
                 } else if (message_newer) {
 
-                    message.insertAfter(message_newer.thread.compose_message ? message_newer.thread.compose_message.$el : message_newer.thread.$el);
+                    message.insertAfter(message_newer.thread ? (message_newer.thread.compose_message ? message_newer.thread.compose_message.$el : message_newer.thread.$el) : message_newer.$el );
 
                 } else if (message.id < 0) {
 
