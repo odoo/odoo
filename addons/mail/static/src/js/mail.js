@@ -359,7 +359,6 @@ openerp.mail = function (session) {
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
                         'comment', 
-                        'mail.mt_comment',
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
@@ -438,7 +437,7 @@ openerp.mail = function (session) {
             // data of this expandable message
             this.id = datasets.id || -1,
             this.model = datasets.model || false,
-            this.ancestor_id = datasets.ancestor_id || false,
+            this.parent_id = datasets.parent_id || false,
             this.nb_messages = datasets.nb_messages || 0,
             this.thread_level = datasets.thread_level || 0,
             this.type = 'expandable',
@@ -512,10 +511,10 @@ openerp.mail = function (session) {
      * - record.attachment_ids[].url: url of each attachmentThe
      * thread view :
      * - root thread
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      * - - - - sub sub message (parent id = sub thread)
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      */
     mail.ThreadMessage = session.web.Widget.extend({
@@ -553,7 +552,7 @@ openerp.mail = function (session) {
             // data of this message
             this.id = datasets.id ||  -1,
             this.model = datasets.model ||  false,
-            this.ancestor_id = datasets.ancestor_id ||  false,
+            this.parent_id = datasets.parent_id ||  false,
             this.res_id = datasets.res_id ||  false,
             this.type = datasets.type ||  false,
             this.is_author = datasets.is_author ||  false,
@@ -864,10 +863,10 @@ openerp.mail = function (session) {
      * This widget handles the display of a thread of messages. The
      * thread view:
      * - root thread
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      * - - - - sub sub message (parent id = sub thread)
-     * - - sub message (ancestor_id = root message)
+     * - - sub message (parent_id = root message)
      * - - - sub thread
      */
     mail.Thread = session.web.Widget.extend({
@@ -907,7 +906,7 @@ openerp.mail = function (session) {
             // data of this thread
             this.id =  datasets.id || false,
             this.model =  datasets.model || false,
-            this.ancestor_id =  datasets.ancestor_id || false,
+            this.parent_id =  datasets.parent_id || false,
             this.is_private =  datasets.is_private || false,
             this.author_id =  datasets.author_id || false,
             this.thread_level =  (datasets.thread_level+1) || 0,
@@ -1119,8 +1118,8 @@ openerp.mail = function (session) {
             // CHM note : option for sending in flat mode by server
             var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined]
-                ).then(this.proxy('switch_new_message'));
+            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined])
+                .then(this.proxy('switch_new_message'));
         },
 
         /**
@@ -1254,7 +1253,7 @@ openerp.mail = function (session) {
             var self=this;
             _(records).each(function (record) {
                 var thread = self.browse_thread({
-                    'id': record.ancestor_id, 
+                    'id': record.parent_id, 
                     'default_return_top_thread':true
                 });
                 // create object and attach to the thread object
@@ -1334,10 +1333,10 @@ openerp.mail = function (session) {
                 var expandable = new mail.ThreadExpandable(this, {
                     'id': message.id,
                     'model': message.model,
-                    'ancestor_id': message.ancestor_id,
+                    'parent_id': message.parent_id,
                     'nb_messages': 1,
                     'thread_level': message.thread_level,
-                    'ancestor_id': message.ancestor_id,
+                    'parent_id': message.parent_id,
                     'domain': message_dom,
                     'options': message.options,
                     }, {
