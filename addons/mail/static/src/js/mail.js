@@ -365,15 +365,17 @@ openerp.mail = function (session) {
                     ]).then(function (record) {
                         var thread = self.parent_thread;
                         // create object and attach to the thread object
-                        var message = thread.create_message_object( record[0] );
-                        // insert the message on dom
-                        thread.insert_message( message, self.$el );
-                        if (thread.parent_message) {
-                            self.$el.remove();
-                            self.parent_thread.compose_message = null;
-                        } else {
-                            self.on_cancel();
-                        }
+                        thread.message_fetch(false, false, [record], function (arg, data) {
+                            var message = thread.create_message_object( data[0] );
+                            // insert the message on dom
+                            thread.insert_message( message, self.$el );
+                            if (thread.parent_message) {
+                                self.$el.remove();
+                                self.parent_thread.compose_message = null;
+                            } else {
+                                self.on_cancel();
+                            }
+                        });
                         //session.web.unblockUI();
                     });
                 return true;
@@ -1107,7 +1109,7 @@ openerp.mail = function (session) {
          * @param {Object} replace_context: added to this.context
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
-        message_fetch: function (replace_domain, replace_context, ids) {
+        message_fetch: function (replace_domain, replace_context, ids, callback) {
             var self = this;
 
             // domain and context: options + additional
@@ -1119,7 +1121,7 @@ openerp.mail = function (session) {
             var nb_indented_thread = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
             return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, nb_indented_thread, fetch_context, this.context.default_parent_id || undefined])
-                .then(this.proxy('switch_new_message'));
+                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
         /**

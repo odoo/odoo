@@ -386,13 +386,6 @@ class mail_message(osv.Model):
                 ancestors and expandables
             :return list: list of message structure for the Chatter widget
         """
-        print domain
-        print message_unload_ids
-        print thread_level
-        print context
-        print parent_id
-        print limit
-
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
@@ -431,8 +424,6 @@ class mail_message(osv.Model):
         message_list = sorted(message_list, key=lambda k: k['id'])
         self._message_read_add_expandables(cr, uid, message_list, read_messages, thread_level=thread_level,
             message_loaded_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context, limit=limit)
-
-        print message_list
 
         return message_list
 
