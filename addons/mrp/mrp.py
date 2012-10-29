@@ -139,10 +139,11 @@ class mrp_bom(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['code','product_id'], context=context)
+        product_obj = self.pool.get('product.product')
+        records = self.read(cr, uid, ids, ['code','product_id'], context=context)
         res = []
-        for record in reads:
-            name = self.pool.get('product.product').browse(cr, uid, record['product_id'][0], context=context).name
+        for record in records:
+            name = product_obj.browse(cr, uid, record['product_id'][0], context=context).name
             if record['code']: 
                 name = name +' - '+ record['code']
             res.append((record['id'], name))
