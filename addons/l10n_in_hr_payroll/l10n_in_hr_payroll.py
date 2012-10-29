@@ -65,7 +65,7 @@ class payroll_advice(osv.osv):
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
-        ], 'State', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True),
         'number':fields.char('Reference', size=16, readonly=True),
         'line_ids':fields.one2many('hr.payroll.advice.line', 'advice_id', 'Employee Salary', states={'draft': [('readonly', False)]}, readonly=True),
         'chaque_nos':fields.char('Cheque Numbers', size=256),

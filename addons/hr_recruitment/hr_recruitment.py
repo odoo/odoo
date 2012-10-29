@@ -62,7 +62,7 @@ class hr_recruitment_stage(osv.osv):
         'name': fields.char('Name', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of stages."),
         'department_id':fields.many2one('hr.department', 'Specific to a Department', help="Stages of the recruitment process may be different per department. If this stage is common to all departments, keep this field empty."),
-        'state': fields.selection(AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change according to the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', required=True, help="The related status for the stage. The status of your document will automatically change according to the selected stage. Example, a stage is related to the status 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty', help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
         'requirements': fields.text('Requirements'),
     }
@@ -189,11 +189,11 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
                         domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=AVAILABLE_STATES, string="State", readonly=True,
-                help='The state is set to \'Draft\', when a case is created.\
-                      If the case is in progress the state is set to \'Open\'.\
-                      When the case is over, the state is set to \'Done\'.\
-                      If the case needs to be reviewed then the state is \
+                selection=AVAILABLE_STATES, string="Status", readonly=True,
+                help='The status is set to \'Draft\', when a case is created.\
+                      If the case is in progress the status is set to \'Open\'.\
+                      When the case is over, the status is set to \'Done\'.\
+                      If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),

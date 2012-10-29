@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,8 +15,40 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import mrp_subproduct
+
+
+{
+    'name': 'MRP Byproducts',
+    'version': '1.0',
+    'category': 'Manufacturing',
+    'description': """
+This module allows you to produce several products from one production order.
+=============================================================================
+
+You can configure by-products in the bill of material.
+
+Without this module:
+--------------------
+    A + B + C -> D
+
+With this module:
+-----------------
+    A + B + C -> D + E
+    """,
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'images': ['images/bom_byproduct.jpeg'],
+    'depends': ['base', 'mrp'],
+    'data': [
+       'security/ir.model.access.csv',
+       'mrp_byproduct_view.xml'
+    ],
+    'demo': [],
+    'test': ['test/mrp_byproduct.yml'],
+    'installable': True,
+    'auto_install': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
