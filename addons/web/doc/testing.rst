@@ -497,12 +497,23 @@ Testing API
 
 .. js:function:: openerp.testing.section(name[, options], body)
 
+    A test section, serves as shared namespace for related tests (for
+    constants or values to only set up once). The ``body`` function
+    should contain the tests themselves.
+
+    Note that the order in which tests are run is essentially
+    undefined, do *not* rely on it.
+
     :param String name:
     :param TestOptions options:
     :param body:
     :type body: Function<:js:func:`~openerp.testing.case`, void>
 
 .. js:function:: openerp.testing.case(name[, options], callback)
+
+    Registers a test case callback in the test runner, the callback
+    will only be run once the runner is started (or maybe not at all,
+    if the test is filtered out).
 
     :param String name:
     :param TestOptions options:
