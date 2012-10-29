@@ -199,7 +199,7 @@ testing them.
 Thus, test cases get a DOM scratchpad as its second positional
 parameter, in a jQuery instance. That scratchpad is fully cleaned up
 before each test, and as long as it doesn't do anything outside the
-scrartchpad your code can do whatever it wants::
+scratchpad your code can do whatever it wants::
 
     // test/demo.js
     test('DOM content', function (instance, $scratchpad) {
@@ -334,7 +334,7 @@ setting up the test case, provide what the RPC responses "should" be,
 and only test the code between the "user" (the test itself) and the
 RPC call, before the call is effectively done.
 
-To do this, set the :js:attr:`rpc option <~TestOptions.rpc>` to
+To do this, set the :js:attr:`rpc option <TestOptions.rpc>` to
 ``mock``. This will add a third parameter to the test case callback:
 
 .. js:function:: mock(rpc_spec, handler)
@@ -349,8 +349,8 @@ To do this, set the :js:attr:`rpc option <~TestOptions.rpc>` to
 
       In that case, ``handler`` should be a function taking two
       arguments ``args`` and ``kwargs``, matching the corresponding
-      arguments on the server side. Hander should simply return the
-      value as if it were returned by the Python XMLRPC handler::
+      arguments on the server side and should simply return the value
+      as if it were returned by the Python XMLRPC handler::
 
           test('XML-RPC', {rpc: 'mock', asserts: 3}, function (instance, $s, mock) {
               // set up mocking
