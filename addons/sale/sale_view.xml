@@ -286,11 +286,8 @@
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <group name="sale_margin_grp">
-                            </group>
                             <div class="oe_clear"/>
-                            <label for="note"/><br/>
-                            <field name="note" class="oe_inline"/>
+                            <field name="note" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
@@ -309,25 +306,11 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="History">
-                            <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'form_view_ref':'account.invoice_form'}">
-                                <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
-                                    <field name="date_invoice"/>
-                                    <field name="number"/>
-                                    <field name="partner_id" string="Customer"/>
-                                    <field name="user_id"/>
-                                    <field name="date_due"/>
-                                    <field name="amount_total"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -363,6 +346,7 @@
                     <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
+                    <field name="project_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>

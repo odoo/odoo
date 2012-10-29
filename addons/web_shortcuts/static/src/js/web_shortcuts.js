@@ -82,7 +82,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         // TODO: Use do_action({menu_id: id, type: 'ir.actions.menu'})
         self.rpc('/web/menu/action', {'menu_id': id}).then(function(ir_menu_data) {
             if (ir_menu_data.action.length){
-                instance.webclient.user_menu.on_action({action_id: ir_menu_data.action[0][2].id});
+                instance.webclient.on_menu_action({action_id: ir_menu_data.action[0][2].id});
             }
         });
         this.$el.find('.oe_systray_shortcuts').trigger('mouseout');
