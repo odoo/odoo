@@ -266,8 +266,8 @@ instance.web.Loading = instance.web.Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
+            this.favicon_drawable = true;
             this.draw_favicon(parseInt(this.response_count * 100 / this.request_count));
-            this.getParent().$el.addClass('oe_wait');
         } else {
             this.count = 0;
             clearTimeout(this.long_running_timer);
@@ -276,8 +276,6 @@ instance.web.Loading = instance.web.Widget.extend({
                 this.blocked_ui = false;
                 instance.web.unblockUI();
             }
-            this.$el.fadeOut();
-            this.getParent().$el.removeClass('oe_wait');
             this.stop_favicon();
         }
     }
@@ -292,32 +290,40 @@ instance.web.favicon = instance.web.Loading.include({
         this.interval = null;
         this.old_title = document.title;
         this.local_counter = 0;
+        this.favicon_drawable = true;
         this.options = {
-            'border':"white",
-            'background' :"gray",
-            'inner_circle':"white",
-            'fill_color':"red",
-            'width': 5
+            'border':"white",//border of favicon
+            'background' :"gray",//main color of circle
+            'inner_circle':"white",//innter circle color
+            'fill_color':"red",//fill color 
+            'width': 5 //width of circle
         }
     },
+    
+    //when time interval is known than start favicon can be used.
     start_favicon: function(second, options){
         var count = 0;
         var self = this;
         this.interval = setInterval(function(){
            if (++count > 100) {self.stop_favicon(); return false;}
+           self.favicon_drawable = true;
            self.draw_favicon(count, options);
         }, second || 1);
     },
+    
     stop_favicon: function(){
         if(this.interval)
             clearInterval(this.interval);
+        this.favicon_drawable = false;
         $('link[type="image/x-icon"]').attr('href', this.original_favi.attr("href"));
         $('head').append(this.original_favi);
         document.title = this.old_title;
     },
+    
     loading_title:function(percentage){
         document.title = percentage + "% processed |" + this.old_title;
     },
+    
     draw_favicon: function(percentage, options){
         var self = this;
         var options = _.extend(this.options, options || {});
@@ -364,7 +370,7 @@ instance.web.favicon = instance.web.Loading.include({
                 if (!src.match(/^data/)) {
                     faviconImage.crossOrigin = 'anonymous';
                 }
-                if(self.count > 0 ){
+                if(self.favicon_drawable){
                     $('link[type="image/x-icon"]').remove();
                     $('head').append(get_link(canvas.toDataURL()));
                 }
@@ -372,7 +378,7 @@ instance.web.favicon = instance.web.Loading.include({
         }
         this.loading_title(percentage);
         faviconImage.src = self.original_favi.attr("href");
-    },
+    }
 });
 instance.web.DatabaseManager = instance.web.Widget.extend({
     init: function(parent) {
