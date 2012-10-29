@@ -1411,7 +1411,7 @@ openerp.mail = function (session) {
                 'show_record_name' : false,
                 'show_compose_message' : false,
                 'show_compact_message' : false,
-                'message_ids': [],
+                'message_ids': undefined,
                 'no_message': false
             }, options);
 
