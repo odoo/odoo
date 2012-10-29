@@ -437,6 +437,8 @@ class fleet_vehicle(osv.Model):
                 ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),'|',('state','=','open'),('state','=','toclose')],limit=1,order='expiration_date asc')
                 if len(ids) > 0:
                     res.append((record.id,self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_subtype.name))
+                else:
+                    res.append((record.id,''))
             else:
                 res.append((record.id,''))
         return dict(res)
