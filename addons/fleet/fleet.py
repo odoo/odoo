@@ -1086,6 +1086,31 @@ class fleet_vehicle_log_contract(osv.Model):
             model_id = False
         return model_id
 
+    def on_change_indic_cost(self,cr,uid,ids,cost_ids,context=None):
+        contracts = self.browse(cr,uid,ids,context=context)
+        totalsum=0
+        for element in contracts:
+            for cost in element.cost_ids:
+                totalsum=totalsum+cost.amount
+        for element in cost_ids:
+            if element[1] is False and element[2] is not False:
+                totalsum = totalsum+element[2]['amount']
+        return {
+            'value' : {
+                'sum_cost' : totalsum,
+            }
+        }
+
+    def _get_sum_cost(self, cr, uid, ids, odometer_id, arg, context):
+        contracts = self.browse(cr,uid,ids,context=context)
+        totalsum=0
+        res = []
+        for element in contracts:
+            for cost in element.cost_ids:
+                totalsum=totalsum+cost.amount
+            res.append((element.id,totalsum))
+        return dict(res)
+
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
     _columns = {
@@ -1108,6 +1133,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'cost_generated': fields.float('Recurring Cost Amount',help="Costs paid at regular intervals, depending on the cost frequency. If the cost frequency is set to unique, the cost will be logged at the start date"),
         'cost_frequency': fields.selection([('no','No'),('daily', 'Daily'),('weekly','Weekly'),('monthly','Monthly'),('yearly','Yearly')], 'Recurring Cost Frequency', help='Frequency of the recuring cost',required=True),
         'generated_cost_ids' : fields.one2many('fleet.vehicle.cost', 'contract_id', 'Generated Costs',ondelete='cascade'),
+        'sum_cost' : fields.function(_get_sum_cost,type='float', string='Indicative Costs Total',readonly=True),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
