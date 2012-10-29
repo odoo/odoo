@@ -275,7 +275,6 @@
             button.popupContent, button.popupHover);
         
       }
-
     });
 
     // Add the main div to the DOM and append the textarea
@@ -295,7 +294,12 @@
 
     // Bind the window resize event when the width or height is auto or %
     if (/auto|%/.test("" + options.width + options.height))
-      $(window).resize(function() {refresh(editor);});
+      $(window).resize(function() {
+        // if the DOM is not remove, refresh the cleditor
+        if(editor.$main.parent().parent().size()) {
+          refresh(editor);
+        }
+      });
 
     // Create the iframe and resize the controls
     refresh(editor);
@@ -564,8 +568,7 @@
   //==================
 
   // checksum - returns a checksum using the Adler-32 method
-  function checksum(text)
-  {
+  function checksum(text) {
     var a = 1, b = 0;
     for (var index = 0; index < text.length; ++index) {
       a = (a + text.charCodeAt(index)) % 65521;
@@ -799,7 +802,7 @@
       options = editor.options;
 
     // Remove the old iframe
-    if (editor.$frame) 
+    if (editor.$frame)
       editor.$frame.remove();
 
     // Create a new iframe
