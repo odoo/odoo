@@ -135,18 +135,16 @@ class mrp_bom(osv.osv):
     _inherit = ['mail.thread']
 
     def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (list, tuple)) and not ids:
+        if not ids:
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        product_obj = self.pool.get('product.product')
-        records = self.read(cr, uid, ids, ['code','product_id'], context=context)
         res = []
-        for record in records:
-            name = product_obj.browse(cr, uid, record['product_id'][0], context=context).name
-            if record['code']: 
-                name = name +' - '+ record['code']
-            res.append((record['id'], name))
+        for bom in self.browse(cr, uid, ids, context=context):
+            name = bom.product_id.name
+            if bom.code: 
+                name = name +' - '+ bom.code
+            res.append((bom['id'], name))
         return res
 
     def name_search(self, cr, user, name, args=None, operator='ilike', context=None, limit=100):
