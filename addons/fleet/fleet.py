@@ -935,7 +935,6 @@ class fleet_vehicle_log_contract(osv.Model):
                 startdate += deltas.get(contract.cost_frequency)
             while (startdate < d) & (startdate < datetime.datetime.strptime(contract.expiration_date,'%Y-%m-%d').date()):
                 data = {'amount' : contract.cost_generated,'date' : startdate.strftime('%Y-%m-%d'),'vehicle_id' : contract.vehicle_id.id,'cost_subtype' : contract.cost_subtype.id,'contract_id' : contract.id,'auto_generated' : True}
-                print data
                 cost_id = self.pool.get('fleet.vehicle.cost').create(cr, uid, data, context=context)
                 startdate += deltas.get(contract.cost_frequency)
         return True
@@ -1121,7 +1120,7 @@ class fleet_vehicle_log_contract(osv.Model):
         return dict(res)
 
     _name = 'fleet.vehicle.log.contract'
-    _order='state,expiration_date'
+    _order='state desc,expiration_date'
     _columns = {
         'name' : fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
 
