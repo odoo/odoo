@@ -74,36 +74,18 @@ class account_analytic_account(osv.osv):
                 for id in ids:
                     res[id][f] = 0.0
                 res2 = {}
-                if parent_ids:
-                    # Amount uninvoiced hours to invoice at sale price
-                    # Warning
-                    # This computation doesn't take care of pricelist !
-                    # Just consider list_price
-                    cr.execute("""SELECT account_analytic_account.id, \
-                                COALESCE(SUM (product_template.list_price * \
-                                    account_analytic_line.unit_amount * \
-                                    ((100-hr_timesheet_invoice_factor.factor)/100)), 0.0) \
-                                    AS ca_to_invoice \
-                            FROM product_template \
-                            JOIN product_product \
-                                ON product_template.id = product_product.product_tmpl_id \
-                            JOIN account_analytic_line \
-                                ON account_analytic_line.product_id = product_product.id \
-                            JOIN account_analytic_journal \
-                                ON account_analytic_line.journal_id = account_analytic_journal.id \
-                            JOIN account_analytic_account \
-                                ON account_analytic_account.id = account_analytic_line.account_id \
-                            JOIN hr_timesheet_invoice_factor \
-                                ON hr_timesheet_invoice_factor.id = account_analytic_account.to_invoice \
-                            WHERE account_analytic_account.id IN %s \
-                                AND account_analytic_line.invoice_id IS NULL \
-                                AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type = 'general' \
-                            GROUP BY account_analytic_account.id;""", (parent_ids,))
-                    for account_id, sum in cr.fetchall():
-                        if account_id not in res:
-                            res[account_id] = {}
-                        res[account_id][f] = round(sum, dp)
+                for account in accounts:
+                    cr.execute("SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id, name " \
+                            "FROM account_analytic_line as line " \
+                            "WHERE account_id = %s " \
+                                "AND invoice_id is NULL AND to_invoice IS NOT NULL " \
+                            "GROUP BY product_id, user_id, to_invoice, product_uom_id, name", (account.id,))
+
+                    res[account.id][f] = 0.0
+                    for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
+                        price = self.pool.get('account.analytic.line')._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
+                        factor = self.pool.get('hr_timesheet_invoice.factor').browse(cr, uid, factor_id, context=context)
+                        res[account.id][f] += price * qty * (100-factor.factor or 0.0) / 100.0
 
                 # sum both result on account_id
                 for id in ids:
