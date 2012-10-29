@@ -68,18 +68,6 @@
                        <field name="shipped"/>
                        <field name="invoice_exists" invisible="1"/>
                    </field>
-                   <field name="invoice_ids" position="after">
-                       <separator string="Delivery Orders"/>
-                       <field name="picking_ids" context="{'default_type': 'out'}">
-                           <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Delivery Orders">
-                               <field name="name"/>
-                               <field name="partner_id" string="Customer"/>
-                               <field name="min_date"/>
-                               <field name="state"/>
-                               <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" context="{'default_type': 'out'}"/>
-                           </tree>
-                       </field>
-                   </field>
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='type']" position="before">                   
                        <label for="delay"/>
                        <div>
