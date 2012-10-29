@@ -168,12 +168,15 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" widget="selection"/>
-                            <field name="origin"/>
-			                <label for="reference_type"/>
-			                <div>
+                            <group>
+                                <field name="origin"/>
+                                <field name="supplier_invoice_number"/>
+                            </group>
+                            <label for="reference_type"/>
+                            <div>
                                 <field name="reference_type" class="oe_inline oe_edit_only"/>
                                 <field name="reference" class="oe_inline"/>
-			                </div>
+                            </div>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -445,7 +448,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field name="number" string="Invoice" filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
+                    <field name="number" string="Invoice" filter_domain="['|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self)]"/>
                     <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
