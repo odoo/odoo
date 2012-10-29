@@ -258,18 +258,9 @@
     -->
     <span t-name="mail.thread.message.vote">
         
-        <span class="oe_mail_vote_count">
-            <t t-if='widget.has_voted'>
-                You
-            </t>
-            <t t-if='(widget.vote_nb - (widget.has_voted ? 1 : 0)) > 0'>
-                <t t-if='widget.has_voted'> and </t>
-                <t t-raw="(widget.vote_nb - (widget.has_voted ? 1 : 0))"/>
-                <t t-esc="widget.vote_nb"/> people
-            </t>
-            <t t-if='widget.vote_nb'>
-                like
-            </t>
+        <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
+            <t t-raw='widget.vote_nb' />
+            <span class='oe_e'>8</span>
         </span>
         <a href='#' t-attf-class="oe_msg_vote">
             <t t-if="!widget.has_voted">like</t>

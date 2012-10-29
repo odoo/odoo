@@ -80,8 +80,27 @@
 .openerp .oe_mail .oe_msg.oe_msg_indented .oe_msg_content{
     padding-top:2px;
 }
+/* b) Votes (likes) */
+.openerp .oe_mail .oe_mail_vote_count{
+    display: inline;
+    position: relative;
+    background: #7C7BAD;
+    color: white;
+    text-shadow: none;
+    border-radius: 3px;
+    margin: 0px;
+    padding-left: 3px;
+    padding-right: 18px;
+    margin-right: 3px;
+}
+.openerp .oe_mail .oe_mail_vote_count .oe_e{
+    position: absolute;
+    bottom: 1px;
+    right: 2px;
+    font-size: 26px;
+}
 
-/* b) Message action icons */
+/* c) Message action icons */
 
 .openerp .oe_mail .oe_msg.oe_msg_unread .oe_unread{
     display:none;
