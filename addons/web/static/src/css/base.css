@@ -25,7 +25,6 @@
     display: none !important;
   }
 }
-
 .openerp.openerp_webclient_container {
   height: 100%;
 }
@@ -45,7 +44,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -526,6 +525,15 @@
 }
 .openerp .oe_grey {
   color: #aaaaaa;
+}
+.openerp .oe_placeImage_old input {
+  background: url(/web/static/src/img/old_key.png) no-repeat 4px;
+}
+.openerp .oe_placeImage_new input {
+  background: url(/web/static/src/img/new_key.png) no-repeat 4px;
+}
+.openerp .oe_padding_left input {
+  padding-left: 22px;
 }
 .openerp .oe_tag {
   border: 1px solid #afafb6;
