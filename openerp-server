@@ -101,6 +101,7 @@ def preload_registry(dbname):
 def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
+        config = openerp.tools.config
         db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
