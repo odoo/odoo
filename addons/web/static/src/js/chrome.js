@@ -233,7 +233,6 @@ instance.web.Loading = instance.web.Widget.extend({
     template: 'Loading',
     init: function(parent) {
         this._super(parent);
-        var self = this;
         this.count = 0;
         this.blocked_ui = false;
         this.request_count = 0;
@@ -291,7 +290,6 @@ instance.web.favicon = instance.web.Loading.include({
         this.link = null;
         this.interval = null;
         this.old_title = document.title;
-        this.local_counter = 0;
         this.favicon_drawable = true;
         this.options = {
             'border':"white",//border of favicon
