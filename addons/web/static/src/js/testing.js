@@ -85,6 +85,7 @@ openerp.testing = {};
         };
     };
 
+    var db = window['oe_db_info'] || undefined;
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
             body = options;
@@ -115,32 +116,69 @@ openerp.testing = {};
             // returns -1 -> index becomes 0 -> replace with ``undefined`` so
             // Array#slice returns a full copy
             0, module_index + 1 || undefined);
+
+        // Serialize options for this precise test case
+        // WARNING: typo is from jquery, do not fix!
+        var env = QUnit.config.currentModuleTestEnviroment;
+        var opts = _.defaults({
+            // section setup
+            //     case setup
+            //         test
+            //     case teardown
+            // section teardown
+            setup: function () {
+                var args = [].slice.call(arguments);
+                return $.when(env._oe.setup.apply(null, args))
+                    .pipe(function () {
+                        return options.setup.apply(null, args);
+                    });
+            },
+            teardown: function () {
+                var args = [].slice.call(arguments);
+                return $.when(options.teardown.apply(null, args))
+                    .pipe(function () {
+                        return env._oe.teardown.apply(null, args);
+                    });
+            }
+        }, options, env._oe);
+        // FIXME: if this test is ignored, will still query
+        if (opts.rpc === 'rpc' && !db) {
+            QUnit.config.autostart = false;
+            db = {
+                source: null,
+                supadmin: null,
+                password: null
+            };
+            var $msg = $('<form style="margin: 0 1em 1em;">')
+                .append('<h3>A test needs to clone a database</h3>')
+                .append('<h4>Please provide the source clone information</h4>')
+                .append('     Source DB: ').append('<input name="source">').append('<br>')
+                .append('   DB Password: ').append('<input name="supadmin">').append('<br>')
+                .append('Admin Password: ').append('<input name="password">').append('<br>')
+                .append('<input type="submit" value="OK"/>')
+                .submit(function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    db.source = $msg.find('input[name=source]').val();
+                    db.supadmin = $msg.find('input[name=supadmin]').val();
+                    db.password = $msg.find('input[name=password]').val();
+                    QUnit.start();
+                    $.unblockUI();
+                });
+            $.blockUI({
+                message: $msg,
+                css: {
+                    fontFamily: 'monospace',
+                    textAlign: 'left',
+                    whiteSpace: 'pre-wrap',
+                    cursor: 'default'
+                }
+            });
+        }
+
         QUnit.test(name, function () {
             // module testing environment
             var self = this;
-            var opts = _.defaults({
-                // section setup
-                //     case setup
-                //         test
-                //     case teardown
-                // section teardown
-                setup: function () {
-                    if (self._oe.setup.apply(null, arguments)) {
-                        throw new Error("Asynchronous setup not implemented");
-                    }
-                    if (options.setup.apply(null, arguments)) {
-                        throw new Error("Asynchronous setup not implemented");
-                    }
-                },
-                teardown: function () {
-                    if (options.teardown.apply(null, arguments)) {
-                        throw new Error("Asynchronous teardown not implemented");
-                    }
-                    if (self._oe.teardown(null, arguments)) {
-                        throw new Error("Asynchronous teardown not implemented");
-                    }
-                }
-            }, options, this._oe);
 
             var instance;
             if (!opts.dependencies) {
@@ -202,38 +240,80 @@ openerp.testing = {};
                 break;
             case 'rpc':
                 async = true;
+                (function (setup, teardown) {
+                // Bunch of random base36 characters
+                var dbname = 'test_' + Math.random().toString(36).slice(2);
+                opts.setup = function (instance, $s) {
+                    // FIXME hack: don't want the session to go through shitty loading process of everything
+                    instance.session.session_init = testing.noop;
+                    instance.session.load_modules = testing.noop;
+                    instance.session.session_bind();
+                    return instance.session.rpc('/web/database/duplicate', {
+                        fields: [
+                            {name: 'super_admin_pwd', value: db.supadmin},
+                            {name: 'db_original_name', value: db.source},
+                            {name: 'db_name', value: dbname}
+                        ]
+                    }).pipe(function (result) {
+                        if (result.error) {
+                            return $.Deferred().reject(result.error).promise();
+                        }
+                        return instance.session.session_authenticate(
+                            dbname, 'admin', db.password, true);
+                    }).pipe(function () {
+                        return setup(instance, $s);
+                    });
+                };
+                opts.teardown = function (instance, $s) {
+                    return $.when(teardown(instance, $s)).pipe(function () {
+                        return instance.session.session_logout()
+                    }).pipe(function () {
+                        return instance.session.rpc('/web/database/drop', {
+                            fields: [
+                                {name: 'drop_pwd', value: db.supadmin},
+                                {name: 'drop_db', value: db.dbname}
+                            ]
+                        });
+                    }).pipe(function (result) {
+                        if (result.error) {
+                            return $.Deferred().reject(result.error).promise();
+                        }
+                        return result;
+                    });
+                };
+                })(opts.setup, opts.teardown);
             }
 
-            // TODO: async setup/teardown
-            opts.setup(instance, $fixture, mock);
-
-            var result = callback(instance, $fixture, mock);
-
-            // TODO: cleanup which works on errors
-            if (!(result && _.isFunction(result.then))) {
-                if (async) {
-                    ok(false, "asynchronous test cases must return a promise");
-                }
-                opts.teardown(instance, $fixture, mock);
-                return;
-            }
-
+            // Always execute tests asynchronously
             stop();
-            if (!_.isNumber(opts.asserts)) {
-                ok(false, "asynchronous test cases must specify the "
-                        + "number of assertions they expect");
-            }
-            result.always(function () {
-                start();
-                opts.teardown(instance, $fixture, mock);
-            }).fail(function (error) {
-                if (options.fail_on_rejection === false) {
-                    return;
+            $.when(opts.setup(instance, $fixture, mock))
+            .pipe(function () {
+                var result = callback(instance, $fixture, mock);
+                if (!(result && _.isFunction(result.then))) {
+                    if (async) {
+                        ok(false, "asynchronous test cases must return a promise");
+                    }
+                } else {
+                    if (!_.isNumber(opts.asserts)) {
+                        ok(false, "asynchronous test cases must specify the "
+                                + "number of assertions they expect");
+                    }
                 }
-                ok(false, typeof error === 'object' && error.message
-                            ? error.message
-                            : JSON.stringify([].slice.call(arguments)));
-            })
+                return $.when(result).fail(function (error) {
+                    if (options.fail_on_rejection === false) {
+                        return;
+                    }
+                    ok(false, typeof error === 'object' && error.message
+                                ? error.message
+                                : JSON.stringify([].slice.call(arguments)));
+                })
+            }).pipe(function () {
+                    return opts.teardown(instance, $fixture, mock);
+                }, function () {
+                    return opts.teardown(instance, $fixture, mock);
+            }).always(function () {
+                start();
+            });
         });
     };
 })(openerp.testing);

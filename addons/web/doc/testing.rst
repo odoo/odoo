@@ -297,8 +297,8 @@ test architecture was not warned about asynchronous operations.
 
 .. note::
 
-    asynchronous test cases also have a 2 seconds timeout: if the test
-    does not finish within 2 seconds, it will be considered
+    asynchronous test cases also have a 10 seconds timeout: if the
+    test does not finish within 10 seconds, it will be considered
     failed. This pretty much always means the test will not resolve.
 
 .. note::
@@ -328,8 +328,8 @@ a test case (or its containing test suite) through
 Mock RPC
 ++++++++
 
-The preferred (and most fastest from a setup and execution time point
-of view) way to do RPC during tests is to mock the RPC calls: while
+The preferred (and fastest from a setup and execution time point of
+view) way to do RPC during tests is to mock the RPC calls: while
 setting up the test case, provide what the RPC responses "should" be,
 and only test the code between the "user" (the test itself) and the
 RPC call, before the call is effectively done.
@@ -412,7 +412,83 @@ To do this, set the :js:attr:`rpc option <~TestOptions.rpc>` to
 Actual RPC
 ++++++++++
 
-.. TODO:: rpc to database (implement & document)
+A more realistic (but significantly slower and more expensive) way to
+perform RPC calls is to perform actual calls to an actually running
+OpenERP server. To do this, set the :js:attr:`rpc option
+<~TestOptions.rpc>` to ``rpc``, it will not provide any new parameter
+but will enable actual RPC, and the automatic creation and destruction
+of databases (from a specified source) around tests.
+
+First, create a basic model we can test stuff with:
+
+.. code-block:: javascript
+
+    from openerp.osv import orm, fields
+
+    class TestObject(orm.Model):
+        _name = 'web_tests_demo.model'
+
+        _columns = {
+            'name': fields.char("Name", required=True),
+            'thing': fields.char("Thing"),
+            'other': fields.char("Other", required=True)
+        }
+        _defaults = {
+            'other': "bob"
+        }
+
+then the actual test::
+
+    test('actual RPC', {rpc: 'rpc', asserts: 4}, function (instance) {
+        var Model = new instance.web.Model('web_tests_demo.model');
+        return Model.call('create', [{name: "Bob"}])
+            .pipe(function (id) {
+                return Model.call('read', [[id]]);
+            }).pipe(function (records) {
+                strictEqual(records.length, 1);
+                var record = records[0];
+                strictEqual(record.name, "Bob");
+                strictEqual(record.thing, false);
+                // default value
+                strictEqual(record.other, 'bob');
+            });
+    });
+
+This test looks like a "mock" RPC test but for the lack of mock
+response (and the different ``rpc`` type), however it has further
+ranging consequences in that it will copy an existing database to a
+new one, run the test in full on that temporary database and destroy
+the database, to simulate an isolated and transactional context and
+avoid affecting other tests. One of the consequences is that it takes
+a *long* time to run (5~10s, most of that time being spent waiting for
+a database duplication).
+
+Furthermore, as the test needs to clone a database, it also has to ask
+which database to clone, the database/super-admin password and the
+password of the ``admin`` user (in order to authenticate as said
+user). As a result, the first time the test runner encounters an
+``rpc: "rpc"`` test configuration it will produce the following
+prompt:
+
+.. image:: ./images/db-query.png
+    :align: center
+
+and stop the testing process until the necessary information has been
+provided.
+
+The prompt will only appear once per test run, all tests will use the
+same "source" database.
+
+.. note::
+
+    The handling of that information is currently rather brittle and
+    unchecked, incorrect values will likely crash the runner.
+
+.. note::
+
+    The runner does not currently store this information (for any
+    longer than a test run that is), the prompt will have to be filled
+    every time.
 
 Testing API
 -----------
