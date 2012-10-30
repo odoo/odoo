@@ -19,7 +19,9 @@
 #
 ##############################################################################
 
+import pytz
 from datetime import datetime, timedelta
+from dateutil import rrule
 import math
 from faces import *
 from osv import fields, osv
@@ -27,8 +29,6 @@ from tools.translate import _
 
 from itertools import groupby
 from operator import itemgetter
-
-import pytz
 
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
@@ -200,7 +200,7 @@ class resource_calendar(osv.osv):
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
-    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False, context=None):
+    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
         """ Calculates the Total Working hours based on given start_date to 
         end_date, If resource id is supplied that it will consider the source 
         leaves also in calculating the hours.
@@ -213,104 +213,108 @@ class resource_calendar(osv.osv):
         @return : Total number of working hours based dt_from and dt_end and 
                   resource if supplied.
         """
-         
-        hours = 0.0
-         
-        dt_to_hours = dt_to.hour + dt_to.minute / 60.0 + dt_to.second / 3600.0         
+        if not id:
+            return 0.0
+        return self._internal_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
 
-        users_obj = self.pool.get('res.users')       
-        user = users_obj.browse(cr, uid, uid, context=context)
-        utc = pytz.timezone('UTC')
-        
-        if user.context_tz:
-            context_tz = pytz.timezone(user.context_tz)
+    def _interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True, context=None):
+        """ Calculates the Total Working hours based on given start_date to
+        end_date, If resource id is supplied that it will consider the source
+        leaves also in calculating the hours.
+
+        @param dt_from : date start to calculate hours
+        @param dt_end : date end to calculate hours
+        @param resource_id: optional resource id, If given resource leave will be
+                         considered.
+        @param timezone_from_uid: optional uid, if given we will considerer
+                                  working hours in that user timezone
+        @param exclude_leaves: optionnal, if set to True (default) we will exclude
+                               resource leaves from working hours
+        @param context: current request context
+        @return : Total number of working hours based dt_from and dt_end and
+                  resource if supplied.
+        """
+        utc_tz = pytz.timezone('UTC')
+        local_tz = utc_tz
+
+        if timezone_from_uid:
+            users_obj = self.pool.get('res.users')
+            user_timezone = users_obj.browse(cr, uid, timezone_from_uid, context=context).context_tz
+            if user_timezone:
+                try:
+                    local_tz = pytz.timezone(user_timezone)
+                except pytz.UnknownTimeZoneError:
+                    pass  # fallback to UTC as local timezone
+
+        def utc_to_local_zone(naive_datetime):
+            utc_dt = utc_tz.localize(naive_datetime, is_dst=False)
+            return utc_dt.astimezone(local_tz)
+
+        def float_time_convert(float_val):
+            factor = float_val < 0 and -1 or 1
+            val = abs(float_val)
+            return (factor * int(math.floor(val)), int(round((val % 1) * 60)))
+
+        # Get slots hours per day
+        # {day_of_week: [(8, 12), (13, 17), ...], ...}
+        hours_range_per_weekday = {}
+        if id:
+            cr.execute("select dayofweek, hour_from,hour_to from resource_calendar_attendance where calendar_id=%s order by hour_from", (id,))
+            for weekday, hour_from, hour_to in cr.fetchall():
+                weekday = int(weekday)
+                hours_range_per_weekday.setdefault(weekday, [])
+                hours_range_per_weekday[weekday].append((hour_from, hour_to))
         else:
-            context_tz = utc     
-    
-        # gap between UTC and user timezone
-        tz_gap = (utc.localize(dt_from) - context_tz.localize(dt_from)).seconds / 3600          
+            # considering default working hours (Monday -> Friday, 8 -> 12, 13 -> 17)
+            for weekday in range(5):
+                hours_range_per_weekday[weekday] = [(8, 12), (13, 17)]
 
-        orig_dt_from = dt_from
+        ## Interval between dt_from - dt_to
+        ##
+        ##            dt_from            dt_to
+        ##  =============|==================|============
+        ##  [  1  ]   [  2  ]   [  3  ]  [  4  ]  [  5  ]
+        ##
+        ## [ : start of range
+        ## ] : end of range
+        ##
+        ## case 1: range end before interval start (skip)
+        ## case 2: range overlap interval start (fit start to internal)
+        ## case 3: range within interval
+        ## case 4: range overlap interval end (fit end to interval)
+        ## case 5: range start after interval end (skip)
 
-        while dt_from <= dt_to:
-            # if the working hours are None, use the default ones
-            if id:
-                cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
-                slots = cr.fetchall()
-            elif dt_from.weekday() not in [5, 6]:
-                slots = [(8, 12), (13, 17)]
-            else:
-                slots = []
-                
-            for (hour_from, hour_to) in slots:
-                
-                hour_from = hour_from - tz_gap
-                if hour_from < 0:
-                    hour_from = 0
-                if hour_from > 24:
-                    hour_from = 24
-                hour_to = hour_to - tz_gap
-                if hour_to < 0:
-                    hour_to = 0
-                if hour_to > 24:
-                    hour_to = 24
-                    
-                dt_from_hours = dt_from.hour + dt_from.minute / 60.0 + dt_from.second / 3600.0
-                
-                first_day = dt_from.year == orig_dt_from.year and dt_from.month == orig_dt_from.month and dt_from.day == orig_dt_from.day
-                last_day = dt_from.year == dt_to.year and dt_from.month == dt_to.month and dt_from.day == dt_to.day
-                
-                # special case: the ticket is closed the same day it is opened:
-                if first_day and last_day:
-                    # no overlap (beginning time after end of current slot or ending time before beginning of current slot)
-                    if dt_from_hours >= hour_to or dt_to_hours <= hour_from:
-                        continue
-                    # beginning of working hours is after beginning time and ending time is after end of working hours: add the entire slot
-                    elif dt_from_hours <= hour_from and dt_to_hours >= hour_to:
-                        hours += hour_to - hour_from
-                    # add only the overlap (left)
-                    elif dt_from_hours >= hour_from and dt_to_hours >= hour_to:
-                        hours += hour_to - dt_from_hours
-                    # add only the overlap (right)
-                    elif dt_from_hours <= hour_from and dt_to_hours <= hour_to:
-                        hours += dt_to_hours - hour_from
-                    # add only the overlap (both sides)
-                    else:
-                        hours += dt_to_hours - dt_from_hours 
-                
-                # first day: only add from beginning time to end of working hours
-                elif first_day:
-                    # no overlap (beginning time after end of current slot)
-                    if dt_from_hours >= hour_to:
-                        continue
-                    # beginning of working hours is after beginning time: add the entire slot
-                    elif dt_from_hours <= hour_from:
-                        hours += hour_to - hour_from
-                    # add only the overlap
-                    else:
-                        hours += hour_to - dt_from_hours
+        interval_start = utc_to_local_zone(dt_from)
+        interval_end = utc_to_local_zone(dt_to)
+        hours_timedelta = timedelta()
 
-                        
-                # last day: only add from beginning of working hours to ending time
-                elif last_day:
-                    # no overlap (ending time before beginning of current slot)
-                    if dt_to_hours <= hour_from:
-                        continue
-                    # ending time is after end of working hours: add the entire slot
-                    elif dt_to_hours >= hour_to:
-                        hours += hour_to - hour_from
-                    # add only the overlap
-                    else:
-                        hours += dt_to_hours - hour_from
-                        
-                # complete day in the middle: add complete working hours
-                else:
-                    hours += hour_to - hour_from
-                        
-            dt_from += timedelta(days=1)
-            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day)
-            
-        return hours
+        # Get leaves for requested resource
+        dt_leaves = set([])
+        if exclude_leaves and id:
+            dt_leaves = set(self._get_leaves(cr, uid, id, resource=resource_id))
+
+        for day in rrule.rrule(rrule.DAILY, dtstart=interval_start,
+                               until=interval_end+timedelta(days=1),
+                               byweekday=hours_range_per_weekday.keys()):
+            if exclude_leaves and day.strftime('%Y-%m-%d') in dt_leaves:
+                # XXX: futher improve leave management to allow for partial day leave
+                continue
+            for (range_from, range_to) in hours_range_per_weekday.get(day.weekday(), []):
+                range_from_hour, range_from_min = float_time_convert(range_from)
+                range_to_hour, range_to_min = float_time_convert(range_to)
+                daytime_start = local_tz.localize(day.replace(hour=range_from_hour, minute=range_from_min, second=0, tzinfo=None))
+                daytime_end = local_tz.localize(day.replace(hour=range_to_hour, minute=range_to_min, second=0, tzinfo=None))
+
+                # case 1 & 5: time range out of interval
+                if daytime_end < interval_start or daytime_start > interval_end:
+                    continue
+                # case 2 & 4: adjust start, end to fit within interval
+                daytime_start = max(daytime_start, interval_start)
+                daytime_end = min(daytime_end, interval_end)
+                # case 2+, 4+, 3
+                hours_timedelta += (daytime_end - daytime_start)
+        # return timedelta converted to hours
+        return (hours_timedelta.days * 24.0 + hours_timedelta.seconds / 3600.0)
 
 resource_calendar()
 

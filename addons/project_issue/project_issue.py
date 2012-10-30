@@ -98,10 +98,10 @@ class project_issue(crm.crm_case, osv.osv):
         """
         cal_obj = self.pool.get('resource.calendar')
         res_obj = self.pool.get('resource.resource')
-        
+
         res = {}
         for issue in self.browse(cr, uid, ids, context=context):
-        
+
             # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
             if not issue.project_id or not issue.project_id.resource_calendar_id:
                 working_hours = None
@@ -121,18 +121,24 @@ class project_issue(crm.crm_case, osv.osv):
                         ans = date_open - date_create
                         date_until = issue.date_open
                         #Calculating no. of working hours to open the issue
-                        hours = cal_obj.interval_hours_get(cr, issue.user_id.id or uid, working_hours,
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
                                                            date_create,
-                                                           date_open)
+                                                           date_open,
+                                                           timezone_from_uid=issue.user_id.id or uid,
+                                                           exclude_leaves=False,
+                                                           context=context)
                 elif field in ['working_hours_close','day_close']:
                     if issue.date_closed:
                         date_close = datetime.strptime(issue.date_closed, "%Y-%m-%d %H:%M:%S")
                         date_until = issue.date_closed
                         ans = date_close - date_create
                         #Calculating no. of working hours to close the issue
-                        hours = cal_obj.interval_hours_get(cr, issue.user_id.id or uid, working_hours,
+                        hours = cal_obj._interval_hours_get(cr, uid, working_hours,
                                date_create,
-                               date_close)
+                               date_close,
+                               timezone_from_uid=issue.user_id.id or uid,
+                               exclude_leaves=False,
+                               context=context)
                 elif field in ['days_since_creation']:
                     if issue.create_date:
                         days_since_creation = datetime.today() - datetime.strptime(issue.create_date, "%Y-%m-%d %H:%M:%S")
