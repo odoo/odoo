@@ -19,7 +19,7 @@ class lunch_cancel(osv.Model):
         for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
             hasconfirmed = False
             hasnew = False
-            for product in order.order_id.products:
+            for product in order.order_id.order_line_ids:
                 if product.state=='confirmed':
                     hasconfirmed= True
                 if product.state=='new':

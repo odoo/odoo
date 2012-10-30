@@ -55,7 +55,7 @@ class report_lunch_order(osv.osv):
 
             from
                    lunch_order_line as lo
-                   left join lunch_product as lp on (lo.product = lp.id)
+                   left join lunch_product as lp on (lo.product_id = lp.id)
             group by
                    lo.date,lo.user_id,lo.note
             )

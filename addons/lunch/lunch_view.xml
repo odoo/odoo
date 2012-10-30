@@ -258,7 +258,7 @@
                     <field name='date'/>
                     <field name='user_id'/>
                     <field name='supplier' invisible='1'/> 
-                    <field name='product'/>                             
+                    <field name='product_id'/>                             
                     <field name='note'/>
                     <field name='state'/>
                     <field name='price' sum="Total"/>
@@ -308,13 +308,13 @@
                         <div name="preferences">
                         </div>
                         <separator string='Your order'/>
-                        <field name='order_line_ids' colspan='4' nolabel='1' on_change='onchange_price(order_line_ids)'>
+                        <field name='order_line_ids' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>
-                                <field name='product' colspan='2' on_change='onchange_price(product)'/>
+                                <field name='product_id' on_change='onchange_price(product_id)'/>
                                 <field name='note' />
-                                <field name='supplier' invisible='1'/>
-                                <field name='state' invisible='1'/>
-                                <field name='price'/>
+                                <field name='price' />
+                                <field name='supplier' invisible="1"/>
+                                <field name="state" invisible="1"/>
                             </tree>
                         </field> 
                         <group class='oe_subtotal_footer oe_right'>

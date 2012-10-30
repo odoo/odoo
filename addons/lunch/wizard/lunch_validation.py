@@ -18,7 +18,7 @@ class lunch_validation(osv.Model):
                 order_lines_ref.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
         for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
             isconfirmed = True
-            for product in order.order_id.products:
+            for product in order.order_id.order_line_ids:
                 if product.state == 'new':
                     isconfirmed = False
                 if product.state == 'cancelled':

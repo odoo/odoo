@@ -37,9 +37,9 @@ class lunch_order(osv.Model):
         result={}
         for order in self.browse(cr, uid, ids, context=context):
             value = 0.0
-            for product in order.order_line_ids: #TODO: use meaningful variable names `for order_line in ...´
-                if product.state != 'cancelled':
-                    value += product.product.price
+            for orderline in order.order_line_ids:
+                if orderline.state != 'cancelled':
+                    value += orderline.product_id.price
                     result[order.id]=value
         return result
 
@@ -63,7 +63,7 @@ class lunch_order(osv.Model):
             new_order_line = {
                 'date': order["date"],
                 'user_id': uid,
-                'product': pref["product"].id,
+                'product_id': pref["product"].id,
                 'note': pref["note"],
                 'order_id': order.id,
                 'price': pref["price"],
@@ -163,15 +163,18 @@ class lunch_order(osv.Model):
         res = {'value':{'total':0.0}}
         if order_line_ids:
             tot = 0.0
+            print order_line_ids
             for prod in order_line_ids:
                 orderline = {}
                 #TODO: that's weird. should truy to find another way to compute total on order lines when record is not saved...
                 #   or at least put some comments
                 if isinstance(prod[1],bool): 
                     orderline = prod[2]
-                    tot += orderline['price']
+                    print orderline
+                    #tot += orderline['price']
                 else:
                     orderline = self.pool.get('lunch.order.line').browse(cr,uid,prod[1],context=context)
+                    print orderline
                     tot += orderline.price
             res = {'value':{'total':tot}}
         return res
@@ -186,12 +189,12 @@ class lunch_order(osv.Model):
             for prods in values['order_line_ids']:
                 already_exists = False #alreadyexist is used to check if a preferece already exists.
                 for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
-                    if pref['product'].id == prods[2]['product']:
+                    if pref['product'].id == prods[2]['product_id']:
                         if pref['note'] == prods[2]['note']:
                             if pref['price'] == prods[2]['price']:
                                 already_exists = True
                 if already_exists == False:
-                    new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product': prods[2]['product'], 'product_name':prod_ref.browse(cr,uid,prods[2]['product'])['name'], 'note':prods[2]['note'], 'price':prods[2]['price']},context=context)
+                    new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product': prods[2]['product_id'], 'product_name':prod_ref.browse(cr,uid,prods[2]['product_id'])['name'], 'note':prods[2]['note'], 'price':prods[2]['price']},context=context)
         return new_id
             
     def _default_preference_get(self,cr,uid,args,context=None):
@@ -241,19 +244,20 @@ class lunch_order(osv.Model):
                         function_name = "add_preference_"+str(val.id)
                         text_xml+= '''
                             <div class="oe_lunch_vignette">
-                                   <h3> %s </h3><span class="oe_tag">%.2f %s</span>
-                                <br/>
                                 <div class="oe_group_text_button oe_inline">
-                                    <div class="oe_lunch_note">
-                                        %s
-                                    </div>
-                                    <div class="oe_lunch_button">
+                                   <div class="oe_lunch_text"> %s </div>
+                                   <div class="oe_lunch_button">
                                         <button name="%s" class="oe_link oe_i" type="object" string="+"></button>
                                         <button name="%s" class="oe_link" type="object" string="Add"></button>
                                     </div>
                                 </div>
+                                <span class="oe_tag">%.2f %s</span>
+                                <br/>
+                                <div class="oe_lunch_note">
+                                    %s
+                                </div>
                             </div>
-                        ''' % (val['product_name'], val['price'] or 0.0, currency['name'], val['note'] or '', function_name, function_name)
+                        ''' % (val['product_name'],function_name, function_name, val['price'] or 0.0, currency['name'], val['note'] or '')
                     text_xml+= ('''</div>''')
                 text_xml+= ('''</div>''')
                 # ADD into ARCH xml
@@ -294,18 +298,19 @@ class lunch_order_line(osv.Model):
     _description = 'lunch order line'
 
     def _price_get(self,cr,uid,ids,name,arg,context=None):
-        """ get the price of the product store in the order line """
+        orderLines = self.browse(cr,uid,ids,context=context)
         result={}
-        for order_line in self.browse(cr,uid,ids,context=context):
-            result[order_line.id]=order_line.product.price
+        print orderLines
+        for orderLine in orderLines:
+            result[orderLine.id]=orderLine.product_id.price
         return result
 
-    def onchange_price(self,cr,uid,ids,product,context=None):
-        """ Onchange methode to refresh the price """
-        if product:
-            price = self.pool.get('lunch.product').read(cr, uid, product, ['price'],context=context)['price']
+    def onchange_price(self,cr,uid,ids,product_id,context=None):
+        if product_id:
+            price = self.pool.get('lunch.product').read(cr, uid, product_id, ['price'])['price']
+            print price
             return {'value': {'price': price}}
-        return {'value': {'price': 0.0}} 
+        return {'value': {'price': 0.0}}
 
 
     def confirm(self,cr,uid,ids,context=None):
@@ -314,14 +319,14 @@ class lunch_order_line(osv.Model):
         orders_ref = self.pool.get('lunch.order')
         for order_line in self.browse(cr,uid,ids,context=context):
             if order_line.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order_line.user_id.id, 'amount':0 - order_line.price,'description':order_line.product.name, 'order_id':order_line.id, 'state':'order', 'date':order_line.date})
+                new_id = cashmove_ref.create(cr,uid,{'user_id': order_line.user_id.id, 'amount':0 - order_line.price,'description':order_line.product_id.name, 'order_id':order_line.id, 'state':'order', 'date':order_line.date})
                 self.write(cr,uid,[order_line.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
         for order_line in self.browse(cr,uid,ids,context=context):
             isconfirmed = True
-            for product in order_line.order_id.order_line_ids:
-                if product.state == 'new':
+            for orderline in order_line.order_id.order_line_ids:
+                if orderline.state == 'new':
                     isconfirmed = False
-                if product.state == 'cancelled':
+                if orderline.state == 'cancelled':
                     isconfirmed = False
                     orders_ref.write(cr,uid,[order_line.order_id.id],{'state':'partially'},context=context)
             if isconfirmed == True:
@@ -339,10 +344,10 @@ class lunch_order_line(osv.Model):
         for order_line in self.browse(cr,uid,ids,context=context):
             hasconfirmed = False
             hasnew = False
-            for product in order_line.order_id.order_line_ids:
-                if product.state=='confirmed':
+            for orderline in order_line.order_id.order_line_ids:
+                if orderline.state=='confirmed':
                     hasconfirmed= True
-                if product.state=='new':
+                if orderline.state=='new':
                     hasnew= True
             if hasnew == False:
                 if hasconfirmed == False:
@@ -352,20 +357,20 @@ class lunch_order_line(osv.Model):
         return {}
 
     _columns = {
-        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
-        'supplier' : fields.related('product','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
-        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
-        'product' : fields.many2one('lunch.product','Product',required=True), 
-        'note' : fields.text('Note',size=256,required=False),
         'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'),
-        'price' : fields.related('product', 'price', type="float", readonly=True,store=True),
+        'product_id' : fields.many2one('lunch.product','Product',required=True), 
+        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
+        'supplier' : fields.related('product_id','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
+        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
+        'note' : fields.text('Note',size=256,required=False),
+        'price' : fields.function(_price_get, string="Price",store=True),
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
             'Status', readonly=True, select=True), #new confirmed and cancelled are the convention
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
         
     }
     _defaults = {
-        'state': 'new',        
+        'state': 'new',
     }
 
 class lunch_preference(osv.Model):
