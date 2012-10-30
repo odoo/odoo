@@ -299,20 +299,29 @@ openerp.testing = {};
                                 + "number of assertions they expect");
                     }
                 }
-                return $.when(result).fail(function (error) {
-                    if (options.fail_on_rejection === false) {
-                        return;
-                    }
-                    ok(false, typeof error === 'object' && error.message
-                                ? error.message
-                                : JSON.stringify([].slice.call(arguments)));
-                })
+                return $.when(result);
             }).pipe(function () {
                     return opts.teardown(instance, $fixture, mock);
                 }, function () {
                     return opts.teardown(instance, $fixture, mock);
             }).always(function () {
                 start();
+            }).fail(function (error) {
+                if (options.fail_on_rejection === false) {
+                    return;
+                }
+                var message;
+                if (typeof error !== 'object'
+                        || typeof error.message !== 'string') {
+                    message = JSON.stringify([].slice.apply(arguments));
+                } else {
+                    message = error.message;
+                    if (error.data && error.data.debug) {
+                        message += '\n\n' + error.data.debug;
+                    }
+                }
+
+                ok(false, message);
             });
         });
     };
