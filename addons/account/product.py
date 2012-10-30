@@ -60,14 +60,14 @@ class product_template(osv.osv):
             relation='account.account',
             string="Income Account",
             view_load=True,
-            help="This account will be used for invoices instead of the default one to value sales."),
+            help="This account will be used to value outgoing stock using sale price."),
         'property_account_expense': fields.property(
             'account.account',
             type='many2one',
             relation='account.account',
             string="Expense Account",
             view_load=True,
-            help="This account will be used for invoices instead of the default one to value expenses."),
+            help="This account will be used to value outgoing stock using cost price."),
     }
 
 product_template()
