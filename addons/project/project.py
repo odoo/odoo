@@ -178,7 +178,18 @@ class project(osv.osv):
         res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
         mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
         return res
-
+    
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        attachment = self.pool.get('ir.attachment')
+        task = self.pool.get('project.task')
+        for id in ids:
+            project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', 'in', [id])], context=context)
+            task_ids = task.search(cr, uid, [('project_id', 'in', [id])])
+            task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context)
+            res[id] = len(project_attachments + task_attachments)
+        return res
+        
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -249,6 +260,7 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
 
     def _get_type_common(self, cr, uid, context):
