@@ -615,22 +615,47 @@ instance.web.client_actions.add("login", "instance.web.Login");
 /**
  * Client action to reload the whole interface.
  * If params has an entry 'menu_id', it opens the given menu entry.
+ * If params has an entry 'wait', reload will wait the openerp server to be reachable before reloading
  */
 instance.web.Reload = function(parent, params) {
-    var menu_id = (params && params.menu_id) || false;
-    var l = window.location;
-
-    var sobj = $.deparam(l.search.substr(1));
-    sobj.ts = new Date().getTime();
-    var search = '?' + $.param(sobj);
-
-    var hash = l.hash;
-    if (menu_id) {
-        hash = "#menu_id=" + menu_id;
+    // hide errors
+    if (instance.client && instance.client.crashmanager) {
+        instance.client.crashmanager.destroy();
     }
-    var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-    window.onerror = function() {};
-    window.location = url;
+
+    var reload = function() {
+        console.log('relocate');
+        var menu_id = (params && params.menu_id) || false;
+        var l = window.location;
+
+        var sobj = $.deparam(l.search.substr(1));
+        sobj.ts = new Date().getTime();
+        var search = '?' + $.param(sobj);
+
+        var hash = l.hash;
+        if (menu_id) {
+            hash = "#menu_id=" + menu_id;
+        }
+        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+        window.location = url;
+    };
+
+    var wait_server = function() {
+        parent.session.rpc("/web/webclient/version_info", {})
+        .done(function() {
+            reload();
+        })
+        .fail(function() { 
+            setTimeout(wait_server, 250);
+        });
+    };
+
+    if (parent && params && params.wait) {
+        setTimeout(wait_server, 1000);
+    } else {
+        reload();
+    }
+    
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
