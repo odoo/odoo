@@ -460,7 +460,7 @@ openerp.mail = function (session) {
          * Bind events in the widget. Each event is slightly described
          * in the function. */
         bind_events: function () {
-            this.$el.on('click', 'a.oe_msg_fetch_more', this.on_expandable);
+            this.$el.on('click', '.oe_msg_more_message', this.on_expandable);
         },
 
         animated_destroy: function (fadeTime) {
@@ -669,10 +669,10 @@ openerp.mail = function (session) {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
-                userCollapseText: '[^]',
+                userCollapseText: '&atilde',
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce',
+                lessClass: 'oe_mail_reduce oe_e',
                 });
         },
 
@@ -957,7 +957,7 @@ openerp.mail = function (session) {
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
-                        $last.find('.oe_msg_fetch_more').click();
+                        $last.find('.oe_msg_more_message').click();
                     }
                 }
             }
