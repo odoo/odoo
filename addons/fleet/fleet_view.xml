@@ -149,7 +149,7 @@
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" sequence="30" />
+        <menuitem name="Fleet" id="menu_root" sequence="70" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
@@ -471,9 +471,9 @@
            <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Contract Costs Per Month">
-                    <field name="date"/>
-                    <field name="vehicle_id" group="True" /> 
+                    <field name="date" />
                     <field name="cost_amount" operator="+"/>
+                    <field name="vehicle_id" group="True"/>
                 </graph>
             </field>
         </record>
@@ -553,8 +553,8 @@
            <field name="arch" type="xml">
                 <graph string="Odometer Values Per Month">
                     <field name="date" />
-                    <field name="value" />
-                    <field name="vehicle_id" group="True" /> 
+                    <field name="value" operator="+"/>
+                    <field name="vehicle_id" group="True"/> 
                 </graph>
             </field>
         </record>
@@ -640,9 +640,9 @@
            <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Fuel Costs Per Month">
-                    <field name="date"/>
-                    <field name="vehicle_id" group="True" /> 
+                    <field name="date" /> 
                     <field name="cost_amount" operator="+"/>
+                    <field name="vehicle_id" group="True"/>
                 </graph>
             </field>
         </record>
@@ -733,8 +733,8 @@
            <field name="arch" type="xml">
                 <graph string="Services Costs Per Month">
                     <field name="date" />
-                    <field name="vehicle_id" group="True" /> 
                     <field name="cost_amount" operator="+"/>
+                    <field name="vehicle_id" group="True"/> 
                 </graph>
             </field>
         </record>
@@ -853,8 +853,8 @@
            <field name="arch" type="xml">
                 <graph string="Costs Per Month">
                     <field name="date" />
-                    <field name="vehicle_id" group="True" /> 
-                    <field name="amount" operator="+"/>
+                    <field name="amount"/>
+                    <field name="vehicle_id" group="True"/>
                 </graph>
             </field>
         </record>

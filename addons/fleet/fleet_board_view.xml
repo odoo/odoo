@@ -38,7 +38,7 @@
     </record>
 
     <record model="ir.actions.act_window" id="action_fleet_vehicle_kanban">
-      <field name="name">Vehicles which need contracts renewal</field>
+      <field name="name">Vehicles with alerts</field>
       <field name="res_model">fleet.vehicle</field>
       <field name="view_id" ref="fleet_vehicle_kanban"></field>
       <field name="view_type">form</field>
@@ -96,7 +96,7 @@
             <form string="Fleet Dashboard"  version="7.0">
                 <board style="2-1">
                     <column>
-                      <action string="Vehicles" name="%(fleet.action_fleet_vehicle_kanban)d" view_mode="kanban"/>
+                      <action string="Vehicles With Alerts" name="%(fleet.action_fleet_vehicle_kanban)d" view_mode="kanban"/>
                       <action string="Costs by Month" name="%(fleet.action_fleet_vehicle_costs_graph)d" view_mode="graph,tree"/>
                     </column>
                     <column>
