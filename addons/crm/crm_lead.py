@@ -50,7 +50,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'),'|', ('type', '=', 'lead'),'|',('type', '=', 'both'),('type','=','opportunity')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'),'|', ('type', '=', 'lead'),'|',('type', '=', 'both')], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
