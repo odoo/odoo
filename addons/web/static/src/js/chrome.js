@@ -331,6 +331,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
         self.$el.find("form td input[name=old_pwd]").css('background','url(/web/static/src/img/old_key.png) no-repeat 4px');
         self.$el.find("form td input[name=new_pwd]").css('background','url(/web/static/src/img/new_key.png) no-repeat 4px');
+        self.$el.find("form td input[name=confirm_pwd]").css('background','url(/web/static/src/img/new_key.png) no-repeat 4px');
         self.$el.find("form[name=change_pwd_form]").validate({
             messages: {
                 old_pwd: "Please enter your previous password",

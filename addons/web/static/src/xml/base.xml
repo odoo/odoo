@@ -263,7 +263,7 @@
                     </tr>
                     <tr>
                         <td><label for="confirm_pwd">Confirm new master password:</label></td>
-                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1" style="padding-left: 22px;"/> </td>
+                        <td class="oe_keyImage_new_pwd"><input type="password" name="confirm_pwd" placeholder=" Password..." class="required" equalTo="input[name=new_pwd]" minlength="1"/> </td>
                     </tr>
                 </table>
             </form>
@@ -295,14 +295,14 @@
                            minlength="1" placeholder=" Password..." autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td class="oe_keyImage_new_pwd"><input type="password" name="new_password"
+                <td><label for="new_password">New Password:</label></td>
+                <td class="oe_keyImage_new_pwd"><input type="password" name="new_password"
                        placeholder=" Password..." minlength="1"/></td>
             </tr>
             <tr>
                 <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1" style="padding-left: 22px;"/></td>
+                <td class="oe_keyImage_new_pwd"><input type="password" name="confirm_pwd"
+                            placeholder=" Password..." minlength="1" /></td>
             </tr>
             <tr>
                 <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
