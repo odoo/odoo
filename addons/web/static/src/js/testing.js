@@ -85,7 +85,7 @@ openerp.testing = {};
         };
     };
 
-    var db = window['oe_db_info'] || undefined;
+    var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
             body = options;
