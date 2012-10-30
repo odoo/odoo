@@ -49,7 +49,6 @@ class account_analytic_line(osv.osv):
     # }
     def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
         analytic_account_obj = self.pool.get('account.analytic.account')
-        res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
         invoice_obj = self.pool.get('account.invoice')
         product_obj = self.pool.get('product.product')
@@ -115,7 +114,7 @@ class account_analytic_line(osv.osv):
 
             for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                 if data.get('product'):
-                     product_id = data['product'][0]
+                    product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
                     raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
@@ -132,7 +131,7 @@ class account_analytic_line(osv.osv):
                 general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
                 if not general_account:
                     raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
-                taxes = product.taxes_id
+                taxes = product.taxes_id or general_account.tax_ids
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': price,
@@ -211,7 +210,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
+                raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]

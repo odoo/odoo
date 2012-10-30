@@ -69,6 +69,7 @@
     assert aline.invoice_id == invoice_id, "Invoice doesn't match the one at analytic line"
     # The expected amount is hard coded here, please keep updated:
     assert invoice_id.amount_untaxed == 187.5, "Invoice amount mismatch: %s" % invoice_id.amount_untaxed
+    assert invoice_id.amount_tax == 28.13, "Invoice tax mismatch: %s" %  invoice_id.amount_tax
 -
   I create final invoice for this analytic account.
 -
