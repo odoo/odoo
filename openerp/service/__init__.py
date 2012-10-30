@@ -22,14 +22,11 @@
 import logging
 import os
 import signal
-import sys
 import threading
 import time
 
-import http_server
 import netrpc_server
 import web_services
-import websrv_lib
 
 import openerp.cron
 import openerp.modules
@@ -126,25 +123,18 @@ def stop_services():
     logging.shutdown()
 
 def start_services_workers():
-    openerp.multi_process = True # Nah!
-
+    openerp.multi_process = True
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
 def restart_server():
-    pid = openerp.wsgi.core.arbiter_pid
-    if pid:
+    if openerp.multi_process:
+        raise NotImplementedError("Multicorn is not supported (but gunicorn was)")
+        pid = openerp.wsgi.core.arbiter_pid
         os.kill(pid, signal.SIGHUP)
     else:
         openerp.phoenix = True
         signame = 'CTRL_C_EVENT' if os.name == 'nt' else 'SIGINT'
         sig = getattr(signal, signame)
         os.kill(os.getpid(), sig)
-
-        #strip_args = ['-d', '-u']
-        #a = sys.argv[:]
-        #args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
-
-        #stop_services()
-        #os.execv(sys.executable, [sys.executable] + args)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
