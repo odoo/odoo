@@ -29,6 +29,7 @@
                             <group>
                                 <field name="subject"/>
                                 <field name="author_id"/>
+                                <field name="email_from"/>
                                 <field name="date"/>
                                 <field name="type"/>
                                 <field name="subtype_id"/>
@@ -38,6 +39,7 @@
                                 <field name="res_id"/>
                                 <field name="parent_id"/>
                                 <field name="partner_ids" widget="many2many_tags"/>
+                                <field name="notified_partner_ids" widget="many2many_tags"/>
                             </group>
                         </group>
                         <field name="body"/>
@@ -63,6 +65,9 @@
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
+                    <filter string="Has attachments"
+                            name="attachments"
+                            domain="[('attachment_ids', '!=', False)]"/>
                     <filter string="Notifications"
                             name="notifications" help="Notifications"
                             domain="[('type', '=', 'notification')]"/>
