@@ -140,9 +140,7 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            News Feed
-                            <t t-if="widget.options.res_model"> / </t>
-                            <t t-if="widget.options.res_model" t-esc="widget.options.res_model"/>
+                            Email box
                         </span>
                     </h2>
                 </td>
@@ -197,9 +195,9 @@
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons'>
-                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">X</a></span>
-                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">v</a></span>
-                    <span class='oe_reply' t-if="widget.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
+                    <span class='oe_read' t-if="widget.options.show_read_unread_button"><a title="Read" class="oe_e">X</a></span>
+                    <span class='oe_unread' t-if="widget.options.show_read_unread_button"><a title="Set back to unread" class="oe_e">v</a></span>
+                    <span class='oe_reply' t-if="widget.options.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
                     <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Add To Favorites" class="oe_e">7</a></span>
                 </div>
                 <!-- message itself -->
@@ -234,11 +232,12 @@
 
     <!-- expandable message layout -->
     <t t-name="mail.thread.expandable">
-        <div t-attf-class="oe_msg oe_msg_#{widget.type} #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_unread">
+        <div t-attf-class="oe_msg oe_msg_#{widget.type} #{widget.max_limit ? 'oe_max_limit' : ''} #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_unread">
             <div class="oe_msg_content oe_msg_more_message">
                 <div class='oe_separator'></div>
+                <a t-if="widget.nb_messages &lt;= 0" class="oe_msg_fetch_more">show more message</a>
                 <a t-if="widget.nb_messages === 1" class="oe_msg_fetch_more">show one more message</a>
-                <a t-if="widget.nb_messages !== 1" class="oe_msg_fetch_more">show <t t-raw="widget.nb_messages" /> more messages</a>
+                <a t-if="widget.nb_messages &gt; 1" class="oe_msg_fetch_more">show <t t-raw="widget.nb_messages" /> more messages</a>
             </div>
         </div>
     </t>
@@ -247,7 +246,7 @@
         mail.compose_message.button_top_bar
         render of the button on the user bar for open wizard compose message
         -->
-    <t t-name="mail.compose_message.button_top_bar">
+    <t t-name="mail.ComposeMessageTopButton">
         <div title='Compose new Message' class="oe_topbar_item oe_topbar_compose_full_email">
             <button class="oe_e">%</button>
         </div>
@@ -257,12 +256,11 @@
         Template used to display Like/Unlike in a mail.message
     -->
     <span t-name="mail.thread.message.vote">
-        
         <span class="oe_mail_vote_count" t-if='widget.vote_nb > 0'>
             <t t-raw='widget.vote_nb' />
             <span class='oe_e'>8</span>
         </span>
-        <a href='#' t-attf-class="oe_msg_vote">
+        <a href='#' class="oe_msg_vote">
             <t t-if="!widget.has_voted">like</t>
             <t t-if="widget.has_voted">unlike</t>
         </a>
