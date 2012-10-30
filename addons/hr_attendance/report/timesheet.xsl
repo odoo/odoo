@@ -68,7 +68,7 @@
                 <td>Fri</td>
                 <td>Sat</td>
                 <td>Sun</td>
-                <td>Tot</td>
+                <td>Total</td>
             </tr>
             <xsl:for-each select="week">
                 <tr></tr>

@@ -109,8 +109,7 @@ class report_custom(report_rml):
                 week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
                 week_repr.append('</total>')
                 week_repr.append('</week>')
-                if len(week_repr) > 21: # 21 = minimal length of week_repr
-                    week_xml.append('\n'.join(week_repr))
+                week_xml.append('\n'.join(week_repr))
 
                 monday, n_monday = n_monday, n_monday + one_week
             user_xml.append(user_repr % '\n'.join(week_xml))
