@@ -154,7 +154,7 @@ class hr_analytic_timesheet(osv.osv):
         'date': lambda self, cr, uid, ctx: ctx.get('date', fields.date.context_today(self,cr,uid,context=ctx)),
         'user_id': lambda obj, cr, uid, ctx: ctx.get('user_id', uid),
     }
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, context=None):
         return {'value':{}}
 
     def on_change_date(self, cr, uid, ids, date):
@@ -195,7 +195,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
+        'use_timesheets': fields.boolean('Use Timesheets', help="Check this field if this project manages timesheets"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):

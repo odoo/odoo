@@ -161,21 +161,11 @@ class lunch_order(osv.Model):
     def onchange_price(self,cr,uid,ids,order_line_ids,context=None):
         """ Onchange methode that refresh the total price of order"""
         res = {'value':{'total':0.0}}
+        order_line_ids= self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context)
         if order_line_ids:
             tot = 0.0
-            print order_line_ids
             for prod in order_line_ids:
-                orderline = {}
-                #TODO: that's weird. should truy to find another way to compute total on order lines when record is not saved...
-                #   or at least put some comments
-                if isinstance(prod[1],bool): 
-                    orderline = prod[2]
-                    print orderline
-                    #tot += orderline['price']
-                else:
-                    orderline = self.pool.get('lunch.order.line').browse(cr,uid,prod[1],context=context)
-                    print orderline
-                    tot += orderline.price
+                tot += prod['price']
             res = {'value':{'total':tot}}
         return res
 
@@ -240,7 +230,10 @@ class lunch_order(osv.Model):
                         <div class="oe_lunch_30pc">
                         <div class="oe_lunch_title">%s</div>
                     """ % (key,)
+                    i = 0
                     for val in value:
+                        if i==5 : break
+                        i+=1
                         function_name = "add_preference_"+str(val.id)
                         text_xml+= '''
                             <div class="oe_lunch_vignette">
@@ -297,18 +290,9 @@ class lunch_order_line(osv.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
 
-    def _price_get(self,cr,uid,ids,name,arg,context=None):
-        orderLines = self.browse(cr,uid,ids,context=context)
-        result={}
-        print orderLines
-        for orderLine in orderLines:
-            result[orderLine.id]=orderLine.product_id.price
-        return result
-
     def onchange_price(self,cr,uid,ids,product_id,context=None):
         if product_id:
             price = self.pool.get('lunch.product').read(cr, uid, product_id, ['price'])['price']
-            print price
             return {'value': {'price': price}}
         return {'value': {'price': 0.0}}
 
@@ -363,7 +347,7 @@ class lunch_order_line(osv.Model):
         'supplier' : fields.related('product_id','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
         'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note' : fields.text('Note',size=256,required=False),
-        'price' : fields.function(_price_get, string="Price",store=True),
+        'price': fields.float('Price'),
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
             'Status', readonly=True, select=True), #new confirmed and cancelled are the convention
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),

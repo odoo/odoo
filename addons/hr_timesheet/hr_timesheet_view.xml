@@ -85,6 +85,23 @@
             <field name="src_model">account.analytic.account</field>
             <field name="view_mode">tree,form</field>
             <field name="view_type">form</field>
+            <field name="help" type="html">
+              <p>
+                No activity yet on this contract.
+              </p><p>
+                In OpenERP, contracts and projects are implemented using
+                analytic account. So, you can track costs and revenues to analyse
+                your margins easily.
+              </p><p>
+                Costs will be created automatically when you register supplier
+                invoices, expenses or timesheets.
+              </p><p>
+                Revenues will be created automatically when you create customer
+                invoices. Customer invoices can be created based on sale orders
+                (fixed price invoices), on timesheets (based on the work done) or
+                on expenses (e.g. reinvoicing of travel costs).
+              </p>
+            </field>
         </record>
 
  
