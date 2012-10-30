@@ -24,6 +24,7 @@
     'version': '0.1',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
+    'sequence': 31,
     'website': 'http://www.openerp.com',
     'summary': 'Periodical Evaluations, Appraisals, Surveys',
     'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg'],

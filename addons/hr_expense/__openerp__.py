@@ -24,7 +24,7 @@
     'name': 'Expense Management',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 30,
+    'sequence': 29,
     'summary': 'Expenses Validation, Invoicing',
     'description': """
 Manage expenses by Employees

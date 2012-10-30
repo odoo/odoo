@@ -24,6 +24,7 @@
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
+    'sequence': 23,
     'description': """
 This module implements a timesheet system.
 ==========================================
