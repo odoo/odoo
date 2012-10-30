@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+The module :mod:`openerp.tests.common` provides a few helper and classes to write
+tests.
+"""
 import os
 import threading
 import time
@@ -92,8 +96,8 @@ class RpcCase(unittest2.TestCase):
     Subclass of TestCase with a few XML-RPC proxies.
     """
 
-    def __init__(self, name):
-        super(RpcCase, self).__init__(name)
+    def __init__(self, methodName='runTest'):
+        super(RpcCase, self).__init__(methodName)
 
         class A(object):
             pass
