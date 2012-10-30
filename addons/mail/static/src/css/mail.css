@@ -1,3 +1,30 @@
+/* ------------ TOPBAR MAIL BUTTON --------------- */
+
+/* FIXME this css is not very pretty because it uses a 
+ * 'button' element wich comes with a lot of inappropriate 
+ * styling. Entypo is also a headache to center properly
+ * */
+
+.openerp .oe_topbar_item.oe_topbar_compose_full_email{ 
+    padding: 0px;
+    width: 32px;
+    height: 32px;
+}
+.openerp .oe_topbar_item.oe_topbar_compose_full_email button{
+    position: relative;
+    top: -3px;  /* centering entypo ... urgh */
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    color: white;
+    background: none;
+    text-shadow: 0px 1px 2px black;
+    width: 32px;
+    height: 32px;
+    padding: 0px;
+    margin: 0px
+    border-radius: 0px;
+}
 
 /* ------------ MAIL WIDGET --------------- */
 .openerp .oe_mail, .openerp .oe_mail *{
@@ -81,7 +108,29 @@
     padding-top:2px;
 }
 
-/* b) Message action icons */
+/* b) Votes (likes) */
+
+.openerp .oe_mail .oe_mail_vote_count{
+    display: inline;
+    position: relative;
+    background: white;
+    box-shadow: 0px 0px 0px 1px rgba(124, 123, 173, 0.36) inset;
+    color: #7c7bad;
+    text-shadow: none;
+    border-radius: 3px;
+    margin: 0px;
+    padding-left: 3px;
+    padding-right: 15px;
+    margin-right: 5px;
+}
+.openerp .oe_mail .oe_mail_vote_count .oe_e{
+    position: absolute;
+    bottom: 1px;
+    right: 2px;
+    font-size: 26px;
+}
+
+/* c) Message action icons */
 
 .openerp .oe_mail .oe_msg.oe_msg_unread .oe_unread{
     display:none;
@@ -136,7 +185,7 @@
 }
 .openerp .oe_mail .oe_msg .oe_msg_content textarea{
     width: 100%;
-    height: 32px;
+    height: 64px;
     margin: 0px;
     padding: 0px;
     resize: vertical;
@@ -279,6 +328,7 @@
     padding-top: 5px;
     width: 160px;
     float: right;
+    margin-right: 16px;
 }
 
 /*  a) THE FOLLOW BUTTON */
@@ -352,12 +402,13 @@
 
 .openerp .oe_record_thread{
     display: block;
-    margin-right: 180px;
+    margin-left: 16px;
+    margin-right: 212px;
 }
 
 /* ----------- INBOX INTEGRATION ----------- */
 
 .openerp .oe_mail_wall .oe_mail{
     margin: 16px;
-    width: 720px;
+    width: 600px;
 }

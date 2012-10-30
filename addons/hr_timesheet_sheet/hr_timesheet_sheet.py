@@ -223,16 +223,26 @@ class hr_timesheet_sheet(osv.osv):
 
 hr_timesheet_sheet()
 
-
-class hr_timesheet_line(osv.osv):
-    _inherit = "hr.analytic.timesheet"
+class account_analytic_line(osv.osv):
+    _inherit = "account.analytic.line"
 
     def _get_default_date(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'date' in context:
-            return context['date']
-        return time.strftime('%Y-%m-%d')
+        #get the default date (should be: today)
+        res = super(account_analytic_line, self)._get_default_date(cr, uid, context=context)
+        #if we got the dates from and to from the timesheet and if the default date is in between, we use the default
+        #but if the default isn't included in those dates, we use the date start of the timesheet as default
+        if context.get('timesheet_date_from') and context.get('timesheet_date_to'):
+            if context['timesheet_date_from'] <= res <= context['timesheet_date_to']:
+                return res
+            return context.get('timesheet_date_from')
+        #if we don't get the dates from the timesheet, we return the default value from super()
+        return res
+
+
+class hr_timesheet_line(osv.osv):
+    _inherit = "hr.analytic.timesheet"
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -277,9 +287,6 @@ class hr_timesheet_line(osv.osv):
                     'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
                   },
             ),
-    }
-    _defaults = {
-        'date': _get_default_date,
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
