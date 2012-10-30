@@ -575,6 +575,20 @@ def from_elementtree(el, preserve_whitespaces=False):
     res["children"] = kids
     return res
 
+
+def content_disposition(filename, req):
+    filename = filename.encode('utf8')
+    escaped = urllib2.quote(filename)
+    browser = req.httprequest.user_agent.browser
+    version = int((req.httprequest.user_agent.version or '0').split('.')[0])
+    if browser == 'msie' and version < 9:
+        return "attachment; filename=%s" % escaped
+    elif browser == 'safari':
+        return "attachment; filename=%s" % filename
+    else:
+        return "attachment; filename*=UTF-8''%s" % escaped
+
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -1520,17 +1534,6 @@ class Binary(openerpweb.Controller):
     def placeholder(self, req):
         addons_path = openerpweb.addons_manifest['web']['addons_path']
         return open(os.path.join(addons_path, 'web', 'static', 'src', 'img', 'placeholder.png'), 'rb').read()
-    def content_disposition(self, filename, req):
-        filename = filename.encode('utf8')
-        escaped = urllib2.quote(filename)
-        browser = req.httprequest.user_agent.browser
-        version = int((req.httprequest.user_agent.version or '0').split('.')[0])
-        if browser == 'msie' and version < 9:
-            return "attachment; filename=%s" % escaped
-        elif browser == 'safari':
-            return "attachment; filename=%s" % filename
-        else:
-            return "attachment; filename*=UTF-8''%s" % escaped
 
     @openerpweb.httprequest
     def saveas(self, req, model, field, id=None, filename_field=None, **kw):
@@ -1566,7 +1569,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 [('Content-Type', 'application/octet-stream'),
-                 ('Content-Disposition', self.content_disposition(filename, req))])
+                 ('Content-Disposition', content_disposition(filename, req))])
 
     @openerpweb.httprequest
     def saveas_ajax(self, req, data, token):
@@ -1596,7 +1599,7 @@ class Binary(openerpweb.Controller):
                 filename = res.get(filename_field, '') or filename
             return req.make_response(filecontent,
                 headers=[('Content-Type', 'application/octet-stream'),
-                        ('Content-Disposition', self.content_disposition(filename, req))],
+                        ('Content-Disposition', content_disposition(filename, req))],
                 cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
@@ -1997,11 +2000,11 @@ class Reports(View):
                 file_name = reports.read(res_id[0], ['name'], context)['name']
             else:
                 file_name = action['report_name']
+        file_name = '%s.%s' % (file_name, report_struct['format'])
 
         return req.make_response(report,
              headers=[
-                 # maybe we should take of what characters can appear in a file name?
-                 ('Content-Disposition', 'attachment; filename="%s.%s"' % (file_name, report_struct['format'])),
+                 ('Content-Disposition', content_disposition(file_name, req)),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
              cookies={'fileToken': int(token)})
