@@ -145,15 +145,16 @@ openerp.mail = function (session) {
             this.show_compact_message = false;
 
             // data of this compose message
-            this.attachment_ids = [];
             this.id = datasets.id;
             this.model = datasets.model;
             this.res_model = datasets.res_model;
             this.is_private = datasets.is_private || false;
             this.partner_ids = datasets.partner_ids || [];
-            this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             this.thread_level = datasets.thread_level;
+
+            this.attachment_ids = [];
             this.parent_thread= parent.messages!= undefined ? parent : false;
+            this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
 
             this.ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
             this.show_delete_attachment = true;
@@ -439,7 +440,7 @@ openerp.mail = function (session) {
             this.type = 'expandable',
             this.max_limit = this.id < 0 || false,
             this.flag_used = false,
-            this.parent_thread= parent.messages!= undefined ? parent : this.options._parents[0];
+            this.parent_thread= parent.messages!= undefined ? parent : this.options.root_thread;
         },
 
         
@@ -529,8 +530,8 @@ openerp.mail = function (session) {
          *              display before having a "show more" link; note that the text
          *              will not be truncated if it does not have 110% of the parameter
          *          @param {Boolean} [show_record_name]
-         *...  @param {int} [show_reply_button] number thread level to display the reply button
-         *...  @param {int} [show_read_unread_button] number thread level to display the read/unread button
+         *...  @param {boolean} [show_reply_button] display the reply button
+         *...  @param {boolean} [show_read_unread_button] display the read/unread button
          */
         init: function (parent, datasets, context) {
             this._super(parent);
@@ -543,7 +544,7 @@ openerp.mail = function (session) {
                 default_parent_id: false }, context || {});
 
             // record options
-            this.options = datasets.options;
+            this.options = datasets.options || {};
 
             // data of this message
             this.id = datasets.id ||  -1,
@@ -566,12 +567,8 @@ openerp.mail = function (session) {
             this.attachment_ids = datasets.attachment_ids ||  [],
             this._date = datasets.date;
 
-
-            this.show_reply_button = this.options.show_compose_message && this.options.show_reply_button > this.thread_level;
-            this.show_read_unread_button = this.options.show_read_unread_button > this.thread_level;
-
             // record options and data
-            this.parent_thread= parent.messages!= undefined ? parent : this.options._parents[0];
+            this.parent_thread= parent.messages!= undefined ? parent : this.options.root_thread;
             this.thread = false;
 
             if ( this.id > 0 ) {
@@ -735,7 +732,7 @@ openerp.mail = function (session) {
         * @param {callback} apply function
         */
         check_for_destroy: function () {
-            var domain = mail.ChatterUtils.expand_domain( this.parent_thread.domain ).concat([["id", "=", this.id]]);
+            var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "=", this.id]]);
             this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
                 .then( _.bind(function (record) { if (!record || !record.length) this.animated_destroy(150); }, this) );
         },
@@ -770,8 +767,8 @@ openerp.mail = function (session) {
             // goto the wall thread for launch browse
             if (!options._go_thread_wall) {
                 options._go_thread_wall = true;
-                for (var i in this.options._parents[0].messages) {
-                    var res=this.options._parents[0].messages[i].browse_message(options);
+                for (var i in this.options.root_thread.messages) {
+                    var res=this.options.root_thread.messages[i].browse_message(options);
                     if (res) return res;
                 }
             }
@@ -896,7 +893,7 @@ openerp.mail = function (session) {
                 default_parent_id: false }, options.context || {});
 
             this.options = options.options;
-            this.options._parents = (options.options._parents != undefined ? options.options._parents : []).concat( [this] );
+            this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
 
             // record options and data
             this.parent_message= parent.thread!= undefined ? parent : false ;
@@ -1031,7 +1028,7 @@ openerp.mail = function (session) {
             // goto the wall thread for launch browse
             if (!options._go_thread_wall) {
                 options._go_thread_wall = true;
-                return this.options._parents[0].browse_thread(options);
+                return this.options.root_thread.browse_thread(options);
             }
 
             if (this.id==options.id) {
@@ -1065,8 +1062,8 @@ openerp.mail = function (session) {
          * @return message object
          */
         browse_message: function (options) {
-            if (this.options._parents[0].messages[0])
-                return this.options._parents[0].messages[0].browse_message(options);
+            if (this.options.root_thread.messages[0])
+                return this.options.root_thread.messages[0].browse_message(options);
         },
 
         /**
@@ -1110,7 +1107,7 @@ openerp.mail = function (session) {
             var thread_level = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
             return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, thread_level, fetch_context, this.context.default_parent_id || undefined])
-                .then(callback ? _.bind(callback, this) : this.proxy('switch_new_message'));
+                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
         /**
@@ -1371,8 +1368,8 @@ openerp.mail = function (session) {
          *      display before having a "show more" link; note that the text
          *      will not be truncated if it does not have 110% of the parameter
          *...  @param {Boolean} [show_record_name] display the name and link for do action
-         *...  @param {int} [show_reply_button] number thread level to display the reply button
-         *...  @param {int} [show_read_unread_button] number thread level to display the read/unread button
+         *...  @param {boolean} [show_reply_button] display the reply button
+         *...  @param {boolean} [show_read_unread_button] display the read/unread button
          *...  @param {int} [display_indented_thread] number thread level to indented threads.
          *      other are on flat mode
          *...  @param {Boolean} [show_compose_message] allow to display the composer
@@ -1390,8 +1387,8 @@ openerp.mail = function (session) {
 
             this.options = _.extend({
                 'display_indented_thread' : -1,
-                'show_reply_button' : -1,
-                'show_read_unread_button' : -1,
+                'show_reply_button' : false,
+                'show_read_unread_button' : false,
                 'truncate_limit' : 250,
                 'show_record_name' : false,
                 'show_compose_message' : false,
@@ -1402,12 +1399,6 @@ openerp.mail = function (session) {
 
             if (this.display_indented_thread === false) {
                 this.display_indented_thread = -1;
-            }
-            if (this.show_reply_button === false) {
-                this.show_reply_button = -1;
-            }
-            if (this.show_read_unread_button === false) {
-                this.show_read_unread_button = -1;
             }
             
         },
@@ -1512,8 +1503,8 @@ openerp.mail = function (session) {
                 'domain' : domain,
                 'context' : this.options.context,
                 'display_indented_thread': -1,
-                'show_reply_button': 0,
-                'show_read_unread_button': -1,
+                'show_reply_button': false,
+                'show_read_unread_button': false,
                 'show_compose_message': show_compose_message,
                 'message_ids': message_ids,
                 'show_compact_message': true,
@@ -1620,8 +1611,8 @@ openerp.mail = function (session) {
                 'domain' : domain,
                 'context' : context,
                 'display_indented_thread': 1,
-                'show_reply_button': 10,
-                'show_read_unread_button': 11,
+                'show_reply_button': true,
+                'show_read_unread_button': true,
                 'show_compose_message': true,
                 'show_compact_message': false,
                 }
