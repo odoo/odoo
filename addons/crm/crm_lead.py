@@ -251,7 +251,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
+        'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
