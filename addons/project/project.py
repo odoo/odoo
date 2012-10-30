@@ -792,6 +792,11 @@ class task(base_stage, osv.osv):
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
+    def set_very_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to very high
+        """
+        return self.set_priority(cr, uid, ids, '0')
+    
     def set_high_priority(self, cr, uid, ids, *args):
         """Set task priority to high
         """
