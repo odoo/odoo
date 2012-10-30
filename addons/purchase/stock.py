@@ -135,6 +135,7 @@ class stock_picking_in(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
+        'purchase_invoice_method': fields.related('purchase_id', 'invoice_method', type='selection', selection=[('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], string='Purchase Invoice Method'),
         'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
     def create_draft_invoice(self, cr, uid, ids, context=None):
