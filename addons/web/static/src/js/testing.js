@@ -271,7 +271,7 @@ openerp.testing = {};
                         return instance.session.rpc('/web/database/drop', {
                             fields: [
                                 {name: 'drop_pwd', value: db.supadmin},
-                                {name: 'drop_db', value: db.dbname}
+                                {name: 'drop_db', value: dbname}
                             ]
                         });
                     }).pipe(function (result) {
