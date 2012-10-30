@@ -144,15 +144,15 @@ class stock_picking_in(osv.osv):
         #compute the number of invoices to display
         inv_ids = []
         pur_id = self.browse(cr, uid, ids[0], context=context).purchase_id.id
+        po = pur_obj.browse(cr, uid, pur_id, context=context)
         pur_ids = [pur_id] 
-        for po in pur_obj.browse(cr, uid, pur_ids, context=context):
-            if po.invoice_method == 'picking':
-                if not po.invoice_ids:
-                    context.update({'active_ids' :  [line.id for line in po.order_line]})
-                    wizard_obj.makeInvoices(cr, uid, [], context=context)
+        if po.invoice_method == 'picking':
+            if not po.invoice_ids:
+                context.update({'active_ids' :  [line.id for line in po.order_line]})
+                wizard_obj.makeInvoices(cr, uid, [], context=context)
 
-        for po in pur_obj.browse(cr, uid, pur_ids, context=context):
-            inv_ids+= [invoice.id for invoice in po.invoice_ids]
+        po = pur_obj.browse(cr, uid, pur_id, context=context)
+        inv_ids+= [invoice.id for invoice in po.invoice_ids]
         res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
         res_id = res and res[1] or False
 
