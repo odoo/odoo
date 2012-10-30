@@ -669,10 +669,10 @@ openerp.mail = function (session) {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
-                userCollapseText: '&atilde',
+                userCollapseText: 'read less',
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce oe_e',
+                lessClass: 'oe_mail_reduce',
                 });
         },
 
