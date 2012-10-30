@@ -745,12 +745,13 @@ openerp.mail = function (session) {
             var self=this;
 
             // if this message is read, all childs message display is read
-            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function () {
-                self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
-                self.to_read = !self.to_read;
-                // check if the message must be display
-                self.check_for_destroy();
-            });
+            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context])
+                .then(function () {
+                    self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
+                    self.to_read = !self.to_read;
+                    // check if the message must be display
+                    self.check_for_destroy();
+                });
             return false;
         },
 
@@ -803,12 +804,13 @@ openerp.mail = function (session) {
         */
         on_vote: function (event) {
             event.stopPropagation();
-            return this.ds_message.call('vote_toggle', [[this.id]]).pipe(
-                _.bind(function (vote) {
-                    this.has_voted = vote;
-                    this.vote_nb += this.has_voted ? 1 : -1;
-                    this.display_vote();
-                }, this));
+            return this.ds_message.call('vote_toggle', [[this.id]])
+                .then(
+                    _.bind(function (vote) {
+                        this.has_voted = vote;
+                        this.vote_nb += this.has_voted ? 1 : -1;
+                        this.display_vote();
+                    }, this));
             return false;
         },
 
@@ -828,16 +830,17 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
-            return this.ds_message.call('favorite_toggle', [[self.id]]).pipe(function (star) {
-                self.is_favorite=star;
-                if (self.is_favorite) {
-                    button.addClass('oe_starred');
-                } else {
-                    button.removeClass('oe_starred');
-                    // check if the message must be display
-                    self.check_for_destroy();
-                }
-            });
+            return this.ds_message.call('favorite_toggle', [[self.id]])
+                .then(function (star) {
+                    self.is_favorite=star;
+                    if (self.is_favorite) {
+                        button.addClass('oe_starred');
+                    } else {
+                        button.removeClass('oe_starred');
+                        // check if the message must be display
+                        self.check_for_destroy();
+                    }
+                });
             return false;
         },
 
@@ -894,6 +897,7 @@ openerp.mail = function (session) {
 
             this.options = options.options;
             this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
+            this.options.show_compose_message = this.options.show_compose_message && (this.options.display_indented_thread >= this.thread_level || !this.thread_level);
 
             // record options and data
             this.parent_message= parent.thread!= undefined ? parent : false ;
@@ -907,8 +911,7 @@ openerp.mail = function (session) {
             this.thread_level =  (datasets.thread_level+1) || 0,
             this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
             this.messages = [];
-            this.show_compose_message = this.options.show_compose_message && (this.options.show_reply_button > this.thread_level || !this.thread_level);
-
+            
             // object compose message
             this.compose_message = false;
 
@@ -1096,18 +1099,20 @@ openerp.mail = function (session) {
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
         message_fetch: function (replace_domain, replace_context, ids, callback) {
-            var self = this;
-
-            // domain and context: options + additional
-            fetch_domain = replace_domain ? replace_domain : this.domain;
-            fetch_context = replace_context ? replace_context : this.context;
-            var message_loaded_ids = this.id ? [this.id].concat( self.get_child_ids() ) : self.get_child_ids();
-
-            // CHM note : option for sending in flat mode by server
-            var thread_level = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
-
-            return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, thread_level, fetch_context, this.context.default_parent_id || undefined])
-                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
+            return this.ds_message.call('message_read', [
+                    // ids force to read
+                    ids, 
+                    // domain + additional
+                    (replace_domain ? replace_domain : this.domain), 
+                    // ids allready loaded
+                    (this.id ? [this.id].concat( this.get_child_ids() ) : this.get_child_ids()), 
+                    // option for sending in flat mode by server
+                    (this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0), 
+                    // context + additional
+                    (replace_context ? replace_context : this.context), 
+                    // parent_id
+                    this.context.default_parent_id || undefined
+                ]).done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
         /**
@@ -1159,7 +1164,7 @@ openerp.mail = function (session) {
         insert_message: function (message, dom_insert_after) {
             var self=this;
 
-            if (this.show_compose_message && this.options.show_compact_message) {
+            if (this.options.show_compact_message) {
                 this.instantiate_compose_message();
                 this.compose_message.do_show_compact();
             }
@@ -1526,7 +1531,6 @@ openerp.mail = function (session) {
          */
         init: function (parent, options) {
             this._super(parent);
-            console.log(arguments);
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
