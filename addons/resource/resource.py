@@ -215,7 +215,7 @@ class resource_calendar(osv.osv):
         """
         if not id:
             return 0.0
-        return self._internal_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
+        return self._interval_hours_get(cr, uid, id, dt_from, dt_to, resource_id=resource)
 
     def _interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource_id=False, timezone_from_uid=None, exclude_leaves=True, context=None):
         """ Calculates the Total Working hours based on given start_date to
