@@ -731,6 +731,15 @@ openerp.mail = function (session) {
             return false;
         },
 
+        /* Check if the message must be destroy and detroy it
+        * @param {callback} apply function
+        */
+        check_for_destroy: function () {
+            var domain = mail.ChatterUtils.expand_domain( this.parent_thread.domain ).concat([["id", "=", this.id]]);
+            this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
+                .then( _.bind(function (record) { if (!record || !record.length) this.animated_destroy(150); }, this) );
+        },
+
         /*The selected thread and all childs (messages/thread) became read
         * @param {object} mouse envent
         */
@@ -738,15 +747,12 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
 
-            if ( (this.to_read && this.options.typeof_thread == 'inbox') ||
-                (!this.to_read && this.options.typeof_thread == 'archives')) {
-                this.animated_destroy(150);
-            }
-
             // if this message is read, all childs message display is read
             this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function () {
                 self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
                 self.to_read = !self.to_read;
+                // check if the message must be display
+                self.check_for_destroy();
             });
             return false;
         },
@@ -831,9 +837,8 @@ openerp.mail = function (session) {
                     button.addClass('oe_starred');
                 } else {
                     button.removeClass('oe_starred');
-                    if ( self.options.typeof_thread == 'stared' ) {
-                        self.animated_destroy(150);
-                    }
+                    // check if the message must be display
+                    self.check_for_destroy();
                 }
             });
             return false;
@@ -879,9 +884,6 @@ openerp.mail = function (session) {
          *      @param {Object} [thread]
          *          @param {int} [display_indented_thread] number thread level to indented threads.
          *              other are on flat mode
-         *          @param {Select} [typeof_thread] inbox/archives/stared/sent
-         *              type of thread and option for user application like animate
-         *              destroy for read/unread
          *          @param {Array} [parents] liked with the parents thread
          *              use with browse, fetch... [O]= top parent
          */
@@ -1108,7 +1110,7 @@ openerp.mail = function (session) {
             var thread_level = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
             return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, thread_level, fetch_context, this.context.default_parent_id || undefined])
-                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
+                .then(callback ? _.bind(callback, this) : this.proxy('switch_new_message'));
         },
 
         /**
@@ -1364,8 +1366,6 @@ openerp.mail = function (session) {
          * @param {Object} [context] context of the thread. It should
          *   contain at least default_model, default_res_id. Please refer to
          *   the compose_message widget for more information about it.
-         * ... @param {Select} [typeof_thread=(mail|stared|archives|send|other)]
-         *       options for destroy message when the user click on a button
          * @param {Object} [options]
          *...  @param {Number} [truncate_limit=250] number of character to
          *      display before having a "show more" link; note that the text
@@ -1389,7 +1389,6 @@ openerp.mail = function (session) {
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}};
 
             this.options = _.extend({
-                'typeof_thread' : 'inbox',
                 'display_indented_thread' : -1,
                 'show_reply_button' : -1,
                 'show_read_unread_button' : -1,
@@ -1448,12 +1447,10 @@ openerp.mail = function (session) {
         },
 
         bind_events: function () {
-            if (this.context['typeof_thread']!='other') {
-                $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
-                $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
-                this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
-                window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
-            }
+            $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
+            $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
+            this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
+            window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
         }
     });
 
@@ -1514,7 +1511,6 @@ openerp.mail = function (session) {
             this.root = new mail.Widget(this, {
                 'domain' : domain,
                 'context' : this.options.context,
-                'typeof_thread': this.options.context['typeof_thread'] || 'other',
                 'display_indented_thread': -1,
                 'show_reply_button': 0,
                 'show_read_unread_button': -1,
