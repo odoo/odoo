@@ -286,6 +286,9 @@ openerp.testing = {};
 
             // Always execute tests asynchronously
             stop();
+            var teardown = function () {
+                return opts.teardown(instance, $fixture, mock)
+            };
             $.when(opts.setup(instance, $fixture, mock))
             .pipe(function () {
                 var result = callback(instance, $fixture, mock);
@@ -299,11 +302,7 @@ openerp.testing = {};
                                 + "number of assertions they expect");
                     }
                 }
-                return $.when(result);
-            }).pipe(function () {
-                    return opts.teardown(instance, $fixture, mock);
-                }, function () {
-                    return opts.teardown(instance, $fixture, mock);
+                return $.when(result).pipe(teardown, teardown);
             }).always(function () {
                 start();
             }).fail(function (error) {
