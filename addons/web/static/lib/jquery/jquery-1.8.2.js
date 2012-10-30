@@ -1149,7 +1149,11 @@ jQuery.extend({
 			deferred = {};
 
 		// Keep pipe for back-compat
-		promise.pipe = promise.then;
+		//promise.pipe = promise.then;
+		promise.pipe = function() {
+            console.error("$.Deferred().pipe() is deprecated. Use .then() instead.");
+            return promise.then.apply(this, arguments);
+        };
 
 		// Add list-specific methods
 		jQuery.each( tuples, function( i, tuple ) {
