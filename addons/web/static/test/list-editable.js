@@ -107,12 +107,12 @@ $(document).ready(function () {
         });
         var counter = 0;
         e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 ok(e.is_editing(), "should be editing");
                 equal(counter, 3, "should have configured all fields");
                 return e.save();
@@ -137,12 +137,12 @@ $(document).ready(function () {
         });
         var counter = 0;
         e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 return e.cancel();
             })
             .always(start)
@@ -170,12 +170,12 @@ $(document).ready(function () {
         var counter = 0;
         var warnings = 0;
         e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 return e.save();
             })
             .always(start)
@@ -243,16 +243,16 @@ $(document).ready(function () {
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
 
         l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
-            .pipe(function () {
+            .then(l.proxy('reload_content'))
+            .then(function () {
                 return l.start_edition();
             })
             .always(start)
-            .pipe(function () {
+            .then(function () {
                 ok(got_defaults, "should have fetched default values for form");
                 return l.save_edition();
             })
-            .pipe(function (result) {
+            .then(function (result) {
                 ok(result.created, "should yield newly created record");
                 equal(result.record.get('a'), "qux",
                       "should have used default values");
@@ -307,14 +307,14 @@ $(document).ready(function () {
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
         l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
+            .then(l.proxy('reload_content'))
             .always(start)
-            .pipe(function () {
+            .then(function () {
                 ok(l.options.editable, "should be editable");
                 equal(o.counter, 0, "should have seen no event yet");
                 return l.start_edition(l.records.get(1));
             })
-            .pipe(function () {
+            .then(function () {
                 ok(l.editor.is_editing(), "should be editing");
                 equal(o.counter, 2, "should have seen two edition events");
             })
@@ -332,14 +332,14 @@ $(document).ready(function () {
             edit_after = true;
         });
         l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
+            .then(l.proxy('reload_content'))
             .always(start)
-            .pipe(function () {
+            .then(function () {
                 ok(l.options.editable, "should be editable");
                 return l.start_edition();
             })
             // cancelling an event rejects the deferred
-            .pipe($.Deferred().reject(), function () {
+            .then($.Deferred().reject(), function () {
                 ok(!l.editor.is_editing(), "should not be editing");
                 ok(!edit_after, "should not have fired the edit:after event");
                 return $.when();

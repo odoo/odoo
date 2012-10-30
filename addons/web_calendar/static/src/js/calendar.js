@@ -43,7 +43,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     start: function() {
         this._super();
-        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}).then(this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}).done(this.on_loaded);
     },
     destroy: function() {
         scheduler.clearAll();
@@ -106,7 +106,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web_calendar.Sidebar(this);
-            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container')));
+            this.has_been_loaded.then(this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container')));
         }
         this.trigger('calendar_view_loaded', data);
         return this.has_been_loaded.resolve();
@@ -214,7 +214,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
     },
     reload_event: function(id) {
-        this.dataset.read_ids([id], _.keys(this.fields)).then(this.on_events_loaded);
+        this.dataset.read_ids([id], _.keys(this.fields)).done(this.on_events_loaded);
     },
     get_color: function(key) {
         if (this.color_map[key]) {
@@ -307,20 +307,20 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_create_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.create(data).then(function(r) {
+        this.dataset.create(data).done(function(r) {
             var id = r;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
             self.reload_event(id);
-        }, function(r, event) {
+        }).fail(function(r, event) {
             event.preventDefault();
             self.do_create_event_with_formdialog(event_id, event_obj);
         });
     },
     do_create_event_with_formdialog: function(event_id, event_obj) {
         var self = this;
-        $.when(! self.form_dialog.dialog_inited ? self.form_dialog.init_dialog() : true).then(function() {
+        $.when(! self.form_dialog.dialog_inited ? self.form_dialog.init_dialog() : true).done(function() {
             if (!event_obj) {
                 event_obj = scheduler.getEvent(event_id);
             }
@@ -328,13 +328,13 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 fields_to_fetch = _(self.form_dialog.form.fields_view.fields).keys();
             self.dataset.index = null;
             self.creating_event_id = event_id;
-            self.form_dialog.form.do_show().then(function() {
+            self.form_dialog.form.do_show().done(function() {
                 _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
                     var field_name = self[field];
                     if (field_name && self.form_dialog.form.fields[field_name]) {
                         var ffield = self.form_dialog.form.fields[field_name];
                         ffield._dirty_flag = false;
-                        $.when(ffield.set_value(data[field_name])).then(function() {
+                        $.when(ffield.set_value(data[field_name])).done(function() {
                             ffield._dirty_flag = true;
                             self.form_dialog.form.do_onchange(ffield);
                         });
@@ -350,7 +350,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             index = this.dataset.get_id_index(event_id);
         if (index != null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).then(function() {
+            this.dataset.write(event_id, data, {}).done(function() {
                 self.refresh_minical();
             });
         }
@@ -361,7 +361,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this,
             index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(event_id).then(function() {
+            this.dataset.unlink(event_id).done(function() {
                 self.refresh_minical();
             });
         }
@@ -413,12 +413,12 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_ranged_search: function() {
         var self = this;
         scheduler.clearAll();
-        $.when(this.has_been_loaded, this.ready).then(function() {
+        $.when(this.has_been_loaded, this.ready).done(function() {
             self.dataset.read_slice(_.keys(self.fields), {
                 offset: 0,
                 domain: self.get_range_domain(),
                 context: self.last_search[1]
-            }).then(function(events) {
+            }).done(function(events) {
                 self.dataset_events = events;
                 self.on_events_loaded(events);
             });
@@ -433,7 +433,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     do_show: function () {
         var self = this;
-        $.when(this.has_been_loaded).then(function() {
+        $.when(this.has_been_loaded).done(function() {
             self.$el.show();
             self.do_push_state({});
         });

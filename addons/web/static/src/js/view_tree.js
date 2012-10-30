@@ -45,7 +45,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
             context: this.dataset.get_context()
-        }).then(this.on_loaded);
+        }).done(this.on_loaded);
     },
     /**
      * Returns the list of fields needed to correctly read objects.
@@ -92,7 +92,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
-        this.dataset.read_slice(this.fields_list()).then(function(records) {
+        this.dataset.read_slice(this.fields_list()).done(function(records) {
             self.store_record(records);
             if (!has_toolbar) {
                 // WARNING: will do a second read on the same ids, but only on
@@ -205,7 +205,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         var parent_child ={};
         id = _.isArray(id)?id:parseInt(id); 
         var ir_model_data = new instance.web.Model(this.model,self.dataset.get_context() || {},[['id','child_of',id]]).query();
-        ir_model_data._execute().then(function(records){
+        ir_model_data._execute().done(function(records){
               self.store_record(records);
              _.each(records,function(rec){
                  if(rec[self.children_field].length === 0)return;
@@ -254,7 +254,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             model: this.dataset.model,
             context: new instance.web.CompoundContext(
                 this.dataset.get_context(), local_context)
-        }).pipe(function (actions) {
+        }).then(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
             var c = new instance.web.CompoundContext(local_context);
@@ -263,7 +263,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             }
             return self.rpc('/web/session/eval_domain_and_context', {
                 contexts: [c], domains: []
-            }).pipe(function (res) {
+            }).then(function (res) {
                 action.context = res.context;
                 return self.do_action(action);
             }, null);

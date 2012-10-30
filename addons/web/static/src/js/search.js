@@ -244,7 +244,7 @@ my.FacetView = instance.web.Widget.extend({
         });
         var $e = self.$el.find('> span:last-child');
         var q = $.when(this._super());
-        return q.pipe(function () {
+        return q.then(function () {
             var values = self.model.values.map(function (value) {
                 return new my.FacetValueView(self, value).appendTo($e);
             });
@@ -324,7 +324,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context() });
 
             $.when(load_view)
-                .pipe(function(r) {
+                .then(function(r) {
                     self.search_view_loaded(r)
                 }).fail(function () {
                     self.ready.reject.apply(null, arguments);
@@ -492,7 +492,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     complete_global_search:  function (req, resp) {
         $.when.apply(null, _(this.inputs).chain()
             .invoke('complete', req.term)
-            .value()).then(function () {
+            .value()).done(function () {
                 resp(_(_(arguments).compact()).flatten(true));
         });
     },
@@ -560,7 +560,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             childView.on('blurred', self, self.proxy('childBlurred'));
         });
 
-        $.when.apply(null, started).then(function () {
+        $.when.apply(null, started).done(function () {
             var input_to_focus;
             // options.at: facet inserted at given index, focus next input
             // otherwise just focus last input
@@ -668,12 +668,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-            'facet_for_defaults', this.defaults)).then(function () {
+            'facet_for_defaults', this.defaults)).done(function () {
                 self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
         
         return $.when(drawer_started, defaults_fetched)
-            .then(function () { 
+            .done(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });
@@ -1439,7 +1439,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             name: needle,
             limit: 8,
             context: {}
-        }).pipe(function (results) {
+        }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
             return [{label: self.attrs.string}].concat(
                 _(results).map(function (result) {
@@ -1462,7 +1462,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        return this.model.call('name_get', [value]).pipe(function (names) {
+        return this.model.call('name_get', [value]).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         })
@@ -1509,7 +1509,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         // FIXME: local eval of domain and context to get rid of special endpoint
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
-        }).pipe(this.proxy('set_filters'));
+        }).then(this.proxy('set_filters'));
     },
     clear_selection: function () {
         this.$el.find('li.oe_selected').removeClass('oe_selected');
@@ -1532,7 +1532,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
                     e.stopPropagation();
-                    self.model.call('unlink', [id]).then(function () {
+                    self.model.call('unlink', [id]).done(function () {
                         $filter.remove();
                     });
                 })
@@ -1567,7 +1567,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             domains: search.domains,
             contexts: search.contexts,
             group_by_seq: search.groupbys || []
-        }).then(function (results) {
+        }).done(function (results) {
             if (!_.isEmpty(results.group_by)) {
                 results.context.group_by = results.group_by;
             }
@@ -1579,7 +1579,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 domain: results.domain
             };
             // FIXME: current context?
-            return self.model.call('create_or_replace', [filter]).then(function (id) {
+            return self.model.call('create_or_replace', [filter]).done(function (id) {
                 filter.id = id;
                 self.append_filter(filter);
                 self.$el
@@ -1656,11 +1656,11 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            this.rpc("/web/searchview/fields_get", {model: this.view.model}).then(function(data) {
+            this.rpc("/web/searchview/fields_get", {model: this.view.model}).done(function(data) {
                 self.fields = _.extend({
                     id: { string: 'ID', type: 'id' }
                 }, data.fields);
-        })).then(function () {
+        })).done(function () {
             self.append_proposition();
         });
     },
