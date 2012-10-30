@@ -69,7 +69,7 @@ class sale_configuration(osv.osv_memory):
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
         'module_project': fields.boolean("Project"),
-        'module_sale_stock': fields.boolean("Sale and Warehouse Management",
+        'module_sale_stock': fields.boolean("Trigger delivery orders automatically from sale orders",
             help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
                     This installs the module sale_stock."""),
     }
