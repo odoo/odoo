@@ -138,34 +138,10 @@ class stock_picking_in(osv.osv):
         'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
     def create_draft_invoice(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
         pur_obj = self.pool.get('purchase.order')
-        wizard_obj = self.pool.get('purchase.order.line_invoice')
-        #compute the number of invoices to display
-        inv_ids = []
-        pur_id = self.browse(cr, uid, ids[0], context=context).purchase_id.id
-        po = pur_obj.browse(cr, uid, pur_id, context=context)
-        pur_ids = [pur_id] 
-        if po.invoice_method == 'picking':
-            if not po.invoice_ids:
-                context.update({'active_ids' :  [line.id for line in po.order_line]})
-                wizard_obj.makeInvoices(cr, uid, [], context=context)
-
-        po = pur_obj.browse(cr, uid, pur_id, context=context)
-        inv_ids+= [invoice.id for invoice in po.invoice_ids]
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_supplier_form')
-        res_id = res and res[1] or False
-
-        return {
-            'name': _('Supplier Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'in_invoice', 'journal_type': 'purchase'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': inv_ids and inv_ids[0] or False,
-        }
+        pur_ids = []
+        for pur_id in self.browse(cr, uid, ids, context=context):
+            pur_ids.append(pur_id.purchase_id.id)
+        pur_obj.action_invoice_create(cr, uid, pur_ids, context=context)
+        return pur_obj.view_invoice(cr, uid, pur_ids, context=context)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
