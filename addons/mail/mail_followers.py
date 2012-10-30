@@ -161,7 +161,10 @@ class mail_notification(osv.Model):
         if signature:
             body_html = tools.append_content_to_html(body_html, signature)
 
-        partner_email = [partner.email for partner in msg.partner_ids]
+        partner_email=[]
+        for partner in msg.partner_ids:
+            if partner.email:
+                partner_email.append(partner.email) 
         mail_values = {
             'mail_message_id': msg.id,
             'email_to': partner_email,
