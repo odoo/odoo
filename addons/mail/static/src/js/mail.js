@@ -360,7 +360,7 @@ openerp.mail = function (session) {
                     ]).then(function (record) {
                         var thread = self.parent_thread;
 
-                        if (self.options.display_indented_thread < self.thread_level) {
+                        if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
                             thread = thread.parent_message.parent_thread;
                         }
                         // create object and attach to the thread object
@@ -1481,6 +1481,7 @@ openerp.mail = function (session) {
             }
 
             if (this.root) {
+                $('<span class="oe_mail-placeholder"/>').insertAfter(this.root.$el);
                 this.root.destroy();
             }
             // create and render Thread widget
