@@ -556,7 +556,7 @@ openerp.mail = function (session) {
             }
             this._date = datasets.date;
 
-            this.show_record_name = this.record_name && !this.subject && !this.thread_level && this.model!='res.partner';
+            this.show_record_name = this.record_name && !this.thread_level && this.model!='res.partner';
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : this.options.root_thread;
@@ -941,13 +941,15 @@ openerp.mail = function (session) {
         */
         on_scroll: function () {
             var expandables = 
-            _.each( _.filter(this.messages, function (val) {return val.id < 0;}), function (val) {
+            _.each( _.filter(this.messages, function (val) {return val.id == -1 && !val.loading;}), function (val) {
                 var pos = val.$el.position();
                 if (pos.top) {
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
                         val.on_expandable();
+                        // load only one time
+                        val.loading = true;
                     }
                 }
             });
