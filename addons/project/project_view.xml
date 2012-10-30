@@ -392,7 +392,7 @@
                                 states="draft,open,pending" groups="base.group_user"/>
                         <button name="do_cancel" string="Cancel Task" type="object"
                                 states="draft,open,pending" groups="base.group_user"/>
-                        <field name="stage_id" widget="statusbar" clickable="True" attrs="{'invisible':[('state','=',['cancelled'])]}"/>
+                        <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet string="Task">
                     <label for="name" class="oe_edit_only"/>
@@ -412,7 +412,7 @@
                             <field name="date_deadline" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}"/>
                             <field name="categ_ids" widget="many2many_tags"/>
                             <field name="progress" widget="progressbar"
-                                groups="project.group_time_work_estimation_tasks"/>
+                                groups="project.group_time_work_estimation_tasks" attrs="{'invisible':[('state','=','cancelled')]}"/>
                         </group>
                     </group>
                     <notebook>
