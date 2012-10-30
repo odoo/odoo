@@ -948,16 +948,14 @@ openerp.mail = function (session) {
         */
         on_scroll: function (event) {
             if (event)event.stopPropagation();
-            this.$('.oe_msg_expandable:last');
-
-            var message = this.messages[this.messages.length-1];
-            if (message && message.type=="expandable" && message.max_limit) {
-                var pos = message.$el.position();
+            $last = this.$('> .oe_msg_expandable:last');
+            if ($last.hasClass('oe_max_limit')) {
+                var pos = $last.position();
                 if (pos.top) {
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
-                        message.on_expandable();
+                        $last.find('.oe_msg_fetch_more').click();
                     }
                 }
             }
@@ -1451,9 +1449,10 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             if (this.context['typeof_thread']!='other') {
-                $(document).scroll( this.thread.on_scroll );
-                $(window).resize( this.thread.on_scroll );
-                window.setTimeout( this.thread.on_scroll, 500 );
+                $(document).scroll( _.bind(this.thread.on_scroll, this.thread) );
+                $(window).resize( _.bind(this.thread.on_scroll, this.thread) );
+                this.$el.resize( _.bind(this.thread.on_scroll, this.thread) );
+                window.setTimeout( _.bind(this.thread.on_scroll, this.thread), 500 );
             }
         }
     });
@@ -1556,17 +1555,23 @@ openerp.mail = function (session) {
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
-            this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
-            this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
+
+            this.options.defaults = {};
+            for (var key in options.context) {
+                if(key.match(/^search_default_/)) {
+                    this.options.defaults[key.replace(/^search_default_/, '')] = options.context[key];
+                }
+            }
         },
 
         start: function () {
             this._super.apply(this, arguments);
-            var searchview_ready = this.load_searchview({}, false);
-            var thread_displayed = this.message_render();
-            this.options.domain = this.options.domain.concat(this.search_results['domain']);
+            this.load_searchview(this.options.defaults, false);
             this.bind_events();
-            return $.when(searchview_ready, thread_displayed);
+
+            if(!this.searchview.has_defaults) {
+                this.message_render();
+            }
         },
 
         /**
@@ -1576,10 +1581,14 @@ openerp.mail = function (session) {
          */
         load_searchview: function (defaults, hidden) {
             var self = this;
-            this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
-            return this.searchview.appendTo(this.$('.oe_view_manager_view_search')).then(function () {
-                self.searchview.on('search_data', self, self.do_searchview_search);
-            });
+            var ds_msg = new session.web.DataSetSearch(self, 'mail.message');
+            self.searchview = new session.web.SearchView(self, ds_msg, false, defaults || {}, hidden || false);
+            self.searchview.appendTo(self.$('.oe_view_manager_view_search'))
+                .then(function () { self.searchview.on('search_data', self, self.do_searchview_search); });
+            if (this.searchview.has_defaults) {
+                this.searchview.ready.then(this.searchview.do_search);
+            }
+            return self.searchview
         },
 
         /**
@@ -1596,10 +1605,11 @@ openerp.mail = function (session) {
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
             }).then(function (results) {
-                self.search_results['context'] = results.context;
-                self.search_results['domain'] = results.domain;
-                self.root.destroy();
-                return self.message_render();
+                if(self.root) {
+                    $('<span class="oe_mail-placeholder"/>').insertAfter(self.root.$el);
+                    self.root.destroy();
+                }
+                return self.message_render(results);
             });
         },
 
@@ -1607,13 +1617,12 @@ openerp.mail = function (session) {
         /**
          *Create the root thread widget and display this object in the DOM
           */
-        message_render: function (search) {
-            var domain = this.options.domain.concat(this.search_results['domain']);
-            var context = _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {});
+        message_render: function ( search ) {
+            var domain = this.options.domain.concat(search && search['domain'] ? search['domain'] : []);
+            var context = _.extend(this.options.context, search && search['context'] ? search['context'] : {});
             this.root = new mail.Widget(this, {
                 'domain' : domain,
                 'context' : context,
-                'typeof_thread': context['typeof_thread'] || 'other',
                 'display_indented_thread': 1,
                 'show_reply_button': 10,
                 'show_read_unread_button': 11,
@@ -1641,23 +1650,11 @@ openerp.mail = function (session) {
      * Add a link on the top user bar for write a full mail
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
-        template:'mail.compose_message.button_top_bar',
+        template:'mail.ComposeMessageTopButton',
 
-        init: function (parent, options) {
-            this._super.apply(this, options);
-            this.options = this.options || {};
-            this.options.domain = this.options.domain || [];
-            this.options.context = {
-                'default_model': false,
-                'default_res_id': 0,
-                'default_content_subtype': 'html',
-            };
-        },
-
-        start: function (parent, params) {
-            var self = this;
-            this.$el.on('click', 'button', self.on_compose_message );
-            this._super(parent, params);
+        start: function () {
+            this.$el.on('click', 'button', this.on_compose_message );
+            this._super();
         },
 
         on_compose_message: function (event) {
@@ -1667,14 +1664,9 @@ openerp.mail = function (session) {
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 view_type: 'form',
-                action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: _.extend(this.options.context, {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
-                    'default_content_subtype': 'html',
-                }),
+                context: { 'default_content_subtype': 'html' },
             };
             session.client.action_manager.do_action(action);
         },
@@ -1682,10 +1674,10 @@ openerp.mail = function (session) {
     });
 
     session.web.UserMenu = session.web.UserMenu.extend({
-        start: function (parent, params) {
+        start: function () {
             var render = new session.web.ComposeMessageTopButton();
             render.insertAfter(this.$el);
-            this._super(parent, params);
+            this._super();
         }
     });
 
