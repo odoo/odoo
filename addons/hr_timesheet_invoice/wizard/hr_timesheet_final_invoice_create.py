@@ -36,14 +36,17 @@ class final_invoice_create(osv.osv_memory):
     _description = 'Create invoice from timesheet final'
     _columns = {
         'date': fields.boolean('Date', help='Display date in the history of works'),
-        'time': fields.boolean('Time spent', help='Display time in the history of works'),
-        'name': fields.boolean('Name of entry', help='Display detail of work in the invoice line.'),
+        'time': fields.boolean('Time Spent', help='Display time in the history of works'),
+        'name': fields.boolean('Log of Activity', help='Display detail of work in the invoice line.'),
         'price': fields.boolean('Cost', help='Display cost of the item you reinvoice'),
         'product': fields.many2one('product.product', 'Product', help='The product that will be used to invoice the remaining amount'),
     }
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]
+        # hack for fixing small issue (context should not propagate implicitly between actions)
+        if 'default_type' in context:
+            del context['default_type']
         ids = self.pool.get('account.analytic.line').search(cr, uid, [('invoice_id','=',False),('to_invoice','<>', False), ('account_id', 'in', context['active_ids'])], context=context)
         invs = self.pool.get('account.analytic.line').invoice_cost_create(cr, uid, ids, data, context=context)
         mod_obj = self.pool.get('ir.model.data')
