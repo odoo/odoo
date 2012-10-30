@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-31 04:56+0000\n"
-"X-Generator: Launchpad (build 15887)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:10+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -57,6 +57,16 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Прогнозируемое количество (подсчитанное как количество на руках - исходящее "
+"+ поступающее)\n"
+"В контексте единственного места хранения товара, это включает товары "
+"хранимые в этом месте или любом его дочернем.\n"
+"В контексте единственного склада, это включает товары хранимые в месте "
+"хранения товара на складе или любом его дочернем.\n"
+"В контексте единственного магазина, это включает товары хранимые в в месте "
+"хранения товара на складе этого магазина или любом его дочернем.\n"
+"Иначе, это включает товары хранимые в любом месте, обозначенном как "
+"'внутреннее'."
 
 #. module: product
 #: model:product.category,name:product.product_category_1
@@ -99,8 +109,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
-"Для продаж текущему партнеру, вместо каталога по умолчанию, будет "
-"использоваться этот каталог"
+"Для продаж текущему партнеру, вместо прайс-листа по умолчанию, будет "
+"использоваться этот прайс-лист"
 
 #. module: product
 #: field:product.template,seller_qty:0
@@ -125,7 +135,7 @@ msgstr "Внимание !"
 #: field:product.product,pricelist_id:0
 #: view:product.supplierinfo:0
 msgid "Pricelist"
-msgstr "Каталог"
+msgstr "Прайс-лист"
 
 #. module: product
 #: view:product.product:0
@@ -170,11 +180,13 @@ msgid ""
 "Conversion from Product UoM %s to Default UoM %s is not possible as they "
 "both belong to different Category!."
 msgstr ""
+"Преобразование ед.изм. товара %s в ед.изм. по умолчанию %s невозможно "
+"поскольку они принадлежат различным категориям!"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen"
-msgstr ""
+msgstr "Дюжина"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -184,7 +196,7 @@ msgstr "Средняя цена"
 #. module: product
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
-msgstr "Название явного правила для позиции каталога."
+msgstr "Название явного правила для позиции прайс-листа."
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu1_product_template
@@ -256,6 +268,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Создайте форму товара для всего, что вы покупаете или продаёте. Определите "
+"поставщика, если товар может быть закуплен."
 
 #. module: product
 #: view:product.uom:0
@@ -427,6 +441,15 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Текущее количество товаров.\n"
+"В контексте единственного места хранения товара, это включает товары "
+"хранимые в этом месте или любом его дочернем.\n"
+"В контексте единственного склада, это включает товары хранимые в месте "
+"хранения товара на складе или любом его дочернем.\n"
+"В контексте единственного магазина, это включает товары хранимые в в месте "
+"хранения товара на складе этого магазина или любом его дочернем.\n"
+"Иначе, это включает товары хранимые в любом месте, обозначенном как "
+"'внутреннее'."
 
 #. module: product
 #: view:product.pricelist:0
@@ -527,6 +550,11 @@ msgid ""
 "each version has several rules. Example: the customer price of a product "
 "category will be based on the supplier price multiplied by 1.80."
 msgstr ""
+"Прайс-лист содержит правила оценки в порядке подсчёта цены закупки или "
+"продаж для всех партнёров предназначенных прайс-листу. Прайс-листы имеют "
+"различные версии (2010, 2011, продвижение февраля 2010, и т.п.) и каждая "
+"версия имеет различные правила. Пример: покупательская цена категории товара "
+"будет основана на цене поставщика умноженной на 1,80."
 
 #. module: product
 #: model:product.template,name:product.product_product_metalcleats0_product_template
@@ -537,7 +565,7 @@ msgstr "Металлические зажимы"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Cannot change the category of existing UoM '%s'."
-msgstr ""
+msgstr "Нельзя изменить категорию существующей ед.изм '%s'."
 
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
@@ -557,7 +585,7 @@ msgstr "Расчет цены"
 #. module: product
 #: model:res.groups,name:product.group_uos
 msgid "Product UoS View"
-msgstr ""
+msgstr "Вид ед.прод. продукта"
 
 #. module: product
 #: field:product.template,purchase_ok:0
@@ -642,6 +670,10 @@ msgid ""
 "you need to change the unit of measure, you may desactivate this product "
 "from the 'Procurement & Locations' tab and create a new one."
 msgstr ""
+"Новая ед.изм. '%s' должна принадлежать той же катагории ед.изм. '%s', что и "
+"старая ед.изм. '%s'. Если вам нужно сменить единицу измерения, вы можете "
+"деактивировать этот продукт во вкладке 'Снабжение и места хранения' и "
+"создать новый."
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -656,7 +688,7 @@ msgstr "Базовая цена"
 #. module: product
 #: model:product.template,name:product.product_consultant_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Услуга по табелю"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan2_product_template
@@ -692,7 +724,7 @@ msgstr "Поставщик"
 #. module: product
 #: field:product.product,qty_available:0
 msgid "Quantity On Hand"
-msgstr ""
+msgstr "Количество на руках"
 
 #. module: product
 #: model:product.template,name:product.product_product_26_product_template
@@ -707,7 +739,7 @@ msgstr "Название цены"
 #. module: product
 #: model:product.template,name:product.product_product_arm_product_template
 msgid "Cabinet"
-msgstr ""
+msgstr "Шкаф"
 
 #. module: product
 #: help:product.product,incoming_qty:0
@@ -722,11 +754,20 @@ msgid ""
 "Otherwise, this includes goods arriving to any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Количество товаров запланированных к прибытию.\n"
+"В контексте единственного места хранения товара, это включает товары "
+"хранимые в этом месте или любом его дочернем.\n"
+"В контексте единственного склада, это включает товары хранимые в месте "
+"хранения товара на складе или любом его дочернем.\n"
+"В контексте единственного магазина, это включает товары хранимые в в месте "
+"хранения товара на складе этого магазина или любом его дочернем.\n"
+"Иначе, это включает товары хранимые в любом месте, обозначенном как "
+"'внутреннее'."
 
 #. module: product
 #: model:product.template,name:product.product_product_woodentable0_product_template
 msgid "Wooden Table"
-msgstr ""
+msgstr "Деревянный стол"
 
 #. module: product
 #: model:product.template,name:product.product_product_cpu3_product_template
@@ -990,7 +1031,7 @@ msgstr "Тип цены продукции"
 #. module: product
 #: field:product.product,price_extra:0
 msgid "Variant Price Extra"
-msgstr ""
+msgstr "Вариант наценки"
 
 #. module: product
 #: model:product.template,name:product.product_product_fan_product_template
@@ -1021,7 +1062,7 @@ msgid ""
 "reception of the products in your warehouse. Used by the scheduler for "
 "automatic computation of the purchase order planning."
 msgstr ""
-"Запас по времени между подтверждением заказа на закупку и приходом ТМЦ на "
+"Запас по времени между подтверждением заказа закупки и приходом ТМЦ на "
 "склад. Используется планировщиком для автоматического планирования заказа на "
 "закупку."
 
@@ -1134,6 +1175,15 @@ msgid ""
 "Otherwise, this includes goods leaving from any Stock Location typed as "
 "'internal'."
 msgstr ""
+"Количество товаров запланированное к уходу.\n"
+"В контексте единственного места хранения товара, это включает товары "
+"хранимые в этом месте или любом его дочернем.\n"
+"В контексте единственного склада, это включает товары хранимые в месте "
+"хранения товара на складе или любом его дочернем.\n"
+"В контексте единственного магазина, это включает товары хранимые в в месте "
+"хранения товара на складе этого магазина или любом его дочернем.\n"
+"Иначе, это включает товары хранимые в любом месте, обозначенном как "
+"'внутреннее'."
 
 #. module: product
 #: model:product.category,name:product.product_category_services0
@@ -1172,7 +1222,7 @@ msgstr "Название"
 #. module: product
 #: model:product.template,name:product.product_product_woodlintelm0_product_template
 msgid "Wood Lintel 4m"
-msgstr ""
+msgstr "Деревянная балка 4м"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_normal_action
@@ -1300,7 +1350,7 @@ msgstr "Услуги"
 #. module: product
 #: model:ir.actions.act_window,name:product.product_form_config_action
 msgid "Create or Import Products"
-msgstr ""
+msgstr "Создать или импортировать товары"
 
 #. module: product
 #: field:product.pricelist.item,base_pricelist_id:0
@@ -1407,7 +1457,7 @@ msgstr "Версия каталога"
 #. module: product
 #: field:product.product,virtual_available:0
 msgid "Quantity Available"
-msgstr ""
+msgstr "Доступное количество"
 
 #. module: product
 #: help:product.pricelist.item,sequence:0
@@ -1498,6 +1548,8 @@ msgid ""
 "Will change the way procurements are processed. Consumable are product where "
 "you don't manage stock."
 msgstr ""
+"Изменение способа обработки снабжения. Потребляемым является товар, где вы "
+"не должны обслуживать запас."
 
 #. module: product
 #: field:product.pricelist.version,date_start:0
@@ -1512,6 +1564,10 @@ msgid ""
 "the level of this product. Different lead times will be summed for all "
 "levels and purchase orders."
 msgstr ""
+"Средняя задержка в днях для производства этого товара. Это только для заказа "
+"производства и если есть многоуровневая спецификация материалов, то это "
+"только для уровня этого товара. Различные сроки суммируются для всех уровней "
+"и заказов закупок."
 
 #. module: product
 #: model:product.template,name:product.product_product_pc1_product_template
@@ -1573,12 +1629,12 @@ msgstr "Категории единиц измерения"
 #. module: product
 #: help:product.packaging,weight_ul:0
 msgid "The weight of the empty UL"
-msgstr ""
+msgstr "Вес пустой UL."
 
 #. module: product
 #: model:product.template,name:product.product_product_woodmm10_product_template
 msgid "Wood 10mm"
-msgstr ""
+msgstr "Доска 10мм"
 
 #. module: product
 #: selection:product.uom,uom_type:0
@@ -1613,7 +1669,7 @@ msgstr "Штрих-код EAN упаковки"
 #. module: product
 #: help:product.supplierinfo,product_uom:0
 msgid "This comes from the product form."
-msgstr ""
+msgstr "Это поступает из формы товара."
 
 #. module: product
 #: field:product.packaging,weight_ul:0
@@ -1744,6 +1800,8 @@ msgid ""
 "Produce will generate production order or tasks, according to the product "
 "type. Buy will trigger purchase orders when requested."
 msgstr ""
+"\"Произвести\" создаст заказ производства или задачи согласно типу товара. "
+"\"Покупка\" запустит заказы закупки по запросу."
 
 #. module: product
 #: field:product.product,variants:0
@@ -1784,7 +1842,7 @@ msgstr "Метод округления"
 #. module: product
 #: model:product.category,name:product.product_category_assembly
 msgid "Assembly Service"
-msgstr ""
+msgstr "Услуги сборки"
 
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
@@ -1862,7 +1920,7 @@ msgstr ""
 #. module: product
 #: model:product.template,description:product.product_product_cpu1_product_template
 msgid "This product is configured with example of push/pull flows"
-msgstr ""
+msgstr "Этот товар сконфигурирован с примером потоков положить/взять"
 
 #. module: product
 #: field:product.packaging,length:0
@@ -2043,7 +2101,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Context..."
-msgstr ""
+msgstr "Контекст ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd1_product_template
@@ -2170,6 +2228,8 @@ msgid ""
 "At least one pricelist has no active version !\n"
 "Please create or activate one."
 msgstr ""
+"По крайней мере один прайс-лист не имеет активной версии!\n"
+"Пожалуйста, создайте или активируйте его."
 
 #. module: product
 #: field:product.pricelist.item,price_max_margin:0
@@ -2237,7 +2297,7 @@ msgstr "Последовательность"
 #. module: product
 #: model:product.template,name:product.product_assembly_product_template
 msgid "Assembly Service Cost"
-msgstr ""
+msgstr "Цена услуги сборки"
 
 #. module: product
 #: view:product.price_list:0
@@ -2268,7 +2328,7 @@ msgstr "Задержки"
 #. module: product
 #: view:product.product:0
 msgid "Both stockable and consumable products"
-msgstr ""
+msgstr "Как запасаемые, так и потребляемые товары"
 
 #. module: product
 #: model:process.node,note:product.process_node_product0
@@ -2362,6 +2422,8 @@ msgid ""
 "Gives the different ways to package the same product. This has no impact on "
 "the picking order and is mainly used if you use the EDI module."
 msgstr ""
+"Даёт различные способы упаковки товара. Это не влияет на заказ "
+"комплектования и в основном применяется если вы используете модуль ЭОД (EDI)."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_pricelist_action
@@ -2373,7 +2435,7 @@ msgstr "Версии каталогов"
 #. module: product
 #: model:product.template,name:product.product_product_span100_product_template
 msgid "Shelf Panel"
-msgstr ""
+msgstr "Панель полки"
 
 #. module: product
 #: help:product.pricelist.item,price_round:0
@@ -2395,7 +2457,7 @@ msgstr "Цена продажи"
 #. module: product
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Ошибка ! Нельзя создавать рекурсивные категории."
 
 #. module: product
 #: field:product.category,type:0
@@ -2419,7 +2481,7 @@ msgstr ""
 #. module: product
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
 
 #. module: product
 #: field:product.pricelist.item,price_discount:0

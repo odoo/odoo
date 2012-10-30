@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-07 04:56+0000\n"
-"X-Generator: Launchpad (build 15914)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:52+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -294,7 +294,7 @@ msgstr "september"
 #: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "Taxes"
+msgstr "Moms"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -304,7 +304,7 @@ msgstr "Taxes"
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr "Purchase Order"
+msgstr "Inköpsorder"
 
 #. module: purchase
 #: field:purchase.order,name:0 view:purchase.order.line:0
@@ -406,13 +406,13 @@ msgstr "Dest. Adress Kontakt Namn"
 #. module: purchase
 #: report:purchase.order:0
 msgid "TVA :"
-msgstr "TVA :"
+msgstr "Moms"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr "Inköpsorder '%s' har åter fått status utkast."
+msgstr "Inköpsorder '%s' har åter fått status Utkast."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
@@ -498,7 +498,7 @@ msgstr "Inkommande leveranser som redan behandlats"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Total :"
-msgstr "Total :"
+msgstr "Totalt:"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
@@ -752,7 +752,7 @@ msgstr "Konfiguration"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
-msgstr "Total amount"
+msgstr "Totalt belopp"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
@@ -856,7 +856,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr "Inköpsorderradsammanslagning"
+msgstr "Sammanslagning av inköpsordrar"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -970,7 +970,7 @@ msgstr "Den totala summan"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr "Taxes :"
+msgstr "Moms :"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
@@ -1022,7 +1022,7 @@ msgstr "Bolagsnamnet måste vara unikt !"
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr "Purchase Order Line"
+msgstr "Inköpsorderrad"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1065,7 +1065,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr "Untaxed Amount"
+msgstr "Belopp ex. moms"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
@@ -1210,7 +1210,7 @@ msgstr "Bolag"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Purchase Order"
-msgstr "Cancel Purchase Order"
+msgstr "Avbryt Inköpsorder"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:411 code:addons/purchase/purchase.py:418
@@ -1319,12 +1319,12 @@ msgid ""
 "received, the state becomes 'Done'. If a cancel action occurs in the invoice "
 "or in the reception of goods, the state becomes in exception."
 msgstr ""
-"Tillstånd för Inköpsorder eller Offertförfråga. En offert är en Inköpsorder "
-"i \"utkast\"-läge. Ordern måste därefter bekräftas av användaren och växlar "
-"då över till \"Bekräftat\"-läge. Sedan måste leverantören bekräfta för att "
-"ändra tillståndet till \"Godkänd\". När beställningen är betald och "
+"Status för Inköpsorder eller Offertförfråga. En offert är en Inköpsorder i "
+"status \"Utkast\". Ordern måste därefter bekräftas av användaren och växlar "
+"då över till status \"Bekräftad\". Därefter måste leverantören bekräfta för "
+"att ändra statusen till \"Godkänd\". När beställningen är betald och "
 "mottagen, blir statusen \"Klar\". Om man Avbryter fakturan eller "
-"inleveransen blir statusen Undantag."
+"inleveransen blir statusen \"Undantag\"."
 
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
@@ -1353,14 +1353,14 @@ msgstr "Datum då inköpsorder har godkänts"
 #: view:purchase.order.line:0 field:purchase.order.line,state:0
 #: view:purchase.report:0 view:stock.picking:0
 msgid "State"
-msgstr "Tillstånd"
+msgstr "Status"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
 #: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
-msgstr "Approved"
+msgstr "Godkänd"
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1411,7 +1411,7 @@ msgstr "Avbryt"
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr "Purchase Order Lines"
+msgstr "Inköpsorderrader"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
@@ -1467,7 +1467,7 @@ msgstr "Offertförfrågan"
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tél. :"
-msgstr "Tél. :"
+msgstr "Tel."
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1562,7 +1562,7 @@ msgstr "Ordrar i år"
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr "Expected Delivery address:"
+msgstr "Förväntad leveransadress:"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -1639,7 +1639,7 @@ msgstr "Beställningar som inkluderar rader som inte är fakturerade."
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed amount"
-msgstr "Untaxed amount"
+msgstr "Belopp ex. moms"
 
 #. module: purchase
 #: view:stock.picking:0
@@ -1686,12 +1686,12 @@ msgstr "Your Order Reference"
 #: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
-msgstr "Expected Date"
+msgstr "Förväntat datum"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr "TVA:"
+msgstr "Moms:"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_picking_tree4_picking_to_invoice
@@ -1797,12 +1797,12 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
-" * Tillståndet \"Utkast\" ställs in automatiskt när inköpsorder är i utkast "
+" * Statusen \"Utkast\" ställs in automatiskt när inköpsorder är i utkast "
 "tillstånd.\n"
-"* Tillståndet \"Bekräftad\" ställs in automatiskt när bekräfta när "
-"inköpsorder är i bekräfta tillstånd.\n"
-"* Tillståndet \"Klar\" ställs in automatiskt när inköpsorder är klar.\n"
-"* Tillståndet \"Inställd\" ställs in automatiskt när användaren avbryter ett "
+"* Statusen \"Bekräftad\" ställs in automatiskt när bekräfta när inköpsorder "
+"är i bekräfta tillstånd.\n"
+"* Statusen \"Klar\" ställs in automatiskt när inköpsorder är klar.\n"
+"* Statusen \"Inställd\" ställs in automatiskt när användaren avbryter ett "
 "inköp."
 
 #. module: purchase
@@ -1814,7 +1814,7 @@ msgstr "Inköpsorder '%s' är avbruten."
 #. module: purchase
 #: field:purchase.order,amount_total:0
 msgid "Total"
-msgstr "Total"
+msgstr "Totalt"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
@@ -1913,20 +1913,19 @@ msgstr ""
 "Hej ${object.partner_address_id.name and ' ' or "
 "''}${object.partner_address_id.name or ''},\n"
 "\n"
-"Här är en inköpsorder bekräftelse från ${object.company_id.name}:\n"
+"Här är en inköpsorderbekräftelse från ${object.company_id.name}:\n"
 "       | Order number: *${object.name}*\n"
 "       | Order total: *${object.amount_total} "
 "${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
+"       | Order datum: ${object.date_order}\n"
 "       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
+"       | Orderreferens: ${object.origin}\n"
 "       % endif\n"
 "       % if object.partner_ref:\n"
-"       | Your reference: ${object.partner_ref}<br />\n"
+"       | Er referens: ${object.partner_ref}<br />\n"
 "       % endif\n"
-"       | Your contact: ${object.validator.name} "
-"${object.validator.user_email and '<%s>'%(object.validator.user_email) or "
-"''}\n"
+"       | Er kontakt: ${object.validator.name} ${object.validator.user_email "
+"and '<%s>'%(object.validator.user_email) or ''}\n"
 "\n"
 "Du kan visa orderbekräftelsen och ladda ner det via följande länk:\n"
 "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
@@ -1954,7 +1953,7 @@ msgstr ""
 "or ''} ${object.company_id.country_id.name or ''}\n"
 "% endif\n"
 "% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
+"Telefon: ${object.company_id.phone}\n"
 "% endif\n"
 "% if object.company_id.website:\n"
 "${object.company_id.website or ''}\n"
@@ -1964,7 +1963,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase orders which are in draft state"
-msgstr "Beställningar som är Utkast"
+msgstr "Beställningar som har status Utkast"
 
 #. module: purchase
 #: selection:purchase.report,month:0

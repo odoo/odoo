@@ -22,7 +22,7 @@ check the logs to see if a message we just received was already logged.
 """
 _PREVIOUS_LOG_CHECK = datetime.timedelta(days=365)
 
-def get_sys_logs(cr, uid):
+def get_sys_logs(self, cr, uid):
     """
     Utility method to send a publisher warranty get logs messages.
     """
@@ -41,6 +41,8 @@ def get_sys_logs(cr, uid):
         nbr_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True)], count=True)
         nbr_active_share_users = pool.get("res.users").search(cr, uid, [("share", "=", True), ("date", ">=", limit_date_str)], count=True)
     user = pool.get("res.users").browse(cr, uid, uid)
+
+    web_base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', 'False')
     msg = {
         "dbuuid": dbuuid,
         "nbr_users": nbr_users,
@@ -51,6 +53,7 @@ def get_sys_logs(cr, uid):
         "db_create_date": db_create_date,
         "version": release.version,
         "language": user.lang,
+        "web_base_url": web_base_url,
     }
     msg.update(pool.get("res.company").read(cr,uid,[1],["name","email","phone"])[0])
 
@@ -59,6 +62,7 @@ def get_sys_logs(cr, uid):
     arguments_raw = urllib.urlencode(arguments)
 
     url = config.get("publisher_warranty_url")
+
     uo = urllib2.urlopen(url, arguments_raw, **add_arg)
     result = {}
     try:
@@ -81,8 +85,8 @@ class publisher_warranty_contract(osv.osv):
         """
         try:
             try:
-                result = get_sys_logs(cr, uid)
-            except Exception:
+                result = get_sys_logs(self, cr, uid)
+            except Exception, ex:
                 if cron_mode: # we don't want to see any stack trace in cron
                     return False
                 _logger.debug("Exception while sending a get logs messages", exc_info=1)

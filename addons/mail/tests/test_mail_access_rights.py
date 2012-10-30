@@ -51,7 +51,40 @@ class test_mail_access_rights(test_mail.TestMailMockups):
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.partner_raoul_id = self.user_raoul.partner_id.id
 
-    def test_00_mail_message_read_access_rights(self):
+    def test_00_mail_message_search_access_rights(self):
+        """ Test mail_message search override about access rights. """
+        cr, uid, group_pigs_id = self.cr, self.uid, self.group_pigs_id
+        partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
+        user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
+        # Data: comment subtype for mail.message creation
+        ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'mail', 'mt_comment')
+        subtype_id = ref and ref[1] or False
+
+        # Data: Birds group, private
+        group_birds_id = self.mail_group.create(self.cr, self.uid, {'name': 'Birds', 'public': 'private'})
+        # Data: raoul is member of Pigs
+        self.mail_group.message_subscribe(cr, uid, [group_pigs_id], [partner_raoul_id])
+        # Data: various author_ids, partner_ids, documents
+        msg_id1 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A', 'subtype_id': subtype_id})
+        msg_id2 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A+B', 'partner_ids': [(6, 0, [partner_bert_id])], 'subtype_id': subtype_id})
+        msg_id3 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A Pigs', 'model': 'mail.group', 'res_id': group_pigs_id, 'subtype_id': subtype_id})
+        msg_id4 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A+B Pigs', 'model': 'mail.group', 'res_id': group_pigs_id, 'partner_ids': [(6, 0, [partner_bert_id])], 'subtype_id': subtype_id})
+        msg_id5 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A+R Pigs', 'model': 'mail.group', 'res_id': group_pigs_id, 'partner_ids': [(6, 0, [partner_raoul_id])], 'subtype_id': subtype_id})
+        msg_id6 = self.mail_message.create(cr, uid, {'subject': '_Test', 'body': 'A Birds', 'model': 'mail.group', 'res_id': group_birds_id, 'subtype_id': subtype_id})
+        msg_id7 = self.mail_message.create(cr, user_bert_id, {'subject': '_Test', 'body': 'B', 'subtype_id': subtype_id})
+        msg_id8 = self.mail_message.create(cr, user_bert_id, {'subject': '_Test', 'body': 'B+R', 'partner_ids': [(6, 0, [partner_raoul_id])], 'subtype_id': subtype_id})
+
+        # Test: Bert: 2 messages that have Bert in partner_ids + 2 messages as author
+        msg_ids = self.mail_message.search(cr, user_bert_id, [('subject', 'like', '_Test')])
+        self.assertEqual(set([msg_id2, msg_id4, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
+        # Test: Raoul: 3 messages on Pigs Raoul can read (employee can read group with default values), 0 on Birds (private group)
+        msg_ids = self.mail_message.search(cr, user_raoul_id, [('subject', 'like', '_Test'), ('body', 'like', 'A')])
+        self.assertEqual(set([msg_id3, msg_id4, msg_id5]), set(msg_ids), 'mail_message search failed')
+        # Test: Admin: all messages
+        msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
+        self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
+
+    def test_05_mail_message_read_access_rights(self):
         """ Test basic mail_message read access rights. """
         cr, uid = self.cr, self.uid
         partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
@@ -98,57 +131,69 @@ class test_mail_access_rights(test_mail.TestMailMockups):
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
 
-    def test_05_mail_message_search_access_rights(self):
-        """ Test mail_message search override about access rights. """
-        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
+    def test_10_mail_flow_access_rights(self):
+        """ Test a Chatter-looks alike flow. """
+        cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
+        partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
+        user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
 
-    # def test_10_mail_flow_access_rights(self):
-    #     """ Test a Chatter-looks alike flow. """
-    #     cr, uid = self.cr, self.uid
-    #     partner_bert_id, partner_raoul_id = self.partner_bert_id, self.partner_raoul_id
-    #     user_bert_id, user_raoul_id = self.user_bert_id, self.user_raoul_id
+        # Prepare groups: Pigs (employee), Jobs (public)
+        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
 
-    #     # Prepare groups: Pigs (employee), Jobs (public)
-    #     self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
-    #     self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
+        # ----------------------------------------
+        # CASE1: Bert, without groups
+        # ----------------------------------------
+        # Do: Bert creates a group, should crash because perm_create only for employees
+        self.assertRaises(except_orm,
+                          self.mail_group.create,
+                          cr, user_bert_id, {'name': 'Bert\'s Group'})
 
-    #     # ----------------------------------------
-    #     # CASE1: Bert, without groups
-    #     # ----------------------------------------
-    #     # Do: Bert creates a group, should crash because perm_create only for employees
-    #     self.assertRaises(except_orm,
-    #                       self.mail_group.create,
-    #                       cr, user_bert_id, {'name': 'Bert\'s Group'})
-    #     # Do: Bert reads Jobs basic fields, ok because public = read access on the group
-    #     self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['name', 'description'])
-    #     # Do: Bert browse Pigs, ok (no direct browse of partners)
-    #     self.mail_group.browse(cr, user_bert_id, self.group_jobs_id)
-    #     # Do: Bert reads Jobs messages, ok because read access on the group => read access on its messages
-    #     jobs_message_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_ids'])['message_ids']
-    #     self.mail_message.read(cr, user_bert_id, jobs_message_ids)
-    #     # Do: Bert reads Jobs followers, ko because partner are accessible to employees or partner manager
-    #     jobs_followers_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_follower_ids'])['message_follower_ids']
-    #     self.assertRaises(except_orm,
-    #                       self.res_partner.read,
-    #                       cr, user_bert_id, jobs_followers_ids)
-    #     # Do: Bert comments Jobs, ko because no write access on the group and not in the followers
-    #     self.assertRaises(except_orm,
-    #                       self.mail_group.message_post,
-    #                       cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
-    #     # Do: add Bert to jobs followers
-    #     self.mail_group.message_subscribe(cr, uid, [self.group_jobs_id], [partner_bert_id])
-    #     # Do: Bert comments Jobs, ok because he is now in the followers
-    #     self.mail_group.message_post(cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
+        # Do: Bert reads Jobs basic fields, ok because public = read access on the group
+        self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['name', 'description'])
+        # Do: Bert browse Pigs, ok (no direct browse of partners)
+        self.mail_group.browse(cr, user_bert_id, self.group_jobs_id)
+        # Do: Bert reads Jobs messages, ok because read access on the group => read access on its messages
+        jobs_message_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_ids'])['message_ids']
+        self.mail_message.read(cr, user_bert_id, jobs_message_ids)
+        # Do: Bert reads Jobs followers, ko because partner are accessible to employees or partner manager
+        jobs_followers_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_follower_ids'])['message_follower_ids']
+        self.assertRaises(except_orm,
+                          self.res_partner.read,
+                          cr, user_bert_id, jobs_followers_ids)
+        # Do: Bert comments Jobs, ko because no write access on the group and not in the followers
+        self.assertRaises(except_orm,
+                          self.mail_group.message_post,
+                          cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
+        # Do: add Bert to jobs followers
+        self.mail_group.message_subscribe(cr, uid, [self.group_jobs_id], [partner_bert_id])
+        # Do: Bert comments Jobs, ok because he is now in the followers
+        self.mail_group.message_post(cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
 
-    #     # Do: Bert reads Pigs, should crash because mail.group security=groups only for employee group
-    #     self.assertRaises(except_orm,
-    #                       self.mail_group.read,
-    #                       cr, user_bert_id, self.group_pigs_id)
+        # Do: Bert reads Pigs, should crash because mail.group security=groups only for employee group
+        self.assertRaises(except_orm,
+                          self.mail_group.read,
+                          cr, user_bert_id, self.group_pigs_id)
 
-    #     # ----------------------------------------
-    #     # CASE1: Raoul, employee
-    #     # ----------------------------------------
-    #     # Do: Bert read Pigs, ok because public
-    #     self.mail_group.read(cr, user_raoul_id, self.group_pigs_id)
-    #     # Do: Bert read Jobs, ok because group_public_id = employee
-    #     self.mail_group.read(cr, user_raoul_id, self.group_jobs_id)
+        # Do: Bert create a mail.compose.message record, because he uses the wizard
+        compose_id = mail_compose.create(cr, user_bert_id,
+            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
+        mail_compose.send_mail(cr, user_bert_id, [compose_id])
+
+        self.user_demo_id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+        compose_id = mail_compose.create(cr, self.user_demo_id,
+            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
+        mail_compose.send_mail(cr, self.user_demo_id, [compose_id])
+
+        # ----------------------------------------
+        # CASE2: Raoul, employee
+        # ----------------------------------------
+        # Do: Bert read Pigs, ok because public
+        self.mail_group.read(cr, user_raoul_id, self.group_pigs_id)
+        # Do: Bert read Jobs, ok because group_public_id = employee
+        self.mail_group.read(cr, user_raoul_id, self.group_jobs_id)

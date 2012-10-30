@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-10 04:44+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:16+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -25,7 +25,7 @@ msgstr "Сина"
 #. module: hr_holidays
 #: field:hr.holidays,holiday_type:0
 msgid "Allocation Type"
-msgstr "Тип на Алокација"
+msgstr "Тип на Распределба"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
@@ -36,7 +36,7 @@ msgstr "Се чека на второ одобрување"
 #. module: hr_holidays
 #: help:hr.holidays.status,remaining_leaves:0
 msgid "Maximum Leaves Allowed - Leaves Already Taken"
-msgstr "Мкасимален број на дозволени отсуства - Отсуствата се веќе земени"
+msgstr "Максимален број на дозволени отсуства - Отсуствата се веќе земени"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -51,7 +51,7 @@ msgstr "Групирај По..."
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Allocation Mode"
-msgstr "Мод на Алокација"
+msgstr "Режим на Распределба"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -102,12 +102,12 @@ msgid ""
 "for every employee"
 msgstr ""
 "Менаџерот за отсуства може да го остави ова поле празно ако барањето за "
-"отсуство/преместување е за секој вработен"
+"отсуство/распределба е за секој вработен"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Set to Draft"
-msgstr "Подеси на нацрт"
+msgstr "Сетирај на Драфт"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -132,6 +132,11 @@ msgid ""
 "the employee. You can define several allowance types (paid holidays, "
 "sickness, etc.) and manage allowances per type."
 msgstr ""
+"Барањата за отсуство може да се евидентираат од страна на вработените и да "
+"се валидираат од нивните менаџери. Кога еднаш ќе се валидира барањето, се "
+"појавува автоматски во агендата на вработениот. Можете да дефинирате неколку "
+"типови на отсуства (платени денови, боледување, итн.) и да менаџирате "
+"отсуства по тип."
 
 #. module: hr_holidays
 #: model:ir.actions.report.xml,name:hr_holidays.report_holidays_summary
@@ -174,6 +179,10 @@ msgid ""
 "  \n"
 "The state is 'Approved', when holiday request is approved by manager."
 msgstr ""
+"Чекор 'Драфт', кога е креирано барање за отсуство.\n"
+"Чекор 'Се чека на одобрување', кога отсуството е потврдено.\n"
+"Чекор 'Одбиено', кога барањето е одбиено од менаџерот.\n"
+"Чекор 'Одобрено', кога барањето е одобрено од менаџерот."
 
 #. module: hr_holidays
 #: view:board.board:0
@@ -186,7 +195,7 @@ msgstr "Отсуства"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays
 msgid "Leave"
-msgstr ""
+msgstr "Отсуство"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
@@ -211,6 +220,9 @@ msgid ""
 "Choose 'Allocation Request' if you want to increase the number of leaves "
 "available for someone"
 msgstr ""
+"Одбери 'Барање за Отсуство' ако некој сака да земе слободен ден.\n"
+"Одбери 'Барање за Преместување' ако сакате да го зголемите бројот на "
+"дозволени отсуства."
 
 #. module: hr_holidays
 #: help:hr.employee,remaining_leaves:0
@@ -218,32 +230,34 @@ msgid ""
 "Total number of legal leaves allocated to this employee, change this value "
 "to create allocation/leave requests."
 msgstr ""
+"Вкупен број на легални отсуства дадени на овој вработен, промени ја оваа "
+"вредност за да креирате барање за отсуство/распределба"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Validation"
-msgstr ""
+msgstr "Потврдување"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:377
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Внимание !"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,color_name:0
 msgid "Color in Report"
-msgstr ""
+msgstr "Боја во Извештај"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_employee
 msgid "HR Holidays Summary Report By Employee"
-msgstr ""
+msgstr "Збир на отсуства по вработен"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id:0
 msgid "This area is automatically filled by the user who validate the leave"
-msgstr ""
+msgstr "Ова е автоматски пополнето од корисник кој го потврдил отсуството"
 
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
@@ -255,64 +269,66 @@ msgstr ""
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
 #: model:ir.ui.menu,name:hr_holidays.menu_open_view_holiday_status
 msgid "Leave Type"
-msgstr ""
+msgstr "Тип на Отсуство"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:199
 #: code:addons/hr_holidays/hr_holidays.py:344
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Предупредување!"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Magenta"
-msgstr ""
+msgstr "Магента"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "You have to select at least 1 Department. And try again"
-msgstr ""
+msgstr "Морате да одберете барем 1 сектор. И да се обидете повторно"
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
-msgstr ""
+msgstr "Потврдено"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,date_from:0
 #: field:hr.holidays.summary.employee,date_from:0
 msgid "From"
-msgstr ""
+msgstr "Од"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Confirm"
-msgstr ""
+msgstr "Потврди"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:384
 #, python-format
 msgid "Leave Request for %s"
-msgstr ""
+msgstr "Барање за Отсуство за %s"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
 msgid "Remaining Leaves"
-msgstr ""
+msgstr "Преостанати отсуства"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,state:0
 msgid "State"
-msgstr ""
+msgstr "Состојба"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_remaining_leaves_user
 msgid "Total holidays by type"
-msgstr ""
+msgstr "Вкупен број на годишни одмори по тип"
 
 #. module: hr_holidays
 #: view:hr.employee:0
@@ -321,28 +337,28 @@ msgstr ""
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
-msgstr ""
+msgstr "Вработен"
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "New"
-msgstr ""
+msgstr "Ново"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Red"
-msgstr ""
+msgstr "Црвена"
 
 #. module: hr_holidays
 #: view:hr.holidays.remaining.leaves.user:0
 msgid "Leaves by Type"
-msgstr ""
+msgstr "Отсуства по Тип"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -358,19 +374,20 @@ msgstr ""
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
 msgstr ""
+"Грешка! Почетниот датум за отсуство мора да биде помал од крајниотдатум."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:382
 #, python-format
 msgid "Allocation for %s"
-msgstr ""
+msgstr "Распределба за %s"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
-msgstr ""
+msgstr "Број на денови"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:377
@@ -388,12 +405,12 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Search Leave Type"
-msgstr ""
+msgstr "Пребарај Тип на Отсуство"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "You have to select an employee or a category"
-msgstr ""
+msgstr "Мора да одберете вработен или категорија"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
@@ -406,12 +423,12 @@ msgstr ""
 #: selection:hr.employee,current_leave_state:0
 #: selection:hr.holidays,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Се чека на одобрување"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,emp:0
 msgid "Employee(s)"
-msgstr ""
+msgstr "Вработен(и)"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,categ_id:0
@@ -423,47 +440,47 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,linked_request_ids:0
 msgid "Linked Requests"
-msgstr ""
+msgstr "Поврзани Барања"
 
 #. module: hr_holidays
 #: field:hr.holidays,parent_id:0
 msgid "Parent"
-msgstr ""
+msgstr "Родител"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
 msgid "Lavender"
-msgstr ""
+msgstr "Лаванда"
 
 #. module: hr_holidays
 #: xsl:holidays.summary:0
 #: view:hr.holidays:0
 msgid "Month"
-msgstr ""
+msgstr "Месец"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_ask_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_ask_holidays_new
 msgid "Leave Requests"
-msgstr ""
+msgstr "Барање за Отсуство"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,limit:0
 msgid "Allow to Override Limit"
-msgstr ""
+msgstr "Дозвола за пречекорување на лимитот"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.employee:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_employee
 msgid "Employee's Holidays"
-msgstr ""
+msgstr "Годишни одмори на вработениот"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Категорија"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,max_leaves:0
@@ -471,11 +488,13 @@ msgid ""
 "This value is given by the sum of all holidays requests with a positive "
 "value."
 msgstr ""
+"Оваа вредност е зададена од сумата на сите барања за годишни одмори со "
+"позитивна вредост."
 
 #. module: hr_holidays
 #: view:board.board:0
 msgid "All Employee Leaves"
-msgstr ""
+msgstr "Сите отсуства на вработениот"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -486,7 +505,7 @@ msgstr ""
 #: view:hr.holidays.summary.dept:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_summary_dept
 msgid "Holidays by Department"
-msgstr ""
+msgstr "Годишни одмори по Сектор"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -496,18 +515,18 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_holidays_leaves_assign_legal
 msgid "Allocate Leaves for Employees"
-msgstr ""
+msgstr "Рспредели отсуства за Вработени"
 
 #. module: hr_holidays
 #: field:resource.calendar.leaves,holiday_id:0
 msgid "Holiday"
-msgstr ""
+msgstr "Одмор"
 
 #. module: hr_holidays
 #: field:hr.holidays,case_id:0
 #: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
-msgstr ""
+msgstr "Состанок"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -518,72 +537,72 @@ msgstr ""
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Both Validated and Confirmed"
-msgstr ""
+msgstr "Валидиран и Потврден"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,leaves_taken:0
 msgid "Leaves Already Taken"
-msgstr ""
+msgstr "Отсуствата се веќе зафаени"
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
 #: field:hr.holidays.remaining.leaves.user,user_id:0
 msgid "User"
-msgstr ""
+msgstr "Корисник"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The start date must be before the end date !"
-msgstr ""
+msgstr "Почетниот датум мора да биде пред крајниот датум !"
 
 #. module: hr_holidays
 #: field:hr.holidays.status,active:0
 msgid "Active"
-msgstr ""
+msgstr "Активен"
 
 #. module: hr_holidays
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Грешка! Не можете да креирате рекурзивна хиерархија на вработените."
 
 #. module: hr_holidays
 #: view:hr.employee:0
 #: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
-msgstr ""
+msgstr "Останати Легални Отсуства"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id:0
 msgid "First Approval"
-msgstr ""
+msgstr "Прво Одобрување"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_unpaid
 msgid "Unpaid"
-msgstr ""
+msgstr "Неплатени"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_company_allocation
 #: model:ir.ui.menu,name:hr_holidays.menu_open_company_allocation
 msgid "Leaves Summary"
-msgstr ""
+msgstr "Збир на Отсуства"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Holidays during last month"
-msgstr ""
+msgstr "Неработни денови во последниот месец"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/wizard/hr_holidays_summary_department.py:44
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Грешка"
 
 #. module: hr_holidays
 #: view:hr.employee:0
 msgid "Assign Leaves"
-msgstr ""
+msgstr "Додели Отсуства"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -593,17 +612,17 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "My Department Leaves"
-msgstr ""
+msgstr "Мои Секторски Отсуства"
 
 #. module: hr_holidays
 #: field:hr.employee,current_leave_state:0
 msgid "Current Leave Status"
-msgstr ""
+msgstr "Тековен Статус на Отсуства"
 
 #. module: hr_holidays
 #: field:hr.holidays,type:0
 msgid "Request Type"
-msgstr ""
+msgstr "Тип на Барање"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,active:0
@@ -615,35 +634,35 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Misc"
-msgstr ""
+msgstr "Разно"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "General"
-msgstr ""
+msgstr "Општо"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_comp
 msgid "Compensatory Days"
-msgstr ""
+msgstr "Денови за Компензација"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,notes:0
 msgid "Reasons"
-msgstr ""
+msgstr "Причини"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "Leaves Analysis"
-msgstr ""
+msgstr "Анализа на Отсуства"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Cancel"
-msgstr ""
+msgstr "Откажи"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,color_name:0
@@ -653,71 +672,73 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
 #: view:hr.holidays:0
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
-msgstr ""
+msgstr "Валидирано"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Allocation Request"
-msgstr ""
+msgstr "Барање за Распределба"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
 msgid "Leave Detail"
-msgstr ""
+msgstr "Детал за Отсуство"
 
 #. module: hr_holidays
 #: field:hr.holidays,double_validation:0
 #: field:hr.holidays.status,double_validation:0
 msgid "Apply Double Validation"
-msgstr ""
+msgstr "Аплицирај Дупла Валидација"
 
 #. module: hr_holidays
 #: view:hr.holidays.summary.dept:0
 #: view:hr.holidays.summary.employee:0
 msgid "Print"
-msgstr ""
+msgstr "Печати"
 
 #. module: hr_holidays
 #: view:hr.holidays.status:0
 msgid "Details"
-msgstr ""
+msgstr "Детали"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_leaves_by_month
 msgid "My Leaves"
-msgstr ""
+msgstr "Мои отсуства"
 
 #. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee Category"
-msgstr ""
+msgstr "По категорија на вработен"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: selection:hr.holidays,type:0
 msgid "Leave Request"
-msgstr ""
+msgstr "Барање за Отсуство"
 
 #. module: hr_holidays
 #: field:hr.holidays,name:0
 msgid "Description"
-msgstr ""
+msgstr "Опис"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_cl
 msgid "Legal Leaves"
-msgstr ""
+msgstr "Легални Отсуства"
 
 #. module: hr_holidays
 #: sql_constraint:hr.holidays:0
 msgid "The number of days must be greater than 0 !"
-msgstr ""
+msgstr "Бројот на денови мора да е поголем од 0 !"
 
 #. module: hr_holidays
 #: help:hr.holidays,holiday_type:0
@@ -730,7 +751,7 @@ msgstr ""
 #: code:addons/hr_holidays/hr_holidays.py:199
 #, python-format
 msgid "You cannot delete a leave which is not in draft state !"
-msgstr ""
+msgstr "Не можете да избришете отсуство што не е во драфт статус !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -740,32 +761,32 @@ msgstr "Пребарај Отсуство"
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
 msgid "Select Holiday Type"
-msgstr ""
+msgstr "Одбери тип на годишен одмор"
 
 #. module: hr_holidays
 #: field:hr.holidays.remaining.leaves.user,no_of_leaves:0
 msgid "Remaining leaves"
-msgstr ""
+msgstr "Преостанати отсуства"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.dept,depts:0
 msgid "Department(s)"
-msgstr ""
+msgstr "Сектор(и)"
 
 #. module: hr_holidays
 #: field:hr.holidays,manager_id2:0
 msgid "Second Approval"
-msgstr ""
+msgstr "Второ Одобрување"
 
 #. module: hr_holidays
 #: field:hr.holidays,date_to:0
 msgid "End Date"
-msgstr ""
+msgstr "Краен датум"
 
 #. module: hr_holidays
 #: model:hr.holidays.status,name:hr_holidays.holiday_status_sl
 msgid "Sick Leaves"
-msgstr ""
+msgstr "Отсуства за боледување"
 
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
@@ -796,7 +817,7 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays.status,max_leaves:0
 msgid "Maximum Allowed"
-msgstr ""
+msgstr "Максимално дозволени"
 
 #. module: hr_holidays
 #: help:hr.holidays,manager_id2:0
@@ -808,30 +829,30 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Mode"
-msgstr ""
+msgstr "Режим"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_holidays_summary_dept
 msgid "HR Holidays Summary Report By Department"
-msgstr ""
+msgstr "Извештај за слободни денови по сектор"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Approve"
-msgstr ""
+msgstr "Одобри"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: field:hr.holidays,date_from:0
 msgid "Start Date"
-msgstr ""
+msgstr "Почетен датум"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 #: model:ir.actions.act_window,name:hr_holidays.open_allocation_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation_holidays
 msgid "Allocation Requests"
-msgstr ""
+msgstr "Барање за Распределба"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -846,19 +867,22 @@ msgstr ""
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Manager"
-msgstr ""
+msgstr "Менаџер"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Confirm"
-msgstr ""
+msgstr "За Потврдување"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "Year"
-msgstr ""
+msgstr "Година"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
 msgid "To Approve"
-msgstr ""
+msgstr "За Одобрување"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "Отсуства за Валидација"
