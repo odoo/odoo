@@ -1031,14 +1031,14 @@ openerp.mail = function (session) {
                 return this.options.root_thread.browse_thread(options);
             }
 
-            if (this.id==options.id) {
+            if (this.id == options.id) {
                 return this;
             }
 
             if (options.id) {
                 for (var i in this.messages) {
                     if (this.messages[i].thread) {
-                        var res=this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
+                        var res = this.messages[i].thread.browse_thread({'id':options.id, '_go_thread_wall':true});
                         if (res) return res;
                     }
                 }
@@ -1460,12 +1460,6 @@ openerp.mail = function (session) {
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 
-        init: function () {
-            this._super.apply(this, arguments);
-            this.options.domain = this.options.domain || [];
-            this.options.context = {'default_model': 'mail.thread', 'default_res_id': false};
-        },
-
         start: function () {
             this._super.apply(this, arguments);
             // NB: check the actual_mode property on view to know if the view is in create mode anymore
@@ -1476,37 +1470,30 @@ openerp.mail = function (session) {
         _check_visibility: function () {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
+
         render_value: function () {
             var self = this;
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
-            // update context
-            _.extend(this.options.context, {
-                default_res_id: this.view.datarecord.id,
-                default_model: this.view.model,
-                default_is_private: false });
-            // update domain
-            var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
-
-            var show_compose_message = this.view.is_action_enabled('edit') ||
-                (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
-
-            var message_ids = this.getParent().fields.message_ids && this.getParent().fields.message_ids.get_value();
 
             if (this.root) {
                 this.root.destroy();
             }
             // create and render Thread widget
             this.root = new mail.Widget(this, {
-                'domain' : domain,
-                'context' : this.options.context,
+                'domain' : (this.options.domain || []).concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]),
+                'context' : {
+                    'default_res_id': this.view.datarecord.id || false,
+                    'default_model': this.view.model || 'mail.thread',
+                    'default_is_private': false 
+                },
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': false,
-                'show_compose_message': show_compose_message,
-                'message_ids': message_ids,
+                'show_compose_message': this.view.is_action_enabled('edit') || (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value()),
+                'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
                 'show_compact_message': true,
                 'no_message': this.node.attrs.help
                 }
@@ -1539,6 +1526,7 @@ openerp.mail = function (session) {
          */
         init: function (parent, options) {
             this._super(parent);
+            console.log(arguments);
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
@@ -1552,7 +1540,7 @@ openerp.mail = function (session) {
         },
 
         start: function () {
-            this._super.apply(this, arguments);
+            this._super.apply(this);
             this.load_searchview(this.options.defaults, false);
             this.bind_events();
 
@@ -1657,7 +1645,6 @@ openerp.mail = function (session) {
             };
             session.client.action_manager.do_action(action);
         },
-
     });
 
     session.web.UserMenu = session.web.UserMenu.extend({
