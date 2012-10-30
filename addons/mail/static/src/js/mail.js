@@ -830,6 +830,9 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
+
+            console.log(window);
+
             return this.ds_message.call('favorite_toggle', [[self.id]])
                 .then(function (star) {
                     self.is_favorite=star;
@@ -841,7 +844,6 @@ openerp.mail = function (session) {
                         self.check_for_destroy();
                     }
                 });
-            return false;
         },
 
         /**
@@ -948,19 +950,18 @@ openerp.mail = function (session) {
         /* When the expandable object is visible on screen (with scrolling)
          * then the on_expandable function is launch
         */
-        on_scroll: function (event) {
-            if (event)event.stopPropagation();
-            $last = this.$('> .oe_msg_expandable:last');
-            if ($last.hasClass('oe_max_limit')) {
-                var pos = $last.position();
+        on_scroll: function () {
+            var expandables = 
+            _.each( _.filter(this.messages, function (val) {return val.id < 0;}), function (val) {
+                var pos = val.$el.position();
                 if (pos.top) {
                     /* bottom of the screen */
                     var bottom = $(window).scrollTop()+$(window).height()+200;
                     if (bottom > pos.top) {
-                        $last.find('.oe_msg_more_message').click();
+                        val.on_expandable();
                     }
                 }
-            }
+            });
         },
 
         /**
