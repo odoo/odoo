@@ -6,6 +6,7 @@ openerp.pad = function(instance) {
         content: "",
         render_value: function() {
             var self = this;
+            var _super = _.bind(this._super, this);
             if (this.get("value") === false || this.get("value") === "") {
                 self.view.dataset.call('pad_generate_url',{context:{
                         model: self.view.model,
@@ -13,7 +14,7 @@ openerp.pad = function(instance) {
                         object_id: self.view.datarecord.id
                     }}).then(function(data) {
                     if(data&&data.url){
-                        _super.apply(self,[data.url]);
+                        _super(data.url);
                         self.renderElement();
                     }
                 });
