@@ -64,7 +64,7 @@ class product_margin(osv.osv_memory):
         #get the current product.margin object to obtain the values from it
         product_margin_obj = self.browse(cr, uid, ids, context=context)[0]
 
-        context = {'invoice_state' : product_margin_obj.invoice_state}
+        context.update({'invoice_state' : product_margin_obj.invoice_state})
         if product_margin_obj.from_date:
             context.update({'date_from': product_margin_obj.from_date})
         if product_margin_obj.to_date:
