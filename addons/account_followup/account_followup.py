@@ -194,11 +194,24 @@ class res_partner(osv.osv):
         return res
 
 
+
+    def _get_amount(self, cr, uid, ids, name, arg, context=None):
+        ''' 
+         Get the total outstanding amount in the account move lines
+        '''
+        res={}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = 0.0
+            for aml in partner.accountmoveline_ids:
+                res[partner.id] = res[partner.id] + aml.debit
+        return res
+
+
     def do_partner_phonecall(self, cr, uid, partner_ids, context=None): 
         #partners = self.browse(cr, uid, partner_ids, context)
         #print partner_ids
-        print "Testing: " ,  fields.date.context_today(cr, uid, context)
-        self.write(cr, uid, partner_ids, {'payment_next_action_date': fields.date.context_today(cr, uid, context), 'payment_next_action' : 'Phoning'}, context)
+        #print "Testing: " ,  fields.date.context_today(cr, uid, context)
+        self.write(cr, uid, partner_ids, {'payment_next_action_date': fields.date.context_today(cr, uid, context),}, context)
         
 
 
@@ -343,6 +356,7 @@ class res_partner(osv.osv):
 
 
 
+
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Responsible', help="Responsible"), 
@@ -354,8 +368,9 @@ class res_partner(osv.osv):
             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="latest followup date", store=True), 
         'latest_followup_level_id':fields.function(_get_latest_followup_level_id, method=True, 
-            type='many2one', relation='account_followup.followup.line', string="latest followup level", store=True), 
-        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="next level"),
+            type='many2one', relation='account_followup.followup.line', string="Latest Followup Level", store=True), 
+        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="Next Level"),
+        'payment_amount_outstanding':fields.function(_get_amount, method=True, type='float', string="Amount", store=True),
     }
 
 res_partner()

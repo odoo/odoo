@@ -19,6 +19,32 @@
     <p>Hello${object.name and ' ' or ''},</p>
     
     <p>We see in our books that some accounts are not settled yet:</p>
+    
+
+    <table>
+
+        <tr>
+            <td>Debit</td>
+            <td>Credit</td>
+            <td>Reference</td>
+        </tr>
+
+        
+% for aml in object.accountmoveline_ids : 
+
+<tr>
+<td>
+${aml.debit}
+</td>
+<td>
+${aml.credit}
+</td>
+<td>
+${aml.ref}
+</td>
+</tr>
+% endfor
+</table>
 
     
 

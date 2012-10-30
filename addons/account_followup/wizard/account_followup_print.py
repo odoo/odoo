@@ -231,7 +231,8 @@ class account_followup_print(osv.osv_memory):
                 "AND (a.active) "\
                 "AND (l.debit > 0) "\
                 "AND (l.company_id = %s) "\
-            "ORDER BY l.date", (company_id,))
+                "AND (l.blocked = False)" \
+            "ORDER BY l.date", (company_id,))  #JCO!!: change l.blocked to be reviewed!
         move_lines = cr.fetchall()
         old = None
         fups = {}
@@ -257,6 +258,8 @@ class account_followup_print(osv.osv_memory):
         to_update = {}
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             
+
+
             if not partner_id:
                 continue
             #part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)            
