@@ -257,16 +257,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var tree = $($.parseXML(view_get['arch']));
             
             var pos = 0;
-            var xaxis = group_by || [];
+            var xaxis = _.clone(group_by || []);
             var yaxis = [];
             tree.find("field").each(function() {
                 var field = $(this);
                 if (! field.attr("name"))
                     return;
-                if ((group_by.length == 0) && ((! pos) || field.attr('group'))) {
+                if ((group_by.length == 0) && ((! pos) || instance.web.py_eval(field.attr('group') || "false"))) {
                     xaxis.push(field.attr('name'));
                 }
-                if (pos && ! field.attr('group')) {
+                if (pos && ! instance.web.py_eval(field.attr('group') || "false")) {
                     yaxis.push(field.attr('name'));
                 }
                 pos += 1;
