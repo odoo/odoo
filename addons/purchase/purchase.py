@@ -890,10 +890,6 @@ class purchase_order_line(osv.osv):
         account_tax = self.pool.get('account.tax')
 
         product = product_product.browse(cr, uid, product_id, context=context)
-        name = product.name
-        if product.description_purchase:
-            name += '\n' + product.description_purchase
-        res['value'].update({'name': name})
 
         # - set a domain on product_uom
         res['domain'] = {'product_uom': [('category_id','=',product.uom_id.category_id.id)]}
@@ -915,19 +911,24 @@ class purchase_order_line(osv.osv):
         if not date_order:
             date_order = fields.date.context_today(self,cr,uid,context=context)
 
-        dt = datetime.strptime(date_order, DEFAULT_SERVER_DATE_FORMAT).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-        res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
-
-        # - determine price_unit and taxes_id
-        price = product.standard_price
-
+        # - determine taxes_id
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
         taxes_ids = account_fiscal_position.map_tax(cr, uid, fpos, taxes)
-        res['value'].update({'price_unit': price, 'taxes_id': taxes_ids})
+        res['value'].update({'taxes_id': taxes_ids})
 
         # - check for the presence of partner_id and pricelist_id
         if not pricelist_id or not partner_id:
+            name = product.name
+            if product.description_purchase:
+                name += '\n' + product.description_purchase
+            res['value'].update({'name': name})
+
+            dt = datetime.strptime(date_order, DEFAULT_SERVER_DATE_FORMAT).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+            res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
+
+            price = product.standard_price
+            res['value'].update({'price_unit': price})
             return res
 
         # - determine name and notes based on product in partner lang.
