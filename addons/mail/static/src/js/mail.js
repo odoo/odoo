@@ -359,8 +359,13 @@ openerp.mail = function (session) {
                         this.parent_thread.context
                     ]).then(function (record) {
                         var thread = self.parent_thread;
+
+                        if (self.options.display_indented_thread < self.thread_level) {
+                            thread = thread.parent_message.parent_thread;
+                        }
                         // create object and attach to the thread object
                         thread.message_fetch(false, false, [record], function (arg, data) {
+                            data[0].no_sorted = true;
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, self.$el );
@@ -536,6 +541,8 @@ openerp.mail = function (session) {
         init: function (parent, datasets, context) {
             this._super(parent);
 
+            // record options
+            this.options = datasets.options || {};
             // record domain and context
             this.domain = datasets.domain || [];
             this.context = _.extend({
@@ -543,29 +550,13 @@ openerp.mail = function (session) {
                 default_res_id: 0,
                 default_parent_id: false }, context || {});
 
-            // record options
-            this.options = datasets.options || {};
-
             // data of this message
-            this.id = datasets.id ||  -1,
-            this.model = datasets.model ||  false,
-            this.parent_id = datasets.parent_id ||  false,
-            this.res_id = datasets.res_id ||  false,
-            this.type = datasets.type ||  false,
-            this.is_author = datasets.is_author ||  false,
-            this.is_private = datasets.is_private ||  false,
-            this.subject = datasets.subject ||  false,
-            this.name = datasets.name ||  false,
-            this.record_name = datasets.record_name ||  false,
-            this.body = datasets.body ||  false,
-            this.vote_nb = datasets.vote_nb || 0,
-            this.has_voted = datasets.has_voted ||  false,
-            this.is_favorite = datasets.is_favorite ||  false,
-            this.thread_level = datasets.thread_level ||  0,
-            this.to_read = datasets.to_read || false,
-            this.author_id = datasets.author_id ||  [],
-            this.attachment_ids = datasets.attachment_ids ||  [],
+            for (var k in datasets) {
+                this[k] = datasets[k];
+            }
             this._date = datasets.date;
+
+            this.show_record_name = this.record_name && !this.subject && !this.thread_level && this.model!='res.partner';
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : this.options.root_thread;
@@ -830,10 +821,7 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
-
-            console.log(window);
-
-            return this.ds_message.call('favorite_toggle', [[self.id]])
+            this.ds_message.call('favorite_toggle', [[self.id]])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {
@@ -844,6 +832,7 @@ openerp.mail = function (session) {
                         self.check_for_destroy();
                     }
                 });
+            return false;
         },
 
         /**
@@ -980,6 +969,7 @@ openerp.mail = function (session) {
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').show(); 
             p.find('.oe_more').hide(); 
+            return false;
         },
 
         /**
@@ -989,6 +979,7 @@ openerp.mail = function (session) {
             var p=$(this).parent(); 
             p.find('.oe_more_hidden, .oe_hidden').hide(); 
             p.find('.oe_more').show(); 
+            return false;
         },
 
         /* get all child message/thread id linked.
@@ -1078,6 +1069,7 @@ openerp.mail = function (session) {
         on_compose_message: function () {
             this.instantiate_compose_message();
             this.compose_message.on_compose_expandable();
+            return false;
         },
 
         /**
@@ -1183,6 +1175,9 @@ openerp.mail = function (session) {
             var message_older = false;
             if (message.id > 0) {
                 for (var i in self.messages) {
+                    if (self.messages[i].no_sorted) {
+                        continue;
+                    } 
                     if (self.messages[i].id > message.id) {
                         if (!message_newer || message_newer.id > self.messages[i].id) {
                             message_newer = self.messages[i];
@@ -1263,6 +1258,7 @@ openerp.mail = function (session) {
         on_message_detroy: function (message) {
 
             this.messages = _.filter(this.messages, function (val) { return !val.isDestroyed(); });
+            return false;
 
         },
 
