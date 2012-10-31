@@ -855,7 +855,7 @@ class Database(openerpweb.Controller):
             }
             return req.make_response(db_dump,
                [('Content-Type', 'application/octet-stream; charset=binary'),
-               ('Content-Disposition', 'attachment; filename="' + filename + '"')],
+               ('Content-Disposition', content_disposition(filename, req))],
                {'fileToken': int(token)}
             )
         except xmlrpclib.Fault, e:
@@ -1864,7 +1864,8 @@ class Export(View):
 
 
         return req.make_response(self.from_data(columns_headers, import_data),
-            headers=[('Content-Disposition', 'attachment; filename="%s"' % self.filename(model)),
+            headers=[('Content-Disposition',
+                            content_disposition(self.filename(model), req)),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': int(token)})
 
