@@ -663,7 +663,8 @@ class module(osv.osv):
                 openerp.service.restart_server()
                 return {
                     'type': 'ir.actions.client',
-                    'tag': 'reload'
+                    'tag': 'home',
+                    'params': {'wait': True},
                 }
             return self.button_immediate_install(cr, uid, ids, context=context)
         finally:
