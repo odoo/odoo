@@ -502,7 +502,7 @@ class product_template(osv.osv):
             string="Inventory Location",
             view_load=True,
             domain=[('usage','like','inventory')],
-            help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory"),
+            help="This stock location will be used, instead of the default one, as the source location for stock moves generated when you do an inventory."),
         'property_stock_account_input': fields.property('account.account',
             type='many2one', relation='account.account',
             string='Stock Input Account', view_load=True,
