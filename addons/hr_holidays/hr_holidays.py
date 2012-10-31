@@ -147,8 +147,8 @@ class hr_holidays(osv.osv):
     }
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
-        ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
-        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
+        ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
+        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
 
     def _create_resource_leave(self, cr, uid, leaves, context=None):
@@ -203,15 +203,22 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel', 'confirm']:
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state!')%(rec.state))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state.')%(rec.state))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
-    def onchange_date_from(self, cr, uid, ids, date_from):
+    def onchange_date_from(self, cr, uid, ids, date_to, date_from):
+        result = {}
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
-        date_to = False
-        if date_from:
+
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
             date_to = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
-        return {'value':{'date_to': str(date_to)}}
+            result['value'] = {'date_to': str(date_to)}
+        # date_from is greater than date_to: throw an exception
+        elif (date_from and date_to) and (date_from > date_to):
+            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+
+        return result
 
     def onchange_date_to(self, cr, uid, ids, date_to, date_from):
         result = {}
@@ -220,10 +227,11 @@ class hr_holidays(osv.osv):
             result['value'] = {
                 'number_of_days_temp': round(math.floor(diff_day))+1
             }
-            return result
-        result['value'] = {
-            'number_of_days_temp': 0,
-        }
+        else:
+            result['value'] = {
+                'number_of_days_temp': 0,
+            }
+
         return result
 
     def set_to_draft(self, cr, uid, ids, context=None):
