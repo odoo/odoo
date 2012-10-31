@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+"""
+The module :mod:`openerp.tests.common` provides a few helper and classes to write
+tests.
+"""
 import os
 import threading
 import time
@@ -40,10 +44,25 @@ def stop_openerp():
     """
     openerp.service.stop_services()
 
-class TransactionCase(unittest2.TestCase):
+
+class BaseCase(unittest2.TestCase):
     """
-    Subclass of TestCase with a single transaction, rolled-back at the end of
-    the tests.
+    Subclass of TestCase for common OpenERP-specific code.
+    """
+
+    @classmethod
+    def cursor(self):
+        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+
+    @classmethod
+    def registry(self, model):
+        return openerp.modules.registry.RegistryManager.get(DB)[model]
+
+
+class TransactionCase(BaseCase):
+    """
+    Subclass of BaseCase with a single transaction, rolled-back at the end of
+    each test (method).
     """
 
     def setUp(self):
@@ -54,19 +73,31 @@ class TransactionCase(unittest2.TestCase):
         self.cr.rollback()
         self.cr.close()
 
-    def cursor(self):
-        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
 
-    def registry(self, model):
-        return openerp.modules.registry.RegistryManager.get(DB)[model]
+class SingleTransactionCase(BaseCase):
+    """
+    Subclass of BaseCase with a single transaction for the whole class,
+    rolled-back after all the tests.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cr = cls.cursor()
+        cls.uid = openerp.SUPERUSER_ID
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.cr.rollback()
+        cls.cr.close()
+
 
 class RpcCase(unittest2.TestCase):
     """
     Subclass of TestCase with a few XML-RPC proxies.
     """
 
-    def __init__(self, name):
-        super(RpcCase, self).__init__(name)
+    def __init__(self, methodName='runTest'):
+        super(RpcCase, self).__init__(methodName)
 
         class A(object):
             pass

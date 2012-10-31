@@ -361,6 +361,7 @@ class res_config_installer(osv.osv_memory):
             'to install', ['uninstalled'], context=context)
         cr.commit() #TOFIX: after remove this statement, installation wizard is fail
         new_db, self.pool = pooler.restart_pool(cr.dbname, update_module=True)
+
 res_config_installer()
 
 DEPRECATION_MESSAGE = 'You are using an addon using old-style configuration '\
@@ -545,6 +546,10 @@ class res_config_settings(osv.osv_memory):
                 'tag': 'apps',
                 'params': {'modules': to_install_names},
             }
+
+        config = self.pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.act_window_close',):
+            return config
 
         # force client-side reload (update user menu and current view)
         return {
