@@ -1532,6 +1532,7 @@ class account_bank_statement(osv.osv):
             })
 
             return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
+        return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # We should not be able to change the journal if we already have
