@@ -114,7 +114,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
-        this.on_change_mutex = new $.Mutex();
+        this.on_change_list = [];
+        this.save_list = [];
         this.reload_mutex = new $.Mutex();
         this.__clicked_inside = false;
         this.__blur_timeout = null;
@@ -492,67 +493,72 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     do_onchange: function(widget, processed) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
-            try {
-                var def;
-                processed = processed || [];
-                processed.push(widget.name);
-                var on_change = widget.node.attrs.on_change;
-                if (on_change) {
-                    var change_spec = self.parse_on_change(on_change, widget);
-                    def = self.rpc('/web/dataset/onchange', {
-                        model: self.dataset.model,
-                        method: change_spec.method,
-                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                        context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                    });
-                } else {
-                    def = $.when({});
-                }
-                return def.pipe(function(response) {
-                    if (widget.field['change_default']) {
-                        var fieldname = widget.name
-                        var value_;
-                        if (response.value && (fieldname in response.value)) {
-                            // Use value from onchange if onchange executed
-                            value_ = response.value[fieldname];
-                        } else {
-                            // otherwise get form value for field
-                            value_ = self.fields[fieldname].get_value();
-                        }
-                        var condition = fieldname + '=' + value_;
-
-                        if (value_) {
-                            return self.rpc('/web/dataset/call', {
-                                model: 'ir.values',
-                                method: 'get_defaults',
-                                args: [self.model, condition]
-                            }).pipe(function (results) {
-                                if (!results.length) {
-                                    return response;
-                                }
-                                if (!response.value) {
-                                    response.value = {};
-                                }
-                                for(var i=0; i<results.length; ++i) {
-                                    // [whatever, key, value]
-                                    var triplet = results[i];
-                                    response.value[triplet[1]] = triplet[2];
-                                }
-                                return response;
-                            });
-                        }
-                    }
-                    return response;
-                }).pipe(function(response) {
-                    return self.on_processed_onchange(response, processed);
+        this.on_change_list = [{widget: widget, processed: processed}].concat(this.on_change_list);
+        return this._process_operations();
+    },
+    _process_onchange: function(on_change_obj) {
+        var self = this;
+        var widget = on_change_obj.widget;
+        var processed = on_change_obj.processed;
+        try {
+            var def;
+            processed = processed || [];
+            processed.push(widget.name);
+            var on_change = widget.node.attrs.on_change;
+            if (on_change) {
+                var change_spec = self.parse_on_change(on_change, widget);
+                def = self.rpc('/web/dataset/onchange', {
+                    model: self.dataset.model,
+                    method: change_spec.method,
+                    args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                    context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
                 });
-            } catch(e) {
-                console.error(e);
-                instance.webclient.crashmanager.show_message(e);
-                return $.Deferred().reject();
+            } else {
+                def = $.when({});
             }
-        });
+            return def.pipe(function(response) {
+                if (widget.field['change_default']) {
+                    var fieldname = widget.name
+                    var value_;
+                    if (response.value && (fieldname in response.value)) {
+                        // Use value from onchange if onchange executed
+                        value_ = response.value[fieldname];
+                    } else {
+                        // otherwise get form value for field
+                        value_ = self.fields[fieldname].get_value();
+                    }
+                    var condition = fieldname + '=' + value_;
+
+                    if (value_) {
+                        return self.rpc('/web/dataset/call', {
+                            model: 'ir.values',
+                            method: 'get_defaults',
+                            args: [self.model, condition]
+                        }).pipe(function (results) {
+                            if (!results.length) {
+                                return response;
+                            }
+                            if (!response.value) {
+                                response.value = {};
+                            }
+                            for(var i=0; i<results.length; ++i) {
+                                // [whatever, key, value]
+                                var triplet = results[i];
+                                response.value[triplet[1]] = triplet[2];
+                            }
+                            return response;
+                        });
+                    }
+                }
+                return response;
+            }).pipe(function(response) {
+                return self.on_processed_onchange(response, processed);
+            });
+        } catch(e) {
+            console.error(e);
+            instance.webclient.crashmanager.show_message(e);
+            return $.Deferred().reject();
+        }
     },
     on_processed_onchange: function(result, processed) {
         try {
@@ -588,6 +594,27 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
+    _process_operations: function() {
+        var self = this;
+        return this.mutating_mutex.exec(function() {
+            function iterate() {
+                var on_change_obj = self.on_change_list.shift();
+                if (on_change_obj) {
+                    return self._process_onchange(on_change_obj).pipe(function() {
+                        return iterate();
+                    });
+                }
+                var save_obj = self.save_list.pop();
+                if (save_obj) {
+                    return self._process_save(save_obj).pipe(function() {
+                        return iterate.apply(null, arguments);
+                    });
+                }
+                return $.when.apply($, arguments);
+            };
+            return iterate();
+        });
+    },
     _internal_set_values: function(values, exclude) {
         exclude = exclude || [];
         for (var f in values) {
@@ -611,7 +638,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     set_values: function(values) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
+        return this.mutating_mutex.exec(function() {
             self._internal_set_values(values);
         });
     },
@@ -765,8 +792,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     save: function(prepend_on_create) {
         var self = this;
-        return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
-            try {
+        this.save_list.push({prepend_on_create: prepend_on_create});
+        return this._process_operations();
+    },
+    _process_save: function(save_obj) {
+        var self = this;
+        var prepend_on_create = save_obj.prepend_on_create;
+        try {
             var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
@@ -810,11 +842,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
                 return save_deferral;
             }
-            } catch (e) {
-                console.error(e);
-                return $.Deferred().reject();
-            }
-        });});
+        } catch (e) {
+            console.error(e);
+            return $.Deferred().reject();
+        }
     },
     on_invalid: function() {
         var warnings = _(this.fields).chain()
