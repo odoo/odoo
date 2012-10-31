@@ -525,7 +525,7 @@
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="In Progress" name="set_kanban_state_done" class="oe_kanban_status"> </a>
-                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Stage Done" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
+                                    <a t-if="record.kanban_state.raw_value === 'done'" type="object" string="Ready for next stage" name="set_kanban_state_blocked" class="oe_kanban_status oe_kanban_status_green"> </a>
                                     <a t-if="record.kanban_state.raw_value === 'blocked'" type="object" string="Blocked" name="set_kanban_state_normal" class="oe_kanban_status oe_kanban_status_red"> </a>
                                     <a t-if="record.priority.raw_value == 2" type="object" string="Important" name="set_very_high_priority" class="oe_e oe_star_on">7</a>
                                     <a t-if="record.priority.raw_value == 1" type="object" string="Normal" name="set_normal_priority" class="oe_e oe_star_off">7</a>
