@@ -50,13 +50,13 @@ class project_issue_report(osv.osv):
         'opening_date': fields.date('Date of Opening', readonly=True),
         'creation_date': fields.date('Creation Date', readonly=True),
         'date_closed': fields.date('Date of Closing', readonly=True),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
+        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="['&',('section_id','=',section_id),('object_id.model', '=', 'project.issue')]"),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'nbr': fields.integer('# of Issues', readonly=True),
         'working_hours_open': fields.float('Avg. Working Hours to Open', readonly=True, group_operator="avg"),
         'working_hours_close': fields.float('Avg. Working Hours to Close', readonly=True, group_operator="avg"),
         'delay_open': fields.float('Avg. Delay to Open', digits=(16,2), readonly=True, group_operator="avg",
-                                       help="Number of Days to close the project issue"),
+                                       help="Number of Days to open the project issue"),
         'delay_close': fields.float('Avg. Delay to Close', digits=(16,2), readonly=True, group_operator="avg",
                                        help="Number of Days to close the project issue"),
         'company_id' : fields.many2one('res.company', 'Company'),
@@ -64,9 +64,9 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
-        'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
+        'partner_id': fields.many2one('res.partner','Partner'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
-        'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
+        'task_id': fields.many2one('project.task', 'Task'),
         'email': fields.integer('# Emails', size=128, readonly=True),
     }
 
@@ -98,8 +98,8 @@ class project_issue_report(osv.osv):
                     c.channel_id,
                     c.task_id,
                     date_trunc('day',c.create_date) as create_date,
-                    extract('epoch' from (c.date_open-c.create_date))/(3600*24) as  delay_open,
-                    extract('epoch' from (c.date_closed-c.date_open))/(3600*24) as  delay_close,
+                    c.day_open as  delay_open,
+                    c.day_close as  delay_close,
                     (SELECT count(id) FROM mail_message WHERE model='project.issue' AND res_id=c.id) AS email
 
                 FROM
