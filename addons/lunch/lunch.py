@@ -126,19 +126,16 @@ class lunch_order(osv.Model):
             return True
         return False
 
-
     def _default_alerts_get(self,cr,uid,arg,context=None):
         """ get the alerts to display on the order form """
         alert_ref = self.pool.get('lunch.alert')
         alert_ids = alert_ref.search(cr,uid,[('lunch_active','=',True)],context=context) 
-        alert_msg=""
+        alert_msg = []
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
             if self.can_display_alert(alert):
                 if alert.active_from==alert.active_to:
                     #the alert is executing all the day
-                    alert_msg+="! "
-                    alert_msg+=alert.message
-                    alert_msg+='\n'
+                    alert_msg.append(alert.message)
                 elif alert.active_from<alert.active_to:
                     #the alert is executing from ... to ...
                     now = datetime.utcnow()
@@ -153,10 +150,8 @@ class lunch_order(osv.Model):
                     min_from = int((alert.active_from-hour_from)*60)
                     from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
                     if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
-                        alert_msg+="! "
-                        alert_msg+=alert.message
-                        alert_msg+='\n'
-        return alert_msg
+                        alert_msg.append(alert.message)
+        return '\n'.join(alert_msg)
 
     def onchange_price(self,cr,uid,ids,order_line_ids,context=None):
         """ Onchange methode that refresh the total price of order"""
@@ -228,7 +223,7 @@ class lunch_order(osv.Model):
                 for key,value in categories.items():
                     text_xml+="""
                         <div class="oe_lunch_30pc">
-                        <div class="oe_lunch_title">%s</div>
+                        <h2>%s</h2>
                     """ % (key,)
                     i = 0
                     for val in value:
@@ -237,20 +232,20 @@ class lunch_order(osv.Model):
                         function_name = "add_preference_"+str(val.id)
                         text_xml+= '''
                             <div class="oe_lunch_vignette">
-                                <div class="oe_group_text_button oe_inline">
-                                   <div class="oe_lunch_text"> %s </div>
-                                   <div class="oe_lunch_button">
-                                        <button name="%s" class="oe_link oe_i" type="object" string="+"></button>
-                                        <button name="%s" class="oe_link" type="object" string="Add"></button>
-                                    </div>
+                                <span class="oe_lunch_button">
+                                    <button name="%s" class="oe_link oe_i oe_button_plus" type="object" string="+"></button><button name="%s" class="oe_link oe_button_add" type="object" string=" Add"></button>
+                                </span>
+                                <div class="oe_group_text_button">
+                                   <div class="oe_lunch_text">
+                                       %s
+                                       <span class="oe_tag">%.2f %s</span>
+                                   </div>
                                 </div>
-                                <span class="oe_tag">%.2f %s</span>
-                                <br/>
-                                <div class="oe_lunch_note">
+                                <div class="oe_grey">
                                     %s
                                 </div>
                             </div>
-                        ''' % (val['product_name'],function_name, function_name, val['price'] or 0.0, currency['name'], val['note'] or '')
+                        ''' % (function_name, function_name, val['product_name'], val['price'] or 0.0, currency['name'], val['note'] or '')
                     text_xml+= ('''</div>''')
                 text_xml+= ('''</div>''')
                 # ADD into ARCH xml
