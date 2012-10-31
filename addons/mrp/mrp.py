@@ -196,8 +196,8 @@ class mrp_bom(osv.osv):
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
-                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
-                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
+                                 help= "If a by-product is used in several products, it can be useful to create its own BoM. "\
+                                 "Though if you don't want separated production orders for this by-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
@@ -230,7 +230,7 @@ class mrp_bom(osv.osv):
     _parent_name = "bom_id"
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)',  'All product quantities must be greater than 0.\n' \
-            'You should install the mrp_subproduct module if you want to manage extra products on BoMs !'),
+            'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
     def _check_recursion(self, cr, uid, ids, context=None):
