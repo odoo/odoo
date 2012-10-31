@@ -83,7 +83,7 @@
     Test one2many operator with False
 -
     !assert {model: res.partner, search: "[('child_ids', '=', False)]"}:
-        - address in (False, None, [])
+        - child_ids in (False, None, [])
 -
     Test many2many operator with empty search list
 -
@@ -396,7 +396,7 @@
         assert res_8 == [1]
         assert res_9 == []
 
-        # get the companies referenced by some currency (this is normally the main company)
+        # get the companies referenced by some currency (this is normally the main company) using a weird negative domain
         res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
         res_11 = self.search(cr, uid, [('currency_ids', 'not in', [max_currency_id + 1])])
         res_12 = self.search(cr, uid, [('currency_ids', '!=', False)])
@@ -408,6 +408,20 @@
         assert res_10 == res_11
         assert res_10 == res_12
         assert res_10 == res_13
+        
+        # try testing real subsets with IN/NOT IN
+        res_partner = self.pool.get('res.partner')
+        res_users = self.pool.get('res.users')
+        p1, _ = res_partner.name_create(cr, uid, "Dédé Boitaclou")
+        p2, _ = res_partner.name_create(cr, uid, "Raoulette Pizza O'poil")
+        u1a = res_users.create(cr, uid, {'login': 'dbo', 'partner_id': p1})
+        u1b = res_users.create(cr, uid, {'login': 'dbo2', 'partner_id': p1})
+        u2 = res_users.create(cr, uid, {'login': 'rpo', 'partner_id': p2})
+        assert [p1] == res_partner.search(cr, uid, [('user_ids', 'in', u1a)]), "o2m IN accept single int on right side"
+        assert [p1,p2] == res_partner.search(cr, uid, [('user_ids', 'in', [u1a,u2])]), "o2m IN matches any on the right side"
+        all_partners = res_partner.search(cr, uid, [])
+        assert (set(all_partners) - set([p1])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', u1a)])), "o2m NOT IN matches none on the right side"
+        assert (set(all_partners) - set([p1,p2])) == set(res_partner.search(cr, uid, [('user_ids', 'not in', [u1b, u2])])), "o2m NOT IN matches none on the right side"
 
         # child_of x returns x and its children (direct or not).
         company = self.browse(cr, uid, ref('ymltest_company3'))

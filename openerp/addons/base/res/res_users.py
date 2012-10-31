@@ -334,10 +334,10 @@ class res_users(osv.osv):
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
-        return self.name_get(cr, user, ids)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
@@ -409,8 +409,8 @@ class res_users(osv.osv):
                 # prevent/delay login in that case. It will also have been logged
                 # as a SQL error, if anyone cares.
                 try:
-                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", str(user_id))
-                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", str(user_id))
+                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", (user_id,))
+                    cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
                 except Exception, e:
                     _logger.exception("Failed to update last_login for db:%s login:%s", db, login)
         except openerp.exceptions.AccessDenied:

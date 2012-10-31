@@ -31,8 +31,7 @@
                             <field name="code"/>
                         </group>
                     </group>
-                    <label for="address_format" string="Address Format"/>
-                    <field name="address_format" colspan="4" groups="base.group_no_one"/>
+                    <field name="address_format" groups="base.group_no_one" placeholder="Address format..."/>
                 </form>
             </field>
         </record>
@@ -45,7 +44,7 @@
             <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
         </record>
 
-        <menuitem id="menu_localisation" name="Localisation" parent="menu_config_address_book" sequence="1" groups="base.group_no_one"/>
+        <menuitem id="menu_localisation" name="Localization" parent="menu_config_address_book" sequence="1" groups="base.group_no_one"/>
 
         <menuitem action="action_country" id="menu_country_partner" parent="menu_localisation" sequence="0" groups="base.group_no_one"/>
 
