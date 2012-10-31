@@ -3973,7 +3973,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
                         dict.id,
                         self.build_context(),
                         {
-                            title: _t("Complete partner's informations"),
+                            title: _t("Please complete partner's informations and Email"),
                         }
                     );
                     pop.on('write_completed', self, function () {
