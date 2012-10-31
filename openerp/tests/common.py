@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import threading
 import time
 import unittest2
@@ -40,7 +39,6 @@ def stop_openerp():
     """
     openerp.service.stop_services()
 
-
 class BaseCase(unittest2.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
@@ -55,19 +53,30 @@ class BaseCase(unittest2.TestCase):
     @classmethod
     def registry(self, model):
         return openerp.modules.registry.RegistryManager.get(DB)[model]
-    
-    def ref(self, xmlid):
-        """Returns res_id corresponding to a given module_name.xml_id (cached) or raise ValueError if not found"""
-        assert "." in xmlid, "this method required a fully qualified xml_id"
-        module, xmlid = xmlid.split('.')
-        model, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xmlid)
+
+    @classmethod
+    def ref(self, xid):
+        """ Returns database ID corresponding to a given identifier.
+
+            :param xid: fully-qualified record identifier, in the form ``module.identifier``
+            :raise: ValueError if not found
+        """
+        assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
+        module, xid = xid.split('.')
+        _, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xid)
         return id
-    
-    def browse_ref(self, xmlid):
-        """Returns a browsable record for the given module_name.xml_id or raise ValueError if not found"""
-        assert "." in xmlid, "this method required a fully qualified xml_id"
-        module, xmlid = xmlid.split('.')
-        return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xmlid)
+
+    @classmethod
+    def browse_ref(self, xid):
+        """ Returns a browsable record for the given identifier.
+
+            :param xid: fully-qualified record identifier, in the form ``module.identifier``
+            :raise: ValueError if not found
+        """
+        assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
+        module, xid = xid.split('.')
+        return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xid)
+
 
 class TransactionCase(BaseCase):
     """
