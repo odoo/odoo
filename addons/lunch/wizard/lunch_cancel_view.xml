@@ -7,12 +7,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="cancel order lines" version="7.0">
-                	<group>
-                		<separator string="Are you sure you want to cancel these orders?"/>
-                		<label string="Please note that: " colspan="4"/>
-                		<label string="--------------------------" colspan="4"/>
-						<label string="Orders will not be deleted but will be cancelled" colspan="4"/>
-					</group>
+                    <separator string="Are you sure you want to cancel these meals?"/>
+                	<p class="oe_grey">
+						Cancel a meal means that we didn't receive it from the supplier.
+                        <br/>
+                        A cancelled meal should not be paid by employees.
+					</p>
 					<footer>
 						<button name="cancel" string="Cancel Orders" type="object" class="oe_highlight"/>
 						or
@@ -24,7 +24,7 @@
 
         <act_window id="cancel_order_lines"
             multi="True"
-            key2="client_action_multi" name="Cancel"
+            key2="client_action_multi" name="Cancel meals"
             res_model="lunch.cancel" src_model="lunch.order.line"
             view_mode="form" target="new" view_type="form" view_id="cancel_order_lines_view"/>
 

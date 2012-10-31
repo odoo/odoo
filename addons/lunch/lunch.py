@@ -20,12 +20,13 @@
 #
 ##############################################################################
 
+from xml.sax.saxutils import escape
 import pytz
 import time
 from osv import osv, fields
 from datetime import datetime, timedelta
 from lxml import etree
-
+from tools.translate import _
 
 class lunch_order(osv.Model):
     """ lunch order """
@@ -38,19 +39,16 @@ class lunch_order(osv.Model):
         for order in self.browse(cr, uid, ids, context=context):
             value = 0.0
             for orderline in order.order_line_ids:
-                if orderline.state != 'cancelled':
-                    value += orderline.product_id.price
-                    result[order.id]=value
+                value += orderline.product_id.price
+                result[order.id]=value
         return result
 
     def _compute_total(self, cr, uid, ids, name, context=None):
         """ compute total"""
         result=  {}
-        value = 0.0
         for order_line in self.browse(cr, uid, ids, context=context):
-            value+=order_line.price
-            result[order_line.order_id.id]=value
-        return result
+            result[order_line.order_id.id] = True
+        return result.keys()
 
     def add_preference(self, cr, uid, ids, pref_id, context=None):
         """ create a new order line based on the preference selected (pref_id)"""
@@ -159,12 +157,19 @@ class lunch_order(osv.Model):
         order_line_ids= self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context)
         if order_line_ids:
             tot = 0.0
+            product_ref = self.pool.get("lunch.product")
             for prod in order_line_ids:
-                tot += prod['price']
+                if 'product_id' in prod:
+                    tot += product_ref.browse(cr,uid,prod['product_id'],context=context).price
+                else:
+                    tot += prod['price']
             res = {'value':{'total':tot}}
         return res
 
+
+
     def create(self, cr, uid, values, context=None):
+        print "CREATE"
         pref_ref = self.pool.get('lunch.preference')
         pref_ids = pref_ref.search(cr,uid,[],context=context)
         prod_ref = self.pool.get('lunch.product')
@@ -176,15 +181,19 @@ class lunch_order(osv.Model):
                 for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
                     if pref['product'].id == prods[2]['product_id']:
                         if pref['note'] == prods[2]['note']:
-                            if pref['price'] == prods[2]['price']:
-                                already_exists = True
+                            if 'price' in prods[2]:
+                                if pref['price'] == prods[2]['price']:
+                                    already_exists = True
+                            else:
+                                if pref['price'] == prod_ref.browse(cr,uid,prods[2]['product_id'])['price']:
+                                    already_exists = True
                 if already_exists == False:
-                    new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product': prods[2]['product_id'], 'product_name':prod_ref.browse(cr,uid,prods[2]['product_id'])['name'], 'note':prods[2]['note'], 'price':prods[2]['price']},context=context)
+                    new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product': prods[2]['product_id'], 'product_name':prod_ref.browse(cr,uid,prods[2]['product_id'])['name'], 'note':prods[2]['note'], 'price':prod_ref.browse(cr,uid,prods[2]['product_id'])['price']},context=context)
         return new_id
             
     def _default_preference_get(self,cr,uid,args,context=None):
         """ return a maximum of 15 last user preferences ordered by date"""
-        return self.pool.get('lunch.preference').search(cr,uid,[('user_id','=',uid)],order='date desc',limit=15,context=context)
+        return self.pool.get('lunch.preference').search(cr,uid,[('user_id','=',uid)],order='date desc',limit=25,context=context)
 
     def __getattr__(self, attr):
         """ this method catch unexisting method call and if starts with
@@ -198,7 +207,7 @@ class lunch_order(osv.Model):
         return super(lunch_order,self).__getattr__(self,attr)
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        #TODO: not reviewed
+        """ Add preferences in the form view of order.line """
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
             pref_ref = self.pool.get("lunch.preference")
@@ -208,22 +217,37 @@ class lunch_order(osv.Model):
 
             pref_ids = pref_ref.search(cr,uid,[('user_id','=',uid)],context=context)
             order_ids = order_ref.search(cr,uid,[('user_id','=',uid)],context=context)
-            if len(order_ids)>0:
+            text_xml = "<div>"
+            if len(order_ids)==0:
+                text_xml+="""
+                    <div class="oe_inline oe_lunch_intro">
+                        <div class="oe_lunch_intro_title">%s</div>
+                        <br/>
+                        %s
+                        <br/>
+                        %s
+                        <br/>
+                        %s
+                    </div>
+                    """ % (_("This is the first time you order a meal"),
+                            _("Select a product and put your order comments on the note."),
+                            _("Your favorite meals will be created based on your last orders."),
+                            _("Don't forget the alerts displayed in the reddish area"))
+            else:
                 preferences = pref_ref.browse(cr,uid,pref_ids,context=context)
                 this_order = order_ref.browse(cr,uid,order_ids[0],context=context)
                 currency = currency_obj.browse(cr, uid, this_order['currency_id'], context=context)
                 categories = {} #store the different categories of products in preference
-                
                 for pref in preferences:
                     categories[pref['product']['category_id']['name']]=[]
                 for pref in preferences:
                     categories[pref['product']['category_id']['name']].append(pref)
                 length = len(categories)
-                text_xml = """<div class="oe_lunch_view">"""
+                text_xml += """<separator name='pref' string='Favorites'/>"""
                 for key,value in categories.items():
                     text_xml+="""
-                        <div class="oe_lunch_30pc">
-                        <h2>%s</h2>
+                    <div class="oe_lunch_30pc">
+                    <h2>%s</h2>
                     """ % (key,)
                     i = 0
                     for val in value:
@@ -233,7 +257,7 @@ class lunch_order(osv.Model):
                         text_xml+= '''
                             <div class="oe_lunch_vignette">
                                 <span class="oe_lunch_button">
-                                    <button name="%s" class="oe_link oe_i oe_button_plus" type="object" string="+"></button><button name="%s" class="oe_link oe_button_add" type="object" string=" Add"></button>
+                                    <button name="%s" class="oe_link oe_i oe_button_plus" type="object" string="+"></button><button name="%s" class="oe_link oe_button_add" type="object" string="%s"></button>
                                 </span>
                                 <div class="oe_group_text_button">
                                    <div class="oe_lunch_text">
@@ -245,15 +269,15 @@ class lunch_order(osv.Model):
                                     %s
                                 </div>
                             </div>
-                        ''' % (function_name, function_name, val['product_name'], val['price'] or 0.0, currency['name'], val['note'] or '')
-                    text_xml+= ('''</div>''')
-                text_xml+= ('''</div>''')
-                # ADD into ARCH xml
-                doc = etree.XML(res['arch'])
-                node = doc.xpath("//div[@name='preferences']")
-                to_add = etree.fromstring(text_xml)
-                node[0].append(to_add)
-                res['arch'] = etree.tostring(doc)
+                        ''' % (function_name, function_name,_("Add"), escape(val['product_name']), val['price'] or 0.0, currency['name'], escape(val['note']) or '')
+                    text_xml+= '''</div>'''
+            # ADD into ARCH xml
+            text_xml += "</div>"
+            doc = etree.XML(res['arch'])
+            node = doc.xpath("//div[@name='preferences']")
+            to_add = etree.fromstring(text_xml)
+            node[0].append(to_add)
+            res['arch'] = etree.tostring(doc)
         return res
 
     _columns = {
@@ -261,7 +285,7 @@ class lunch_order(osv.Model):
         'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
         'order_line_ids' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
         'total' : fields.function(_price_get, string="Total",store={
-                 'lunch.order.line': (_compute_total, ['price'], 20),
+                 'lunch.order.line': (_compute_total, ['product_id','order_id'], 20),
             }),
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
@@ -291,6 +315,16 @@ class lunch_order_line(osv.Model):
             return {'value': {'price': price}}
         return {'value': {'price': 0.0}}
 
+    def _price_get(self,cr,uid,ids,name,arg,context=None):
+        result={}
+        for orderLine in self.browse(cr,uid,ids,context=context):
+            result[orderLine.id]=orderLine.product_id.price
+        return result
+
+    def order(self,cr,uid,ids,context=None):
+        for order_line in self.browse(cr,uid,ids,context=context):
+            self.write(cr,uid,[order_line.id],{'state':'ordered'},context)
+        return {}
 
     def confirm(self,cr,uid,ids,context=None):
         """ confirm one or more order line, update order status and create new cashmove """
@@ -342,8 +376,8 @@ class lunch_order_line(osv.Model):
         'supplier' : fields.related('product_id','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
         'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note' : fields.text('Note',size=256,required=False),
-        'price': fields.float('Price'),
-        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
+        'price' : fields.function(_price_get, type="float", string="Price",store=True),
+        'state': fields.selection([('new', 'New'),('confirmed','Received'), ('ordered','Ordered'), ('cancelled','Cancelled')], \
             'Status', readonly=True, select=True), #new confirmed and cancelled are the convention
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
         

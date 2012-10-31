@@ -14,7 +14,7 @@ class lunch_validation(osv.Model):
 
         for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
             if order.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product.name, 'order_id':order.id, 'state':'order', 'date':order.date})
+                new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product_id.name, 'order_id':order.id, 'state':'order', 'date':order.date})
                 order_lines_ref.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
         for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
             isconfirmed = True

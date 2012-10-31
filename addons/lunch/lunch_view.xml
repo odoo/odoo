@@ -2,7 +2,7 @@
 <openerp>
     <data>
         <!--Menu and Title-->
-        <menuitem id='menu_lunch' name='Lunch' />
+        <menuitem id='menu_lunch' name='Lunch' sequence="300"/>
         <menuitem name="Lunch Menu" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
         <menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="51" groups="group_lunch_manager"/>
         <menuitem name="Administrate Cash Moves" parent="menu_lunch" id="menu_lunch_cash" sequence="52" groups="group_lunch_manager"/>
@@ -15,11 +15,13 @@
             <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
+                    <field name="note"/>
                     <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
-                    <filter name="not_confirmed" string="Not Confirmed" domain="[('state','!=',('confirmed'))]"/>
-                    <filter name="comfirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
+                    <filter name="not_confirmed" string="Not Received" domain="[('state','!=',('confirmed'))]"/>
+                    <filter name="comfirmed" string="Received" domain="[('state','=','confirmed')]"/>
                     <filter name="cancelled" string="Cancelled" domain="[('state','=','cancelled')]"/>
                     <filter name="group_by_date" string="By Date" context="{'group_by':'date'}"/>
+
                 </search>
             </field>
         </record>
@@ -29,6 +31,7 @@
             <field name="model">lunch.order.line</field>
             <field name="arch" type="xml">
                 <search string="Search Lunch Order">
+                    <field name="note"/>
                     <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
                     <filter name="not_confirmed" string="Not Confirmed" domain="[('state','!=',('confirmed'))]"/>
                     <filter name="comfirmed" string="Confirmed" domain="[('state','=','confirmed')]"/>
@@ -45,6 +48,7 @@
             <field name='type'>search</field>
             <field name='arch' type='xml'>
                 <search string="lunch employee payment">
+                    <field name="description"/>
                     <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
                     <filter name='is_mine' string="My Account" domain="[('user_id','=',uid)]"/>
                 </search>
@@ -57,6 +61,7 @@
             <field name='type'>search</field>
             <field name='arch' type='xml'>
                 <search string="lunch cashmove">
+                    <field name="description"/>
                     <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
                 </search>
             </field>
@@ -69,6 +74,7 @@
             <field name='type'>search</field>
             <field name='arch' type='xml'>
                 <search string="lunch orders">
+                    <field name="date"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
                 </search>
             </field>
@@ -93,8 +99,8 @@
                 Click to create a lunch order. 
             </p>
             <p>
-                Use lunch order if you need to order any food for your lunch.
-              </p>
+                Select your favorite meals for today's lunch.
+            </p>
             </field>
         </record>
         <menuitem name="Previous Orders" parent="menu_lunch_title" id="menu_lunch_order_tree" action="action_lunch_order_tree" sequence="2"/>
@@ -108,7 +114,7 @@
             <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see your cash moves. There are your orders and refund.
+                Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
               </p>
             </field>
         </record>
@@ -123,7 +129,7 @@
             <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see the orders of the day grouped by suppliers.
+                Here you can see today's orders grouped by suppliers.
               </p>
             </field>
         </record>
@@ -138,7 +144,7 @@
             <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
             <field name="help" type="html">
               <p>
-                Here you can see the orders of the month grouped by suppliers.
+                Here you can see every orders grouped by suppliers and by date.
               </p>
             </field>
         </record>
@@ -153,11 +159,12 @@
             <field name="context">{"search_default_group_by_user":1}</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
-                Click to create a transaction. 
+                Click to create a new payment. 
             </p>
               <p>
-                The different cash moves are used to see the orders but also the
-                employees' refunds.
+                A cashmove can either be an expense or a payment.<br/>
+                An expense is automatically created at the order receipt.<br/>
+                A payment represents the employee reimbursement to the company.
               </p>
             </field>
         </record>
@@ -176,7 +183,7 @@
                 Click to create a payment. 
             </p>
               <p>
-                Here you can see the employees' refund.
+                Here you can see the employees' payment.
               </p>
             </field>
         </record>
@@ -192,7 +199,7 @@
                 Click to create a product for lunch. 
             </p>
               <p>
-                A product is defined by its name, category, price and supplier.
+                A product is defined by its name, category, price and supplier (the supplier must be a lunch supplier).
               </p>
             </field>
         </record>
@@ -242,7 +249,8 @@
                 Click to create a lunch alert. 
             </p>
               <p>
-                Alerts are used to warn employee and user from possible issues about the lunch.
+                Alerts are used to warn employee from possible issues concerning the lunch orders.<br/>
+                To create a lunch alert you have to define its recurrency (A specific day of the year, every week or every day), the time interval during which the alert should be executed and the message to display. 
               </p>
             </field>
         </record>
@@ -262,7 +270,8 @@
                     <field name='note'/>
                     <field name='state'/>
                     <field name='price' sum="Total"/>
-                    <button name="confirm" string="Confirm" type="object" icon="gtk-apply" attrs="{'invisible': [('state','=','confirmed')]}"/>
+                    <button name="order" string="Order" type="object" icon="terp-call-start" attrs="{'invisible': ['|',('state','=','confirmed'),('state','=','ordered')]}"/>
+                    <button name="confirm" string="Confirm" type="object" icon="gtk-apply" attrs="{'invisible': [('state','!=','ordered')]}"/>
                     <button name="cancel" string="Cancel" type="object" icon="gtk-cancel" attrs="{'invisible': [('state','=','cancelled')]}"/>
                 </tree>
             </field>

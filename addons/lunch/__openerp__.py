@@ -32,7 +32,7 @@ The base module to manage lunch.
 keep track for the Lunch Order, Cash Moves and Product. Apply Different
 Category for the product.
     """,
-    'data': ['security/groups.xml','lunch_view.xml','wizard/lunch_validation_view.xml','wizard/lunch_cancel_view.xml','lunch_report.xml',
+    'data': ['security/groups.xml','lunch_view.xml','wizard/lunch_order_view.xml','wizard/lunch_validation_view.xml','wizard/lunch_cancel_view.xml','lunch_report.xml',
         'report/report_lunch_order_view.xml',
         'security/ir.model.access.csv',],
     'css':['static/src/css/lunch.css'],

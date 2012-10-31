@@ -7,16 +7,12 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="validate order lines" version="7.0">
-                	<group>
-                		<separator string="Are you sure you want to confirm these orders?"/>
-                		<label string="Please note that: " colspan="4"/>
-                		<label string="--------------------------" colspan="4"/>
-						<label string="Orders will only be confirmed if: " colspan="4"/>
-						<label string=" * Orders aren't already in the confirmed state" colspan="4"/>
-						<label string=" * Orders aren't in the cancelled state" colspan="4"/>
-					</group>
+                    <separator string="Did your received these meals?"/>
+                	<p class="oe_grey">
+                        Once a meal is received a new cash move is created for the employee.
+					</p>
 					<footer>
-						<button name="confirm" string="Confirm Orders" type="object" class="oe_highlight"/>
+						<button name="confirm" string="Receive Meals" type="object" class="oe_highlight"/>
 						or
 						<button name="cancel" string="Cancel" class="oe_link" special="cancel" />
 					</footer>
@@ -26,7 +22,7 @@
 
         <act_window id="validate_order_lines"
             multi="True"
-            key2="client_action_multi" name="Confirm"
+            key2="client_action_multi" name="Receive meals"
             res_model="lunch.validation" src_model="lunch.order.line"
             view_mode="form" target="new" view_type="form" view_id="validate_order_lines_view"/>
 
