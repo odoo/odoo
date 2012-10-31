@@ -61,7 +61,7 @@ openerp.account_voucher = function (instance) {
 
     instance.web.list.columns.add('field.account_voucher_field', 'instance.web.list.AccountVoucherField');
     instance.web.list.AccountVoucherField = instance.web.list.Column.extend({
-        format: function (row_data, options) {
+        _format: function (row_data, options) {
             if (row_data.voucher_id.value) {
                 this.icon = '/web/static/src/img/icons/gtk-yes.png';
             } else {
