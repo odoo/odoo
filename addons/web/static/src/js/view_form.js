@@ -3963,31 +3963,30 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
  */
 instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags.extend({
     add_id: function(id) {
-        this._super.apply(this, arguments);
-
         var self = this;
-        new instance.web.Model('res.partner').call("read", [id, ["email"]], {context: this.build_context()}).pipe(function (dict) {
-            if (!dict.email) {
-                if (! confirm(_t("This partner don't have email.\nDo you want to complete the partner's informations?"))) { return false; }
-                self.on_complete_informations(dict);
-            }
-        });
+        new instance.web.Model('res.partner').call("read", [id, ["email", "notification_email_send"]], {context: this.build_context()})
+            .pipe(function (dict) {
+                if (!dict.email && (dict.notification_email_send == 'all' || dict.notification_email_send == 'comment')) {
+                    var pop = new instance.web.form.FormOpenPopup(self);
+                    pop.show_element(
+                        'res.partner',
+                        dict.id,
+                        self.build_context(),
+                        {
+                            title: _t("Complete partner's informations"),
+                        }
+                    );
+                    pop.on('write_completed', self, function () {
+                        self._add_id(dict.id)
+                    });
+                } else {
+                    self._add_id(dict.id);
+                }
+            });
     },
-
-    on_complete_informations: function (dict) {
-        var self = this;
-
-        var pop = new instance.web.form.FormOpenPopup(self);
-        pop.show_element(
-            'res.partner',
-            dict.id,
-            self.build_context(),
-            {
-                title: _t("Complete partner's informations"),
-            }
-        );
-    },
-
+    _add_id: function (id) {
+        this.set({'value': _.uniq(this.get('value').concat([id]))});
+    }
 });
 
 /**
