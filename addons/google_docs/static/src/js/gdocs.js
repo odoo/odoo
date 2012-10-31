@@ -20,9 +20,9 @@ var _t = instance.web._t;
         on_google_doc: function() {
             var self = this;
             var form = self.getParent();
-            form.sidebar_context().then(function (context) {
+            form.sidebar_context().done(function (context) {
                 var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).then(function(r) {
+                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context]).done(function(r) {
                     if (r == 'False') {
                         var params = {
                             error: response,

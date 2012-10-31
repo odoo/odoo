@@ -16,7 +16,7 @@ openerp.project = function(openerp) {
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
                     self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
@@ -41,7 +41,7 @@ openerp.project = function(openerp) {
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'project.category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
                     self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
