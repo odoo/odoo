@@ -381,8 +381,11 @@ class YamlInterpreter(object):
                 return False
             return val
 
-        view = etree.fromstring(view_info['arch'].encode('utf-8')) if view_info else False
-        view = view if len(view) else False
+        if view_info:
+            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            view = arch if len(arch) else False
+        else:
+            view = False
         fields = fields or {}
         if view is not False:
             fg = view_info['fields']
