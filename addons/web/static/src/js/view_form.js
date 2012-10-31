@@ -1979,11 +1979,6 @@ instance.web.form.FieldInterface = {
      * Called when the translate button is clicked.
      */
     on_translate: function() {},
-    /**
-        This method is called by the form view before reading on_change values and before saving. It tells
-        the field to save its value before reading it using get_value(). Must return a deferred.
-    */
-    commit_value: function() {},
 };
 
 /**
@@ -2127,10 +2122,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         }
         this.$el.attr('style', style);
         this.$el.css('minHeight', height);
-    },
-    commit_value: function() {
-        return $.when();
-    },
+    }
 });
 
 /**
