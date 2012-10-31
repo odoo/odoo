@@ -3955,6 +3955,41 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     },
 });
 
+
+/**
+ * Extend of FieldMany2ManyTags widget method.
+ * When the user add a partner and the partner don't have an email, open a popup to purpose to add an email.
+ * The user can choose to add an email or cancel and close the popup.
+ */
+instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags.extend({
+    add_id: function(id) {
+        this._super.apply(this, arguments);
+
+        var self = this;
+        new instance.web.Model('res.partner').call("read", [id, ["email"]], {context: this.build_context()}).pipe(function (dict) {
+            if (!dict.email) {
+                if (! confirm(_t("This partner don't have email.\nDo you want to complete the partner's informations?"))) { return false; }
+                self.on_complete_informations(dict);
+            }
+        });
+    },
+
+    on_complete_informations: function (dict) {
+        var self = this;
+
+        var pop = new instance.web.form.FormOpenPopup(self);
+        pop.show_element(
+            'res.partner',
+            dict.id,
+            self.build_context(),
+            {
+                title: _t("Complete partner's informations"),
+            }
+        );
+    },
+
+});
+
 /**
     widget options:
     - reload_on_button: Reload the whole form view if click on a button in a list view.
@@ -5141,6 +5176,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
     'many2many_tags' : 'instance.web.form.FieldMany2ManyTags',
+    'many2many_tags_email' : 'instance.web.form.FieldMany2ManyTagsEmail',
     'many2many_kanban' : 'instance.web.form.FieldMany2ManyKanban',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
