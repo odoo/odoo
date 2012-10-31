@@ -146,7 +146,7 @@
   I check that the move of my voucher is valid and that it is posted
 -
   !python {model: account.voucher}: |
-    voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow,'))
+    voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow'))
     assert voucher_id.state == 'posted', "Voucher state is not posted"
     for move_line in voucher_id.move_id.line_id:
         assert move_line.state == 'valid', "Voucher move is not valid"
@@ -162,7 +162,7 @@
   I check that my writeoff is correct. 33.34€ in credit with -$50 as amount currency
 -
   !python {model: account.voucher}: |
-    voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow,'))
+    voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow'))
     for move_line in voucher_id.move_id.line_id:
         if move_line.amount_currency == -950.00:
             assert move_line.credit == 633.33, "Wrong bank entry."
