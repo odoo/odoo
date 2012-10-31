@@ -283,10 +283,11 @@
             <field name="model">stock.tracking</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:not active" string="Packs">
+                <tree colors="grey:active == False" string="Packs">
                     <field name="name"/>
                     <field name="serial"/>
                     <field name="date"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
