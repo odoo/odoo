@@ -1297,7 +1297,7 @@ class product_product(osv.osv):
 
     _columns = {
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
-        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
         'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
