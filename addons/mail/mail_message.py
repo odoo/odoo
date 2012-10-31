@@ -227,7 +227,7 @@ class mail_message(osv.Model):
             is_private = False
 
         try:
-            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, message['attachment_ids'], context=context)]
+            attachment_ids = [{'id': attach['id'], 'filename': attach['datas_fname']} for attach in self.pool.get('ir.attachment').read(cr, uid, message['attachment_ids'], ['id', 'datas_fname'],  context=context)]
         except (orm.except_orm, osv.except_osv):
             attachment_ids = []
 

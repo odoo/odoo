@@ -38,7 +38,7 @@
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <textarea class="field_text oe_compact" placeholder="Write a reply..."/>
+            <textarea class="field_text oe_compact" placeholder="Write to this group followers..."/>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
@@ -72,18 +72,18 @@
         <span class="oe_msg_attachments">
             <t t-foreach="widget.attachment_ids" t-as="attachment" t-if="!attachment.is_image">
                 <div class="oe_attachment">
-                    <span t-if="(attachment.upload and attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
+                    <span t-if="attachment.upload" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
                         <div class="oe_upload_in_process">
                             <span>...Upload in progress...</span>
                         </div>
                         <t t-raw="attachment.name || attachment.filename"/>
                     </span>
-                    <t t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)">
+                    <t t-if="!attachment.upload">
                         <a t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
                             <t t-raw="attachment.name || attachment.filename"/>
                         </a>
                     </t>
-                    <t t-if="(widget.show_delete_attachment and (!attachment.upload or attachment.percent_loaded&gt;=100))">
+                    <t t-if="(widget.show_delete_attachment and !attachment.upload)">
                         <a class="oe_right oe_mail_attachment_delete oe_e" title="Delete this attachment" t-attf-data-id="{attachment.id}">[</a>
                     </t>
                 </div>
@@ -146,14 +146,14 @@
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
-            <tr class="oe_header_row">
+            <tr class="oe_header_row" t-if="widget.context.view_mailbox" >
                 <td colspan="2">
                     <button type="button" class="oe_write_full oe_highlight">
                         Compose a new message
                     </button>
                     <span class='oe_alternative'>
                         or
-                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write to your followers</a>
+                        <a href='#'  class='oe_write_onwall oe_bold' help='Your followers can read this message'>Write on this document</a>
                     </span>
                 </td>
             </tr>

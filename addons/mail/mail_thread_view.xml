@@ -5,35 +5,45 @@
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new sales tag.
+              </p><p>
+                Create specific tags that fit your company's activities
+                to better classify and analyse your leads and opportunities.
+                Such categories could for instance reflect your product
+                structure or the different types of sales you do.
+              </p>
+            </field>
         </record>
 
         <record id="action_mail_to_me_feeds" model="ir.actions.client">
             <field name="name">To: me</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('partner_ids.user_ids', 'in', [uid]), ('to_read', '=', True), ('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <record id="action_mail_star_feeds" model="ir.actions.client">
-            <field name="name">Favorites</field>
+            <field name="name">Todo</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('favorite_user_ids.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
-            <field name="name">Archives</field>
+            <field name="name">Done</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', False)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <record id="action_mail_sent_feeds" model="ir.actions.client">
             <field name="name">Sent</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <!-- MENU -->
@@ -61,13 +71,13 @@
           <field name="parent_id" ref="mail.mail_feeds"/>
         </record>
         <record id="mail_starfeeds" model="ir.ui.menu">
-          <field name="name">Favorites</field>
+          <field name="name">Todo</field>
           <field name="sequence" eval="14"/>
           <field name="action" ref="action_mail_star_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>
         </record>
         <record id="mail_archivesfeeds" model="ir.ui.menu">
-          <field name="name">Archives</field>
+          <field name="name">Done</field>
           <field name="sequence" eval="16"/>
           <field name="action" ref="action_mail_archives_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>
