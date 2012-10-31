@@ -1565,7 +1565,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
-        'voucher_id': fields.many2one('account.voucher', 'Payment'),
+        'voucher_id': fields.many2one('account.voucher', 'Reconciliation'),
     }
 
     def unlink(self, cr, uid, ids, context=None):

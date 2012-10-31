@@ -60,6 +60,15 @@ This module manages:
         'security/account_voucher_security.xml',
         'account_voucher_data.xml',
     ],
+    'js': [
+        'static/src/js/account_voucher_reconciliation.js',
+    ],
+    'qweb' : [
+        'static/src/xml/account_voucher_reconciliation.xml',
+    ],
+    'css': [
+        #'static/src/css/account_voucher_reconciliation.css',
+    ],
     'test' : [
         'test/account_voucher.yml',
         'test/sales_receipt.yml',
