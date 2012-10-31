@@ -104,3 +104,14 @@ TestCase subclasses
 
 .. automodule:: openerp.tests.common
    :members:
+
+.. note::
+
+    The `setUp` and `tearDown` methods are not part of the tests. Uncaught
+    exceptions in those methods are errors, not test failures. In particular,
+    a failing `setUp` will not be followed by a `tearDown` causing any
+    allocated resource in the `setUp` to not be released by the `tearDown`.
+
+    In the :py:class:`openerp.tests.common.TransactionCase` and
+    :py:class:`openerp.tests.common.SingleTransactionCase`, this means the
+    test suite can hang because of unclosed cursors.
