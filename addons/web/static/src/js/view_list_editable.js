@@ -252,9 +252,10 @@ openerp.web.list_editable = function (instance) {
             var position = $cell.position();
 
             field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
-            field.$el.css({
-                top: position.top,
-                left: position.left,
+            field.$el.position({
+                my: 'left top',
+                at: 'left top',
+                of: $cell
             });
         },
         /**
