@@ -3329,7 +3329,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                         e.cancel = true;
                     });
                     _(controller.columns).find(function (column) {
-                        if (!column instanceof instance.web.list.Handle) {
+                        if (!(column instanceof instance.web.list.Handle)) {
                             return false;
                         }
                         column.modifiers.invisible = true;
