@@ -371,15 +371,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 self.$el.find('.oe_searchview_input:last').focus();
             }
         });
-        // when the completion list opens/refreshes, automatically select the
-        // first completion item so if the user just hits [RETURN] or [TAB] it
-        // automatically selects it
-        this.$el.on('autocompleteopen', function () {
-            var menu = self.$el.data('autocomplete').menu;
-            menu.activate(
-                $.Event({ type: "mouseenter" }),
-                menu.element.children().first());
-        });
 
         return $.when(p, this.ready);
     },
@@ -429,58 +420,46 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     setup_global_completion: function () {
         var self = this;
 
-        // autocomplete only correctly handles being initialized on the actual
-        // editable element (and only an element with a @value in 1.8 e.g.
-        // input or textarea), cheat by setting val() on $el
-        this.$el.on('keydown', function () {
-            // keydown is triggered *before* the element's value is set, so
-            // delay this. Pray that setTimeout are executed in FIFO (if they
-            // have the same delay) as autocomplete uses the exact same trick.
-            // FIXME: brittle as fuck
-            setTimeout(function () {
-                self.$el.val(self.currentInputValue());
-            }, 0);
-
-        });
-
-        this.$el.autocomplete({
+        var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
             focus: function (e) { e.preventDefault(); },
             html: true,
+            autoFocus: true,
             minLength: 1,
             delay: 0
-        }).data('autocomplete')._renderItem = function (ul, item) {
-            // item of completion list
-            var $item = $( "<li></li>" )
-                .data( "item.autocomplete", item )
-                .appendTo( ul );
+        }).data('autocomplete');
 
-            if (item.facet !== undefined) {
-                // regular completion item
-                return $item.append(
-                    (item.label)
-                        ? $('<a>').html(item.label)
-                        : $('<a>').text(item.value));
-            }
-            return $item.text(item.label)
-                .css({
-                    borderTop: '1px solid #cccccc',
-                    margin: 0,
-                    padding: 0,
-                    zoom: 1,
-                    'float': 'left',
-                    clear: 'left',
-                    width: '100%'
-                });
-        };
-    },
-    /**
-     * Gets value out of the currently focused "input" (a
-     * div[contenteditable].oe_searchview_input)
-     */
-    currentInputValue: function () {
-        return this.$el.find('div.oe_searchview_input:focus').text();
+        // MonkeyPatch autocomplete instance
+        _.extend(autocomplete, {
+            _renderItem: function (ul, item) {
+                // item of completion list
+                var $item = $( "<li></li>" )
+                    .data( "item.autocomplete", item )
+                    .appendTo( ul );
+
+                if (item.facet !== undefined) {
+                    // regular completion item
+                    return $item.append(
+                        (item.label)
+                            ? $('<a>').html(item.label)
+                            : $('<a>').text(item.value));
+                }
+                return $item.text(item.label)
+                    .css({
+                        borderTop: '1px solid #cccccc',
+                        margin: 0,
+                        padding: 0,
+                        zoom: 1,
+                        'float': 'left',
+                        clear: 'left',
+                        width: '100%'
+                    });
+            },
+            _value: function() {
+                return self.$el.find('div.oe_searchview_input').text();
+            },
+        });
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
