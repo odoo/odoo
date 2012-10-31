@@ -11,8 +11,7 @@ openerp.account_voucher = function (instance) {
         init: function(field_manager, node) {            
             this._super.apply(this, arguments);
             var self = this;
-            this.set('value', false);
-            this.is_started = false;           
+            this.set('value', false);          
         },
         start: function() {
             this._super.apply(this, arguments);
@@ -22,7 +21,6 @@ openerp.account_voucher = function (instance) {
             this.$button = $(QWeb.render('WidgetButton', {'widget': this}));
             this.$el.append(this.$button);
             this.$button.on('click', self.on_click);
-            this.is_started = true;
         },
         on_click: function(ev) {
             var self = this;
@@ -38,7 +36,6 @@ openerp.account_voucher = function (instance) {
                 self.set_value(r);
             });
         },
-        // render_value: function() {},
         set_value: function(value_) {
             var self = this;
             if (value_ instanceof Array) {
@@ -50,12 +47,6 @@ openerp.account_voucher = function (instance) {
                 this.render_value();
             }
          },
-        // get_value: function() {},
-        // set_input_id: function(id) {},
-        // is_valid: function() {},
-        // is_syntax_valid: function() {},
-        // focus: function() {},
-        // on_translate: function() {},
 
     });
 
