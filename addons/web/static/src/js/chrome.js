@@ -612,50 +612,51 @@ instance.web.Login =  instance.web.Widget.extend({
 });
 instance.web.client_actions.add("login", "instance.web.Login");
 
-/**
- * Client action to reload the whole interface.
- * If params has an entry 'menu_id', it opens the given menu entry.
- * If params has an entry 'wait', reload will wait the openerp server to be reachable before reloading
- */
-instance.web.Reload = function(parent, params) {
+
+instance.web._relocate = function(url, wait) {
     // hide errors
     if (instance.client && instance.client.crashmanager) {
         instance.client.crashmanager.destroy();
     }
 
-    var reload = function() {
-        console.log('relocate');
-        var menu_id = (params && params.menu_id) || false;
-        var l = window.location;
-
-        var sobj = $.deparam(l.search.substr(1));
-        sobj.ts = new Date().getTime();
-        var search = '?' + $.param(sobj);
-
-        var hash = l.hash;
-        if (menu_id) {
-            hash = "#menu_id=" + menu_id;
-        }
-        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-        window.location = url;
-    };
-
     var wait_server = function() {
-        parent.session.rpc("/web/webclient/version_info", {})
+        instance.session.rpc("/web/webclient/version_info", {})
         .done(function() {
-            reload();
+            window.location = url;
         })
         .fail(function() { 
             setTimeout(wait_server, 250);
         });
     };
 
-    if (parent && params && params.wait) {
+    if (wait) {
         setTimeout(wait_server, 1000);
     } else {
-        reload();
+        window.location = url;
     }
-    
+}
+
+/**
+ * Client action to reload the whole interface.
+ * If params has an entry 'menu_id', it opens the given menu entry.
+ * If params has an entry 'wait', reload will wait the openerp server to be reachable before reloading
+ */
+instance.web.Reload = function(parent, params) {
+
+    var menu_id = (params && params.menu_id) || false;
+    var l = window.location;
+
+    var sobj = $.deparam(l.search.substr(1));
+    sobj.ts = new Date().getTime();
+    var search = '?' + $.param(sobj);
+
+    var hash = l.hash;
+    if (menu_id) {
+        hash = "#menu_id=" + menu_id;
+    }
+    var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+
+    instance.web._relocate(url, params && params.wait);
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
@@ -665,7 +666,7 @@ instance.web.client_actions.add("reload", "instance.web.Reload");
  */
 instance.web.HistoryBack = function(parent, params) {
     if (!parent.history_back()) {
-        window.location = '/' + (window.location.search || '');
+        instance.web.Home(parent);
     }
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
@@ -673,11 +674,10 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 /**
  * Client action to go back home.
  */
-instance.web.Home = instance.web.Widget.extend({
-    init: function(parent, params) {
-        window.location = '/' + (window.location.search || '');
-    }
-});
+instance.web.Home = function(parent, params) {
+    var url = '/' + (window.location.search || '');
+    instance.web._relocate(url, params && params.wait);
+};
 instance.web.client_actions.add("home", "instance.web.Home");
 
 instance.web.ChangePassword =  instance.web.Widget.extend({
