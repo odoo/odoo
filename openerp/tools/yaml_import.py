@@ -286,8 +286,11 @@ class YamlInterpreter(object):
         model = self.get_model(record.model)
 
         view_id = record.view
-        if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, self.module, record.view)[1]
+        if view_id and (view_id is not True) and isinstance(view_id, basestring):
+            module = self.module
+            if '.' in view_id:
+                module, view_id = view_id.split('.',1)
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
