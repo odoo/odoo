@@ -138,7 +138,7 @@ openerp.mail = function (session) {
                 default_parent_id: false }, options.context || {});
 
             // data of this message
-            this.id = datasets.id ||  -1,
+            this.id = datasets.id ||  false,
             this.last_id = this.id,
             this.model = datasets.model || false,
             this.res_model = datasets.res_model ||  false;
