@@ -596,7 +596,7 @@ openerp.mail = function (session) {
         start: function () {
             this._super.apply(this, arguments);
             this.expender();
-            this.$el.hide().fadeIn(750, function () {$(this).css('display', '');});
+            //this.$el.hide().fadeIn(750, function () {$(this).css('display', '');});
             this.resize_img();
             this.bind_events();
             if(this.thread_level < this.options.display_indented_thread) {
@@ -895,6 +895,7 @@ openerp.mail = function (session) {
 
             // data of this thread
             this.id =  datasets.id || false,
+            this.last_id =  datasets.last_id || false,
             this.model =  datasets.model || false,
             this.parent_id =  datasets.parent_id || false,
             this.is_private =  datasets.is_private || false,
@@ -941,7 +942,7 @@ openerp.mail = function (session) {
         */
         on_scroll: function () {
             var expandables = 
-            _.each( _.filter(this.messages, function (val) {return val.id == -1 && !val.loading;}), function (val) {
+            _.each( _.filter(this.messages, function (val) {return val.id == -1;}), function (val) {
                 var pos = val.$el.position();
                 if (pos.top) {
                     /* bottom of the screen */
@@ -1180,12 +1181,12 @@ openerp.mail = function (session) {
                     if (self.messages[i].no_sorted) {
                         continue;
                     } 
-                    if (self.messages[i].id > message.id) {
-                        if (!message_newer || message_newer.id > self.messages[i].id) {
+                    if (self.messages[i].last_id > (message.last_id || message.id)) {
+                        if (!message_newer || message_newer.last_id > self.messages[i].last_id) {
                             message_newer = self.messages[i];
                         }
-                    } else if (self.messages[i].id > 0 && self.messages[i].id < message.id) {
-                        if (!message_older || message_older.id < self.messages[i].id) {
+                    } else if (self.messages[i].last_id > 0 && self.messages[i].last_id < (message.last_id || message.id)) {
+                        if (!message_older || message_older.last_id < self.messages[i].last_id) {
                             message_older = self.messages[i];
                         }
                     }
