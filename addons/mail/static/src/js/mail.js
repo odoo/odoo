@@ -114,7 +114,16 @@ openerp.mail = function (session) {
     };
 
 
-    mail.ThreadMessageGlobal = session.web.Widget.extend({
+    /**
+     * ------------------------------------------------------------
+     * MessageCommon
+     * ------------------------------------------------------------
+     * 
+     * Common base for expandables, chatter messages and composer. It manages
+     * the various variables common to those models.
+     */
+
+    mail.MessageCommon = session.web.Widget.extend({
         
         init: function (parent, datasets, options) {
             this._super(parent, options);
@@ -207,7 +216,7 @@ openerp.mail = function (session) {
      * When the user focuses the textarea, the compose message is instantiated.
      */
     
-    mail.ThreadComposeMessage = mail.ThreadMessageGlobal.extend({
+    mail.ThreadComposeMessage = mail.MessageCommon.extend({
         template: 'mail.compose_message',
 
         /**
@@ -490,7 +499,7 @@ openerp.mail = function (session) {
      * - - visible message
      * - - expandable
      */
-    mail.ThreadExpandable = mail.ThreadMessageGlobal.extend({
+    mail.ThreadExpandable = mail.MessageCommon.extend({
         template: 'mail.thread.expandable',
 
         init: function (parent, datasets, options) {
@@ -560,7 +569,7 @@ openerp.mail = function (session) {
      * - - sub message (parent_id = root message)
      * - - - sub thread
      */
-    mail.ThreadMessage = mail.ThreadMessageGlobal.extend({
+    mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
 
         /**
