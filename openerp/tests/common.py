@@ -44,6 +44,8 @@ def stop_openerp():
 class BaseCase(unittest2.TestCase):
     """
     Subclass of TestCase for common OpenERP-specific code.
+    
+    This class is abstract and expects self.cr and self.uid to be initialized by subclasses.
     """
 
     @classmethod
@@ -53,7 +55,19 @@ class BaseCase(unittest2.TestCase):
     @classmethod
     def registry(self, model):
         return openerp.modules.registry.RegistryManager.get(DB)[model]
-
+    
+    def ref(self, xmlid):
+        """Returns res_id corresponding to a given module_name.xml_id (cached) or raise ValueError if not found"""
+        assert "." in xmlid, "this method required a fully qualified xml_id"
+        module, xmlid = xmlid.split('.')
+        model, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xmlid)
+        return id
+    
+    def browse_ref(self, xmlid):
+        """Returns a browsable record for the given module_name.xml_id or raise ValueError if not found"""
+        assert "." in xmlid, "this method required a fully qualified xml_id"
+        module, xmlid = xmlid.split('.')
+        return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xmlid)
 
 class TransactionCase(BaseCase):
     """
