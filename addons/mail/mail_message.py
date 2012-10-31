@@ -240,7 +240,6 @@ class mail_message(osv.Model):
 
         return {
             'id': message['id'],
-            'last_id': message['id'],
             'type': message['type'],
             'attachment_ids': attachment_ids,
             'body': message['body'],
@@ -426,17 +425,6 @@ class mail_message(osv.Model):
 
         # get the child expandable messages for the tree
         message_list = sorted(message_list, key=lambda k: k['id'])
-
-
-        for message in message_list:
-            if message['parent_id']:
-                for msg in message_list:
-                    if message['parent_id'] == msg['id']:
-                        if message['last_id'] < message['parent_id']:
-                            message['last_id'] = message['parent_id']
-                        break
-        
-
         self._message_read_add_expandables(cr, uid, message_list, read_messages, thread_level=thread_level,
             message_loaded_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context, limit=limit)
 
