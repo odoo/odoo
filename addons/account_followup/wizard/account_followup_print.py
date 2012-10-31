@@ -132,7 +132,6 @@ class account_followup_print(osv.osv_memory):
                 partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
-            
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 

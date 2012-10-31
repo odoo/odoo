@@ -10,13 +10,16 @@
  			<field name="type">form</field>
  			<field name="priority" eval="20"/>
  			<field name="arch" type="xml">
- 				<form string="Customer FollowUp form">
- 					<group col="4" colspan="4">
+ 				<form string="Customer FollowUp form" version="7.0">
+ 					<group>
  						<field name="name"/>
  						<field name="phone" />
+ 						<!--<field name="sales" readonly="True"/>-->
  					</group>
- 					<separator string="Detail of accounts" />	
- 					<field name="accountmoveline_ids" nolabel="1" domain="[('reconcile_id', '=', False)]"> <!--domain does not work-->
+ 					
+ 					<separator string="Detail of accounts" />
+ 					<group>
+ 					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
  						<tree string="Account Move line" editable="bottom">
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/>
@@ -28,23 +31,37 @@
  							<field name="blocked" string="Litigation"/>
  							<field name="payment_commitment"/>
  							<field name="payment_date"/>
- 							<field name="reconcile_id" invisible="True"/>
+ 							<!--<field name="reconcile_id" invisible="True"/>-->
  							<field name="reconcile_partial_id" readonly="True"/>
  							<field name="invoice"/>
  						</tree>
  					</field>
+ 					</group>
+ 				<newline/>
+ 				   <group>
+ 					<separator string="Actions to be taken"/>
  					<newline/>
- 					<separator string="Payment Followup Remarks" colspan="4"/>
- 					<newline/> 					
- 					<group col="6" colspan="6">
- 					    <field name="payment_next_action"/>		
+ 					<group>
+ 					 <field name="payment_next_action" help="Describes agreement with the client"/>
+ 					 
+ 					 <button name="action_done" type="object" string="Follow-up Action Done" class="oe_highlight" help="This button will clear the action and the action date. "/>
+ 					 </group>
+ 					 <group>
+ 					 <field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
+ 					 <field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the currrent date when processing the follow-ups asks for a phone call"/>
+ 					 </group>
+ 					</group>
+ 					 <separator string="Payment Followup Remarks"/>
+ 					 <newline/> 					
+ 					 <group>
+ 					   
  						<field name="payment_note"/>
- 						<field name="payment_responsible_id"/>
+ 						
  						<!--<field name="payment_followup_level_id"/>--> 
  						<field name="latest_followup_level_id"/>
  						<field name="latest_followup_date"/>
  						<field name="next_followup_level_id"/>
- 						<field name="payment_next_action_date"/>
+ 						
  					</group>
  				</form>
  			</field>
@@ -80,10 +97,19 @@
  			<field name="type">search</field>
  			<field name="arch" type="xml">
  				<search string="Search view">
- 					<filter string="Actions to be taken" domain="[('payment_next_action', '!=', '')]"/>
- 					<filter string="Follow-up sent" domain="[('latest_followup_level_id', '!=', '')]"/>
+ 					
+ 					<!--<filter string="Actions to be taken with overdue amount" domain="['&amp;', ('payment_amount_outstanding', '>', 0.0), ('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+ 					<separator/>-->
+ 					<filter string="Overdue amount outstanding" domain="[('payment_amount_outstanding', '>', 0.0)]"/>
+ 					<separator/>
+ 					<filter string="Action to be taken now" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+ 					<separator/>
+ 					<filter string="Action to be taken" domain="[('payment_next_action', '!=', '')]"/>
+ 					<filter string="Follow-up sent" domain="[('latest_followup_level_id', '!=', False)]"/>
+ 					<separator/>
  					<filter string="Without responsible" domain="[('payment_responsible_id', '=', False)]"/>
  					<filter string="I am responsible" domain="[('payment_responsible_id','=', uid)]"/>
+ 								
  				</search>
  			</field>
  		</record>
@@ -113,6 +139,35 @@
  			<field name="view_id" ref="customer_followup_tree"/>
  			<field name="act_window_id" ref="action_customer_followup"/>
  		</record>
+ 		
+ 	
+ 		<record model="ir.ui.view" id="view_partner_inherit_followup_form">
+            <field name="name">res.partner.followup.form.inherit</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+            	<notebook position="inside">
+            		<page string="Payments Follow-up" position="inside">
+            			<separator string="Payments follow-up"/>
+            			<group>
+            			<field name="payment_amount_outstanding"/>
+            			<field name="latest_followup_level_id"/>
+            			<field name="payment_next_action"/>
+            			<field name="payment_next_action_date"/>
+            			</group>
+            		</page>
+            	</notebook>
+            		   
+            	<!--<field name="name" position="after">
+            		<field name="payment_next_action"/>
+            	</field>-->  	
+                <!--<field name="payment_amount_outstanding" position="after">
+                    <separator string="Account Move Lines" colspan="4"/>
+                    <field name="accountmoveline_ids" nolabel="1" colspan="4"/>
+            </field>-->
+            </field>
+        </record>
+       
 
          <!-- Menus about followup of customers -->
         <menuitem id="account_followup_" action="action_customer_followup"  parent="account.menu_configuration_misc" name="Customer follow up"/>

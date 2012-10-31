@@ -161,6 +161,37 @@ class res_partner(osv.osv):
     def get_latest_followup_level(self):
         amls = self.accountmoveline_ids
 
+    def _get_next_followup_level_id_optimized(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for partner in self.browse(cr, uid, ids):            
+            latest_id = partner.latest_followup_level_id
+            if latest_id:
+                latest = latest_id
+            else:
+                latest = False
+
+            delay = False
+            newlevel = False
+            if latest: #if latest exists                
+                newlevel = latest.id
+                old_delay = latest.delay
+            else:
+                old_delay = False
+            fl_ar = self.pool.get('account_followup.followup.line').search(cr, uid, [('followup_id.company_id.id','=', partner.company_id.id)])
+            
+            for fl_obj in self.pool.get('account_followup.followup.line').browse(cr, uid, fl_ar):
+                if not old_delay: 
+                    if not delay or fl_obj.delay < delay: 
+                        delay = fl_obj.delay
+                        newlevel = fl_obj.id
+                else:
+                    if (not delay and (fl_obj.delay > old_delay)) or ((fl_obj.delay < delay) and (fl_obj.delay > old_delay)):
+                        delay = fl_obj.delay
+                        newlevel = fl_obj.id
+            res[partner.id] = newlevel
+            #Now search one level higher
+        return res
+
 
     def _get_next_followup_level_id(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -203,7 +234,8 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context):
             res[partner.id] = 0.0
             for aml in partner.accountmoveline_ids:
-                res[partner.id] = res[partner.id] + aml.debit
+                if ((not aml.date_maturity) and (aml.date > fields.date.context_today(cr, uid, context))) or (aml.date_maturity > fields.date.context_today(cr, uid, context)):
+                     res[partner.id] = res[partner.id] + aml.debit
         return res
 
 
@@ -355,7 +387,12 @@ class res_partner(osv.osv):
 #            }
 
 
-
+    def action_done(self, cr, uid, ids, context=None):
+        
+        self.write(cr, uid, ids,  {'payment_next_action_date': False, 'payment_next_action':''}, context)
+        
+            
+    
 
     _inherit = "res.partner"
     _columns = {
@@ -369,8 +406,8 @@ class res_partner(osv.osv):
         'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="latest followup date", store=True), 
         'latest_followup_level_id':fields.function(_get_latest_followup_level_id, method=True, 
             type='many2one', relation='account_followup.followup.line', string="Latest Followup Level", store=True), 
-        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="Next Level"),
-        'payment_amount_outstanding':fields.function(_get_amount, method=True, type='float', string="Amount", store=True),
+        'next_followup_level_id':fields.function(_get_next_followup_level_id_optimized, method=True, type='many2one', relation='account_followup.followup.line', string="Next Level", help="Next level that will be printed"),
+        'payment_amount_outstanding':fields.function(_get_amount, method=True, type='float', string="Amount Overdue", store=True),
     }
 
 res_partner()
