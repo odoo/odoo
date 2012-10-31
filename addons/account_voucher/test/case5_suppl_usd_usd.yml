@@ -128,7 +128,7 @@
   !python {model: account.voucher}: |
     import netsvc, time
     vals = {}
-    voucher_id = self.browse(cr, uid, ref('account_voucher_1_case_basic_supplier_flows'))
+    voucher_id = self.browse(cr, uid, ref('account_voucher_case_5_supplier_flow'))
     for item in voucher_id.line_dr_ids:
         if item.amount_unreconciled == 1000.00:
             self.pool.get('account.voucher.line').write(cr, uid, [item.id], {'amount': 1000})
@@ -141,7 +141,7 @@
 -
   I confirm the voucher
 -
-  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_1_case_basic_supplier_flows}
+  !workflow {model: account.voucher, action: proforma_voucher, ref: account_voucher_case_5_supplier_flow}
 -
   I check that the move of my voucher is valid and that it is posted
 -
