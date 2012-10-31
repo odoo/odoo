@@ -150,7 +150,7 @@ class hr_holidays(osv.osv):
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
-    
+
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
@@ -444,10 +444,10 @@ class hr_employee(osv.osv):
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 sum(h.number_of_days) as days,
-                h.employee_id 
+                h.employee_id
             from
                 hr_holidays h
-                join hr_holidays_status s on (s.id=h.holiday_status_id) 
+                join hr_holidays_status s on (s.id=h.holiday_status_id)
             where
                 h.state='validate' and
                 s.limit=False and
@@ -462,9 +462,9 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-    def _get_leave_status(self, cr, uid, ids, name, args, context=None):       
+    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
         holidays_obj = self.pool.get('hr.holidays')
-        holidays_id = holidays_obj.search(cr, uid, 
+        holidays_id = holidays_obj.search(cr, uid,
            [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
            ('date_to','>=',time.strftime('%Y-%m-%d 23:59:59')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
@@ -490,7 +490,7 @@ class hr_employee(osv.osv):
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
-        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
+        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
 hr_employee()
