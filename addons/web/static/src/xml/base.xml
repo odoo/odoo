@@ -276,15 +276,15 @@
                 <table align="center" class="db_option_table">
                     <tr>
                         <td><label for="old_pwd">Master password:</label></td>
-                        <td><input type="password" name="old_pwd" class="required" minlength="1" autofocus="autofocus"/></td>
+                        <td class="oe_keyImage_old_pwd"><input type="password" name="old_pwd" placeholder=" Password..." class="required" minlength="1" autofocus="autofocus"/></td>
                     </tr>
                     <tr>
                         <td><label for="new_pwd">New master password:</label></td>
-                        <td><input type="password" name="new_pwd" class="required" minlength="1"/></td>
+                        <td class="oe_keyImage_new_pwd"><input type="password" name="new_pwd" placeholder=" Password..." class="required" minlength="1"/></td>
                     </tr>
                     <tr>
                         <td><label for="confirm_pwd">Confirm new master password:</label></td>
-                        <td><input type="password" name="confirm_pwd" class="required" equalTo="input[name=new_pwd]" minlength="1"/> </td>
+                        <td class="oe_keyImage_new_pwd"><input type="password" name="confirm_pwd" placeholder=" Password..." class="required" equalTo="input[name=new_pwd]" minlength="1"/> </td>
                     </tr>
                 </table>
             </form>
@@ -312,18 +312,18 @@
         <table align="center">
             <tr>
                 <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
-                           minlength="1" autofocus="autofocus"/></td>
+                <td class="oe_keyImage_old_pwd"><input type="password" name="old_pwd"
+                           minlength="1" placeholder=" Password..." autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
-                       minlength="1"/></td>
+                <td><label for="new_password">New Password:</label></td>
+                <td class="oe_keyImage_new_pwd"><input type="password" name="new_password"
+                       placeholder=" Password..." minlength="1"/></td>
             </tr>
             <tr>
                 <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
-                             minlength="1"/></td>
+                <td class="oe_keyImage_new_pwd"><input type="password" name="confirm_pwd"
+                            placeholder=" Password..." minlength="1" /></td>
             </tr>
             <tr>
                 <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
