@@ -103,7 +103,7 @@
                             </widget>
                         </page>
                         <page string="Details">
-                            <field context="{'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}}" name="timesheet_ids" nolabel="1">
+                            <field context="{'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Activities">
                                     <field name="date"/>
                                     <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
@@ -303,18 +303,21 @@
         </record>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_account"
-        name="Timesheet by Account"
-        res_model="hr_timesheet_sheet.sheet.account"
-        src_model="hr_timesheet_sheet.sheet"/>
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_account"
+            name="Timesheet by Account"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.account"
+            src_model="hr_timesheet_sheet.sheet"/>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_day"
-        name="Timesheet by Day"
-        res_model="hr_timesheet_sheet.sheet.day"
-        src_model="hr_timesheet_sheet.sheet"/>
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_day"
+            name="Timesheet by Day"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.day"
+            src_model="hr_timesheet_sheet.sheet"/>
+
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
