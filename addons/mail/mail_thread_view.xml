@@ -4,7 +4,8 @@
         <record id="action_mail_inbox_feeds" model="ir.actions.client">
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True)],
+            <field name="params" eval="&quot;{
+                'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True), ('favorite_user_ids.user_ids', 'not in', [uid])],
                 'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -21,15 +22,15 @@
         <record id="action_mail_to_me_feeds" model="ir.actions.client">
             <field name="name">To: me</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('partner_ids.user_ids', 'in', [uid]), ('to_read', '=', True), ('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
+            <field name="params" eval="&quot;{'domain': [('partner_ids.user_ids', 'in', [uid])],
+                'context': {'search_default_message_unread': True, 'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <record id="action_mail_star_feeds" model="ir.actions.client">
             <field name="name">Todo</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('favorite_user_ids.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
+                'context': {'search_default_message_unread': True, 'default_model': 'res.users', 'default_res_id': uid, 'view_mailbox': True} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
