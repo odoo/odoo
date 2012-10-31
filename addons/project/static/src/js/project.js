@@ -57,6 +57,12 @@ openerp.project = function(openerp) {
             } else if (self.dataset.model === 'project.task') {
                 self.project_display_categ_names();
             }
+        },
+        on_record_moved: function(record, old_group, old_index, new_group, new_index){
+            var self = this;
+            self._super(record, old_group, old_index, new_group, new_index);
+            if(new_group.state.folded)
+                new_group.do_action_toggle_fold();
         }
     });
 
