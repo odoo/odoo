@@ -186,3 +186,24 @@ class note_base_config_settings(osv.osv_memory):
         'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
         'group_note_fancy': fields.boolean('Use fancy layouts for notes', implied_group='note.group_note_fancy'),
     }
+
+class res_users(osv.Model):
+    _name = 'res.users'
+    _inherit = ['res.users']
+    def create(self, cr, uid, data, context=None):
+        user_id = super(res_users, self).create(cr, uid, data, context=context)
+        note_obj = self.pool.get('note.stage')
+        data_obj = self.pool.get('ir.model.data')
+        model_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user')
+        group_id = model_id and model_id[1] or False
+        if not group_id: return user_id
+        cr.execute('SELECT * FROM res_groups_users_rel WHERE uid = %s and gid = %s', (user_id, group_id,))
+        if not cr.fetchone():
+            return user_id
+        note_ids = ['note_stage_01','note_stage_02','note_stage_03','note_stage_04']
+        for note_id in note_ids:
+            data_id = data_obj._get_id(cr, uid, 'note', note_id)
+            view_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+            note_obj.copy(cr, uid, view_id, default = { 
+                                    'user_id': user_id}, context=context)
+        return user_id
