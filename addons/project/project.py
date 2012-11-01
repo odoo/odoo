@@ -207,7 +207,7 @@ class project(osv.osv):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context)
         all_attachment = project_attachments + task_attachments
-
+        res_id = ids and ids[0] or False
         return {
                 'name': _('Attachments'),
                 'domain': [('id','in', all_attachment)],
@@ -217,6 +217,7 @@ class project(osv.osv):
                 'view_mode': 'tree,form',
                 'view_type': 'form',
                 'limit': 80,
+                'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
              }
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
