@@ -29,7 +29,7 @@ var _t = instance.web._t,
                                 modal: true,
                             });
                         }
-                    }).done(function(){
+                    }).done(function(r){
                         window.open(r.url,"_blank");
                         view.reload();
                     });
