@@ -77,7 +77,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
                         self.main_view_id = ids[0];
-                        }
+                    }
                 });
             });
         });
