@@ -545,8 +545,16 @@ openerp.mail = function (session) {
             }
             this.flag_used = true;
 
-            this.animated_destroy(200);
-            this.parent_thread.message_fetch(this.domain, this.context);
+            var self = this;
+
+            // read messages
+            self.parent_thread.message_fetch(this.domain, this.context, false, function (arg, data) {
+                // insert the message on dom after this message
+                self.id = false;
+                self.parent_thread.switch_new_message( data, self.$el );
+                self.animated_destroy(200);
+            });
+
             return false;
         },
     });
@@ -1086,7 +1094,7 @@ openerp.mail = function (session) {
         message_fetch: function (replace_domain, replace_context, ids, callback) {
             return this.ds_message.call('message_read', [
                     // ids force to read
-                    ids, 
+                    ids == false ? undefined : ids, 
                     // domain + additional
                     (replace_domain ? replace_domain : this.domain), 
                     // ids allready loaded
@@ -1129,6 +1137,7 @@ openerp.mail = function (session) {
             // check if the message is already create
             for (var i in self.messages) {
                 if (self.messages[i] && self.messages[i].id == message.id) {
+                    console.log('Warning double', message.id);
                     self.messages[i].destroy();
                 }
             }
@@ -1148,7 +1157,6 @@ openerp.mail = function (session) {
          */
         insert_message: function (message, dom_insert_after) {
             var self=this;
-
             if (this.options.show_compact_message > this.thread_level) {
                 this.instantiate_compose_message();
                 this.compose_message.do_show_compact();
@@ -1159,66 +1167,8 @@ openerp.mail = function (session) {
 
             if (dom_insert_after) {
                 message.insertAfter(dom_insert_after);
-                return message
-            } 
-
-            // check older and newer message for insertion
-            var message_newer = false;
-            var message_older = false;
-            if (message.id > 0) {
-                for (var i in self.messages) {
-                    if (self.messages[i].no_sorted) {
-                        continue;
-                    } 
-                    if (self.messages[i].last_id > (message.last_id || message.id)) {
-                        if (!message_newer || message_newer.last_id > self.messages[i].last_id) {
-                            message_newer = self.messages[i];
-                        }
-                    } else if (self.messages[i].last_id > 0 && self.messages[i].last_id < (message.last_id || message.id)) {
-                        if (!message_older || message_older.last_id < self.messages[i].last_id) {
-                            message_older = self.messages[i];
-                        }
-                    }
-                }
-            }
-
-            var sort = (!!self.thread_level || message.id<0);
-
-            if (sort) {
-                if (message_older) {
-
-                    message.insertAfter(message_older.thread ? (message_older.thread.compose_message ? message_older.thread.compose_message.$el : message_older.thread.$el) : message_older.$el);
-
-                } else if (message_newer) {
-
-                    message.insertBefore(message_newer.$el);
-
-                } else if (message.id < 0) {
-
-                    message.appendTo(self.$el);
-
-                } else {
-
-                    message.prependTo(self.$el);
-                }
             } else {
-                if (message_older) {
-
-                    message.insertBefore(message_older.$el);
-
-                } else if (message_newer) {
-
-                    message.insertAfter(message_newer.thread ? (message_newer.thread.compose_message ? message_newer.thread.compose_message.$el : message_newer.thread.$el) : message_newer.$el );
-
-                } else if (message.id < 0) {
-
-                    message.prependTo(self.$el);
-
-                } else {
-
-                    message.appendTo(self.$el);
-
-                }
+                message.appendTo(self.$el);
             }
 
             return message
@@ -1229,7 +1179,7 @@ openerp.mail = function (session) {
          * Each message is send to his parent object (or parent thread flat mode) for creating the object message.
          * @param : {Array} datas from calling RPC to "message_read"
          */
-        switch_new_message: function (records) {
+        switch_new_message: function (records, dom_insert_after) {
             var self=this;
             _(records).each(function (record) {
                 var thread = self.browse_thread({
@@ -1239,7 +1189,7 @@ openerp.mail = function (session) {
                 // create object and attach to the thread object
                 var message = thread.create_message_object( record );
                 // insert the message on dom
-                thread.insert_message( message );
+                thread.insert_message( message, typeof dom_insert_after == 'object' ? dom_insert_after : false);
             });
         },
 
