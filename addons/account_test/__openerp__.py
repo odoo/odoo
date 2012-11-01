@@ -20,23 +20,24 @@
 #
 ##############################################################################
 {
-    "name" : "OpenERP",
-    "version" : "1.0",
-    "author" : "OpenERP",
-    "category" : "Test accounting",
-    "website": "http://www.openerp.com",
-    "description": "Asserts on accounting",
-    "depends" : ["account"],
-    "update_xml" : [
-        "account_test_view.xml",
-        "account_test_report.xml",
-        "security/ir.model.access.csv",
-        "account_test_data.xml",
+    'name' : 'Accounting Consistency Tests',
+    'version' : '1.0',
+    'author' : 'OpenERP',
+    'category' : 'Test accounting',
+    'website': 'http://www.openerp.com',
+    'description': """Asserts on accounting
+                      =====================""",
+    'depends' : ['account'],
+    'data' : [
+        'security/ir.model.access.csv',
+        'account_test_view.xml',
+        'account_test_report.xml',
+        'account_test_data.xml',
     ],
     'demo_xml': [
-        "account_test_demo.xml",
+        'account_test_demo.xml',
     ],
-    "active": False,
-    "installable": True
+    'active': False,
+    'installable': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

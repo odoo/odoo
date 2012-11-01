@@ -22,23 +22,32 @@
                     <sheet>
                         <group>
                             <group>
+                                <field name="name"/>
                                 <field name="sequence"/>
-                                <field name="active"/>
                             </group>
                             <group>
-                                <field name="name"/>
+                                <field name="active"/>
                             </group>
-                            <separator string="Test Description"/>
-                            <div colspan="4">
-                                <field name="desc"/>
-                            </div>
-                            <separator string="Expression to evaluate"/>
-                            <newline/>
-                            <separator string="Python Code"/>
-                            <div colspan="4">
-                                <field colspan="4" name="code_exec"/>
-                            </div>
                         </group>
+                        <notebook colspan="4">
+                            <page string="Description">
+                                <field name="desc" nolabel="1"/>
+                            </page>
+                            <page string="Expression">
+                                <group string="Python Code">
+                                    <field colspan="4" name="code_exec" nolabel="1"/>
+                                </group>
+                                <group string="Code Help">
+                                    <pre>
+Example: 
+sql = 'select id, name, ref, date from account_move_line where account_id in 
+(select id from account_account where type = 'view')'
+cr.execute(sql)
+result = cr.dictfetchall()
+                                    </pre>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
