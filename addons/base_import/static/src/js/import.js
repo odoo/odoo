@@ -66,7 +66,7 @@ openerp.base_import = function (instance) {
 
     instance.web_kanban.KanbanView.prototype.import_enabled = true;
     instance.web_kanban.KanbanView.include({
-        load_kanban: function (data) {
+        load_kanban: function () {
             var self = this;
             var add_button = false;
             if (!this.$buttons) {
