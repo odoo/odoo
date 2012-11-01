@@ -46,7 +46,7 @@
                     <field name="purchase_invoice_method" invisible="1"/>
                 </xpath>
                 <xpath expr="//button[@name='action_process']" position="after">
-                    <button name="view_invoice" string="Receive &amp; Control Invoice"  attrs="{'invisible':[('purchase_invoice_method', '=', 'manual')]}" type="object" class="oe_highlight"/>
+                    <button name="view_invoice" string="Receive &amp; Control Invoice"  attrs="{'invisible':['|', ('invoice_state','=','invoiced'),('purchase_invoice_method', '!=', 'picking')]}" type="object" class="oe_highlight"/>
                 </xpath>
             </field>
         </record>
@@ -63,7 +63,7 @@
                             name="view_picking"
                             string="Incoming Shipments" states="approved"/>
                         <button type="object"  name="view_invoice"
-                            string="Invoices" attrs="{'invisible': ['|', ('invoiced','=',True), ('state', '=', 'draft')]}"/> 
+                            string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
                     </div>
                 </xpath>
             </field>
