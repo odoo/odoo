@@ -208,7 +208,7 @@ class account_move_line(osv.osv):
             if type(period_id) == str:
                 ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
                 context.update({
-                    'period_id': ids[0]
+                    'period_id': ids and ids[0] or False
                 })
         return context
 
