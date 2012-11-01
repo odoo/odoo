@@ -18,6 +18,7 @@
 #
 ##############################################################################
 from datetime import datetime
+from tools import DEFAULT_SERVER_DATETIME_FORMAT
 from osv import osv, fields
 from tools.translate import _
 try:
@@ -61,7 +62,7 @@ class google_docs_ir_attachment(osv.osv):
         #login with the base account google module
         client = self._auth(cr, uid, context=context)
         # create the document in google docs
-        title = "%s %s" % (context.get("name","Untitled Document."), datetime.today().strftime("%Y-%m-%d %H:%M:%S"))
+        title = "%s %s" % (context.get("name","Untitled Document."), datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT))
         local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL,title=title)
         #create a new doc in Google Docs 
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
