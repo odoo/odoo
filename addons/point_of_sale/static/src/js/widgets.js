@@ -142,7 +142,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         click_handler: function() {
             this.order.selectLine(this.model);
-            this.on_selected();
+            this.trigger('order_line_selected');
         },
         renderElement: function() {
             this._super();
@@ -153,10 +153,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         refresh: function(){
             this.renderElement();
-            this.on_refresh();
+            this.trigger('order_line_refreshed');
         },
-        on_selected: function() {},
-        on_refresh: function(){},
     });
     
     module.OrderWidget = module.PosBaseWidget.extend({
@@ -230,8 +228,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         model: orderLine,
                         order: this.pos.get('selectedOrder'),
                 });
-            	line.on_selected.add(_.bind(this.update_numpad, this));
-                line.on_refresh.add(_.bind(this.update_summary, this));
+            	line.on('order_line_selected', self, self.update_numpad);
+                line.on('order_line_refreshed', self, self.update_summary);
                 line.appendTo($content);
             }, this));
             this.update_numpad();
@@ -303,7 +301,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.payment_line = options.payment_line;
             this.payment_line.bind('change', this.changedAmount, this);
         },
-        on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
@@ -317,10 +314,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         		this.renderElement();
         },
         renderElement: function() {
+            var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
             this.$('input').keyup(_.bind(this.changeAmount, this));
-            this.$('.delete-payment-line').click(this.on_delete);
+            this.$('.delete-payment-line').click(function() {
+                self.trigger('delete_payment_line');
+            });
         },
     });
 

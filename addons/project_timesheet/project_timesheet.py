@@ -115,7 +115,7 @@ class project_work(osv.osv):
         if not context.get('no_analytic_entry',False):
             task_obj = task_obj.browse(cr, uid, vals['task_id'])
             result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name']) or '/')
+            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
@@ -172,7 +172,7 @@ class project_work(osv.osv):
 
             vals_line = {}
             if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
+                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name'] or '/'))
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
             if 'date' in vals:

@@ -120,6 +120,8 @@ class account_config_settings(osv.osv_memory):
         'group_analytic_accounting': fields.boolean('Analytic accounting',
             implied_group='analytic.group_analytic_accounting',
             help="Allows you to use the analytic accounting."),
+        'group_check_supplier_invoice_total': fields.boolean('Check the total of supplier invoices', 
+            implied_group="account.group_supplier_inv_check_total"),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -260,6 +262,7 @@ class account_config_settings(osv.osv_memory):
                 'sale_tax_rate': config.sale_tax_rate,
                 'purchase_tax_rate': config.purchase_tax_rate,
                 'complete_tax_set': config.complete_tax_set,
+                'currency_id': config.currency_id.id,
             }, context)
             wizard.execute(cr, uid, [wizard_id], context)
 

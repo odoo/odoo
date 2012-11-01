@@ -156,25 +156,26 @@ class mail_thread(osv.AbstractModel):
         old = set(fol.partner_id.id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids))
         new = set(old)
 
-        for command in value:
-            if isinstance(command, (int, long)):
-                new.add(command)
-            elif command[0] == 0:
-                new.add(partner_obj.create(cr, uid, command[2], context=context))
-            elif command[0] == 1:
-                partner_obj.write(cr, uid, [command[1]], command[2], context=context)
-                new.add(command[1])
-            elif command[0] == 2:
-                partner_obj.unlink(cr, uid, [command[1]], context=context)
-                new.discard(command[1])
-            elif command[0] == 3:
-                new.discard(command[1])
-            elif command[0] == 4:
-                new.add(command[1])
-            elif command[0] == 5:
-                new.clear()
-            elif command[0] == 6:
-                new = set(command[2])
+        if value:
+            for command in value:
+                if isinstance(command, (int, long)):
+                    new.add(command)
+                elif command[0] == 0:
+                    new.add(partner_obj.create(cr, uid, command[2], context=context))
+                elif command[0] == 1:
+                    partner_obj.write(cr, uid, [command[1]], command[2], context=context)
+                    new.add(command[1])
+                elif command[0] == 2:
+                    partner_obj.unlink(cr, uid, [command[1]], context=context)
+                    new.discard(command[1])
+                elif command[0] == 3:
+                    new.discard(command[1])
+                elif command[0] == 4:
+                    new.add(command[1])
+                elif command[0] == 5:
+                    new.clear()
+                elif command[0] == 6:
+                    new = set(command[2])
 
         # remove partners that are no longer followers
         fol_ids = fol_obj.search(cr, SUPERUSER_ID,
@@ -554,7 +555,11 @@ class mail_thread(osv.AbstractModel):
                                       ('file2', 'bytes')}
                     }
         """
-        msg_dict = {}
+        msg_dict = {
+            'type': 'email',
+            'subtype': 'mail.mt_comment',
+            'author_id': False,
+        }
         if not isinstance(message, Message):
             if isinstance(message, unicode):
                 # Warning: message_from_string doesn't always work correctly on unicode,
@@ -572,7 +577,7 @@ class mail_thread(osv.AbstractModel):
         if 'Subject' in message:
             msg_dict['subject'] = decode(message.get('Subject'))
 
-        # Envelope fields not stored in  mail.message but made available for message_new()
+        # Envelope fields not stored in mail.message but made available for message_new()
         msg_dict['from'] = decode(message.get('from'))
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
@@ -581,6 +586,8 @@ class mail_thread(osv.AbstractModel):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
+            else:
+                msg_dict['email_from'] = message.get('from')
         partner_ids = self._message_find_partners(cr, uid, message, ['From', 'To', 'Cc'], context=context)
         msg_dict['partner_ids'] = partner_ids
 
@@ -670,6 +677,18 @@ class mail_thread(osv.AbstractModel):
         if self._mail_flat_thread and not parent_id and thread_id:
             message_ids = mail_message.search(cr, uid, ['&', ('res_id', '=', thread_id), ('model', '=', model)], context=context, order="id ASC", limit=1)
             parent_id = message_ids and message_ids[0] or False
+        # we want to set a parent: force to set the parent_id to the oldest ancestor, to avoid having more than 1 level of thread
+        elif parent_id:
+            message_ids = mail_message.search(cr, SUPERUSER_ID, [('id', '=', parent_id), ('parent_id', '!=', False)], context=context)
+            # avoid loops when finding ancestors
+            processed_list = []
+            if message_ids:
+                _counter, _counter_max = 0, 200
+                message = mail_message.browse(cr, SUPERUSER_ID, message_ids[0], context=context)
+                while (message.parent_id and message.parent_id.id not in processed_list):
+                    processed_list.append(message.parent_id.id)
+                    message = message.parent_id
+                parent_id = message.id
 
         values = kwargs
         values.update({
@@ -689,27 +708,28 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        # TDE FIXME: body is plaintext: convert it into html
-        # when writing on res.partner, without specific thread_id -> redirect to the user's partner
-        if self._name == 'res.partner' and not thread_id:
-            thread_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
+        """ Wrapper on message_post, used only in Chatter (JS). The purpose is
+            to handle attachments.
+            # TDE FIXME: body is plaintext: convert it into html
+        """
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type='comment',
+                        subtype='mail.mt_comment', parent_id=parent_id, context=context)
 
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
-                        subtype=subtype, parent_id=parent_id, context=context)
-
-        # Chatter: attachments linked to the document (not done JS-side), load the message
-        if attachments:
+        # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        if attachment_ids:
             ir_attachment = self.pool.get('ir.attachment')
             mail_message = self.pool.get('mail.message')
-            attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [('res_model', '=', 'mail.message'), ('res_id', '=', 0), ('create_uid', '=', uid), ('id', 'in', attachments)], context=context)
-            if attachment_ids:
+            filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
+                ('res_model', '=', 'mail.compose.message'),
+                ('res_id', '=', 0),
+                ('create_uid', '=', uid),
+                ('id', 'in', attachment_ids)], context=context)
+            if filtered_attachment_ids:
                 ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
-        new_message = self.pool.get('mail.message').message_read(cr, uid, [new_message_id], context=context)
-        return new_message
+        return new_message_id
 
     #------------------------------------------------------
     # Followers API

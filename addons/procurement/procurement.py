@@ -113,8 +113,8 @@ class procurement_order(osv.osv):
             ('ready','Ready'),
             ('done','Done'),
             ('waiting','Waiting')], 'Status', required=True,
-            help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
-            \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
+            help='When a procurement is created the status is set to \'Draft\'.\n If the procurement is confirmed, the status is set to \'Confirmed\'.\
+            \nAfter confirming the status is set to \'Running\'.\n If any exception arises in the order then the status is set to \'Exception\'.\n Once the exception is removed the status becomes \'Ready\'.\n It is in \'Waiting\'. status when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }

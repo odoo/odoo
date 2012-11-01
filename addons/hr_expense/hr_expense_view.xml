@@ -79,7 +79,7 @@
                         </group>
                         <group>
                             <field name="name"/>
-                            <field name="user_valid"/>
+                            <field name="user_valid" attrs="{'invisible': [('state','=','draft')]}"/>
                             <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"/>
                         </group>
                     </group>
@@ -128,9 +128,9 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Other Info">
+                        <page string="Accounting" groups="account.group_account_user">
                             <group>
-                                <group string="Accounting Data" groups="account.group_account_user">
+                                <group string="Accounting Data">
                                     <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
                                     <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
@@ -139,8 +139,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
