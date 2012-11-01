@@ -429,6 +429,8 @@ def Project():
         return result
 
     def _schedule_project(self, cr, uid, project, context=None):
+        if not project.date_start:
+            raise osv.except_osv(_('Warning !'),_("You must assign Start Date on the Project '%s' !") % (project.name,)) 
         resource_pool = self.pool.get('resource.resource')
         calendar_id = project.resource_calendar_id and project.resource_calendar_id.id or False
         working_days = resource_pool.compute_working_calendar(cr, uid, calendar_id, context=context)
