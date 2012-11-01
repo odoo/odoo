@@ -21,9 +21,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
-        // if true, the 'Import', 'Export', etc... buttons will be shown
-        'import_enabled': true,
     },
+    view_type: 'tree',
     /**
      * Core class for list-type displays.
      *
@@ -66,9 +65,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.set_groups(new (this.options.GroupsType)(this));
 
         if (this.dataset instanceof instance.web.DataSetStatic) {
-            this.groups.datagroup = new instance.web.StaticDataGroup(this.dataset);
+            this.groups.datagroup = new StaticDataGroup(this.dataset);
         } else {
-            this.groups.datagroup = new instance.web.DataGroup(
+            this.groups.datagroup = new DataGroup(
                 this, this.model,
                 dataset.get_domain(),
                 dataset.get_context());
@@ -85,6 +84,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
+        this.grouped = false;
+        this.on('view_loaded', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -145,8 +146,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @returns {$.Deferred} loading promise
      */
     start: function() {
-        this.$element.addClass('oe_list');
-        return this.reload_view(null, null, true);
+        this.$el.addClass('oe_list');
+        return this._super();
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -220,7 +221,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    on_loaded: function(data, grouped) {
+    load_list: function(data) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -246,22 +247,23 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 }).value();
         }
 
-        this.setup_columns(this.fields_view.fields, grouped);
+        this.setup_columns(this.fields_view.fields, this.grouped);
 
-        this.$element.html(QWeb.render(this._template, this));
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.html(QWeb.render(this._template, this));
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
+
         // Head hook
         // Selecting records
-        this.$element.find('.oe_list_record_selector').click(function(){
-            self.$element.find('.oe_list_record_selector input').prop('checked',
-                self.$element.find('.oe_list_record_selector').prop('checked')  || false);
+        this.$el.find('.oe_list_record_selector').click(function(){
+            self.$el.find('.oe_list_record_selector input').prop('checked',
+                self.$el.find('.oe_list_record_selector').prop('checked')  || false);
             var selection = self.groups.get_selection();
             $(self.groups).trigger(
                 'selected', [selection.ids, selection.records]);
         });
 
         // Sorting columns
-        this.$element.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
+        this.$el.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
             e.stopPropagation();
             var $this = $(this);
             self.dataset.sort($this.data('id'));
@@ -275,21 +277,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             self.reload_content();
         });
 
-        // Add button and Import link
+        // Add button
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
                 this.$buttons.appendTo(this.options.$buttons);
             } else {
-                this.$element.find('.oe_list_buttons').replaceWith(this.$buttons);
+                this.$el.find('.oe_list_buttons').replaceWith(this.$buttons);
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped);
-            this.$buttons.on('click', '.oe_list_button_import', function() {
-                self.on_sidebar_import();
-                return false;
-            });
+                    .prop('disabled', this.grouped);
         }
 
         // Pager
@@ -298,7 +296,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             if (this.options.$buttons) {
                 this.$pager.appendTo(this.options.$pager);
             } else {
-                this.$element.find('.oe_list_pager').replaceWith(this.$pager);
+                this.$el.find('.oe_list_pager').replaceWith(this.$pager);
             }
 
             this.$pager
@@ -351,14 +349,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
-            this.sidebar.add_items('other', [
-                { label: _t("Import"), callback: this.on_sidebar_import },
+            this.sidebar.add_items('other', _.compact([
                 { label: _t("Export"), callback: this.on_sidebar_export },
-                { label: _t('Delete'), callback: this.do_delete_selected }
-            ]);
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
+            ]));
             this.sidebar.add_toolbar(this.fields_view.toolbar);
-            this.sidebar.$element.hide();
+            this.sidebar.$el.hide();
         }
+        this.trigger('list_view_loaded', data, this.grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -376,7 +374,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        this.$pager.toggle(total !== 0);
+        if (total == 0)
+            this.$pager.hide();
+        else
+            this.$pager.css("display", "");
         this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
         var spager = '-';
         if (total) {
@@ -450,7 +451,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     do_hide: function () {
         if (this.sidebar) {
-            this.sidebar.$element.hide();
+            this.sidebar.$el.hide();
         }
         if (this.$buttons) {
             this.$buttons.hide();
@@ -463,25 +464,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     /**
      * Reloads the list view based on the current settings (dataset & al)
      *
+     * @deprecated
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
     reload_view: function (grouped, context, initial) {
-        var self = this;
-        var callback = function (field_view_get) {
-            self.on_loaded(field_view_get, grouped);
-        };
-        if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve(this.embedded_view);
-        } else {
-            return this.rpc('/web/listview/load', {
-                model: this.model,
-                view_id: this.view_id,
-                view_type: "tree",
-                context: this.dataset.get_context(context),
-                toolbar: !!this.options.$sidebar
-            }, callback);
-        }
+        return this.load_view(context);
     },
     /**
      * re-renders the content of the list view
@@ -490,10 +478,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     reload_content: function () {
         var self = this;
-        self.$element.find('.oe_list_record_selector').prop('checked', false);
+        self.$el.find('.oe_list_record_selector').prop('checked', false);
         this.records.reset();
         var reloaded = $.Deferred();
-        this.$element.find('.oe_list_content').append(
+        this.$el.find('.oe_list_content').append(
             this.groups.render(function () {
                 if (self.dataset.index == null) {
                     var has_one = false;
@@ -555,7 +543,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     do_search: function (domain, context, group_by) {
         this.page = 0;
-        this.groups.datagroup = new instance.web.DataGroup(
+        this.groups.datagroup = new DataGroup(
             this, this.model, domain, context, group_by);
         this.groups.datagroup.sort = this.dataset._sort;
 
@@ -563,8 +551,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             group_by = null;
         }
         this.no_leaf = !!context['group_by_no_leaf'];
+        this.grouped = !!group_by;
 
-        this.reload_view(!!group_by, context).then(
+        return this.load_view(context).pipe(
             this.proxy('reload_content'));
     },
     /**
@@ -595,7 +584,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!ids.length) {
             this.dataset.index = 0;
             if (this.sidebar) {
-                this.sidebar.$element.hide();
+                this.sidebar.$el.hide();
             }
             this.compute_aggregates();
             return;
@@ -603,7 +592,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
-            this.sidebar.$element.show();
+            this.sidebar.$el.show();
         }
 
         this.compute_aggregates(_(records).map(function (record) {
@@ -763,7 +752,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     },
     display_aggregates: function (aggregation) {
         var self = this;
-        var $footer_cells = this.$element.find('.oe_list_footer');
+        var $footer_cells = this.$el.find('.oe_list_footer');
         _(this.aggregate_columns).each(function (column) {
             if (!column['function']) {
                 return;
@@ -789,7 +778,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     pad_columns: function (count, options) {
         options = options || {};
         // padding for action/pager header
-        var $first_header = this.$element.find('thead tr:first th');
+        var $first_header = this.$el.find('thead tr:first th');
         var colspan = $first_header.attr('colspan');
         if (colspan) {
             if (!this.previous_colspan) {
@@ -798,7 +787,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             $first_header.attr('colspan', parseInt(colspan, 10) + count);
         }
         // Padding for column titles, footer and data rows
-        var $rows = this.$element
+        var $rows = this.$el
                 .find('.oe_list_header_columns, tr:not(thead tr)')
                 .not(options['except']);
         var newcols = new Array(count+1).join('<td class="oe_list_padding"></td>');
@@ -812,25 +801,29 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * Removes all padding columns of the table
      */
     unpad_columns: function () {
-        this.$element.find('.oe_list_padding').remove();
+        this.$el.find('.oe_list_padding').remove();
         if (this.previous_colspan) {
-            this.$element
+            this.$el
                     .find('thead tr:first th')
                     .attr('colspan', this.previous_colspan);
             this.previous_colspan = null;
         }
     },
     no_result: function () {
-        this.$element.find('.oe_view_nocontent').remove();
+        this.$el.find('.oe_view_nocontent').remove();
         if (this.groups.group_by
             || !this.options.action
             || !this.options.action.help) {
             return;
         }
-        this.$element.find('table:first').hide();
-        this.$element.prepend(
+        this.$el.find('table:first').hide();
+        this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
+        var create_nocontent = this.$buttons;
+        this.$el.find('.oe_view_nocontent').click(function() {
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+        });
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
@@ -920,8 +913,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             this.records.bind(event, callback);
         }, this);
 
-        this.$_element = $('<tbody>')
-            .appendTo(document.body)
+        this.$current = $('<tbody>')
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
@@ -984,7 +976,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new instance.web.DataSet(this.view, model).name_get([id], function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id]).then(function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -1000,10 +992,32 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // and let the various registered events handle refreshing the
                 // row
                 new instance.web.DataSet(this.view, column.relation)
-                        .name_get([value], function (names) {
+                        .name_get([value]).then(function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
+            }
+        } else if (column.type === 'many2many') {
+            value = record.get(column.id);
+            // non-resolved (string) m2m values are arrays
+            if (value instanceof Array && !_.isEmpty(value)) {
+                var ids;
+                // they come in two shapes:
+                if (value[0] instanceof Array) {
+                    var command = value[0];
+                    // 1. an array of m2m commands (usually (6, false, ids))
+                    if (command[0] !== 6) {
+                        throw new Error(_t("Unknown m2m command ") + command[0]);
+                    }
+                    ids = command[2];
+                } else {
+                    // 2. an array of ids
+                    ids = value;
+                }
+                new instance.web.Model(column.relation)
+                    .call('name_get', [ids]).then(function (names) {
+                        record.set(column.id, _(names).pluck(1).join(', '));
+                    })
             }
         }
         return column.format(record.toForm().data, {
@@ -1012,11 +1026,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         });
     },
     render: function () {
-        var self = this;
-        if (this.$current) {
-            this.$current.remove();
-        }
-        this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
                     render_cell: function () {
@@ -1092,7 +1101,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
-        this.$_element.remove();
     },
     get_records: function () {
         return this.records.map(function (record) {
@@ -1132,7 +1140,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     passtrough_events: 'action deleted row_link',
     /**
      * Grouped display for the ListView. Handles basic DOM events and interacts
-     * with the :js:class:`~instance.web.DataGroup` bound to it.
+     * with the :js:class:`~DataGroup` bound to it.
      *
      * Provides events similar to those of
      * :js:class:`~instance.web.ListView.List`
@@ -1212,6 +1220,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     .replaceWith(self.render());
             });
         this.$row.children().last()
+            .addClass('oe_list_group_pagination')
             .append($prev)
             .append('<span class="oe_list_pager_state"></span>')
             .append($next);
@@ -1259,7 +1268,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             self.bind_child_events(child);
             child.datagroup = group;
 
-            var $row = child.$row = $('<tr>');
+            var $row = child.$row = $('<tr class="oe_group_header">');
             if (group.openable && group.length) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {
@@ -1396,10 +1405,12 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                             }))
                         .end()
                         .find('button[data-pager-action=previous]')
-                            .attr('disabled', page === 0)
+                            .css('visibility',
+                                 page === 0 ? 'hidden' : '')
                         .end()
                         .find('button[data-pager-action=next]')
-                            .attr('disabled', page === pages - 1);
+                            .css('visibility',
+                                 page === pages - 1 ? 'hidden' : '');
                 }
             }
 
@@ -1478,27 +1489,27 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     },
     render: function (post_render) {
         var self = this;
-        var $element = $('<tbody>');
-        this.elements = [$element[0]];
+        var $el = $('<tbody>');
+        this.elements = [$el[0]];
 
         this.datagroup.list(
             _(this.view.visible_columns).chain()
                 .filter(function (column) { return column.tag === 'field' })
                 .pluck('name').value(),
             function (groups) {
-                $element[0].appendChild(
+                $el[0].appendChild(
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
                 self.render_dataset(dataset).then(function (list) {
                     self.children[null] = list;
                     self.elements =
-                        [list.$current.replaceAll($element)[0]];
+                        [list.$current.replaceAll($el)[0]];
                     self.setup_resequence_rows(list, dataset);
                     if (post_render) { post_render(); }
                 });
             });
-        return $element;
+        return $el;
     },
     /**
      * Returns the ids of all selected records for this group, and the records
@@ -1535,6 +1546,60 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                 return child.get_records();
             }).flatten().value();
     }
+});
+
+var DataGroup =  instance.web.CallbackEnabled.extend({
+   init: function(parent, model, domain, context, group_by, level) {
+       this._super(parent, null);
+       this.model = new instance.web.Model(model, context, domain);
+       this.group_by = group_by;
+       this.context = context;
+       this.domain = domain;
+
+       this.level = level || 0;
+   },
+   list: function (fields, ifGroups, ifRecords) {
+       var self = this;
+       var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
+       $.when(query).then(function (querygroups) {
+           // leaf node
+           if (!querygroups) {
+               var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
+               ds._sort = self.sort;
+               ifRecords(ds);
+               return;
+           }
+           // internal node
+           var child_datagroups = _(querygroups).map(function (group) {
+               var child_context = _.extend(
+                   {}, self.model.context(), group.model.context());
+               var child_dg = new DataGroup(
+                   self, self.model.name, group.model.domain(),
+                   child_context, group.model._context.group_by,
+                   self.level + 1);
+               child_dg.sort = self.sort;
+               // copy querygroup properties
+               child_dg.__context = child_context;
+               child_dg.__domain = group.model.domain();
+               child_dg.folded = group.get('folded');
+               child_dg.grouped_on = group.get('grouped_on');
+               child_dg.length = group.get('length');
+               child_dg.value = group.get('value');
+               child_dg.openable = group.get('has_children');
+               child_dg.aggregates = group.get('aggregates');
+               return child_dg;
+           });
+           ifGroups(child_datagroups);
+       });
+   }
+});
+var StaticDataGroup = DataGroup.extend({
+   init: function (dataset) {
+       this.dataset = dataset;
+   },
+   list: function (fields, ifGroups, ifRecords) {
+       ifRecords(this.dataset);
+   }
 });
 
 /**
@@ -1995,7 +2060,7 @@ instance.web.list.Column = instance.web.Class.extend({
         if (!(aggregation_func in this)) {
             return {};
         }
-        var C = function (label, fn) {
+        var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;
         };
@@ -2053,16 +2118,20 @@ instance.web.list.Button = instance.web.list.Column.extend({
      * Return an actual ``<button>`` tag
      */
     format: function (row_data, options) {
-        return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
-            '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
-            '</button>', {
-                title: this.string || '',
-                additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
-                    'disabled="disabled" class="oe_list_button_disabled"' : '',
-                prefix: instance.session.prefix,
-                icon: this.icon,
-                alt: this.string || ''
-            });
+        options = options || {};
+        var attrs = {};
+        if (options.process_modifiers !== false) {
+            attrs = this.modifiers_for(row_data);
+        }
+        if (attrs.invisible) { return ''; }
+
+        return QWeb.render('ListView.row.button', {
+            widget: this,
+            prefix: instance.session.prefix,
+            disabled: attrs.readonly
+                || isNaN(row_data.id.value)
+                || instance.web.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
+        });
     }
 });
 instance.web.list.Boolean = instance.web.list.Column.extend({
@@ -2115,6 +2184,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
     }
 });
 instance.web.list.Handle = instance.web.list.Column.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        // Handle overrides the field to not be form-editable.
+        this.modifiers.readonly = true;
+    },
     /**
      * Return styling hooks for a drag handle
      *

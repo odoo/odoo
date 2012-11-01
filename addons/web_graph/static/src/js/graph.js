@@ -23,6 +23,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
     view_type: "graph",
 
     init: function(parent, dataset, view_id, options) {
+        var self = this;
         this._super(parent);
         this.set_default_options(options);
         this.dataset = dataset;
@@ -41,6 +42,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this.group_by = [];
 
         this.graph = null;
+        this.on('view_loaded', self, self.load_graph);
     },
     destroy: function () {
         if (this.graph) {
@@ -49,24 +51,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
         this._super();
     },
 
-    on_loaded: function(fields_view_get) {
+    load_graph: function(fields_view_get) {
         // TODO: move  to load_view and document
         var self = this;
         this.fields_view = fields_view_get;
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         this.mode = this.fields_view.arch.attrs.type || 'bar';
         this.orientation = this.fields_view.arch.attrs.orientation == 'horizontal';
 
-        var width = this.$element.parent().width();
-        this.$element.css("width", width);
-        this.container = this.$element.find("#editor-render-body").css({
+        var width = this.$el.parent().width();
+        this.$el.css("width", width);
+        this.container = this.$el.find("#editor-render-body").css({
             width: width,
             height: Math.min(500, width * 0.8)
         })[0];
 
         var graph_render = this.proxy('graph_render');
-        this.$element.on('click', '.oe_graph_options a', function (evt) {
+        this.$el.on('click', '.oe_graph_options a', function (evt) {
             var $el = $(evt.target);
 
             self.graph_render({data: filter_values({
@@ -77,18 +79,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
             })});
         });
 
-        this.$element.find("#graph_show_data").click(function () {
+        this.$el.find("#graph_show_data").click(function () {
             self.spreadsheet = ! self.spreadsheet;
             self.graph_render();
         });
-        this.$element.find("#graph_switch").click(function () {
+        this.$el.find("#graph_switch").click(function () {
             if (self.mode != 'radar') {
                 self.orientation = ! self.orientation;
             }
             self.graph_render();
         });
 
-        this.$element.find("#graph_download").click(function () {
+        this.$el.find("#graph_download").click(function () {
             if (self.legend == "top") { self.legend = "inside"; }
             self.forcehtml = true;
 
@@ -98,7 +100,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 self.forcehtml = false;
             });
         });
-        return this._super();
+        this.trigger('graph_view_loaded', fields_view_get);
     },
 
     get_format: function (options) {
@@ -110,7 +112,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         switch (this.legend) {
         case 'top':
             legend.noColumns = 4;
-            legend.container = this.$element.find("div.graph_header_legend")[0];
+            legend.container = this.$el.find("div.graph_header_legend")[0];
             break;
         case 'inside':
             legend.position = 'nw';
@@ -142,9 +144,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
     options_bar: function (data) {
         var min = _(data.data).chain()
             .map(function (record) {
-                return _.min(record.data, function (item) {
-                    return item[1];
-                })[1];
+                if (record.data.length > 0){
+	                return _.min(record.data, function (item) {
+	                    return item[1];
+	                })[1];
+                }
             }).min().value();
         return {
             bars : {
@@ -224,15 +228,144 @@ instance.web_graph.GraphView = instance.web.View.extend({
     },
 
     graph_get_data: function () {
-        return this.rpc('/web_graph/graph/data_get', {
-            model: this.dataset.model,
-            domain: this.domain,
-            context: this.context,
-            group_by: this.group_by,
-            view_id: this.view_id,
-            mode: this.mode,
-            orientation: this.orientation,
-            stacked: this.stacked
+        var model = this.dataset.model,
+            domain = new instance.web.CompoundDomain(this.domain || []),
+            context = new instance.web.CompoundContext(this.context || {}),
+            group_by = this.group_by || [],
+            view_id = this.view_id  || false,
+            mode = this.mode || 'bar',
+            orientation = this.orientation || false,
+            stacked = this.stacked || false;
+
+        var obj = new instance.web.Model(model);
+        var view_get;
+        var fields;
+        var result = [];
+        var ticks = {};
+
+        return obj.call("fields_view_get", [view_id, 'graph']).pipe(function(tmp) {
+            view_get = tmp;
+            fields = view_get['fields'];
+            var toload = _.select(group_by, function(x) { return fields[x] === undefined });
+            if (toload.length >= 1)
+                return obj.call("fields_get", [toload, context]);
+            else
+                return $.when([]);
+        }).pipe(function (fields_to_add) {
+            _.extend(fields, fields_to_add);
+
+            var tree = $($.parseXML(view_get['arch']));
+            
+            var pos = 0;
+            var xaxis = _.clone(group_by || []);
+            var yaxis = [];
+            tree.find("field").each(function() {
+                var field = $(this);
+                if (! field.attr("name"))
+                    return;
+                if ((group_by.length == 0) && ((! pos) || instance.web.py_eval(field.attr('group') || "false"))) {
+                    xaxis.push(field.attr('name'));
+                }
+                if (pos && ! instance.web.py_eval(field.attr('group') || "false")) {
+                    yaxis.push(field.attr('name'));
+                }
+                pos += 1;
+            });
+
+            if (xaxis.length === 0)
+                throw new Error("No field for the X axis!");
+            if (yaxis.length === 0)
+                throw new Error("No field for the Y axis!");
+
+            // Convert a field's data into a displayable string
+
+            function _convert_key(field, data) {
+                if (fields[field]['type'] === 'many2one')
+                    data = data && data[0];
+                return data;
+            }
+
+            function _convert(field, data, tick) {
+                tick = tick === undefined ? true : false;
+                try {
+                    data = instance.web.format_value(data, fields[field]);
+                } catch(e) {
+                    data = "" + data;
+                }
+                if (tick) {
+                    if (ticks[data] === undefined)
+                        ticks[data] = _.size(ticks);
+                    return ticks[data];
+                }
+                return data || 0;
+            }
+
+            function _orientation(x, y) {
+                if (! orientation)
+                    return [x, y]
+                return [y, x]
+            }
+
+            if (mode === "pie") {
+                return obj.call("read_group", [domain, yaxis.concat([xaxis[0]]), [xaxis[0]]], {context: context}).pipe(function(res) {
+                    _.each(res, function(record) {
+                        result.push({
+                            'data': [[_convert(xaxis[0], record[xaxis[0]]), record[yaxis[0]]]],
+                            'label': _convert(xaxis[0], record[xaxis[0]], false)
+                        });
+                    });
+                });
+            } else if ((! stacked) || (xaxis.length < 2)) {
+                var defs = [];
+                _.each(xaxis, function(x) {
+                    defs.push(obj.call("read_group", [domain, yaxis.concat([x]), [x]], {context: context}).pipe(function(res) {
+                        return [x, res];
+                    }));
+                });
+                return $.when.apply($, defs).pipe(function() {
+                    _.each(_.toArray(arguments), function(res) {
+                        var x = res[0];
+                        res = res[1];
+                        result.push({
+                            'data': _.map(res, function(record) {
+                                return _orientation(_convert(x, record[x]), record[yaxis[0]] || 0);
+                            }),
+                            'label': fields[x]['string']
+                        });
+                    });
+                });
+            } else {
+                xaxis.reverse();
+                return obj.call("read_group", [domain, yaxis.concat(xaxis.slice(0, 1)), xaxis.slice(0, 1)], {context: context}).pipe(function(axis) {
+                    var defs = [];
+                    _.each(axis, function(x) {
+                        var key = x[xaxis[0]]
+                        defs.push(obj.call("read_group", [new instance.web.CompoundDomain(domain, [[xaxis[0], '=' ,_convert_key(xaxis[0], key)]]),
+                                yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).pipe(function(res) {
+                            return [x, key, res];
+                        }));
+                    });
+                    return $.when.apply($, defs).pipe(function() {
+                        _.each(_.toArray(arguments), function(res) {
+                            var x = res[0];
+                            var key = res[1];
+                            res = res[2];
+                            result.push({
+                                'data': _.map(res, function(record) {
+                                    return _orientation(_convert(xaxis[1], record[xaxis[1]]), record[yaxis[0]] || 0);
+                                }),
+                                'label': _convert(xaxis[0], key, false)
+                            })
+                        });
+                    });
+                });
+            }
+        }).pipe(function() {
+            var res = {
+                'data': result,
+                'ticks': _.map(ticks, function(el, key) { return [el, key] })
+            };
+            return res;
         });
     },
 
@@ -257,24 +390,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
 
         // Render the graph
-        this.$element.find(".graph_header_legend").children().remove();
+        this.$el.find(".graph_header_legend").children().remove();
         this.graph = this.make_graph(this.mode, this.container, data);
 
         // Update styles of menus
 
-        this.$element.find("a").removeClass("active");
+        this.$el.find("a").removeClass("active");
 
-        var $active = this.$element.find('a[data-mode=' + this.mode + ']');
+        var $active = this.$el.find('a[data-mode=' + this.mode + ']');
         if ($active.length > 1) {
             $active = $active.filter('[data-stacked=' + this.stacked + ']');
         }
         $active = $active.add(
-            this.$element.find('a:not([data-mode])[data-legend=' + this.legend + ']'));
+            this.$el.find('a:not([data-mode])[data-legend=' + this.legend + ']'));
 
         $active.addClass('active');
 
         if (this.spreadsheet) {
-            this.$element.find("#graph_show_data").addClass("active");
+            this.$el.find("#graph_show_data").addClass("active");
         }
         return this.graph;
     },

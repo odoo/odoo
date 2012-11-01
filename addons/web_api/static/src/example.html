@@ -18,38 +18,34 @@
         <script type="text/javascript">
         $(function() {
             $("body").on('click','button',function(ev){
-                eval($("pre.run").text());
+                console.log($("textarea").val());
+                eval($("textarea").val());
             });
         });
         </script> 
     </head> 
     <body>
-        <h1>OpenERP web_api examples</h1>
-        <h2>Example 1: Load the list of defined ir.model <button>Run it !</button></h2>
-        <blockquote>
-        <h3>Code: </h3>
+        <h1>OpenERP web_api test</h1>
+        <h2>Example: Load the content of ir.model <button>Run it !</button></h2>
         <pre>
 &lt;script type="text/javascript" src="/web/webclient/js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript"&gt;
-<pre id="ex1" class="run">
-    var instance = openerp.init(["web"]); // get a new instance
-    instance.session.session_bind(); // bind it to the right hostname
-    instance.session.session_authenticate("trunk", "admin", "admin", false).then(function() {
-        var ds = new instance.web.DataSetSearch(null, "ir.model");
-        ds.read_slice(['name','model'], {}).then(function(models){
-            _.each(models,function(m,i){
-                $("#ex1res").append("&lt;li&gt;" + m.model + " (" + m.name + ") &lt;/li&gt;")
-            });
+<textarea rows="12" cols="100"id="ex1" class="run">
+var instance = openerp.init(["web"]); // get a new instance
+instance.session.session_bind(); // bind it to the right hostname
+instance.session.session_authenticate("trunk", "admin", "admin", false).then(function() {
+    var ds = new instance.web.DataSetSearch(null, "ir.model");
+    ds.read_slice(['name','model'], {}).then(function(models){
+        _.each(models,function(m,i){
+            $("#result").append("&lt;li&gt;" + m.model + " (" + m.name + ") &lt;/li&gt;")
         });
     });
-</pre>&lt;/script&gt;
+});
+</textarea>
+&lt;/script&gt;</pre>
+        <h3>Result:</h3>
+        <pre id="result" class="result">
         </pre>
-        <h3>Div for output:</h3>
-        <div id="ex1res" class="result">
-        &nbsp;
-        </div>
-        </blockquote>
-        <h2>Help me to complete this examples on <a href="http://bazaar.launchpad.net/~openerp/openerp-web/trunk/view/head:/addons/web_api/static/src/example.html">launchpad</a></h2>
     </body> 
 </html> 
 

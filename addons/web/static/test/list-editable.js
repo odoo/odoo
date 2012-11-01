@@ -192,7 +192,7 @@ $(document).ready(function () {
 
             var records = {};
             _.extend(instance.session.responses, {
-                '/web/listview/load': function () {
+                '/web/view/load': function () {
                     return {result: {
                         type: 'tree',
                         fields: {
@@ -268,7 +268,7 @@ $(document).ready(function () {
         setup: function () {
             baseSetup();
             _.extend(instance.session.responses, {
-                '/web/listview/load': function () {
+                '/web/view/load': function () {
                     return {result: {
                         type: 'tree',
                         fields: {

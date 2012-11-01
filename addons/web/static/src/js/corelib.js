@@ -121,6 +121,10 @@ openerp.web.corelib = function(instance) {
 
         // The dummy class constructor
         function Class() {
+            if(this.constructor !== instance.web.Class){
+                throw new Error("You can only instanciate objects with the 'new' operator");
+                return null;
+            }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
@@ -287,6 +291,17 @@ var Events = instance.web.Class.extend({
         return this;
     },
 
+    callbackList: function() {
+        var lst = [];
+        _.each(this._callbacks || {}, function(el, eventName) {
+            var node = el;
+            while ((node = node.next) && node.next) {
+                lst.push([eventName, node.callback, node.context]);
+            }
+        });
+        return lst;
+    },
+    
     trigger : function(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
@@ -365,9 +380,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        if(!this.__edispatcherEvents) {
-            debugger;
-        }
+        _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+            this.off(cal[0], cal[2], cal[1]);
+        }, this);
         this.__edispatcherEvents.off();
         instance.web.ParentedMixin.destroy.call(this);
     }
@@ -378,8 +393,17 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
         instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
-    set: function(map, options) {
-        options = options || {};
+    set: function(arg1, arg2, arg3) {
+        var map;
+        var options;
+        if (typeof arg1 === "string") {
+            map = {};
+            map[arg1] = arg2;
+            options = arg3 || {};
+        } else {
+            map = arg1;
+            options = arg2 || {};
+        }
         var self = this;
         var changed = false;
         _.each(map, function(val, key) {
@@ -406,71 +430,16 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     init: function() {
         instance.web.PropertiesMixin.init.call(this);
         var self = this;
-        var callback_maker = function(obj, name, method) {
-            var callback = function() {
-                var args = Array.prototype.slice.call(arguments);
-                self.trigger.apply(self, [name].concat(args));
-                var r;
-                for(var i = 0; i < callback.callback_chain.length; i++)  {
-                    var c = callback.callback_chain[i];
-                    if(c.unique) {
-                        callback.callback_chain.splice(i, 1);
-                        i -= 1;
-                    }
-                    var result = c.callback.apply(c.self, c.args.concat(args));
-                    if (c.callback === method) {
-                        // return the result of the original method
-                        r = result;
-                    }
-                    // TODO special value to stop the chain
-                    // instance.web.callback_stop
-                }
-                return r;
-            };
-            callback.callback_chain = [];
-            callback.add = function(f) {
-                if(typeof(f) == 'function') {
-                    f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
-                }
-                f.self = f.self || null;
-                f.args = f.args || [];
-                f.unique = !!f.unique;
-                if(f.position == 'last') {
-                    callback.callback_chain.push(f);
-                } else {
-                    callback.callback_chain.unshift(f);
-                }
-                return callback;
-            };
-            callback.add_first = function(f) {
-                return callback.add.apply(null,arguments);
-            };
-            callback.add_last = function(f) {
-                return callback.add({
-                    callback: f,
-                    args: Array.prototype.slice.call(arguments, 1),
-                    position: "last"
-                });
-            };
-            callback.remove = function(f) {
-                callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
-                    return el.callback === f;
-                }));
-                return callback;
-            };
-
-            return callback.add({
-                callback: method,
-                self:obj,
-                args:Array.prototype.slice.call(arguments, 3)
-            });
-        };
         // Transform on_/do_* methods into callbacks
+        var callback_maker = function(fn) {
+            return function() {
+                return fn.apply(self, arguments);
+            }
+        };
         for (var name in this) {
             if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
                 if((/^on_|^do_/).test(name)) {
-                    this[name] = callback_maker(this, name, this[name]);
+                    this[name] = callback_maker(this[name]);
                 }
             }
         }
@@ -525,8 +494,8 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
-        if(this.$element) {
-            this.$element.remove();
+        if(this.$el) {
+            this.$el.remove();
         }
         instance.web.PropertiesMixin.destroy.call(this);
     },
@@ -538,7 +507,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     appendTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.appendTo(t);
+            self.$el.appendTo(t);
         }, target);
     },
     /**
@@ -549,7 +518,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     prependTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.prependTo(t);
+            self.$el.prependTo(t);
         }, target);
     },
     /**
@@ -560,7 +529,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertAfter: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertAfter(t);
+            self.$el.insertAfter(t);
         }, target);
     },
     /**
@@ -571,7 +540,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertBefore: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertBefore(t);
+            self.$el.insertBefore(t);
         }, target);
     },
     /**
@@ -581,7 +550,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     replace: function(target) {
         return this.__widgetRenderAndInsert(_.bind(function(t) {
-            this.$element.replaceAll(t);
+            this.$el.replaceAll(t);
         }, this), target);
     },
     __widgetRenderAndInsert: function(insertion, target) {
@@ -640,8 +609,8 @@ instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEn
  *         // stuff that you want to init before the rendering
  *     },
  *     start: function() {
- *         // stuff you want to make after the rendering, `this.$element` holds a correct value
- *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ *         // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *         this.$el.find(".my_button").click(/* an example of event binding * /);
  *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()
@@ -718,15 +687,15 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @returns {*} this
      */
     replaceElement: function ($el) {
-        var $oldel = this.$element;
+        var $oldel = this.$el;
         this.setElement($el);
-        if ($oldel && !$oldel.is(this.$element)) {
-            $oldel.replaceWith(this.$element);
+        if ($oldel && !$oldel.is(this.$el)) {
+            $oldel.replaceWith(this.$el);
         }
         return this;
     },
     /**
-     * Re-sets the widget's root element (el/$el/$element).
+     * Re-sets the widget's root element (el/$el/$el).
      *
      * Includes:
      * * re-delegating events
@@ -738,14 +707,14 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @return {*} this
      */
     setElement: function (element) {
-        // NB: completely useless, as WidgetMixin#init creates a $element
+        // NB: completely useless, as WidgetMixin#init creates a $el
         // always
-        if (this.$element) {
+        if (this.$el) {
             this.undelegateEvents();
         }
 
-        this.$element = (element instanceof $) ? element : $(element);
-        this.el = this.$element[0];
+        this.$el = (element instanceof $) ? element : $(element);
+        this.el = this.$el[0];
 
         this.delegateEvents();
 
@@ -797,32 +766,33 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
 
             event += '.widget_events';
             if (!selector) {
-                this.$element.on(event, method);
+                this.$el.on(event, method);
             } else {
-                this.$element.on(event, selector, method);
+                this.$el.on(event, selector, method);
             }
         }
     },
     undelegateEvents: function () {
-        this.$element.off('.widget_events');
+        this.$el.off('.widget_events');
     },
     /**
-     * Shortcut for ``this.$element.find(selector)``
+     * Shortcut for ``this.$el.find(selector)``
      *
      * @param {String} selector CSS selector, rooted in $el
      * @returns {jQuery} selector match
      */
     $: function(selector) {
-        return this.$element.find(selector);
+        return this.$el.find(selector);
     },
     /**
      * Informs the action manager to do an action. This supposes that
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
      */
-    do_action: function(action, on_finished) {
-        if (this.getParent()) {
-            return this.getParent().do_action(action, on_finished);
+    do_action: function() {
+        var parent = this.getParent();
+        if (parent) {
+            return parent.do_action.apply(parent, arguments);
         }
         return false;
     },
@@ -841,7 +811,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        instance.session.rpc(url, data). then(function() {
+        instance.session.rpc(url, data).then(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -972,6 +942,12 @@ instance.web.Registry = instance.web.Class.extend({
 });
 
 instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
+    triggers: {
+        'request': 'Request sent',
+        'response': 'Response received',
+        'response_failed': 'HTTP Error response or timeout received',
+        'error': 'The received response is an JSON-RPC error',
+    },
     /**
      * @constructs instance.web.JsonRPC
      * @extends instance.web.CallbackEnabled
@@ -1294,7 +1270,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params, success_callback, error_callback) {
+    rpc: function(url, params) {
         var self = this;
         // url can be an $.ajax option object
         if (_.isString(url)) {
@@ -1310,12 +1286,10 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             id: _.uniqueId('r')
         };
         var deferred = $.Deferred();
-        this.on_rpc_request();
-        var aborter = params.aborter;
-        delete params.aborter;
+        this.trigger('request', url, payload);
         var request = this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
-                self.on_rpc_response();
+                self.trigger('response', response);
                 if (!response.error) {
                     if (url.url === '/web/session/eval_domain_and_context') {
                         self.test_eval(params, response.result);
@@ -1323,18 +1297,12 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
-                    // TODO deprecate or use a deferred on login.do_ask_login()
-                    self.on_session_invalid(function() {
-                        self.rpc(url, payload.params,
-                            function() { deferred.resolve.apply(deferred, arguments); },
-                            function() { deferred.reject.apply(deferred, arguments); });
-                    });
                 } else {
                     deferred.reject(response.error, $.Event());
                 }
             },
             function(jqXHR, textStatus, errorThrown) {
-                self.on_rpc_response();
+                self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
@@ -1342,24 +1310,14 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 };
                 deferred.reject(error, $.Event());
             });
-        if (aborter) {
-            aborter.abort_last = function () {
-                if (!(request.isResolved() || request.isRejected())) {
-                    deferred.fail(function (error, event) {
-                        event.preventDefault();
-                    });
-                    request.abort();
-                }
-            };
-        }
         // Allow deferred user to disable on_rpc_error in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
-                    self.on_rpc_error(error, event);
+                    self.trigger('error', error, event);
                 }
             });
-        }).then(success_callback, error_callback).promise();
+        });
         return deferred;
     },
     /**
@@ -1442,16 +1400,14 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             return deferred;
         }
     },
-    on_rpc_request: function() {
-    },
-    on_rpc_response: function() {
-    },
-    on_rpc_error: function(error) {
-    },
     get_url: function (file) {
         return this.prefix + file;
     },
 });
+
+instance.web.py_eval = function(expr, context) {
+    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+};
 
 }
 
