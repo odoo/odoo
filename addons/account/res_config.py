@@ -262,6 +262,7 @@ class account_config_settings(osv.osv_memory):
                 'sale_tax_rate': config.sale_tax_rate,
                 'purchase_tax_rate': config.purchase_tax_rate,
                 'complete_tax_set': config.complete_tax_set,
+                'currency_id': config.currency_id.id,
             }, context)
             wizard.execute(cr, uid, [wizard_id], context)
 
