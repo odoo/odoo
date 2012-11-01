@@ -466,9 +466,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            domain = [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)]
-            if context.get('invoice_id', False):
-	            domain.append(('invoice', '=', context['invoice_id']))
+            domain = [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id), ('journal_id.type', 'not in', ('bank', 'cash'))]
             ids = move_line_pool.search(cr, uid, domain, context=context)
         else:
             ids = context['move_line_ids']
@@ -483,10 +481,6 @@ class account_voucher(osv.osv):
             total_credit = currency_pool.compute(cr, uid, currency_id, company_currency, total_credit, context=context_multi_currency)
 
         for line in moves:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             if invoice_id:
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
@@ -510,10 +504,6 @@ class account_voucher(osv.osv):
                 total_credit += line.credit and line.amount_currency or 0.0
                 total_debit += line.debit and line.amount_currency or 0.0
         for line in moves:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             original_amount = line.credit or line.debit or 0.0
             amount_unreconciled = currency_pool.compute(cr, uid, line.currency_id and line.currency_id.id or company_currency, currency_id, abs(line.amount_residual_currency), context=context_multi_currency)
             line_currency_id = line.currency_id and line.currency_id.id or company_currency
