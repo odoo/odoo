@@ -125,6 +125,13 @@
         </record>
         <menuitem action="action_res_company_tree" groups="base.group_multi_company" id="menu_action_res_company_tree" parent="base.menu_res_company_global" sequence="16"/>
 
+        <record id="ir_open_company" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'res.company'" name="model"/>
+            <field name="name">Companies</field>
+            <field eval="'ir.actions.act_window,%d'%action_res_company_form" name="value"/>
+        </record>
+
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">multi_company.default.tree</field>
             <field name="model">multi_company.default</field>
