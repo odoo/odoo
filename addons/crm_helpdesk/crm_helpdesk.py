@@ -53,7 +53,7 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                            select=True, help='Responsible sales team.Define Responsible user and Email account for mail gateway.'),
+                            select=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
             'partner_id': fields.many2one('res.partner', 'Partner'),

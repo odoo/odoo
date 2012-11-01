@@ -97,7 +97,7 @@ class crm_claim(base_stage, osv.osv):
         'user_fault': fields.char('Trouble Responsible', size=64),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help="Responsible sales team."\
-                                "Define Responsible user and Email account for"\
+                                " Define Responsible user and Email account for"\
                                 " mail gateway."),
         'company_id': fields.many2one('res.company', 'Company'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
