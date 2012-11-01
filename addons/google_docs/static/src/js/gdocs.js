@@ -30,6 +30,7 @@ var _t = instance.web._t,
                             });
                         }
                     }).done(function(){
+                        window.open(r.url,"_blank");
                         view.reload();
                     });
                 });

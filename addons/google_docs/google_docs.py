@@ -17,7 +17,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from datetime import datetime
 from osv import osv, fields
 from tools.translate import _
 try:
@@ -61,7 +61,7 @@ class google_docs_ir_attachment(osv.osv):
         #login with the base account google module
         client = self._auth(cr, uid, context=context)
         # create the document in google docs
-        title = context.get("name","Untitled Document.")
+        title = "%s %s" % (context.get("name","Untitled Document."), datetime.today().strftime("%Y-%m-%d %H:%M:%S"))
         local_resource = gdata.docs.data.Resource(gdata.docs.data.DOCUMENT_LABEL,title=title)
         #create a new doc in Google Docs 
         gdocs_resource = client.post(entry=local_resource, uri='https://docs.google.com/feeds/default/private/full/')
@@ -70,10 +70,12 @@ class google_docs_ir_attachment(osv.osv):
             'res_model': res_model,
             'res_id': res_id,
             'type': 'url',
-            'name': _('Google Doc'),
+            'name': title,
             'url': gdocs_resource.get_alternate_link().href,
         }, context=context)
-        return gdocs_resource.resource_id.text
+        return {'resource_id': gdocs_resource.resource_id.text,
+                'title': title,
+                'url': gdocs_resource.get_alternate_link().href}
 
     def copy_gdoc(self, cr, uid, res_model, res_id, name_gdocs, gdoc_template_id, context=None):
         '''
