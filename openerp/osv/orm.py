@@ -1548,7 +1548,6 @@ class BaseModel(object):
                 )
                 self._invalids.update(fields)
         if error_msgs:
-            cr.rollback()
             raise except_orm('ValidateError', '\n'.join(error_msgs))
         else:
             self._invalids.clear()
