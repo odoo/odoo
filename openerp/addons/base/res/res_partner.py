@@ -135,7 +135,7 @@ class res_partner_category(osv.osv):
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _parent_store = True
     _parent_order = 'name'
