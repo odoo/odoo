@@ -79,7 +79,7 @@ stock_picking_out()
 class sale(osv.osv):
     _inherit = "sale.order"
     _columns = {
-        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type')
+        'invoice_type_id': fields.many2one('sale_journal.invoice.type', 'Invoice Type', help="Generate invoice based on the selected option.")
     }
 
     def _prepare_order_picking(self, cr, uid, order, context=None):
