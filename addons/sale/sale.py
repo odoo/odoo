@@ -265,6 +265,9 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
+        if context is None:
+            context = {}
+        context.update({'lang': self.pool.get('res.users').context_get(cr, uid, context)['lang']})
         if not pricelist_id:
             return {}
         value = {
@@ -601,6 +604,9 @@ class sale_order(osv.osv):
         }
 
     def action_wait(self, cr, uid, ids, context=None):
+        if context is None:
+             context = {}
+        context.update({'lang': self.pool.get('res.users').context_get(cr, uid, context)['lang']})
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
