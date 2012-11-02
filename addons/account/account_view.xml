@@ -302,7 +302,7 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
-         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+        <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
@@ -322,7 +322,7 @@
             </field>
         </record>
 
-          <record id="action_account_gain_loss" model="ir.actions.act_window">
+        <record id="action_account_gain_loss" model="ir.actions.act_window">
             <field name="name">Unrealized Gain or Loss</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>

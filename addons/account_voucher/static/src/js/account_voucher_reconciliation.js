@@ -8,7 +8,7 @@ openerp.account_voucher = function (instance) {
     instance.web.form.widgets.add('account_voucher_field', 'instance.web.account_voucher.AccountVoucherField');
     instance.web.account_voucher.AccountVoucherField = instance.web.form.AbstractField.extend({
         template: 'FieldAccountVoucher',
-        init: function(field_manager, node) {            
+        init: function(field_manager, node) {
             this._super.apply(this, arguments);
             var self = this;
             this.set('value', false);          
