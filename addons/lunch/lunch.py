@@ -225,7 +225,8 @@ class lunch_order(osv.Model):
             doc = etree.XML(res['arch'])
             node = doc.xpath("//div[@name='preferences']")
             to_add = etree.fromstring(text_xml)
-            node[0].append(to_add)
+            if node and len(node)>0:
+                node[0].append(to_add)
             res['arch'] = etree.tostring(doc)
         return res
 
