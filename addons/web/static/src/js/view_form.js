@@ -427,7 +427,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var onchange = _.str.trim(on_change);
         var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
         if (!call) {
-            return null;
+            throw new Error("Wrong on change format: " + onchange);
         }
 
         var method = call[1];
@@ -494,71 +494,59 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.on_change_mutex.exec(function() {
             try {
-                var response = {}, can_process_onchange = $.Deferred();
+                var def;
                 processed = processed || [];
                 processed.push(widget.name);
                 var on_change = widget.node.attrs.on_change;
                 if (on_change) {
                     var change_spec = self.parse_on_change(on_change, widget);
-                    if (change_spec) {
-                        var ajax = {
-                            url: '/web/dataset/onchange',
-                            async: false
-                        };
-                        can_process_onchange = self.rpc(ajax, {
-                            model: self.dataset.model,
-                            method: change_spec.method,
-                            args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                            context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                        }).then(function(r) {
-                            _.extend(response, r);
-                        });
-                    } else {
-                        console.warn("Wrong on_change format", on_change);
-                    }
+                    def = self.rpc('/web/dataset/onchange', {
+                        model: self.dataset.model,
+                        method: change_spec.method,
+                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                        context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
+                    });
+                } else {
+                    def = $.when({});
                 }
-                // fail if onchange failed
-                if (can_process_onchange.isRejected()) {
-                    return can_process_onchange;
-                }
+                return def.pipe(function(response) {
+                    if (widget.field['change_default']) {
+                        var fieldname = widget.name
+                        var value_;
+                        if (response.value && (fieldname in response.value)) {
+                            // Use value from onchange if onchange executed
+                            value_ = response.value[fieldname];
+                        } else {
+                            // otherwise get form value for field
+                            value_ = self.fields[fieldname].get_value();
+                        }
+                        var condition = fieldname + '=' + value_;
 
-                if (widget.field['change_default']) {
-                    var fieldname = widget.name, value_;
-                    if (response.value && (fieldname in response.value)) {
-                        // Use value from onchange if onchange executed
-                        value_ = response.value[fieldname];
-                    } else {
-                        // otherwise get form value for field
-                        value_ = self.fields[fieldname].get_value();
+                        if (value_) {
+                            return self.rpc('/web/dataset/call', {
+                                model: 'ir.values',
+                                method: 'get_defaults',
+                                args: [self.model, condition]
+                            }).pipe(function (results) {
+                                if (!results.length) {
+                                    return response;
+                                }
+                                if (!response.value) {
+                                    response.value = {};
+                                }
+                                for(var i=0; i<results.length; ++i) {
+                                    // [whatever, key, value]
+                                    var triplet = results[i];
+                                    response.value[triplet[1]] = triplet[2];
+                                }
+                                return response;
+                            });
+                        }
                     }
-                    var condition = fieldname + '=' + value_;
-
-                    if (value_) {
-                        can_process_onchange = self.rpc({
-                            url: '/web/dataset/call',
-                            async: false
-                        }, {
-                            model: 'ir.values',
-                            method: 'get_defaults',
-                            args: [self.model, condition]
-                        }).then(function (results) {
-                            if (!results.length) { return; }
-                            if (!response.value) {
-                                response.value = {};
-                            }
-                            for(var i=0; i<results.length; ++i) {
-                                // [whatever, key, value]
-                                var triplet = results[i];
-                                response.value[triplet[1]] = triplet[2];
-                            }
-                        });
-                    }
-                }
-                if (can_process_onchange.isRejected()) {
-                    return can_process_onchange;
-                }
-
-                return self.on_processed_onchange(response, processed);
+                    return response;
+                }).pipe(function(response) {
+                    return self.on_processed_onchange(response, processed);
+                });
             } catch(e) {
                 console.error(e);
                 instance.webclient.crashmanager.show_message(e);
@@ -1590,37 +1578,6 @@ instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
     },
 });
 
-instance.web.form.FormDialog = instance.web.Dialog.extend({
-    init: function(parent, options, view_id, dataset) {
-        this._super(parent, options);
-        this.dataset = dataset;
-        this.view_id = view_id;
-        return this;
-    },
-    start: function() {
-        var self = this;
-        this._super();
-        this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
-            pager: false
-        });
-        this.form.appendTo(this.$el);
-        this.form.on('record_created', self, this.on_form_dialog_saved);
-        this.form.on('record_saved', this, this.on_form_dialog_saved);
-        return this;
-    },
-    select_id: function(id) {
-        if (this.form.dataset.select_id(id)) {
-            return this.form.do_show();
-        } else {
-            this.do_warn("Could not find id in dataset");
-            return $.Deferred().reject();
-        }
-    },
-    on_form_dialog_saved: function(r) {
-        this.close();
-    }
-});
-
 instance.web.form.compute_domain = function(expr, fields) {
     if (! (expr instanceof Array))
         return !! expr;
@@ -2570,7 +2527,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
         if (! this.get("effective_readonly")) {
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
-            var width = ((this.node.attrs || {}).editor_width || 468);
+            var width = ((this.node.attrs || {}).editor_width || '100%');
             var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
@@ -3141,7 +3098,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                         type: 'ir.actions.act_window',
                         res_model: self.field.relation,
                         res_id: self.get("value"),
-                        context: self.build_context(),
                         views: [[false, 'form']],
                         target: 'current'
                     });
@@ -3353,7 +3309,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                         e.cancel = true;
                     });
                     _(controller.columns).find(function (column) {
-                        if (!column instanceof instance.web.list.Handle) {
+                        if (!(column instanceof instance.web.list.Handle)) {
                             return false;
                         }
                         column.modifiers.invisible = true;
@@ -4567,6 +4523,10 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                     self.select_elements(self.selected_ids);
                     self.destroy();
                 });
+                var $cbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-create");
+                $cbutton.click(function() {
+                    self.new_object();
+                });
             });
         });
         this.searchview.appendTo($(".oe_popup_search", self.$el));
@@ -4902,6 +4862,132 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     }
 });
 
+/**
+ * Widget for (one2many field) to upload one or more file in same time and display in list.
+ * The user can delete his files.
+ * Options on attribute ; "blockui" {Boolean} block the UI or not
+ * during the file is uploading
+ */
+instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+    template: "FieldBinaryFileUploader",
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
+        this.field_manager = field_manager;
+        this.node = node;
+        if(this.field.type != "one2many" || this.field.relation != 'ir.attachment') {
+            throw "The type of the field '"+this.field.string+"' must be a one2many field with a relation to 'ir.attachment' model.";
+        }
+        this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
+        this.fileupload_id = _.uniqueId('oe_fileupload_temp');
+        $(window).on(this.fileupload_id, _.bind(this.on_file_loaded, this));
+    },
+    start: function() {
+        this._super(this);
+        this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
+    },
+    get_value: function() {
+        return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
+    },
+    get_file_url: function (attachment) {
+        return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+    },
+    render_value: function () {
+        var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
+        render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
+        this.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+
+        // reinit input type file
+        var $input = this.$('input.oe_form_binary_file');
+        $input.after($input.clone(true)).remove();
+        this.$(".oe_fileupload").show();
+    },
+    on_file_change: function (event) {
+        event.stopPropagation();
+        var self = this;
+        var $target = $(event.target);
+        if ($target.val() !== '') {
+
+            var filename = $target.val().replace(/.*[\\\/]/,'');
+
+            // if the files is currently uploded, don't send again
+            if( !isNaN(_.find(this.get('value'), function (file) { return (file.filename || file.name) == filename && file.upload; } )) ) {
+                return false;
+            }
+
+            // block UI or not
+            if(this.node.attrs.blockui) {
+                instance.web.blockUI();
+            }
+
+            // if the files exits for this answer, delete the file before upload
+            var files = _.filter(this.get('value'), function (file) {
+                if((file.filename || file.name) == filename) {
+                    self.ds_file.unlink([file.id]);
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+
+            // TODO : unactivate send on wizard and form
+
+            // submit file
+            this.$('form.oe_form_binary_form').submit();
+            this.$(".oe_fileupload").hide();
+
+            // add file on result
+            files.push({
+                'id': 0,
+                'name': filename,
+                'filename': filename,
+                'url': '',
+                'upload': true
+            });
+
+            this.set({'value': files});
+        }
+    },
+    on_file_loaded: function (event, result) {
+        // unblock UI
+        if(this.node.attrs.blockui) {
+            instance.web.unblockUI();
+        }
+
+        // TODO : activate send on wizard and form
+
+        var files = this.get('value');
+        for(var i in files){
+            if(files[i].filename == result.filename && files[i].upload) {
+                files[i] = {
+                    'id': result.id,
+                    'name': result.name,
+                    'filename': result.filename,
+                    'url': this.get_file_url(result)
+                };
+            }
+        }
+
+        this.set({'value': files});
+        this.render_value()
+    },
+    on_file_delete: function (event) {
+        event.stopPropagation();
+        var file_id=$(event.target).data("id");
+        if (file_id) {
+            var files=[];
+            for(var i in this.get('value')){
+                if(file_id != this.get('value')[i].id){
+                    files.push(this.get('value')[i]);
+                }
+                else {
+                    this.ds_file.unlink([file_id]);
+                }
+            }
+            this.set({'value': files});
+        }
+    },
+});
+
 instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     template: "FieldStatus",
     init: function(field_manager, node) {
@@ -5054,6 +5140,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
+    'one2many_binary': 'instance.web.form.FieldOne2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
 });
