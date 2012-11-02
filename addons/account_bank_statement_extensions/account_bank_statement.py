@@ -105,8 +105,7 @@ account_bank_statement_line_global()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
     _columns = {
-        'date': fields.date('Entry Date', required=True, states={'confirm': [('readonly', True)]}),
-        'val_date': fields.date('Valuta Date', states={'confirm': [('readonly', True)]}),
+        'val_date': fields.date('Value Date', states={'confirm': [('readonly', True)]}),
         'globalisation_id': fields.many2one('account.bank.statement.line.global', 'Globalisation ID',
             states={'confirm': [('readonly', True)]},
             help="Code to identify transactions belonging to the same globalisation level within a batch payment"),
