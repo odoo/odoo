@@ -150,11 +150,11 @@ class membership_line(osv.osv):
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
-                        string='Membership State', type='selection',
+                        string='Membership Status', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
                         'res.partner': (_get_partners, ['membership_state'], 12),
-                        }, help="""It indicates the membership state.
+                        }, help="""It indicates the membership status.
                         -Non Member: A member who has not applied for any membership.
                         -Cancelled Member: A member who has cancelled his membership.
                         -Old Member: A member whose membership date has expired.
@@ -323,7 +323,7 @@ class Partner(osv.osv):
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
                     __get_membership_state,
-                    string = 'Current Membership State', type = 'selection',
+                    string = 'Current Membership Status', type = 'selection',
                     selection = STATE,
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),

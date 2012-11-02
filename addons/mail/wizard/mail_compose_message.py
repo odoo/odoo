@@ -156,12 +156,6 @@ class mail_compose_message(osv.TransientModel):
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
-        # create the reply in the body
-        reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
-            'date': message_data.date if message_data.date else '',
-            'sender_name': message_data.author_id.name,
-            'body': message_data.body,
-            }
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
@@ -170,7 +164,6 @@ class mail_compose_message(osv.TransientModel):
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
-            'body': reply_body,
             'subject': reply_subject,
             'partner_ids': partner_ids,
             'content_subtype': 'html',

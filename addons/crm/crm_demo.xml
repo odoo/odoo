@@ -6,13 +6,6 @@
             <field name="groups_id" eval="[(4,ref('base.group_sale_salesman'))]"/>
         </record>
 
-        <record id="ir_ui_view_sc_calendar_demo" model="ir.ui.view_sc">
-            <field name="name">Meetings</field>
-            <field name="resource">ir.ui.menu</field>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="res_id" ref="base_calendar.menu_crm_meeting"/>
-        </record>
-
         <record model="crm.case.section" id="crm_case_section_1">
             <field name="name">Sales Marketing Department</field>
             <field name="code">SMD</field>

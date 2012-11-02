@@ -38,7 +38,7 @@ class payment_advice_report(osv.osv):
             ('draft', 'Draft'),
             ('confirm', 'Confirmed'),
             ('cancel', 'Cancelled'),
-        ], 'State', select=True, readonly=True),
+        ], 'Status', select=True, readonly=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', readonly=True),
         'nbr': fields.integer('# Payment Lines', readonly=True),
         'number':fields.char('Number', size=16, readonly=True),

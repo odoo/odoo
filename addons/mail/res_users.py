@@ -111,8 +111,7 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id.
@@ -124,7 +123,7 @@ class res_users(osv.Model):
             thread_id = thread_id[0]
         partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
         return self.pool.get('res.partner').message_post_api(cr, uid, partner_id, body=body, subject=subject,
-            type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+            parent_id=parent_id, attachment_ids=attachment_ids, context=context)
 
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.

@@ -113,8 +113,8 @@ class procurement_order(osv.osv):
             ('ready','Ready'),
             ('done','Done'),
             ('waiting','Waiting')], 'Status', required=True,
-            help='When a procurement is created the state is set to \'Draft\'.\n If the procurement is confirmed, the state is set to \'Confirmed\'.\
-            \nAfter confirming the state is set to \'Running\'.\n If any exception arises in the order then the state is set to \'Exception\'.\n Once the exception is removed the state becomes \'Ready\'.\n It is in \'Waiting\'. state when the procurement is waiting for another one to finish.'),
+            help='When a procurement is created the status is set to \'Draft\'.\n If the procurement is confirmed, the status is set to \'Confirmed\'.\
+            \nAfter confirming the status is set to \'Running\'.\n If any exception arises in the order then the status is set to \'Exception\'.\n Once the exception is removed the status becomes \'Ready\'.\n It is in \'Waiting\'. status when the procurement is waiting for another one to finish.'),
         'note': fields.text('Note'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
@@ -561,10 +561,10 @@ class stock_warehouse_orderpoint(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\
-            "a procurement to bring the virtual stock to the Max Quantity."),
+            "a procurement to bring the forecasted quantity to the Max Quantity."),
         'product_max_qty': fields.float('Maximum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity, OpenERP generates "\
-            "a procurement to bring the virtual stock to the Quantity specified as Max Quantity."),
+            "a procurement to bring the forecasted quantity to the Quantity specified as Max Quantity."),
         'qty_multiple': fields.integer('Qty Multiple', required=True,
             help="The procurement quantity will be rounded up to this multiple."),
         'procurement_id': fields.many2one('procurement.order', 'Latest procurement', ondelete="set null"),

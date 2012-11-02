@@ -4,6 +4,9 @@ openerp.hr_timesheet_sheet = function(instance) {
     var _t = instance.web._t;
 
     instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.form.FormWidget.extend(instance.web.form.ReinitializeWidgetMixin, {
+        events: {
+            "click .oe_timesheet_weekly_account a": "go_to",
+        },
         init: function() {
             this._super.apply(this, arguments);
             this.set({
@@ -25,6 +28,16 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("/");
+        },
+        go_to: function(event) {
+            var id = JSON.parse($(event.target).data("id"));
+            this.do_action({
+                type: 'ir.actions.act_window',
+                res_model: "account.analytic.account",
+                res_id: id,
+                views: [[false, 'form']],
+                target: 'current'
+            });
         },
         query_sheets: function() {
             var self = this;
@@ -194,6 +207,10 @@ openerp.hr_timesheet_sheet = function(instance) {
                         ['use_timesheets','=',1],
                         ['id', 'not in', _.pluck(self.accounts, "account")],
                     ],
+                    context: {
+                        default_use_timesheets: 1,
+                        default_type: "contract",
+                    },
                     modifiers: '{"required": true}',
                 },
             });

@@ -178,7 +178,18 @@ class project(osv.osv):
         res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
         mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
         return res
-
+    
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        attachment = self.pool.get('ir.attachment')
+        task = self.pool.get('project.task')
+        for id in ids:
+            project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', 'in', [id])], context=context, count=True)
+            task_ids = task.search(cr, uid, [('project_id', 'in', [id])], context=context)
+            task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
+            res[id] = project_attachments or 0 + task_attachments or 0
+        return res
+        
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -189,7 +200,26 @@ class project(osv.osv):
     def _get_alias_models(self, cr, uid, context=None):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
-
+    
+    def attachment_tree_view(self, cr, uid, ids, context):
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        domain = [
+            ('|', 
+             '&', 'res_model', '=', 'project.project'), ('res_id', 'in', ids),
+             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
+		]
+        res_id = ids and ids[0] or False
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _columns = {
@@ -232,6 +262,7 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -721,18 +752,18 @@ class task(base_stage, osv.osv):
         'stage_id': fields.many2one('project.task.type', 'Stage',
                         domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_TASK_STATE, string="State", readonly=True,
-                help='The state is set to \'Draft\', when a case is created.\
-                      If the case is in progress the state is set to \'Open\'.\
-                      When the case is over, the state is set to \'Done\'.\
-                      If the case needs to be reviewed then the state is \
+                selection=_TASK_STATE, string="Status", readonly=True,
+                help='The status is set to \'Draft\', when a case is created.\
+                      If the case is in progress the status is set to \'Open\'.\
+                      When the case is over, the status is set to \'Done\'.\
+                      If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
-                                              " * Ready To Pull indicates the task is ready to be pulled to the next stage",
+                                              " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
@@ -792,6 +823,11 @@ class task(base_stage, osv.osv):
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
+    def set_very_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to very high
+        """
+        return self.set_priority(cr, uid, ids, '0')
+    
     def set_high_priority(self, cr, uid, ids, *args):
         """Set task priority to high
         """
@@ -1398,7 +1434,7 @@ class project_task_history(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done')], 'Status'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State', required=False),
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)

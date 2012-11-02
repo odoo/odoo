@@ -88,6 +88,7 @@
                                 <field name="user_id"/>
                                 <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]"/>
                                 <field name="picking_id" readonly="1"/>
+                                <field name="pos_reference"/>
                             </group>
                             <group string="Accounting Information">
                                 <field name="sale_journal" domain="[('type','=','sale')]"/>
@@ -131,6 +132,7 @@
             <field name="arch" type="xml">
                 <tree string="POS Orders" colors="blue:state == 'draft';gray:state in ('done','cancel');black:state not in('done','cancel')">
                     <field name="name"/>
+                    <field name="pos_reference"/>
                     <field name="partner_id"/>
                     <field name="date_order"/>
                     <field name="user_id"/>
@@ -149,6 +151,7 @@
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order"/>
                     <field name="date_order"/>
+                    <field name="pos_reference"/>
                     <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
                     <filter icon="gtk-apply" string="Done" domain="[('state','in',('paid','invoiced','done'))]"/>
                     <filter icon="terp-check" string="Invoiced" domain="[('state','=','invoiced')]"/>
@@ -890,7 +893,7 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
-                                <field name="config_id" attrs="{'invisible' : [('config_id', '!=', False)]}"/>
+                                <field name="config_id"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
@@ -1039,7 +1042,7 @@
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_order'}"/>
                     </group>
                 </search>
