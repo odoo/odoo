@@ -2955,7 +2955,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         self.uned_def = $.Deferred();
         var ed_delay = 200;
         var ed_duration = 15000;
-        var anyoneLoosesFocus = function() {
+        var anyoneLoosesFocus = function (e) {
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -2979,7 +2979,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.ed_def = $.Deferred();
                 self.ed_def.then(function() {
                     self.show_error_displayer();
+                    ignore_blur = false;
+                    self.trigger('focused');
                 });
+                ignore_blur = true;
                 setTimeout(function() {
                     self.ed_def.resolve();
                     self.uned_def.reject();
