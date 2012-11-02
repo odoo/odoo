@@ -33,7 +33,7 @@ class stock_config_settings(osv.osv_memory):
             help="""This allows to automatically launch the invoicing wizard if the delivery is
                 to be invoiced when you send or deliver goods.
                 This installs the module stock_invoice_directly."""),
-        'module_product_expiry': fields.boolean("Expiry date on lots",
+        'module_product_expiry': fields.boolean("Expiry date on serial numbers",
             help="""Track different dates on products and serial numbers.
                 The following dates can be tracked:
                     - end of life
@@ -59,10 +59,10 @@ class stock_config_settings(osv.osv_memory):
         'group_stock_production_lot': fields.boolean("Track serial number on products",
             implied_group='stock.group_production_lot',
             help="""This allows you to manage products by using serial numbers.
-                When you select a lot, you can get the upstream or downstream traceability of the products contained in lot."""),
+                When you select a serial number, you can get the upstream or downstream traceability of the products contained in serial number."""),
         'group_stock_tracking_lot': fields.boolean("Track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
-            help="""Allows you to get the upstream or downstream traceability of the products contained in lot."""),
+            help="""Allows you to get the upstream or downstream traceability of the products contained in serial number."""),
         'group_stock_inventory_valuation': fields.boolean("Generate accounting entries per stock movement",
             implied_group='stock.group_inventory_valuation',
             help="""Allows to configure inventory valuations on products and product categories."""),
