@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <!-- <data noupdate="1"> -->
+    <data>
 
+        <!-- Pushed to all employees -->
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
@@ -45,6 +47,31 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+        </record>
+
+        <!-- Demo user and admin conversation -->
+        <record id="message_discussion" model="mail.message">
+            <field name="body">Hello Demo User! How are you ?</field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
+        <record id="message_discussion_answer1" model="mail.message">
+            <field name="body">Fine, thanks, and you ?</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_discussion_answer2" model="mail.message">
+            <field name="body">Fine too.</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
         </record>
 
     </data>
