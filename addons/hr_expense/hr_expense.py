@@ -233,7 +233,7 @@ hr_expense_expense()
 class product_product(osv.osv):
     _inherit = "product.product"
     _columns = {
-        'hr_expense_ok': fields.boolean('Expense', help="Specify if the product can be selected in an HR expense line."),
+        'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
     def on_change_hr_expense_ok(self, cr, uid, id, hr_expense_ok):
