@@ -75,6 +75,7 @@
             <field name='arch' type='xml'>
                 <search string="lunch orders">
                     <field name="date"/>
+                    <field name="order_line_ids"/>
                     <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
                 </search>
             </field>
@@ -111,7 +112,9 @@
                 Click to create a lunch order. 
             </p>
             <p>
-                Select your favorite meals for today's lunch.
+                A lunch order is defined by its user, date and order lines.
+                Each order line corresponds to a product, an additional note and a price.
+                Before selecting your order lines, don't forget to read the warnings displayed in the reddish area.
             </p>
             </field>
         </record>
@@ -127,6 +130,7 @@
             <field name="help" type="html">
               <p>
                 Here you can see your cash moves.<br/>A cash moves can be either an expense or a payment.
+                An expense is automatically created when an order is received while a payment is encoded by the manager.
               </p>
             </field>
         </record>
@@ -143,6 +147,11 @@
               <p>
                 Here you can see today's orders grouped by suppliers.
               </p>
+              <p>
+                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the meal is ordered <br/>
+                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the meal is received <br/>
+                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> to announce that the meal isn't available
+              </p>
             </field>
         </record>
         <menuitem name="Today's Orders by Supplier" parent="menu_lunch_admin" id="menu_lunch_order_by_supplier_form" action="action_lunch_order_by_supplier_form" />
@@ -157,6 +166,11 @@
             <field name="help" type="html">
               <p>
                 Here you can see every orders grouped by suppliers and by date.
+              </p>
+              <p>
+                - Click on the <img src="../../../web/static/src/img/icons/terp-call-start.png"/> to announce that the meal is ordered <br/>
+                - Click on the <img src="../../../web/static/src/img/icons/gtk-apply.png"/> to announce that the meal is received <br/>
+                - Click on the <img src="../../../web/static/src/img/icons/gtk-cancel.png"/> red X to announce that the meal isn't available
               </p>
             </field>
         </record>
@@ -261,7 +275,13 @@
             </p>
               <p>
                 Alerts are used to warn employee from possible issues concerning the lunch orders.
-                To create a lunch alert you have to define its recurrency (A specific day of the year, every week or every day), the time interval during which the alert should be executed and the message to display. 
+                To create a lunch alert you have to define its recurrency, the time interval during which the alert should be executed and the message to display.
+            </p>
+            <p>
+                Example: <br/>
+                - Recurency: Everyday<br/>
+                - Time interval: from 00h00 am to 11h59 pm<br/>
+                - Message: "You must order before 10h30 am"
               </p>
             </field>
         </record>
@@ -356,7 +376,6 @@
                     <field name="supplier"/>
                     <field name="description"/>
                     <field name="price"/>
-                    <field name="active"/>
                 </tree>
             </field>
         </record>
@@ -375,7 +394,6 @@
                             <field name='category_id'/>
                             <field name='supplier'/>
                             <field name='price'/>
-                            <field name='active'/>
                         </group>
                         <label for='description'/>
                         <field name='description'/>
@@ -429,39 +447,43 @@
                     <field name="day"/>
                     <field name='active_from' widget='float_time'/>
                     <field name='active_to' widget='float_time'/>
-                    <field name="lunch_active"/>
                 </tree>
             </field>
         </record>
 
         <record model="ir.ui.view" id="alert_form_view">
-            <field name="name">alert tree</field>
+            <field name="name">alert form</field>
             <field name="model">lunch.alert</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="alert tree" version="7.0">
                     <sheet>
-                        <group col="4" string="Schedule Date">
-                            <field name="day"/>
-                            <field name='lunch_active'/>
-                            <field name="specific" attrs="{'invisible': [('day','!=','specific')], 'required':[('day','=','specific')]}"/>
+                        <group string="Schedule Date">
+                            <group>
+                                <field name="day"/>
+                                <field name="specific" attrs="{'invisible': [('day','!=','specific')], 'required':[('day','=','specific')]}"/>
+                            </group>
                         </group>
-                        <group attrs="{'invisible': [('day','!=','week')]}" col="4">
-                            <field name="monday"/>
-                            <field name="tuesday"/>
-                            <field name="wednesday"/>
-                            <field name="thursday"/>
-                            <field name="friday"/>
-                            <field name="saturday"/>
-                            <field name="sunday"/>
+                        <group attrs="{'invisible': [('day','!=','week')]}">
+                            <group>
+                                <field name="monday"/>
+                                <field name="tuesday"/>
+                                <field name="wednesday"/>
+                                <field name="thursday"/>
+                            </group>
+                            <group>
+                                <field name="friday"/>
+                                <field name="saturday"/>
+                                <field name="sunday"/>
+                            </group>
                         </group>
                         <group string="Schedule Hour">
                             <field name='active_from' widget='float_time'/>
                             <field name='active_to' widget='float_time'/>
                         </group>
-                        <label for='message'/>
-                        <field name='message' placeholder="Write the message you want to display during the defined period..."/>
-                    
+                        <group string='Message'>
+                            <field name='message' nolabel='1' placeholder="Write the message you want to display during the defined period..."/>
+                        </group>
 
                 </sheet>
                 </form>

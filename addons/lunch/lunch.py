@@ -113,7 +113,7 @@ class lunch_order(osv.Model):
     def _default_alerts_get(self,cr,uid,arg,context=None):
         """ get the alerts to display on the order form """
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[('lunch_active','=',True)],context=context) 
+        alert_ids = alert_ref.search(cr,uid,[],context=context) 
         alert_msg = []
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
             if self.can_display_alert(alert):
@@ -270,7 +270,6 @@ class lunch_order_line(osv.Model):
     def confirm(self,cr,uid,ids,context=None):
         """ confirm one or more order line, update order status and create new cashmove """
         cashmove_ref = self.pool.get('lunch.cashmove')
-        orders_ref = self.pool.get('lunch.order')
         for order_line in self.browse(cr,uid,ids,context=context):
             if order_line.state!='confirmed':
                 new_id = cashmove_ref.create(cr,uid,{'user_id': order_line.user_id.id, 'amount':-order_line.price,'description':order_line.product_id.name, 'order_id':order_line.id, 'state':'order', 'date':order_line.date})
@@ -278,7 +277,11 @@ class lunch_order_line(osv.Model):
         return self._update_order_lines(cr, uid, ids, context)
 
     def _update_order_lines(self, cr, uid, ids, context=None):
-        for order in set(self.browse(cr,uid,ids,context=context).order_id):
+        orders_ref = self.pool.get('lunch.order')
+        orders = []
+        for order_line in self.browse(cr,uid,ids,context=context):
+            orders.append(order_line.order_id)
+        for order in set(orders):
             isconfirmed = True
             for orderline in order.order_line_ids:
                 if orderline.state == 'new':
@@ -293,7 +296,6 @@ class lunch_order_line(osv.Model):
     def cancel(self,cr,uid,ids,context=None):
         """ confirm one or more order.line, update order status and create new cashmove """
         cashmove_ref = self.pool.get('lunch.cashmove')
-        orders_ref = self.pool.get('lunch.order')
         for order_line in self.browse(cr,uid,ids,context=context):
             self.write(cr,uid,[order_line.id],{'state':'cancelled'},context)
             for cash in order_line.cashmove:
@@ -301,6 +303,7 @@ class lunch_order_line(osv.Model):
         return self._update_order_lines(cr, uid, ids, context)
 
     _columns = {
+        'name' : fields.related('product_id','name',readonly=True),
         'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'),
         'product_id' : fields.many2one('lunch.product','Product',required=True), 
         'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
@@ -327,7 +330,6 @@ class lunch_product(osv.Model):
         'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
         'description': fields.text('Description', size=256, required=False),
         'price': fields.float('Price', digits=(16,2)),
-        'active': fields.boolean('Active'), #If this product isn't offered anymore, the active boolean is set to false. This will allow to keep trace of previous orders and cashmoves.
         'supplier' : fields.many2one('res.partner', 'Supplier'), 
     }
 
@@ -363,7 +365,6 @@ class lunch_alert(osv.Model):
     _description = 'lunch alert'
     _columns = {
         'message' : fields.text('Message',size=256, required=True),
-        'lunch_active' : fields.boolean('Active'),
         'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], string='Recurrency', required=True,select=True),
         'specific' : fields.date('Day'),
         'monday' : fields.boolean('Monday'),
