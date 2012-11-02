@@ -360,6 +360,11 @@ class project_issue(base_stage, osv.osv):
                 context=context)
 
     def _subscribe_project_followers_to_issue(self, cr, uid, task_id, context=None):
+        """ TDE note: not the best way to do this, we could override _get_followers
+            of issue, and perform a better mapping of subtypes than a mapping
+            based on names.
+            However we will keep this implementation, maybe to be refactored
+            in 7.1 of future versions. """
         # task followers are project followers, with matching subtypes
         task_record = self.browse(cr, uid, task_id, context=context)
         subtype_obj = self.pool.get('mail.message.subtype')
