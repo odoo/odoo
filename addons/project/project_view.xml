@@ -10,7 +10,7 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-        
+
         <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
             <field name="view_type">form</field>
@@ -141,9 +141,8 @@
                                     <field name="date" string="End Date"/>
                                     <field name="priority" groups="base.group_no_one"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
-
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
-                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+                                    <field name="parent_id" string="Parent" help="Append this project to another one using analytic accounts hierarchy" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}" />
                                 </group>
                             </group>
                         </page>
@@ -160,7 +159,7 @@
             </field>
         </record>
 
-       <record id="view_project_project_filter" model="ir.ui.view">
+        <record id="view_project_project_filter" model="ir.ui.view">
             <field name="name">project.project.select</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
@@ -230,7 +229,7 @@
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Project Settings</a></li></t>
                                         <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
@@ -475,7 +474,7 @@
             </field>
         </record>
 
-        <!-- Project Task Kanban View  -->
+        <!-- Project Task Kanban View -->
         <record model="ir.ui.view" id="view_task_kanban">
             <field name="name">project.task.kanban</field>
             <field name="model">project.task</field>
