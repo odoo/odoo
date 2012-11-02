@@ -239,7 +239,6 @@ class lunch_order(osv.Model):
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'currency_id': fields.related('company_id','currency_id',string="Currency", readonly=True),
     }
 
     _defaults = {
@@ -247,7 +246,6 @@ class lunch_order(osv.Model):
         'date': fields.date.context_today,
         'state': 'new',
         'alerts': _default_alerts_get,
-        'company_id': lambda self,cr,uid,context: self.pool.get('res.company')._company_default_get(cr, uid, 'lunch.order', context=context),
     }
 
 
