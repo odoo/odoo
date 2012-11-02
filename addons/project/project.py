@@ -1151,7 +1151,9 @@ class task(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
+        # subscribe project followers to the task
         self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
+
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
@@ -1177,6 +1179,8 @@ class task(base_stage, osv.osv):
             result = super(task, self).write(cr, uid, ids, vals, context=context)
         if ('stage_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
+
+        # subscribe new project followers to the task
         if vals.get('project_id'):
             for id in ids:
                 self._subscribe_project_followers_to_task(cr, uid, id, context=context)
