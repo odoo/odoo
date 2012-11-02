@@ -36,7 +36,8 @@ It handles the full sales workflow:
 * **Quotation** -> **Sales order** -> **Invoice**
 
 Preferences (only with Warehouse Management installed)
------------
+------------------------------------------------------
+
 If you also installed the Warehouse Management, you can deal with the following preferences:
 
 * Shipping: Choice of delivery at once or partial delivery
