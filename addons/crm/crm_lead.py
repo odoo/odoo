@@ -188,7 +188,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
-            select=True, help="Optional linked partner, usually after conversion of the lead"),
+            select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Subject', size=64, required=True, select=1),
