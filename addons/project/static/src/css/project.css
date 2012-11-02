@@ -2,13 +2,29 @@
   margin: 2px;
 }
 
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_very_high_priority {
+  color: #cccccc;
+  text-shadow: 0 0 2px black;
+  vertical-align: top;
+  position: relative;
+  top: -5px;
+}
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_very_high_priority:hover {
+  text-decoration: none;
+}
+
+.openerp .oe_kanban_view .oe_kanban_content .oe_star_very_high_priority {
+  color: red;
+}
+
 .oe_kanban_project {
     width: 220px;
     min-height: 160px;
 }
 
-.oe_kanban_project_list {
+.oe_kanban_project_list > a > span:hover{
     margin: 4px 0;
+    text-decoration: underline;
 }
 
 .openerp .oe_kanban_content h4 {

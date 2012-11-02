@@ -70,8 +70,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
-            help="This field allows you to define the rate in case you plan to reinvoice " \
-            "the costs in this analytic account: timesheets, expenses, ..."),
+            help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sale order), you should invoice the rest on timesheet with a 80% ratio."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
@@ -95,13 +94,13 @@ class account_analytic_account(osv.osv):
     def set_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_account_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_closed", context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
         message = _("Contract has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_account_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_canceled", context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
