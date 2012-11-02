@@ -6,7 +6,7 @@
     date_invoice: 2012-06-2
     invoice_line:
       - account_id : account.a_sale
-        name: 'Stupid PC'
+        name: 'Test PC'
         quantity: 1.0
     journal_id: account.bank_journal
     partner_id: base.res_partner_12
@@ -23,12 +23,18 @@
 - 
   !python {model: account.followup.print}:  |
     self.do_process(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),})
-#- 
-#  Test it has everything
-#- 
-#  !assert {model: account.invoice, id: account.demo_invoice_0}:
-#    - reference_type = None
-  #!assert {model: res.partner, id: base.res_partner_12} :
-  #  - 
-      #latest_followup_level_id == ref("demo_followup_line1")
-    
+- 
+  Unnecessary test of invoice
+- 
+  !assert {model: account.invoice, id: account.demo_invoice_0}:
+    - check_total == 14.0
+-
+  Test latest followup level changed Python
+-
+  !python {model: res.partner, id: base.res_partner_12}:  |
+    assert(latest_followup_level_id == ref("demo_followup_line1"))
+-
+  Test latest followup level changed
+-
+    !assert {model: res.partner, id: base.res_partner_12} :
+      - latest_followup_level_id == ref("demo_followup_line1")

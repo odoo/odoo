@@ -49,9 +49,10 @@ class followup_line(osv.osv):
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
         'send_email':fields.boolean('Send email', help="When processing, it will send an email"),
-        'send_letter':fields.boolean('Print email'),
+        'send_letter':fields.boolean('Send letter'),
         'phonecall':fields.boolean('Phone call'), 
-        'email_template_id':fields.many2one('email.template', 'Email template', required = False, ondelete='set null')
+        'email_template_id':fields.many2one('email.template', 'Email template', required = False, ondelete='set null'), 
+        'email_body':fields.related('email_template_id', 'body_html', type='text', string="Email Message"), 
     }
     _defaults = {
         'start': 'days',
@@ -244,7 +245,6 @@ class res_partner(osv.osv):
         #print partner_ids
         #print "Testing: " ,  fields.date.context_today(cr, uid, context)
         self.write(cr, uid, partner_ids, {'payment_next_action_date': fields.date.context_today(cr, uid, context),}, context)
-        
 
 
 
