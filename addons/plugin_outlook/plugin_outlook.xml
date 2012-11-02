@@ -10,7 +10,11 @@
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <xpath expr="//footer" position="replace"/>
+                    <xpath expr="//footer" position="replace">
+                    <footer>
+                        <button string="Close" special="Cancel" class="oe_highlight"/>
+                    </footer>
+                    </xpath>
                     <xpath expr="//separator[@string='title']" position="after" version="7.0">
                         <group>
                             <field name="plugin32" widget="url"/>
@@ -27,9 +31,6 @@
                     <separator string="title" position="attributes">
                         <attribute name="string"></attribute>
                     </separator>
-                    <group><footer>
-                        <button string="Close" special="Cancel" class="oe_highlight"/></footer>
-                    </group>
                 </data>
             </field>
         </record>

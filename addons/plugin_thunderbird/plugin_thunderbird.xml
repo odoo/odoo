@@ -10,7 +10,11 @@
                     <form position="attributes">
                         <attribute name="string">Install Thunderbird Plug-In</attribute>
                     </form>
-                    <xpath expr="//footer" position="replace"/>
+                    <xpath expr="//footer" position="replace">
+                    <footer>
+                        <button string="Close" special="Cancel" class="oe_highlight"/>
+                    </footer>
+                    </xpath>
                     <xpath expr="//separator[@string='title']" position="after">
                         <group>
                             <field name="thunderbird" invisible="1"/>
@@ -33,9 +37,6 @@
                     <separator string="title" position="attributes">
                         <attribute name="string"></attribute>
                     </separator>
-                    <group><footer>
-                        <button string="Close" special="Cancel" class="oe_highlight"/></footer>
-                    </group>
                 </data>
             </field>
         </record>
