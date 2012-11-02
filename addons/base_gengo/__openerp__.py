@@ -25,7 +25,8 @@
     'description': """
 Automated Translations through Gengo API
 ----------------------------------------
-    This module will install passive scheduler job for automated translations 
+
+This module will install passive scheduler job for automated translations 
 using the Gengo API. To activate it, you must
 1) Configure your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`
 2) Launch the wizard under `Settings > Application Terms > Gengo: Manual Request of Translation` and follow the wizard.
