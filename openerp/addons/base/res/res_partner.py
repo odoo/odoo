@@ -320,6 +320,12 @@ class res_partner(osv.osv, format_address):
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
         return {}
 
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
+        return {}
+
     def _check_ean_key(self, cr, uid, ids, context=None):
         for partner_o in pooler.get_pool(cr.dbname).get('res.partner').read(cr, uid, ids, ['ean13',]):
             thisean=partner_o['ean13']
