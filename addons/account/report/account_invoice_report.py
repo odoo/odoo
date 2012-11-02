@@ -91,7 +91,7 @@ class account_invoice_report(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-            ], 'Invoice State', readonly=True),
+            ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),

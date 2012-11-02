@@ -165,11 +165,8 @@ class test_message_compose(test_mail.TestMailMockups):
         self.assertEqual(message_pigs.body, _body_html1, 'mail.message body on Pigs incorrect')
         self.assertEqual(message_bird.body, _body_html2, 'mail.message body on Bird incorrect')
         # Test: partner_ids: p_a_id (default) + 3 newly created partners
-        message_pigs_pids = [partner.id for partner in message_pigs.partner_ids]
-        message_bird_pids = [partner.id for partner in message_bird.partner_ids]
+        message_pigs_pids = [partner.id for partner in message_pigs.notified_partner_ids]
+        message_bird_pids = [partner.id for partner in message_bird.notified_partner_ids]
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
-        self.assertEqual(len(message_pigs_pids), len(partner_ids), 'mail.message on pigs incorrect number of partner_ids')
-        self.assertEqual(set(message_pigs_pids), set(partner_ids), 'mail.message on pigs incorrect number of partner_ids')
-
-        self.assertEqual(len(message_bird_pids), len(partner_ids), 'mail.message on bird partner_ids incorrect')
-        self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird partner_ids incorrect')
+        self.assertEqual(set(message_pigs_pids), set(partner_ids), 'mail.message on pigs incorrect number of notified_partner_ids')
+        self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
