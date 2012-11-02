@@ -26,8 +26,8 @@
 			   <paraStyle name="title" fontName="Helvetica-Bold" fontSize="15.0" leading="17" alignment="CENTER" spaceBefore="12.0" spaceAfter="6.0"/>
 			   <paraStyle name="emp" fontSize="13.0"/>
 		       <blockTableStyle id="week">
-		           <blockFont name="Helvetica" size="12" colorName="red" start="0,0" stop="-1,-1"/>
-		           <blockFont name="Helvetica-BoldOblique" start="0,0" stop="0,0"/>
+		           <blockFont name="Helvetica" size="9" start="0,0" stop="-1,-1"/>
+		           <blockFont name="Helvetica-BoldOblique" size="12" start="0,0" stop="0,0"/>
 		           <blockBackground colorName="lightgrey" start="1,0" stop="-1,0"/>
 		           <blockFont name="Helvetica-BoldOblique" start="-1,0" stop="-1,-1"/>
 		            <lineStyle kind="LINEABOVE" colorName="black" start="0,0" stop="-1,0" />
