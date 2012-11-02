@@ -226,6 +226,7 @@
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist" on_change="onchange_pricelist(pricelist_id, context)"/>
                             <field name="currency_id" invisible='1'/>
+                            <field name="journal_id" invisible='1'/>
                         </group>
                         <group>
                             <field name="date_order"/>
