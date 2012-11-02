@@ -8,7 +8,7 @@
                 'domain': [
                     ('notification_ids.partner_id.user_ids', 'in', [uid]),
                     ('to_read', '=', True),
-                    ('favorite_user_ids.user_ids', 'not in', [uid])
+                    ('favorite_user_ids', 'not in', [uid])
                     ],
                 'context': {'default_model': 'res.users', 'default_res_id': uid},
                 'view_mailbox': True,
@@ -39,7 +39,7 @@
             <field name="name">Todo</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{
-                'domain': [('favorite_user_ids.user_ids', 'in', [uid])],
+                'domain': [('favorite_user_ids', 'in', [uid])],
                 'context': {'default_model': 'res.users', 'default_res_id': uid, 'search_default_message_unread': True},
                 'view_mailbox': True,
                 'read_action': 'read', }&quot;"/>
