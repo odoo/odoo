@@ -636,7 +636,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = super(sale_advance_payment_inv, self)._create_invoices(cr, uid, inv_values, sale_id, context=context)
         sale_obj = self.pool.get('sale.order')
         sale_line_obj = self.pool.get('sale.order.line')
-        wizard = self.browse(cr, uid, ids[0], context)
+        wizard = self.browse(cr, uid, [result], context)
         sale = sale_obj.browse(cr, uid, sale_id, context=context)
         if sale.order_policy == 'postpaid':
             raise osv.except_osv(
@@ -646,8 +646,8 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
-        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[2].get('name') or ''
-        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[2].get('invoice_line_tax_id') or False
+        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
+        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
         if sale.order_policy == 'picking':
             vals = {
                 'order_id': sale.id,
