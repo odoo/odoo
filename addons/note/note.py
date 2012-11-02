@@ -29,7 +29,7 @@ class note_stage(osv.osv):
     _name = "note.stage"
     _description = "Note Stage"
     _columns = {
-        'name': fields.char('Stage Name', required=True),
+        'name': fields.char('Stage Name', translate=True, required=True),
         'sequence': fields.integer('Sequence', help="Used to order the note stages"),
         'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True),
         'fold': fields.boolean('Folded by Default'),
