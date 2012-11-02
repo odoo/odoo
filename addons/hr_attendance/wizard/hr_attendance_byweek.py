@@ -37,6 +37,7 @@ class hr_attendance_byweek(osv.osv_memory):
     def print_report(self, cr, uid, ids, context=None):
         datas = {
              'ids': [],
+             'active_ids': context['active_ids'],
              'model': 'hr.employee',
              'form': self.read(cr, uid, ids)[0]
         }

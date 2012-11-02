@@ -73,7 +73,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         if res:
             return res[0]['bal']
         else:
-            return False
+            return 0
 
     def _get_sub_total(self, user, data, date):
         res={}

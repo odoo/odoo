@@ -134,6 +134,7 @@ class account_asset_asset(osv.osv):
 
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
+        currency_obj = self.pool.get('res.currency')
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.value_residual == 0.0:
                 continue
@@ -158,6 +159,10 @@ class account_asset_asset(osv.osv):
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
+                company_currency = asset.company_id.currency_id.id
+                current_currency = asset.currency_id.id
+                # compute amount into company currency
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -191,7 +196,7 @@ class account_asset_asset(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
-                l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
+                l.asset_id as id, SUM(abs(l.debit-l.credit)) AS amount
             FROM
                 account_move_line l
             WHERE
@@ -226,9 +231,9 @@ class account_asset_asset(osv.osv):
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True,
-                                  help="When an asset is created, the state is 'Draft'.\n" \
-                                       "If the asset is confirmed, the state goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
-                                       "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that state."),
+                                  help="When an asset is created, the status is 'Draft'.\n" \
+                                       "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
+                                       "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
         'active': fields.boolean('Active'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
@@ -349,8 +354,8 @@ class account_asset_depreciation_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
-        'amount': fields.float('Depreciation Amount', required=True),
-        'remaining_value': fields.float('Amount to Depreciate', required=True),
+        'amount': fields.float('Depreciation Amount', digits_compute=dp.get_precision('Account'), required=True),
+        'remaining_value': fields.float('Amount to Depreciate', digits_compute=dp.get_precision('Account'),required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),

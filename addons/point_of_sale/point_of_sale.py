@@ -66,7 +66,7 @@ class pos_config(osv.osv):
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
@@ -197,7 +197,7 @@ class pos_session(osv.osv):
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
-        'state' : fields.selection(POS_SESSION_STATE, 'State',
+        'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
 
@@ -484,7 +484,8 @@ class pos_order(osv.osv):
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
-                'lines': order['lines']
+                'lines': order['lines'],
+                'pos_reference':order['name']
             }, context)
 
             for payments in order['statement_ids']:
@@ -592,7 +593,7 @@ class pos_order(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
-
+        'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
@@ -1300,7 +1301,7 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
+        'to_weight' : fields.boolean('To Weigh', help="This category contains products that should to be weighed, mainly used for the self-checkout interface"),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):

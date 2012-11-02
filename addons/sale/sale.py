@@ -187,21 +187,22 @@ class sale_order(osv.osv):
             ('manual', 'Sale to Invoice'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True, help="Gives the state of the quotation or sales order. \nThe exception state is automatically set when a cancel operation occurs in the processing of a document linked to the sale order. \nThe 'Waiting Schedule' state is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
+            ], 'Status', readonly=True, help="Gives the status of the quotation or sales order. \nThe exception status is automatically set when a cancel operation occurs in the processing of a document linked to the sale order. \nThe 'Waiting Schedule' status is set when the invoice is confirmed but waiting for the scheduler to run on the order date.", select=True),
         'date_order': fields.date('Date', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'create_date': fields.datetime('Creation Date', readonly=True, select=True, help="Date on which sales order is created."),
         'date_confirm': fields.date('Confirmation Date', readonly=True, select=True, help="Date on which sales order is confirmed."),
         'user_id': fields.many2one('res.users', 'Salesperson', states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, select=True),
         'partner_id': fields.many2one('res.partner', 'Customer', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, required=True, change_default=True, select=True),
         'partner_invoice_id': fields.many2one('res.partner', 'Invoice Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Invoice address for current sales order."),
-        'partner_shipping_id': fields.many2one('res.partner', 'Shipping Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Shipping address for current sales order."),
+        'partner_shipping_id': fields.many2one('res.partner', 'Delivery Address', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Delivery address for current sales order."),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
             help="""This field controls how invoice and delivery operations are synchronized.
   - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
-        'project_id': fields.many2one('account.analytic.account', 'Contract/Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order."),
+        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", readonly=True, required=True),
+        'project_id': fields.many2one('account.analytic.account', 'Contract / Analytic', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
         'invoice_ids': fields.many2many('account.invoice', 'sale_order_invoice_rel', 'order_id', 'invoice_id', 'Invoices', readonly=True, help="This is the list of invoices that have been generated for this sales order. The same sales order may have been invoiced in several times (by line for example)."),
@@ -264,13 +265,18 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
-        if (not pricelist_id) or (not order_lines):
+        if not pricelist_id:
             return {}
+        value = {
+            'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id
+        }
+        if not order_lines:
+            return {'value': value}
         warning = {
             'title': _('Pricelist Warning!'),
             'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
         }
-        return {'warning': warning}
+        return {'warning': warning, 'value': value}
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
@@ -704,12 +710,14 @@ class sale_order_line(osv.osv):
     _description = 'Sales Order Line'
     _columns = {
         'order_id': fields.many2one('sale.order', 'Order Reference', required=True, ondelete='cascade', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.text('Product Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'name': fields.text('Description', size=256, required=True, select=True, readonly=True, states={'draft': [('readonly', False)]}),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of sales order lines."),
         'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok', '=', True)], change_default=True),
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
+        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
+         help="If 'on order', it triggers a procurement when the sale order is confirmed to create a task, purchase order or manufacturing order linked to this sale order line."),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner'),
@@ -720,11 +728,11 @@ class sale_order_line(osv.osv):
         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
-                help='* The \'Draft\' state is set when the related sales order in draft state. \
-                    \n* The \'Confirmed\' state is set when the related sales order is confirmed. \
-                    \n* The \'Exception\' state is set when the related sales order is set as exception. \
-                    \n* The \'Done\' state is set when the sales order line has been picked. \
-                    \n* The \'Cancelled\' state is set when a user cancel the sales order related.'),
+                help='* The \'Draft\' status is set when the related sales order in draft status. \
+                    \n* The \'Confirmed\' status is set when the related sales order is confirmed. \
+                    \n* The \'Exception\' status is set when the related sales order is set as exception. \
+                    \n* The \'Done\' status is set when the sales order line has been picked. \
+                    \n* The \'Cancelled\' status is set when a user cancel the sales order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
@@ -738,6 +746,7 @@ class sale_order_line(osv.osv):
         'sequence': 10,
         'invoiced': 0,
         'state': 'draft',
+        'type': 'make_to_stock',
         'price_unit': 0.0,
     }
 
@@ -745,13 +754,13 @@ class sale_order_line(osv.osv):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos_qty or 0.0
-            return line.product_uom_qty
+        return line.product_uom_qty
 
     def _get_line_uom(self, cr, uid, line, context=None):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos.id
-            return line.product_uom.id
+        return line.product_uom.id
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a
@@ -939,6 +948,7 @@ class sale_order_line(osv.osv):
         elif uom: # whether uos is set or not
             default_uom = product_obj.uom_id and product_obj.uom_id.id
             q = product_uom_obj._compute_qty(cr, uid, uom, qty, default_uom)
+            result['product_uom'] = default_uom
             if product_obj.uos_id:
                 result['product_uos'] = product_obj.uos_id.id
                 result['product_uos_qty'] = qty * product_obj.uos_coeff

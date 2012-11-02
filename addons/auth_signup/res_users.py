@@ -18,17 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
+import random
+import time
+import urllib
+import urlparse
 
 import openerp
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
-
-import time
-import random
-import urllib
-import urlparse
 
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
@@ -37,7 +36,6 @@ def random_token():
 
 def now():
     return time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
@@ -132,8 +130,6 @@ class res_partner(osv.Model):
             res['email'] = partner.email or ''
         return res
 
-
-
 class res_users(osv.Model):
     _inherit = 'res.users'
 
@@ -142,7 +138,7 @@ class res_users(osv.Model):
                     for user in self.browse(cr, uid, ids, context))
 
     _columns = {
-        'state': fields.function(_get_state, string='State', type='selection',
+        'state': fields.function(_get_state, string='Status', type='selection',
                     selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
     }
 

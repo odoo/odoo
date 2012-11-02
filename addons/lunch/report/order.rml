@@ -137,7 +137,7 @@
             </para>
           </td>
           <td>
-            <para style="terp_default_9_right_bold"><u>[[ formatLang(get_total(o,objects)) ]] [[ (o.company_id and o.company_id.currency_id and o.company_id.currency_id.symbol) or '' ]]</u></para>
+            <para style="terp_default_9_right_bold"><u>[[ formatLang(get_total(o,objects), currency_obj = o.company_id and o.company_id.currency_id) ]]</u></para>
           </td>
         </tr>
       </blockTable>
@@ -155,7 +155,7 @@
               <para style="terp_default_9">[[ lines.descript]]</para>
             </td>
             <td>
-              <para style="terp_default_9_right">[[ lines.price ]] [[ (o.company_id and o.company_id.currency_id and o.company_id.currency_id.symbol) or '' ]]</para>
+              <para style="terp_default_9_right">[[ formatLang(lines.price , currency_obj = o.company_id and o.company_id.currency_id) ]]</para>
             </td>
           </tr>
         </blockTable>
@@ -172,7 +172,7 @@
           <para style="terp_tbl_detail_header">Total :</para>
         </td>
         <td>
-          <para style="terp_default_9_right_bold">[[ formatLang(get_nettotal()) ]] [[ (o.company_id and o.company_id.currency_id and o.company_id.currency_id.symbol) or '' ]]</para>
+          <para style="terp_default_9_right_bold">[[ formatLang(get_nettotal(), currency_obj = o.company_id and o.company_id.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

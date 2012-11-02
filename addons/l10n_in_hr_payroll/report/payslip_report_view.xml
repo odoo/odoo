@@ -6,7 +6,7 @@
         <field name="name">payslip.report.tree</field>
         <field name="model">payslip.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state == 'done';gray:state == 'cancel' " string="Payslip Analysis">
+            <tree colors="blue:state == 'draft';black:state == 'done';gray:state == 'cancel' " create="false" string="Payslip Analysis">
                 <field name="nbr" sum="# Payslip Lines"/>
                 <field name="name"/>
                 <field name="employee_id" invisible="1"/>

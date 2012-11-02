@@ -37,8 +37,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 callbacks[i](params);
             }
 
-            this.connection.rpc('/pos/'+name, params || {}, 
-                    function(result){
+            this.connection.rpc('/pos/'+name, params || {}).then(function(result){
                         ret.resolve(result);
                     },
                     function(error){

@@ -24,7 +24,8 @@ import tools
 from osv import osv
 from osv import fields
 
-class mail_compose_message(osv.osv_memory):
+
+class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
     def _get_templates(self, cr, uid, context=None):

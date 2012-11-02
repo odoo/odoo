@@ -1,19 +1,14 @@
 # -*- coding: utf-8 -*-
 from xml.etree import ElementTree
 
-try:
-    import openerp.addons.web.common.http as openerpweb
-    from openerp.addons.web.common import nonliterals
-    from openerp.addons.web.controllers.main import load_actions_from_ir_values
-except ImportError:
-    import web.common.http as openerpweb    # noqa
-    from web.common import nonliterals      # noqa
-    from web.controllers.main import load_actions_from_ir_values    # noqa
+import openerp
+from openerp.addons.web import nonliterals
+from openerp.addons.web.controllers.main import load_actions_from_ir_values
 
-class Board(openerpweb.Controller):
+class Board(openerp.addons.web.http.Controller):
     _cp_path = '/board'
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def add_to_dashboard(self, req, menu_id, action_id, context_to_save, domain, view_mode, name=''):
         # FIXME move this method to board.board model
         to_eval = nonliterals.CompoundContext(context_to_save)

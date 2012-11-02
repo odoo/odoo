@@ -112,7 +112,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
@@ -231,7 +231,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
+            return {'value': {'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):

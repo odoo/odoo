@@ -42,6 +42,21 @@ class res_company(osv.osv):
 
 res_company()
 
+class account_config_settings(osv.osv_memory):
+    _inherit = 'account.config.settings'
+    _columns = {
+        'income_currency_exchange_account_id': fields.related(
+            'company_id', 'income_currency_exchange_account_id',
+            type='many2one',
+            relation='account.account',
+            string="Gain Exchange Rate Account"),
+        'expense_currency_exchange_account_id': fields.related(
+            'company_id', 'expense_currency_exchange_account_id',
+            type="many2one",
+            relation='account.account',
+            string="Loss Exchange Rate Account"),
+    }
+
 class account_voucher(osv.osv):
     def _check_paid(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -278,10 +293,10 @@ class account_voucher(osv.osv):
              ('proforma','Pro-forma'),
              ('posted','Posted')
             ], 'Status', readonly=True, size=32,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Voucher. \
-                        \n* The \'Pro-forma\' when voucher is in Pro-forma state,voucher does not have an voucher number. \
-                        \n* The \'Posted\' state is used when user create voucher,a voucher number is generated and voucher entries are created in account \
-                        \n* The \'Cancelled\' state is used when user cancel voucher.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Voucher. \
+                        \n* The \'Pro-forma\' when voucher is in Pro-forma status,voucher does not have an voucher number. \
+                        \n* The \'Posted\' status is used when user create voucher,a voucher number is generated and voucher entries are created in account \
+                        \n* The \'Cancelled\' status is used when user cancel voucher.'),
         'amount': fields.float('Total', digits_compute=dp.get_precision('Account'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'tax_amount':fields.float('Tax Amount', digits_compute=dp.get_precision('Account'), readonly=True, states={'draft':[('readonly',False)]}),
         'reference': fields.char('Ref #', size=64, readonly=True, states={'draft':[('readonly',False)]}, help="Transaction reference number."),
@@ -973,11 +988,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Insufficient Configuration!'),_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Insufficient Configuration!'),_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
@@ -1070,7 +1085,8 @@ class account_voucher(osv.osv):
             if line.amount == line.amount_unreconciled:
                 if not line.move_line_id.amount_residual:
                     raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
-                currency_rate_difference = line.move_line_id.amount_residual - amount
+                sign = voucher_brw.type in ('payment', 'purchase') and -1 or 1
+                currency_rate_difference = sign * (line.move_line_id.amount_residual - amount)
             else:
                 currency_rate_difference = 0.0
             move_line = {
@@ -1406,7 +1422,7 @@ class account_voucher_line(osv.osv):
     }
 
     def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
-        vals = { 'amount': 0.0}
+        vals = {'amount': 0.0}
         if reconcile:
             vals = { 'amount': amount_unreconciled}
         return {'value': vals}

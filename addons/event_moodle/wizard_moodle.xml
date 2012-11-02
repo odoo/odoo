@@ -8,7 +8,7 @@
                 <form string="Configure Moodle" version="7.0">
                     <header>
                         <button type="object" name="configure_moodle"
-                            string="Configure Moodle" class="oe_highlight"  />
+                            string="Apply" class="oe_highlight"  />
                             or
                             <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
@@ -16,14 +16,14 @@
                      <separator string="Server" colspan="4"/>
                      <field name="server_moodle"/>
                      <newline/>
-                     <separator string="Connexion with a Token" colspan="4"/>
+                     <separator string="Connection with a Token" colspan="4"/>
                      <label string="The easiest way to connect OpenERP with a moodle server is to create a 'token' in Moodle. It will be used to authenticate OpenERP as a trustable application." colspan="4"/>
                      <field name="moodle_token"/>
                      <newline/>
-                     <separator string="Connexion with Password and Username" colspan="4"/>
-                     <label string="Another approach is to create a user for OpenERP in Moodle. If you do so, make sure that this user has enough access rights" colspan="4"/>
+                     <separator string="Connection with username and password" colspan="4"/>
+                     <label string="Another approach is to create a user for OpenERP in Moodle. If you do so, make sure that this user has appropriate access rights." colspan="4"/>
                      <field name="moodle_username"/>
-                     <field name="moodle_password"/>
+                     <field name="moodle_password" password="True"/>
                     </group>
                 </form>
             </field>

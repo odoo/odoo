@@ -86,6 +86,8 @@ class report_custom(report_rml):
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
+                            if dt.date() > ldt.date():
+                                dt = ldt
                             wh += (float((dt - ldt).seconds)/60/60)
                         else:
                             ldt = dt

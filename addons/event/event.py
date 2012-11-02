@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from datetime import datetime, timedelta
 from osv import fields, osv
 from tools.translate import _
 from openerp import SUPERUSER_ID
@@ -200,7 +201,7 @@ class event_event(osv.osv):
             ('confirm', 'Confirmed'),
             ('done', 'Done')],
             'Status', readonly=True, required=True,
-            help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
+            help='If event is created, the status is \'Draft\'.If event is confirmed for the particular dates the status is set to \'Confirmed\'. If the event is over, the status is set to \'Done\'.If event is cancelled the status is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
@@ -267,27 +268,29 @@ class event_event(osv.osv):
             return {'value': dic}
 
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
-        values = {
-            'street' : False,
-            'street2' : False,
-            'city' : False,
-            'zip' : False,
-            'country_id' : False,
-            'state_id' : False,
-        }
-        if isinstance(address_id, (long, int)):
-            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
-            values.update({
-                'street' : address.street,
-                'street2' : address.street2,
-                'city' : address.city,
-                'country_id' : address.country_id and address.country_id.id,
-                'state_id' : address.state_id and address.state_id.id,
-                'zip' : address.zip,
-            })
-
+        values = {}
+        if not address_id:
+            return values
+        address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
+        values.update({
+            'street' : address.street,
+            'street2' : address.street2,
+            'city' : address.city,
+            'country_id' : address.country_id and address.country_id.id or False,
+            'state_id' : address.state_id and address.state_id.id or False,
+            'zip' : address.zip,
+        })
         return {'value' : values}
 
+    def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
+        res = {'value':{}}
+        if date_end:
+            return res
+        if date_begin and isinstance(date_begin, str):
+            date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
+            date_end = date_begin + timedelta(hours=1)
+            res['value'] = {'date_end': date_end.strftime("%Y-%m-%d %H:%M:%S")}
+        return res
 
     # ----------------------------------------
     # OpenChatter methods and notifications
@@ -327,7 +330,7 @@ class event_registration(osv.osv):
     _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source Document', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),

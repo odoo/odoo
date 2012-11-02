@@ -46,7 +46,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 delete(action.attrs.colspan);
                 var action_id = _.str.toNumber(action.attrs.name);
                 if (!_.isNaN(action_id)) {
-                    self.rpc('/web/action/load', {action_id: action_id}, function(result) {
+                    self.rpc('/web/action/load', {action_id: action_id}).then(function(result) {
                         self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                     });
                 }
@@ -81,7 +81,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/undo_custom', {
             view_id: this.view.fields_view.view_id,
             reset: true
-        }, this.do_reload);
+        }).then(this.do_reload);
     },
     on_change_layout: function() {
         var self = this;
@@ -382,7 +382,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
             domain: domain,
             view_mode: view_parent.active_view,
             name: this.$el.find("input").val()
-        }, function(r) {
+        }).then(function(r) {
             if (r === false) {
                 self.do_warn("Could not add filter to dashboard");
             } else {

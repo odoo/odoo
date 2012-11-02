@@ -227,11 +227,11 @@ class project_issue(base_stage, osv.osv):
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=_ISSUE_STATE, string="State", readonly=True,
-                help='The state is set to \'Draft\', when a case is created.\
-                      If the case is in progress the state is set to \'Open\'.\
-                      When the case is over, the state is set to \'Done\'.\
-                      If the case needs to be reviewed then the state is \
+                selection=_ISSUE_STATE, string="Status", readonly=True,
+                help='The status is set to \'Draft\', when a case is created.\
+                      If the case is in progress the status is set to \'Open\'.\
+                      When the case is over, the status is set to \'Done\'.\
+                      If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
@@ -240,7 +240,7 @@ class project_issue(base_stage, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
-        'categ_ids': fields.many2many('project.category', string='Categories'),
+        'categ_ids': fields.many2many('project.category', string='Tags'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
@@ -275,7 +275,6 @@ class project_issue(base_stage, osv.osv):
         'active': 1,
         'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
-        'state': 'draft',
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
@@ -332,7 +331,7 @@ class project_issue(base_stage, osv.osv):
             })
             vals = {
                 'task_id': new_task_id,
-                'state':'pending'
+                'stage_id': self.stage_find(cr, uid, [bug], bug.project_id.id, [('state', '=', 'pending')], context=context),
             }
             self.convert_to_task_send_note(cr, uid, [bug.id], context=context)
             case_obj.write(cr, uid, [bug.id], vals, context=context)

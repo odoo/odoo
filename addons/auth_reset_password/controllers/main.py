@@ -18,20 +18,20 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-from openerp import SUPERUSER_ID
-from openerp.modules.registry import RegistryManager
-import openerp.addons.web.common.http as openerpweb
+import logging
 
 import werkzeug
 
-import logging
+import openerp
+from openerp import SUPERUSER_ID
+from openerp.modules.registry import RegistryManager
+
 _logger = logging.getLogger(__name__)
 
-class Controller(openerpweb.Controller):
+class Controller(openerp.addons.web.http.Controller):
     _cp_path = '/auth_reset_password'
 
-    @openerpweb.httprequest
+    @openerp.addons.web.http.httprequest
     def reset_password(self, req, dbname, login):
         """ retrieve user, and perform reset password """
         url = '/'

@@ -52,7 +52,7 @@ class sale_receipt_report(osv.osv):
              ('proforma','Pro-forma'),
              ('posted','Posted'),
              ('cancel','Cancelled')
-            ], 'Voucher State', readonly=True),
+            ], 'Voucher Status', readonly=True),
         'pay_now':fields.selection([
             ('pay_now','Pay Directly'),
             ('pay_later','Pay Later or Group Funds'),
