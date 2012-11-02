@@ -239,7 +239,10 @@
 
                                     <h4><field name="name"/></h4>
                                     <div class="oe_kanban_project_list">
-                                        <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> <field name="task_count"/> Tasks</a>
+                                        <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action" style="margin-right: 10px"> 
+                                            <span t-if="record.task_count.raw_value gt 1"><field name="task_count"/> Tasks</span>
+                                            <span t-if="record.task_count.raw_value lt 2"><field name="task_count"/> Task</span>
+                                        </a>
                                     </div>
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.doc_count.raw_value" name="attachment_tree_view" type="object" style="margin-right: 10px"> <field name="doc_count"/> Documents</a>
