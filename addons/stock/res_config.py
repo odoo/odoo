@@ -62,7 +62,7 @@ class stock_config_settings(osv.osv_memory):
                 When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
         'group_stock_tracking_lot': fields.boolean("Track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
-            help="""Allows you to get the upstream or downstream traceability of the products contained in serial number."""),
+            help="""When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
         'group_stock_inventory_valuation': fields.boolean("Generate accounting entries per stock movement",
             implied_group='stock.group_inventory_valuation',
             help="""Allows to configure inventory valuations on products and product categories."""),
