@@ -99,7 +99,7 @@ class report_custom(report_rml):
                             ldt = dt
 
                 # Week xml representation
-                week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % n_monday.strftime('%Y-%m-%d')]
+                week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % (n_monday - relativedelta(days=1)).strftime('%Y-%m-%d')]
                 for idx in range(7):
                     week_repr.append('<%s>' % num2day[idx])
                     if idx in week_wh:
