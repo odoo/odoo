@@ -80,6 +80,18 @@
             </field>
         </record>
 
+
+        <record model="ir.ui.view" id="alert_search_view">
+            <field name="name">Search</field>
+            <field name="model">lunch.alert</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="message"/>
+                </search>
+            </field>
+        </record>
+
         <!--Action for Your Orders-->
         <record model="ir.actions.act_window" id="action_lunch_order_form">
             <field name="name">Your Orders</field>
@@ -226,10 +238,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Products Form" version="7.0">
-                    <header>
-                    </header>
                     <sheet>
-                        <group>
+                    <group>
                         <field name='name' string="Product Category: "/>
                     </group>
                     </sheet>
@@ -244,12 +254,13 @@
             <field name="name">Alerts</field>
             <field name="res_model">lunch.alert</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="alert_search_view"/>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to create a lunch alert. 
             </p>
               <p>
-                Alerts are used to warn employee from possible issues concerning the lunch orders.<br/>
+                Alerts are used to warn employee from possible issues concerning the lunch orders.
                 To create a lunch alert you have to define its recurrency (A specific day of the year, every week or every day), the time interval during which the alert should be executed and the message to display. 
               </p>
             </field>
@@ -287,7 +298,6 @@
                     <field name="order_line_ids"/>
                     <field name="state" />
                     <field name="total" sum="Total"/>
-                    <field name="preferences" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -360,18 +370,15 @@
                     <header>
                     </header>
                     <sheet>
-                        <group colspan="2" col="2">
+                        <group>
                             <field name='name'/>
                             <field name='category_id'/>
                             <field name='supplier'/>
                             <field name='price'/>
                             <field name='active'/>
                         </group>
-                        <group colspan="2" col="2">
-                        </group>
-                        <group>
+                        <label for='description'/>
                         <field name='description'/>
-                    </group>
                     </sheet>
                 </form>
             </field>
@@ -398,19 +405,14 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="cashmove form" version="7.0">
-                    <header>
-                    </header>
                     <sheet>
-                        <group colspan="2" col="2">
+                        <group>
                             <field name="user_id"/>
                             <field name="date"/>
                             <field name="amount"/>
                         </group>
-                         <group colspan="2" col="2">
-                        </group>
-                        <group>
-                            <field name="description"/>
-                        </group>
+                        <label for='description'/>
+                        <field name="description"/>
                     </sheet>
                 </form>
             </field>
@@ -438,56 +440,33 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="alert tree" version="7.0">
-                    <header>
-                    </header>
                     <sheet>
-                    <separator string="Schedule Date" colspan="4"/>
-                        <group col="2" colspan="2">
+                        <group col="4" string="Schedule Date">
                             <field name="day"/>
-                            <field name="specific" attrs="{'invisible': [('day','!=','specific')]}"/>
+                            <field name='lunch_active'/>
+                            <field name="specific" attrs="{'invisible': [('day','!=','specific')], 'required':[('day','=','specific')]}"/>
                         </group>
-                        <group col="2" colspan="2">
-                        </group>
-                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
+                        <group attrs="{'invisible': [('day','!=','week')]}" col="4">
                             <field name="monday"/>
                             <field name="tuesday"/>
                             <field name="wednesday"/>
                             <field name="thursday"/>
-                        </group>
-                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
                             <field name="friday"/>
                             <field name="saturday"/>
                             <field name="sunday"/>
                         </group>
-                    <separator string="Schedule Hour" colspan="4"/>
-                    <group col="2" colspan="2">
-                        <field name='active_from' widget='float_time'/>
-                        <field name='active_to' widget='float_time'/>
-                    </group>
-                    <group col="2" colspan="2">
-                    </group>
-                    <separator string="Alert Informations" colspan="4"/>
-                     <group col="2" colspan="2">
-                        <field name='lunch_active'/>
+                        <group string="Schedule Hour">
+                            <field name='active_from' widget='float_time'/>
+                            <field name='active_to' widget='float_time'/>
+                        </group>
+                        <label for='message'/>
                         <field name='message' placeholder="Write the message you want to display during the defined period..."/>
-                    </group>
-                    <group col="2" colspan="2">
-                    </group>
+                    
+
                 </sheet>
                 </form>
             </field>
         </record>
 
-        <record model='ir.ui.view' id='partner_instructor_form_view'>
-            <field name='name'>partner.supplier.name.form</field>
-            <field name='model'>res.partner</field>
-            <field name='type'>form</field>
-            <field name='inherit_id' ref='base.view_partner_form' />
-            <field name='arch' type='xml'>
-                <field name='title' position='after'>
-                    <field name='supplier_lunch'/>
-                </field> 
-            </field>
-        </record>
     </data>
 </openerp>

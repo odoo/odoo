@@ -161,36 +161,7 @@
             <field name="order_id" ref="order_3"/>
         </record>
 
-        <record model="lunch.preference" id="preference_1">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="product" ref="product_gouda"/>
-            <field name="date" eval="time.strftime('2012-10-24')"/>
-            <field name="color">0</field>
-            <field name="product_name">Fromage Gouda</field>
-            <field name="price">2.50</field>
-            <field name="note">+Salade +Tomates +Comcombres</field>
-        </record>
-
-         <record model="lunch.preference" id="preference_2">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="product" ref="product_italiana"/>
-            <field name="date" eval="time.strftime('2012-10-22')"/>
-            <field name="color">0</field>
-            <field name="product_name">Pizza Italiana</field>
-            <field name="price">7.40</field>
-            <field name="note">+Champignons</field>
-        </record>
-
-         <record model="lunch.preference" id="preference_3">
-            <field name="user_id" ref="base.user_root"/>
-            <field name="product" ref="product_Bolognese"/>
-            <field name="date" eval="time.strftime('2012-10-23')"/>
-            <field name="color">0</field>
-            <field name="product_name">Pâtes Bolognese</field>
-            <field name="price">7.70</field>
-            <field name="note">+Emmental</field>
-        </record>
-
+    
         <record model="lunch.cashmove" id="cashmove_1">
             <field name="user_id" ref="base.user_root"/>
             <field name="date" eval="time.strftime('2012-10-23')"/>

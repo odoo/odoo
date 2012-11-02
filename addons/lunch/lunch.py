@@ -52,24 +52,20 @@ class lunch_order(osv.Model):
 
     def add_preference(self, cr, uid, ids, pref_id, context=None):
         """ create a new order line based on the preference selected (pref_id)"""
-        pref_ref = self.pool.get("lunch.preference")
         orderline_ref = self.pool.get('lunch.order.line')
         prod_ref = self.pool.get('lunch.product')
         order = self.browse(cr,uid,ids,context=context)[0]
-        pref = pref_ref.browse(cr,uid,pref_id,context=context)
-        if pref.user_id.id == uid:
-            new_order_line = {
-                'date': order["date"],
-                'user_id': uid,
-                'product_id': pref["product"].id,
-                'note': pref["note"],
-                'order_id': order.id,
-                'price': pref["price"],
-                'supplier': prod_ref.browse(cr,uid,pref["product"].id,context=context)['supplier'].id
-            }
-            new_id = orderline_ref.create(cr,uid,new_order_line)
-            order.order_line_ids.append(new_id)
-        return True
+        pref = orderline_ref.browse(cr,uid,pref_id,context=context)
+        new_order_line = {
+            'date': order.date,
+            'user_id': uid,
+            'product_id': pref.product_id.id,
+            'note': pref.note,
+            'order_id': order.id,
+            'price': pref.product_id.price,
+            'supplier': pref.product_id.supplier.id
+        }
+        return orderline_ref.create(cr,uid,new_order_line)
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
         """ get the alerts to display on the order form """
@@ -88,42 +84,32 @@ class lunch_order(osv.Model):
         """
         today = datetime.now().isoweekday()
         if today == 1:
-            if alert.monday == True:
-                return True
+            return alert.monday
         if today == 2:
-            if alert.tuesday == True:
-                return True
+            return alert.tuesday
         if today == 3:
-            if alert.wednesday == True:
-                return True
+            return alert.wednesday
         if today == 4:
-            if alert.thursday == True:
-                return True
+            return alert.thursday
         if today == 5:
-            if alert.friday == True:
-                return True
+            return alert.friday
         if today == 6:
-            if alert.saturday == True:
-                return True
+            return alert.saturday
         if today == 7:
-            if alert.sunday == True:
-                return True
-        return False
+            return alert.sunday
+        assert "today should be between 1 and 7"
 
     def can_display_alert(self, alert):
         """ This method check if the alert can be displayed today """
         if alert.day=='specific':
             #the alert is only activated a specific day
-            if alert.specific==fields.datetime.now().split(' ')[0]:
-                return True
+            return alert.specific==fields.datetime.now()[:10]
         elif alert.day=='week':
             #the alert is activated during some days of the week
             return self.check_day(alert)
-        elif alert.day=='days':
-            #the alert is activated everyday
-            return True
-        return False
+        return True
 
+    # code to improve
     def _default_alerts_get(self,cr,uid,arg,context=None):
         """ get the alerts to display on the order form """
         alert_ref = self.pool.get('lunch.alert')
@@ -131,24 +117,20 @@ class lunch_order(osv.Model):
         alert_msg = []
         for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
             if self.can_display_alert(alert):
-                if alert.active_from==alert.active_to:
-                    #the alert is executing all the day
+                #the alert is executing from ... to ...
+                now = datetime.utcnow()
+                user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+                tz = pytz.timezone(user.tz) if user.tz else pytz.utc
+                tzoffset=tz.utcoffset(now)
+                mynow = now+tzoffset
+                hour_to = int(alert.active_to)
+                min_to = int((alert.active_to-hour_to)*60)
+                to_alert = datetime.strptime(str(hour_to)+":"+str(min_to),"%H:%M")
+                hour_from = int(alert.active_from)
+                min_from = int((alert.active_from-hour_from)*60)
+                from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
+                if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
                     alert_msg.append(alert.message)
-                elif alert.active_from<alert.active_to:
-                    #the alert is executing from ... to ...
-                    now = datetime.utcnow()
-                    user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                    tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-                    tzoffset=tz.utcoffset(now)
-                    mynow = now+tzoffset
-                    hour_to = int(alert.active_to)
-                    min_to = int((alert.active_to-hour_to)*60)
-                    to_alert = datetime.strptime(str(hour_to)+":"+str(min_to),"%H:%M")
-                    hour_from = int(alert.active_from)
-                    min_from = int((alert.active_from-hour_from)*60)
-                    from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
-                    if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
-                        alert_msg.append(alert.message)
         return '\n'.join(alert_msg)
 
     def onchange_price(self,cr,uid,ids,order_line_ids,context=None):
@@ -166,35 +148,6 @@ class lunch_order(osv.Model):
             res = {'value':{'total':tot}}
         return res
 
-
-
-    def create(self, cr, uid, values, context=None):
-        print "CREATE"
-        pref_ref = self.pool.get('lunch.preference')
-        pref_ids = pref_ref.search(cr,uid,[],context=context)
-        prod_ref = self.pool.get('lunch.product')
-        new_id = super(lunch_order, self).create(cr, uid, values, context=context)
-        #When we create a new order we also create new preference
-        if len(values['order_line_ids'])>0 and values['user_id']==uid:
-            for prods in values['order_line_ids']:
-                already_exists = False #alreadyexist is used to check if a preferece already exists.
-                for pref in pref_ref.browse(cr,uid,pref_ids,context=context):
-                    if pref['product'].id == prods[2]['product_id']:
-                        if pref['note'] == prods[2]['note']:
-                            if 'price' in prods[2]:
-                                if pref['price'] == prods[2]['price']:
-                                    already_exists = True
-                            else:
-                                if pref['price'] == prod_ref.browse(cr,uid,prods[2]['product_id'])['price']:
-                                    already_exists = True
-                if already_exists == False:
-                    new_pref = pref_ref.create(cr,uid,{'date':values['date'], 'color':0, 'order_id':new_id, 'user_id':values['user_id'], 'product': prods[2]['product_id'], 'product_name':prod_ref.browse(cr,uid,prods[2]['product_id'])['name'], 'note':prods[2]['note'], 'price':prod_ref.browse(cr,uid,prods[2]['product_id'])['price']},context=context)
-        return new_id
-            
-    def _default_preference_get(self,cr,uid,args,context=None):
-        """ return a maximum of 15 last user preferences ordered by date"""
-        return self.pool.get('lunch.preference').search(cr,uid,[('user_id','=',uid)],order='date desc',limit=25,context=context)
-
     def __getattr__(self, attr):
         """ this method catch unexisting method call and if starts with
             add_preference_'n' we execute the add_preference method with 
@@ -209,42 +162,38 @@ class lunch_order(osv.Model):
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
         """ Add preferences in the form view of order.line """
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        line_ref = self.pool.get("lunch.order.line")
         if view_type == 'form':
-            pref_ref = self.pool.get("lunch.preference")
-            order_ref = self.pool.get("lunch.order")
-            currency_obj = self.pool.get('res.currency')
-            prod_ref = self.pool.get("lunch.product")
-
-            pref_ids = pref_ref.search(cr,uid,[('user_id','=',uid)],context=context)
-            order_ids = order_ref.search(cr,uid,[('user_id','=',uid)],context=context)
+            pref_ids = line_ref.search(cr,uid,[('user_id','=',uid)],context=context)
             text_xml = "<div>"
-            if len(order_ids)==0:
+            if len(pref_ids)==0:
                 text_xml+="""
                     <div class="oe_inline oe_lunch_intro">
-                        <div class="oe_lunch_intro_title">%s</div>
-                        <br/>
+                        <h3>%s</h3>
+                        <p class="oe_grey">
                         %s
-                        <br/>
+                        </p><p class="oe_grey">
                         %s
-                        <br/>
+                        </p><p class="oe_grey">
                         %s
+                        </p>
                     </div>
                     """ % (_("This is the first time you order a meal"),
                             _("Select a product and put your order comments on the note."),
                             _("Your favorite meals will be created based on your last orders."),
                             _("Don't forget the alerts displayed in the reddish area"))
             else:
-                preferences = pref_ref.browse(cr,uid,pref_ids,context=context)
-                this_order = order_ref.browse(cr,uid,order_ids[0],context=context)
-                currency = currency_obj.browse(cr, uid, this_order['currency_id'], context=context)
+                preferences = line_ref.browse(cr,uid,pref_ids,context=context)
                 categories = {} #store the different categories of products in preference
                 for pref in preferences:
-                    categories[pref['product']['category_id']['name']]=[]
-                for pref in preferences:
-                    categories[pref['product']['category_id']['name']].append(pref)
-                length = len(categories)
-                text_xml += """<separator name='pref' string='Favorites'/>"""
+                    categories.setdefault(pref.product_id.category_id.name, {})
+                    if pref.product_id.id not in categories[pref.product_id.category_id.name]:
+                        categories[pref.product_id.category_id.name][pref.product_id.id] = pref
+
+                currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+
                 for key,value in categories.items():
+                    value = value.values()
                     text_xml+="""
                     <div class="oe_lunch_30pc">
                     <h2>%s</h2>
@@ -269,7 +218,7 @@ class lunch_order(osv.Model):
                                     %s
                                 </div>
                             </div>
-                        ''' % (function_name, function_name,_("Add"), escape(val['product_name']), val['price'] or 0.0, currency['name'], escape(val['note']) or '')
+                        ''' % (function_name, function_name,_("Add"), escape(val.product_id.name), val.product_id.price or 0.0, currency.name or '', escape(val.note or ''))
                     text_xml+= '''</div>'''
             # ADD into ARCH xml
             text_xml += "</div>"
@@ -289,7 +238,6 @@ class lunch_order(osv.Model):
             }),
         'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
-        'preferences': fields.many2many("lunch.preference",'lunch_preference_rel','preferences','order_id','Preferences'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'currency_id': fields.related('company_id','currency_id',string="Currency", readonly=True),
     }
@@ -299,7 +247,6 @@ class lunch_order(osv.Model):
         'date': fields.date.context_today,
         'state': 'new',
         'alerts': _default_alerts_get,
-        'preferences': _default_preference_get,
         'company_id': lambda self,cr,uid,context: self.pool.get('res.company')._company_default_get(cr, uid, 'lunch.order', context=context),
     }
 
@@ -315,12 +262,6 @@ class lunch_order_line(osv.Model):
             return {'value': {'price': price}}
         return {'value': {'price': 0.0}}
 
-    def _price_get(self,cr,uid,ids,name,arg,context=None):
-        result={}
-        for orderLine in self.browse(cr,uid,ids,context=context):
-            result[orderLine.id]=orderLine.product_id.price
-        return result
-
     def order(self,cr,uid,ids,context=None):
         for order_line in self.browse(cr,uid,ids,context=context):
             self.write(cr,uid,[order_line.id],{'state':'ordered'},context)
@@ -332,18 +273,21 @@ class lunch_order_line(osv.Model):
         orders_ref = self.pool.get('lunch.order')
         for order_line in self.browse(cr,uid,ids,context=context):
             if order_line.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order_line.user_id.id, 'amount':0 - order_line.price,'description':order_line.product_id.name, 'order_id':order_line.id, 'state':'order', 'date':order_line.date})
-                self.write(cr,uid,[order_line.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
-        for order_line in self.browse(cr,uid,ids,context=context):
+                new_id = cashmove_ref.create(cr,uid,{'user_id': order_line.user_id.id, 'amount':-order_line.price,'description':order_line.product_id.name, 'order_id':order_line.id, 'state':'order', 'date':order_line.date})
+                self.write(cr,uid,[order_line.id],{'state':'confirmed'},context)
+        return self._update_order_lines(cr, uid, ids, context)
+
+    def _update_order_lines(self, cr, uid, ids, context=None):
+        for order in set(self.browse(cr,uid,ids,context=context).order_id):
             isconfirmed = True
-            for orderline in order_line.order_id.order_line_ids:
+            for orderline in order.order_line_ids:
                 if orderline.state == 'new':
                     isconfirmed = False
                 if orderline.state == 'cancelled':
                     isconfirmed = False
-                    orders_ref.write(cr,uid,[order_line.order_id.id],{'state':'partially'},context=context)
-            if isconfirmed == True:
-                orders_ref.write(cr,uid,[order_line.order_id.id],{'state':'confirmed'},context=context)
+                    orders_ref.write(cr,uid,[order.id],{'state':'partially'},context=context)
+            if isconfirmed:
+                orders_ref.write(cr,uid,[order.id],{'state':'confirmed'},context=context)
         return {}
 
     def cancel(self,cr,uid,ids,context=None):
@@ -354,20 +298,7 @@ class lunch_order_line(osv.Model):
             self.write(cr,uid,[order_line.id],{'state':'cancelled'},context)
             for cash in order_line.cashmove:
                 cashmove_ref.unlink(cr,uid,cash.id,context)
-        for order_line in self.browse(cr,uid,ids,context=context):
-            hasconfirmed = False
-            hasnew = False
-            for orderline in order_line.order_id.order_line_ids:
-                if orderline.state=='confirmed':
-                    hasconfirmed= True
-                if orderline.state=='new':
-                    hasnew= True
-            if hasnew == False:
-                if hasconfirmed == False:
-                    orders_ref.write(cr,uid,[order_line.order_id.id],{'state':'cancelled'},context)
-                    return {}
-            orders_ref.write(cr,uid,[order_line.order_id.id],{'state':'partially'},context)
-        return {}
+        return self._update_order_lines(cr, uid, ids, context)
 
     _columns = {
         'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'),
@@ -376,7 +307,7 @@ class lunch_order_line(osv.Model):
         'supplier' : fields.related('product_id','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
         'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note' : fields.text('Note',size=256,required=False),
-        'price' : fields.function(_price_get, type="float", string="Price",store=True),
+        'price' : fields.float("Price"),
         'state': fields.selection([('new', 'New'),('confirmed','Received'), ('ordered','Ordered'), ('cancelled','Cancelled')], \
             'Status', readonly=True, select=True), #new confirmed and cancelled are the convention
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
@@ -386,24 +317,6 @@ class lunch_order_line(osv.Model):
         'state': 'new',
     }
 
-class lunch_preference(osv.Model):
-    """ lunch preference (based on user previous order lines) """
-    _name = 'lunch.preference'
-    _description= "user preferences"
-
-    _columns = {
-        'date' : fields.date('Date', required=True,readonly=True),
-        'color': fields.integer('Color'),
-        'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True),
-        'product' : fields.many2one('lunch.product','Product',required=True),
-        'product_name' : fields.char('Product name',size=64),
-        'note' : fields.text('Note',size=256,required=False),
-        'price' : fields.float('Price',digits=(16,2)),
-    }
-
-    _defaults = {      
-        'color': 1,
-    }
 
 class lunch_product(osv.Model):
     """ lunch product """
@@ -411,11 +324,11 @@ class lunch_product(osv.Model):
     _description = 'lunch product'
     _columns = {
         'name' : fields.char('Product',required=True, size=64),
-        'category_id': fields.many2one('lunch.product.category', 'Category'),
+        'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
         'description': fields.text('Description', size=256, required=False),
         'price': fields.float('Price', digits=(16,2)),
         'active': fields.boolean('Active'), #If this product isn't offered anymore, the active boolean is set to false. This will allow to keep trace of previous orders and cashmoves.
-        'supplier' : fields.many2one('res.partner','Supplier',required=True, domain=[('supplier_lunch','=',True)]), 
+        'supplier' : fields.many2one('res.partner', 'Supplier'), 
     }
 
 class lunch_product_category(osv.Model):
@@ -423,7 +336,7 @@ class lunch_product_category(osv.Model):
     _name = 'lunch.product.category'
     _description = 'lunch product category'
     _columns = {
-        'name' : fields.char('Category', required=True, size=64), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
+        'name' : fields.char('Category', required=True), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
     }
 
 class lunch_cashmove(osv.Model):
@@ -434,7 +347,7 @@ class lunch_cashmove(osv.Model):
         'user_id' : fields.many2one('res.users','User Name',required=True),
         'date' : fields.date('Date', required=True),
         'amount' : fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
-        'description' : fields.text('Description',size=256), #the description can be an order or a payment
+        'description' : fields.text('Description'), #the description can be an order or a payment
         'order_id' : fields.many2one('lunch.order.line','Order',required=False,ondelete='cascade'),
         'state' : fields.selection([('order','Order'),('payment','Payment')],'Is an order or a Payment'),
     }
@@ -451,7 +364,7 @@ class lunch_alert(osv.Model):
     _columns = {
         'message' : fields.text('Message',size=256, required=True),
         'lunch_active' : fields.boolean('Active'),
-        'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], 'Recurrency'),
+        'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], string='Recurrency', required=True,select=True),
         'specific' : fields.date('Day'),
         'monday' : fields.boolean('Monday'),
         'tuesday' : fields.boolean('Tuesday'),
@@ -463,9 +376,9 @@ class lunch_alert(osv.Model):
         'active_from': fields.float('Between',required=True),
         'active_to': fields.float('And',required=True),
     }
-
-class res_partner (osv.Model):
-    _inherit = 'res.partner'
-    _columns = {
-        'supplier_lunch': fields.boolean('Lunch Supplier'),
+    _defaults = {
+        'day': lambda self, cr, uid, context: 'specific',
+        'specific': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'active_from': 7,
+        'active_to': 23,
     }
