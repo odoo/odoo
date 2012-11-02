@@ -328,7 +328,7 @@
             <field name="model">mrp.production.workcenter.line</field>
             <field name="arch" type="xml">
                 <graph string="Hours by Work Center" type="bar">
-                     <field name="date_start_date"/>
+                     <field name="date_start"/>
                      <field name="hour" operator="+"/>
                      <field name="workcenter_id" group="True"/>
                 </graph>
