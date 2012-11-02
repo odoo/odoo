@@ -903,14 +903,16 @@ class purchase_order_line(osv.osv):
         account_tax = self.pool.get('account.tax')
 
         # - check for the presence of partner_id and pricelist_id
-        if not partner_id:
-            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
-        if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
+        #if not partner_id:
+        #    raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        #if not pricelist_id:
+        #    raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
-        lang = res_partner.browse(cr, uid, partner_id).lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+        context_partner = context.copy()
+        if partner_id:
+            lang = res_partner.browse(cr, uid, partner_id).lang
+            context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
         name = product.name
         if product.description_purchase:
@@ -939,7 +941,7 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         supplierinfo = False
         for supplier in product.seller_ids:
-            if supplier.name.id == partner_id:
+            if partner_id and (supplier.name.id == partner_id):
                 supplierinfo = supplier
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
@@ -953,8 +955,11 @@ class purchase_order_line(osv.osv):
         res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
 
         # - determine price_unit and taxes_id
-        price = product_pricelist.price_get(cr, uid, [pricelist_id],
-                    product.id, qty or 1.0, partner_id, {'uom': uom_id, 'date': date_order})[pricelist_id]
+        if pricelist_id:
+            price = product_pricelist.price_get(cr, uid, [pricelist_id],
+                    product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
+        else:
+            price = product.standard_price
 
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
