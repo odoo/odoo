@@ -135,7 +135,7 @@ class res_partner_category(osv.osv):
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _parent_store = True
     _parent_order = 'name'
@@ -318,6 +318,12 @@ class res_partner(osv.osv, format_address):
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
+        return {}
+
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):

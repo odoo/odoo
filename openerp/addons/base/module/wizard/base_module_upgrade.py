@@ -46,12 +46,12 @@ class base_module_upgrade(osv.osv_memory):
 
         ids = self.get_module_list(cr, uid, context=context)
         if not ids:
-            res['arch'] = '''<form string="Apply Schedule Upgrade" version="7.0">
-                                <header>
-                                    <button name="config" string="Start configuration" type="object" icon="gtk-ok"/>
-                                    <button special="cancel" string="Close" icon="gtk-cancel"/>
-                                </header>
-                                <separator string="Apply Schedule Upgrade" colspan="4"/>
+            res['arch'] = '''<form string="Upgrade Completed" version="7.0">
+                                <separator string="Upgrade Completed" colspan="4"/>
+                                <footer>
+                                    <button name="config" string="Start Configuration" type="object" class="oe_highlight"/> or
+                                    <button special="cancel" string="Close" class="oe_link"/>
+                                </footer>
                              </form>'''
 
         return res

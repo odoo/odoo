@@ -51,8 +51,8 @@ class multi_company_default(osv.osv):
     }
 
     _defaults = {
-        'expression': lambda *a: 'True',
-        'sequence': lambda *a: 100,
+        'expression': 'True',
+        'sequence': 100,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
