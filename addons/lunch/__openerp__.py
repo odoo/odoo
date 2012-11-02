@@ -25,6 +25,7 @@
     'version': '0.2',
     'depends': ['base'],
     'category' : 'Tools',
+    'summary': 'Lunch Order, Meal',
     'description': """
 The base module to manage lunch.
 ================================
