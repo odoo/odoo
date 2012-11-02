@@ -185,7 +185,7 @@
                         'Sellable' category found in the Product Category list 
                         ("Misc. Products/Sellable"). We recommend you modify 
                         one of the duplicates' values or your product category 
-                        hierarchy.
+                        hierarchy.<br/>
                         However if you do not wish to change your 
                         configuration of product categories, we recommend you 
                         use make use of the external ID for this field 
@@ -203,7 +203,8 @@
                         lined to both tags 'Manufacturer' and 'Retailer' 
                         then you will encode it as follow "Manufacturer,
                         Retailer" in the same column of your CSV file.</p>
-                        <a href="/base_import/static/csv/m2m_customers_tags.csv">CSV file for many2many relationship</a><br/>
+                        <a href="/base_import/static/csv/m2m_customers_tags.csv">
+                        CSV file for Manufacturer, Retailer</a><br/>
                     </dd>
                 </dl>
 
@@ -223,7 +224,7 @@
                         purchase.order_functional_error_line_cant_adpat.CSV 
                         file of some quotations you can import, based on demo 
                         data.</p>
-                        <a href="/base_import/static/csv/purchase.order_functional_error_line_cant_adpat.csv">File of some Quotations</a>
+                        <a href="/base_import/static/csv/purchase.order_functional_error_line_cant_adpat.csv">File for some Quotations</a>
                         <p>The following CSV file shows how to import purchase 
                         orders with their respective purchase order lines:</p>
                         <a href="/base_import/static/csv/o2m_purchase_order_lines.csv">Purchase orders with their respective purchase order lines</a>
@@ -298,27 +299,24 @@
                         as "Name",'True' as "Is a Company" from companies) TO 
                         '/tmp/company.csv' with CSV HEADER;</p>
                         <p>This SQL command will create the following CSV file:
-                        <br/> &#160;&#160;&#160;&#160;External ID,Name,Is a 
-                        Company<br/> &#160;&#160;&#160;&#160;
-                        company_1,Bigees,True<br/> &#160;&#160;&#160;&#160;
-                        company_2,Organi,True<br/> &#160;&#160;&#160;&#160;
-                        company_3,Boum,True</p> <p>To create the CSV file for 
-                        persons, linked to companies, we will use the 
-                        following SQL command in PSQL:</p> 
-                        <p>&#160;&#160;&#160;&#160;copy (select 'person_'||id 
-                        as "External ID",person_name as "Name",'False' as "Is 
-                        a Company",'company_'||company_id as "Related 
-                        Company/External ID" from persons) TO '/tmp/person.csv'
-                         with CSV</p>
-                        <p>It will produce the following CSV file:<br/>
-                        &#160;&#160;&#160;&#160;External ID,Name,Is a 
-                        Company,Related Company/External ID<br/>
-                        &#160;&#160;&#160;&#160;person_1,Fabien,False,company_1
-                        <br/>&#160;&#160;&#160;&#160;
-                        person_2,Laurence,False,company_1<br/>
-                        &#160;&#160;&#160;&#160;person_3,Eric,False,company_2
-                        <br/>&#160;&#160;&#160;&#160;
-                        person_4,Ramsy,False,company_3</p>
+                        <br/>&#160;&#160;&#160;&#160;External ID,Name,Is a Company
+                        <br/>&#160;&#160;&#160;&#160;company_1,Bigees,True
+                        <br/>&#160;&#160;&#160;&#160;company_2,Organi,True
+                        <br/>&#160;&#160;&#160;&#160;company_3,Boum,True</p>
+                        <p>To create the CSV file for persons, linked to 
+                        companies, we will use the following SQL command in 
+                        PSQL:</p> <p>&#160;&#160;&#160;&#160;copy (select 
+                        'person_'||id as "External ID",person_name as 
+                        "Name",'False' as "Is a Company",'company_'||company_id
+                         as "Related Company/External ID" from persons) TO 
+                        '/tmp/person.csv' with CSV</p>
+                        <p>It will produce the following CSV file:
+                        <br/>&#160;&#160;&#160;&#160;External ID,Name,Is a 
+                        Company,Related Company/External ID
+                        <br/>&#160;&#160;&#160;&#160;person_1,Fabien,False,company_1
+                        <br/>&#160;&#160;&#160;&#160;person_2,Laurence,False,company_1
+                        <br/>&#160;&#160;&#160;&#160;person_3,Eric,False,company_2
+                        <br/>&#160;&#160;&#160;&#160;person_4,Ramsy,False,company_3</p>
                         <p>As you can see in this file, Fabien and Laurence 
                         are working for the Bigees company (company_1) and 
                         Eric is working for the Organi company. The relation 
