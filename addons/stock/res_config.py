@@ -35,12 +35,12 @@ class stock_config_settings(osv.osv_memory):
                 This installs the module stock_invoice_directly."""),
         'module_product_expiry': fields.boolean("Expiry date on serial numbers",
             help="""Track different dates on products and serial numbers.
-                The following dates can be tracked:
-                    - end of life
-                    - best before date
-                    - removal date
-                    - alert date.
-                This installs the module product_expiry."""),
+The following dates can be tracked:
+    - end of life
+    - best before date
+    - removal date
+    - alert date.
+This installs the module product_expiry."""),
         'module_stock_location': fields.boolean("Create push/pull logistic rules",
             help="""Provide push and pull inventory flows.  Typical uses of this feature are:
                 manage product manufacturing chains, manage default locations per product,
@@ -58,8 +58,7 @@ class stock_config_settings(osv.osv_memory):
             help="""Allows you to create and manage your packaging dimensions and types you want to be maintained in your system."""),
         'group_stock_production_lot': fields.boolean("Track serial number on products",
             implied_group='stock.group_production_lot',
-            help="""This allows you to manage products by using serial numbers.
-                When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
+            help="""This allows you to manage products by using serial numbers. When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
         'group_stock_tracking_lot': fields.boolean("Track serial number on logistic units (pallets)",
             implied_group='stock.group_tracking_lot',
             help="""When you select a serial number on product moves, you can get the upstream or downstream traceability of that product."""),
