@@ -493,17 +493,26 @@ class pos_order(osv.osv):
                 self.add_payment(cr, uid, order_id, {
                     'amount': payment['amount'] or 0.0,
                     'payment_date': payment['name'],
+                    'statement_id': payment['statement_id'],
                     'payment_name': payment.get('note', False),
                     'journal': payment['journal_id']
                 }, context=context)
 
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+                cash_journal = session.cash_journal_id
+                cash_statement = False
+                if not cash_journal:
+                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
+                    if not len(cash_journal_ids):
+                        raise osv.except_osv( _('error!'),
+                            _("No cash statement found for this session. Unable to record returned cash."))
+                    cash_journal = cash_journal_ids[0].journal_id
                 self.add_payment(cr, uid, order_id, {
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                     'payment_name': _('return'),
-                    'journal': session.cash_journal_id.id
+                    'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
             wf_service = netsvc.LocalService("workflow")
@@ -703,21 +712,15 @@ class pos_order(osv.osv):
         """Create a new payment for the order"""
         if not context:
             context = {}
-        statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
-        prod_obj = self.pool.get('product.product')
         property_obj = self.pool.get('ir.property')
-        curr_c = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        curr_company = curr_c.id
         order = self.browse(cr, uid, order_id, context=context)
         args = {
             'amount': data['amount'],
+            'date': data.get('payment_date', time.strftime('%Y-%m-%d')),
+            'name': order.name + ': ' + (data.get('payment_name', '') or ''),
         }
-        if 'payment_date' in data:
-            args['date'] = data['payment_date']
-        args['name'] = order.name
-        if data.get('payment_name', False):
-            args['name'] = args['name'] + ': ' + data['payment_name']
+
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
                              and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
@@ -732,14 +735,15 @@ class pos_order(osv.osv):
 
         context.pop('pos_session_id', False)
 
-        try:
-            journal_id = long(data['journal'])
-        except Exception:
-            journal_id = False
+        journal_id = data.get('journal', False)
+        statement_id = data.get('statement_id', False)
+        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
 
-        statement_id = False
         for statement in order.session_id.statement_ids:
-            if statement.journal_id.id == journal_id:
+            if statement.id == statement_id:
+                journal_id = statement.journal_id.id
+                break
+            elif statement.journal_id.id == journal_id:
                 statement_id = statement.id
                 break
 
@@ -755,10 +759,6 @@ class pos_order(osv.osv):
         })
 
         statement_line_obj.create(cr, uid, args, context=context)
-
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
-        wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
         return statement_id
 
