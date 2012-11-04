@@ -1953,13 +1953,15 @@ class Import(View):
                 # filtering in case of e.g. o2m content rows)
                 if any(row)
             ]
-        except UnicodeDecodeError:
-            error = u"Failed to decode CSV file using encoding %s" % csvcode
+        except UnicodeDecodeError, e:
+            # decode with iso-8859-1 for error display: always works-ish
+            error = u"Failed to decode cell %r using encoding %s: '%s'" % (
+                e.object, e.encoding, e.reason)
         except csv.Error, e:
             error = u"Could not process CSV file: %s" % e
 
-        # If the file contains nothing,
-        if not data:
+        # If the file contains nothing, and the import has not already blown up
+        if not (error or data):
             error = u"File to import is empty"
         if error:
             return '<script>window.top.%s(%s);</script>' % (
