@@ -303,7 +303,7 @@ class audittrail_objects_proxy(object_proxy):
         self.process_data(cr, uid_orig, pool, res_ids, model, method, old_values, new_values, field_list)
         return res
 
-    def get_data(self, cr, uid, pool, res_ids, model, method):
+    def get_data(self, cr, uid, pool, res_ids, model, method, parent=None):
         """
         This function simply read all the fields of the given res_ids, and also recurisvely on
         all records of a x2m fields read that need to be logged. Then it returns the result in
@@ -347,11 +347,12 @@ class audittrail_objects_proxy(object_proxy):
                         assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
                         x2m_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, x2m_model_id)
                         #recursive call on x2m fields that need to be checked too
-                        data.update(self.get_data(cr, SUPERUSER_ID, pool, resource[field], x2m_model, method))
+                        if not parent in [x2m_model.model, model.model] and resource[field]:
+                            data.update(self.get_data(cr, SUPERUSER_ID, pool, resource[field], x2m_model, method, parent=model.model))
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
-    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
+    def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None, parent=None):
         """
         This function compares the old data (i.e before the method was executed) and the new data
         (after the method was executed) and returns a structure with all the needed information to
@@ -406,8 +407,9 @@ class audittrail_objects_proxy(object_proxy):
                     x2m_new_values_ids = new_values.get(key, {'value': {}})['value'].get(field_name, [])
                     # We use list(set(...)) to remove duplicates.
                     res_ids = list(set(x2m_old_values_ids + x2m_new_values_ids))
-                    for res_id in res_ids:
-                        lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
+                    if not parent in [x2m_model.model, model.model] and res_ids:
+                        for res_id in res_ids:
+                            lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list, parent=model.model))
             # if the value value is different than the old value: record the change
             if key not in old_values or key not in new_values or old_values[key]['value'][field_name] != new_values[key]['value'][field_name]:
                 data = {
@@ -445,10 +447,10 @@ class audittrail_objects_proxy(object_proxy):
         for res_id in res_ids:
             # compare old and new values and get audittrail log lines accordingly
             lines = self.prepare_audittrail_log_line(cr, uid, pool, model, res_id, method, old_values, new_values, field_list)
-
             # if at least one modification has been found
             for model_id, resource_id in lines:
-                name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
+                objmodel = pool.get('ir.model').browse(cr, uid, model_id)
+                name = pool.get(objmodel.model).name_get(cr, uid, [resource_id])[0][1]
                 vals = {
                     'method': method,
                     'object_id': model_id,
@@ -469,8 +471,7 @@ class audittrail_objects_proxy(object_proxy):
                 # create the audittrail log in super admin mode, only if a change has been detected
                 if lines[(model_id, resource_id)]:
                     log_id = pool.get('audittrail.log').create(cr, SUPERUSER_ID, vals)
-                    model = pool.get('ir.model').browse(cr, uid, model_id)
-                    self.create_log_line(cr, SUPERUSER_ID, log_id, model, lines[(model_id, resource_id)])
+                    self.create_log_line(cr, SUPERUSER_ID, log_id, objmodel, lines[(model_id, resource_id)])
         return True
 
     def check_rules(self, cr, uid, model, method):
