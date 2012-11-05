@@ -1306,22 +1306,23 @@ class task(base_stage, osv.osv):
             self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
     def project_task_reevaluate(self, cr, uid, ids, context=None):
-        res={}
+        data={}
         cr.execute('SELECT max(id) FROM project_config_settings' )
-        task = self.pool.get('project.config.settings')
-        tasks = task.browse(cr, uid, map(lambda x: x[0], cr.fetchall()) )
-        if tasks[0].group_time_work_estimation_tasks:
-            res= {
-            'view_type': 'form',
-            "view_mode": 'form',
-            'res_model': 'project.task.reevaluate',
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context' : context
-         }
-        else:
-            self.do_reopen(cr, uid, ids, context=None)
-        return res
+        res = cr.fetchone() 
+        setting_id = res and res[0] or None
+        if setting_id and setting_id != None:
+            
+            config_id = self.pool.get('project.config.settings').browse(cr, uid, setting_id, context=context)
+            if config_id.group_time_work_estimation_tasks:
+                return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'project.task.reevaluate',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context' : context
+             }
+        return self.do_reopen(cr, uid, ids, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"
