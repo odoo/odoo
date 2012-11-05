@@ -86,14 +86,12 @@ The kernel of OpenERP, needed for all installation.
         'security/base_security.xml',
         'security/ir.model.access.csv',
         'security/ir.model.access-1.csv', # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
-        'res/res_widget_view.xml',
-        'res/res_widget_data.xml',
     ],
     'demo': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
         'res/res_partner_demo.yml',
-        'res/res_widget_demo.xml',
+        'res/res_partner_image_demo.xml',
     ],
     'test': [
         'test/base_test.xml',

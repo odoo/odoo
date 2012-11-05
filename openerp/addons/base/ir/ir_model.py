@@ -106,7 +106,7 @@ class ir_model(osv.osv):
     }
 
     _defaults = {
-        'model': lambda *a: 'x_',
+        'model': 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
 
