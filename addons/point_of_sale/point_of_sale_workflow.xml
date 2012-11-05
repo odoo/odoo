@@ -152,7 +152,7 @@
 
     <record model="workflow.transition" id="trans_open_to_close">
       <field name="act_from" ref="act_open" />
-      <field name="act_to" ref="act_close" />
+      <field name="act_to" ref="act_closing_control" />
       <field name="signal">close</field>
       <field name="condition">cash_control == False</field>
     </record>
@@ -162,6 +162,14 @@
       <field name="act_to" ref="act_close" />
       <field name="signal">close</field>
     </record>
+
+    <record model="workflow.transition" id="trans_closing_control_to_close_no_control">
+      <field name="act_from" ref="act_closing_control" />
+      <field name="act_to" ref="act_close" />
+      <field name="condition">cash_control == False</field>
+    </record>
+
+
 
   </data>
 </openerp>

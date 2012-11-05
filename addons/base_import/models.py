@@ -316,17 +316,9 @@ class ir_import(orm.TransientModel):
             }]
 
         _logger.info('importing %d rows...', len(data))
-        try:
-            import_result = self.pool[record.res_model].load(
-                cr, uid, import_fields, data, context=context)
-            _logger.info('done')
-        except Exception, e:
-            _logger.info(e)
-            return [{
-                'type': 'error',
-                'message': unicode('No data have been imported.'),
-                'record': False,
-            }]
+        import_result = self.pool[record.res_model].load(
+            cr, uid, import_fields, data, context=context)
+        _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.
