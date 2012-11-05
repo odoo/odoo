@@ -604,13 +604,23 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         return iterate();
                     });
                 }
-                var save_obj = self.save_list.pop();
-                if (save_obj) {
-                    return self._process_save(save_obj).pipe(function() {
-                        return iterate.apply(null, arguments);
-                    });
-                }
-                return $.when.apply($, arguments);
+                var defs = [];
+                _.each(self.fields, function(field) {
+                    defs.push(field.commit_value());
+                });
+                var args = _.toArray(arguments);
+                return $.when.apply($, defs).pipe(function() {
+                    if (self.on_change_list.length !== 0) {
+                        return iterate();
+                    }
+                    var save_obj = self.save_list.pop();
+                    if (save_obj) {
+                        return self._process_save(save_obj).pipe(function() {
+                            return iterate.apply(null, arguments);
+                        });
+                    }
+                    return $.when.apply($, args);
+                });
             };
             return iterate();
         });
