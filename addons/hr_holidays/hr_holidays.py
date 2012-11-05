@@ -27,6 +27,7 @@ from operator import itemgetter
 
 import math
 import netsvc
+import tools
 from osv import fields, osv
 from tools.translate import _
 
@@ -217,11 +218,10 @@ class hr_holidays(osv.osv):
             raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
 
         result = {'value': {}}
-        DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
-            date_to_with_delta = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
+            date_to_with_delta = datetime.datetime.strptime(date_from, tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(hours=8)
             result['value']['date_to'] = str(date_to_with_delta)
 
         # Compute and update the number of days
