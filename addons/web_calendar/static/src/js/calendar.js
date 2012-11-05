@@ -185,6 +185,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             }
         });
         scheduler.attachEvent('onEmptyClick', function(start_date, mouse_event) {
+            scheduler._loading = false; // Dirty workaround for a dhtmleditor bug I couln't track
             if (!self.$el.find('.dhx_cal_editor').length) {
                 var end_date = new Date(start_date);
                 end_date.addHours(1);
@@ -451,7 +452,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             scheduler.addEvent({
                 start_date: event_obj.start_date,
                 end_date: event_obj.end_date,
-                text: event_obj.text + ' fix',
+                text: event_obj.text,
                 _force_slow_create: true,
             });
         } else {
