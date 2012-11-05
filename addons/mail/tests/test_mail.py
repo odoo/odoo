@@ -334,8 +334,8 @@ class test_mail(TestMailMockups):
         # ----------------------------------------
 
         subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
-        self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
-        self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
+        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 

@@ -186,7 +186,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('account.journal', undefined, [['id','in', journals]]);
                 }).pipe(function(journals){
                     self.set('journals',journals);
-                    
+
                     // associate the bank statements with their journals. 
                     var bank_statements = self.get('bank_statements');
                     for(var i = 0, ilen = bank_statements.length; i < ilen; i++){
