@@ -47,7 +47,7 @@ class purchase_config_settings(osv.osv_memory):
             implied_group='purchase.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a purchase order."),
         'module_warning': fields.boolean("Alerts by products or supplier",
-            help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier.
+            help="""Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.
             Example: Product: this product is deprecated, do not purchase more than 5.
                     Supplier: don't forget to ask for an express delivery."""),
 
