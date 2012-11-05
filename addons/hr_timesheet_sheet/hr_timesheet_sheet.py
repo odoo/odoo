@@ -70,7 +70,7 @@ class hr_timesheet_sheet(osv.osv):
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal, like \'Timesheet\'.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
@@ -79,11 +79,11 @@ class hr_timesheet_sheet(osv.osv):
             if not new_user_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
-                raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
+                raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -187,7 +187,7 @@ class hr_timesheet_sheet(osv.osv):
 
 
     _constraints = [
-        (_sheet_date, 'You cannot have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
+        (_sheet_date, 'You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
     ]
 
     def action_set_to_draft(self, cr, uid, ids, *args):
@@ -223,16 +223,26 @@ class hr_timesheet_sheet(osv.osv):
 
 hr_timesheet_sheet()
 
-
-class hr_timesheet_line(osv.osv):
-    _inherit = "hr.analytic.timesheet"
+class account_analytic_line(osv.osv):
+    _inherit = "account.analytic.line"
 
     def _get_default_date(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'date' in context:
-            return context['date']
-        return time.strftime('%Y-%m-%d')
+        #get the default date (should be: today)
+        res = super(account_analytic_line, self)._get_default_date(cr, uid, context=context)
+        #if we got the dates from and to from the timesheet and if the default date is in between, we use the default
+        #but if the default isn't included in those dates, we use the date start of the timesheet as default
+        if context.get('timesheet_date_from') and context.get('timesheet_date_to'):
+            if context['timesheet_date_from'] <= res <= context['timesheet_date_to']:
+                return res
+            return context.get('timesheet_date_from')
+        #if we don't get the dates from the timesheet, we return the default value from super()
+        return res
+
+
+class hr_timesheet_line(osv.osv):
+    _inherit = "hr.analytic.timesheet"
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -277,9 +287,6 @@ class hr_timesheet_line(osv.osv):
                     'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
                   },
             ),
-    }
-    _defaults = {
-        'date': _get_default_date,
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
