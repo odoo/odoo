@@ -18,11 +18,10 @@ instance.web.ViewManagerAction.include({
             return this._super.apply(this,arguments); 
         }
     }
-})
+});
 instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
-        this.element_id = element_id;
         this.parent = parent;
         this.dataset = new instance.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
@@ -74,12 +73,12 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         $.when(this.action_manager.do_action(action)).then(function() {
             var viewmanager = self.action_manager.inner_widget;
             var controller = viewmanager.views[viewmanager.active_view].controller;
-            controller.on('view_loaded', function(){
+            controller.on('view_loaded', self, function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
                         self.main_view_id = ids[0];
                     }
-                })
+                });
             });
         });
     },
