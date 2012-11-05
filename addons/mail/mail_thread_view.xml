@@ -45,10 +45,8 @@
             <field name="name">Done</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{
-                'domain': [
-                    ('notification_ids.partner_id.user_ids', 'in', [uid]),
-                    ('to_read', '=', False)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid},
+                'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'search_default_message_read': True},
                 'view_mailbox': True,
                 'read_action': 'unread', }&quot;"/>
         </record>
