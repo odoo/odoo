@@ -24,7 +24,7 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 12,
+    'sequence': 21,
     'website': 'http://www.openerp.com',
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
