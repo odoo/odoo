@@ -108,6 +108,14 @@
                 </tree>
             </field>
         </record>
+        <record id="company_normal_action_tree" model="ir.actions.act_window">
+            <field name="name">Companies</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.company</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('id','=',active_id)]</field>
+        </record>
         <record id="action_res_company_form" model="ir.actions.act_window">
             <field name="name">Companies</field>
             <field name="type">ir.actions.act_window</field>
@@ -124,6 +132,13 @@
             <field name="view_type">tree</field>
         </record>
         <menuitem action="action_res_company_tree" groups="base.group_multi_company" id="menu_action_res_company_tree" parent="base.menu_res_company_global" sequence="16"/>
+
+        <record id="ir_open_company" model="ir.values">
+            <field eval="'tree_but_open'" name="key2"/>
+            <field eval="'res.company'" name="model"/>
+            <field name="name">Companies</field>
+            <field eval="'ir.actions.act_window,%d'%company_normal_action_tree" name="value"/>
+        </record>
 
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">multi_company.default.tree</field>
