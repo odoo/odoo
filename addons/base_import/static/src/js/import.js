@@ -123,10 +123,10 @@ openerp.base_import = function (instance) {
                 this.exit();
             }
         },
-        init: function (parent, params) {
+        init: function (parent, action) {
             var self = this;
             this._super.apply(this, arguments);
-            this.res_model = params.model;
+            this.res_model = action.params.model;
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
