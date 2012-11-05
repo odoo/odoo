@@ -44,7 +44,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
-                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+Example: 10% for retailers, promotion of 5 USD on this product, etc."""),
         'group_uom':fields.boolean("Allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
