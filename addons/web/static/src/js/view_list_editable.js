@@ -252,9 +252,10 @@ openerp.web.list_editable = function (instance) {
             var position = $cell.position();
 
             field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
-            field.$el.css({
-                top: position.top,
-                left: position.left,
+            field.$el.position({
+                my: 'left top',
+                at: 'left top',
+                of: $cell
             });
         },
         /**
@@ -410,15 +411,15 @@ openerp.web.list_editable = function (instance) {
             });
 
             this.editor.$el.on('keyup keydown', function (e) {
-                if (!self.editor.is_editing()) { return; }
+                if (!self.editor.is_editing()) { return true; }
                 var key = _($.ui.keyCode).chain()
                     .map(function (v, k) { return {name: k, code: v}; })
                     .find(function (o) { return o.code === e.which; })
                     .value();
-                if (!key) { return; }
+                if (!key) { return true; }
                 var method = e.type + '_' + key.name;
-                if (!(method in self)) { return; }
-                self[method](e);
+                if (!(method in self)) { return true; }
+                return self[method](e);
             });
         },
         /**
@@ -446,7 +447,10 @@ openerp.web.list_editable = function (instance) {
         keyup_ENTER: function () {
             return this._next();
         },
-        keyup_ESCAPE: function () {
+        keydown_ESCAPE: function (e) {
+            return false;
+        },
+        keyup_ESCAPE: function (e) {
             return this.cancel_edition();
         },
         /**

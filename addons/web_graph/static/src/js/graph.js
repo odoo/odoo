@@ -257,16 +257,16 @@ instance.web_graph.GraphView = instance.web.View.extend({
             var tree = $($.parseXML(view_get['arch']));
             
             var pos = 0;
-            var xaxis = group_by || [];
+            var xaxis = _.clone(group_by || []);
             var yaxis = [];
             tree.find("field").each(function() {
                 var field = $(this);
                 if (! field.attr("name"))
                     return;
-                if ((group_by.length == 0) && ((! pos) || field.attr('group'))) {
+                if ((group_by.length == 0) && ((! pos) || instance.web.py_eval(field.attr('group') || "false"))) {
                     xaxis.push(field.attr('name'));
                 }
-                if (pos && ! field.attr('group')) {
+                if (pos && ! instance.web.py_eval(field.attr('group') || "false")) {
                     yaxis.push(field.attr('name'));
                 }
                 pos += 1;
@@ -340,8 +340,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [new instance.web.CompoundDomain(domain, [[xaxis[0], '=' ,_convert_key(xaxis[0], key)]]),
-                                yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
+                        defs.push(obj.call("read_group", [domain, yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
                             return [x, key, res];
                         }));
                     });
