@@ -53,8 +53,7 @@ class Test_Lunch(common.TransactionCase):
             })
 
     def test_00_lunch_order(self):
-        """Change the state of an order line from 'new' to 'ordered'
-        Check that there are no cashmove linked to that order line"""
+        """Change the state of an order line from 'new' to 'ordered'. Check that there are no cashmove linked to that order line"""
         cr, uid = self.cr, self.uid
         self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
         #we check that our order_line is a 'new' one and that there are no cashmove linked to that order_line:
@@ -68,8 +67,7 @@ class Test_Lunch(common.TransactionCase):
         self.assertEqual(self.order_one.cashmove, [])
 
     def test_01_lunch_order(self):
-        """Change the state of an order line from 'new' to 'ordered' then to 'confirmed'
-        Check that there is a cashmove linked to the order line"""
+        """Change the state of an order line from 'new' to 'ordered' then to 'confirmed'. Check that there is a cashmove linked to the order line"""
         cr, uid = self.cr, self.uid
         self.test_00_lunch_order()
         #We receive the order so we confirm the order line so it's state will be 'confirmed'
@@ -81,3 +79,14 @@ class Test_Lunch(common.TransactionCase):
         self.assertTrue(self.order_one.cashmove!=[])
         self.assertTrue(self.order_one.cashmove[0].amount==-self.order_one.price)
 
+    def test_02_lunch_order(self):
+        """Change the state of an order line from 'confirmed' to 'cancelled' and check that the cashmove linked to that order line will be deleted"""
+        cr, uid = self.cr, self.uid
+        self.test_01_lunch_order()
+        #We have a confirmed order with its associate cashmove
+        #We execute the cancel function
+        self.order_one.cancel()
+        self.order_one = self.lunch_order_line.browse(cr,uid,self.new_id_order_line,context=None)
+        #We check that the state is cancelled and that the cashmove has been deleted
+        self.assertEqual(self.order_one.state,'cancelled')
+        self.assertTrue(self.order_one.cashmove==[])
