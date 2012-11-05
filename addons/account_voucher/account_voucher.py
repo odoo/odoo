@@ -384,7 +384,7 @@ class account_voucher(osv.osv):
                 for line in voucher.line_ids:
                     for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes', []):
                         total_tax += tax_line.get('amount', 0.0)
-                    total += total_tax
+                total += total_tax
             else:
                 for line in voucher.line_ids:
                     line_total = 0.0
