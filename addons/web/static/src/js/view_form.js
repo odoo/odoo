@@ -616,10 +616,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     var save_obj = self.save_list.pop();
                     if (save_obj) {
                         return self._process_save(save_obj).pipe(function() {
-                            return iterate.apply(null, arguments);
+                            save_obj.ret = _.toArray(arguments);
+                            return iterate();
                         });
                     }
-                    return $.when.apply($, args);
+                    return $.when();
                 });
             };
             return iterate();
@@ -802,8 +803,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     save: function(prepend_on_create) {
         var self = this;
-        this.save_list.push({prepend_on_create: prepend_on_create});
-        return this._process_operations();
+        var save_obj = {prepend_on_create: prepend_on_create, ret: null};
+        this.save_list.push(save_obj);
+        return this._process_operations().pipe(function() {
+            return $.when.apply($, save_obj.ret);
+        });
     },
     _process_save: function(save_obj) {
         var self = this;
@@ -3284,10 +3288,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.reload_current_view();
     },
     trigger_on_change: function() {
-        var tmp = this.doing_on_change;
-        this.doing_on_change = true;
         this.trigger('changed_value');
-        this.doing_on_change = tmp;
     },
     load_views: function() {
         var self = this;
@@ -3482,7 +3483,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        this.save_any_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -3499,33 +3499,24 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
+    commit_value: function() {
+        return this.save_any_view();
+    },
     save_any_view: function() {
-        if (this.doing_on_change)
-            return false;
-        return this.session.synchronized_mode(_.bind(function() {
-            if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-                this.viewmanager.views[this.viewmanager.active_view] &&
-                this.viewmanager.views[this.viewmanager.active_view].controller) {
-                var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-                if (this.viewmanager.active_view === "form") {
-                    if (!view.is_initialized.isResolved()) {
-                        return false;
-                    }
-                    var res = $.when(view.save());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in form view.");
-                    }
-                    return res;
-                } else if (this.viewmanager.active_view === "list") {
-                    var res = $.when(view.ensure_saved());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in list view.");
-                    }
-                    return res;
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            if (this.viewmanager.active_view === "form") {
+                if (!view.is_initialized.isResolved()) {
+                    return $.when(false);
                 }
+                return $.when(view.save());
+            } else if (this.viewmanager.active_view === "list") {
+                return $.when(view.ensure_saved());
             }
-            return false;
-        }, this));
+        }
+        return $.when(false);
     },
     is_syntax_valid: function() {
         if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
