@@ -471,7 +471,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     default_get: function(fields, options) {
         options = options || {};
         return this._model.call('default_get',
-            [fields], {context: this._model.context(options.context)});
+            [fields], {context: this.get_context(options.context)});
     },
     /**
      * Creates a new record in db
@@ -480,7 +480,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     create: function(data) {
-        return this._model.call('create', [data], {context: this._model.context()});
+        return this._model.call('create', [data], {context: this.get_context()});
     },
     /**
      * Saves the provided data in an existing db record
@@ -493,7 +493,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      */
     write: function (id, data, options) {
         options = options || {};
-        return this._model.call('write', [[id], data], {context: this._model.context(options.context)}).then(this.trigger('dataset_changed', id, data, options));
+        return this._model.call('write', [[id], data], {context: this.get_context(options.context)}).then(this.trigger('dataset_changed', id, data, options));
     },
     /**
      * Deletes an existing record from the database
@@ -501,7 +501,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
-        return this._model.call('unlink', [ids], {context: this._model.context()}).then(this.trigger('dataset_changed', ids));
+        return this._model.call('unlink', [ids], {context: this.get_context()}).then(this.trigger('dataset_changed', ids));
     },
     /**
      * Calls an arbitrary RPC method
@@ -532,7 +532,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     name_get: function(ids) {
-        return this._model.call('name_get', [ids], {context: this._model.context()});
+        return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
      * 
@@ -556,7 +556,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param name
      */
     name_create: function(name) {
-        return this._model.call('name_create', [name], {context: this._model.context()});
+        return this._model.call('name_create', [name], {context: this.get_context()});
     },
     exec_workflow: function (id, signal) {
         return this._model.exec_workflow(id, signal);
@@ -606,7 +606,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         return instance.session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: this._model.context(options.context),
+            context: this.get_context(options.context),
         }).pipe(function (results) {
             return results;
         });
