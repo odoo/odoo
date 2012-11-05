@@ -1281,11 +1281,9 @@ instance.web.View = instance.web.Widget.extend({
     },
     /**
      * Switches to a specific view type
-     *
-     * @param {String} view view type to switch to
      */
-    do_switch_view: function(view) { 
-        this.trigger('switch_mode',view);
+    do_switch_view: function() { 
+        this.trigger.apply(this, ['switch_mode'].concat(_.toArray(arguments)));
     },
     /**
      * Cancels the switch to the current view, switches to the previous one
