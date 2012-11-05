@@ -158,7 +158,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id ||  [this.session.uid],
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
-            this.nb_messages = datasets.nb_messages;
+            this.nb_messages = datasets.nb_messages || false;
             this._date = datasets.date;
 
             this.format_data();
@@ -205,6 +205,28 @@ openerp.mail = function (session) {
             }
         },
 
+
+        /* get all child message id linked.
+         * @return array of id
+        */
+        get_child_ids: function () {
+            return _.map(this.get_childs(), function (val) { return val.id; });
+        },
+
+        /* get all child message linked.
+         * @return array of message object
+        */
+        get_childs: function (nb_thread_level) {
+            var res=[];
+            if (arguments[1]) res.push(this);
+            if ((isNaN(nb_thread_level) || nb_thread_level>0) && this.thread) {
+                _(this.thread.messages).each(function (val, key) {
+                    res = res.concat( val.get_childs((isNaN(nb_thread_level) ? undefined : nb_thread_level-1), true) );
+                });
+            }
+            return res;
+        },
+
         /**
          * call on_message_delete on his parent thread
         */
@@ -214,6 +236,7 @@ openerp.mail = function (session) {
             this.parent_thread.on_message_detroy(this);
 
         }
+
     });
 
     /**
@@ -741,10 +764,10 @@ openerp.mail = function (session) {
         * @param {callback} apply function
         */
         check_for_rerender: function () {
-            var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "=", this.id]]);
+
+            var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "in", [this.id].concat(this.get_child_ids()) ]]);
             return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
                 .then( _.bind(function (record) {
-
                     if (!record || !record.length) {
 
                         this.animated_destroy(150);
@@ -774,7 +797,20 @@ openerp.mail = function (session) {
         */
         on_message_read_unread: function (read_value) {
             var self = this;
-            var message_ids = [this.id].concat(this.get_child_ids());
+            var messages = [this].concat(this.get_childs());
+
+            // inside the inbox, when the user mark a message as read/done, don't apply this value
+            // for the stared/favorite message
+            if (this.options.view_inbox && read_value) {
+                var messages = _.filter(messages, function (val) { return !val.is_favorite; });
+                if (!messages.length) {
+                    this.check_for_rerender();
+                    return false;
+                }
+            }
+
+            var message_ids = _.map(messages, function (val) { return val.id; });
+
             this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
                     self.to_read = !read_value;
@@ -820,24 +856,6 @@ openerp.mail = function (session) {
             return false;
         },
 
-        /* get all child message id linked.
-         * @return array of id
-        */
-        get_child_ids: function () {
-            return _.map(this.get_childs(), function (val) { return val.id; });
-        },
-
-        /* get all child message linked.
-         * @return array of message object
-        */
-        get_childs: function () {
-            if (this.thread) {
-                return _.map(this.thread.get_childs(), function (val) {return val.parent_message;});
-            } else {
-                return [];
-            }
-        },
-
         /**
          * add or remove a vote for a message and display the result
         */
@@ -869,6 +887,7 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
+
             this.ds_message.call('favorite_toggle', [[self.id]])
                 .then(function (star) {
                     self.is_favorite=star;
@@ -876,7 +895,11 @@ openerp.mail = function (session) {
                         button.addClass('oe_starred');
                     } else {
                         button.removeClass('oe_starred');
-                        // check if the message must be display
+                    }
+
+                    if (self.options.view_inbox && self.is_favorite) {
+                        self.on_message_read_unread(true);
+                    } else {
                         self.check_for_rerender();
                     }
                 });
@@ -1377,6 +1400,7 @@ openerp.mail = function (session) {
                 'show_record_name' : false,
                 'show_compose_message' : false,
                 'show_compact_message' : false,
+                'view_inbox': false,
                 'message_ids': undefined,
                 'no_message': false
             }, options);
@@ -1578,6 +1602,7 @@ openerp.mail = function (session) {
                 'show_read_unread_button': true,
                 'show_compose_message': true,
                 'show_compact_message': this.context.view_mailbox ? false : 1,
+                'view_inbox': this.context.view_inbox ? false : true,
                 })
             );
             return this.root.replace(this.$('.oe_mail-placeholder'));
