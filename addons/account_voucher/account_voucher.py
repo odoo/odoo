@@ -415,7 +415,6 @@ class account_voucher(osv.osv):
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
         total_tax = 0.0
-        net_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
