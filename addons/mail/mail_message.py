@@ -317,13 +317,13 @@ class mail_message(osv.Model):
                 to load
             :return bool: True
         """
-        def _get_expandable(domain, message_nb, parent_id, id):
+        def _get_expandable(domain, message_nb, parent_id, max_limit):
             return {
                 'domain': domain,
                 'nb_messages': message_nb,
                 'type': 'expandable',
                 'parent_id': parent_id,
-                'id':  id,
+                'max_limit':  max_limit,
             }
 
         if not messages:
@@ -339,10 +339,10 @@ class mail_message(osv.Model):
         if ids:
             # inside a thread: prepend
             if parent_id:
-                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, -1))
+                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, True))
             # new threads: append
             else:
-                messages.append(_get_expandable(exp_domain, -1, parent_id, -1))
+                messages.append(_get_expandable(exp_domain, -1, parent_id, True))
 
         # 2. get the expandables for new messages inside threads if display is not flat
         if thread_level == 0:
@@ -371,7 +371,7 @@ class mail_message(osv.Model):
                         id_max = child_id
                 elif nb > 0:
                     exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
-                    messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
+                    messages.append(_get_expandable(exp_domain, nb, message_id, False))
                     id_min, id_max, nb = max(child_ids), 0, 0
                 else:
                     id_min, id_max, nb = max(child_ids), 0, 0
@@ -379,7 +379,7 @@ class mail_message(osv.Model):
                 exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
                 idx = [msg.get('id') for msg in messages].index(message_id) + 1
                 # messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
-                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, id_min))
+                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
 
         return True
 

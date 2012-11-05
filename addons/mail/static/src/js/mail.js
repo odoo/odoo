@@ -158,7 +158,6 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id ||  [this.session.uid],
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
-            this.nb_messages = datasets.nb_messages || false;
             this._date = datasets.date;
 
             this.format_data();
@@ -218,7 +217,7 @@ openerp.mail = function (session) {
         */
         get_childs: function (nb_thread_level) {
             var res=[];
-            if (arguments[1]) res.push(this);
+            if (arguments[1] && this.id) res.push(this);
             if ((isNaN(nb_thread_level) || nb_thread_level>0) && this.thread) {
                 _(this.thread.messages).each(function (val, key) {
                     res = res.concat( val.get_childs((isNaN(nb_thread_level) ? undefined : nb_thread_level-1), true) );
@@ -539,7 +538,8 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             this._super(parent, datasets, options);
             this.type = 'expandable';
-            this.max_limit = this.id < 0 || false;
+            this.max_limit = datasets.max_limit;
+            this.nb_messages = datasets.nb_messages;
             this.flag_used = false;
         },
         
@@ -802,13 +802,12 @@ openerp.mail = function (session) {
             // inside the inbox, when the user mark a message as read/done, don't apply this value
             // for the stared/favorite message
             if (this.options.view_inbox && read_value) {
-                var messages = _.filter(messages, function (val) { return !val.is_favorite; });
+                var messages = _.filter(messages, function (val) { return !val.is_favorite && val.id; });
                 if (!messages.length) {
                     this.check_for_rerender();
                     return false;
                 }
             }
-
             var message_ids = _.map(messages, function (val) { return val.id; });
 
             this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
@@ -1602,7 +1601,7 @@ openerp.mail = function (session) {
                 'show_read_unread_button': true,
                 'show_compose_message': true,
                 'show_compact_message': this.context.view_mailbox ? false : 1,
-                'view_inbox': this.context.view_inbox ? false : true,
+                'view_inbox': !!this.context.view_inbox,
                 })
             );
             return this.root.replace(this.$('.oe_mail-placeholder'));
