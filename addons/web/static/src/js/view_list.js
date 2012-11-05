@@ -2010,6 +2010,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
+    'field.many2onebutton': 'instance.web.list.Many2OneButton',
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2196,6 +2197,16 @@ instance.web.list.Handle = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         return '<div class="oe_list_handle">';
     }
+});
+instance.web.list.Many2OneButton = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (row_data.voucher_id.value) {
+            this.icon = '/web/static/src/img/icons/gtk-yes.png';
+        } else {
+            this.icon = '/web/static/src/img/icons/gtk-no.png';
+        }
+        return QWeb.render('Many2OneButton.cell', {'widget': this});
+    },
 });
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
