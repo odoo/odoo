@@ -188,7 +188,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
-            select=True, help="Optional linked partner, usually after conversion of the lead"),
+            select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Subject', size=64, required=True, select=1),
@@ -236,7 +236,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
-        'date_deadline': fields.date('Expected Closing'),
+        'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
         'title_action': fields.char('Next Action', size=64),
         'color': fields.integer('Color Index'),
