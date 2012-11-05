@@ -207,30 +207,49 @@ class hr_holidays(osv.osv):
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
-        result = {}
+        """
+        If there are no date set for date_to, automatically set one 8 hours later than
+        the date_from.
+        Also update the number_of_days.
+        """
+        # date_to has to be greater than date_from
+        if (date_from and date_to) and (date_from > date_to):
+            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+
+        result = {'value': {}}
         DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
         # No date_to set so far: automatically compute one 8 hours later
         if date_from and not date_to:
-            date_to = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
-            result['value'] = {'date_to': str(date_to)}
-        # date_from is greater than date_to: throw an exception
-        elif (date_from and date_to) and (date_from > date_to):
-            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+            date_to_with_delta = datetime.datetime.strptime(date_from, DATETIME_FORMAT) + datetime.timedelta(hours=8)
+            result['value']['date_to'] = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
+            diff_day = self._get_number_of_days(date_from, date_to)
+            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+        else:
+            result['value']['number_of_days_temp'] = 0
 
         return result
 
     def onchange_date_to(self, cr, uid, ids, date_to, date_from):
-        result = {}
-        if date_to and date_from:
+        """
+        Update the number_of_days.
+        """
+
+        # date_to has to be greater than date_from
+        if (date_from and date_to) and (date_from > date_to):
+            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+
+        result = {'value': {}}
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
             diff_day = self._get_number_of_days(date_from, date_to)
-            result['value'] = {
-                'number_of_days_temp': round(math.floor(diff_day))+1
-            }
+            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
         else:
-            result['value'] = {
-                'number_of_days_temp': 0,
-            }
+            result['value']['number_of_days_temp'] = 0
 
         return result
 
