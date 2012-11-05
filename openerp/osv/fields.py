@@ -1158,6 +1158,8 @@ class related(function):
         return map(lambda x: (field, x[1], x[2]), domain)
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for record in obj.browse(cr, uid, ids, context=context):
             # traverse all fields except the last one
             for field in self.arg[:-1]:
