@@ -56,9 +56,6 @@
             <field name="globalisation_id"/>
             <field name="state" invisible="1"/>
           </xpath>
-          <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="replace">
-            <field name="date" string="'Entry Date'" attrs="{'readonly':[('state','=','draft')]}" />
-          </xpath>
         </data>
       </field>
     </record>
@@ -151,7 +148,7 @@
       <field name="name">Bank Statement Lines</field>
       <field name="res_model">account.bank.statement.line</field>
       <field name="view_type">form</field>
-      <field name="view_mode">tree,graph,form</field>
+      <field name="view_mode">tree,form</field>
       <field name="context">{'block_statement_line_delete' : 1}</field>
       <field name="search_view_id" ref="view_bank_statement_line_filter"/>
       <field name="view_id" ref="view_bank_statement_line_list"/>

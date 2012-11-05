@@ -78,7 +78,7 @@ class account_cash_statement(osv.osv):
         """
         res = {}
         for statement in self.browse(cr, uid, ids, context=context):
-            if statement.journal_id.type not in ('cash',):
+            if (statement.journal_id.type not in ('cash',)) or (not statement.journal_id.cash_control):
                 continue
             start = end = 0
             for line in statement.details_ids:
@@ -289,13 +289,13 @@ class account_cash_statement(osv.osv):
         super(account_cash_statement, self).button_confirm_bank(cr, uid, ids, context=context)
         absl_proxy = self.pool.get('account.bank.statement.line')
 
-        TABLES = (('Profit', 'profit_account_id'), ('Loss', 'loss_account_id'),)
+        TABLES = ((_('Profit'), 'profit_account_id'), (_('Loss'), 'loss_account_id'),)
 
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.difference == 0.0:
                 continue
 
-            for item_label, item_account in TALBES:
+            for item_label, item_account in TABLES:
                 if getattr(obj.journal_id, item_account):
                     raise osv.except_osv(_('Error!'),
                                          _('There is no %s Account on the journal %s.') % (item_label, obj.journal_id.name,))
