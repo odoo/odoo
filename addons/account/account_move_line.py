@@ -1383,6 +1383,14 @@ class account_move_line(osv.osv):
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
         return result
 
+    def list_periods(self, cr, uid, context=None):
+        ids = self.pool.get('account.period').search(cr,uid,[])
+        return self.pool.get('account.period').name_get(cr, uid, ids, context=context)
+
+    def list_journals(self, cr, uid, context=None):
+        ids = self.pool.get('account.journal').search(cr,uid,[])
+        return self.pool.get('account.journal').name_get(cr, uid, ids, context=context)
+
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1055,6 +1055,30 @@
             </field>
         </record>
 
+         <record id="view_move_line_quickadd_tree" model="ir.ui.view">
+            <field name="model">account.move.line</field>
+            <field eval="24" name="priority"/>
+            <field name="arch" type="xml">
+                <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="invoice"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                    <field name="state" invisible="1"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                </tree_account_move_line_quickadd>
+            </field>
+        </record>
+
          <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
@@ -1549,6 +1573,22 @@
                 </p>
             </field>
         </record>
+
+        <record id="action_account_manual_account_move_line_quickadd" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Quick Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_quickadd_tree"/>
+            <field name="view_mode">tree_account_move_line_quickadd</field>
+        </record>
+
+        <menuitem
+             name="Quick Journal Items"
+             action="action_account_manual_account_move_line_quickadd"
+             id="menu_manual_account_move_line_quickadd"
+             sequence="20"
+             parent="account.menu_finance_bank_and_cash"/>
+
         <menuitem
              name="Journal Items to Reconcile"
              action="action_account_manual_reconcile"

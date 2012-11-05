@@ -128,9 +128,11 @@ for a particular financial year and for preparation of vouchers there is a modul
     ],
     'js': [
         'static/src/js/account_move_reconciliation.js',
+        
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
+        "static/src/xml/account_move_line_quickadd.xml",
     ],
     'css':['static/src/css/account_move_reconciliation.css'
     ],
