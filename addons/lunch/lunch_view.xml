@@ -444,7 +444,7 @@
             <field name="arch" type="xml">
                 <tree string="alert tree">
                     <field name="message"/>
-                    <field name="day"/>
+                    <field name="alter_type"/>
                     <field name='active_from' widget='float_time'/>
                     <field name='active_to' widget='float_time'/>
                 </tree>
@@ -460,11 +460,11 @@
                     <sheet>
                         <group string="Schedule Date">
                             <group>
-                                <field name="day"/>
-                                <field name="specific" attrs="{'invisible': [('day','!=','specific')], 'required':[('day','=','specific')]}"/>
+                                <field name="alter_type"/>
+                                <field name="specific" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('day','!=','week')]}">
+                        <group attrs="{'invisible': [('alter_type','!=','week')]}">
                             <group>
                                 <field name="monday"/>
                                 <field name="tuesday"/>

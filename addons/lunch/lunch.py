@@ -1,4 +1,3 @@
-
 # -*- encoding: utf-8 -*-
 ##############################################################################
 #
@@ -24,7 +23,7 @@ from xml.sax.saxutils import escape
 import pytz
 import time
 from osv import osv, fields
-from datetime import datetime, timedelta
+from datetime import datetime
 from lxml import etree
 from tools.translate import _
 
@@ -79,12 +78,11 @@ class lunch_order(osv.Model):
         """ 
         get the alerts to display on the order form 
         """
-        orders = self.browse(cr, uid, ids, context=context)
-        result={}
-        alert_msg= self._default_alerts_get(cr, uid, arg, context=context)
-        for order in orders:
-            if order.state=='new':
-                result[order.id]=alert_msg
+        result = {}
+        alert_msg = self._default_alerts_get(cr, uid, arg, context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.state == 'new':
+                result[order.id] = alert_msg
         return result
 
     def check_day(self, alert):
@@ -103,13 +101,12 @@ class lunch_order(osv.Model):
         """ 
         This method check if the alert can be displayed today 
         """
-        if alert.day=='specific':
-            #the alert is only activated a specific day
-            return alert.specific==fields.datetime.now()[:10]
-        elif alert.day=='week':
+        if alert.alter_type == 'specific':
+            #the alert is only activated on a specific day
+            return alert.specific == fields.datetime.now()[:10]
+        elif alert.alter_type == 'week':
             #the alert is activated during some days of the week
             return self.check_day(alert)
-        return True
 
     # code to improve
     def _default_alerts_get(self, cr, uid, arg, context=None):
@@ -138,11 +135,11 @@ class lunch_order(osv.Model):
         return '\n'.join(alert_msg)
 
     def onchange_price(self, cr, uid, ids, order_line_ids, context=None):
-        """ 
+        """
         Onchange methode that refresh the total price of order
         """
-        res = {'value':{'total':0.0}}
-        order_line_ids= self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context=context)
+        res = {'value': {'total': 0.0}}
+        order_line_ids = self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context=context)
         if order_line_ids:
             tot = 0.0
             product_ref = self.pool.get("lunch.product")
@@ -151,7 +148,7 @@ class lunch_order(osv.Model):
                     tot += product_ref.browse(cr, uid, prod['product_id'], context=context).price
                 else:
                     tot += prod['price']
-            res = {'value':{'total':tot}}
+            res = {'value': {'total': tot}}
         return res
 
     def __getattr__(self, attr):
@@ -199,7 +196,7 @@ class lunch_order(osv.Model):
                 xml_no_pref_1.append(xml_no_pref_3)
                 xml_no_pref_1.append(xml_no_pref_4)
                 xml_no_pref_1.append(xml_no_pref_5)
-            #Else : the user already have preferences so we display them
+            #Else: the user already have preferences so we display them
             else:
                 preferences = line_ref.browse(cr, uid, pref_ids,context=context)
                 categories = {} #store the different categories of products in preference
@@ -286,10 +283,10 @@ class lunch_order(osv.Model):
         return res
 
     _columns = {
-        'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True, states={'new':[('readonly', False)]}),
-        'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
-        'order_line_ids' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}),
-        'total' : fields.function(_price_get, string="Total",store={
+        'user_id': fields.many2one('res.users', 'User Name', required=True, readonly=True, states={'new':[('readonly', False)]}),
+        'date': fields.date('Date', required=True, readonly=True, states={'new':[('readonly', False)]}),
+        'order_line_ids': fields.one2many('lunch.order.line', 'order_id', 'Products', ondelete="cascade", readonly=True, states={'new':[('readonly', False)]}),
+        'total': fields.function(_price_get, string="Total", store={
                  'lunch.order.line': (_compute_total, ['product_id','order_id'], 20),
             }),
         'state': fields.selection([('new', 'New'), \
@@ -310,7 +307,7 @@ class lunch_order(osv.Model):
 
 class lunch_order_line(osv.Model):
     """ 
-    lunch order line : one lunch order can have many order lines
+    lunch order line: one lunch order can have many order lines
     """
     _name = 'lunch.order.line'
     _description = 'lunch order line'
@@ -326,8 +323,8 @@ class lunch_order_line(osv.Model):
         The order_line is ordered to the supplier but isn't received yet
         """
         for order_line in self.browse(cr, uid, ids, context=context):
-            order_line.write({'state' : 'ordered'})
-        return self._update_order_lines(cr, uid, ids, context)
+            order_line.write({'state': 'ordered'}, context=context)
+        return self._update_order_lines(cr, uid, ids, context=context)
 
     def confirm(self, cr, uid, ids, context=None):
         """ 
@@ -337,15 +334,15 @@ class lunch_order_line(osv.Model):
         for order_line in self.browse(cr, uid, ids, context=context):
             if order_line.state!='confirmed':
                 values = {
-                    'user_id' : order_line.user_id.id,
-                    'amount' : -order_line.price,
+                    'user_id': order_line.user_id.id,
+                    'amount': -order_line.price,
                     'description': order_line.product_id.name,
-                    'order_id' : order_line.id,
-                    'state' : 'order',
+                    'order_id': order_line.id,
+                    'state': 'order',
                     'date': order_line.date,
                 }
                 cashmove_ref.create(cr, uid, values, context=context)
-                order_line.write({'state' : 'confirmed'})
+                order_line.write({'state': 'confirmed'}, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
 
     def _update_order_lines(self, cr, uid, ids, context=None):
@@ -374,27 +371,27 @@ class lunch_order_line(osv.Model):
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
         for order_line in self.browse(cr, uid, ids, context=context):
-            order_line.write({'state':'cancelled'})
+            order_line.write({'state':'cancelled'}, context=context)
             for cash in order_line.cashmove:
                 cashmove_ref.unlink(cr, uid, cash.id, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
 
     _columns = {
-        'name' : fields.related('product_id','name',readonly=True),
-        'order_id' : fields.many2one('lunch.order','Order',ondelete='cascade'),
-        'product_id' : fields.many2one('lunch.product','Product',required=True), 
-        'date' : fields.related('order_id','date',type='date', string="Date", readonly=True,store=True),
-        'supplier' : fields.related('product_id','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True,store=True),
-        'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
-        'note' : fields.text('Note',size=256,required=False),
-        'price' : fields.float("Price"),
+        'name': fields.related('product_id', 'name', readonly=True),
+        'order_id': fields.many2one('lunch.order', 'Order', ondelete='cascade'),
+        'product_id': fields.many2one('lunch.product', 'Product', required=True),
+        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store=True),
+        'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
+        'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
+        'note': fields.text('Note'),
+        'price': fields.float("Price"),
         'state': fields.selection([('new', 'New'), \
-                                    ('confirmed','Received'), \
-                                    ('ordered','Ordered'),  \
-                                    ('cancelled','Cancelled')], \
+                                    ('confirmed', 'Received'), \
+                                    ('ordered', 'Ordered'),  \
+                                    ('cancelled', 'Cancelled')], \
                                 'Status', readonly=True, select=True),
-        'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
-    
+        'cashmove': fields.one2many('lunch.cashmove', 'order_id', 'Cash Move', ondelete='cascade'),
+
     }
     _defaults = {
         'state': 'new',
@@ -408,11 +405,11 @@ class lunch_product(osv.Model):
     _name = 'lunch.product'
     _description = 'lunch product'
     _columns = {
-        'name' : fields.char('Product',required=True, size=64),
+        'name': fields.char('Product', required=True, size=64),
         'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
-        'description': fields.text('Description', size=256, required=False),
-        'price': fields.float('Price', digits=(16,2)),
-        'supplier' : fields.many2one('res.partner', 'Supplier'), 
+        'description': fields.text('Description', size=256),
+        'price': fields.float('Price', digits=(16,2)), #TODO: use decimal precision of 'Account', move it from product to decimal_precision
+        'supplier': fields.many2one('res.partner', 'Supplier'),
     }
 
 class lunch_product_category(osv.Model):
@@ -422,7 +419,7 @@ class lunch_product_category(osv.Model):
     _name = 'lunch.product.category'
     _description = 'lunch product category'
     _columns = {
-        'name' : fields.char('Category', required=True), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
+        'name': fields.char('Category', required=True), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
     }
 
 class lunch_cashmove(osv.Model):
@@ -432,17 +429,17 @@ class lunch_cashmove(osv.Model):
     _name = 'lunch.cashmove'
     _description = 'lunch cashmove'
     _columns = {
-        'user_id' : fields.many2one('res.users','User Name',required=True),
-        'date' : fields.date('Date', required=True),
-        'amount' : fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
-        'description' : fields.text('Description'), #the description can be an order or a payment
-        'order_id' : fields.many2one('lunch.order.line','Order',required=False,ondelete='cascade'),
-        'state' : fields.selection([('order','Order'),('payment','Payment')],'Is an order or a Payment'),
+        'user_id': fields.many2one('res.users', 'User Name', required=True),
+        'date': fields.date('Date', required=True),
+        'amount': fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
+        'description': fields.text('Description'), #the description can be an order or a payment
+        'order_id': fields.many2one('lunch.order.line', 'Order', ondelete='cascade'),
+        'state': fields.selection([('order','Order'), ('payment','Payment')], 'Is an order or a Payment'),
     }
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'date': fields.date.context_today,
-        'state': lambda self, cr, uid, context: 'payment',
+        'state': 'payment',
     }
 
 class lunch_alert(osv.Model):
@@ -450,27 +447,27 @@ class lunch_alert(osv.Model):
     lunch alert 
     """
     _name = 'lunch.alert'
-    _description = 'lunch alert'
+    _description = 'Lunch Alert'
     _columns = {
-        'message' : fields.text('Message',size=256, required=True),
-        'day' : fields.selection([('specific','Specific day'), \
-                                    ('week','Every Week'), \
-                                    ('days','Every Day')], \
-                                string='Recurrency', required=True,select=True),
-        'specific' : fields.date('Day'),
-        'monday' : fields.boolean('Monday'),
-        'tuesday' : fields.boolean('Tuesday'),
-        'wednesday' : fields.boolean('Wednesday'),
-        'thursday' : fields.boolean('Thursday'),
-        'friday' : fields.boolean('Friday'),
-        'saturday' : fields.boolean('Saturday'),
-        'sunday' :  fields.boolean('Sunday'),
-        'active_from': fields.float('Between',required=True),
-        'active_to': fields.float('And',required=True),
+        'message': fields.text('Message', size=256, required=True),
+        'alter_type': fields.selection([('specific', 'Specific Day'), \
+                                    ('week', 'Every Week'), \
+                                    ('days', 'Every Day')], \
+                                string='Recurrency', required=True, select=True),
+        'specific': fields.date('Day'),
+        'monday': fields.boolean('Monday'),
+        'tuesday': fields.boolean('Tuesday'),
+        'wednesday': fields.boolean('Wednesday'),
+        'thursday': fields.boolean('Thursday'),
+        'friday': fields.boolean('Friday'),
+        'saturday': fields.boolean('Saturday'),
+        'sunday':  fields.boolean('Sunday'),
+        'active_from': fields.float('Between', required=True),
+        'active_to': fields.float('And', required=True),
     }
     _defaults = {
-        'day': lambda self, cr, uid, context: 'specific',
-        'specific': lambda self, cr, uid, context: time.strftime('%Y-%m-%d'),
+        'alter_type': 'specific',
+        'specific': fields.date.context_today,
         'active_from': 7,
         'active_to': 23,
     }
