@@ -46,7 +46,7 @@
                     <field name="date_from"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
+                    <filter icon="terp-camera_test" domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                     <separator/>
                     <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
