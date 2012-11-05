@@ -509,8 +509,8 @@
                         <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
-                                    <field name="profit_account_id"/>
-                                    <field name="loss_account_id"/>
+                                    <field name="profit_account_id" domain="[('type','!=','view')]"/>
+                                    <field name="loss_account_id" domain="[('type','!=','view')]"/>
                                     <field name="internal_account_id"/>
                                 </group>
                                 <group string="Miscellaneous">
