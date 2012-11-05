@@ -788,6 +788,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 instance.web.search.fields = new instance.web.Registry({
     'char': 'instance.web.search.CharField',
     'text': 'instance.web.search.CharField',
+    'html': 'instance.web.search.CharField',
     'boolean': 'instance.web.search.BooleanField',
     'integer': 'instance.web.search.IntegerField',
     'id': 'instance.web.search.IntegerField',
