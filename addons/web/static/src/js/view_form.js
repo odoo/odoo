@@ -4380,14 +4380,14 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.create_function = function(data, sup) {
             var fct = self.options.create_function || sup;
             return fct.call(this, data).then(function(r) {
-                self.trigger('create_completed');
+                self.trigger('create_completed', r);
                 self.created_elements.push(r);
             });
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
-            return fct.call(this, id, data, options).then(function() {
-                self.trigger('write_completed');
+            return fct.call(this, id, data, options).then(function(r) {
+                self.trigger('write_completed', r);
             });
         };
         this.dataset.parent_view = this.options.parent_view;
