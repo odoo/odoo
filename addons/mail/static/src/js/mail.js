@@ -1386,7 +1386,8 @@ openerp.mail = function (session) {
          *      When you use this option, the domain is not used for the fetch root.
          *     @param {String} [no_message] Message to display when there are no message
          */
-        init: function (parent, options) {
+        init: function (parent, action) {
+            var options = action.params || {};
             this._super(parent);
             this.domain = options.domain || [];
             this.context = options.context || {};
@@ -1461,6 +1462,11 @@ openerp.mail = function (session) {
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 
+        init: function (parent, action) {
+            this._super(parent);
+            this.action = action;
+        },
+
         start: function () {
             this._super.apply(this, arguments);
             // NB: check the actual_mode property on view to know if the view is in create mode anymore
@@ -1496,9 +1502,8 @@ openerp.mail = function (session) {
                 'show_compose_message': this.view.is_action_enabled('edit'),
                 'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
                 'show_compact_message': 1,
-                'no_message': this.node.attrs.help
-                }
-            );
+                'no_message': this.action.help,
+            });
 
             return this.root.replace(this.$('.oe_mail-placeholder'));
         },
@@ -1526,8 +1531,11 @@ openerp.mail = function (session) {
          * @param {Object} [options.context] context, is an object. It should
          *      contain default_model, default_res_id, to give it to the threads.
          */
-        init: function (parent, options) {
+        init: function (parent, action) {
             this._super(parent);
+
+            this.action = action;
+            var options = action.params || {};
             this.options = options || {};
             this.domain = options.domain || [];
             this.context = options.context || {};
@@ -1602,6 +1610,7 @@ openerp.mail = function (session) {
                 'show_compose_message': true,
                 'show_compact_message': this.context.view_mailbox ? false : 1,
                 'view_inbox': !!this.context.view_inbox,
+                'no_message': this.action.help
                 })
             );
             return this.root.replace(this.$('.oe_mail-placeholder'));
