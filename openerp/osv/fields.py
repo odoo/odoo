@@ -1186,13 +1186,12 @@ class related(function):
             res[record.id] = value
 
         if self._type == 'many2one':
-            # res[id] is a browse_record or False; convert it to (id, name) or False
-            res = dict((id, value and value.id) for id, value in res.iteritems())
-            value_ids = filter(None, res.itervalues())
-            # name_get as root, as seeing the name of a related object depends on
+            # res[id] is a browse_record or False; convert it to (id, name) or False.
+            # Perform name_get as root, as seeing the name of a related object depends on
             # access right of source document, not target, so user may not have access.
+            value_ids = [value.id for id, value in res.iteritems() if value]
             value_name = dict(obj.pool.get(self._obj).name_get(cr, SUPERUSER_ID, value_ids, context=context))
-            res = dict((id, value_id and value_name[value_id]) for id, value_id in res.iteritems())
+            res = dict((id, value and (value.id, value_name[value.id])) for id, value in res.iteritems())
 
         elif self._type in ('one2many', 'many2many'):
             # res[id] is a list of browse_record or False; convert it to a list of ids
