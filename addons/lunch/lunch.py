@@ -262,14 +262,14 @@ class lunch_order(osv.Model):
 
                             xml_pref_8 = etree.Element("div")
                             xml_pref_8.set('class','oe_lunch_text')
-                            xml_pref_8.text = escape(pref.product_id.name)
+                            xml_pref_8.text = escape(pref.product_id.name)+str(" ")
                             xml_pref_7.append(xml_pref_8)
 
                             price = pref.product_id.price or 0.0
                             cur = currency.name or ''
                             xml_pref_9 = etree.Element("span")
                             xml_pref_9.set('class','oe_tag')
-                            xml_pref_9.text = str(price)+" "+cur
+                            xml_pref_9.text = str(price)+str(" ")+cur
                             xml_pref_8.append(xml_pref_9)
 
                             xml_pref_10 = etree.Element("div")
