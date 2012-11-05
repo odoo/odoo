@@ -2875,7 +2875,7 @@ class stock_inventory(osv.osv):
                 if change:
                     location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
                     value = {
-                        'name': 'INV:' + str(line.inventory_id.id) + ':' + line.inventory_id.name,
+                        'name': _('INV: %s') % str(line.inventory_id.id) + ':' + line.inventory_id.name,
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
