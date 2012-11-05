@@ -59,10 +59,11 @@ class lunch_order(osv.Model):
         """ 
         create a new order line based on the preference selected (pref_id)
         """
+        assert len(ids) == 1
         orderline_ref = self.pool.get('lunch.order.line')
         prod_ref = self.pool.get('lunch.product')
-        order = self.browse(cr,uid,ids[0],context=context)
-        pref = orderline_ref.browse(cr,uid,pref_id,context=context)
+        order = self.browse(cr, uid, ids[0], context=context)
+        pref = orderline_ref.browse(cr, uid, pref_id, context=context)
         new_order_line = {
             'date': order.date,
             'user_id': uid,
@@ -72,15 +73,15 @@ class lunch_order(osv.Model):
             'price': pref.product_id.price,
             'supplier': pref.product_id.supplier.id
         }
-        return orderline_ref.create(cr,uid,new_order_line)
+        return orderline_ref.create(cr, uid, new_order_line,context=context)
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
         """ 
         get the alerts to display on the order form 
         """
-        orders = self.browse(cr,uid,ids,context=context)
+        orders = self.browse(cr, uid, ids, context=context)
         result={}
-        alert_msg= self._default_alerts_get(cr,uid,arg,context=context)
+        alert_msg= self._default_alerts_get(cr, uid, arg, context=context)
         for order in orders:
             if order.state=='new':
                 result[order.id]=alert_msg
@@ -111,14 +112,14 @@ class lunch_order(osv.Model):
         return True
 
     # code to improve
-    def _default_alerts_get(self,cr,uid,arg,context=None):
+    def _default_alerts_get(self, cr, uid, arg, context=None):
         """ 
         get the alerts to display on the order form 
         """
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr,uid,[],context=context) 
+        alert_ids = alert_ref.search(cr, uid, [], context=context) 
         alert_msg = []
-        for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
+        for alert in alert_ref.browse(cr, uid, alert_ids, context=context):
             if self.can_display_alert(alert):
                 #the alert is executing from ... to ...
                 now = datetime.utcnow()
@@ -136,18 +137,18 @@ class lunch_order(osv.Model):
                     alert_msg.append(alert.message)
         return '\n'.join(alert_msg)
 
-    def onchange_price(self,cr,uid,ids,order_line_ids,context=None):
+    def onchange_price(self, cr, uid, ids, order_line_ids, context=None):
         """ 
         Onchange methode that refresh the total price of order
         """
         res = {'value':{'total':0.0}}
-        order_line_ids= self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context)
+        order_line_ids= self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context=context)
         if order_line_ids:
             tot = 0.0
             product_ref = self.pool.get("lunch.product")
             for prod in order_line_ids:
                 if 'product_id' in prod:
-                    tot += product_ref.browse(cr,uid,prod['product_id'],context=context).price
+                    tot += product_ref.browse(cr, uid, prod['product_id'], context=context).price
                 else:
                     tot += prod['price']
             res = {'value':{'total':tot}}
@@ -173,80 +174,129 @@ class lunch_order(osv.Model):
         res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
         line_ref = self.pool.get("lunch.order.line")
         if view_type == 'form':
-            pref_ids = line_ref.search(cr,uid,[('user_id','=',uid)],context=context)
-            text_xml = "<div>"
+            doc = etree.XML(res['arch'])
+            pref_ids = line_ref.search(cr, uid, [('user_id','=',uid)], order='create_date desc', context=context)
+            xml_start = etree.Element("div")
+            #If there are no preference (it's the first time for the user)
             if len(pref_ids)==0:
-                text_xml+="""
-                    <div class="oe_inline oe_lunch_intro">
-                        <h3>%s</h3>
-                        <p class="oe_grey">
-                        %s
-                        </p><p class="oe_grey">
-                        %s
-                        </p><p class="oe_grey">
-                        %s
-                        </p>
-                    </div>
-                    """ % (_("This is the first time you order a meal"),
-                            _("Select a product and put your order comments on the note."),
-                            _("Your favorite meals will be created based on your last orders."),
-                            _("Don't forget the alerts displayed in the reddish area"))
+                #create Elements
+                xml_no_pref_1 = etree.Element("div")
+                xml_no_pref_1.set('class','oe_inline oe_lunch_intro')
+                xml_no_pref_2 = etree.Element("h3")
+                xml_no_pref_2.text = _("This is the first time you order a meal")
+                xml_no_pref_3 = etree.Element("p")
+                xml_no_pref_3.set('class','oe_grey')
+                xml_no_pref_3.text = _("Select a product and put your order comments on the note.")
+                xml_no_pref_4 = etree.Element("p")
+                xml_no_pref_4.set('class','oe_grey')
+                xml_no_pref_4.text = _("Your favorite meals will be created based on your last orders.")
+                xml_no_pref_5 = etree.Element("p")
+                xml_no_pref_5.set('class','oe_grey')
+                xml_no_pref_5.text = _("Don't forget the alerts displayed in the reddish area")
+                #structure Elements
+                xml_start.append(xml_no_pref_1)
+                xml_no_pref_1.append(xml_no_pref_2)
+                xml_no_pref_1.append(xml_no_pref_3)
+                xml_no_pref_1.append(xml_no_pref_4)
+                xml_no_pref_1.append(xml_no_pref_5)
+            #Else : the user already have preferences so we display them
             else:
-                preferences = line_ref.browse(cr,uid,pref_ids,context=context)
+                preferences = line_ref.browse(cr, uid, pref_ids,context=context)
                 categories = {} #store the different categories of products in preference
+                count = 0
                 for pref in preferences:
+                    #For each preference
                     categories.setdefault(pref.product_id.category_id.name, {})
-                    if pref.product_id.id not in categories[pref.product_id.category_id.name]:
-                        categories[pref.product_id.category_id.name][pref.product_id.id] = pref
+                    #if this product has already been added to the categories dictionnary
+                    if pref.product_id.id in categories[pref.product_id.category_id.name]:
+                        #we check if for the same product the note has already been added
+                        if pref.note not in categories[pref.product_id.category_id.name][pref.product_id.id]:
+                            #if it's not the case then we add this to preferences
+                            categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
+                    #if this product is not in the dictionnay, we add it
+                    else:
+                        categories[pref.product_id.category_id.name][pref.product_id.id] = {}
+                        categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
 
                 currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
 
+                #For each preferences that we get, we will create the XML structure
                 for key,value in categories.items():
-                    value = value.values()
-                    text_xml+="""
-                    <div class="oe_lunch_30pc">
-                    <h2>%s</h2>
-                    """ % (key,)
+                    xml_pref_1 = etree.Element("div")
+                    xml_pref_1.set('class','oe_lunch_30pc')
+                    xml_pref_2 = etree.Element("h2")
+                    xml_pref_2.text = key
+                    xml_pref_1.append(xml_pref_2)
                     i = 0
+                    value = value.values()
                     for val in value:
-                        if i==5 : break
-                        i+=1
-                        function_name = "add_preference_"+str(val.id)
-                        text_xml+= '''
-                            <div class="oe_lunch_vignette">
-                                <span class="oe_lunch_button">
-                                    <button name="%s" class="oe_link oe_i oe_button_plus" type="object" string="+"></button><button name="%s" class="oe_link oe_button_add" type="object" string="%s"></button>
-                                </span>
-                                <div class="oe_group_text_button">
-                                   <div class="oe_lunch_text">
-                                       %s
-                                       <span class="oe_tag">%.2f %s</span>
-                                   </div>
-                                </div>
-                                <div class="oe_grey">
-                                    %s
-                                </div>
-                            </div>
-                        ''' % (function_name, function_name,_("Add"), escape(val.product_id.name), val.product_id.price or 0.0, currency.name or '', escape(val.note or ''))
-                    text_xml+= '''</div>'''
-            # ADD into ARCH xml
-            text_xml += "</div>"
-            doc = etree.XML(res['arch'])
-            node = doc.xpath("//div[@name='preferences']")
-            to_add = etree.fromstring(text_xml)
-            if node and len(node)>0:
-                node[0].append(to_add)
+                        for pref in val.values():
+                            #We only show 5 preferences per category (or it will be too long)
+                            if i==5: break
+                            i+=1
+                            xml_pref_3 = etree.Element("div")
+                            xml_pref_3.set('class','oe_lunch_vignette')
+                            xml_pref_1.append(xml_pref_3)
+
+                            xml_pref_4 = etree.Element("span")
+                            xml_pref_4.set('class','oe_lunch_button')
+                            xml_pref_3.append(xml_pref_4)
+
+                            xml_pref_5 = etree.Element("button")
+                            xml_pref_5.set('name',"add_preference_"+str(pref.id))
+                            xml_pref_5.set('class','oe_link oe_i oe_button_plus')
+                            xml_pref_5.set('type','object')
+                            xml_pref_5.set('string','+')
+                            xml_pref_4.append(xml_pref_5)
+
+                            xml_pref_6 = etree.Element("button")
+                            xml_pref_6.set('name',"add_preference_"+str(pref.id))
+                            xml_pref_6.set('class','oe_link oe_button_add')
+                            xml_pref_6.set('type','object')
+                            xml_pref_6.set('string',_("Add"))
+                            xml_pref_4.append(xml_pref_6)
+
+                            xml_pref_7 = etree.Element("div")
+                            xml_pref_7.set('class','oe_group_text_button')
+                            xml_pref_3.append(xml_pref_7)
+
+                            xml_pref_8 = etree.Element("div")
+                            xml_pref_8.set('class','oe_lunch_text')
+                            xml_pref_8.text = escape(pref.product_id.name)
+                            xml_pref_7.append(xml_pref_8)
+
+                            price = pref.product_id.price or 0.0
+                            cur = currency.name or ''
+                            xml_pref_9 = etree.Element("span")
+                            xml_pref_9.set('class','oe_tag')
+                            xml_pref_9.text = str(price)+" "+cur
+                            xml_pref_8.append(xml_pref_9)
+
+                            xml_pref_10 = etree.Element("div")
+                            xml_pref_10.set('class','oe_grey')
+                            xml_pref_10.text = escape(pref.note or '')
+                            xml_pref_3.append(xml_pref_10)
+
+                            xml_start.append(xml_pref_1)
+
+            first_node = doc.xpath("//div[@name='preferences']")
+            if first_node and len(first_node)>0:
+                first_node[0].append(xml_start)
             res['arch'] = etree.tostring(doc)
         return res
 
     _columns = {
         'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True, states={'new':[('readonly', False)]}),
         'date': fields.date('Date', required=True,readonly=True, states={'new':[('readonly', False)]}),
-        'order_line_ids' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}), #TODO: a good naming convention is to finish your field names with `_ids´ for *2many fields. BTW, the field name should reflect more it's nature: `order_line_ids´ for example
+        'order_line_ids' : fields.one2many('lunch.order.line','order_id','Products',ondelete="cascade",readonly=True,states={'new':[('readonly', False)]}),
         'total' : fields.function(_price_get, string="Total",store={
                  'lunch.order.line': (_compute_total, ['product_id','order_id'], 20),
             }),
-        'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Partially Confirmed')],'Status', readonly=True, select=True), #TODO: parcially? #TODO: the labels are confusing. confirmed=='received' or 'delivered'...
+        'state': fields.selection([('new', 'New'), \
+                                    ('confirmed','Confirmed'), \
+                                    ('cancelled','Cancelled'), \
+                                    ('partially','Partially Confirmed')] \
+                                ,'Status', readonly=True, select=True),
         'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
     }
 
@@ -265,13 +315,13 @@ class lunch_order_line(osv.Model):
     _name = 'lunch.order.line'
     _description = 'lunch order line'
 
-    def onchange_price(self,cr,uid,ids,product_id,context=None):
+    def onchange_price(self, cr, uid, ids, product_id, context=None):
         if product_id:
-            price = self.pool.get('lunch.product').browse(cr, uid, product_id).price
+            price = self.pool.get('lunch.product').browse(cr, uid, product_id, context=context).price
             return {'value': {'price': price}}
         return {'value': {'price': 0.0}}
 
-    def order(self,cr,uid,ids,context=None):
+    def order(self, cr, uid, ids, context=None):
         """ 
         The order_line is ordered to the supplier but isn't received yet
         """
@@ -279,12 +329,12 @@ class lunch_order_line(osv.Model):
             order_line.write({'state' : 'ordered'})
         return self._update_order_lines(cr, uid, ids, context)
 
-    def confirm(self,cr,uid,ids,context=None):
+    def confirm(self, cr, uid, ids, context=None):
         """ 
         confirm one or more order line, update order status and create new cashmove 
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
-        for order_line in self.browse(cr,uid,ids,context=context):
+        for order_line in self.browse(cr, uid, ids, context=context):
             if order_line.state!='confirmed':
                 values = {
                     'user_id' : order_line.user_id.id,
@@ -296,7 +346,7 @@ class lunch_order_line(osv.Model):
                 }
                 cashmove_ref.create(cr, uid, values, context=context)
                 order_line.write({'state' : 'confirmed'})
-        return self._update_order_lines(cr, uid, ids, context)
+        return self._update_order_lines(cr, uid, ids, context=context)
 
     def _update_order_lines(self, cr, uid, ids, context=None):
         """
@@ -304,7 +354,7 @@ class lunch_order_line(osv.Model):
         """
         orders_ref = self.pool.get('lunch.order')
         orders = []
-        for order_line in self.browse(cr,uid,ids,context=context):
+        for order_line in self.browse(cr, uid, ids, context=context):
             orders.append(order_line.order_id)
         for order in set(orders):
             isconfirmed = True
@@ -318,16 +368,16 @@ class lunch_order_line(osv.Model):
                 order.write({'state':'confirmed'})
         return {}
 
-    def cancel(self,cr,uid,ids,context=None):
+    def cancel(self, cr, uid, ids, context=None):
         """ 
         confirm one or more order.line, update order status and create new cashmove 
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
-        for order_line in self.browse(cr,uid,ids,context=context):
+        for order_line in self.browse(cr, uid, ids, context=context):
             order_line.write({'state':'cancelled'})
             for cash in order_line.cashmove:
-                cashmove_ref.unlink(cr,uid,cash.id,context)
-        return self._update_order_lines(cr, uid, ids, context)
+                cashmove_ref.unlink(cr, uid, cash.id, context=context)
+        return self._update_order_lines(cr, uid, ids, context=context)
 
     _columns = {
         'name' : fields.related('product_id','name',readonly=True),
@@ -338,8 +388,11 @@ class lunch_order_line(osv.Model):
         'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
         'note' : fields.text('Note',size=256,required=False),
         'price' : fields.float("Price"),
-        'state': fields.selection([('new', 'New'),('confirmed','Received'), ('ordered','Ordered'), ('cancelled','Cancelled')], \
-            'Status', readonly=True, select=True), #new confirmed and cancelled are the convention
+        'state': fields.selection([('new', 'New'), \
+                                    ('confirmed','Received'), \
+                                    ('ordered','Ordered'),  \
+                                    ('cancelled','Cancelled')], \
+                                'Status', readonly=True, select=True),
         'cashmove': fields.one2many('lunch.cashmove','order_id','Cash Move',ondelete='cascade'),
     
     }
@@ -400,7 +453,10 @@ class lunch_alert(osv.Model):
     _description = 'lunch alert'
     _columns = {
         'message' : fields.text('Message',size=256, required=True),
-        'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], string='Recurrency', required=True,select=True),
+        'day' : fields.selection([('specific','Specific day'), \
+                                    ('week','Every Week'), \
+                                    ('days','Every Day')], \
+                                string='Recurrency', required=True,select=True),
         'specific' : fields.date('Day'),
         'monday' : fields.boolean('Monday'),
         'tuesday' : fields.boolean('Tuesday'),
