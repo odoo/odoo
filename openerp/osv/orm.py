@@ -1352,9 +1352,11 @@ class BaseModel(object):
                      noupdate=noupdate, res_id=id, context=context))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
             except psycopg2.Warning, e:
+                _logger.exception('Failed to import record %s', record)
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 messages.append(dict(info, type='warning', message=str(e)))
             except psycopg2.Error, e:
+                _logger.exception('Failed to import record %s', record)
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
