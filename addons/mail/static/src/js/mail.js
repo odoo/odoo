@@ -764,7 +764,6 @@ openerp.mail = function (session) {
         * @param {callback} apply function
         */
         check_for_rerender: function () {
-
             var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "in", [this.id].concat(this.get_child_ids()) ]]);
             return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
                 .then( _.bind(function (record) {
@@ -1431,13 +1430,9 @@ openerp.mail = function (session) {
 
             if (this.action.params.show_compose_message) {
                 this.thread.instantiate_compose_message();
-                if (this.action.params.show_compact_message) {
-                    this.thread.compose_message.do_show_compact();
-                } else {
-                    this.thread.compose_message.do_hide_compact();
-                }
+                this.thread.compose_message.do_show_compact();
             }
-            
+
             this.thread.message_fetch(null, null, this.action.params.message_ids);
 
         },
@@ -1469,14 +1464,14 @@ openerp.mail = function (session) {
             this._super(parent);
             this.action = _.clone(action);
 
-            this.action.params = _.extend(this.action.params, {
+            this.action.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': false,
                 'show_compose_message': this.view.is_action_enabled('edit'),
                 'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
                 'show_compact_message': 1,
-            });
+            }, this.action.params);
             this.action.context = {
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
@@ -1553,14 +1548,14 @@ openerp.mail = function (session) {
                 }
             }
 
-            this.action.params = _.extend(this.action.params, {
+            this.action.params = _.extend({
                 'display_indented_thread': 1,
                 'show_reply_button': true,
                 'show_read_unread_button': true,
                 'show_compose_message': true,
-                'show_compact_message': this.context.view_mailbox ? false : 1,
-                'view_inbox': !!this.context.view_inbox,
-            });
+                'show_compact_message': this.action.params.view_mailbox ? false : 1,
+                'view_inbox': false,
+            }, this.action.params);
         },
 
         start: function () {

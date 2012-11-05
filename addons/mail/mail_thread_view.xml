@@ -63,7 +63,7 @@
             <field name="context">{
               'default_model': 'res.users', 
               'default_res_id': uid, 
-              'search_default_message_unread': True
+              'search_default_message_read': True
             }</field>
             <field name="params" eval="&quot;{
                 'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
