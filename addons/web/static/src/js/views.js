@@ -247,7 +247,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_menu_id: null,
         });
         if (_.isString(action) && instance.web.client_actions.contains(action)) {
-            var action_client = { type: "ir.actions.client", tag: action };
+            var action_client = { type: "ir.actions.client", tag: action, params: {} };
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
@@ -346,14 +346,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
 
         if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
             var next;
-            if (next = ClientWidget(this, action.params)) {
+            if (next = ClientWidget(this, action)) {
                 return this.do_action(next, options);
             }
             return $.when();
         }
 
         return this.ir_actions_common({
-            widget: function () { return new ClientWidget(self, action.params); },
+            widget: function () { return new ClientWidget(self, action); },
             action: action,
             klass: 'oe_act_client',
             post_process: function(widget) {
