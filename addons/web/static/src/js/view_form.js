@@ -2022,7 +2022,7 @@ instance.web.form.FieldInterface = {
     on_translate: function() {},
     /**
         This method is called by the form view before reading on_change values and before saving. It tells
-        the field to save its value before reading it using get_value(). Must return a deferred.
+        the field to save its value before reading it using get_value(). Must return a promise.
     */
     commit_value: function() {},
 };
@@ -2265,7 +2265,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function() {
         this.$('input:first').focus();
-    }
+    },
 });
 
 instance.web.form.FieldID = instance.web.form.FieldChar.extend({
