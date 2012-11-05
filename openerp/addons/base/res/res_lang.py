@@ -143,14 +143,14 @@ class lang(osv.osv):
         'thousands_sep':fields.char('Thousands Separator',size=64),
     }
     _defaults = {
-        'active': lambda *a: 1,
-        'translatable': lambda *a: 0,
-        'direction': lambda *a: 'ltr',
+        'active': 1,
+        'translatable': 0,
+        'direction': 'ltr',
         'date_format':_get_default_date_format,
         'time_format':_get_default_time_format,
-        'grouping':lambda *a: '[]',
-        'decimal_point':lambda *a: '.',
-        'thousands_sep':lambda *a: ',',
+        'grouping': '[]',
+        'decimal_point': '.',
+        'thousands_sep': ',',
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),

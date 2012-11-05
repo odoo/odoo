@@ -9,7 +9,7 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 """
 
 from . import test_expression, test_html_sanitize, test_ir_sequence, test_orm,\
-              test_fields, test_per_class_teardown, \
+              test_fields, test_basecase, \
               test_view_validation, test_uninstall, test_misc, test_db_cursor
 
 fast_suite = [
@@ -22,7 +22,7 @@ checks = [
     test_db_cursor,
     test_orm,
     test_fields,
-    test_per_class_teardown,
+    test_basecase,
     test_view_validation,
     test_misc,
 ]

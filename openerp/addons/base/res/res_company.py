@@ -51,8 +51,8 @@ class multi_company_default(osv.osv):
     }
 
     _defaults = {
-        'expression': lambda *a: 'True',
-        'sequence': lambda *a: 100,
+        'expression': 'True',
+        'sequence': 100,
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -235,7 +235,7 @@ class res_company(osv.osv):
             self.cache_restart(cr)
             return super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner = self.pool.get('res.partner')
-        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True}, context=context)
+        partner_id = obj_partner.create(cr, uid, {'name': vals['name'], 'is_company':True, 'image': vals.get('logo', False)}, context=context)
         vals.update({'partner_id': partner_id})
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
