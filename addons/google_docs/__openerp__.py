@@ -28,11 +28,12 @@
     'installable': True,
     'auto_install': False,
     'js': ['static/src/js/gdocs.js'],
+    'qweb': ['static/src/xml/gdocs.xml'],
     'data': [
         'security/ir.model.access.csv',
         'res_config_user_view.xml'
     ],
-    'depends': ['google_base_account'],
+    'depends': ['google_base_account','document'],
     'description': """
 Module to attach a google document to any model.
 ================================================
