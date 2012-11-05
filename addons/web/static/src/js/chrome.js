@@ -153,7 +153,9 @@ instance.web.Dialog = instance.web.Widget.extend({
         return res;
     },
     close: function() {
-        this.$el.dialog('close');
+        if (this.dialog_inited) {
+            this.$el.dialog('close');
+        }
     },
     _closing: function() {
         if (this.__tmp_dialog_destroying)
@@ -175,7 +177,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.close();
             this.__tmp_dialog_destroying = undefined;
         }
-        if (! this.isDestroyed()) {
+        if (this.dialog_inited && !this.isDestroyed()) {
             this.$el.dialog('destroy');
         }
         this._super();
