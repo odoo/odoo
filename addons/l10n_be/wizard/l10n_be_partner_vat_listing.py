@@ -66,7 +66,7 @@ class partner_vat(osv.osv_memory):
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
         if not partner_ids:
-             raise osv.except_osv(_('Missing Partner Configuration'),_('Could not find VAT and Legal Statement Validation'))
+             raise osv.except_osv(_('Missing Partner Configuration'),_('Could not find VAT and Legal Statement Validation'.))
         cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
                 FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
                       FROM account_move_line l
@@ -314,7 +314,7 @@ class partner_vat_list(osv.osv_memory):
         datas['limit_amount'] = context['limit_amount']
         datas['client_datas'] = self._get_datas(cr, uid, ids, context=context)
         if not datas['client_datas']:
-            raise osv.except_osv(_('Error !'),_('No record to print.'))
+            raise osv.except_osv(_('Error!'),_('No record to print.'))
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'partner.vat.listing.print',
