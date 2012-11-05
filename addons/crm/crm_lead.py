@@ -118,6 +118,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         'stage_id': _read_group_stage_ids
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        stage_id = self.pool.get('crm.lead').browse(cr, uid, uid, context=context).stage_id.id
+        default.update({
+            'stage_id': stage_id,
+        })
+        return super(crm_lead, self).copy(cr, uid, id, default, context=context)
+
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
         @param cr: the current row, from the database cursor,
