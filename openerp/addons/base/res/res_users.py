@@ -122,7 +122,6 @@ class res_users(osv.osv):
     }
     _name = "res.users"
     _description = 'Users'
-    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:

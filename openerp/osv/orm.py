@@ -2292,7 +2292,9 @@ class BaseModel(object):
                          if view_type == 'tree' or not action[2].get('multi')]
             resprint = [clean(print_) for print_ in resprint
                         if view_type == 'tree' or not print_[2].get('multi')]
-            resrelate = map(lambda x: x[2], resrelate)
+            #When multi="True" set it will display only in More of the list view 
+            resrelate = [clean(action) for action in resrelate
+                         if (action[2].get('multi') and view_type == 'tree') or (not action[2].get('multi') and view_type == 'form')]
 
             for x in itertools.chain(resprint, resaction, resrelate):
                 x['string'] = x['name']

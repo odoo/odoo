@@ -135,7 +135,7 @@ class res_partner_category(osv.osv):
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _parent_store = True
     _parent_order = 'name'
@@ -213,7 +213,7 @@ class res_partner(osv.osv, format_address):
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position', size=128),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
-                                   ('delivery', 'Delivery'), ('contact', 'Contact'),
+                                   ('delivery', 'Shipping'), ('contact', 'Contact'),
                                    ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
