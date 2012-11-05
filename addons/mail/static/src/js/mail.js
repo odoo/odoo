@@ -173,6 +173,8 @@ openerp.mail = function (session) {
                 else {
                     this.options.show_read = this.to_read;
                     this.options.show_unread = !this.to_read;
+                    this.options.rerender = true;
+                    this.options.toggle_read = true;
                 }
             }
             this.parent_thread = parent.messages != undefined ? parent : this.options.root_thread;
@@ -735,13 +737,26 @@ openerp.mail = function (session) {
             return false;
         },
 
-        /* Check if the message must be destroy and detroy it
+        /* Check if the message must be destroy and detroy it or check for re render widget
         * @param {callback} apply function
         */
-        check_for_destroy: function () {
+        check_for_rerender: function () {
             var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "=", this.id]]);
-            this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
-                .then( _.bind(function (record) { if (!record || !record.length) this.animated_destroy(150); }, this) );
+            return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
+                .then( _.bind(function (record) {
+
+                    if (!record || !record.length) {
+
+                        this.animated_destroy(150);
+
+                    } else if (this.options.rerender) {
+
+                        this.renderElement();
+                        this.start();
+
+                    }
+
+                }, this) );
         },
 
         on_message_read: function (event) {
@@ -759,15 +774,16 @@ openerp.mail = function (session) {
         */
         on_message_read_unread: function (read_value) {
             var self = this;
-            // TDE note: this does not seem to work, try on demo data
             var message_ids = [this.id].concat(this.get_child_ids());
             this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
-                    /* TDE note: not very understandable -> just toggle the buttons if necessary */
-                    // self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
-                    self.to_read = read_value;
-                    // check if the message must be display
-                    self.check_for_destroy();
+                    self.to_read = !read_value;
+                    if (self.options.toggle_read) {
+                        self.options.show_read = self.to_read;
+                        self.options.show_unread = !self.to_read;
+                    }
+                    // check if the message must be display, destroy or rerender
+                    self.check_for_rerender();
                 });
             return false;
         },
@@ -808,12 +824,18 @@ openerp.mail = function (session) {
          * @return array of id
         */
         get_child_ids: function () {
-            var res=[]
-            if (arguments[0]) res.push(this.id);
+            return _.map(this.get_childs(), function (val) { return val.id; });
+        },
+
+        /* get all child message linked.
+         * @return array of message object
+        */
+        get_childs: function () {
             if (this.thread) {
-                res = res.concat( this.thread.get_child_ids(true) );
+                return _.map(this.thread.get_childs(), function (val) {return val.parent_message;});
+            } else {
+                return [];
             }
-            return res;
         },
 
         /**
@@ -855,7 +877,7 @@ openerp.mail = function (session) {
                     } else {
                         button.removeClass('oe_starred');
                         // check if the message must be display
-                        self.check_for_destroy();
+                        self.check_for_rerender();
                     }
                 });
             return false;
@@ -1005,9 +1027,7 @@ openerp.mail = function (session) {
          * @return array of id
         */
         get_child_ids: function () {
-            var res=[];
-            _(this.get_childs()).each(function (val, key) { res.push(val.id); });
-            return res;
+            return _.map(this.get_childs(), function (val) { return val.id; });
         },
 
         /* get all child message/thread linked.
