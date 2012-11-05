@@ -258,6 +258,7 @@ $sheet-padding: 16px
     // so remove position:relative
     .ui-tabs
         position: static
+
     // Modal box
     &.ui-dialog
         display: none
@@ -271,7 +272,7 @@ $sheet-padding: 16px
         @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
         @include background-clip()
         .ui-dialog-content
-            padding: 0px
+            padding: 0
         .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
             padding: 16px
         .ui-dialog-titlebar
@@ -316,7 +317,7 @@ $sheet-padding: 16px
                     text-decoration: none
         .oe_about
             background-color: white
-            background-image: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
             @include radius(0 0 2px 2px)
             a
                 color: $link-color
@@ -681,7 +682,7 @@ $sheet-padding: 16px
     // }}}
     // Login {{{
     .oe_login
-        background-image: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
         height: 100%
@@ -1028,7 +1029,7 @@ $sheet-padding: 16px
     // About openerp {{{
     .oe_about
         background-color: white
-        background-image: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         @include radius(0 0 2px 2px)
         a
             color: $link-color
@@ -1636,10 +1637,11 @@ $sheet-padding: 16px
                 width: 400px
                 padding-bottom: 0
         div.oe_chatter
+            box-sizing: border-box 
             min-width: $sheet-min-width + 2* $sheet-padding
             max-width: $sheet-max-width + 2* $sheet-padding
             margin: 0 auto
-            padding: 16px 0 48px
+            padding: 16px 16px 48px
         div.oe_form_configuration
             p, ul, ol
                 color: #aaa
@@ -2032,14 +2034,12 @@ $sheet-padding: 16px
         .oe_list_content
             td.oe_list_field_cell
                 padding: 4px 6px 3px 6px
-    .oe_list.oe_list_editable
-        td.oe_list_record_delete
-            position: absolute
     .oe_list.oe_list_editable.oe_editing
         .oe_edition .oe_list_field_cell:not(.oe_readonly)
             *
                 visibility: hidden
             color: transparent
+            text-shadow: none
         .oe_m2o_drop_down_button
             top: 5px
         .oe_m2o_cm_button
@@ -2335,7 +2335,7 @@ $sheet-padding: 16px
                 .oe_e:hover
                     text-decoration: none
             .oe_attachment:nth-child(odd)
-                background:white
+                background: white
             .oe_attachment:nth-child(even)
                 background: #F4F5FA
 
