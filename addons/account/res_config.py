@@ -113,7 +113,7 @@ class account_config_settings(osv.osv_memory):
         'default_purchase_tax': fields.many2one('account.tax', 'Default purchase tax',
             help="This purchase tax will be assigned by default on new products."),
         'decimal_precision': fields.integer('Decimal precision on journal entries',
-            help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
+            help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 USD, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 USD."""),
         'group_multi_currency': fields.boolean('Allow multi currencies',
             implied_group='base.group_multi_currency',
             help="Allows you multi currency environment"),
