@@ -345,7 +345,7 @@
                         <field name='alerts' attrs="{'invisible': [('state','!=','new')]}" class="oe_inline oe_lunch_alert"/> 
                         <div name="preferences">
                         </div>
-                        <separator string='Your order'/>
+                        <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>
                                 <field name='product_id' on_change='onchange_price(product_id)'/>
