@@ -21,13 +21,20 @@
 
 from lxml.html.soupparser import fromstring
 from lxml.etree import tostring
+import logging
 import lxml.html
 import openerp.pooler as pooler
 import operator
 import random
 import re
+import socket
+import threading
+import time
 
 from openerp.loglevels import ustr
+
+_logger = logging.getLogger(__name__)
+
 
 def html_sanitize(src):
     if not src:
@@ -230,7 +237,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
-    
+
        Used to track the replies related to a given object thanks to the "In-Reply-To"
        or "References" fields that Mail User Agents will set.
     """
@@ -238,7 +245,7 @@ def generate_tracking_message_id(res_id):
         rnd = random.SystemRandom().random()
     except NotImplementedError:
         rnd = random.random()
-    rndstr = ("%.15f" % rnd)[2:] 
+    rndstr = ("%.15f" % rnd)[2:]
     return "<%.15f.%s-openerp-%s@%s>" % (time.time(), rndstr, res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
@@ -246,7 +253,7 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                smtp_server=None, smtp_port=None, ssl=False, smtp_user=None, smtp_password=None, cr=None, uid=None):
     """Low-level function for sending an email (deprecated).
 
-    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead. 
+    :deprecate: since OpenERP 6.1, please use ir.mail_server.send_email() instead.
     :param email_from: A string used to fill the `From` header, if falsy,
                        config['email_from'] is used instead.  Also used for
                        the `Reply-To` header if `reply_to` is not provided
@@ -281,7 +288,8 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
 
 def email_split(text):
     """ Return a list of the email addresses found in ``text`` """
-    if not text: return []
+    if not text:
+        return []
     return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
 def append_content_to_html(html, content, plaintext=True):
@@ -292,7 +300,7 @@ def append_content_to_html(html, content, plaintext=True):
        method is to coerce all HTML tags to lowercase in ``html``,
        and strip enclosing <html> or <body> tags in content if
        ``plaintext`` is False.
-       
+
        :param str html: html tagsoup (doesn't have to be XHTML)
        :param str content: extra content to append
        :param bool plaintext: whether content is plaintext and should
@@ -303,13 +311,13 @@ def append_content_to_html(html, content, plaintext=True):
         content = u'\n<pre>%s</pre>\n' % ustr(content)
     else:
         content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
-        content = u'\n%s\n'% ustr(content)
+        content = u'\n%s\n' % ustr(content)
     # Force all tags to lowercase
     html = re.sub(r'(</?)\W*(\w+)([ >])',
-        lambda m: '%s%s%s' % (m.group(1),m.group(2).lower(),m.group(3)), html)
+        lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
     insert_location = html.find('</body>')
     if insert_location == -1:
         insert_location = html.find('</html>')
     if insert_location == -1:
         return '%s%s' % (html, content)
-    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])  
+    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
