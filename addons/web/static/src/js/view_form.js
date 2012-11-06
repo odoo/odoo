@@ -4414,10 +4414,6 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.trigger('closed');
         this.destroy();
     },
-    destroy: function () {
-        this.$el.dialog('close');
-        this._super();
-    },
 });
 
 /**
