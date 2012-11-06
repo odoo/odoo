@@ -542,10 +542,10 @@ class account_account(osv.osv):
         return True
 
     def _check_company_account(self, cr, uid, ids, context=None):
-        account = self.browse(cr, uid, ids, context=context)[0]
-        if account.parent_id:
-            if account.company_id != account.parent_id.company_id:
-                return False
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.parent_id:
+                if account.company_id != account.parent_id.company_id:
+                    return False
         return True
 
     _constraints = [
