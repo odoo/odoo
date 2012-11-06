@@ -162,12 +162,12 @@
           <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'delivery') ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.partner_id and picking.partner_id.title.name or '' ]] [[ picking.partner_id and picking.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'default') ]] </para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]] </para>
         </td>
       </tr>
     </blockTable>
@@ -189,7 +189,7 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Header_Order_Reference_Tbl">
+    <blockTable colWidths="100.0,154.0,161.0,109.0" style="Header_Order_Reference_Tbl">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Journal</para>
@@ -198,26 +198,20 @@
           <para style="terp_tblheader_General_Centre">Order(Origin)</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Recipient</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Scheduled Date</para>
+          <para style="terp_tblheader_General_Centre">Schedule Date</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Weight</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="100.0,154.0,162.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ (picking.partner_id and picking.partner_id.title.name) or '' ]] [[ (picking.partner_id and picking.partner_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
