@@ -23,20 +23,15 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
 
         // filter for removed values
         var values_removed = _.difference(this.values, this.get('value'));
-
         if (values_removed.length) {
             this.values = _.difference(this.values, values_removed);
             this.set({'value': this.values});
             return false;
         }
 
-        // find not checked values
-        var not_checked = _.difference(this.get('value'), this.values);
-
-        // find not checked values and not on checking
-        var not_checked = _.difference(not_checked, this.values_checking);
-
-        if(not_checked.length) {
+        // find not checked values that are not currently on checking
+        var not_checked = _.difference(this.get('value'), this.values, this.values_checking);
+        if (not_checked.length) {
             // remember values on checking for cheked only one time
             this.values_checking = this.values_checking.concat(not_checked);
             // check values
@@ -58,7 +53,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
                 self.values_checking = _.difference(self.values_checking, valid_partner);
 
                 // unvalid partner
-                _.each(record_ids, function(id) {
+                _.each(record_ids, function (id) {
                     var pop = new instance.web.form.FormOpenPopup(self);
                     pop.show_element(
                         'res.partner',
