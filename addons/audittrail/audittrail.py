@@ -510,6 +510,3 @@ class audittrail_objects_proxy(object_proxy):
         return fct_src(cr, uid, model, method, *args, **kw)
 
 audittrail_objects_proxy()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
