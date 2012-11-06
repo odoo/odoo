@@ -112,6 +112,14 @@ class hr_holidays(osv.osv):
                 result[hol.id] = hol.number_of_days_temp
         return result
 
+    def _check_date(self, cr, uid, ids):
+        for holiday in self.browse(cr, uid, ids):
+            holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from), ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id)])
+            if holiday_ids:
+                return False
+        return True
+
+
     _columns = {
         'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
@@ -145,6 +153,11 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
     }
+
+    _constraints = [
+        (_check_date, 'You can not have 2 Leaves that overlaps on same day!', ['date_from','date_to']),
+    ] 
+    
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
