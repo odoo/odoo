@@ -504,13 +504,13 @@ instance.web.Login =  instance.web.Widget.extend({
     template: "Login",
     remember_credentials: true,
 
-    init: function(parent, params) {
+    init: function(parent, action) {
         this._super(parent);
         this.has_local_storage = typeof(localStorage) != 'undefined';
         this.db_list = null;
         this.selected_db = null;
         this.selected_login = null;
-        this.params = params || {};
+        this.params = action.params || {};
 
         if (this.params.login_successful) {
             this.on('login_successful', this, this.params.login_successful);
@@ -641,9 +641,9 @@ instance.web._relocate = function(url, wait) {
  * If params has an entry 'menu_id', it opens the given menu entry.
  * If params has an entry 'wait', reload will wait the openerp server to be reachable before reloading
  */
-instance.web.Reload = function(parent, params) {
-
-    var menu_id = (params && params.menu_id) || false;
+instance.web.Reload = function(parent, action) {
+    var params = action.params || {};
+    var menu_id = params.menu_id || false;
     var l = window.location;
 
     var sobj = $.deparam(l.search.substr(1));
@@ -656,7 +656,7 @@ instance.web.Reload = function(parent, params) {
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
 
-    instance.web._relocate(url, params && params.wait);
+    instance.web._relocate(url, params.wait);
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
@@ -664,7 +664,7 @@ instance.web.client_actions.add("reload", "instance.web.Reload");
  * Client action to go back in breadcrumb history.
  * If can't go back in history stack, will go back to home.
  */
-instance.web.HistoryBack = function(parent, params) {
+instance.web.HistoryBack = function(parent) {
     if (!parent.history_back()) {
         instance.web.Home(parent);
     }
@@ -674,9 +674,9 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 /**
  * Client action to go back home.
  */
-instance.web.Home = function(parent, params) {
+instance.web.Home = function(parent, action) {
     var url = '/' + (window.location.search || '');
-    instance.web._relocate(url, params && params.wait);
+    instance.web._relocate(url, action.params && action.params.wait);
 };
 instance.web.client_actions.add("home", "instance.web.Home");
 

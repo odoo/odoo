@@ -4332,13 +4332,14 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.create_function = function(data, sup) {
             var fct = self.options.create_function || sup;
             return fct.call(this, data).then(function(r) {
+                self.trigger('create_completed saved', r);
                 self.created_elements.push(r);
             });
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
             return fct.call(this, id, data, options).then(function() {
-                self.trigger('write_completed');
+                self.trigger('write_completed saved');
             });
         };
         this.dataset.parent_view = this.options.parent_view;
@@ -4415,6 +4416,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.select_elements(this.created_elements);
             this.created_elements = [];
         }
+        this.trigger('closed');
         this.destroy();
     },
     destroy: function () {
