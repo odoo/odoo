@@ -67,10 +67,11 @@ class account_followup_stat_by_partner(osv.osv):
                     a.active AND
                     a.type = 'receivable' AND
                     l.reconcile_id is NULL AND
-                    l.partner_id IS NOT NULL
+                    l.partner_id IS NOT NULL AND
+                    (l.blocked = False)
                     GROUP BY
                     l.partner_id, l.company_id
-            )""")
+            )""") #Blocked is to take into account litigation
 account_followup_stat_by_partner()
 
 class account_followup_print(osv.osv_memory):
@@ -86,7 +87,7 @@ class account_followup_print(osv.osv_memory):
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
-        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.')
+        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.'),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -140,7 +141,6 @@ class account_followup_print(osv.osv_memory):
         #update the followupo level on account.move.line
         for id in to_update.keys():
             if to_update[id]['partner_id'] in partner_list:
-
                 cr.execute(
                     "UPDATE account_move_line "\
                     "SET followup_line_id=%s, followup_date=%s "\
@@ -173,7 +173,7 @@ class account_followup_print(osv.osv_memory):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d'),
         'followup_id': _get_followup,
-        'email_body': _get_msg,
+        'email_body': "",
         'email_subject': _('Invoices Reminder'),
         'partner_lang': True,
         #'partner_ids': _get_partners,
@@ -229,9 +229,9 @@ class account_followup_print(osv.osv_memory):
                 "AND (l.partner_id is NOT NULL) "\
                 "AND (a.active) "\
                 "AND (l.debit > 0) "\
-                "AND (l.company_id = %s) "\
+                "AND (l.company_id = %s) " \
                 "AND (l.blocked = False)" \
-            "ORDER BY l.date", (company_id,))  #JCO!!: change l.blocked to be reviewed!
+            "ORDER BY l.date", (company_id,))  #l.blocked added to take litigation into account
         move_lines = cr.fetchall()
         old = None
         fups = {}
@@ -245,31 +245,27 @@ class account_followup_print(osv.osv_memory):
             "FROM account_followup_followup_line "\
             "WHERE followup_id=%s "\
             "ORDER BY delay", (fup_id,))
+        
+        #Create dictionary of tuples where first element is the date to compare with the due date and second element is the id of the next level
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])
-            if result['start'] == 'end_of_month':
-                fups[old][0].replace(day=1)
+            #if result['start'] == 'end_of_month': -> fait rien du tout
+            #    print "Important date change start:", fups[old][0]#.strftime("%Y-%m%-%d")
+            #   fups[old][0].replace(day=1)
+            #    print "Important date change end:", fups[old][0]#.strftime("%Y-%m%-%d")
+                #fups[old][0] = fups[old][0] + datetime.timedelta(months=1)
             old = result['id']
-        fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old)
-
+        #fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old) --> By commenting this, will anything happen?
+        fups 
         partner_list = []
         to_update = {}
+        
+        #Fill dictionary of accountmovelines to_update with the partners that need to be updated
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
             
-
-
             if not partner_id:
                 continue
-            #part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)            
-            #print "Respartner: " + part.send_letter
-
-            #if not partns[0].send_letter:
-            #    continue
-
-            #if not partner_id.send_letter:
-            #    continue
-
 
             if followup_line_id not in fups:
                 continue

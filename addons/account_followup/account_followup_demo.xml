@@ -23,6 +23,7 @@ Would your payment have been carried out after this mail was sent, please ignore
 
 Best Regards,
 </field>
+		<field name="email_template_id" ref="email_template_account_followup_level0"/>
         </record>
 
         <record id="demo_followup_line2" model="account_followup.followup.line">
@@ -31,6 +32,7 @@ Best Regards,
             <field name="start">days</field>
             <field name="delay">30</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="email_template_id" ref="email_template_account_followup_level1"/>
             <field name="description">
 Dear %(partner_name)s,
 
@@ -53,6 +55,7 @@ Best Regards,
             <field name="start">end_of_month</field>
             <field name="delay">45</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="email_template_id" ref="email_template_account_followup_level2"/>
             <field name="description">
 Dear %(partner_name)s,
 

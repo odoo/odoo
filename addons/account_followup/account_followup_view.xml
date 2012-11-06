@@ -5,10 +5,10 @@
             <field name="name">account_followup.followup.line.tree</field>
             <field name="model">account_followup.followup.line</field>
             <field name="arch" type="xml">
-                <tree string="Follow-up Steps">
+                <tree string="Follow-up Steps" >
                     <field name="name"/>
                     <field name="delay"/>
-                    <field name="start"/>
+                    <!--<field name="start"/>-->
 
                 </tree>
             </field>
@@ -19,28 +19,40 @@
             <field name="model">account_followup.followup.line</field>
             <field name="arch" type="xml">
                 <form string="Follow-up Steps" version="7.0">
-                    <group>
-                       <field name="name"/>
-                       <group>
-                       <field name="delay"/>
-                       <field name="start"/>
-                       </group>
-
-                    </group>
+                                         
+                       	<field name="name"/>
+                       	<group>
+                       	<label for="delay"/>
+                       	<div class="oe_inline">
+                        <field name="delay" style="width: 25%%"/>
+                        <!--<field name="start" style="width: 25%%"/>--> 
+                       	</div> 
+                       	</group>
+                       	<div class="oe_grey">
+                       		<label string="This explains the behaviour of the lines and so on"/>
+                       	</div>
                     <separator string="Processing actions"/>
-                    <group col="4">
-                       <field name="send_email"/>
+                    <group>
+                      <group>
                        <field name="send_letter"/>
                        <field name="phonecall"/>
-                       <field name="email_template_id"/>
+                       <field name="manual_action" attrs="{'invisible': [('phonecall', '=', False)]}"/>
+                       <field name="action_responsible" attrs="{'invisible': [('phonecall', '=', False)]}"/>
+                      </group>
+                      <group>
+                       <field name="send_email"/>
+                      </group>
                     </group>
                     <separator string="Message"/>
                     <group col="4">
-                    <field name="description" attr="{'invisible': [('send_email', '=', False)]}" colspan="2"/>
-                    <field name="email_body" attr="{'invisible': [('send_letter', '=', False)]}" colspan="2"/>
+                    <field name="description"  attrs="{'invisible': [('send_letter', '=', False)]}" colspan="2"/>
+                   <group> 
+                    <field name="email_template_id" attrs="{'invisible': [('send_email', '=', False)]}" on_change="on_change_template(email_template_id)"/>
+                    <field name="email_body" attrs="{'invisible': [('send_email', '=', False)]}" colspan="2"/>
+                   </group> 
                     </group>
                     <separator string="Legend"/>
-                    <group>
+                    <group attrs="{'invisible': [('send_letter', '=', False)]}">
                         <label string="%%(partner_name)s: Partner Name"/>
                         <label string="%%(date)s: Current Date"/>
                         <label string="%%(user_signature)s: User Name"/>
@@ -59,7 +71,9 @@
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
+                    <group>
                     <field name="followup_line"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -162,7 +176,7 @@
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 
-        <record model="ir.ui.view" id="view_company_inherit_followup_form">
+      <!--COMPANY VIEW NOT NECESSARY ANYMORE  <record model="ir.ui.view" id="view_company_inherit_followup_form">
             <field name="name">res.company.followup.form.inherit</field>
             <field name="inherit_id" ref="account.view_company_inherit_form"/>
             <field name="model">res.company</field>
@@ -172,6 +186,6 @@
                     <field name="follow_up_msg" nolabel="1" colspan="4"/>
                 </field>
             </field>
-        </record>
+     </record> -->
     </data>
 </openerp>

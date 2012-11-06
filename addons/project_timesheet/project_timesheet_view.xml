@@ -14,8 +14,8 @@
                     <field name="partner_id"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_timesheets.raw_value"
-                        name="open_timesheets" type="object"><field name="hours_quantity"/> Timesheets</a>
+                    <a t-if="record.use_timesheets.raw_value" style="margin-right: 10px"
+                        name="open_timesheets" type="object"><field name="hours_quantity"/> Hours</a>
                 </xpath>
             </field>
         </record>

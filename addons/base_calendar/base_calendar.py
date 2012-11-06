@@ -1151,7 +1151,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             context = {}
 
         result = []
-        for data in super(calendar_event, self).read(cr, uid, select, context=context):
+        for data in super(calendar_event, self).read(cr, uid, select, ['rrule', 'exdate', 'exrule', 'date'], context=context):
             if not data['rrule']:
                 result.append(data['id'])
                 continue
