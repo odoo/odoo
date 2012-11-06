@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+from lxml.html.soupparser import fromstring
+from lxml.etree import tostring
 import lxml.html
 import openerp.pooler as pooler
 import operator
@@ -92,6 +94,62 @@ def append_to(elements, dest_node):
                 children[-1].tail = element
         else:
             dest_node.append(element)
+
+
+#----------------------------------------------------------
+# HTML Cleaner
+#----------------------------------------------------------
+
+def html_email_clean(html):
+    """ html_email_clean: clean the html to display in the web client.
+        - strip email quotes (remove blockquote nodes)
+        - strip signatures (remove --\n{\n)Blahblah), by replacing <br> by
+            \n to avoid ignoring signatures converted into html
+    """
+    modified_html = ''
+
+    # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
+    br_tags = re.compile(r'([<]\s*br\s*\/?[>])')
+    idx = 0
+    for item in re.finditer(br_tags, html):
+        modified_html += html[idx:item.start()] + '\n'
+        idx = item.end()
+    modified_html += html[idx:]
+
+    # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
+    root = fromstring(modified_html)
+    if not len(root) and root.text is None and root.tail is None:
+        modified_html = '<div>%s</div>' % modified_html
+        root = fromstring(modified_html)
+
+    # 3. remove blockquotes
+    quotes = [el for el in root.iterchildren(tag='blockquote')]
+    for node in quotes:
+        node.getparent().remove(node)
+
+    # 4. strip signatures
+    signature = re.compile(r'([-]{2}[\s]?[\r\n]{1,2}[^\z]+)')
+    for elem in root.getiterator():
+        if elem.text:
+            match = re.search(signature, elem.text)
+            if match:
+                elem.text = elem.text[:match.start()] + elem.text[match.end():]
+        if elem.tail:
+            match = re.search(signature, elem.tail)
+            if match:
+                elem.tail = elem.tail[:match.start()] + elem.tail[match.end():]
+
+    # 5. \n back to <br/>
+    for el in root.iterchildren():
+        if el.tag == 'pre':
+            continue
+        if el.text:
+            el.text = el.text.replace('\n', '<br />')
+        if el.tail:
+            el.tail = el.tail.replace('\n', '<br />')
+
+    new_html = tostring(root, pretty_print=True)
+    return new_html
 
 
 #----------------------------------------------------------
