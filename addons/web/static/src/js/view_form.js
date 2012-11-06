@@ -3177,7 +3177,7 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
             this.build_context(),
             {title: this.string + ' ' +_t("Voucher: ")}
         );
-        popup.on('create_completed write_completed', self, function(r){
+        popup.on('create_completed write_completed', self, function(r) {
             self.set_value(r);
         });
     },
