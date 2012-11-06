@@ -153,7 +153,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         return res;
     },
     close: function() {
-        if (this.dialog_inited) {
+        if (this.dialog_inited && this.$el.is(":data(dialog)")) {
             this.$el.dialog('close');
         }
     },
