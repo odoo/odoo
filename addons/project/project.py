@@ -1320,7 +1320,6 @@ class task(base_stage, osv.osv):
                     'res_model': 'project.task.reevaluate',
                     'type': 'ir.actions.act_window',
                     'target': 'new',
-                    'context' : context
                     }
         return self.do_reopen(cr, uid, ids, context=context)
 
