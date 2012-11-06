@@ -3922,6 +3922,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
         var values = self.get("value")
         var handle_names = function(data) {
+            if (self.isDestroyed())
+                return;
             var indexed = {};
             _.each(data, function(el) {
                 indexed[el[0]] = el;
