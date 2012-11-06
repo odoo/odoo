@@ -2074,28 +2074,23 @@
             <field name="model">account.account.template</field>
             <field name="arch" type="xml">
                 <form string="Account Template" version="7.0">
-                    <notebook>
-                        <page string="General Information">
-                            <group col="4">
-                                <field name="name"/>
-                                <field name="code"/>
-                                <newline/>
-                                <field name="parent_id"/>
-                                <field name="shortcut"/>
-                                <field name="type"/>
-                                <field name="user_type"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <newline/>
+                        <field name="parent_id"/>
+                        <field name="shortcut"/>
+                        <field name="type"/>
+                        <field name="user_type"/>
 
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="reconcile"/>
-                                <field name="chart_template_id"/>
-                            </group>
-                            <separator string="Default Taxes"/>
-                            <field name="tax_ids"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="note"/>
-                        </page>
-                    </notebook>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="reconcile"/>
+                        <field name="chart_template_id"/>
+                    </group>
+                    <separator string="Default Taxes"/>
+                    <field name="tax_ids"/>
+                    <separator string="Notes"/>
+                    <field name="note"/>
                 </form>
             </field>
         </record>
