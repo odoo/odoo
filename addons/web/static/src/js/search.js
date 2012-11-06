@@ -1699,6 +1699,13 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
 
 instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
+    events: {
+        'change .searchview_extended_prop_field': 'changed',
+        'click .searchview_extended_delete_prop': function (e) {
+            e.stopPropagation();
+            this.destroy();
+        }
+    },
     /**
      * @constructs instance.web.search.ExtendedSearchProposition
      * @extends instance.web.Widget
@@ -1716,13 +1723,6 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this.value = null;
     },
     start: function () {
-        var _this = this;
-        this.$el.find(".searchview_extended_prop_field").change(function() {
-            _this.changed();
-        });
-        this.$el.find('.searchview_extended_delete_prop').click(function () {
-            _this.destroy();
-        });
         this.changed();
     },
     changed: function() {
