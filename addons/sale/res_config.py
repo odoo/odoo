@@ -53,8 +53,8 @@ class sale_configuration(osv.osv_memory):
             help="Allows you to apply some discount per sale order line."),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help="""Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.
-            Example: Product: this product is deprecated, do not purchase more than 5.
-            Supplier: don't forget to ask for an express delivery."""),
+Example: Product: this product is deprecated, do not purchase more than 5.
+                Supplier: don't forget to ask for an express delivery."""),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
