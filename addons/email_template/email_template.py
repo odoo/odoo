@@ -28,7 +28,7 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
-from tools.html_sanitize import html_sanitize
+from tools.mail import html_sanitize
 from tools import append_content_to_html
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
