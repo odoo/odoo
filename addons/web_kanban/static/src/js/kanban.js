@@ -838,13 +838,13 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
 
         if (this.$el.find('.oe_kanban_global_click,.oe_kanban_global_click_edit').length) {
             this.$el.on('click', function(ev) {
-                if (!ev.isTrigger && !$(ev.target).data('events')) {
+                if (!ev.isTrigger && !$._data(ev.target, 'events')) {
                     var trigger = true;
                     var elem = ev.target;
                     var ischild = true;
                     var children = [];
                     while (elem) {
-                        var events = $(elem).data('events');
+                        var events = $._data(elem, 'events');
                         if (elem == ev.currentTarget) {
                             ischild = false;
                         }
