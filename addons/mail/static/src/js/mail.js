@@ -432,7 +432,6 @@ openerp.mail = function (session) {
 
             // data of this expandable message
             this.id = datasets.id || -1,
-            this.model = datasets.model || false,
             this.parent_id = datasets.parent_id || false,
             this.nb_messages = datasets.nb_messages || 0,
             this.thread_level = datasets.thread_level || 0,
@@ -565,6 +564,7 @@ openerp.mail = function (session) {
             this.author_id = datasets.author_id ||  [],
             this.attachment_ids = datasets.attachment_ids ||  [],
             this._date = datasets.date;
+            this.partner_ids = datasets.partner_ids;
 
 
             this.show_reply_button = this.options.show_compose_message && this.options.show_reply_button > this.thread_level;
