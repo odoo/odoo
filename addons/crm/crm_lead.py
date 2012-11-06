@@ -610,9 +610,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
-        partner = self.pool.get('res.partner')
         customer = False
         if partner_id:
+            partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
