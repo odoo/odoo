@@ -20,11 +20,11 @@
 ##############################################################################
 
 from xml.sax.saxutils import escape
-import pytz
 import time
 from osv import osv, fields
 from datetime import datetime
 from lxml import etree
+import tools
 from tools.translate import _
 
 class lunch_order(osv.Model):
@@ -44,9 +44,9 @@ class lunch_order(osv.Model):
                                    for order_line in order.order_line_ids)
         return result
 
-    def _compute_total(self, cr, uid, ids, name, context=None):
+    def _fetch_orders_from_lines(self, cr, uid, ids, name, context=None):
         """ 
-        compute total
+        return the list of lunch orders to which belong the order lines `ids´
         """
         result = set()
         for order_line in self.browse(cr, uid, ids, context=context):
@@ -72,7 +72,7 @@ class lunch_order(osv.Model):
             'price': pref.product_id.price,
             'supplier': pref.product_id.supplier.id
         }
-        return orderline_ref.create(cr, uid, new_order_line,context=context)
+        return orderline_ref.create(cr, uid, new_order_line, context=context)
 
     def _alerts_get(self, cr, uid, ids, name, arg, context=None):
         """ 
@@ -99,38 +99,34 @@ class lunch_order(osv.Model):
 
     def can_display_alert(self, alert):
         """ 
-        This method check if the alert can be displayed today 
+        This method check if the alert can be displayed today
         """
         if alert.alter_type == 'specific':
             #the alert is only activated on a specific day
-            return alert.specific == fields.datetime.now()[:10]
+            return alert.specific_day == time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
         elif alert.alter_type == 'week':
             #the alert is activated during some days of the week
             return self.check_day(alert)
 
-    # code to improve
     def _default_alerts_get(self, cr, uid, arg, context=None):
         """ 
-        get the alerts to display on the order form 
+        get the alerts to display on the order form
         """
         alert_ref = self.pool.get('lunch.alert')
-        alert_ids = alert_ref.search(cr, uid, [], context=context) 
+        alert_ids = alert_ref.search(cr, uid, [], context=context)
         alert_msg = []
         for alert in alert_ref.browse(cr, uid, alert_ids, context=context):
+            #check if the address must be displayed today
             if self.can_display_alert(alert):
-                #the alert is executing from ... to ...
-                now = datetime.utcnow()
-                user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-                tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-                tzoffset=tz.utcoffset(now)
-                mynow = now+tzoffset
+                #display the address only during its active time
+                mynow = fields.datetime.context_timestamp(cr, uid, datetime.datetime.now(), context=context)
                 hour_to = int(alert.active_to)
-                min_to = int((alert.active_to-hour_to)*60)
-                to_alert = datetime.strptime(str(hour_to)+":"+str(min_to),"%H:%M")
+                min_to = int((alert.active_to - hour_to) * 60)
+                to_alert = datetime.strptime(str(hour_to) + ":" + str(min_to), "%H:%M")
                 hour_from = int(alert.active_from)
-                min_from = int((alert.active_from-hour_from)*60)
-                from_alert = datetime.strptime(str(hour_from)+":"+str(min_from),"%H:%M")
-                if mynow.time()>=from_alert.time() and mynow.time()<=to_alert.time():
+                min_from = int((alert.active_from - hour_from) * 60)
+                from_alert = datetime.strptime(str(hour_from) + ":" + str(min_from), "%H:%M")
+                if mynow.time() >= from_alert.time() and mynow.time() <= to_alert.time():
                     alert_msg.append(alert.message)
         return '\n'.join(alert_msg)
 
@@ -153,7 +149,7 @@ class lunch_order(osv.Model):
 
     def __getattr__(self, attr):
         """ 
-        this method catch unexisting method call and if starts with
+        this method catch unexisting method call and if it starts with
         add_preference_'n' we execute the add_preference method with 
         'n' as parameter 
         """
@@ -172,7 +168,7 @@ class lunch_order(osv.Model):
         line_ref = self.pool.get("lunch.order.line")
         if view_type == 'form':
             doc = etree.XML(res['arch'])
-            pref_ids = line_ref.search(cr, uid, [('user_id','=',uid)], order='create_date desc', context=context)
+            pref_ids = line_ref.search(cr, uid, [('user_id', '=', uid)], order='create_date desc', context=context)
             xml_start = etree.Element("div")
             #If there are no preference (it's the first time for the user)
             if len(pref_ids)==0:
@@ -198,7 +194,7 @@ class lunch_order(osv.Model):
                 xml_no_pref_1.append(xml_no_pref_5)
             #Else: the user already have preferences so we display them
             else:
-                preferences = line_ref.browse(cr, uid, pref_ids,context=context)
+                preferences = line_ref.browse(cr, uid, pref_ids, context=context)
                 categories = {} #store the different categories of products in preference
                 count = 0
                 for pref in preferences:
@@ -287,7 +283,7 @@ class lunch_order(osv.Model):
         'date': fields.date('Date', required=True, readonly=True, states={'new':[('readonly', False)]}),
         'order_line_ids': fields.one2many('lunch.order.line', 'order_id', 'Products', ondelete="cascade", readonly=True, states={'new':[('readonly', False)]}),
         'total': fields.function(_price_get, string="Total", store={
-                 'lunch.order.line': (_compute_total, ['product_id','order_id'], 20),
+                 'lunch.order.line': (_fetch_orders_from_lines, ['product_id','order_id'], 20),
             }),
         'state': fields.selection([('new', 'New'), \
                                     ('confirmed','Confirmed'), \
@@ -332,7 +328,7 @@ class lunch_order_line(osv.Model):
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
         for order_line in self.browse(cr, uid, ids, context=context):
-            if order_line.state!='confirmed':
+            if order_line.state != 'confirmed':
                 values = {
                     'user_id': order_line.user_id.id,
                     'amount': -order_line.price,
@@ -360,20 +356,20 @@ class lunch_order_line(osv.Model):
                     isconfirmed = False
                 if orderline.state == 'cancelled':
                     isconfirmed = False
-                    order.write({'state':'partially'})
+                    order_ref.write(cr, uid, [order.id], {'state': 'partially'}, context=context)
             if isconfirmed:
-                order.write({'state':'confirmed'})
+                order_ref.write(cr, uid, [order.id], {'state': 'confirmed'}, context=context)
         return {}
 
     def cancel(self, cr, uid, ids, context=None):
-        """ 
-        confirm one or more order.line, update order status and create new cashmove 
+        """
+        cancel one or more order.line, update order status and unlink existing cashmoves
         """
         cashmove_ref = self.pool.get('lunch.cashmove')
         for order_line in self.browse(cr, uid, ids, context=context):
             order_line.write({'state':'cancelled'}, context=context)
-            for cash in order_line.cashmove:
-                cashmove_ref.unlink(cr, uid, cash.id, context=context)
+            cash_ids = [cash.id for cash in order_line.cashmove]
+            cashmove_ref.unlink(cr, uid, cash_ids, context=context)
         return self._update_order_lines(cr, uid, ids, context=context)
 
     _columns = {
@@ -454,7 +450,7 @@ class lunch_alert(osv.Model):
                                     ('week', 'Every Week'), \
                                     ('days', 'Every Day')], \
                                 string='Recurrency', required=True, select=True),
-        'specific': fields.date('Day'),
+        'specific_day': fields.date('Day'),
         'monday': fields.boolean('Monday'),
         'tuesday': fields.boolean('Tuesday'),
         'wednesday': fields.boolean('Wednesday'),
@@ -467,7 +463,7 @@ class lunch_alert(osv.Model):
     }
     _defaults = {
         'alter_type': 'specific',
-        'specific': fields.date.context_today,
+        'specific_day': fields.date.context_today,
         'active_from': 7,
         'active_to': 23,
     }

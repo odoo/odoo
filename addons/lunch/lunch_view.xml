@@ -461,7 +461,7 @@
                         <group string="Schedule Date">
                             <group>
                                 <field name="alter_type"/>
-                                <field name="specific" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
+                                <field name="specific_day" attrs="{'invisible': [('alter_type','!=','specific')], 'required':[('alter_type','=','specific')]}"/>
                             </group>
                         </group>
                         <group attrs="{'invisible': [('alter_type','!=','week')]}">
