@@ -21,8 +21,7 @@
 
 import tools
 
-from openerp.addons.mail.tests import test_mail
-from openerp.tests import common
+from openerp.addons.mail.tests import test_mail_mockup
 from openerp.tools.mail import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -85,7 +84,7 @@ Sylvie
 """
 
 
-class test_mail(test_mail.TestMailMockups):
+class test_mail(test_mail_mockup.TestMailMockups):
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
