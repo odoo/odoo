@@ -74,8 +74,9 @@ openerp.base = function(instance) {
         remote_action_id: 'loempia.action_embed',
         failback_action_id: 'base.open_module_tree',
 
-        init: function(parent, options) {
-            this._super(parent);
+        init: function(parent, action) {
+            this._super(parent, action);
+            var options = actions.params || {};
 
             if (options.apps_user) {
                 sessionStorage.setItem('apps.login', options.apps_user);
