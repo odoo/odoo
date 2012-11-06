@@ -3955,40 +3955,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     },
 });
 
-
-/**
- * Extend of FieldMany2ManyTags widget method.
- * When the user add a partner and the partner don't have an email, open a popup to purpose to add an email.
- * The user can choose to add an email or cancel and close the popup.
- */
-instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags.extend({
-    add_id: function(id) {
-        var self = this;
-        new instance.web.Model('res.partner').call("read", [id, ["email", "notification_email_send"]], {context: this.build_context()})
-            .pipe(function (dict) {
-                if (!dict.email && (dict.notification_email_send == 'all' || dict.notification_email_send == 'comment')) {
-                    var pop = new instance.web.form.FormOpenPopup(self);
-                    pop.show_element(
-                        'res.partner',
-                        dict.id,
-                        self.build_context(),
-                        {
-                            title: _t("Please complete partner's informations and Email"),
-                        }
-                    );
-                    pop.on('write_completed', self, function () {
-                        self._add_id(dict.id)
-                    });
-                } else {
-                    self._add_id(dict.id);
-                }
-            });
-    },
-    _add_id: function (id) {
-        this.set({'value': _.uniq(this.get('value').concat([id]))});
-    }
-});
-
 /**
     widget options:
     - reload_on_button: Reload the whole form view if click on a button in a list view.
@@ -5175,7 +5141,6 @@ instance.web.form.widgets = new instance.web.Registry({
     'many2one' : 'instance.web.form.FieldMany2One',
     'many2many' : 'instance.web.form.FieldMany2Many',
     'many2many_tags' : 'instance.web.form.FieldMany2ManyTags',
-    'many2many_tags_email' : 'instance.web.form.FieldMany2ManyTagsEmail',
     'many2many_kanban' : 'instance.web.form.FieldMany2ManyKanban',
     'one2many' : 'instance.web.form.FieldOne2Many',
     'one2many_list' : 'instance.web.form.FieldOne2Many',
