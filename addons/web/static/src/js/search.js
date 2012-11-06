@@ -1656,11 +1656,20 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
         });
     },
     append_proposition: function () {
+        var self = this;
         return (new instance.web.search.ExtendedSearchProposition(this, this.fields))
-            .appendTo(this.$('ul'));
+            .appendTo(this.$('ul')).then(function () {
+                self.$('button.oe_apply').prop('disabled', false);
+            });
+    },
+    remove_proposition: function (prop) {
+        // removing last proposition, disable apply button
+        if (this.getChildren().length <= 1) {
+            this.$('button.oe_apply').prop('disabled', true);
+        }
+        prop.destroy();
     },
     commit_search: function () {
-        var self = this;
         // Get domain sections from all propositions
         var children = this.getChildren();
         var propositions = _.invoke(children, 'get_proposition');
@@ -1694,7 +1703,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         'change .searchview_extended_prop_field': 'changed',
         'click .searchview_extended_delete_prop': function (e) {
             e.stopPropagation();
-            this.destroy();
+            this.getParent().remove_proposition(this);
         }
     },
     /**
@@ -1714,7 +1723,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this.value = null;
     },
     start: function () {
-        this.changed();
+        return this._super().then(this.proxy('changed'));
     },
     changed: function() {
         var nval = this.$(".searchview_extended_prop_field").val();
