@@ -30,8 +30,6 @@ from functools import wraps
 import subprocess
 import logging
 import os
-import random
-import re
 import socket
 import sys
 import threading
@@ -44,7 +42,6 @@ from lxml import etree
 from which import which
 from threading import local
 
-import openerp.pooler as pooler
 from config import config
 from cache import *
 

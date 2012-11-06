@@ -20,7 +20,9 @@
 ##############################################################################
 
 import lxml.html
+import openerp.pooler as pooler
 import operator
+import random
 import re
 
 from openerp.loglevels import ustr
