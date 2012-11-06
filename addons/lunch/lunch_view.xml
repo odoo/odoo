@@ -37,9 +37,10 @@
             <field name='type'>search</field>
             <field name='arch' type='xml'>
                 <search string="lunch employee payment">
-                    <field name="user_id"/>
                     <field name="description"/>
+                    <field name="user_id"/>
                     <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
+                    <separator/>
                     <filter name='is_mine' string="My Account" domain="[('user_id','=',uid)]"/>
                 </search>
             </field>
@@ -51,9 +52,11 @@
             <field name='type'>search</field>
             <field name='arch' type='xml'>
                 <search string="lunch cashmove">
-                    <field name="user_id"/>
                     <field name="description"/>
-                    <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -86,11 +89,11 @@
 
         <!--Action for Your Orders-->
         <record model="ir.actions.act_window" id="action_lunch_order_form">
-            <field name="name">Your Order</field>
+            <field name="name">New Order</field>
             <field name="res_model">lunch.order</field>
             <field name="view_mode">form</field>
         </record>
-        <menuitem name="Your Order" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" sequence="1"/>
+        <menuitem name="New Order" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" sequence="1"/>
 
         <record model="ir.actions.act_window" id="action_lunch_order_tree">
             <field name="name">Your Orders</field>

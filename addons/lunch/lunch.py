@@ -79,7 +79,7 @@ class lunch_order(osv.Model):
         get the alerts to display on the order form 
         """
         result = {}
-        alert_msg = self._default_alerts_get(cr, uid, arg, context=context)
+        alert_msg = self._default_alerts_get(cr, uid, context=context)
         for order in self.browse(cr, uid, ids, context=context):
             if order.state == 'new':
                 result[order.id] = alert_msg
