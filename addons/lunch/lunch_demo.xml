@@ -26,44 +26,44 @@
             <field name="supplier_lunch">True</field>
         </record>
 
-        <record model="lunch.product" id="product_club">
-            <field name="name">Club</field>
+        <record model="lunch.product" id="product_cheese_ham">
+            <field name="name">Cheese And Ham</field>
             <field name="category_id" eval="str(ref('categ_sandwich'))"/>
             <field name="price">3.30</field>
             <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
-            <field name="descrîption">Jambon, Fromage, Salade, Tomates, comcombres, oeufs</field>
+            <field name="description">Cheese, Ham, Salad, Tomatoes, cucumbers, eggs</field>
         </record>
 
-        <record model="lunch.product" id="product_campagnard">
-            <field name="name">Le Campagnard</field>
+        <record model="lunch.product" id="product_country">
+            <field name="name">The Country</field>
             <field name="category_id" eval="str(ref('categ_sandwich'))"/>
             <field name="price">3.30</field>
             <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
-            <field name="descrîption">Brie, Miel, Cerneaux de noix</field>
+            <field name="description">Brie, Honey, Walnut Kernels</field>
         </record>
 
-        <record model="lunch.product" id="product_pate_creme">
-            <field name="name">Le Pâté Crème</field>
+        <record model="lunch.product" id="product_tuna">
+            <field name="name">Tuna</field>
             <field name="category_id" eval="str(ref('categ_sandwich'))"/>
             <field name="price">2.50</field>
             <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
-            <field name="descrîption"></field>
+            <field name="description">Tuna, Mayonnaise</field>
         </record>
 
         <record model="lunch.product" id="product_gouda">
-            <field name="name">Fromage Gouda</field>
+            <field name="name">Gouda Cheese</field>
             <field name="category_id" eval="str(ref('categ_sandwich'))"/>
             <field name="price">2.50</field>
             <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
-            <field name="descrîption"></field>
+            <field name="description"></field>
         </record>
 
-        <record model="lunch.product" id="product_poulet_curry">
-            <field name="name">Poulet Curry</field>
+        <record model="lunch.product" id="product_chicken_curry">
+            <field name="name">Chicken Curry</field>
             <field name="category_id" eval="str(ref('categ_sandwich'))"/>
             <field name="price">2.60</field>
             <field name="supplier" eval="str(ref('partner_coin_gourmand'))"/>
-            <field name="descrîption"></field>
+            <field name="description"></field>
         </record>
 
         <record model="lunch.product" id="product_margherita">
@@ -71,7 +71,7 @@
             <field name="category_id" eval="str(ref('categ_pizza'))"/>
             <field name="price">6.90</field>
             <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
-            <field name="descrîption">Tomates, Mozzarella</field>
+            <field name="description">Tomatoes, Mozzarella</field>
         </record>
 
         <record model="lunch.product" id="product_italiana">
@@ -79,23 +79,23 @@
             <field name="category_id" eval="str(ref('categ_pizza'))"/>
             <field name="price">7.40</field>
             <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
-            <field name="descrîption">Tomates fraiches, Basilic, Mozzarella</field>
+            <field name="description">Fresh Tomatoes, Basil, Mozzarella</field>
         </record>
 
         <record model="lunch.product" id="product_Bolognese">
-            <field name="name">Pâtes Bolognese</field>
+            <field name="name">Bolognese Pasta</field>
             <field name="category_id" eval="str(ref('categ_pasta'))"/>
             <field name="price">7.70</field>
             <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
-            <field name="descrîption"></field>
+            <field name="description"></field>
         </record>
 
          <record model="lunch.product" id="product_Napoli">
-            <field name="name">Pâtes Napoli</field>
+            <field name="name">Napoli Pasta</field>
             <field name="category_id" eval="str(ref('categ_pasta'))"/>
             <field name="price">7.70</field>
             <field name="supplier" eval="str(ref('partner_pizza_inn'))"/>
-            <field name="descrîption">Tomates, Basilic</field>
+            <field name="description">Tomatoes, Basil</field>
         </record>
 
         <record model="lunch.order" id="order_1">
@@ -138,7 +138,7 @@
             <field name="date" eval="time.strftime('2012-10-22')"/>
             <field name="state">confirmed</field>
             <field name="supplier" ref="partner_pizza_inn"/>
-            <field name="note">+Champignons</field>
+            <field name="note">+Mushrooms</field>
             <field name="order_id" ref="order_2"/>
         </record>
 
@@ -148,7 +148,7 @@
             <field name="date" eval="time.strftime('2012-10-24')"/>
             <field name="state">cancelled</field>
             <field name="supplier" ref="partner_coin_gourmand"/>
-            <field name="note">+Salade +Tomates +Comcombres</field>
+            <field name="note">+Salad +Tomatoes +Cucumbers</field>
             <field name="order_id" ref="order_3"/>
         </record>
 
