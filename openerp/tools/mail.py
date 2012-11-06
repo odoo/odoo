@@ -19,8 +19,11 @@
 #
 ##############################################################################
 
-from lxml.html.soupparser import fromstring
-from lxml.etree import tostring
+from lxml.etree import tostring, Element
+try:
+    from lxml.html.soupparser import fromstring as parser_fromstring
+except ImportError:
+    from lxml.html import fromstring as parser_fromstring
 import logging
 import lxml.html
 import openerp.pooler as pooler
@@ -124,10 +127,10 @@ def html_email_clean(html):
     modified_html += html[idx:]
 
     # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
-    root = fromstring(modified_html)
+    root = parser_fromstring(modified_html)
     if not len(root) and root.text is None and root.tail is None:
         modified_html = '<div>%s</div>' % modified_html
-        root = fromstring(modified_html)
+        root = parser_fromstring(modified_html)
 
     # 3. remove blockquotes
     quotes = [el for el in root.iterchildren(tag='blockquote')]
