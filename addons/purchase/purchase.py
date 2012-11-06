@@ -220,7 +220,7 @@ class purchase_order(osv.osv):
     _defaults = {
         'date_order': fields.date.context_today,
         'state': 'draft',
-        'name': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'purchase.order'),
+        'name': lambda obj, cr, uid, context: '/',
         'shipped': 0,
         'invoice_method': 'order',
         'invoiced': 0,
@@ -237,6 +237,9 @@ class purchase_order(osv.osv):
     _order = "name desc"
 
     def create(self, cr, uid, vals, context=None):
+        if ('name' not in vals) or (vals.get('name')=='/'):
+            seq_obj_name =  self._name
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, seq_obj_name)
         order =  super(purchase_order, self).create(cr, uid, vals, context=context)
         if order:
             self.create_send_note(cr, uid, [order], context=context)
