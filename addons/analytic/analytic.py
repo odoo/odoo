@@ -180,7 +180,7 @@ class account_analytic_account(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
-        'date_start': fields.date('Date Start'),
+        'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
@@ -305,7 +305,10 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
+            message = _("Contract <b>created</b>.")
+            if obj.partner_id:
+                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
+            self.message_post(cr, uid, [obj.id], body=message,
                 subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()

@@ -29,6 +29,9 @@ from openerp import SUPERUSER_ID
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
 
+class SignupError(Exception):
+    pass
+
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -101,12 +104,12 @@ class res_partner(osv.Model):
         partner_ids = self.search(cr, uid, [('signup_token', '=', token)], context=context)
         if not partner_ids:
             if raise_exception:
-                raise Exception("Signup token '%s' is not valid" % token)
+                raise SignupError("Signup token '%s' is not valid" % token)
             return False
         partner = self.browse(cr, uid, partner_ids[0], context)
         if check_validity and not partner.signup_valid:
             if raise_exception:
-                raise Exception("Signup token '%s' is no longer valid" % token)
+                raise SignupError("Signup token '%s' is no longer valid" % token)
             return False
         return partner
 
@@ -194,7 +197,7 @@ class res_users(osv.Model):
         # check that uninvited users may sign up
         if 'partner_id' not in values:
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
-                raise Exception('Signup is not allowed for uninvited users')
+                raise SignupError('Signup is not allowed for uninvited users')
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True

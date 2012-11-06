@@ -509,8 +509,8 @@
                         <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
-                                    <field name="profit_account_id"/>
-                                    <field name="loss_account_id"/>
+                                    <field name="profit_account_id" domain="[('type','!=','view')]"/>
+                                    <field name="loss_account_id" domain="[('type','!=','view')]"/>
                                     <field name="internal_account_id"/>
                                 </group>
                                 <group string="Miscellaneous">
@@ -1230,8 +1230,8 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id" context="{'journal_id':self}"/>
-                    <field name="period_id" context="{'period_id':self}"/>
+                    <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                    <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
