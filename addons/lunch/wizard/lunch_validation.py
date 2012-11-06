@@ -1,3 +1,23 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 from osv import osv, fields
 
 class lunch_validation(osv.Model):
@@ -6,24 +26,4 @@ class lunch_validation(osv.Model):
     _description = 'lunch validation for order'
 
     def confirm(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        order_lines_ref = self.pool.get('lunch.order.line')
-        orders_ref = self.pool.get('lunch.order')
-        order_ids = context.get('active_ids', [])
-
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            if order.state!='confirmed':
-                new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product_id.name, 'order_id':order.id, 'state':'order', 'date':order.date})
-                order_lines_ref.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            isconfirmed = True
-            for product in order.order_id.order_line_ids:
-                if product.state == 'new':
-                    isconfirmed = False
-                if product.state == 'cancelled':
-                    isconfirmed = False
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-            if isconfirmed == True:
-                orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
-        return {}
+        return self.pool.get('lunch.order.line').confirm(cr, uid, ids, context=context)

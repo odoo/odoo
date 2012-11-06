@@ -1,3 +1,23 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 from osv import osv, fields
 
 class lunch_order_order(osv.Model):
@@ -6,9 +26,4 @@ class lunch_order_order(osv.Model):
     _description = 'Wizard to order a meal'
 
     def order(self,cr,uid,ids,context=None):
-        order_lines_ref = self.pool.get('lunch.order.line')
-        active_ids =  context.get('active_ids', [])
-        for order_line in order_lines_ref.browse(cr,uid,active_ids,context=context):
-            if order_line.state!='confirmed' and order_line.state!='ordered':
-                order_lines_ref.write(cr,uid,[order_line.id],{'state':'ordered'},context)
-        return {}
+        return self.pool.get('lunch.order.line').order(cr, uid, ids, context=context)

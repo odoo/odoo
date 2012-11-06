@@ -1,3 +1,23 @@
+# -*- encoding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Management Solution
+#    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
 from osv import osv, fields
 
 class lunch_cancel(osv.Model):
@@ -6,27 +26,4 @@ class lunch_cancel(osv.Model):
     _description = 'cancel lunch order'
 
     def cancel(self,cr,uid,ids,context=None):
-        #confirm one or more order.line, update order status and create new cashmove
-        cashmove_ref = self.pool.get('lunch.cashmove')
-        order_lines_ref = self.pool.get('lunch.order.line')
-        orders_ref = self.pool.get('lunch.order')
-        order_ids = context.get('active_ids', [])
-
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            order_lines_ref.write(cr,uid,[order.id],{'state':'cancelled'},context)
-            for cash in order.cashmove:
-                cashmove_ref.unlink(cr,uid,cash.id,context)
-        for order in order_lines_ref.browse(cr,uid,order_ids,context=context):
-            hasconfirmed = False
-            hasnew = False
-            for product in order.order_id.order_line_ids:
-                if product.state=='confirmed':
-                    hasconfirmed= True
-                if product.state=='new':
-                    hasnew= True
-            if hasnew == False:
-                if hasconfirmed == False:
-                    orders_ref.write(cr,uid,[order.order_id.id],{'state':'cancelled'},context)
-                    return {}
-            orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
-        return {}
+        return self.pool.get('lunch.order.line').cancel(cr, uid, ids, context=context)
