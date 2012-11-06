@@ -1642,8 +1642,6 @@ openerp.mail = function (session) {
                     views: [[false, 'form']],
                     target: 'new',
                     context: {
-                        'default_model': '',
-                        'default_res_id': false,
                         'default_content_subtype': 'html',
                     },
                 };
