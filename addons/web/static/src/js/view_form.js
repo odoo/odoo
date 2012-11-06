@@ -222,8 +222,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     widgetAccesskey:function(){
         $(document).keydown(function(e){
-            if(e.keyCode === $.ui.keyCode.ALT) {
+            if(e.keyCode === $.ui.keyCode.ALT || e.keyCode === $.ui.keyCode.SHIFT && e.altKey) {
                 $("[accesskey]").addClass('accessactive');
+            }else {
+                $("[accesskey]").removeClass('accessactive');
             }
             e.stopPropagation();
         }).keyup(function(e){
