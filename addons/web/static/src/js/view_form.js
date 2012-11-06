@@ -3739,7 +3739,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
         // FIXME: why isn't there an API for this?
         if (this.editor.form.$el.hasClass('oe_form_dirty')) {
-            this.save_edition();
+            this.ensure_saved();
             return;
         }
         this.cancel_edition();
