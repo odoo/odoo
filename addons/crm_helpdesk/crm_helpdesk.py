@@ -53,13 +53,12 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                            select=True, help='Sales team to which Case belongs to.\
-                                 Define Responsible user and Email account for mail gateway.'),
+                            select=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
             'partner_id': fields.many2one('res.partner', 'Partner'),
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-            'email_from': fields.char('Email', size=128, help="These people will receive email."),
+            'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -73,10 +72,10 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
                             ('object_id.model', '=', 'crm.helpdesk')]"),
             'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
             'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+                                  help='The status is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the status is set to \'Open\'.\
+                                  \nWhen the case is over, the status is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the status is set to \'Pending\'.'),
     }
 
     _defaults = {
