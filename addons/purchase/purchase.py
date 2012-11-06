@@ -189,7 +189,7 @@ class purchase_order(osv.osv):
         'shipped_rate': fields.function(_shipped_rate, string='Received', type='float'),
         'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
-        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
+        'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
                 "Bases on incoming shipments: let you create an invoice when receptions are validated."
@@ -214,7 +214,7 @@ class purchase_order(osv.osv):
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
-        'company_id': fields.many2one('res.company','Company',required=True,select=1),
+        'company_id': fields.many2one('res.company','Company',required=True,select=1, states={'confirmed':[('readonly',True)], 'approved':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal'),
     }
     _defaults = {
@@ -504,7 +504,28 @@ class purchase_order(osv.osv):
         if res:
             self.invoice_send_note(cr, uid, ids, res, context)
         return res
+    def action_view_invoice(self, cr, uid, ids, context=None):
+        '''
+        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        '''
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
 
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        #compute the number of invoices to display
+        inv_ids = []
+        for po in self.browse(cr, uid, ids, context=context):
+            inv_ids += [invoice.id for invoice in po.invoice_ids]
+        #choose the view_mode accordingly
+        if len(inv_ids)>1:
+            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
+        else:
+            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+            result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
+        return result
     def invoice_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'approved'}, context=context)
         self.invoice_done_send_note(cr, uid, ids, context=context)

@@ -208,6 +208,8 @@
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight" groups="purchase.group_purchase_manager"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
+                    <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}"
+                             groups="base.group_user"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
                     <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
@@ -262,8 +264,7 @@
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <div class="oe_clear"/>
-                            <label for="notes"/>
-                            <field name="notes"/>
+                            <field name="notes" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
                         <page string="Incoming Shipments &amp; Invoices">
                             <group>
@@ -282,8 +283,6 @@
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
-                            <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                     </notebook>
                 </sheet>
