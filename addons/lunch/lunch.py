@@ -356,9 +356,9 @@ class lunch_order_line(osv.Model):
                     isconfirmed = False
                 if orderline.state == 'cancelled':
                     isconfirmed = False
-                    order_ref.write(cr, uid, [order.id], {'state': 'partially'}, context=context)
+                    orders_ref.write(cr, uid, [order.id], {'state': 'partially'}, context=context)
             if isconfirmed:
-                order_ref.write(cr, uid, [order.id], {'state': 'confirmed'}, context=context)
+                orders_ref.write(cr, uid, [order.id], {'state': 'confirmed'}, context=context)
         return {}
 
     def cancel(self, cr, uid, ids, context=None):
