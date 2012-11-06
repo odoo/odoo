@@ -682,7 +682,6 @@ class mail_thread(osv.AbstractModel):
             # avoid loops when finding ancestors
             processed_list = []
             if message_ids:
-                _counter, _counter_max = 0, 200
                 message = mail_message.browse(cr, SUPERUSER_ID, message_ids[0], context=context)
                 while (message.parent_id and message.parent_id.id not in processed_list):
                     processed_list.append(message.parent_id.id)
