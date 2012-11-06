@@ -21,8 +21,9 @@
 
 import tools
 
+from openerp.addons.mail.tests import test_mail
 from openerp.tests import common
-from openerp.tools.html_sanitize import html_sanitize
+from openerp.tools.mail import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -84,39 +85,7 @@ Sylvie
 """
 
 
-class TestMailMockups(common.TransactionCase):
-
-    def _mock_smtp_gateway(self, *args, **kwargs):
-        return True
-
-    def _init_mock_build_email(self):
-        self._build_email_args_list = []
-        self._build_email_kwargs_list = []
-
-    def _mock_build_email(self, *args, **kwargs):
-        """ Mock build_email to be able to test its values. Store them into
-            some internal variable for latter processing. """
-        self._build_email_args_list.append(args)
-        self._build_email_kwargs_list.append(kwargs)
-        return self._build_email(*args, **kwargs)
-
-    def setUp(self):
-        super(TestMailMockups, self).setUp()
-        # Install mock SMTP gateway
-        self._init_mock_build_email()
-        self._build_email = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self._send_email = self.registry('ir.mail_server').send_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
-
-    def tearDown(self):
-        # Remove mocks
-        self.registry('ir.mail_server').build_email = self._build_email
-        self.registry('ir.mail_server').send_email = self._send_email
-        super(TestMailMockups, self).tearDown()
-
-
-class test_mail(TestMailMockups):
+class test_mail(test_mail.TestMailMockups):
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
