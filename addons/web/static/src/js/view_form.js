@@ -4826,6 +4826,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
+    placeholder: "/web/static/src/img/placeholder.png",
     render_value: function() {
         var self = this;
         var url;
@@ -4839,7 +4840,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + id + '&field=' + field + '&t=' + (new Date().getTime());
         } else {
-            url = "/web/static/src/img/placeholder.png";
+            url = this.placeholder;
         }
         var $img = $(QWeb.render("FieldBinaryImage-img", { widget: this, url: url }));
         this.$el.find('> img').remove();
@@ -4851,6 +4852,10 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             $img.css("max-height", "" + self.options.size[1] + "px");
             $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
             $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
+        });
+        $img.on('error', function() {
+            $img.attr('src', self.placeholder);
+            instance.webclient.notification.warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
     on_file_change: function() {
