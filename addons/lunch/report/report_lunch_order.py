@@ -45,11 +45,11 @@ class report_lunch_order(osv.osv):
             create or replace view report_lunch_order_line as (
                select
                    min(lo.id) as id,
+                   lo.user_id as user_id,
                    lo.date as date,
                    to_char(lo.date, 'YYYY') as year,
                    to_char(lo.date, 'MM') as month,
                    to_char(lo.date, 'YYYY-MM-DD') as day,
-                   lo.user_id,
                    lo.note as note,
                    sum(lp.price) as price_total
 

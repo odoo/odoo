@@ -5,6 +5,9 @@
         <record id="base.user_root" model="res.users">
             <field name="groups_id" eval="[(4,ref('lunch.group_lunch_manager'))]"/> 
         </record>
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('lunch.group_lunch_user'))]"/> 
+        </record>
 
         <record model="lunch.product.category" id="categ_sandwich">
             <field name="name">Sandwich</field>
