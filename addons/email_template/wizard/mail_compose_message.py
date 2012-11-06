@@ -148,15 +148,24 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body', 'body_html', 'subject', 'email_to', 'email_cc', 'attachments']
+        fields = ['body', 'body_html', 'subject', 'email_to', 'email_to_partner', 'email_cc', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
         values['partner_ids'] = []
-        mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
+
+        mails = tools.email_split( values.pop('email_to', '') + ' ' + values.pop('email_cc', '') )
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             values['partner_ids'].append(partner_id)
+
+        partner_ids = values.pop('email_to_partner', '').split(',')
+        for partner_id in partner_ids:
+            if partner_id:
+                values['partner_ids'].append(int(partner_id))
+
+        values['partner_ids'] = list(set(values['partner_ids']))
+
         return values
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
