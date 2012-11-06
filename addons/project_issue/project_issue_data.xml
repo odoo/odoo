@@ -44,17 +44,19 @@ Access all issues from the top Project menu, and access the issues of a specific
 
         <!-- Mail subtypes -->
         <record id="mail.mt_issue_new" model="mail.message.subtype">
-            <field name="name">created</field>
+            <field name="name">New</field>
             <field name="res_model">project.issue</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_issue_new" model="mail.message.subtype">
-            <field name="name">stage change</field>
-            <field name="res_model">project.issue</field>
-            <field name="default" eval="False"/>
         </record>
         <record id="mail.mt_issue_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
+            <field name="name">Closed</field>
+            <field name="res_model">project.issue</field>
+        </record>
+        <record id="mail.mt_issue_canceled" model="mail.message.subtype">
+            <field name="name">Canceled</field>
+            <field name="res_model">project.issue</field>
+        </record>
+        <record id="mail.mt_issue_change" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
         </record>
 
