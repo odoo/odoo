@@ -552,7 +552,7 @@ class account_account(osv.osv):
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
         (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
-        (_check_company_account, 'You cannot create an account which has parent account of different company.', ['parent_id']),
+        (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
