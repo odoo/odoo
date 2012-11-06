@@ -4420,6 +4420,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.destroy();
     },
     destroy: function () {
+        this.trigger('closed');
         this.$el.dialog('close');
         this._super();
     },
