@@ -3170,7 +3170,6 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
     },
     on_click: function(ev) {
         var self = this;
-        ev.stopPropagation();
         var popup =  new instance.web.form.FormOpenPopup(this);
         popup.show_element(
             this.field.relation,
@@ -3190,9 +3189,6 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
         value_ = value_ || false;
         this.set('value', value_);
         this.set_button();
-        if (this.is_started) {
-            this.render_value();
-        }
      },
 });
 

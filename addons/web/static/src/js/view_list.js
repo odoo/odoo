@@ -2200,11 +2200,7 @@ instance.web.list.Handle = instance.web.list.Column.extend({
 });
 instance.web.list.Many2OneButton = instance.web.list.Column.extend({
     _format: function (row_data, options) {
-        if (row_data.voucher_id.value) {
-            this.icon = '/web/static/src/img/icons/gtk-yes.png';
-        } else {
-            this.icon = '/web/static/src/img/icons/gtk-no.png';
-        }
+        this.has_value = !!row_data[this.id].value;
         return QWeb.render('Many2OneButton.cell', {'widget': this});
     },
 });
