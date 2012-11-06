@@ -91,16 +91,17 @@ class pos_details(report_sxw.rml_parse):
     def _get_sum_dis_2(self):
         return self.discount or 0.0
 
-    def _get_sum_discount(self, objects):
+    def _get_sum_discount(self, form):
         #code for the sum of discount value
-        return reduce(lambda acc, object:
-                                        acc + reduce(
-                                                lambda sum_dis, line:
-                                                        sum_dis + ((line.price_unit * line.qty) * (line.discount / 100)),
-                                                object.lines,
-                                                0.0),
-                                    objects,
-                                    0.0)
+        pos_obj = self.pool.get('pos.order')
+        user_obj = self.pool.get('res.users')
+        user_ids = form['user_ids'] or self._get_all_users()
+        company_id = user_obj.browse(self.cr, self.uid, self.uid).company_id.id
+        pos_ids = pos_obj.search(self.cr, self.uid, [('date_order','>=',form['date_start'] + ' 00:00:00'),('date_order','<=',form['date_end'] + ' 23:59:59'),('user_id','in',user_ids),('company_id','=',company_id)])
+        for pos in pos_obj.browse(self.cr, self.uid, pos_ids):
+            for pol in pos.lines:
+                self.total_discount += ((pol.price_unit * pol.qty) * (pol.discount / 100))
+        return self.total_discount or False
 
     def _get_payments(self, form):
         statement_line_obj = self.pool.get("account.bank.statement.line")
@@ -179,11 +180,12 @@ class pos_details(report_sxw.rml_parse):
         self.qty = 0.0
         self.total_invoiced = 0.0
         self.discount = 0.0
+        self.total_discount = 0.0
         self.localcontext.update({
             'time': time,
             'strip_name': self._strip_name,
             'getpayments': self._get_payments,
-            'getsumdisc': self._get_sum_dis_2,
+            'getsumdisc': self._get_sum_discount,
             'gettotalofthaday': self._total_of_the_day,
             'gettaxamount': self._get_tax_amount,
             'pos_sales_details':self._pos_sales_details,

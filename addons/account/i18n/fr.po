@@ -7,14 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-06-20 16:18+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-10-30 15:48+0000\n"
+"Last-Translator: Frederic Clementi - Camptocamp.com "
+"<frederic.clementi@camptocamp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:01+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-03 05:03+0000\n"
+"X-Generator: Launchpad (build 16218)\n"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1215
@@ -151,7 +152,7 @@ msgstr "Définition des enfants"
 #: code:addons/account/account_bank_statement.py:302
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr "Écriture \"%s\" n'est pas équilibrée"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -1608,10 +1609,9 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
-"Une pièce comptable est composée de plusieurs écritures comptables, chacune "
-"étant soit un débit soit un crédit. OpenERP crée automatiquement une pièce "
-"comptable par document comptable : facture, avoir, paiement de fournisseur, "
-"relevés bancaires, etc."
+"Un écriture est composée de plusieurs lignes, chacune étant soit un débit "
+"soit un crédit. OpenERP crée automatiquement une écriture par document "
+"comptable : facture, avoir, paiement de fournisseur, relevés bancaires, etc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1703,7 +1703,7 @@ msgstr "Recherche d'un relevé bancaire"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "Pièces non comptabiliisées"
+msgstr "Ecritures brouillon"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2478,8 +2478,6 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
-"Pour supprimer un relevé bancaire vous devez préalablement supprimer les "
-"lignes rapprochées."
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -3629,7 +3627,7 @@ msgstr "État des ventes par type de compte"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr "Ecritures non lettrées"
+msgstr "Ecritures non léttrées"
 
 #. module: account
 #: sql_constraint:res.currency:0
@@ -3900,7 +3898,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
 msgid "Account balance"
-msgstr "Balance des comptes"
+msgstr "Balance générale"
 
 #. module: account
 #: report:account.invoice:0
@@ -3972,7 +3970,7 @@ msgstr "Nom"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr "Rapport du solde de la balance agée"
+msgstr "Balance agée"
 
 #. module: account
 #: code:addons/account/account_move_line.py:582
@@ -4181,7 +4179,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr "Ecritures saisies"
+msgstr "Ecritures validées"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4244,7 +4242,7 @@ msgstr "Titulaire du compte bancaire"
 #: model:ir.actions.report.xml,name:account.account_account_balance
 #: model:ir.ui.menu,name:account.menu_general_Balance_report
 msgid "Trial Balance"
-msgstr "Balance des comptes"
+msgstr "Balance générale"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_cancel
@@ -4659,7 +4657,7 @@ msgstr "Sert de compte par défaut pour le crédit"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Comptabiliser les pièces comptables dans le journal"
+msgstr "Valider les écritures"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -4927,7 +4925,7 @@ msgstr ""
 #: code:addons/account/account.py:923
 #, python-format
 msgid "Opening Period"
-msgstr "Période ouverte"
+msgstr "Période d'ouverture"
 
 #. module: account
 #: view:account.move:0
@@ -5611,7 +5609,7 @@ msgstr "Quantité de produits"
 #: selection:account.move,state:0
 #: view:account.move.line:0
 msgid "Unposted"
-msgstr "Non comptabilisé"
+msgstr "Non validée"
 
 #. module: account
 #: view:account.change.currency:0
@@ -5823,7 +5821,7 @@ msgstr "Journal d'écriture"
 #: model:ir.actions.act_window,name:account.action_account_fiscalyear_close
 #: model:ir.ui.menu,name:account.menu_wizard_fy_close
 msgid "Generate Opening Entries"
-msgstr "Générer les écritures d'ouverture"
+msgstr "Générer l'écriture d'ouverture"
 
 #. module: account
 #: code:addons/account/account_move_line.py:775
@@ -7117,7 +7115,7 @@ msgstr "Sélection du journal"
 #: code:addons/account/account.py:432
 #, python-format
 msgid "Opening Balance"
-msgstr "Solde initial"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_reconcile
@@ -7727,8 +7725,7 @@ msgstr "Signes sur les Rapports"
 #: code:addons/account/wizard/account_fiscalyear_close.py:88
 #, python-format
 msgid "The periods to generate opening entries were not found"
-msgstr ""
-"Les périodes pour générer les écritures d'ouverture n'ont pas été trouvées."
+msgstr "Aucune période d'ouverture trouvée"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_view
@@ -7822,7 +7819,7 @@ msgstr "Journal des ventes"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr "Écritures ouvertes !"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7859,7 +7856,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr "Pièces non comptabilisées"
+msgstr "Ecritures non validées"
 
 #. module: account
 #: view:product.product:0
@@ -7976,7 +7973,7 @@ msgstr "Code de la case"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Comptabiliser les pièces comptables d'un journal"
+msgstr "Valider les écritures"
 
 #. module: account
 #: view:product.product:0
@@ -8161,7 +8158,7 @@ msgstr "Ligne de caisse"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "Grand Livre"
+msgstr "Livre des tiers"
 
 #. module: account
 #: selection:account.tax.template,type:0
@@ -8359,7 +8356,7 @@ msgstr ""
 #: help:account.account,reconcile:0
 msgid ""
 "Check this box if this account allows reconciliation of journal items."
-msgstr "Cochez si le compte autorise le lettrage des pièces."
+msgstr "Cochez si le compte autorise le lettrage des écritures."
 
 #. module: account
 #: help:account.period,state:0
@@ -9220,7 +9217,7 @@ msgstr "inconnu"
 #: code:addons/account/account.py:3130
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Journal des écritures d'ouverture"
+msgstr "Journal d'ouverture"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -10006,7 +10003,7 @@ msgstr "Ce compte de tiers remplacera le compte par défaut."
 #. module: account
 #: field:account.period,special:0
 msgid "Opening/Closing Period"
-msgstr "Ouverture/clôture d'exercice"
+msgstr "Période d'ouverture/clôture"
 
 #. module: account
 #: field:account.account,currency_id:0
@@ -10336,7 +10333,7 @@ msgstr "Date de fin"
 #: model:ir.actions.act_window,name:account.action_account_open_closed_fiscalyear
 #: model:ir.ui.menu,name:account.menu_wizard_account_open_closed_fiscalyear
 msgid "Cancel Opening Entries"
-msgstr "Annuler les écritures d'ouvertures"
+msgstr "Annuler l'écriture d'ouverture"
 
 #. module: account
 #: field:account.payment.term.line,days2:0
@@ -10505,7 +10502,7 @@ msgstr "Signer pour le parent"
 #. module: account
 #: model:ir.model,name:account.model_account_balance_report
 msgid "Trial Balance Report"
-msgstr "Rapport sur la balance des comptes"
+msgstr "Balance générale"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_draft_tree
@@ -10688,7 +10685,7 @@ msgstr "Intervalle"
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a purchase journal."
-msgstr "Imputations analytiques relatives au journal des achats."
+msgstr "Ecritures analytiques relatives au journal des achats."
 
 #. module: account
 #: help:account.account,type:0
@@ -11213,7 +11210,7 @@ msgstr "Future"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Rechercher des écritures comptables"
+msgstr "Recherche par ligne d'écritures"
 
 #. module: account
 #: help:account.tax,base_sign:0
