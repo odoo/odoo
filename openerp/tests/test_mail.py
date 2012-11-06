@@ -1,5 +1,25 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+##############################################################################
+#
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
+#
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU Affero General Public License as
+#    published by the Free Software Foundation, either version 3 of the
+#    License, or (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU Affero General Public License for more details.
+#
+#    You should have received a copy of the GNU Affero General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+##############################################################################
+
 import unittest
 from openerp.tools.html_sanitize import html_sanitize
 
@@ -21,21 +41,29 @@ test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></fo
 <a href="javascript:alert('malicious code')">test link</a>
 """
 
+
 class TestSanitizer(unittest.TestCase):
+    # TDE note: could be improved by actually checking the output
 
     def test_simple(self):
         x = "yop"
         self.assertEqual(x, html_sanitize(x))
-        
+
     def test_trailing_text(self):
         x = 'lala<p>yop</p>xxx'
         self.assertEqual(x, html_sanitize(x))
-    
+
     def test_no_exception(self):
         html_sanitize(test_case)
-        
+
     def test_unicode(self):
         html_sanitize("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci")
+
+
+class TestCleaner(unittest.TestCase):
+
+    def test(self):
+        print 'poinpoinpoinponi'
 
 if __name__ == '__main__':
     unittest.main()
