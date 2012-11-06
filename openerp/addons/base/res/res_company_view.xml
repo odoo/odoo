@@ -20,8 +20,8 @@
             <field name="arch" type="xml">
                 <form string="Company" version="7.0">
                   <sheet>
-                    <div class="oe_right oe_avatar">
-                        <field name="logo" nolabel="1" widget="image"/>
+                    <div>
+                        <field name="logo" nolabel="1" widget="image"  class="oe_avatar oe_left"/>
                     </div>
                     <div class="oe_right oe_button_box" name="button_box">
                                 <button name="%(preview_report)d" string="Preview Header/Footer" type="action" icon="gtk-print" class="oe_inline oe_right"/>
