@@ -119,7 +119,7 @@ class lunch_order(osv.Model):
             #check if the address must be displayed today
             if self.can_display_alert(alert):
                 #display the address only during its active time
-                mynow = fields.datetime.context_timestamp(cr, uid, datetime.datetime.now(), context=context)
+                mynow = fields.datetime.context_timestamp(cr, uid, datetime.now(), context=context)
                 hour_to = int(alert.active_to)
                 min_to = int((alert.active_to - hour_to) * 60)
                 to_alert = datetime.strptime(str(hour_to) + ":" + str(min_to), "%H:%M")
