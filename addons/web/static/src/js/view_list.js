@@ -1100,7 +1100,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
         if (!this.$current) { return; }
         this.$current.remove();
-        this.$current = null;
     },
     get_records: function () {
         return this.records.map(function (record) {
@@ -1307,9 +1306,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         process_modifiers: false
                     });
                 } catch (e) {
-                    group_label = row_data[group_column.id].value;
+                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
                 }
-                $group_column.text(_.str.sprintf("%s (%d)",
+                // group_label is html-clean (through format or explicit
+                // escaping if format failed), can inject straight into HTML
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {

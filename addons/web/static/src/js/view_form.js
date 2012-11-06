@@ -427,7 +427,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var onchange = _.str.trim(on_change);
         var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
         if (!call) {
-            return null;
+            throw new Error("Wrong on change format: " + onchange);
         }
 
         var method = call[1];
@@ -494,71 +494,59 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         return this.on_change_mutex.exec(function() {
             try {
-                var response = {}, can_process_onchange = $.Deferred();
+                var def;
                 processed = processed || [];
                 processed.push(widget.name);
                 var on_change = widget.node.attrs.on_change;
                 if (on_change) {
                     var change_spec = self.parse_on_change(on_change, widget);
-                    if (change_spec) {
-                        var ajax = {
-                            url: '/web/dataset/onchange',
-                            async: false
-                        };
-                        can_process_onchange = self.rpc(ajax, {
-                            model: self.dataset.model,
-                            method: change_spec.method,
-                            args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                            context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                        }).then(function(r) {
-                            _.extend(response, r);
-                        });
-                    } else {
-                        console.warn("Wrong on_change format", on_change);
-                    }
+                    def = self.rpc('/web/dataset/onchange', {
+                        model: self.dataset.model,
+                        method: change_spec.method,
+                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                        context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
+                    });
+                } else {
+                    def = $.when({});
                 }
-                // fail if onchange failed
-                if (can_process_onchange.isRejected()) {
-                    return can_process_onchange;
-                }
+                return def.pipe(function(response) {
+                    if (widget.field['change_default']) {
+                        var fieldname = widget.name
+                        var value_;
+                        if (response.value && (fieldname in response.value)) {
+                            // Use value from onchange if onchange executed
+                            value_ = response.value[fieldname];
+                        } else {
+                            // otherwise get form value for field
+                            value_ = self.fields[fieldname].get_value();
+                        }
+                        var condition = fieldname + '=' + value_;
 
-                if (widget.field['change_default']) {
-                    var fieldname = widget.name, value_;
-                    if (response.value && (fieldname in response.value)) {
-                        // Use value from onchange if onchange executed
-                        value_ = response.value[fieldname];
-                    } else {
-                        // otherwise get form value for field
-                        value_ = self.fields[fieldname].get_value();
+                        if (value_) {
+                            return self.rpc('/web/dataset/call', {
+                                model: 'ir.values',
+                                method: 'get_defaults',
+                                args: [self.model, condition]
+                            }).pipe(function (results) {
+                                if (!results.length) {
+                                    return response;
+                                }
+                                if (!response.value) {
+                                    response.value = {};
+                                }
+                                for(var i=0; i<results.length; ++i) {
+                                    // [whatever, key, value]
+                                    var triplet = results[i];
+                                    response.value[triplet[1]] = triplet[2];
+                                }
+                                return response;
+                            });
+                        }
                     }
-                    var condition = fieldname + '=' + value_;
-
-                    if (value_) {
-                        can_process_onchange = self.rpc({
-                            url: '/web/dataset/call',
-                            async: false
-                        }, {
-                            model: 'ir.values',
-                            method: 'get_defaults',
-                            args: [self.model, condition]
-                        }).then(function (results) {
-                            if (!results.length) { return; }
-                            if (!response.value) {
-                                response.value = {};
-                            }
-                            for(var i=0; i<results.length; ++i) {
-                                // [whatever, key, value]
-                                var triplet = results[i];
-                                response.value[triplet[1]] = triplet[2];
-                            }
-                        });
-                    }
-                }
-                if (can_process_onchange.isRejected()) {
-                    return can_process_onchange;
-                }
-
-                return self.on_processed_onchange(response, processed);
+                    return response;
+                }).pipe(function(response) {
+                    return self.on_processed_onchange(response, processed);
+                });
             } catch(e) {
                 console.error(e);
                 instance.webclient.crashmanager.show_message(e);
@@ -2967,7 +2955,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         self.uned_def = $.Deferred();
         var ed_delay = 200;
         var ed_duration = 15000;
-        var anyoneLoosesFocus = function() {
+        var anyoneLoosesFocus = function (e) {
             var used = false;
             if (self.floating) {
                 if (self.last_search.length > 0) {
@@ -2991,7 +2979,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.ed_def = $.Deferred();
                 self.ed_def.then(function() {
                     self.show_error_displayer();
+                    ignore_blur = false;
+                    self.trigger('focused');
                 });
+                ignore_blur = true;
                 setTimeout(function() {
                     self.ed_def.resolve();
                     self.uned_def.reject();
@@ -3321,7 +3312,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                         e.cancel = true;
                     });
                     _(controller.columns).find(function (column) {
-                        if (!column instanceof instance.web.list.Handle) {
+                        if (!(column instanceof instance.web.list.Handle)) {
                             return false;
                         }
                         column.modifiers.invisible = true;
@@ -4341,13 +4332,14 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.create_function = function(data, sup) {
             var fct = self.options.create_function || sup;
             return fct.call(this, data).then(function(r) {
+                self.trigger('create_completed saved', r);
                 self.created_elements.push(r);
             });
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
             return fct.call(this, id, data, options).then(function() {
-                self.trigger('write_completed');
+                self.trigger('write_completed saved');
             });
         };
         this.dataset.parent_view = this.options.parent_view;
@@ -4424,6 +4416,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.select_elements(this.created_elements);
             this.created_elements = [];
         }
+        this.trigger('closed');
         this.destroy();
     },
     destroy: function () {
