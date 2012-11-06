@@ -163,11 +163,13 @@
           <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.partner_id and picking.partner_id.title.name or '' ]] [[ picking.partner_id and picking.partner_id.name or '' ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]] </para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email]]</para>
         </td>
       </tr>
     </blockTable>
