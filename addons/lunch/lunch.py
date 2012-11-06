@@ -108,7 +108,7 @@ class lunch_order(osv.Model):
             #the alert is activated during some days of the week
             return self.check_day(alert)
 
-    def _default_alerts_get(self, cr, uid, arg, context=None):
+    def _default_alerts_get(self, cr, uid, context=None):
         """ 
         get the alerts to display on the order form
         """
