@@ -37,20 +37,6 @@
             </field>
         </record>
 
-        <record id="view_picking_in_form_picking_inherit" model="ir.ui.view">
-            <field name="name">stock.picking.in.form.inherit</field>
-            <field name="model">stock.picking.in</field>
-            <field name="inherit_id" ref="stock.view_picking_in_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='move_lines']" position="after">
-                    <field name="purchase_invoice_method" invisible="1"/>
-                </xpath>
-                <xpath expr="//button[@name='action_process']" position="after">
-                    <button name="view_invoice" string="Receive &amp; Control Invoice"  attrs="{'invisible':['|', ('invoice_state','=','invoiced'),('purchase_invoice_method', '!=', 'picking')]}" type="object" class="oe_highlight"/>
-                </xpath>
-            </field>
-        </record>
-
         <!-- is it need ? we have another method "Receive Products"-->
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>

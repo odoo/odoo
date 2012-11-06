@@ -135,30 +135,7 @@ class stock_picking_in(osv.osv):
     _columns = {
         'purchase_id': fields.many2one('purchase.order', 'Purchase Order',
             ondelete='set null', select=True),
-        'purchase_invoice_method': fields.related('purchase_id', 'invoice_method', type='selection', selection=[('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], string='Purchase Invoice Method'),
         'warehouse_id': fields.related('purchase_id', 'warehouse_id', type='many2one', relation='stock.warehouse', string='Destination Warehouse'),
     }
-    def view_invoice(self, cr, uid, ids, context=None):
-        pur_obj = self.pool.get('purchase.order')
-        models_data = self.pool.get('ir.model.data')
-        pur_ids = []
-        inv_ids = []
-        for pur_id in self.browse(cr, uid, ids, context=context):
-            pur_ids.append(pur_id.purchase_id.id)
-        for po in pur_obj.browse(cr, uid, pur_ids, context=context):
-            inv_ids+= [invoice.id for invoice in po.invoice_ids]
-        form_view = models_data.get_object_reference(cr, uid, 'stock', 'view_stock_invoice_onshipping')
-        if inv_ids:
-            return pur_obj.view_invoice(cr, uid, pur_ids, context=context)
-        else:
-            return {
-                'name': _('Create Supplier Invoice'),
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.invoice.onshipping',
-                'view_id': False,
-                'views': [(form_view and form_view[1] or False, 'form')],
-                'target': 'new',
-                'type': 'ir.actions.act_window',
-            }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
