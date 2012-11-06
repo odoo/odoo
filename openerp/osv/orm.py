@@ -1460,15 +1460,16 @@ class BaseModel(object):
         field_names = dict(
             (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
                                          context.get('lang'))
-                 or column.string or f))
+                 or column.string))
             for f, column in columns.iteritems())
-        converters = dict(
-            (k, Converter.to_field(cr, uid, self, column, context=context))
-            for k, column in columns.iteritems())
+
+        convert = Converter.for_model(cr, uid, self, context=context)
 
         def _log(base, field, exception):
             type = 'warning' if isinstance(exception, Warning) else 'error'
-            record = dict(base, field=field, type=type,
+            # logs the logical (not human-readable) field name for automated
+            # processing of response, but injects human readable in message
+            record = dict(base, type=type, field=field,
                           message=unicode(exception.args[0]) % base)
             if len(exception.args) > 1 and exception.args[1]:
                 record.update(exception.args[1])
@@ -1478,7 +1479,6 @@ class BaseModel(object):
         for record, extras in stream:
             dbid = False
             xid = False
-            converted = {}
             # name_get/name_create
             if None in record: pass
             # xid
@@ -1499,27 +1499,8 @@ class BaseModel(object):
                         message=_(u"Unknown database identifier '%s'") % dbid))
                     dbid = False
 
-            for field, strvalue in record.iteritems():
-                if field in (None, 'id', '.id'): continue
-                if not strvalue:
-                    converted[field] = False
-                    continue
-
-                # In warnings and error messages, use translated string as
-                # field name
-                message_base = dict(
-                    extras, record=stream.index, field=field_names[field])
-                try:
-                    converted[field], ws = converters[field](strvalue)
-
-                    for w in ws:
-                        if isinstance(w, basestring):
-                            # wrap warning string in an ImportWarning for
-                            # uniform handling
-                            w = ImportWarning(w)
-                        _log(message_base, field, w)
-                except ValueError, e:
-                    _log(message_base, field, e)
+            converted = convert(record, lambda field, err:\
+                _log(dict(extras, record=stream.index, field=field_names[field]), field, err))
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
