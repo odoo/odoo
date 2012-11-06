@@ -19,60 +19,66 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
     },
 
     on_change_value_check : function () {
-        var self = this;
+        this.values = _.uniq(this.values);
+
         // filter for removed values
-        var values_removed = _.difference(self.values, self.get('value'));
+        var values_removed = _.difference(this.values, this.get('value'));
 
         if (values_removed.length) {
-            self.values = _.difference(self.values, values_removed);
-            this.set({'value': self.values});
+            this.values = _.difference(this.values, values_removed);
+            this.set({'value': this.values});
             return false;
         }
 
         // find not checked values
-        var not_checked = _.difference(self.get('value'), self.values);
+        var not_checked = _.difference(this.get('value'), this.values);
 
         // find not checked values and not on checking
-        var not_checked = _.difference(not_checked, self.values_checking);
+        var not_checked = _.difference(not_checked, this.values_checking);
 
-        _.each(not_checked, function (val, key) {
-            self.values_checking.push(val);
-            self._check_email_popup(val);
-        });
+        if(not_checked.length) {
+            // remember values on checking for cheked only one time
+            this.values_checking = this.values_checking.concat(not_checked);
+            // check values
+            this._check_email_popup(not_checked);
+        }
     },
 
-    _check_email_popup: function (id) {
+    _check_email_popup: function (ids) {
         var self = this;
-        new instance.web.Model('res.partner').call("read", [id, ["email", "notification_email_send"]], {context: this.build_context()})
-            .pipe(function (dict) {
-                if (!dict.email && (dict.notification_email_send == 'all' || dict.notification_email_send == 'comment')) {
+        new instance.web.Model('res.partner').call("search", [[
+                ["id", "in", ids], 
+                ["email", "=", false], 
+                ["notification_email_send", "in", ['all', 'comment']] ]], 
+                {context: this.build_context()})
+            .pipe(function (record_ids) {
+                // valid partner
+                var valid_partner = _.difference(ids, record_ids);
+                self.values = self.values.concat(valid_partner);
+                self.values_checking = _.difference(self.values_checking, valid_partner);
+
+                // unvalid partner
+                _.each(record_ids, function(id) {
                     var pop = new instance.web.form.FormOpenPopup(self);
                     pop.show_element(
                         'res.partner',
-                        dict.id,
+                        id,
                         self.build_context(),
                         {
                             title: _t("Please complete partner's informations and Email"),
                         }
                     );
                     pop.on('write_completed', self, function () {
-                        self._checked(dict.id, true);
+                        this.values.push(id);
+                        this.values_checking = _.without(this.values_checking, id);
+                        this.set({'value': this.values});
                     });
                     pop.on('closed', self, function () {
-                        self._checked(dict.id, false);
+                        this.values_checking = _.without(this.values_checking, id);
+                        this.set({'value': this.values});
                     });
-                } else {
-                    self._checked(dict.id, true);
-                }
+                });
             });
-    },
-
-    _checked: function (id, access) {
-        if (access) {
-            this.values.push(id);
-        }
-        this.values_checking = _.without(this.values_checking, id);
-        this.set({'value': this.values});
     },
 });
 
