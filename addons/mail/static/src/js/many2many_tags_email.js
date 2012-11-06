@@ -58,7 +58,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
                     pop.on('write_completed', self, function () {
                         self._checked(dict.id, true);
                     });
-                    pop.on('closing', self, function () {
+                    pop.on('closed', self, function () {
                         self._checked(dict.id, false);
                     });
                 } else {
