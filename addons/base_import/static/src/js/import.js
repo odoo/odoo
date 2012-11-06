@@ -123,10 +123,10 @@ openerp.base_import = function (instance) {
                 this.exit();
             }
         },
-        init: function (parent, params) {
+        init: function (parent, action) {
             var self = this;
             this._super.apply(this, arguments);
-            this.res_model = params.model;
+            this.res_model = action.params.model;
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
@@ -179,7 +179,8 @@ openerp.base_import = function (instance) {
 
         //- File & settings change section
         onfile_loaded: function () {
-            this.$('.oe_import_button').prop('disabled', true);
+            this.$('.oe_import_button, .oe_import_file_reload')
+                    .prop('disabled', true);
             if (!this.$('input.oe_import_file').val()) { return; }
 
             this.$el.removeClass('oe_import_preview oe_import_error');
@@ -189,7 +190,8 @@ openerp.base_import = function (instance) {
         },
         onpreviewing: function () {
             var self = this;
-            this.$('.oe_import_button').prop('disabled', true);
+            this.$('.oe_import_button, .oe_import_file_reload')
+                    .prop('disabled', true);
             this.$el.addClass('oe_import_with_file');
             // TODO: test that write // succeeded?
             this.$el.removeClass('oe_import_preview_error oe_import_error');
@@ -205,6 +207,7 @@ openerp.base_import = function (instance) {
         },
         onpreview_error: function (event, from, to, result) {
             this.$('.oe_import_options').show();
+            this.$('.oe_import_file_reload').prop('disabled', false);
             this.$el.addClass('oe_import_preview_error oe_import_error');
             this.$('.oe_import_error_report').html(
                     QWeb.render('ImportView.preview.error', result));
@@ -212,7 +215,8 @@ openerp.base_import = function (instance) {
         onpreview_success: function (event, from, to, result) {
             this.$('.oe_import_import').removeClass('oe_highlight');
             this.$('.oe_import_validate').addClass('oe_highlight');
-            this.$('.oe_import_button').prop('disabled', false);
+            this.$('.oe_import_button, .oe_import_file_reload')
+                    .prop('disabled', false);
             this.$el.addClass('oe_import_preview');
             this.$('table').html(QWeb.render('ImportView.preview', result));
 

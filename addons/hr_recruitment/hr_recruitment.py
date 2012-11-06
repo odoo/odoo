@@ -258,6 +258,17 @@ class hr_applicant(base_stage, osv.Model):
         stage_id = stage_ids and stage_ids[0] or False
         return {'value': {'stage_id': stage_id}}
 
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        data = {'partner_phone': False,
+                'partner_mobile': False,
+                'email_from': False}
+        if partner_id:
+            addr = self.pool.get('res.partner').browse(cr, uid, partner_id, context)
+            data.update({'partner_phone': addr.phone,
+                        'partner_mobile': addr.mobile,
+                        'email_from': addr.email})
+        return {'value': data}
+
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
