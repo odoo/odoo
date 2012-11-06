@@ -663,7 +663,7 @@ class pos_order(osv.osv):
                 continue
             addr = order.partner_id and partner_obj.address_get(cr, uid, [order.partner_id.id], ['delivery']) or {}
             picking_id = picking_obj.create(cr, uid, {
-                'name' : 'out/' + order.name,
+                'name' : 'OUT/' + order.name,
                 'origin': order.name,
                 'partner_id': addr.get('delivery',False),
                 'type': 'out',
