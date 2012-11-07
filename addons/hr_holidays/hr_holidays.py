@@ -269,7 +269,8 @@ class hr_holidays(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         res = super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
         for  holiday in self.browse(cr, uid, ids, context=context):
-            if holiday.state == 'validate' and holiday.employee_id.user_id.id != 1:
+            
+            if holiday.state == 'validate' and holiday.employee_id.user_id.id == uid and uid != 1:
                 raise osv.except_osv(_('Warning!'),_('You cannot modify leave request, Once the leave Request has been approved'))
         return res
 
