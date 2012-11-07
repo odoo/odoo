@@ -730,7 +730,7 @@ class mail_message(osv.Model):
                 ], context=context)
             fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
             partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
-        # when writing to a wall
+        # remove me from notified partners, unless the message is written on my own wall
         if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
             partners_to_notify |= set([message.get('author_id')[0]])
         elif message.get('author_id'):

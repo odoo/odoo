@@ -588,7 +588,7 @@ class mail_thread(osv.AbstractModel):
             else:
                 msg_dict['email_from'] = message.get('from')
         partner_ids = self._message_find_partners(cr, uid, message, ['From', 'To', 'Cc'], context=context)
-        msg_dict['partner_ids'] = partner_ids
+        msg_dict['partner_ids'] = [(4, partner_id) for partner_id in partner_ids]
 
         if 'Date' in message:
             date_hdr = decode(message.get('Date'))
