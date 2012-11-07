@@ -2216,6 +2216,13 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function() {
         this.$('input:first').focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$('input').css({
+            height: height,
+            width: width
+        });
     }
 });
 
@@ -2502,7 +2509,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         this.$textarea.focus();
     },
     set_dimensions: function (height, width) {
-        this._super();
+        this._super(height, width);
         this.$textarea.css({
             width: width,
             minHeight: height
@@ -2664,6 +2671,13 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     },
     focus: function() {
         this.$el.find('select:first').focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$('select').css({
+            height: height,
+            width: width
+        });
     }
 });
 
@@ -3146,6 +3160,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$input.css('height', height);
+    }
 });
 
 /*
