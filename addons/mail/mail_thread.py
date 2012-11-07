@@ -710,12 +710,24 @@ class mail_thread(osv.AbstractModel):
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
         """ Wrapper on message_post, used only in Chatter (JS). The purpose is
             to handle attachments.
-            # TDE FIXME: body is plaintext: convert it into html
+            - body is plaintext: convert it into html
+            - handle reply to a previous message
         """
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type='comment',
-                        subtype='mail.mt_comment', parent_id=parent_id, context=context)
+        # 1. handle body
+        body = tools.text2html(body)
 
-        # HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        # 2. handle message partner_ids
+        if parent_id:
+            parent_data = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
+            partner_ids = [(4, partner.id) for partner in parent_data.partner_ids]
+        else:
+            partner_ids = []
+
+        # 3. post message
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type='comment',
+                        subtype='mail.mt_comment', parent_id=parent_id, context=context, partner_ids=partner_ids)
+
+        # 4. HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
             ir_attachment = self.pool.get('ir.attachment')
             mail_message = self.pool.get('mail.message')
