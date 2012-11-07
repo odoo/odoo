@@ -164,7 +164,7 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                    <field name="complete_name" string="Project Name"/>
+                    <field name="name" string="Project Name"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
