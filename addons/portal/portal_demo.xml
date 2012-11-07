@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data noupdate="1">
 
         <!-- Create a portal member attached to a partner -->
         <record id="demo_user0" model="res.users">
@@ -24,14 +24,11 @@
             <field name="subject">Our company's first blog-post !</field>
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="body"><![CDATA[Hello, and welcome to our company's portal !
-
-Lorem ipsum <b>sit amet</b>, consectetur <em>adipiscing elit</em>. Pellentesque et quam sapien, in sagittis tellus.
-Praesent vel massa sed massa consequat egestas in tristique orci. Praesent iaculis libero et neque vehicula iaculis. Vivamus placerat tincidunt orci ac ornare. Proin ut dolor fringilla velit ultricies consequat. Maecenas sit amet ipsum non leo interdum imperdiet. Donec sapien mi.
-
-Fusce tempus elit volutpat mi auctor adipiscing. Nam congue luctus suscipit. Sed tellus libero, venenatis ut mollis ut, luctus quis dui. Sed rhoncus pulvinar orci in consectetur.
-
-Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in dolor in sapien tempus vehicula.]]></field>
+            <field name="body"><![CDATA[<p>Hello, and welcome to our company's portal !</p>
+<p>Lorem ipsum <b>sit amet</b>, consectetur <em>adipiscing elit</em>. Pellentesque et quam sapien, in sagittis tellus.
+Praesent vel massa sed massa consequat egestas in tristique orci. Praesent iaculis libero et neque vehicula iaculis. Vivamus placerat tincidunt orci ac ornare. Proin ut dolor fringilla velit ultricies consequat. Maecenas sit amet ipsum non leo interdum imperdiet. Donec sapien mi.</p>
+<p>Fusce tempus elit volutpat mi auctor adipiscing. Nam congue luctus suscipit. Sed tellus libero, venenatis ut mollis ut, luctus quis dui. Sed rhoncus pulvinar orci in consectetur.</p>
+<p>Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in dolor in sapien tempus vehicula.</p>]]></field>
             <field name="type">comment</field>
             <field name="author_id" ref="base.partner_root"/>
         </record>
@@ -39,7 +36,7 @@ Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in
         <record id="message_company_news0_comment0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="body"><![CDATA[Great first blogpost !  (first comment)]]></field>
+            <field name="body"><![CDATA[<p>Great first blogpost!</p>]]></field>
             <field name="parent_id" ref="message_company_news0"/>
             <field name="type">comment</field>
             <field name="author_id" ref="base.res_partner_1"/>
@@ -48,7 +45,7 @@ Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in
         <record id="message_company_news0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="body"><![CDATA[Thanks !  (second comment)]]></field>
+            <field name="body"><![CDATA[<p>Thanks!</p>]]></field>
             <field name="parent_id" ref="message_company_news0"/>
             <field name="type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
