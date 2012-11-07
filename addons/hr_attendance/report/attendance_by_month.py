@@ -57,6 +57,7 @@ class report_custom(report_rml):
         if emp_ids:
             for emp in obj_emp.read(cr, uid, emp_ids, ['name']):
                 stop, days_xml = False, []
+                total_wh = 0.0
                 user_repr = '''
                 <user>
                   <name>%s</name>
@@ -86,15 +87,21 @@ class report_custom(report_rml):
                     for att in attendences:
                         dt = datetime.strptime(att['name'], '%Y-%m-%d %H:%M:%S')
                         if ldt and att['action'] == 'sign_out':
+                            if dt.date() > ldt.date():
+                                dt = ldt
                             wh += (float((dt - ldt).seconds)/60/60)
                         else:
                             ldt = dt
                     # Week xml representation
+                    total_wh += wh
                     wh = hour2str(wh)
                     today_xml = '<day num="%s"><wh>%s</wh></day>' % ((today - month).days+1, (wh))
                     dy=(today - month).days+1
                     days_xml.append(today_xml)
                     today, tomor = tomor, tomor + one_day
+                total_wh = hour2str(total_wh)
+                today_xml = '<day num="Total"><wh>%s</wh></day>' % (total_wh)
+                days_xml.append(today_xml)
                 user_xml.append(user_repr % '\n'.join(days_xml))
 
         rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
@@ -172,8 +179,9 @@ class report_custom(report_rml):
                     cell=cell+x
                     width_dict[j]=x
                 day_diff1=day_diff1-x
+        date_xml += ['<dayy name="Total" cell="Total"/>']
         date_xml.append('</days>')
-        date_xml.append('<cols>3.5cm%s</cols>\n' % (',0.74cm' * (int(dy))))
+        date_xml.append('<cols>3.5cm%s,1.2cm</cols>\n' % (',0.74cm' * (int(dy))))
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
@@ -181,7 +189,7 @@ class report_custom(report_rml):
         %s
         %s
         </report>
-        ''' % (header_xml,_('Attendances By Month'),'\n'.join(user_xml),date_xml)
+        ''' % (header_xml,_('Attendances by Month'),'\n'.join(user_xml),date_xml)
         return xml
 
 report_custom('report.hr.attendance.bymonth', 'hr.employee', '', 'addons/hr_attendance/report/bymonth.xsl')

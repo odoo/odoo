@@ -13,7 +13,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{"search_default_draft":1}</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
-            <field name="help">You dont have any quotation.</field>
+            <field name="help">You don't have any quotation.</field>
         </record>
 
         <record id="action_order_form" model="ir.actions.act_window">
@@ -23,7 +23,7 @@
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="search_view_id" ref="sale.view_sales_order_filter"/>
             <field name="context">{"search_default_sales":1}</field>
-            <field name="help">You dont have any sale order.</field>
+            <field name="help">You don't have any sale order.</field>
         </record>
 
         <record id="action_picking_tree" model="ir.actions.act_window">
@@ -34,7 +34,7 @@
             <field name="domain">[('type','=','out')]</field>
             <field name="context">{'default_type': 'out', 'contact_display': 'partner_address'}</field>
             <field name="search_view_id" ref="stock.view_picking_out_search"/>
-            <field name="help">You dont have any delivery order.</field>
+            <field name="help">You don't have any delivery order.</field>
         </record>
 
         <record id="product_normal_action" model="ir.actions.act_window">
@@ -55,7 +55,7 @@
             <field name="domain">[('type','=','out_invoice')]</field>
             <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-            <field name="help">You dont have any invoice.</field>
+            <field name="help">You don't have any invoice.</field>
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
@@ -65,7 +65,7 @@
             <field name="context">{'type':'receipt'}</field>
             <field name="search_view_id" ref="account_voucher.view_voucher_filter_customer_pay"/>
             <field name="target">current</field>
-            <field name="help">You dont have any payment.</field>
+            <field name="help">You don't have any payment.</field>
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"

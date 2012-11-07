@@ -46,12 +46,15 @@ class project_project(osv.osv):
 
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+
         project = self.browse(cr, uid, ids[0], context)
         view_context = {
             'search_default_account_id': [project.analytic_account_id.id],
             'default_account_id': project.analytic_account_id.id,
         }
-        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""")
+        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
         try:
             if project.to_invoice and project.partner_id:
                 help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
@@ -59,16 +62,13 @@ class project_project(osv.osv):
             # if the user do not have access rights on the partner
             pass
 
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Timesheets'),
-            'res_model': 'hr.analytic.timesheet',
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context': view_context,
-            'nodestroy': True,
-            'help': help
-        }
+        res = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
+        id = res and res[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result['name'] = _('Timesheets')
+        result['context'] = view_context
+        result['help'] = help
+        return result
 
 project_project()
 
@@ -86,7 +86,7 @@ class project_work(osv.osv):
         emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('Please define product on the related employee.\nFill in the timesheet tab of the employee form.'))
+                 _('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
 
         if not emp.journal_id:
             raise osv.except_osv(_('Bad Configuration !'),
@@ -115,7 +115,7 @@ class project_work(osv.osv):
         if not context.get('no_analytic_entry',False):
             task_obj = task_obj.browse(cr, uid, vals['task_id'])
             result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name']) or '/')
+            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name'] or '/'))
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
@@ -172,7 +172,7 @@ class project_work(osv.osv):
 
             vals_line = {}
             if 'name' in vals:
-                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
+                vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name'] or '/'))
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
             if 'date' in vals:
@@ -272,6 +272,16 @@ res_partner()
 class account_analytic_line(osv.osv):
    _inherit = "account.analytic.line"
 
+   def get_product(self, cr, uid, context=None):
+        emp_obj = self.pool.get('hr.employee')
+        emp_ids = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if emp_ids:
+            employee = emp_obj.browse(cr, uid, emp_ids, context=context)[0]
+            if employee.product_id:return employee.product_id.id
+        return False
+   
+   _defaults = {'product_id': get_product,}
+   
    def on_change_account_id(self, cr, uid, ids, account_id):
        res = {}
        if not account_id:

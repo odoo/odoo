@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <openerp>
-   <data>
+    <data>
 
-    <!-- report , event on registration... start -->
+        <!-- Report, event on registration -->
         <record model="ir.ui.view" id="report_event_registration_tree">
             <field name="name">report.event.registration.tree</field>
             <field name="model">report.event.registration</field>
             <field name="arch" type="xml">
-                <tree colors="blue:event_state == 'draft';black:event_state == 'confirm';gray:event_state in('done','cancel')" string="Events Analysis">
+                <tree colors="blue:event_state == 'draft';black:event_state == 'confirm';gray:event_state in('done','cancel')" create="false" string="Events Analysis">
                     <field name="event_date" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="speaker_id" invisible="1"/>
@@ -28,7 +28,6 @@
             </field>
         </record>
 
-
         <record model ="ir.ui.view" id="report_event_registration_graph">
             <field name="name">report.event.registration.graph</field>
             <field name="model">report.event.registration</field>
@@ -42,8 +41,7 @@
             </field>
         </record>
 
-              <!-- Event on Registration search view -->
-
+        <!-- Event on Registration search view -->
         <record model="ir.ui.view" id="view_report_event_registration_search">
             <field name="name">report.event.registration.search</field>
             <field name="model">report.event.registration</field>
@@ -62,8 +60,8 @@
                     <newline/>
                     <group expand="1" string="Group By...">
                         <filter string="Participant / Contact" icon="terp-personal" context="{'group_by':'name_registration'}" help="Registration contact"/>
-                        <filter string="Register" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Registration contact" groups="base.extended"/>
-                        <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}" groups="base.extended"/>
+                        <filter string="Register" icon="terp-personal" context="{'group_by':'user_id_registration'}" help="Registration contact" groups="base.group_no_one"/>
+                        <filter string="Speaker" name="speaker" icon="terp-personal+" context="{'group_by': 'speaker_id'}" groups="base.group_no_one"/>
                         <filter string="Event Responsible" name="user_id" icon="terp-personal" context="{'group_by': 'user_id'}"/>
                         <filter string="Event" name="event" icon="terp-crm" context="{'group_by':'event_id', 'max_reg_event_visible':0}"/>
                         <filter string="Event Type" icon="terp-crm"  context="{'group_by':'event_type'}"/>
@@ -82,28 +80,28 @@
             </field>
         </record>
 
-        <record  model="ir.actions.act_window" id="action_report_event_registration">
+        <record model="ir.actions.act_window" id="action_report_event_registration">
             <field name="name">Events Analysis</field>
             <field name="res_model">report.event.registration</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="search_view_id" ref="view_report_event_registration_search"/>
-            <field name="context">{"search_default_year":1,"search_default_this_month":1,"search_default_365day":1, "search_default_invoiced":1, "search_default_event":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
+            <field name="context">{"search_default_year":1,"search_default_this_month":1,"search_default_365day":1, "search_default_invoiced":1, "search_default_event":1, "group_by_no_leaf":1, "group_by":[]}</field>
         </record>
 
-       <record model="ir.actions.act_window.view" id="action_report_event_registration_tree">
+        <record model="ir.actions.act_window.view" id="action_report_event_registration_tree">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
             <field name="view_id" ref="report_event_registration_tree"/>
             <field name="act_window_id" ref="action_report_event_registration"/>
-       </record>
+        </record>
 
-       <record model="ir.actions.act_window.view" id="action_report_event_registration_graph">
+        <record model="ir.actions.act_window.view" id="action_report_event_registration_graph">
             <field name="sequence" eval="2"/>
             <field name="view_mode">graph</field>
             <field name="view_id" ref="report_event_registration_graph"/>
             <field name="act_window_id" ref="action_report_event_registration"/>
-       </record>
+        </record>
 
         <menuitem parent="base.menu_reporting" id="menu_reporting_events" sequence="30" groups="event.group_event_manager" name="Events"/>
         <menuitem parent="menu_reporting_events" action="action_report_event_registration" id="menu_report_event_registration" sequence="3" groups="event.group_event_manager"/>

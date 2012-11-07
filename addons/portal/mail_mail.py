@@ -19,34 +19,22 @@
 #
 ##############################################################################
 
-import tools
 from osv import osv
+import tools
 
-
-class mail_mail_portal(osv.Model):
-    """ Update of mail_mail class, to add the signin URL to notifications.
-    """
-    _name = 'mail.mail'
-    _inherit = ['mail.mail']
-
-    def _generate_signin_url(self, cr, uid, partner_id, portal_group_id, key, context=None):
-        """ Generate the signin url """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
-        return base_url + '/login?action=signin&partner_id=%s&group=%s&key=%s' % (partner_id, portal_group_id, key)
+class mail_mail(osv.Model):
+    """ Update of mail_mail class, to add the signin URL to notifications. """
+    _inherit = 'mail.mail'
 
     def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
-        """ Return a specific ir_email body. The main purpose of this method
-            is to be inherited by Portal, to add a link for signing in, in
-            each notification email a partner receives.
-
+        """ add a signin link inside the body of a mail.mail
             :param mail: mail.mail browse_record
             :param partner: browse_record of the specific recipient partner
+            :return: the resulting body_html
         """
+        body = super(mail_mail, self).send_get_mail_body(cr, uid, mail, partner, context=context)
         if partner:
-            portal_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
-            portal_id = portal_ref and portal_ref[1] or False
-            url = self._generate_signin_url(cr, uid, partner.id, portal_id, 1234, context=context)
-            body = tools.append_content_to_html(mail.body_html, url)
-            return body
-        else:
-            return super(mail_mail_portal, self).send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+            context = dict(context or {}, signup_valid=True)
+            partner = self.pool.get('res.partner').browse(cr, uid, partner.id, context)
+            body = tools.append_content_to_html(body, "Log in our portal at: %s" % partner.signup_url)
+        return body

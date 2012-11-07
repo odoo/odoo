@@ -28,7 +28,7 @@
     'description': """
 Business oriented Social Networking
 ===================================
-The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete 
+The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete
 communication history on documents with a fully-integrated email and message management system.
 
 It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
@@ -54,6 +54,7 @@ Main Features
         'mail_message_view.xml',
         'mail_mail_view.xml',
         'mail_followers_view.xml',
+        'mail_favorite_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
@@ -83,12 +84,12 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
-        'static/src/css/mail_compose_message.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
+        'static/src/js/many2many_tags_email.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',

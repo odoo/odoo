@@ -140,18 +140,20 @@ class users(osv.osv):
     # Add handlers for 'input_pw' field.
 
     def set_pw(self, cr, uid, id, name, value, args, context):
-        if not value:
-            raise osv.except_osv(_('Error!'), _("You have to specify a password."))
+        if value:
+            obj = pooler.get_pool(cr.dbname).get('res.users')
+            if not hasattr(obj, "_salt_cache"):
+                obj._salt_cache = {}
 
-        obj = pooler.get_pool(cr.dbname).get('res.users')
-        if not hasattr(obj, "_salt_cache"):
-            obj._salt_cache = {}
+            salt = obj._salt_cache[id] = gen_salt()
+            encrypted = encrypt_md5(value, salt)
 
-        salt = obj._salt_cache[id] = gen_salt()
-        encrypted = encrypt_md5(value, salt)
+        else:
+            #setting a password to '' is allowed. It can be used to inactivate the classic log-in of the user
+            #while the access can still be granted by another login method (openid...)
+            encrypted = ''
         cr.execute('update res_users set password=%s where id=%s',
             (encrypted.encode('utf-8'), int(id)))
-        cr.commit()
         del value
 
     def get_pw( self, cr, uid, ids, name, args, context ):

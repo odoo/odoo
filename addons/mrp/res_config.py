@@ -44,11 +44,11 @@ class mrp_config_settings(osv.osv_memory):
         'module_mrp_operations': fields.boolean("Allow detailed planning of work order",
             help="""This allows to add state, date_start,date_stop in production order operation lines (in the "Work Centers" tab).
                 This installs the module mrp_operations."""),
-        'module_mrp_subproduct': fields.boolean("Produce several products from one manufacturing order",
-            help="""You can configure sub-products in the bill of material.
+        'module_mrp_byproduct': fields.boolean("Produce several products from one manufacturing order",
+            help="""You can configure by-products in the bill of material.
                 Without this module: A + B + C -> D.
                 With this module: A + B + C -> D + E.
-                This installs the module mrp_subproduct."""),
+                This installs the module mrp_byproduct."""),
         'module_mrp_jit': fields.boolean("Generate procurement in real time",
             help="""This allows Just In Time computation of procurement orders.
                 All procurement orders will be processed immediately, which could in some

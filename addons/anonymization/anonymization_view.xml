@@ -14,7 +14,6 @@
                     <field name="model_id" on_change="onchange_model_id(model_id)" />
                     <field name="model_name" on_change="onchange_model_name(model_name)" />
                     <field name="field_id"
-                          
                            on_change="onchange_field_id(field_id, model_name)"
                            domain="[('model_id','=',model_id), ('ttype', 'not in', ['function', 'binary', 'many2many', 'many2one', 'one2many', 'reference'])]" />
                     <field name="field_name" on_change="onchange_field_name(field_name, model_name)" />

@@ -26,6 +26,7 @@ from osv import fields, osv
 import time
 import tools
 from tools.translate import _
+from tools import html2plaintext
 
 from base.res.res_partner import format_address
 
@@ -187,7 +188,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
-            select=True, help="Optional linked partner, usually after conversion of the lead"),
+            select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Subject', size=64, required=True, select=1),
@@ -222,11 +223,11 @@ class crm_lead(base_stage, format_address, osv.osv):
         'day_close': fields.function(_compute_day, string='Days to Close', \
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
-                selection=crm.AVAILABLE_STATES, string="State", readonly=True,
-                help='The state is set to \'Draft\', when a case is created.\
-                      If the case is in progress the state is set to \'Open\'.\
-                      When the case is over, the state is set to \'Done\'.\
-                      If the case needs to be reviewed then the state is \
+                selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
+                help='The Status is set to \'Draft\', when a case is created.\
+                      If the case is in progress the Status is set to \'Open\'.\
+                      When the case is over, the Status is set to \'Done\'.\
+                      If the case needs to be reviewed then the Status is \
                       set to \'Pending\'.'),
 
         # Only used for type opportunity
@@ -235,7 +236,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
-        'date_deadline': fields.date('Expected Closing'),
+        'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
         'title_action': fields.char('Next Action', size=64),
         'color': fields.integer('Color Index'),
@@ -250,7 +251,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
+        'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -776,7 +777,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_user_id': uid,
             'default_section_id': opportunity.section_id and opportunity.section_id.id or False,
             'default_email_from': opportunity.email_from,
-            'default_state': 'open',
             'default_name': opportunity.name,
         }
         return res
@@ -812,9 +812,11 @@ class crm_lead(base_stage, format_address, osv.osv):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
@@ -894,6 +896,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         lead.message_post(body=message)
         return True
 
-crm_lead()
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

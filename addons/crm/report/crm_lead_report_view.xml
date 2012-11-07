@@ -8,7 +8,7 @@
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-            <tree string="Leads Analysis">
+            <tree string="Leads Analysis" create="false">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
@@ -130,7 +130,7 @@
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
             <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " string="Opportunities Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " create="false" string="Opportunities Analysis">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
