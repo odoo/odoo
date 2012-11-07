@@ -88,7 +88,7 @@ class test_mail(test_mail_mockup.TestMailMockups):
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
-        body = tools.append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner')
+        body = tools.append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner', plaintext=False)
         return body
 
     def setUp(self):
@@ -343,10 +343,10 @@ class test_mail(test_mail_mockup.TestMailMockups):
         _subject = 'Pigs'
         _mail_subject = '%s posted on %s' % (user_admin.name, group_pigs.name)
         _body1 = 'Pigs rules'
-        _mail_body1 = 'Pigs rules\n<pre>Admin</pre>\n'
-        _mail_bodyalt1 = 'Pigs rules\nAdmin'
+        _mail_body1 = 'Pigs rules\n<div><p>Admin</p></div>\n'
+        _mail_bodyalt1 = 'Pigs rules\nAdmin\n'
         _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = html_sanitize('<html>Pigs rules\n<pre>Admin</pre>\n</html>')
+        _mail_body2 = html_sanitize('<html>Pigs rules\n<div><p>Admin</p></div>\n</html>')
         _mail_bodyalt2 = 'Pigs rules\nAdmin'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
@@ -367,7 +367,7 @@ class test_mail(test_mail_mockup.TestMailMockups):
         # Test: sent_email: email send by server: correct subject, body, body_alternative
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
-            self.assertEqual(sent_email['body'], _mail_body1 + '\n<pre>Bert Tartopoils</pre>\n', 'sent_email body incorrect')
+            self.assertEqual(sent_email['body'], _mail_body1 + '\nBert Tartopoils\n', 'sent_email body incorrect')
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
             self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
