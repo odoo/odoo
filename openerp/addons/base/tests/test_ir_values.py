@@ -54,7 +54,10 @@ class test_ir_values(common.TransactionCase):
         ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action', ['unexisting_model'], 'ir.actions.act_window,10', isobject=True)
         ir_values.set(self.cr, self.uid, 'action', 'tree_but_open', 'OnDblClick Action 2', ['unexisting_model'], 'ir.actions.act_window,11', isobject=True)
         ir_values.set(self.cr, self.uid, 'action', 'client_action_multi', 'Side Wizard', ['unexisting_model'], 'ir.actions.act_window,12', isobject=True)
-        ir_values.set(self.cr, self.uid, 'action', 'client_print_multi', 'Nice Report', ['unexisting_model'], 'ir.actions.report.xml,45', isobject=True)
+        report_ids = self.registry('ir.actions.report.xml').search(self.cr, self.uid, [], {})
+        reports = self.registry('ir.actions.report.xml').browse(self.cr, self.uid, report_ids, {})
+        report_id = [report.id for report in reports if not report.groups_id][0] # assume at least one
+        ir_values.set(self.cr, self.uid, 'action', 'client_print_multi', 'Nice Report', ['unexisting_model'], 'ir.actions.report.xml,%s'%report_id, isobject=True)
         ir_values.set(self.cr, self.uid, 'action', 'client_action_relate', 'Related Stuff', ['unexisting_model'], 'ir.actions.act_window,14', isobject=True)
 
         # Replace one action binding to set a new name.
@@ -86,7 +89,7 @@ class test_ir_values(common.TransactionCase):
         assert len(actions) == 1, "Mismatching number of bound actions"
         assert len(actions[0]) == 3, "Malformed action definition"
         assert actions[0][1] == 'Nice Report', 'Bound action does not match definition'
-        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == 45, 'Bound action does not match definition'
+        assert isinstance(actions[0][2], dict) and actions[0][2]['id'] == report_id, 'Bound action does not match definition'
 
         actions = ir_values.get(self.cr, self.uid, 'action', 'client_action_relate', ['unexisting_model'])
         assert len(actions) == 1, "Mismatching number of bound actions"

@@ -44,7 +44,7 @@ class ir_rule(osv.osv):
     def _eval_context(self, cr, uid):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
-        return {'user': self.pool.get('res.users').browse(cr, 1, uid),
+        return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
                 'time':time}
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
@@ -75,6 +75,7 @@ class ir_rule(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, select=1),
+        'active': fields.boolean('Active', help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module."),
         'model_id': fields.many2one('ir.model', 'Object',select=1, required=True, ondelete="cascade"),
         'global': fields.function(_get_value, string='Global', type='boolean', store=True, help="If no group is specified the rule is global and applied to everyone"),
         'groups': fields.many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', 'Groups'),
@@ -89,6 +90,7 @@ class ir_rule(osv.osv):
     _order = 'model_id DESC'
 
     _defaults = {
+        'active': True,
         'perm_read': True,
         'perm_write': True,
         'perm_create': True,
@@ -114,6 +116,7 @@ class ir_rule(osv.osv):
                 FROM ir_rule r
                 JOIN ir_model m ON (r.model_id = m.id)
                 WHERE m.model = %s
+                AND r.active is True
                 AND r.perm_""" + mode + """
                 AND (r.id IN (SELECT rule_group_id FROM rule_group_rel g_rel
                             JOIN res_groups_users_rel u_rel ON (g_rel.group_id = u_rel.gid)
@@ -152,7 +155,7 @@ class ir_rule(osv.osv):
             # involve objects on which the real uid has no acces rights.
             # This means also there is no implicit restriction (e.g. an object
             # references another object the user can't see).
-            query = self.pool.get(model_name)._where_calc(cr, 1, dom, active_test=False)
+            query = self.pool.get(model_name)._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
 

@@ -87,9 +87,9 @@ In addition to the above possibilities, when invoked with a non-existing module
 sub-modules.
 
 Depending on the unittest2_ class that is used to write the tests (see
-``openerp.tests.common`` for some helper classes that you can re-use), a database
-may be created before the test is run, and the module providing the test will
-be installed on that database.
+:mod:`openerp.tests.common` for some helper classes that you can re-use), a
+database may be created before the test is run, and the module providing the
+test will be installed on that database.
 
 Because creating a database, installing modules, and then dropping it is
 expensive, it is possible to interleave the run of the ``fast_suite`` tests
@@ -98,3 +98,20 @@ each requested module is installed, its fast_suite tests are run. The database
 is thus created and dropped (and the modules installed) only once.
 
 .. _unittest2: http://pypi.python.org/pypi/unittest2
+
+TestCase subclasses
+-------------------
+
+.. automodule:: openerp.tests.common
+   :members:
+
+.. note::
+
+    The `setUp` and `tearDown` methods are not part of the tests. Uncaught
+    exceptions in those methods are errors, not test failures. In particular,
+    a failing `setUp` will not be followed by a `tearDown` causing any
+    allocated resource in the `setUp` to not be released by the `tearDown`.
+
+    In the :py:class:`openerp.tests.common.TransactionCase` and
+    :py:class:`openerp.tests.common.SingleTransactionCase`, this means the
+    test suite can hang because of unclosed cursors.

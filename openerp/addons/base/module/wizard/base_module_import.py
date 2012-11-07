@@ -34,13 +34,11 @@ class base_module_import(osv.osv_memory):
     """ Import Module """
 
     _name = "base.module.import"
-    _inherit = "ir.wizard.screen"
     _description = "Import Module"
-
     _columns = {
           'module_file': fields.binary('Module .ZIP file', required=True),
           'state':fields.selection([('init','init'),('done','done')],
-                                   'state', readonly=True),
+                                   'Status', readonly=True),
           'module_name': fields.char('Module Name', size=128),
     }
 
@@ -87,8 +85,6 @@ class base_module_import(osv.osv_memory):
             'res_model': 'ir.module.module',
             'type': 'ir.actions.act_window',
         }
-
-base_module_import()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,6 +19,5 @@
 #
 ##############################################################################
 import wizard_menu
-import wizard_screen
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

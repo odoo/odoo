@@ -22,59 +22,28 @@ def registry(model):
 def cursor():
     return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
 
-class SequenceCase(unittest2.TestCase):
-    """
-    Base case for stateful testing of sequence objects (until we have fixtures?)
 
-    * Provides easy-to-call methods for creating new ir.sequence and
-      ir.sequence.type (``make_seq`` and ``make_typ``)
-    * Cleanup of all sequences and sequence types created via the two functions
-      above
-    """
-    typ_ids = None
-    seq_ids = None
+def drop_sequence(code):
+    cr = cursor()
+    for model in ['ir.sequence', 'ir.sequence.type']:
+        s = registry(model)
+        ids = s.search(cr, ADMIN_USER_ID, [('code', '=', code)])
+        s.unlink(cr, ADMIN_USER_ID, ids)
+    cr.commit()
+    cr.close()
 
-    @classmethod
-    def setUpClass(cls):
-        cls.typ_ids = []
-        cls.seq_ids = []
-
-    @classmethod
-    def tearDownClass(cls):
-        cr = cursor()
-
-        registry('ir.sequence.type').unlink(cr, ADMIN_USER_ID, cls.typ_ids)
-        registry('ir.sequence').unlink(cr, ADMIN_USER_ID, cls.seq_ids)
-
-        cr.commit()
-        cr.close()
-
-    @classmethod
-    def make_seq(cls, cr, vars):
-        seq = registry('ir.sequence').create(cr, ADMIN_USER_ID, vars, {})
-        cls.seq_ids.append(seq)
-        return seq
-
-    @classmethod
-    def make_typ(cls, cr, vars):
-        typ = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, vars, {})
-        cls.typ_ids.append(typ)
-        return typ
-
-class test_ir_sequence_standard(SequenceCase):
+class test_ir_sequence_standard(unittest2.TestCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
     def test_ir_sequence_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
-
         d = dict(code='test_sequence_type', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type', name='Test sequence')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
-
         cr.commit()
         cr.close()
 
@@ -89,7 +58,7 @@ class test_ir_sequence_standard(SequenceCase):
     def test_ir_sequence_draw(self):
         """ Try to draw a number. """
         cr = cursor()
-        n = registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type', {})
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type', {})
         assert n
         cr.commit()
         cr.close()
@@ -98,28 +67,31 @@ class test_ir_sequence_standard(SequenceCase):
         """ Try to draw a number from two transactions. """
         cr0 = cursor()
         cr1 = cursor()
-        n0 = registry('ir.sequence').get(cr0, ADMIN_USER_ID, 'test_sequence_type', {})
+        n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type', {})
         assert n0
-        n1 = registry('ir.sequence').get(cr1, ADMIN_USER_ID, 'test_sequence_type', {})
+        n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type', {})
         assert n1
         cr0.commit()
         cr1.commit()
         cr0.close()
         cr1.close()
 
-class test_ir_sequence_no_gap(SequenceCase):
+    @classmethod
+    def tearDownClass(cls):
+        drop_sequence('test_sequence_type')
+
+class test_ir_sequence_no_gap(unittest2.TestCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
     def test_ir_sequence_create_no_gap(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_2', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
-
         d = dict(code='test_sequence_type_2', name='Test sequence',
             implementation='no_gap')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
@@ -127,7 +99,7 @@ class test_ir_sequence_no_gap(SequenceCase):
     def test_ir_sequence_draw_no_gap(self):
         """ Try to draw a number. """
         cr = cursor()
-        n = registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type_2', {})
+        n = registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_2', {})
         assert n
         cr.commit()
         cr.close()
@@ -141,30 +113,34 @@ class test_ir_sequence_no_gap(SequenceCase):
         cr1._default_log_exceptions = False # Prevent logging a traceback
         msg_re = '^could not obtain lock on row in relation "ir_sequence"$'
         with self.assertRaisesRegexp(psycopg2.OperationalError, msg_re):
-            n0 = registry('ir.sequence').get(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
+            n0 = registry('ir.sequence').next_by_code(cr0, ADMIN_USER_ID, 'test_sequence_type_2', {})
             assert n0
-            n1 = registry('ir.sequence').get(cr1, ADMIN_USER_ID, 'test_sequence_type_2', {})
+            n1 = registry('ir.sequence').next_by_code(cr1, ADMIN_USER_ID, 'test_sequence_type_2', {})
         cr0.close()
         cr1.close()
 
-class test_ir_sequence_change_implementation(SequenceCase):
+    @classmethod
+    def tearDownClass(cls):
+        drop_sequence('test_sequence_type_2')
+
+class test_ir_sequence_change_implementation(unittest2.TestCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_1_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_3', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_3', name='Test sequence')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_4', name='Test sequence',
             implementation='no_gap')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
@@ -188,24 +164,29 @@ class test_ir_sequence_change_implementation(SequenceCase):
         cr.commit()
         cr.close()
 
-class test_ir_sequence_generate(SequenceCase):
+    @classmethod
+    def tearDownClass(cls):
+        drop_sequence('test_sequence_type_3')
+        drop_sequence('test_sequence_type_4')
+
+class test_ir_sequence_generate(unittest2.TestCase):
     """ Create sequence objects and generate some values. """
 
     def test_ir_sequence_create(self):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_5', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_5', name='Test sequence')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
 
         cr = cursor()
-        f = lambda *a: registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
-        assert all(str(x) == f() for x in xrange(1,1000))
+        f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_5', {})
+        assert all(str(x) == f() for x in xrange(1,10))
         cr.commit()
         cr.close()
 
@@ -213,20 +194,24 @@ class test_ir_sequence_generate(SequenceCase):
         """ Try to create a sequence object. """
         cr = cursor()
         d = dict(code='test_sequence_type_6', name='Test sequence type')
-        c = self.make_typ(cr, d)
+        c = registry('ir.sequence.type').create(cr, ADMIN_USER_ID, d, {})
         assert c
         d = dict(code='test_sequence_type_6', name='Test sequence')
-        c = self.make_seq(cr, d)
+        c = registry('ir.sequence').create(cr, ADMIN_USER_ID, d, {})
         assert c
         cr.commit()
         cr.close()
 
         cr = cursor()
-        f = lambda *a: registry('ir.sequence').get(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
-        assert all(str(x) == f() for x in xrange(1,1000))
+        f = lambda *a: registry('ir.sequence').next_by_code(cr, ADMIN_USER_ID, 'test_sequence_type_6', {})
+        assert all(str(x) == f() for x in xrange(1,10))
         cr.commit()
         cr.close()
-        
+
+    @classmethod
+    def tearDownClass(cls):
+        drop_sequence('test_sequence_type_5')
+        drop_sequence('test_sequence_type_6')
 
 
 if __name__ == '__main__':

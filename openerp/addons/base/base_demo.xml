@@ -1,26 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-
-        <record id="demo_address" model="res.partner">
-            <field name="name">Fabien D'souza</field>
-            <field name="street">Chaussee de Namur</field>
-            <field name="zip">1367</field>
-            <field name="city">Gerompont</field>
-            <field name="phone">(+32).81.81.37.00</field>
-            <field name="type">default</field>
-            <field model="res.country" name="country_id" ref="be"/>
-            <!-- Company ID will be set later -->
-            <field name="company_id" eval="None"/>
+        <record id="partner_demo" model="res.partner">
+            <field name="name">Demo User</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="customer" eval="False"/>
         </record>
-
         <record id="user_demo" model="res.users">
+            <field name="partner_id" ref="base.partner_demo"/>
             <field name="login">demo</field>
             <field name="password">demo</field>
-            <field name="name">Demo User</field>
             <field name="signature">Mr Demo</field>
             <field name="company_id" ref="main_company"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        </record>
+
+        <!-- new rate for demo transactions in multi currency -->
+        <record id="rateUSDbis" model="res.currency.rate">
+            <field name="rate">1.5289</field>
+            <field name="currency_id" ref="USD"/>
+            <field eval="time.strftime('%Y-06-06')" name="name"/>
         </record>
     </data>
 </openerp>
