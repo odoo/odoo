@@ -192,7 +192,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     tree = fromstring(html, parser=HTMLParser())
 
     if body_id is not None:
-        source = tree.xpath('//*[@id=%s]'%(body_id,))
+        source = tree.xpath('//*[@id=%s]' % (body_id,))
     else:
         source = tree.xpath('//body')
     if len(source):
@@ -210,12 +210,12 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(tostring(tree, encoding=encoding))
 
-    html = html.replace('<strong>','*').replace('</strong>','*')
-    html = html.replace('<b>','*').replace('</b>','*')
-    html = html.replace('<h3>','*').replace('</h3>','*')
-    html = html.replace('<h2>','**').replace('</h2>','**')
-    html = html.replace('<h1>','**').replace('</h1>','**')
-    html = html.replace('<em>','/').replace('</em>','/')
+    html = html.replace('<strong>', '*').replace('</strong>', '*')
+    html = html.replace('<b>', '*').replace('</b>', '*')
+    html = html.replace('<h3>', '*').replace('</h3>', '*')
+    html = html.replace('<h2>', '**').replace('</h2>', '**')
+    html = html.replace('<h1>', '**').replace('</h1>', '**')
+    html = html.replace('<em>', '/').replace('</em>', '/')
     html = html.replace('<tr>', '\n')
     html = html.replace('</p>', '\n')
     html = re.sub('<br\s*/?>', '\n', html)
@@ -229,10 +229,39 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     for i, url in enumerate(url_index):
         if i == 0:
             html += '\n\n'
-        html += ustr('[%s] %s\n') % (i+1, url)
+        html += ustr('[%s] %s\n') % (i + 1, url)
 
     return html
 
+def text2html(text, container_tag='div'):
+    """ Convert plaintext into html. Content of the text is escaped to manage
+        html entities, using cgi.escape().
+        - all \n,\r are replaced by <br />
+        - enclose content into <p>
+        - 2 or more consecutive <br /> are considered as paragraph breaks
+
+        :param string container_tag: container of the html; by default the
+            content is embedded into a <div>
+    """
+    text = cgi.escape(text)
+
+    # 1. replace \n and \r
+    text = text.replace('\n', '<br/>')
+    text = text.replace('\r', '<br/>')
+
+    # 2-3: form paragraphs
+    idx = 0
+    final = '<p>'
+    br_tags = re.compile(r'(([<]\s*[bB][rR]\s*\/?[>]\s*){2,})')
+    for item in re.finditer(br_tags, text):
+        final += text[idx:item.start()] + '</p><p>'
+        idx = item.end()
+    final += text[idx:] + '</p>'
+
+    # 4. container
+    if container_tag:
+        final = '<%s>%s</%s>' % (container_tag, final, container_tag)
+    return final
 
 #----------------------------------------------------------
 # Emails

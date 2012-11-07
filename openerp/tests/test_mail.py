@@ -23,7 +23,7 @@
 ##############################################################################
 
 import unittest2
-from openerp.tools.mail import html_sanitize, html_email_clean, append_content_to_html
+from openerp.tools.mail import html_sanitize, html_email_clean, append_content_to_html, text2html
 
 test_case = """
 <font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
@@ -187,6 +187,18 @@ class TestCleaner(unittest2.TestCase):
         self.assertNotIn(new_html, 'blockquote')
         self.assertNotIn(new_html, 'Vive les lapins rapides !')
         self.assertNotIn(new_html, 'Bert Tartopoils')
+
+
+class TestText2Html(unittest2.TestCase):
+
+    def test_text2html(self):
+        cases = [
+            ("First \nSecond \nThird\n \nParagraph\n\r--\nSignature paragraph", 'div',
+             "<div><p>First <br/>Second <br/>Third</p><p>Paragraph</p><p>--<br/>Signature paragraph</p></div>"),
+        ]
+        for content, container_tag, expected in cases:
+            html = text2html(content, container_tag)
+            self.assertEqual(html, expected, 'text2html is broken')
 
 
 if __name__ == '__main__':
