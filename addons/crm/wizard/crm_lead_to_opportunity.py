@@ -105,7 +105,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
             context = {}
         lead = self.pool.get('crm.lead')
         res = False
-        # FIXME: automatically creating a partner ?
         partner_ids_map = self._create_partner(cr, uid, ids, context=context)
         lead_ids = vals.get('lead_ids', [])
         team_id = vals.get('section_id', False)

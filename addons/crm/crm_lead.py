@@ -676,7 +676,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        This function convert partner based on action.
+        Convert partner based on action.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
         """
@@ -684,6 +684,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             context = {}
         partner_ids = {}
         force_partner_id = partner_id
+        import pudb; pudb.set_trace();
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
                 if not partner_id:
