@@ -86,7 +86,7 @@ class project_work(osv.osv):
         emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('Please define product on the related employee.\nFill in the timesheet tab of the employee form.'))
+                 _('Please define product and product category property account on the related employee.\nFill in the HR Settings tab of the employee form.'))
 
         if not emp.journal_id:
             raise osv.except_osv(_('Bad Configuration !'),
