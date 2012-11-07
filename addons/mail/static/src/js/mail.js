@@ -693,50 +693,22 @@ openerp.mail = function (session) {
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
         },
 
-        resize_img: function () {
-            var resize = function () {
-                var h = $(this).height();
-                var w = $(this).width();
-                if ( h > 100 || w >100 ) {
-                    var ratio = 100 / (h > w ? h : w);
-                    $(this).attr("width", parseInt( w*ratio )).attr("height", parseInt( h*ratio ));
-                }
-            };
-            this.$("img").load(resize).each(resize);
-        },
-
         /**
          * Bind events in the widget. Each event is slightly described
          * in the function. */
         bind_events: function () {
             var self = this;
 
-            // event: click on 'Attachment(s)' in msg
-            this.$('.oe_mail_msg_view_attachments').on('click', function (event) {
-                var attach = self.$('.oe_msg_attachments:first, .oe_msg_images:first');
-                if ( self.$('.oe_msg_attachments:first').hasClass("oe_hidden") ) {
-                    attach.removeClass("oe_hidden");
-                } else {
-                    attach.addClass("oe_hidden");
-                }
-                self.resize_img();
-            });
-            // event: click on icone 'Read' in header
+            // header icons bindings
             this.$el.on('click', '.oe_read', this.on_message_read);
-            // event: click on icone 'UnRead' in header
             this.$el.on('click', '.oe_unread', this.on_message_unread);
-            // event: click on 'Delete' in msg side menu
             this.$el.on('click', '.oe_msg_delete', this.on_message_delete);
-
-            // event: click on 'Reply' in msg
             this.$el.on('click', '.oe_reply', this.on_message_reply);
-            // event: click on 'Vote' button
-            this.$el.on('click', '.oe_msg_vote', this.on_vote);
-            // event: click on 'starred/favorite' button
             this.$el.on('click', '.oe_star', this.on_star);
 
+            this.$el.on('click', '.oe_msg_vote', this.on_vote);
+
             this.$el.on('click', '.oe_view_attachments', function(){
-                console.log('toggle');
                 self.$('.oe_msg_attachment_list').toggle(200);
             });
         },
