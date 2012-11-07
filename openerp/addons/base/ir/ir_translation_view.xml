@@ -54,12 +54,12 @@
         <record id="view_translation_tree" model="ir.ui.view">
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                <tree string="Translations" editable="bottom">
-                    <field name="src" readonly="True"/>
+                <tree string="Translations" editable="top">
+                    <field name="src"/>
                     <field name="value"/>
-                    <field name="name" readonly="True"/>
-                    <field name="lang" readonly="True"/>
-                    <field name="type" readonly="True"/>
+                    <field name="name"/>
+                    <field name="lang"/>
+                    <field name="type"/>
                 </tree>
             </field>
         </record>
