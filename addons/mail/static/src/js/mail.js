@@ -590,7 +590,7 @@ openerp.mail = function (session) {
             //formating and add some fields for render
             this.date = session.web.format_value(this._date, {type:"datetime"});
             this.timerelative = $.timeago(this.date);
-            if (this.type == 'email') {
+            if (this.type == 'email' && !this.author_id[0]) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
