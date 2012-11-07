@@ -100,7 +100,7 @@ class project_issue(crm.crm_case, osv.osv):
         res_obj = self.pool.get('resource.resource')
 
         res = {}
-        for issue in self.browse(cr, uid, ids, context=context):
+        for issue in self.browse(cr, 1, ids, context=context):
 
             # if the working hours on the project are not defined, use default ones (8 -> 12 and 13 -> 17 * 5), represented by None
             if not issue.project_id or not issue.project_id.resource_calendar_id:
