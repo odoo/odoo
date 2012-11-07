@@ -124,19 +124,10 @@ function assert(condition, message) {
 }
 my.InputView = instance.web.Widget.extend({
     template: 'SearchView.InputView',
-    start: function () {
-        var p = this._super.apply(this, arguments);
-        this.$el.on('focus', this.proxy('onFocus'));
-        this.$el.on('blur', this.proxy('onBlur'));
-        this.$el.on('keydown', this.proxy('onKeydown'));
-        return p;
-    },
-    onFocus: function () {
-        this.trigger('focused', this);
-    },
-    onBlur: function () {
-        this.$el.text('');
-        this.trigger('blurred', this);
+    events: {
+        focus: function () { this.trigger('focused', this); },
+        blur: function () { this.$el.text(''); this.trigger('blurred', this); },
+        keydown: 'onKeydown'
     },
     getSelection: function () {
         // get Text node
@@ -212,6 +203,27 @@ my.InputView = instance.web.Widget.extend({
 });
 my.FacetView = instance.web.Widget.extend({
     template: 'SearchView.FacetView',
+    events: {
+        'focus': function () { this.trigger('focused', this); },
+        'blur': function () { this.trigger('blurred', this); },
+        'click': function (e) {
+            if ($(e.target).is('.oe_facet_remove')) {
+                this.model.destroy();
+                return false;
+            }
+            this.$el.focus();
+            e.stopPropagation();
+        },
+        'keydown': function (e) {
+            var keys = $.ui.keyCode;
+            switch (e.which) {
+            case keys.BACKSPACE:
+            case keys.DELETE:
+                this.model.destroy();
+                return false;
+            }
+        }
+    },
     init: function (parent, model) {
         this._super(parent);
         this.model = model;
@@ -223,33 +235,11 @@ my.FacetView = instance.web.Widget.extend({
     },
     start: function () {
         var self = this;
-        this.$el.on('focus', function () { self.trigger('focused', self); });
-        this.$el.on('blur', function () { self.trigger('blurred', self); });
-        this.$el.on('click', function (e) {
-            if ($(e.target).is('.oe_facet_remove')) {
-                self.model.destroy();
-                return false;
-            }
-            self.$el.focus();
-            e.stopPropagation();
-        });
-        this.$el.on('keydown', function (e) {
-            var keys = $.ui.keyCode;
-            switch (e.which) {
-            case keys.BACKSPACE:
-            case keys.DELETE:
-                self.model.destroy();
-                return false;
-            }
-        });
-        var $e = self.$el.find('> span:last-child');
-        var q = $.when(this._super());
-        return q.pipe(function () {
-            var values = self.model.values.map(function (value) {
+        var $e = this.$('> span:last-child');
+        return $.when(this._super()).pipe(function () {
+            return $.when.apply(null, self.model.values.map(function (value) {
                 return new my.FacetValueView(self, value).appendTo($e);
-            });
-
-            return $.when.apply(null, values);
+            }));
         });
     },
     model_changed: function () {
@@ -274,6 +264,48 @@ my.FacetValueView = instance.web.Widget.extend({
 
 instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.SearchView# */{
     template: "SearchView",
+    events: {
+        // focus last input if view itself is clicked
+        'click': function (e) {
+            if (e.target === this.$('.oe_searchview_facets')[0]) {
+                this.$('.oe_searchview_input:last').focus();
+            }
+        },
+        // when the completion list opens/refreshes, automatically select the
+        // first completion item so if the user just hits [RETURN] or [TAB] it
+        // automatically selects it
+        'autocompleteopen': function () {
+            var menu = this.$el.data('autocomplete').menu;
+            menu.activate(
+                $.Event({ type: "mouseenter" }),
+                menu.element.children().first());
+        },
+        // search button
+        'click button.oe_searchview_search': function (e) {
+            e.stopImmediatePropagation();
+            this.do_search();
+        },
+        'click .oe_searchview_clear': function (e) {
+            e.stopImmediatePropagation();
+            this.query.reset();
+        },
+        'click .oe_searchview_unfold_drawer': function (e) {
+            e.stopImmediatePropagation();
+            this.$el.toggleClass('oe_searchview_open_drawer');
+        },
+        'keydown .oe_searchview_input, .oe_searchview_facet': function (e) {
+            switch(e.which) {
+            case $.ui.keyCode.LEFT:
+                this.focusPreceding(this);
+                e.preventDefault();
+                break;
+            case $.ui.keyCode.RIGHT:
+                this.focusFollowing(this);
+                e.preventDefault();
+                break;
+            }
+        }
+    },
     /**
      * @constructs instance.web.SearchView
      * @extends instance.web.Widget
@@ -331,54 +363,10 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 });
         }
 
-        // Launch a search on clicking the oe_searchview_search button
-        this.$el.on('click', 'button.oe_searchview_search', function (e) {
-            e.stopImmediatePropagation();
-            self.do_search();
-        });
-
-        this.$el.on('keydown',
-                '.oe_searchview_input, .oe_searchview_facet', function (e) {
-            switch(e.which) {
-            case $.ui.keyCode.LEFT:
-                self.focusPreceding(this);
-                e.preventDefault();
-                break;
-            case $.ui.keyCode.RIGHT:
-                self.focusFollowing(this);
-                e.preventDefault();
-                break;
-            }
-        });
-
-        this.$el.on('click', '.oe_searchview_clear', function (e) {
-            e.stopImmediatePropagation();
-            self.query.reset();
-        });
-        this.$el.on('click', '.oe_searchview_unfold_drawer', function (e) {
-            e.stopImmediatePropagation();
-            self.$el.toggleClass('oe_searchview_open_drawer');
-        });
         instance.web.bus.on('click', this, function(ev) {
             if ($(ev.target).parents('.oe_searchview').length === 0) {
                 self.$el.removeClass('oe_searchview_open_drawer');
             }
-        });
-        // Focus last input if the view itself is clicked (empty section of
-        // facets element)
-        this.$el.on('click', function (e) {
-            if (e.target === self.$el.find('.oe_searchview_facets')[0]) {
-                self.$el.find('.oe_searchview_input:last').focus();
-            }
-        });
-        // when the completion list opens/refreshes, automatically select the
-        // first completion item so if the user just hits [RETURN] or [TAB] it
-        // automatically selects it
-        this.$el.on('autocompleteopen', function () {
-            var menu = self.$el.data('autocomplete').menu;
-            menu.activate(
-                $.Event({ type: "mouseenter" }),
-                menu.element.children().first());
         });
 
         return $.when(p, this.ready);
@@ -480,7 +468,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      * div[contenteditable].oe_searchview_input)
      */
     currentInputValue: function () {
-        return this.$el.find('div.oe_searchview_input:focus').text();
+        return this.$('div.oe_searchview_input:focus').text();
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
@@ -510,7 +498,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
 
         var input_index = _(this.input_subviews).indexOf(
             this.subviewForRoot(
-                this.$el.find('div.oe_searchview_input:focus')[0]));
+                this.$('div.oe_searchview_input:focus')[0]));
         this.query.add(ui.item.facet, {at: input_index / 2});
     },
     childFocused: function () {
@@ -539,7 +527,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // _2: undefined if event=change, otherwise model
         var self = this;
         var started = [];
-        var $e = this.$el.find('div.oe_searchview_facets');
+        var $e = this.$('div.oe_searchview_facets');
         _.invoke(this.input_subviews, 'destroy');
         this.input_subviews = [];
 
@@ -664,7 +652,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // build drawer
         var drawer_started = $.when.apply(
             null, _(this.select_for_drawer()).invoke(
-                'appendTo', this.$el.find('.oe_searchview_drawer')));
+                'appendTo', this.$('.oe_searchview_drawer')));
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
@@ -736,6 +724,9 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
      *
      * If at least one field failed its validation, triggers
      * :js:func:`instance.web.SearchView.on_invalid` instead.
+     *
+     * @param [_query]
+     * @param {Object} [options]
      */
     do_search: function (_query, options) {
         if (options && options.preventSearch) {
@@ -961,7 +952,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
      */
     search_change: function () {
         var self = this;
-        var $filters = this.$el.find('> li').removeClass('oe_selected');
+        var $filters = this.$('> li').removeClass('oe_selected');
         var facet = this.view.query.find(_.bind(this.match_facet, this));
         if (!facet) { return; }
         facet.values.each(function (v) {
@@ -1512,7 +1503,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         }).pipe(this.proxy('set_filters'));
     },
     clear_selection: function () {
-        this.$el.find('li.oe_selected').removeClass('oe_selected');
+        this.$('li.oe_selected').removeClass('oe_selected');
     },
     append_filter: function (filter) {
         var self = this;
@@ -1524,7 +1515,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         } else {
             var id = filter.id;
             $filter = this.filters[key] = $('<li></li>')
-                .appendTo(this.$el.find('.oe_searchview_custom_list'))
+                .appendTo(this.$('.oe_searchview_custom_list'))
                 .addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
                 .text(filter.name);
@@ -1559,8 +1550,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     },
     save_current: function () {
         var self = this;
-        var $name = this.$el.find('input:first');
-        var private_filter = !this.$el.find('input:last').prop('checked');
+        var $name = this.$('input:first');
+        var private_filter = !this.$('input:last').prop('checked');
 
         var search = this.view.build_search_data();
         this.rpc('/web/session/eval_domain_and_context', {
@@ -1665,11 +1656,20 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
         });
     },
     append_proposition: function () {
+        var self = this;
         return (new instance.web.search.ExtendedSearchProposition(this, this.fields))
-            .appendTo(this.$el.find('ul'));
+            .appendTo(this.$('ul')).then(function () {
+                self.$('button.oe_apply').prop('disabled', false);
+            });
+    },
+    remove_proposition: function (prop) {
+        // removing last proposition, disable apply button
+        if (this.getChildren().length <= 1) {
+            this.$('button.oe_apply').prop('disabled', true);
+        }
+        prop.destroy();
     },
     commit_search: function () {
-        var self = this;
         // Get domain sections from all propositions
         var children = this.getChildren();
         var propositions = _.invoke(children, 'get_proposition');
@@ -1699,6 +1699,13 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
 
 instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @lends instance.web.search.ExtendedSearchProposition# */{
     template: 'SearchView.extended_search.proposition',
+    events: {
+        'change .searchview_extended_prop_field': 'changed',
+        'click .searchview_extended_delete_prop': function (e) {
+            e.stopPropagation();
+            this.getParent().remove_proposition(this);
+        }
+    },
     /**
      * @constructs instance.web.search.ExtendedSearchProposition
      * @extends instance.web.Widget
@@ -1716,17 +1723,10 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this.value = null;
     },
     start: function () {
-        var _this = this;
-        this.$el.find(".searchview_extended_prop_field").change(function() {
-            _this.changed();
-        });
-        this.$el.find('.searchview_extended_delete_prop').click(function () {
-            _this.destroy();
-        });
-        this.changed();
+        return this._super().then(this.proxy('changed'));
     },
     changed: function() {
-        var nval = this.$el.find(".searchview_extended_prop_field").val();
+        var nval = this.$(".searchview_extended_prop_field").val();
         if(this.attrs.selected == null || nval != this.attrs.selected.name) {
             this.select_field(_.detect(this.fields, function(x) {return x.name == nval;}));
         }
@@ -1741,7 +1741,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         if(this.attrs.selected != null) {
             this.value.destroy();
             this.value = null;
-            this.$el.find('.searchview_extended_prop_op').html('');
+            this.$('.searchview_extended_prop_op').html('');
         }
         this.attrs.selected = field;
         if(field == null) {
@@ -1757,9 +1757,9 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         _.each(this.value.operators, function(operator) {
             $('<option>', {value: operator.value})
                 .text(String(operator.text))
-                .appendTo(self.$el.find('.searchview_extended_prop_op'));
+                .appendTo(self.$('.searchview_extended_prop_op'));
         });
-        var $value_loc = this.$el.find('.searchview_extended_prop_value').empty();
+        var $value_loc = this.$('.searchview_extended_prop_value').empty();
         this.value.appendTo($value_loc);
 
     },
@@ -1767,7 +1767,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         if ( this.attrs.selected == null)
             return null;
         var field = this.attrs.selected;
-        var op = this.$el.find('.searchview_extended_prop_op')[0];
+        var op = this.$('.searchview_extended_prop_op')[0];
         var operator = op.options[op.selectedIndex];
         return {
             label: _.str.sprintf(_t('%(field)s %(operator)s "%(value)s"'), {
