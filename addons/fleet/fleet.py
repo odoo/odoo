@@ -56,7 +56,7 @@ class fleet_vehicle_cost(osv.Model):
     def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year) #TODO: why is it a char?
+            res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
         return res
 
     def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
@@ -92,7 +92,6 @@ class fleet_vehicle_cost(osv.Model):
     }
 
     def create(self, cr, uid, data, context=None):
-        #TODO: should be managed by onchanges() rather by this
         if 'parent_id' in data and data['parent_id']:
             parent = self.browse(cr, uid, data['parent_id'], context=context)
             data['vehicle_id'] = parent.vehicle_id.id
@@ -111,7 +110,6 @@ class fleet_vehicle_tag(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
 
 class fleet_vehicle_state(osv.Model):
     _name = 'fleet.vehicle.state'
@@ -395,44 +393,27 @@ class fleet_vehicle(osv.Model):
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
-        #TODO: put comments
-        #TODO: use _() to translate labels
-        #TODO: why is there a try..except?
-        #TODO: shorten the code (e.g: oldmodel = vehicle.model_id and olmodel.model_id.name or _('None')
-        #TODO: in PEP 8 standard, a coma should be followed by a space, '+' operator and equal sign should be in between 2 spaces
-        #TODO: you're looping on `ids´, and in this loop you're writing again and posting logs on `ids´. Use message_post only on vehicle.id and put super write() outside of the loop.
+        """
+        This function write an entry in the openchatter whenever we change important information
+        on the vehicle like the model, the drive, the state of the vehicle or its license plate
+        """
         for vehicle in self.browse(cr, uid, ids, context):
             changes = []
             if 'model_id' in vals and vehicle.model_id.id != vals['model_id']:
                 value = self.pool.get('fleet.vehicle.model').browse(cr,uid,vals['model_id'],context=context).name
-                oldmodel = vehicle.model_id
-                if oldmodel:
-                    oldmodel = oldmodel.name
-                else:
-                    oldmodel = 'None'
+                oldmodel = vehicle.model_id.name or _('None')
                 changes.append(_('Model: from \' %s \' to \' %s \'') %(oldmodel, value))
             if 'driver' in vals and vehicle.driver.id != vals['driver']:
                 value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
-                olddriver = vehicle.driver
-                if olddriver:
-                    olddriver = olddriver.name
-                else:
-                    olddriver = 'None'
+                olddriver = (vehicle.driver.name) or _('None')
                 changes.append(_('Driver: from \' %s \' to \' %s \'') %(olddriver, value))
             if 'state' in vals and vehicle.state.id != vals['state']:
                 value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
-                oldstate = vehicle.state
-                if oldstate:
-                    oldstate=oldstate.name
-                else:
-                    oldstate = 'None'
+                oldstate = vehicle.state.name or _('None')
                 changes.append(_('State: from \' %s \' to \' %s \'') %(oldstate, value))
             if 'license_plate' in vals and vehicle.license_plate != vals['license_plate']:
-                old_license_plate = vehicle.license_plate
-                if not old_license_plate:
-                    old_license_plate = 'None'
+                old_license_plate = vehicle.license_plate or _('None')
                 changes.append(_('License Plate: from \' %s \' to \' %s \'') %(old_license_plate, vals['license_plate']))
-           
            
             if len(changes) > 0:
                 self.message_post(cr, uid, [vehicle.id], body=", ".join(changes), context=context)
