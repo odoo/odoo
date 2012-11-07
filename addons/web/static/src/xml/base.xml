@@ -1027,6 +1027,13 @@
         </t>
     </span>
 </t>
+<t t-name="Many2OneButton">
+    <span class="oe_form_field">
+    </span>
+</t>
+<t t-name="Many2OneButton.cell"
+    ><img t-attf-src="#{_s}/web/static/src/img/icons/gtk-#{widget.has_value ? 'yes' : 'no'}.png" width="16" height="16"/>
+</t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">

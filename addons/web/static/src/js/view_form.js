@@ -3166,6 +3166,58 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
     }
 });
 
+instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
+    template: 'Many2OneButton',
+    init: function(field_manager, node) {
+        this._super.apply(this, arguments);
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.set_button();
+    },
+    set_button: function() {
+        var self = this;
+        if (this.$button) {
+            this.$button.remove();
+        }
+        var options = {};
+        try {
+            options = py.eval(this.node.attrs.options);
+        } catch (e) {}
+        if (options.label) {
+            this.string = this.get('value') ? _t(options.label.edit) : _t(options.label.create);
+        } else {
+            this.string = '';
+        }
+        this.node.attrs.icon = this.get('value') ? '/web/static/src/img/icons/gtk-yes.png' : '/web/static/src/img/icons/gtk-no.png';
+        this.$button = $(QWeb.render('WidgetButton', {'widget': this}));
+        this.$el.append(this.$button);
+        this.$button.on('click', self.on_click);
+    },
+    on_click: function(ev) {
+        var self = this;
+        this.popup =  new instance.web.form.FormOpenPopup(this);
+        this.popup.show_element(
+            this.field.relation,
+            this.get('value'),
+            this.build_context(),
+            {title: this.string}
+        );
+        this.popup.on('create_completed write_completed', self, function(r) {
+            self.set_value(r);
+        });
+    },
+    set_value: function(value_) {
+        var self = this;
+        if (value_ instanceof Array) {
+            value_ = value_[0];
+        }
+        value_ = value_ || false;
+        this.set('value', value_);
+        this.set_button();
+     },
+});
+
 /*
 # Values: (0, 0,  { fields })    create
 #         (1, ID, { fields })    update
@@ -5154,6 +5206,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
+    'many2onebutton' : 'instance.web.form.Many2OneButton',
     'many2many' : 'instance.web.form.FieldMany2Many',
     'many2many_tags' : 'instance.web.form.FieldMany2ManyTags',
     'many2many_kanban' : 'instance.web.form.FieldMany2ManyKanban',
