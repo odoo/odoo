@@ -73,7 +73,7 @@
         <t t-foreach='widget.attachment_ids' t-as='attachment'>
             <t t-if="widget.filetype(attachment) !== 'webimage'">
                 <div class='oe_attachment'>
-                    <img t-att-src="'/mail/static/src/img/mimetypes/' + widget.filetype(attachment) + '.png'"></img>
+                    <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + widget.filetype(attachment) + '.png'"></img></a>
                     <div class='oe_delete oe_e'>[</div>
                     <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
                     <div class='oe_progress_bar'>
@@ -83,7 +83,7 @@
             </t>
             <t t-if="widget.filetype(attachment) === 'webimage'">
                 <div class='oe_attachment oe_preview'>
-                    <img t-att-src="attachment.url"></img>
+                    <a t-att-href='attachment.url'><img t-att-src="attachment.url"></img></a>
                     <div class='oe_delete oe_e'>[</div>
                     <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
                     <div class='oe_progress_bar'>
@@ -218,11 +218,13 @@
                     <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                        <a t-if="widget.attachment_ids.length > 0" class="oe_mail_msg_view_attachments">
-                            <span class='oe_subtle'>•</span>
+                    <t t-if='widget.attachment_ids.length > 0'>
+                        <span class='oe_subtle'>•</span>
+                        <a class="oe_view_attachments">
                             <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
                             <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
                         </a>
+                    </t>
                     <span class='oe_subtle'>•</span>
                     <t t-call="mail.thread.message.vote"/>
                 </div>

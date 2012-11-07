@@ -363,7 +363,7 @@ openerp.mail = function (session) {
         display_attachments: function () {
             this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
             // event: delete an attachment
-            this.$(".oe_msg_attachment_list").on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
+            this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -734,6 +734,11 @@ openerp.mail = function (session) {
             this.$el.on('click', '.oe_msg_vote', this.on_vote);
             // event: click on 'starred/favorite' button
             this.$el.on('click', '.oe_star', this.on_star);
+
+            this.$el.on('click', '.oe_view_attachments', function(){
+                console.log('toggle');
+                self.$('.oe_msg_attachment_list').toggle(200);
+            });
         },
 
         /* Call the on_compose_message on the thread of this message. */

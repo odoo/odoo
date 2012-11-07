@@ -211,8 +211,12 @@
 /* --------------------- ATTACHMENTS --------------------- */
 
 .openerp .oe_mail .oe_msg_attachment_list{
+    display: none;
     margin-top: 12px;
     margin-bottom: 12px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
+    display: block;
 }
 .openerp .oe_mail .oe_attachment{
     display: inline-block;
@@ -289,6 +293,7 @@
     margin: 0px;
     left: 0px;
     right: 0px;
+    max-height: 64px;
     background: rgba(0,0,0,0.8); 
     color: white;
     border-top-left-radius: 0px;
