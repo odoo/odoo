@@ -74,7 +74,7 @@
             <t t-if="widget.filetype(attachment) !== 'webimage'">
                 <div class='oe_attachment'>
                     <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + widget.filetype(attachment) + '.png'"></img></a>
-                    <div class='oe_delete oe_e'>[</div>
+                    <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
                     <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
                     <div class='oe_progress_bar'>
                         uploading

@@ -363,6 +363,7 @@ openerp.mail = function (session) {
             this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
             // event: delete an attachment
             this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
+            console.log('display_attachments:',this.$('.oe_msg_attachment_list'));
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -681,7 +682,6 @@ openerp.mail = function (session) {
         start: function () {
             this._super.apply(this, arguments);
             this.expender();
-            this.resize_img();
             this.bind_events();
             if(this.thread_level < this.options.display_indented_thread) {
                 this.create_thread();
