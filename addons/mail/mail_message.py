@@ -25,6 +25,7 @@ import tools
 from email.header import decode_header
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
+from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -242,7 +243,7 @@ class mail_message(osv.Model):
             'id': message['id'],
             'type': message['type'],
             'attachment_ids': attachment_ids,
-            'body': message['body'],
+            'body': html_email_clean(message['body']),
             'model': message['model'],
             'res_id': message['res_id'],
             'record_name': message['record_name'],
