@@ -1029,7 +1029,7 @@ class account_move_line(osv.osv):
             'move_id': 40,
         }
 
-        document = etree.Element('tree', string=title, editable="top",
+        document = etree.Element('tree', string=title, 
                                  on_write="on_create_write",
                                  colors="red:state=='draft';black:state=='valid'")
         fields_get = self.fields_get(cr, uid, flds, context)
