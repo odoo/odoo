@@ -29,7 +29,7 @@ $(document).ready(function () {
             fail1 = false, fail2 = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred();
-        dm.add(d1).done(function () { done1 = true; }
+        dm.add(d1).done(function () { done1 = true; })
                   .fail(function () { fail1 = true; });
         dm.add(d2).done(function () { done2 = true; })
                   .fail(function () { fail2 = true; });
