@@ -65,6 +65,7 @@
                     <filter string="Unread"
                             name="message_unread" help="Show messages to read"
                             domain="[('to_read', '=', True)]"/>
+                    <separator/>
                     <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -74,6 +75,7 @@
                     <filter string="Emails"
                             name="emails" help="Emails"
                             domain="[('type', '=', 'email')]"/>
+                    <separator/>
                     <filter string="Has attachments"
                             name="attachments"
                             domain="[('attachment_ids', '!=', False)]"/>
