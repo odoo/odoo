@@ -271,15 +271,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 this.$('.oe_searchview_input:last').focus();
             }
         },
-        // when the completion list opens/refreshes, automatically select the
-        // first completion item so if the user just hits [RETURN] or [TAB] it
-        // automatically selects it
-        'autocompleteopen': function () {
-            var menu = this.$el.data('autocomplete').menu;
-            menu.activate(
-                $.Event({ type: "mouseenter" }),
-                menu.element.children().first());
-        },
         // search button
         'click button.oe_searchview_search': function (e) {
             e.stopImmediatePropagation();
