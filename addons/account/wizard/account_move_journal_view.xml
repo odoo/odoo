@@ -12,25 +12,5 @@
             </field>
         </record>
 
-
-
-        <record id="action_account_moves_bank" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.journal</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_account_move_journal_form"/>
-            <field name="context">{'journal_type':'bank','view_mode':False}</field>
-            <field name="target">new</field>
-            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. Journal items are created by OpenERP if you use Bank Statements, Cash Registers, or Customer/Supplier payments.</field>
-        </record>
-
-        <menuitem
-            action="action_account_moves_bank"
-            icon="STOCK_JUSTIFY_FILL"
-            id="menu_action_account_moves_bank"
-            parent="account.menu_finance_bank_and_cash"
-            sequence="16"
-            groups="group_account_user,group_account_manager"
-        />
     </data>
 </openerp>
