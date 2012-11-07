@@ -178,11 +178,11 @@
                             <field name="tag_ids" widget="many2many_tags" />
                         </div>
                         <div class="oe_right oe_button_box">
-                            <button name="act_show_log_contract" type="object" string="Contracts" help="show the contract for this vehicle" />
+                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_contract_act'}" string="Contracts" help="show the contract for this vehicle" />
                             <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" />
-                            <button name="act_show_log_services" type="object" string="Services" help="show the services logs for this vehicle" />
-                            <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
-                            <button name="act_show_log_odometer" type="object" string="Odometer Logs" help="show the odometer logs for this vehicle" />
+                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_services_act'}" string="Services" help="show the services logs for this vehicle" />
+                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_fuel_act'}" string="Fuel Logs" help="show the fuel logs for this vehicle" />
+                            <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_odometer_act'}" string="Odometer Logs" help="show the odometer logs for this vehicle" />
                         </div> 
                         <group col="2" string="General Properties">
                             <group >
@@ -294,7 +294,7 @@
                                         </a>
                                     </h4>
                                     <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
-                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
+                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
@@ -302,7 +302,7 @@
                                     </t>
 
                                     <t t-if="record.contract_renewal_overdue.raw_value > 0">
-                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
+                                        <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
                                                 <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
                                             </span>
@@ -450,10 +450,10 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0;grey:state=='closed'">
+                <tree string="Contract logs" version="7.0" colors="orange:days_left>0 and days_left&lt;15;red:days_left==0;grey:state=='closed'">
                     <field name="start_date" />
                     <field name="expiration_date" />
-                    <field name="warning_date" invisible="1"/>
+                    <field name="days_left" invisible="1"/>
                     <field name="vehicle_id" />
                     <field name="cost_subtype"/>
                     <field name="insurer_id" />
