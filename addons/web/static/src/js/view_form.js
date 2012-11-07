@@ -4862,10 +4862,6 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             instance.webclient.notification.warn(_t("Image"), _t("Could not display the selected image."));
         });
     },
-    on_file_change: function() {
-        this.render_value();
-        this._super.apply(this, arguments);
-    },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.internal_set_value(file_base64);
         this.binary_value = true;
