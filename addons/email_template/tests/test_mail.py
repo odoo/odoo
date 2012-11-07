@@ -172,20 +172,18 @@ class test_message_compose(test_mail.TestMailMockups):
         self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
 
 
-    def test_10_template_email_for_composer(self):
-        """ Tests designed for message_post. """
-        cr, uid = self.cr, self.uid
+        # ----------------------------------------
+        # CASE4: Created message with template, test recipients
+        # ----------------------------------------
 
-        # 1 - Bert Tartopoils, with email, object to send message, add his partner_id from email_to
-        u_a_id = self.res_users.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'raoul@raoul.fr', 'login': 'raoul'})
-        p_a_id = self.res_users.browse(cr, uid, u_a_id).partner_id.id
-        # 2 - Carine Poilvache, with email, add his partner_id from email_to and email_to_partner
+        # 1 - Admin, with email, object to send message, add his partner_id from email_to
+        # p_a_id
+        # 2 - Carine Poilvache, with email, add his partner_id from email_to and email_recipients
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c'})
-        # 3 - Dédé Grosbedon, without email, add his partner_id from email_to_partner
+        # 3 - Dédé Grosbedon, without email, add his partner_id from email_recipients
         p_c_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon'})
         # 4 - Truc Much, without email, add his partner_id from email_cc
         p_d_id = self.res_partner.create(cr, uid, {'name': 'Truc Much', 'email': 'd@d'})
-
         # Create template on res.users
         user_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'res.users')])[0]
         self.email_template_id = self.email_template.create(cr, uid, {
@@ -194,15 +192,12 @@ class test_message_compose(test_mail.TestMailMockups):
             'subject': '${object.name}',
             'body_html': '${object.login}',
             'email_to': '${object.email} c@c',
-            'email_to_partner': '%i,%i' % (p_b_id, p_c_id),
+            'email_recipients': '%i,%i' % (p_b_id, p_c_id),
             'email_cc': 'd@d'
             })
 
         # patner by email + partner by id (no double)
         send_to = [p_a_id, p_b_id, p_c_id, p_d_id];
-
         # Generate messsage with default email and partner on template
         mail_value = self.mail_compose.generate_email_for_composer(cr, uid, self.email_template_id, u_a_id)
-        mail_value['partner_ids'].sort()
-
-        self.assertEqual(mail_value['partner_ids'], send_to, 'mail.message the partner_ids list create by template is incorrect')
+        self.assertEqual(set(mail_value['partner_ids']), set(send_to), 'mail.message the partner_ids list create by template is incorrect')
