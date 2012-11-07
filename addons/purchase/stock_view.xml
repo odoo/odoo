@@ -37,18 +37,6 @@
             </field>
         </record>
 
-        <!-- inherit view of stock.partial.picking wizard -->
-        <record id="stock_partial_picking_form_inherit" model="ir.ui.view">
-            <field name="name">stock.partial.picking.form.inherit</field>
-            <field name="model">stock.partial.picking</field>
-            <field name="inherit_id" ref="stock.stock_partial_picking_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//button[@name='do_partial']" position="after">
-                        <button name="open_invoice" string="Receive &amp; Control Invoice" type="object" class="oe_highlight" />
-                </xpath>
-           </field>
-        </record>
-
         <!-- is it need ? we have another method "Receive Products"-->
         <record id="purchase_order_2_stock_picking" model="ir.ui.view">
             <field name="name">Purchase Picking Inherited</field>

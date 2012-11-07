@@ -118,7 +118,6 @@ class stock_picking(osv.osv):
 
 class stock_partial_picking(osv.osv_memory):
     _inherit = 'stock.partial.picking'
-
     # Overridden to inject the purchase price as true 'cost price' when processing
     # incoming pickings.
     def _product_cost_for_average_update(self, cr, uid, move):
@@ -126,54 +125,6 @@ class stock_partial_picking(osv.osv_memory):
             return {'cost': move.purchase_line_id.price_unit,
                     'currency': move.picking_id.purchase_id.pricelist_id.currency_id.id}
         return super(stock_partial_picking, self)._product_cost_for_average_update(cr, uid, move)
-
-
-    def create_invoice(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        picking_pool = self.pool.get('stock.picking')
-        active_ids = context.get('active_ids', [])
-        active_picking = picking_pool.browse(cr, uid, context.get('active_id',False), context=context)
-        inv_type = picking_pool._get_invoice_type(active_picking)
-        context['inv_type'] = inv_type
-        res = picking_pool.action_invoice_create(cr, uid, active_ids,
-              type = inv_type,
-              context=context)
-        return res
-
-    def open_invoice(self, cr, uid, ids, context=None):
-        """Launch Create invoice wizard.
-        """
-        if context is None: context = {}
-        data_pool = self.pool.get('ir.model.data')
-        result = self.do_partial(cr, uid, ids, context=context)
-        partial = self.browse(cr, uid, ids[0], context=context)
-        context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.id])
-        if partial.picking_id.invoice_state == '2binvoiced':
-            invoice_ids = []
-            res = self.create_invoice(cr, uid, ids, context=context)
-            invoice_ids += res.values()
-            inv_type = context.get('inv_type', False)
-            action_model = False
-            action = {}
-            if not invoice_ids:
-                raise osv.except_osv(_('Error!'), _('Please create Invoices.'))
-            if inv_type == "out_invoice":
-                action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree1")
-            elif inv_type == "in_invoice":
-                action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree2")
-            elif inv_type == "out_refund":
-                action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree3")
-            elif inv_type == "in_refund":
-                action_model,action_id = data_pool.get_object_reference(cr, uid, 'account', "action_invoice_tree4")
-            if action_model:
-                action_pool = self.pool.get(action_model)
-                action = action_pool.read(cr, uid, action_id, context=context)
-                action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
-            return action
-        return {'type': 'ir.actions.act_window_close'}
-
 
 # Redefinition of the new field in order to update the model stock.picking.in in the orm
 # FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
