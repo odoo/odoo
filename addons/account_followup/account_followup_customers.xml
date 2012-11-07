@@ -3,6 +3,8 @@
 
  		<!-- followup of customers views
  		-->
+ 		
+ 		<!-- Was specific view, not used anymore -->
 
  		<record id="customer_followup_formgone" model="ir.ui.view">
  			<field name="name">eee</field>
@@ -22,7 +24,7 @@
  					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
  						<tree string="Account Move line" editable="bottom">
  							<field name="date" readonly="True"/>
-                    		<field name="move_id" readonly="True"/>
+                    		<!--<field name="move_id" readonly="True"/>-->
                     		<field name="ref" readonly="True"/>
  							<field name="debit" readonly="True"/>
  							<field name="credit" readonly="True"/>
@@ -48,15 +50,13 @@
  					 </group>
  					 <group>
  					 <field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
- 					 <field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the currrent date when processing the follow-ups asks for a phone call"/>
+ 					 <field name="payment_next_action_date"/>
  					 </group>
  					</group>
  					 <separator string="Payment Followup Remarks"/>
  					 <newline/> 					
  					 <group>
- 					   
  						<field name="payment_note"/>
- 						
  						<!--<field name="payment_followup_level_id"/>--> 
  						<field name="latest_followup_level_id"/>
  						<field name="latest_followup_date"/>
@@ -113,6 +113,9 @@
  					<separator/>
  					<filter string="Without responsible" domain="[('payment_responsible_id', '=', False)]"/>
  					<filter string="I am responsible" domain="[('payment_responsible_id','=', uid)]"/>
+ 					<group expand="1" string="Group by">
+ 					<filter string="Responsible" context="{'group_by':'payment_responsible_id'}"/>
+ 					</group>
  				</search>
  			</field>
  		</record>
@@ -140,12 +143,12 @@
             <field name="model">res.partner</field>
             <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="arch" type="xml">
-            	<sheet position="before">
-            		<header>
-            			<button name="do_button_print" string="Print Overdue Payments Report"/>
-            			<button name="do_button_mail" string="Send Overdue Email"/>
-            		</header>
-            	</sheet>
+            	
+            		<div name="buttons" position="inside">
+            			<button name="do_button_print" type="object" string="Print Overdue Payments Report"/>
+            			<button name="do_button_mail" type="object" string="Send Overdue Email"/>
+            		</div>
+            	
         			
             		<page string="Accounting" position="before" version="7.0">
             		<page string="Payments Follow-up" position="inside">
@@ -166,6 +169,7 @@
             			<field name="latest_followup_level_id"/>
             			<field name="latest_followup_date"/>
  						<field name="next_followup_level_id"/>
+ 						<field name="payment_note"/>
             			</group>
             			<group>
             			<!--<field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the current date when processing the follow-ups asks for a phone call"/>-->
@@ -178,15 +182,16 @@
  						<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> <!---->
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/>
-                    		<field name="ref" readonly="True"/>
- 							<field name="debit" readonly="True"/>
- 							<field name="credit" readonly="True"/>
+                    		<!--<field name="ref" readonly="True"/>-->
+ 							<!--<field name="debit" readonly="True"/>
+ 							<field name="credit" readonly="True"/>-->
+ 							<field name="result" readonly="True"/>
  							<field name="followup_date" readonly="True"/>
- 							<field name="followup_line_id" readonly="True"/>
+ 							<!--<field name="followup_line_id" readonly="True"/>-->
  							<field name="blocked" string="Litigation"/>
- 							<field name="payment_commitment"/>
- 							<field name="payment_date"/>
- 							<field name="date_maturity"/>
+ 							<!--<field name="payment_commitment"/>
+ 							<field name="payment_date"/>-->
+ 							<field name="date_maturity" readonly="True"/>
  							<!--<field name="reconcile_id" invisible="True"/>-->
  							<field name="reconcile_partial_id" readonly="True"/>
  							<!--<field name="invoice"/>-->
@@ -207,66 +212,7 @@
             </field>
         </record>
        
-       
-       <record id="customer_followup_form" model="ir.ui.view">
- 			<field name="name">eee</field>
- 			<field name="model">res.partner</field>
- 			<field name="type">form</field>
- 			<field name="priority" eval="20"/>
- 			<field name="inherits_id" ref="base.view_partner_form"/>
- 			<field name="arch" type="xml">
- 				<xpath expr="//page[@string='Payments Follow-up']" position="replace">
- 				
-            		<page string="Payments Follow-up" position="inside">
-            			<group>
-            			<group>
-            			<field name="payment_amount_outstanding"/>
-            			</group>
-            			<group>
-            				<label for="payment_next_action"/>
-                                <div>
-                                    <field name="payment_next_action_date" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('payment_next_action_date', '=', False), ('payment_next_action', '=', False)]}"/>
-                                    <field name="payment_next_action" class="oe_inline" nolabel="1" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
-                                </div>
-            			</group>
-                  		
-              			
-            			<group>
-            			<field name="latest_followup_level_id"/>
-            			<field name="latest_followup_date"/>
- 						<field name="next_followup_level_id"/>
-            			</group>
-            			<group>
-            			<!--<field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the current date when processing the follow-ups asks for a phone call"/>-->
-            			<field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
- 					 	<button name="action_done" type="object" string="Follow-up Action Done" help="This button will clear the action and the action date. "/>
- 					 	</group>
- 					 	</group>			 	            			
- 						<group>
- 					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
- 						<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> <!---->
- 							<field name="date" readonly="True"/>
-                    		<field name="move_id" readonly="True"/>
-                    		<field name="ref" readonly="True"/>
- 							<field name="debit" readonly="True"/>
- 							<field name="credit" readonly="True"/>
- 							<field name="followup_date" readonly="True"/>
- 							<field name="followup_line_id" readonly="True"/>
- 							<field name="blocked" string="Litigation"/>
- 							<field name="payment_commitment"/>
- 							<field name="payment_date"/>
- 							<field name="date_maturity"/>
- 							<!--<field name="reconcile_id" invisible="True"/>-->
- 							<field name="reconcile_partial_id" readonly="True"/>
- 							<!--<field name="invoice"/>-->
- 						</tree>
- 					</field>
- 					</group>
-            		</page>
-            		
- 				</xpath>
- 			</field>
- 			</record>
+   
  			
  			
  		<!--	<record id="action_view_customer_followup_form" model="ir.actions.act_window.view">

@@ -66,6 +66,7 @@ class email_template(osv.osv):
             if res_id:
                 record = self.pool.get(model).browse(cr, uid, res_id, context=context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            context['current_date'] = fields.date.context_today(cr, uid, context) #change by inheritance
             result = MakoTemplate(template).render_unicode(object=record,
                                                            user=user,
                                                            # context kw would clash with mako internals

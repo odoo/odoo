@@ -133,6 +133,7 @@ class account_followup_print(osv.osv_memory):
                 partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
+            partner_obj.message_post(cr, uid, [partner.partner_id.id], body="Follow-up letter will be sent", context=context)
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 
@@ -179,39 +180,6 @@ class account_followup_print(osv.osv_memory):
         #'partner_ids': _get_partners,
         'summary': _get_summary,
     }
-#account_followup_print()
-
-
-#class account_followup_print_all(osv.osv_memory):
-#    _name = 'account.followup.print.all'
-#    _description = 'Print Follow-up & Send Mail to Customers'
-#    _columns = {
-#        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
-#        'email_conf': fields.boolean('Send Email Confirmation'),
-#        'email_subject': fields.char('Email Subject', size=64),
-#        'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
-#        'email_body': fields.text('Email Body'),
-#        'summary': fields.text('Summary', required=True, readonly=True),
-#        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.')
-#    }
-#    def _get_summary(self, cr, uid, context=None):
-#        if context is None:
-#            context = {}
-#        return context.get('summary', '')
-#
-#    def _get_partners(self, cr, uid, context=None):
-#        return self._get_partners_followp(cr, uid, [], context=context)['partner_ids']
-#
-#    def _get_msg(self, cr, uid, context=None):
-#        return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
-#
-#    _defaults = {
-#         'email_body': _get_msg,
-#         'email_subject': _('Invoices Reminder'),
-#         'partner_lang': True,
-#         'partner_ids': _get_partners,
-#         'summary': _get_summary,
-#    }
 
     def _get_partners_followp(self, cr, uid, ids, context=None):
         data = {}       
@@ -231,7 +199,7 @@ class account_followup_print(osv.osv_memory):
                 "AND (l.debit > 0) "\
                 "AND (l.company_id = %s) " \
                 "AND (l.blocked = False)" \
-            "ORDER BY l.date", (company_id,))  #l.blocked added to take litigation into account
+            "ORDER BY l.date", (company_id,))  #l.blocked added to take litigation into account and it is not necessary to change follow-up level of account move lines without debit
         move_lines = cr.fetchall()
         old = None
         fups = {}
@@ -312,34 +280,5 @@ class account_followup_print(osv.osv_memory):
         }
 
 account_followup_print()
-
-
-#jco tests
-#        resu = self.do_mail(cr,uid,ids,context)        
-#        mod_obj = self.pool.get('ir.model.data')
-#        move_obj = self.pool.get('account.move.line')
-#        user_obj = self.pool.get('res.users')
-#        if context is None:
-#            context = {}
-#        data = self.browse(cr, uid, ids, context=context)[0]
-#        stat_by_partner_line_ids = [partner_id.id for partner_id in data.partner_ids]
-#        partners = [stat_by_partner_line / 10000 for stat_by_partner_line in stat_by_partner_line_ids]
-#        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_print_all_msg')], context=context)
-#        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-#        print "start changeof new action..."
-#    
-#        partnersfilt = []
-#        partner_obj = self.pool.get('res.partner')
-#        for partner in partner_obj.browse(cr, uid, partners, context):
-#            if partner.next_followup_level_id.phonecall:
-#                partnersfilt.append(partner.id)            
-#            print "Should have been changed"
-#            print partner.name
-#        partner_obj = self.pool.get('res.partner').write(cr, uid, partnersfilt, {'payment_new_action': "Take your phone and call him, please!!!"})
-#        resu2 = self.do_print(cr,uid,ids,context)
-#        return resu2
-
-
-#account_followup_print_all()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
