@@ -60,6 +60,9 @@ This module manages:
         'security/account_voucher_security.xml',
         'account_voucher_data.xml',
     ],
+    'js': [
+        'static/src/js/account_voucher.js',
+    ],
     'test' : [
         'test/account_voucher.yml',
         'test/sales_receipt.yml',

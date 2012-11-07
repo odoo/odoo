@@ -329,7 +329,7 @@ class account_voucher(osv.osv):
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
     }
     _defaults = {
-        'active': lambda *a: False,
+        'active': lambda *a: True,
         'period_id': _get_period,
         'partner_id': _get_partner,
         'journal_id':_get_journal,
