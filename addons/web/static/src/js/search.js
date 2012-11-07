@@ -656,9 +656,8 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-            'facet_for_defaults', this.defaults)).then(function () {
-                self.query.reset(_(arguments).compact(), {preventSearch: true});
-            });
+                'facet_for_defaults', this.defaults))
+            .pipe(this.proxy('setup_default_query'));
 
         return $.when(drawer_started, defaults_fetched)
             .then(function () { 
