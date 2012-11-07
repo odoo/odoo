@@ -312,12 +312,7 @@ class hr_payslip(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         default.update({
             'line_ids': [],
-            'move_ids': [],
-            'move_line_ids': [],
             'company_id': company_id,
-            'period_id': False,
-            'basic_before_leaves': 0.0,
-            'basic_amount': 0.0,
             'number': '',
             'payslip_run_id': False,
             'paid': False,

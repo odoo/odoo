@@ -5,6 +5,7 @@ openerp.mail = function (session) {
     var mail = session.mail = {};
 
     openerp_mail_followers(session, mail);        // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -1630,7 +1631,22 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self=this;
-            this.$(".oe_write_full").click(function(){ self.root.thread.compose_message.on_compose_fullmail(); });
+            this.$(".oe_write_full").click(function (event) {
+                event.stopPropagation();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    action_from: 'mail.ThreadComposeMessage',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: {
+                        'default_content_subtype': 'html',
+                    },
+                };
+                session.client.action_manager.do_action(action);
+            });
             this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
@@ -1645,17 +1661,6 @@ openerp.mail = function (session) {
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
         template:'mail.compose_message.button_top_bar',
-
-        init: function (parent, options) {
-            this._super.apply(this, options);
-            this.options = this.options || {};
-            this.options.domain = this.options.domain || [];
-            this.options.context = {
-                'default_model': false,
-                'default_res_id': 0,
-                'default_content_subtype': 'html',
-            };
-        },
 
         start: function (parent, params) {
             var self = this;
@@ -1673,11 +1678,11 @@ openerp.mail = function (session) {
                 action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: _.extend(this.options.context, {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
+                context: {
+                    'default_model': '',
+                    'default_res_id': false,
                     'default_content_subtype': 'html',
-                }),
+                },
             };
             session.client.action_manager.do_action(action);
         },

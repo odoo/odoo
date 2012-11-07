@@ -465,7 +465,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var product_list = this.pos.get('product_list');
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = product.get('taxes_id');;
             var taxes =  self.pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {

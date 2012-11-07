@@ -202,12 +202,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         update_numpad: function() {
-        	var reset = false;
-        	if (this.selected_line !== this.pos.get('selectedOrder').getSelectedLine()) {
-        		reset = true;
-        	}
         	this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
-        	if (reset && this.numpadState)
+        	if (this.numpadState)
         		this.numpadState.reset();
         },
         renderElement: function() {
