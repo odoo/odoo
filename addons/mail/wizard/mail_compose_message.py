@@ -186,17 +186,6 @@ class mail_compose_message(osv.TransientModel):
         """
         return {'value': {'content_subtype': value}}
 
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ The basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-            :param value: value format: [[6, 0, [3, 4]]]
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
-        return res
-
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
             currently impossible to have buttons that do nothing special
