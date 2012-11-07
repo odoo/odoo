@@ -20,10 +20,7 @@
 ##############################################################################
 
 from lxml import etree
-# try:
-#     from lxml.html.soupparser import fromstring as parser_fromstring
-# except ImportError:
-#     from lxml.html import fromstring as parser_fromstring
+import cgi
 import logging
 import lxml.html
 import openerp.pooler as pooler
@@ -38,6 +35,10 @@ from openerp.loglevels import ustr
 
 _logger = logging.getLogger(__name__)
 
+
+#----------------------------------------------------------
+# HTML Sanitizer
+#----------------------------------------------------------
 
 def html_sanitize(src):
     if not src:
@@ -173,24 +174,8 @@ def html_email_clean(html):
 
 
 #----------------------------------------------------------
-# Emails
+# HTML/Text management
 #----------------------------------------------------------
-
-email_re = re.compile(r"""
-    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
-    @                                # mandatory @ sign
-    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
-     \.
-     [a-z]{2,3}                      # TLD
-    )
-    """, re.VERBOSE)
-res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
-command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
-
-# Updated in 7.0 to match the model name as well
-# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
-# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
-reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
 def html2plaintext(html, body_id=None, encoding='utf-8'):
     """ From an HTML text, convert the HTML to plain text.
@@ -247,6 +232,27 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         html += ustr('[%s] %s\n') % (i+1, url)
 
     return html
+
+
+#----------------------------------------------------------
+# Emails
+#----------------------------------------------------------
+
+email_re = re.compile(r"""
+    ([a-zA-Z][\w\.-]*[a-zA-Z0-9]     # username part
+    @                                # mandatory @ sign
+    [a-zA-Z0-9][\w\.-]*              # domain must start with a letter ... Ged> why do we include a 0-9 then?
+     \.
+     [a-z]{2,3}                      # TLD
+    )
+    """, re.VERBOSE)
+res_re = re.compile(r"\[([0-9]+)\]", re.UNICODE)
+command_re = re.compile("^Set-([a-z]+) *: *(.+)$", re.I + re.UNICODE)
+
+# Updated in 7.0 to match the model name as well
+# Typical form of references is <timestamp-openerp-record_id-model_name@domain>
+# group(1) = the record ID ; group(2) = the model (if any) ; group(3) = the domain
+reference_re = re.compile("<.*-open(?:object|erp)-(\\d+)(?:-([\w.]+))?.*@(.*)>", re.UNICODE)
 
 def generate_tracking_message_id(res_id):
     """Returns a string that can be used in the Message-ID RFC822 header field
