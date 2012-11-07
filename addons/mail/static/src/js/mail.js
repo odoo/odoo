@@ -225,6 +225,66 @@ openerp.mail = function (session) {
             }
         },
 
+        // inserts zero width space between each letter of a string so that
+        // the word will correctly wrap in html boxes smaller than the text
+        breakword: function(str){
+            var out = '';
+            for(var i = 0, len = str.length; i < len; i++){
+                out += _.str.escapeHTML(str[i]) + '&#8203;';
+            }
+            return out;
+        },
+
+        // returns the file type of a file based on its extension 
+        // As it only looks at the extension it is quite approximative. 
+        filetype: function(url){
+            console.log(url);
+            url = url.name || url.filename || url;
+            var tokens = url.split('.');
+            if(tokens.length <= 1){
+                return 'unknown';
+            }
+            var extension = tokens[tokens.length -1];
+            if(extension.length === 0){
+                return 'unknown';
+            }else{
+                extension = extension.toLowerCase();
+            }
+            var filetypes = {
+                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
+                'image':        ['tif','tiff','tga',
+                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
+                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
+                                 'jp2','jpx','dng','djvu','dds'],
+                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
+                'print':        ['dvi','pdf','ps'],
+                'document':     ['doc','docx','odm','odt'],
+                'presentation': ['key','keynote','odp','pps','ppt'],
+                'font':         ['otf','ttf','woff','eot'],
+                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
+                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
+                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
+                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
+                                 'm4a','ra','mid','midi'],
+                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
+                'text':         ['txt','rtf','ass'],
+                'html':         ['html','xhtml','xml','htm','css'],
+                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
+                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
+                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
+                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
+                'binary':       ['exe','com','bin','app'],
+            };
+            for(filetype in filetypes){
+                var ext_list = filetypes[filetype];
+                for(var i = 0, len = ext_list.length; i < len; i++){
+                    if(extension === ext_list[i]){
+                        return filetype;
+                    }
+                }
+            }
+            return 'unknown';
+        },
 
         /* get all child message id linked.
          * @return array of id
@@ -297,12 +357,6 @@ openerp.mail = function (session) {
             this.display_attachments();
             this.bind_events();
         },
-
-        // used to retrieve the filetype of attachments
-        filetype: mail.ChatterUtils.filetype,
-
-        // used to wrap the name of the atttachments before display
-        breakword: mail.ChatterUtils.breakword,
 
         /* upload the file on the server, add in the attachments list and reload display
          */
@@ -619,66 +673,6 @@ openerp.mail = function (session) {
             return false;
         },
 
-        // inserts zero width space between each letter of a string so that
-        // the word will correctly wrap in html boxes smaller than the text
-        breakword: function(str){
-            var out = '';
-            for(var i = 0, len = str.length; i < len; i++){
-                out += _.str.escapeHTML(str[i]) + '&#8203;';
-            }
-            return out;
-        },
-
-        // returns the file type of a file based on its extension 
-        // As it only looks at the extension it is quite approximative. 
-        filetype: function(url){
-            console.log(url);
-            url = url.name || url.filename || url;
-            var tokens = url.split('.');
-            if(tokens.length <= 1){
-                return 'unknown';
-            }
-            var extension = tokens[tokens.length -1];
-            if(extension.length === 0){
-                return 'unknown';
-            }else{
-                extension = extension.toLowerCase();
-            }
-            var filetypes = {
-                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
-                'image':        ['tif','tiff','tga',
-                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
-                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
-                                 'jp2','jpx','dng','djvu','dds'],
-                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
-                'print':        ['dvi','pdf','ps'],
-                'document':     ['doc','docx','odm','odt'],
-                'presentation': ['key','keynote','odp','pps','ppt'],
-                'font':         ['otf','ttf','woff','eot'],
-                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
-                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
-                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
-                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
-                                 'm4a','ra','mid','midi'],
-                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
-                'text':         ['txt','rtf','ass'],
-                'html':         ['html','xhtml','xml','htm','css'],
-                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
-                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
-                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
-                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
-                'binary':       ['exe','com','bin','app'],
-            };
-            for(filetype in filetypes){
-                var ext_list = filetypes[filetype];
-                for(var i = 0, len = ext_list.length; i < len; i++){
-                    if(extension === ext_list[i]){
-                        return filetype;
-                    }
-                }
-            }
-            return 'unknown';
-        },
     });
 
     mail.ThreadMessage = mail.MessageCommon.extend({
