@@ -110,7 +110,8 @@ openerp.mail = function (session) {
             }
 
             return domain;
-        }
+        },
+
     };
 
 
@@ -124,6 +125,26 @@ openerp.mail = function (session) {
      */
 
     mail.MessageCommon = session.web.Widget.extend({
+
+    /**
+     * ------------------------------------------------------------
+     * FIXME: this comment was moved as is from the ThreadMessage Init as
+     * part of a refactoring. Check that it is still correct
+     * ------------------------------------------------------------
+     * This widget handles the display of a messages in a thread. 
+     * Displays a record and performs some formatting on the record :
+     * - record.date: formatting according to the user timezone
+     * - record.timerelative: relative time givein by timeago lib
+     * - record.avatar: image url
+     * - record.attachment_ids[].url: url of each attachmentThe
+     * thread view :
+     * - root thread
+     * - - sub message (parent_id = root message)
+     * - - - sub thread
+     * - - - - sub sub message (parent id = sub thread)
+     * - - sub message (parent_id = root message)
+     * - - - sub thread
+     */
         
         init: function (parent, datasets, options) {
             this._super(parent, options);
@@ -204,6 +225,66 @@ openerp.mail = function (session) {
             }
         },
 
+        // inserts zero width space between each letter of a string so that
+        // the word will correctly wrap in html boxes smaller than the text
+        breakword: function(str){
+            var out = '';
+            for(var i = 0, len = str.length; i < len; i++){
+                out += _.str.escapeHTML(str[i]) + '&#8203;';
+            }
+            return out;
+        },
+
+        // returns the file type of a file based on its extension 
+        // As it only looks at the extension it is quite approximative. 
+        filetype: function(url){
+            console.log(url);
+            url = url.name || url.filename || url;
+            var tokens = url.split('.');
+            if(tokens.length <= 1){
+                return 'unknown';
+            }
+            var extension = tokens[tokens.length -1];
+            if(extension.length === 0){
+                return 'unknown';
+            }else{
+                extension = extension.toLowerCase();
+            }
+            var filetypes = {
+                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
+                'image':        ['tif','tiff','tga',
+                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
+                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
+                                 'jp2','jpx','dng','djvu','dds'],
+                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
+                'print':        ['dvi','pdf','ps'],
+                'document':     ['doc','docx','odm','odt'],
+                'presentation': ['key','keynote','odp','pps','ppt'],
+                'font':         ['otf','ttf','woff','eot'],
+                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
+                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
+                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
+                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
+                                 'm4a','ra','mid','midi'],
+                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
+                'text':         ['txt','rtf','ass'],
+                'html':         ['html','xhtml','xml','htm','css'],
+                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
+                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
+                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
+                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
+                'binary':       ['exe','com','bin','app'],
+            };
+            for(filetype in filetypes){
+                var ext_list = filetypes[filetype];
+                for(var i = 0, len = ext_list.length; i < len; i++){
+                    if(extension === ext_list[i]){
+                        return filetype;
+                    }
+                }
+            }
+            return 'unknown';
+        },
 
         /* get all child message id linked.
          * @return array of id
@@ -282,7 +363,7 @@ openerp.mail = function (session) {
         display_attachments: function () {
             this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
             // event: delete an attachment
-            this.$(".oe_msg_attachment_list").on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
+            this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -591,46 +672,12 @@ openerp.mail = function (session) {
 
             return false;
         },
+
     });
 
-    /**
-     * ------------------------------------------------------------
-     * Thread Message Widget
-     * ------------------------------------------------------------
-     * This widget handles the display of a messages in a thread. 
-     * Displays a record and performs some formatting on the record :
-     * - record.date: formatting according to the user timezone
-     * - record.timerelative: relative time givein by timeago lib
-     * - record.avatar: image url
-     * - record.attachment_ids[].url: url of each attachmentThe
-     * thread view :
-     * - root thread
-     * - - sub message (parent_id = root message)
-     * - - - sub thread
-     * - - - - sub sub message (parent id = sub thread)
-     * - - sub message (parent_id = root message)
-     * - - - sub thread
-     */
     mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
 
-        /**
-         * INIT :
-         * @param {Object} parent parent
-         * @param {Array} [domain]
-         * @param {Object} [context] context of the thread. It should
-            contain at least default_model, default_res_id. Please refer to
-            the ComposeMessage widget for more information about it.
-         * @param {Object} [options]
-         *      @param {Object} [thread] read obout mail.Thread object
-         *      @param {Object} [message]
-         *          @param {Number} [truncate_limit=250] number of character to
-         *              display before having a "show more" link; note that the text
-         *              will not be truncated if it does not have 110% of the parameter
-         *          @param {Boolean} [show_record_name]
-         *...  @param {boolean} [show_reply_button] display the reply button
-         *...  @param {boolean} [show_read_unread_button] display the read/unread button
-         */
         
         start: function () {
             this._super.apply(this, arguments);
@@ -687,6 +734,11 @@ openerp.mail = function (session) {
             this.$el.on('click', '.oe_msg_vote', this.on_vote);
             // event: click on 'starred/favorite' button
             this.$el.on('click', '.oe_star', this.on_star);
+
+            this.$el.on('click', '.oe_view_attachments', function(){
+                console.log('toggle');
+                self.$('.oe_msg_attachment_list').toggle(200);
+            });
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -701,10 +753,10 @@ openerp.mail = function (session) {
             this.$('.oe_msg_body:first').expander({
                 slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
-                userCollapseText: '&atilde',
+                userCollapseText: 'read less',
                 detailClass: 'oe_msg_tail',
                 moreClass: 'oe_mail_expand',
-                lessClass: 'oe_mail_reduce oe_e',
+                lessClass: 'oe_mail_reduce',
                 });
         },
 
