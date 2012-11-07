@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:38+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:31+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -528,6 +528,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Die erzeugten Werkzeuge werden dem Partner zugeordnet, auf den sich dieser "
+"Datensatz bezieht. Sollte dies der Partner selbst sein, so lassen Sie das "
+"Feld leer. Dies ist für Berichtszwecke in den Sichten zur Kampagnen-Analyse "
+"oder Kampagnen-Nachpflege sinnvoll."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -599,6 +603,12 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Legt für die Filter ein weiteres Kriterium fest nach dem Datensätze einer "
+"Kampagne hinzugefügt werden. \"Ohne Duplikate\" verhindert die Auswahl von "
+"Sätzen, die bereits zuvor der Kampagne zugefügt wurden. Wenn für die "
+"Kampagne ein Feld als \"Unikat\" gekennzeichnet ist, wird \"Ohne Duplikate\" "
+"auch verhindern, dass Sätze mit gleichem Inhalt im unikaten Feld wie bereits "
+"in die Kampagne eingetragene, nicht mehr ausgewählt werden."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -965,6 +975,16 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Wenn ausgewählt, hilft dies in Segmenten, die im \"ohne Duplikate\"-Modus "
+"genutzt werden, ähnliche Datensätze mehrfach auszuwählen. Ähnliche "
+"Datensätze sind solche, die in diesem einzelnen Feld den gleichen Wert "
+"enthalten. Zum Beispiel bei Auswahl des \"EMail von\"-Feldes in "
+"Kundenverwaltung-Leads würden Sie verhindern die gleiche Kampagne nochmals "
+"an die gleiche Adresse zu senden. Nicht ausgewählt wird das Segment \"ohne "
+"Duplikate\" nur die Auswahl des identischen Datensatzes verhindern, sofern "
+"dieser die Kampagne bereits zuvor zugefügt wurde. Nur leicht vergleichbare "
+"Felder, wie Text, Ganzzahlen, Auswahlen oder einfache Relationen (m:1), "
+"dürfen hier verwendet werden."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
@@ -1110,7 +1130,9 @@ msgstr "Nur neu erstellte Daten"
 #. module: marketing_campaign
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
+msgstr ""
+"Fehler! Sie können keine rekursiv assoziierten (sich selbst einschließende) "
+"Mitglieder anlegen."
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,variable_cost:0

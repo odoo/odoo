@@ -178,9 +178,12 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
                     );
                 }).pipe(function(bank_statements){
+                    var journals = new Array();
+                    _.each(bank_statements,function(statement) {
+                        journals.push(statement.journal_id[0])
+                    });
                     self.set('bank_statements', bank_statements);
-
-                    return self.fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
+                    return self.fetch('account.journal', undefined, [['id','in', journals]]);
                 }).pipe(function(journals){
                     self.set('journals',journals);
 
@@ -462,7 +465,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var product_list = this.pos.get('product_list');
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = product.get('taxes_id');;
             var taxes =  self.pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
@@ -612,6 +615,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_with_tax();
+            }), 0);
+        },
+        getDiscountTotal: function() {
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             }), 0);
         },
         getTotalTaxExcluded: function() {

@@ -192,12 +192,12 @@ class mrp_bom(osv.osv):
         return res
 
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64),
         'code': fields.char('Reference', size=16),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the bills of material without removing it."),
         'type': fields.selection([('normal','Normal BoM'),('phantom','Sets / Phantom')], 'BoM Type', required=True,
-                                 help= "If a sub-product is used in several products, it can be useful to create its own BoM. "\
-                                 "Though if you don't want separated production orders for this sub-product, select Set/Phantom as BoM type. "\
+                                 help= "If a by-product is used in several products, it can be useful to create its own BoM. "\
+                                 "Though if you don't want separated production orders for this by-product, select Set/Phantom as BoM type. "\
                                  "If a Phantom BoM is used for a root product, it will be sold and shipped as a set of components, instead of being produced."),
         'method': fields.function(_compute_type, string='Method', type='selection', selection=[('',''),('stock','On Stock'),('order','On Order'),('set','Set / Pack')]),
         'date_start': fields.date('Valid From', help="Validity of this BoM or component. Keep empty if it's always valid."),
@@ -230,7 +230,7 @@ class mrp_bom(osv.osv):
     _parent_name = "bom_id"
     _sql_constraints = [
         ('bom_qty_zero', 'CHECK (product_qty>0)',  'All product quantities must be greater than 0.\n' \
-            'You should install the mrp_subproduct module if you want to manage extra products on BoMs !'),
+            'You should install the mrp_byproduct module if you want to manage extra products on BoMs !'),
     ]
 
     def _check_recursion(self, cr, uid, ids, context=None):
@@ -420,28 +420,6 @@ class mrp_production(osv.osv):
                 result[prod.id]['cycle_total'] += wc.cycle
         return result
 
-    def _production_date_end(self, cr, uid, ids, prop, unknow_none, context=None):
-        """ Finds production end date.
-        @param prop: Name of field.
-        @param unknow_none:
-        @return: Dictionary of values.
-        """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            result[prod.id] = prod.date_planned
-        return result
-
-    def _production_date(self, cr, uid, ids, prop, unknow_none, context=None):
-        """ Finds production planned date.
-        @param prop: Name of field.
-        @param unknow_none:
-        @return: Dictionary of values.
-        """
-        result = {}
-        for prod in self.browse(cr, uid, ids, context=context):
-            result[prod.id] = prod.date_planned[:10]
-        return result
-
     def _src_id_default(self, cr, uid, ids, context=None):
         src_location_id = self.pool.get('ir.model.data').get_object(cr, uid, 'stock', 'stock_location_stock', context=context)
         return src_location_id.id
@@ -469,13 +447,9 @@ class mrp_production(osv.osv):
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
             readonly=True, states={'draft':[('readonly',False)]},
             help="Location where the system will stock the finished products."),
-
-        'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
-        'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft':[('readonly',False)]}),
         'date_start': fields.datetime('Start Date', select=True, readonly=True),
         'date_finished': fields.datetime('End Date', select=True, readonly=True),
-
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]},
             help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
@@ -499,12 +473,12 @@ class mrp_production(osv.osv):
             [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Waiting Goods'),
                 ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
             string='Status', readonly=True,
-            help="When the production order is created the state is set to 'Draft'.\n\
-                If the order is confirmed the state is set to 'Waiting Goods'.\n\
-                If any exceptions are there, the state is set to 'Picking Exception'.\n\
-                If the stock is available then the state is set to 'Ready to Produce'.\n\
-                When the production gets started then the state is set to 'In Production'.\n\
-                When the production is over, the state is set to 'Done'."),
+            help="When the production order is created the status is set to 'Draft'.\n\
+                If the order is confirmed the status is set to 'Waiting Goods'.\n\
+                If any exceptions are there, the status is set to 'Picking Exception'.\n\
+                If the stock is available then the status is set to 'Ready to Produce'.\n\
+                When the production gets started then the status is set to 'In Production'.\n\
+                When the production is over, the status is set to 'Done'."),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id':fields.many2one('res.users', 'Responsible'),
@@ -515,6 +489,7 @@ class mrp_production(osv.osv):
         'state': lambda *a: 'draft',
         'date_planned': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'product_qty':  lambda *a: 1.0,
+        'user_id': lambda self, cr, uid, c: uid,
         'name': lambda x, y, z, c: x.pool.get('ir.sequence').get(y, z, 'mrp.production') or '/',
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'mrp.production', context=c),
         'location_src_id': _src_id_default,

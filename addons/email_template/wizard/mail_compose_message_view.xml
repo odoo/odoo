@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//form/notebook" position="after">
+                    <xpath expr="//form/group" position="after">
                         <group attrs="{'invisible':[('use_template','=',False)]}">
                             <field name="use_template" invisible="1"
                                 on_change="onchange_use_template(use_template, template_id, composition_mode, model, res_id, context)"/>
