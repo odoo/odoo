@@ -163,13 +163,13 @@
           <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]]</para>
-          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email]]</para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email or or removeParentNode('para')]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.partner_id and picking.partner_id.title.name or '' ]] [[ picking.partner_id and picking.partner_id.name or '' ]]</para>
           <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]] </para>
-          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email]]</para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email or removeParentNode('para')]]</para>
         </td>
       </tr>
     </blockTable>
@@ -251,8 +251,7 @@
       <blockTable colWidths="256.0,74.0,58.0,60.0,73.0" style="Move_Line_Contect_Assign_State">
         <tr>
           <td>
-            <para style="terp_default_2">[[ repeatIn(get_product_desc(move_lines),'desc') ]]</para>
-            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ desc ]] </font></para>
+            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
@@ -277,8 +276,7 @@
       <blockTable colWidths="256.0,74.0,57.0,61.0,72.0" style="Table1">
         <tr>
           <td>
-           <para style="terp_default_2">[[ repeatIn(get_product_desc(move_lines),'desc') ]]</para>
-            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ desc ]] </font></para>
+            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
