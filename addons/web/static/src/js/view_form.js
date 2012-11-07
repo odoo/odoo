@@ -221,16 +221,18 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
-        $(document).keydown(function(e){
-            if(e.keyCode === $.ui.keyCode.ALT || e.keyCode === $.ui.keyCode.SHIFT && e.altKey) {
-                $("[accesskey]").addClass('accessactive');
-            }else {
-                $("[accesskey]").removeClass('accessactive');
-            }
-            e.stopPropagation();
-        }).keyup(function(e){
-                $("[accesskey]").removeClass('accessactive');
+        var self = this;
+        self.$buttons.find("[accesskey]").html(function(i, html){
+           return html.replace(/^[^a-zA-Z]*([a-zA-Z])/g, '<p>$1</p>');
         });
+        $(document).keydown(function(e){
+             self.$buttons.find("[accesskey] >p").removeClass("accessactive");
+            if (e.keyCode === $.ui.keyCode.ALT || e.keyCode === $.ui.keyCode.SHIFT && e.altKey) {
+                self.$buttons.find("[accesskey] >p").addClass("accessactive");
+            }
+        }).keyup(function(){
+                self.$buttons.find("[accesskey] > p").removeClass("accessactive");
+        })
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
