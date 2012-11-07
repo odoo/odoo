@@ -30,7 +30,9 @@
                 <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
                 <input type="file" id-attf-id="file_#{_id}"
                        name="file" class="oe_import_file"/>
-                <button type="button" class="oe_import_file_reload" title="Reload data to check changes.">
+                <button type="button" class="oe_import_file_reload"
+                        disabled="disabled"
+                        title="Reload data to check changes.">
                     <img src="/web/static/src/img/icons/gtk-refresh.png"/>
                 </button>
                 <div class="oe_import_with_file">
