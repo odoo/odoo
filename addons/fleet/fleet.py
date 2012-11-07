@@ -389,13 +389,9 @@ class fleet_vehicle(osv.Model):
         }
 
     def create(self, cr, uid, data, context=None):
-        #TODO: why is there a try..except? No idea, this is denis code, we should ask him
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
-        try:
-            vehicle = self.browse(cr, uid, vehicle_id, context=context)
-            self.message_post(cr, uid, [vehicle_id], body=_('Vehicle %s has been added to the fleet!') % (vehicle.license_plate), context=context)
-        except:
-            pass # group deleted: do not push a message
+        vehicle = self.browse(cr, uid, vehicle_id, context=context)
+        self.message_post(cr, uid, [vehicle_id], body=_('Vehicle %s has been added to the fleet!') % (vehicle.license_plate), context=context)
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -437,12 +433,9 @@ class fleet_vehicle(osv.Model):
                     old_license_plate = 'None'
                 changes.append(_('License Plate: from \' %s \' to \' %s \'') %(old_license_plate, vals['license_plate']))
            
-            try:
-                if len(changes) > 0:
-                    self.message_post(cr, uid, [self.browse(cr, uid, vehicle.id, context)[0].id], body=", ".join(changes), context=context)
-            except Exception as e:
-                print e
-                pass
+           
+            if len(changes) > 0:
+                self.message_post(cr, uid, [vehicle.id], body=", ".join(changes), context=context)
 
         vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
         return True
@@ -604,7 +597,12 @@ class fleet_service_type(osv.Model):
 class fleet_vehicle_log_contract(osv.Model):
 
     def run_scheduler(self,cr,uid,context=None):
-        #TODO: add comments, will ask denis, this is his code
+        #This method is called by a cron task
+        #It creates costs for contracts having the "recurring cost" field setted, depending on their frequency
+        #For example, if a contract has a reccuring cost of 200 with a weekly frequency, this method creates a cost of 200 on the first day of each week, from the date of the last recurring costs in the database to today
+        #If the contract has not yet any recurring costs in the database, the method generates the recurring costs from the start_date to today
+        #The created costs are associated to a contract thanks to the many2one field contract_id
+        #If the contract has no start_date, no cost will be created, even if the contract has recurring costs
         vehicle_cost_obj = self.pool.get('fleet.vehicle.cost')
         d = datetime.datetime.strptime(fields.date.context_today(self, cr, uid, context=context), tools.DEFAULT_SERVER_DATE_FORMAT).date()
         contract_ids = self.pool.get('fleet.vehicle.log.contract').search(cr, uid, [('state','!=','closed')], offset=0, limit=None, order=None,context=None, count=False)
