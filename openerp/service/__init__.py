@@ -34,7 +34,6 @@ import openerp.netsvc
 import openerp.osv
 import openerp.tools
 import openerp.service.wsgi_server
-import openerp.service.workers
 
 #.apidoc title: RPC Services
 
@@ -123,6 +122,7 @@ def stop_services():
     logging.shutdown()
 
 def start_services_workers():
+    import openerp.service.workers
     openerp.multi_process = True
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
