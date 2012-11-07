@@ -102,6 +102,8 @@ class fleet_vehicle_cost(osv.Model):
             data['vehicle_id'] = contract.vehicle_id.id
             data['cost_subtype'] = contract.cost_subtype.id
             data['cost_type'] = contract.cost_type
+        if 'odometer' in data and not data['odometer']:
+            del(data['odometer'])
         return super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
 
 
