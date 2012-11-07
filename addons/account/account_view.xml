@@ -680,6 +680,18 @@
             </field>
         </record>
 
+        <record id="view_bank_statement_form_journal_items" model="ir.ui.view">
+            <field name="name">account.bank.statement.journal.items.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name=""
+                            string="Journal Items" type="action"
+                            attrs="{'invisible':[('state','!=','confirm')]}"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
