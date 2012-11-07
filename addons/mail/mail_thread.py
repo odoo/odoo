@@ -629,7 +629,8 @@ class mail_thread(osv.AbstractModel):
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
             Auto link messages for same id and object
-            :param int thread_id: thread ID to post into, or list with one ID
+            :param int thread_id: thread ID to post into, or list with one ID;
+                if False/0, mail.message model will also be set as False
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str subject: optional subject

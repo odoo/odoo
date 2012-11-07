@@ -48,7 +48,7 @@ class res_partner_mail(osv.Model):
             private:
             - add the target partner in the message partner_ids
             - set thread_id as None, because this will trigger the 'private'
-                aspect of the message (model=False, res_is=False)
+                aspect of the message (model=False, res_id=False)
         """
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
