@@ -437,14 +437,14 @@ class fleet_vehicle(osv.Model):
                     old_license_plate = 'None'
                 changes.append(_('License Plate: from \' %s \' to \' %s \'') %(old_license_plate, vals['license_plate']))
            
-            vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
-
             try:
                 if len(changes) > 0:
-                    self.message_post(cr, uid, [self.browse(cr, uid, ids, context)[0].id], body=", ".join(changes), context=context)
+                    self.message_post(cr, uid, [self.browse(cr, uid, vehicle.id, context)[0].id], body=", ".join(changes), context=context)
             except Exception as e:
                 print e
                 pass
+
+        vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
         return True
 
 
@@ -706,22 +706,18 @@ class fleet_vehicle_log_contract(osv.Model):
             default['expiration_date']=str(newenddate)
         
         newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, ids[0], default, context=context)
-
         mod,modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
-        
-        inv = self.browse(cr, uid, newid, context=context)
-        #TODO : ne fonctionne pas, une nouvelle fenetre s'ouvre bien, mais sans les valeurs et l'objet est déjà creer a cause du super
-        #au dessus alors qu'il faudrait normalement cliquer sur save pour le creer.
         return {
             'name':_("Renew Contract"),
             'view_mode': 'form',
             'view_id': modid,
-            'view_type': 'form',
+            'view_type': 'tree,form',
             'res_model': 'fleet.vehicle.log.contract',
             'type': 'ir.actions.act_window',
             'nodestroy': True,
             'domain': '[]',
-            'context': default, 
+            'res_id': newid,
+            'context': {'active_id':newid}, 
         }
 
     def _get_default_contract_type(self, cr, uid, context=None):
