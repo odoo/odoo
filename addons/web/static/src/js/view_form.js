@@ -3170,14 +3170,14 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
     },
     on_click: function(ev) {
         var self = this;
-        var popup =  new instance.web.form.FormOpenPopup(this);
-        popup.show_element(
+        this.popup =  new instance.web.form.FormOpenPopup(this);
+        this.popup.show_element(
             this.field.relation,
             this.get('value'),
             this.build_context(),
             {title: this.string + ' ' +_t("Voucher: ")}
         );
-        popup.on('create_completed write_completed', self, function(r) {
+        this.popup.on('create_completed write_completed', self, function(r) {
             self.set_value(r);
         });
     },
