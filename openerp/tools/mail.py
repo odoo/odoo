@@ -138,7 +138,7 @@ def html_email_clean(html):
         root = lxml.html.fromstring(html)
 
     # 3. remove blockquotes
-    quotes = [el for el in root.iterchildren(tag='blockquote')]
+    quotes = [el for el in root.getiterator(tag='blockquote')]
     for node in quotes:
         node.getparent().remove(node)
 
