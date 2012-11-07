@@ -199,8 +199,9 @@ class project_work(osv.osv):
 
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     vals_line['amount'] = amount_unit['value']['amount']
-
-            self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
+            state = self.pool.get('hr.analytic.timesheet').browse(cr,uid,line_id.id,context=context).sheet_id.state
+            if state != 'confirm' and state != 'done':
+                self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
 
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
@@ -241,7 +242,6 @@ class task(osv.osv):
             if vals.get('project_id',False):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
                 acc_id = project_obj.analytic_account_id.id
-
             for task_obj in self.browse(cr, uid, ids, context=context):
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
