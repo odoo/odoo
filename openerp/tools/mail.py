@@ -115,6 +115,10 @@ def html_email_clean(html):
         - strip email quotes (remove blockquote nodes)
         - strip signatures (remove --\n{\n)Blahblah), by replacing <br> by
             \n to avoid ignoring signatures converted into html
+
+        :param string html: sanitized html; tags like html or head should not
+            be present in the html string. This method therefore takes as input
+            html code coming from a sanitized source, like fields.html.
     """
     modified_html = ''
 

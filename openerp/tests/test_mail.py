@@ -43,42 +43,8 @@ test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></fo
 <a href="javascript:alert('malicious code')">test link</a>
 """
 
-GMAIL_REPLY = """<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">R&eacute;ponse via thunderbird, classique.<br>
-      <br>
-      On 11/05/2012 10:51 AM, Thibault Delavall&eacute;e wrote:<br>
-    </div>
-    <blockquote
-cite="mid:CAP76m_WwG6=dY1aYYBJpJHvFtFk31YYjMoHoZaDRpPmacn+Ohw@mail.gmail.com"
-      type="cite">
-      <div>Plop !</div>
-      <ul>
-        <li>Vive les lapins rapides !<br>
-        </li>
-        <li>Nouille</li>
-        <li>Frites</li>
-      </ul>
-      <div><br>
-      </div>
-      <div>Clairement, hein ?</div>
-      -- <br>
-      Thibault Delavall&eacute;e<br>
-    </blockquote>
-    <br>
-    <br>
-    <pre class="moz-signature" cols="72">-- 
-Thibault Delavall&eacute;e
-</pre>
-  </body>
-</html>"""
-
-GAMIL_REPLY_SAN = """<div>R&#233;ponse via thunderbird, classique.<br><br>
-      On 11/05/2012 10:51 AM, Thibault Delavall&#233;e wrote:<br></div>
+GMAIL_REPLY_SAN = """<div>R&#233;ponse via thunderbird, classique.<br><br>
+      On 11/05/2012 10:51 AM, Raoul Tartopoils wrote:<br></div>
     <blockquote>
       <div>Plop !</div>
       <ul><li>Vive les lapins rapides !<br></li>
@@ -87,17 +53,14 @@ GAMIL_REPLY_SAN = """<div>R&#233;ponse via thunderbird, classique.<br><br>
       </ul><div><br></div>
       <div>Clairement, hein ?</div>
       -- <br>
-      Thibault Delavall&#233;e<br></blockquote>
+      Raoul Tartopoils<br></blockquote>
     <br><br><pre>-- 
-Thibault Delavall&#233;e
+Raoul Tartopoils
 </pre>"""
-
-
-
 
 GMAIL_REPLY2_SAN = """<div>Je r&#233;ponds, hop, via thunderbird. Mais
       je vais r&#233;podnre aussi au milieu du thread.<br><br>
-      On 11/05/2012 10:53 AM, Thibault Delavall&#233;e wrote:<br></div>
+      On 11/05/2012 10:53 AM, Raoul Tartopoils wrote:<br></div>
     <blockquote>Reply rapide de gmail.</blockquote>
     <br>
     Jamais.<br><br><blockquote>
@@ -106,7 +69,7 @@ GMAIL_REPLY2_SAN = """<div>Je r&#233;ponds, hop, via thunderbird. Mais
               <div>R&#233;ponse via thunderbird, classique.
                 <div>
                   <div><br><br>
-                    On 11/05/2012 10:51 AM, Thibault Delavall&#233;e wrote:<br></div>
+                    On 11/05/2012 10:51 AM, Raoul Tartopoils wrote:<br></div>
                 </div>
               </div>
               <div>
@@ -135,70 +98,52 @@ GMAIL_REPLY2_SAN = """<div>Je r&#233;ponds, hop, via thunderbird. Mais
                     </ul><div><br></div>
                     <div>Clairement, hein ?</div>
                     -- <br>
-                    Thibault Delavall&#233;e<br></blockquote>
+                    Raoul Tartopoils<br></blockquote>
                   <br><br></div>
               </div>
               <span><font>
                   <pre>-- 
-Thibault Delavall&#233;e
+Raoul Tartopoils
 </pre>
                 </font></span></div>
           </blockquote>
         </div>
         <br><br><div><br></div>
         -- <br>
-        Thibault Delavall&#233;e<br></div>
+        Raoul Tartopoils<br></div>
     </blockquote>
     <br><br><pre>-- 
-Thibault Delavall&#233;e
+Raoul Tartopoils
 </pre>"""
 
 
+TEXT_TPL = """Salut Raoul!
+Le 28 oct. 2012 à 00:02, Raoul Grosbedon a écrit :
 
-MAIL_TEMPLATE = """Hey XYZ,
+> C'est sûr que je suis intéressé (quote)!
 
-I've fixed that error and tested it a couple of times, it seems to be working
-fine now.
+Trouloulou pouet pouet.
 
-On Fri, Feb 18, 2011 at 7:44 AM, Joe David <joe@david.com> wrote:
-Initial thread starts here...
+Je ne vais quand même pas écrire de vrais mails, non mais ho.
 
---
-Thanks
-joe@david.com
-"""
-
-GMAIL_TPL = """Salut Bob!
-Le 28 oct. 2012 à 00:02, Thibault Delavallée a écrit :
-
-> MatrixPlus le 22/02 ? Si c'est ce que tu dis, je suis intéressé, oui !
-
-Non, pas MatrixPlus, juste Matrix.
-
-Et oui, le 22/02 est la date qui doit vous convenir le deux.
-
-Bon, on tente de s’organiser un truc se samedi-là et je réserve des places.
-
-En passant, t’as contacté les gens du KdM pour le truc pour Bénisexe ?
-
-> 2012/10/27 Édouard Gilbert :
->> Diantre, me disè-je en envoyant un message similaire à Koukouiles, que ne voilà un concert qui pourrait intéresser Thibault ?
+> 2012/10/27 Bert Tartopoils :
+>> Diantre, me disè-je en envoyant un message similaire à Martine, mais comment vas-tu (quote)?
 >> 
->> L’ONL donne, en février et à Lille, Matrix en ciné-concert. Il passe le film sans musique mais c’est pas grave parce qu’il y a un orchestre qui la joue en même temps. Intéressé ?
+>> A la base le contenu était un vrai mail, mais je l'ai quand même réécrit pour ce test, histoire de dire que, quand même, on ne met pas n'importe quoi ici. (quote)
 >> 
->> On peut trouver plus d’info sur le site de l’ONL, onlille.com , mais il est tellement mal foutu que je ne trouve pas de lien direct. Je te laisse chercher.
+>> Et sinon bon courage pour trouver tes clefs (quote).
 >> 
->> Édouard GILBERT
->> edouard.gilbert@gmail.com
+>> Bert TARTOPOILS
+>> bert.tartopoils@miam.miam
 >> 
 > 
 > 
 > 
 > -- 
-> Thibault Delavallée
+> Raoul Grosbedon
 
-Édouard GILBERT
-edouard.gilbert@gmail.com
+Bert TARTOPOILS
+bert.tartopoils@miam.miam
 """
 
 
@@ -237,8 +182,11 @@ class TestSanitizer(unittest2.TestCase):
 class TestCleaner(unittest2.TestCase):
 
     def test_gmail(self):
-        test_case = """youplaboum"""
-        html_email_clean(test_case)
+        # Test1: blahblah
+        new_html = html_email_clean(GMAIL_REPLY_SAN)
+        self.assertNotIn(new_html, 'blockquote')
+        self.assertNotIn(new_html, 'Vive les lapins rapides !')
+        self.assertNotIn(new_html, 'Bert Tartopoils')
 
 
 if __name__ == '__main__':
