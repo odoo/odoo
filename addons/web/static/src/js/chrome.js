@@ -613,7 +613,7 @@ instance.web.Login =  instance.web.Widget.extend({
 instance.web.client_actions.add("login", "instance.web.Login");
 
 
-instance.web._relocate = function(url, wait) {
+instance.web.redirect = function(url, wait) {
     // hide errors
     if (instance.client && instance.client.crashmanager) {
         instance.client.crashmanager.destroy();
@@ -656,7 +656,7 @@ instance.web.Reload = function(parent, action) {
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
 
-    instance.web._relocate(url, params.wait);
+    instance.web.redirect(url, params.wait);
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
@@ -676,7 +676,7 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
  */
 instance.web.Home = function(parent, action) {
     var url = '/' + (window.location.search || '');
-    instance.web._relocate(url, action.params && action.params.wait);
+    instance.web.redirect(url, action.params && action.params.wait);
 };
 instance.web.client_actions.add("home", "instance.web.Home");
 
