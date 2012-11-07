@@ -125,7 +125,7 @@ class mail_message(osv.Model):
             help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
         'partner_ids': fields.many2many('res.partner', string='Recipients'),
         'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
-            'message_id', 'partner_id', 'Recipients'),
+            'message_id', 'partner_id', 'Notified partners'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
             'message_id', 'attachment_id', 'Attachments'),
         'parent_id': fields.many2one('mail.message', 'Parent Message', select=True, ondelete='set null', help="Initial thread message."),
