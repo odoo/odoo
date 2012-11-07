@@ -3861,10 +3861,12 @@ class BaseModel(object):
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
 
     def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        """Send given workflow signal"""
+        """Send given workflow signal and return a dict mapping ids to workflow results"""
         wf_service = netsvc.LocalService("workflow")
+        result = {}
         for res_id in ids:
-            wf_service.trg_validate(uid, self._name, res_id, signal, cr)
+            result[res_id] = wf_service.trg_validate(uid, self._name, res_id, signal, cr)
+        return result
 
     def unlink(self, cr, uid, ids, context=None):
         """
