@@ -154,26 +154,6 @@ class stock_partial_picking(osv.osv_memory):
             partial_move.update(update_cost=True, **self._product_cost_for_average_update(cr, uid, move))
         return partial_move
 
-    def view_invoice(self, cr, uid, ids, context=None):
-        """Launch Create invoice wizard.
-        """
-        if context is None: context = {}
-        result = self.do_partial(cr, uid, ids, context=context)
-        partial = self.browse(cr, uid, ids[0], context=context)
-        context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.id])
-        if partial.picking_id.invoice_state == '2binvoiced':
-            return {
-                'name': 'Create Invoice',
-                'view_type': 'form',
-                'view_mode': 'form',
-                'res_model': 'stock.invoice.onshipping',
-                'type': 'ir.actions.act_window',
-                'target': 'new',
-                'context': context
-            }
-        return {'type': 'ir.actions.act_window_close'}
-
     def do_partial(self, cr, uid, ids, context=None):
         assert len(ids) == 1, 'Partial picking processing may only be done one at a time.'
         stock_picking = self.pool.get('stock.picking')
