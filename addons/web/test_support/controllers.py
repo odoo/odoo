@@ -39,5 +39,4 @@ class TestSession(Session):
             "context": CONTEXT,
             "db": req.session._db,
             "login": req.session._login,
-            "openerp_entreprise": False,
         }

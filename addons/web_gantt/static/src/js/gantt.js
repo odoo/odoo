@@ -12,13 +12,16 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     template: "GanttView",
     view_type: "gantt",
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
+        this.on('view_loaded', self, self.load_gantt);
     },
-    on_loaded: function(fields_view_get, fields_get) {
+    load_gantt: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
         return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
             self.fields = fields_get.fields;
             self.has_been_loaded.resolve();
@@ -68,7 +71,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
-        $(".oe-gantt-view-view", this.$element).html("");
+        $(".oe_gantt", this.$el).html("");
         
         //prevent more that 1 group by
         if (group_bys.length > 0) {
@@ -176,18 +179,19 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         gantt.create(this.chart_id);
         
         // bind event to display task when we click the item in the tree
-        $(".taskNameItem", self.$element).click(function(event) {
+        $(".taskNameItem", self.$el).click(function(event) {
             var task_info = task_ids[event.target.id];
             if (task_info) {
                 self.on_task_display(task_info.internal_task);
             }
         });
-        
-        // insertion of create button
-        var td = $($("table td", self.$element)[0]);
-        var rendered = QWeb.render("GanttView-create-button");
-        $(rendered).prependTo(td);
-        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
+        if (this.is_action_enabled('create')) {        
+            // insertion of create button
+            var td = $($("table td", self.$el)[0]);
+            var rendered = QWeb.render("GanttView-create-button");
+            $(rendered).prependTo(td);
+            $(".oe_gantt_button_create", this.$el).click(this.on_task_create);
+        }
     },
     on_task_changed: function(task_obj) {
         var self = this;
@@ -204,16 +208,12 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
-        this.dataset.write(itask.id, data).then(function() {
-            console.log("task edited");
-        });
+        this.dataset.write(itask.id, data);
     },
     on_task_display: function(task) {
         var self = this;
         var pop = new instance.web.form.FormOpenPopup(self);
-        pop.on_write_completed.add_last(function() {
-            self.reload();
-        });
+        pop.on('write_completed',self,self.reload);
         pop.show_element(
             self.dataset.model,
             task.id,
@@ -224,7 +224,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_task_create: function() {
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.on_select_elements.add_last(function() {
+        pop.on("elements_selected", self, function() {
             self.reload();
         });
         pop.select_element(
