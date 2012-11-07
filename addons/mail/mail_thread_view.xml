@@ -8,7 +8,7 @@
               'default_model': 'res.users', 
               'default_res_id': uid
             }</field>
-            <field name="params">{
+            <field name="params" eval="&quot;{
                 'domain': [
                   ('notification_ids.partner_id.user_ids', 'in', [uid]),
                   ('to_read', '=', True),
@@ -17,7 +17,7 @@
                 'view_mailbox': True,
                 'view_inbox': True,
                 'read_action': 'read'
-            }</field>
+            }&quot;"/>
             <field name="help">
                 There are no message in your mailbox for this search.
             </field>

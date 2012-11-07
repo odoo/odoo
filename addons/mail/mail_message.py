@@ -52,7 +52,7 @@ class mail_message(osv.Model):
     _order = 'id desc'
     _rec_name = 'record_name'
 
-    _message_read_limit = 100
+    _message_read_limit = 30
     _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
         'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
     _message_record_name_length = 18
