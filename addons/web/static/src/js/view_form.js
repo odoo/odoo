@@ -3162,7 +3162,10 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
         if (this.$button) {
             this.$button.remove();
         }
-        var options =py.eval(this.node.attrs.options);
+        var options = {};
+        try {
+            options = py.eval(this.node.attrs.options);
+        } catch (e) {}
         if (options.label) {
             this.string = this.get('value') ? _t(options.label.edit) : _t(options.label.create);
         } else {
