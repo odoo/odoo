@@ -332,15 +332,14 @@ class crm_lead(base_stage, format_address, osv.osv):
               be a default stage; if not set, stages must be default
               stages
         """
-        if domain == None:
-            domain = []
         if isinstance(cases, (int, long)):
             cases = self.browse(cr, uid, cases, context=context)
         # collect all section_ids
         section_ids = []
         types = ['both']
         if not cases :
-            types += ['lead', 'opportunity']
+            type = context.get('default_type')
+            types += [type]
         if section_id:
             section_ids.append(section_id)
         for lead in cases:
