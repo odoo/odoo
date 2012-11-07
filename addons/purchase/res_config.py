@@ -36,7 +36,7 @@ class purchase_config_settings(osv.osv_memory):
         'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
             help="""Allows to manage different prices based on rules per category of Supplier.
-                Example: 10% for retailers, promotion of 5 USD on this product, etc."""),
+                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_uom':fields.boolean("Manage different units of measure for products",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
