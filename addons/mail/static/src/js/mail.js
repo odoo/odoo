@@ -5,6 +5,7 @@ openerp.mail = function (session) {
     var mail = session.mail = {};
 
     openerp_mail_followers(session, mail);        // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -1385,7 +1386,8 @@ openerp.mail = function (session) {
          *      When you use this option, the domain is not used for the fetch root.
          *     @param {String} [no_message] Message to display when there are no message
          */
-        init: function (parent, options) {
+        init: function (parent, action) {
+            var options = action.params || {};
             this._super(parent);
             this.domain = options.domain || [];
             this.context = options.context || {};
@@ -1513,7 +1515,7 @@ openerp.mail = function (session) {
                 this.root.destroy();
             }
             // create and render Thread widget
-            this.root = new mail.Widget(this, {
+            this.root = new mail.Widget(this, { params: {
                 'domain' : domain,
                 'context' : this.options.context,
                 'typeof_thread': this.options.context['typeof_thread'] || 'other',
@@ -1524,7 +1526,7 @@ openerp.mail = function (session) {
                 'message_ids': message_ids,
                 'show_compact_message': true,
                 'no_message': this.node.attrs.help
-                }
+                }}
             );
 
             return this.root.replace(this.$('.oe_mail-placeholder'));
@@ -1552,9 +1554,10 @@ openerp.mail = function (session) {
          * @param {Object} [options.context] context, is an object. It should
          *      contain default_model, default_res_id, to give it to the threads.
          */
-        init: function (parent, options) {
+        init: function (parent, action) {
             this._super(parent);
-            this.options = options || {};
+            var options = action.params || {};
+            this.options = options;
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
@@ -1611,7 +1614,7 @@ openerp.mail = function (session) {
         message_render: function (search) {
             var domain = this.options.domain.concat(this.search_results['domain']);
             var context = _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {});
-            this.root = new mail.Widget(this, {
+            this.root = new mail.Widget(this, { params: {
                 'domain' : domain,
                 'context' : context,
                 'typeof_thread': context['typeof_thread'] || 'other',
@@ -1620,7 +1623,7 @@ openerp.mail = function (session) {
                 'show_read_unread_button': 11,
                 'show_compose_message': true,
                 'show_compact_message': false,
-                }
+                }}
             );
 
             return this.root.replace(this.$('.oe_mail-placeholder'));
@@ -1628,7 +1631,22 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self=this;
-            this.$(".oe_write_full").click(function(){ self.root.thread.compose_message.on_compose_fullmail(); });
+            this.$(".oe_write_full").click(function (event) {
+                event.stopPropagation();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    action_from: 'mail.ThreadComposeMessage',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: {
+                        'default_content_subtype': 'html',
+                    },
+                };
+                session.client.action_manager.do_action(action);
+            });
             this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
@@ -1643,17 +1661,6 @@ openerp.mail = function (session) {
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
         template:'mail.compose_message.button_top_bar',
-
-        init: function (parent, options) {
-            this._super.apply(this, options);
-            this.options = this.options || {};
-            this.options.domain = this.options.domain || [];
-            this.options.context = {
-                'default_model': false,
-                'default_res_id': 0,
-                'default_content_subtype': 'html',
-            };
-        },
 
         start: function (parent, params) {
             var self = this;
@@ -1671,11 +1678,11 @@ openerp.mail = function (session) {
                 action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: _.extend(this.options.context, {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
+                context: {
+                    'default_model': '',
+                    'default_res_id': false,
                     'default_content_subtype': 'html',
-                }),
+                },
             };
             session.client.action_manager.do_action(action);
         },

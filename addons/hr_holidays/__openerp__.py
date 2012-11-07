@@ -25,7 +25,7 @@
     'version': '1.5',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 28,
+    'sequence': 27,
     'summary': 'Holidays, Allocation and Leave Requests',
     'website': 'http://www.openerp.com',
     'description': """
