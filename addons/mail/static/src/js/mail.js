@@ -360,10 +360,8 @@ openerp.mail = function (session) {
         /* upload the file on the server, add in the attachments list and reload display
          */
         display_attachments: function () {
+            //this.$(".oe_msg_attachment_list").off('click', '.oe_mail_attachment_delete')
             this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
-            // event: delete an attachment
-            this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
-            console.log('display_attachments:',this.$('.oe_msg_attachment_list'));
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -429,6 +427,7 @@ openerp.mail = function (session) {
         /* unlink the file on the server and reload display
          */
         on_attachment_delete: function (event) {
+            console.log('delete');
             event.stopPropagation();
             var attachment_id=$(event.target).data("id");
             if (attachment_id) {
@@ -452,19 +451,22 @@ openerp.mail = function (session) {
             this.$('textarea.oe_compact').on('focus', _.bind( this.on_compose_expandable, this));
 
             // set the function called when attachments are added
-            this.$el.on('change', 'input.oe_form_binary_file', _.bind( this.on_attachment_change, this) );
+            this.$('input.oe_form_binary_file').on('change', _.bind( this.on_attachment_change, this) );
 
-            this.$el.on('click', '.oe_cancel', _.bind( this.on_cancel, this) );
-            this.$el.on('click', '.oe_post', _.bind( this.on_message_post, this) );
-            this.$el.on('click', '.oe_full', _.bind( this.on_compose_fullmail, this, 'reply') );
+            this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
+            this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
+            this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, 'reply') );
 
             /* stack for don't close the compose form if the user click on a button */
-            this.$el.on('mousedown', '.oe_msg_footer', _.bind( function () { this.stay_open = true; }, this));
-            this.$('textarea:not(.oe_compact):first').on('focus, mouseup, keydown', _.bind( function () { this.stay_open = false; }, this));
-            this.$('textarea:not(.oe_compact):first').autosize();
+            this.$('.oe_msg_footer').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
+            this.$('textarea:not(.oe_compact)').on('focus, mouseup, keydown', _.bind( function () { this.stay_open = false; }, this));
+            this.$('textarea:not(.oe_compact)').autosize();
 
             // auto close
-            this.$el.on('blur', 'textarea:not(.oe_compact):first', _.bind( this.on_compose_expandable, this));
+            this.$('textarea:not(.oe_compact)').on('blur', _.bind( this.on_compose_expandable, this));
+
+            // event: delete child attachments off the oe_msg_attachment_list box
+            this.$(".oe_msg_attachment_list").on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
@@ -640,7 +642,7 @@ openerp.mail = function (session) {
          * Bind events in the widget. Each event is slightly described
          * in the function. */
         bind_events: function () {
-            this.$el.on('click', '.oe_msg_more_message', this.on_expandable);
+            this.$('.oe_msg_more_message').on('click', this.on_expandable);
         },
 
         animated_destroy: function (fadeTime) {
@@ -697,17 +699,16 @@ openerp.mail = function (session) {
          * in the function. */
         bind_events: function () {
             var self = this;
-
             // header icons bindings
-            this.$el.on('click', '.oe_read', this.on_message_read);
-            this.$el.on('click', '.oe_unread', this.on_message_unread);
-            this.$el.on('click', '.oe_msg_delete', this.on_message_delete);
-            this.$el.on('click', '.oe_reply', this.on_message_reply);
-            this.$el.on('click', '.oe_star', this.on_star);
+            this.$('.oe_read').on('click', this.on_message_read);
+            this.$('.oe_unread').on('click', this.on_message_unread);
+            this.$('.oe_msg_delete').on('click', this.on_message_delete);
+            this.$('.oe_reply').on('click', this.on_message_reply);
+            this.$('.oe_star').on('click', this.on_star);
 
-            this.$el.on('click', '.oe_msg_vote', this.on_vote);
+            this.$('.oe_msg_vote').on('click', this.on_vote);
 
-            this.$el.on('click', '.oe_view_attachments', function(){
+            this.$('.oe_view_attachments').on('click', function(){
                 self.$('.oe_msg_attachment_list').toggle(200);
             });
         },
@@ -1043,8 +1044,8 @@ openerp.mail = function (session) {
          * in the function. */
         bind_events: function () {
             var self = this;
-            self.$el.on('click', '.oe_mail_list_recipients .oe_more', self.on_show_recipients);
-            self.$el.on('click', '.oe_mail_compose_textarea .oe_more_hidden', self.on_hide_recipients);
+            self.$('.oe_mail_list_recipients .oe_more').on('click', self.on_show_recipients);
+            self.$('.oe_mail_compose_textarea .oe_more_hidden').on('click', self.on_hide_recipients);
         },
 
         /**
@@ -1662,7 +1663,7 @@ openerp.mail = function (session) {
         template:'mail.ComposeMessageTopButton',
 
         start: function () {
-            this.$el.on('click', 'button', this.on_compose_message );
+            this.$('button').on('click', this.on_compose_message );
             this._super();
         },
 
