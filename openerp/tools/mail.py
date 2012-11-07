@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from lxml.etree import tostring, Element
-try:
-    from lxml.html.soupparser import fromstring as parser_fromstring
-except ImportError:
-    from lxml.html import fromstring as parser_fromstring
+from lxml import etree
+# try:
+#     from lxml.html.soupparser import fromstring as parser_fromstring
+# except ImportError:
+#     from lxml.html import fromstring as parser_fromstring
 import logging
 import lxml.html
 import openerp.pooler as pooler
@@ -122,15 +122,16 @@ def html_email_clean(html):
     br_tags = re.compile(r'([<]\s*br\s*\/?[>])')
     idx = 0
     for item in re.finditer(br_tags, html):
-        modified_html += html[idx:item.start()] + '\n'
+        modified_html += html[idx:item.start()] + '__BR_TAG__'
         idx = item.end()
     modified_html += html[idx:]
+    html = modified_html
 
     # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
-    root = parser_fromstring(modified_html)
+    root = lxml.html.fromstring(html)
     if not len(root) and root.text is None and root.tail is None:
-        modified_html = '<div>%s</div>' % modified_html
-        root = parser_fromstring(modified_html)
+        html = '<div>%s</div>' % html
+        root = lxml.html.fromstring(html)
 
     # 3. remove blockquotes
     quotes = [el for el in root.iterchildren(tag='blockquote')]
@@ -150,16 +151,21 @@ def html_email_clean(html):
                 elem.tail = elem.tail[:match.start()] + elem.tail[match.end():]
 
     # 5. \n back to <br/>
-    for el in root.iterchildren():
-        if el.tag == 'pre':
-            continue
-        if el.text:
-            el.text = el.text.replace('\n', '<br />')
-        if el.tail:
-            el.tail = el.tail.replace('\n', '<br />')
+    html = etree.tostring(root, pretty_print=True)
+    html = html.replace('__BR_TAG__', '<br />')
 
-    new_html = tostring(root, pretty_print=True)
-    return new_html
+    # 6. Misc cleaning :
+    # - ClEditor seems to love using <div><br /><div> -> replace with <br />
+    modified_html = ''
+    br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
+    idx = 0
+    for item in re.finditer(br_div_tags, html):
+        modified_html += html[idx:item.start()] + '<br />'
+        idx = item.end()
+    modified_html += html[idx:]
+    html = modified_html
+
+    return html
 
 
 #----------------------------------------------------------
