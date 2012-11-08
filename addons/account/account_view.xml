@@ -2159,7 +2159,8 @@
                         <field name="visible" />
                         <field name="complete_tax_set" />
                     </group>
-                    <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
+                    <separator string="Default Taxes" colspan="4"/>
+                    <field name="tax_template_ids" colspan="4"  nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group col="4">
                         <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
