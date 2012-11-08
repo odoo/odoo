@@ -506,7 +506,7 @@ class purchase_order(osv.osv):
         return res
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
-        This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
+        This function returns an action that display existing invoices of given purchase order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
         act_obj = self.pool.get('ir.actions.act_window')
