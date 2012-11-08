@@ -100,7 +100,7 @@
                         <group>
                             <group>
                                 <field name="new_password" password="True" attrs="{'required': [('id','=',False)]}"/>
-                                <field name="company_id" context="{'user_preference': 0}"/>
+                                <field name="company_id" context="{'user_preference': 0}" attrs="{'readonly': [('in_group_4','=',False)]}"/>
                             </group>
                             <group>
                                 <field name="active"/>

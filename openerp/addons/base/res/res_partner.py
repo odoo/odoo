@@ -349,6 +349,13 @@ class res_partner(osv.osv, format_address):
 
 #   _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 
+    def unlink(self, cr, uid, ids, context=None):
+        if not ids:
+            return True
+        res_id = self.pool.get('res.users').search(cr, uid, [('partner_id', '=', ids)], context=context)
+        res_user.unlink(cr, uid, res_id)
+        return super(res_partner,self).unlink(cr, uid, ids, context=context)
+
     def write(self, cr, uid, ids, vals, context=None):
         # Update parent and siblings or children records
         if isinstance(ids, (int, long)):
