@@ -622,7 +622,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -667,7 +667,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -714,7 +714,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
 
         # Do: fetch new messages, domain from expandable
