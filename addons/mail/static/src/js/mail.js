@@ -5,6 +5,7 @@ openerp.mail = function (session) {
     var mail = session.mail = {};
 
     openerp_mail_followers(session, mail);        // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -1656,8 +1657,23 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self=this;
-            this.$(".oe_write_full").click( function() { self.root.thread.compose_message.on_compose_fullmail(); });
-            this.$(".oe_write_onwall").click( function() { self.root.thread.on_compose_message(); });
+            this.$(".oe_write_full").click(function (event) {
+                event.stopPropagation();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    action_from: 'mail.ThreadComposeMessage',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: {
+                        'default_content_subtype': 'html',
+                    },
+                };
+                session.client.action_manager.do_action(action);
+            });
+            this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
 

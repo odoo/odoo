@@ -14,9 +14,8 @@
                         <field name="parent_id" invisible="0"/>
                         <field name="content_subtype" invisible="0"/>
                         <!-- visible wizard -->
-                        <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
-                                context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)" required="1"/>
+                        <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                context="{'force_email':True}" required="1"/>
                         <field name="subject" placeholder="Subject..."
                                 attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                     </group>
