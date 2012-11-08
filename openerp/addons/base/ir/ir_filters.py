@@ -80,7 +80,7 @@ class ir_filters(osv.osv):
             return
 
         raise exceptions.Warning(
-            _("There is already a global filter set as default for %(model)s, delete or change it before setting a new default") % {
+            _("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {
                 'model': vals['model_id']
             })
 
