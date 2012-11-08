@@ -467,14 +467,16 @@ openerp.mail = function (session) {
 
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_footer').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
-            this.$('textarea:not(.oe_compact)').on('focus, mouseup, keydown', _.bind( function () { this.stay_open = false; }, this));
+            var ev_stay = {};
+            ev_stay.mouseup = ev_stay.keydown = ev_stay.focus = function () { self.stay_open = false; };
+            this.$('textarea:not(.oe_compact)').on(ev_stay);
             this.$('textarea:not(.oe_compact)').autosize();
 
             // auto close
             this.$('textarea:not(.oe_compact)').on('blur', _.bind( this.on_compose_expandable, this));
 
             // event: delete child attachments off the oe_msg_attachment_list box
-            this.$(".oe_msg_attachment_list").on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
+            this.$(".oe_msg_attachment_list").off('click').on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
