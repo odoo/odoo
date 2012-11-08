@@ -16,7 +16,7 @@ openerp.project = function(openerp) {
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'res.users', self.session.context, [['id', 'in', _.uniq(members_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM
                     self.$el.find('img[data-member_id=' + v.id + ']').attr('title', v.name).tipsy({
@@ -41,7 +41,7 @@ openerp.project = function(openerp) {
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'project.category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
                     self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
@@ -57,6 +57,12 @@ openerp.project = function(openerp) {
             } else if (self.dataset.model === 'project.task') {
                 self.project_display_categ_names();
             }
+        },
+        on_record_moved: function(record, old_group, old_index, new_group, new_index){
+            var self = this;
+            this._super.apply(this, arguments);
+            if(new_group.state.folded)
+                new_group.do_action_toggle_fold();
         }
     });
 
@@ -67,6 +73,10 @@ openerp.project = function(openerp) {
             } else {
                 this._super.apply(this, arguments);
             }
-        }
+        },
+        bind_events: function() {
+            this._super();
+            this.view.project_display_categ_names();
+        },
     });
 };

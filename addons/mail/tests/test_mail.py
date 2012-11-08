@@ -334,8 +334,8 @@ class test_mail(TestMailMockups):
         # ----------------------------------------
 
         subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
-        self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
-        self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
+        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
         self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
         self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
@@ -547,7 +547,7 @@ class test_mail(TestMailMockups):
 
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}', 'content_subtype': 'html'},
+            {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
