@@ -1,12 +1,12 @@
 -
-  In order to test convert customer lead into opportunity,
+  In order to test the conversion of a lead into a opportunity,
 -
-  I open customer lead.
+  I open a lead.
 -
    !python {model: crm.lead}: |
      self.case_open(cr, uid, [ref("crm_case_4")])
 -
-  I check lead state is "Open".
+  I check if the lead state is "Open".
 -
   !assert {model: crm.lead, id: crm.crm_case_4, string: Lead in open state}:
      - state == "open"
