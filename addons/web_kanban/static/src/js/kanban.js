@@ -638,10 +638,16 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_show_more: function(evt) {
         var self = this;
-        this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
+        return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
-        }).done(this.do_add_records);
+        }).then(function(records) {
+            records.forEach(function(r) {
+                self.view.dataset.ids.push(r.id);
+            });
+            self.do_add_records(records);
+            return records;
+        });
     },
     do_add_records: function(records, prepend) {
         var self = this;
