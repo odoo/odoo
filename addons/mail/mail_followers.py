@@ -102,7 +102,7 @@ class mail_notification(osv.Model):
         # some messages do not have notifications: find which one, create notification, update read status
         exist_notification = dict.fromkeys(msg_ids, False)
         for notification in self.browse(cr, uid, notif_ids, context=context):
-            exist_notification[notification.message_id] = True
+            exist_notification[notification.message_id.id] = True
         for msg_id in exist_notification.keys():
             self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return self.write(cr, uid, notif_ids, {'read': read}, context=context)
