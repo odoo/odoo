@@ -81,9 +81,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             }
         }
         if (options) {
-            if (options.buttons) {
-                this.params_buttons = true;
-            }
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
@@ -129,6 +126,8 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
+        this.add_buttons(o.buttons);
+        delete(o.buttons);
         this.$buttons.appendTo($("body"));
         instance.web.dialog(this.$el, o).dialog('open');
         this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
@@ -138,16 +137,22 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         return this;
     },
+    add_buttons: function(buttons) {
+        var self = this;
+        _.each(buttons, function(fn, but) {
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: but, node: { attrs: {} }}}));
+            self.$buttons.append($but);
+            $but.on('click', function(ev) {
+                fn.call(self.$el, ev);
+            });
+        });
+    },
     init_dialog: function(options) {
         this.renderElement();
         var o = this.get_options(options);
         instance.web.dialog(this.$el, o);
-        if (! this.params_buttons) {
-            this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
-            this.$el.dialog("widget").append(this.$buttons);
-        } else {
-            this.$buttons = this.$el.dialog("widget").find(".ui-dialog-buttonpane");
-        }
+        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
+        this.$el.dialog("widget").append(this.$buttons);
         this.dialog_inited = true;
         var res = this.start();
         return res;
