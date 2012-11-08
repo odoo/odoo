@@ -43,8 +43,6 @@ class account_journal(osv.osv):
 
         return super(account_journal, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
-account_journal()        
-
 class pos_make_payment(osv.osv_memory):
     _name = 'pos.make.payment'
     _description = 'Point of Sale Payment'

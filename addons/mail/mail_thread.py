@@ -156,7 +156,7 @@ class mail_thread(osv.AbstractModel):
         old = set(fol.partner_id.id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids))
         new = set(old)
 
-        for command in value:
+        for command in value or []:
             if isinstance(command, (int, long)):
                 new.add(command)
             elif command[0] == 0:

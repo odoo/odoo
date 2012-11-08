@@ -129,17 +129,28 @@ openerp.account = function (instance) {
     instance.web.views.add('tree_account_move_line_quickadd', 'instance.web.account.QuickAddListView');
     instance.web.account.QuickAddListView = instance.web.ListView.extend({
         init: function() {
-            this._super.apply(this, arguments);
             var self = this;
+            this._super.apply(this, arguments);
+            this.journals = [];
+            this.periods = [];
             this.current_journal = null;
             this.current_period = null;
         },
         load_list: function() {
             var self = this;
             var tmp = this._super.apply(this, arguments);
-            if (this.journals) {
-                this.$el.prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
-            }
+
+            this.$el.prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
+            
+            this.$("#oe_account_select_journal").change(function() {
+                    self.current_journal = parseInt(this.value);
+                    self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                });
+            this.$("#oe_account_select_period").change(function() {
+                    self.current_period = parseInt(this.value);
+                    self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                });
+            
             return tmp;
         },
         do_search: function(domain, context, group_by) {
@@ -149,38 +160,30 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return mod.call("list_journals", []).pipe(function(result) {
-                var current = self.current_journal !== null ? self.journals[self.current_journal][0] : null;
+            var getarray = [];
+            getarray.push(mod.call("list_journals", []).pipe(function(result) {
                 self.journals = result;
-                var index = _.find(_.range(self.journals.length), function(el) {
-                    if (current === self.journals[el][0])
-                        return true;
-                });
-                if (index !== undefined)
-                    self.current_journal = index;
-                else
-                    self.current_journal = self.journals.length == 0 ? null : 0;
-                self.search_by_journal();
+            }));
+            getarray.push(mod.call("list_periods", []).pipe(function(result) {
+                self.periods = result;
+            }));
+            $.when.apply($, getarray).done(function () {
+                self.search_by_journal_period();
             });
         },
-        search_by_journal: function() {
+        search_by_journal_period: function() {
             var self = this;
             var fct = function() {
-                return self.old_search(new instance.web.CompoundDomain(self.last_domain, 
-                    [["journal_id", "in", self.current_journal === null ? [] :
-                    [self.journals[self.current_journal][0]] ]]), self.last_context, self.last_group_by);
+                compoundDomain = new instance.web.CompoundDomain(self.last_domain, 
+                    [
+                    ["journal_id", "=", self.current_journal === null ? self.journals[0][0] : self.current_journal], 
+                    ["period_id", "=", self.current_period === null ? self.journals[0][0] :self.current_period] 
+                    ]);
+                return self.old_search(compoundDomain, self.last_context, self.last_group_by);
             };
             return fct();
         },
-        search_by_period: function() {
-            var self = this;
-            var fct = function() {
-                return self.old_search(new instance.web.CompoundDomain(self.last_domain, 
-                    [["period_id", "in", self.current_period === null ? [] :
-                    [self.periods[self.current_period][0]] ]]), self.last_context, self.last_group_by);
-            };
-            return fct();
-        },
+        
         do_select: function (ids, records) {
             this.trigger('record_selected')
             this._super.apply(this, arguments);

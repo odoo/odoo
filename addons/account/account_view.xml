@@ -509,8 +509,8 @@
                         <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
-                                    <field name="profit_account_id"/>
-                                    <field name="loss_account_id"/>
+                                    <field name="profit_account_id" domain="[('type','!=','view')]"/>
+                                    <field name="loss_account_id" domain="[('type','!=','view')]"/>
                                     <field name="internal_account_id"/>
                                 </group>
                                 <group string="Miscellaneous">
@@ -1059,7 +1059,7 @@
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
-                <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
+                <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0" editable="bottom">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1575,7 +1575,7 @@
         </record>
 
         <record id="action_account_manual_account_move_line_quickadd" model="ir.actions.act_window">
-            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="context">{'view_mode':True}</field>
             <field name="name">Quick Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_quickadd_tree"/>
