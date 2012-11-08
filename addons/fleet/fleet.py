@@ -274,8 +274,8 @@ class fleet_vehicle(osv.Model):
     def _get_contract_reminder_fnc(self, cr, uid, ids, field_names, unknow_none, context=None):
         res= {}
         for record in self.browse(cr, uid, ids, context=context):
-            overdue = 0
-            due_soon = 0
+            overdue = False
+            due_soon = False
             name = ''
             for element in record.log_contracts:
                 if element.state in ('open', 'toclose') and element.expiration_date:
@@ -285,14 +285,14 @@ class fleet_vehicle(osv.Model):
                     due_time = str_to_date(due_time_str)
                     diff_time = (due_time-current_date).days
                     if diff_time < 0:
-                        overdue += 1
-                    if diff_time < 15 and diff_time >= 0:
-                            due_soon = due_soon + 1;
-                    if overdue + due_soon > 0:
+                        overdue = True
+                    if diff_time<15 and diff_time>=0:
+                            due_soon = True;
+                    if overdue or due_soon:
                         ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
-                        if ids:
+                        if len(ids) > 0:
                             #we display only the name of the oldest overdue/due soon contract
-                            name = self.pool.get('fleet.vehicle.log.contract').browse(cr, uid, ids[0], context=context).cost_subtype.name
+                            name=(self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,ids[0],context=context).cost_subtype.name)
 
             res[record.id] = {
                 'contract_renewal_overdue': overdue,
@@ -356,8 +356,8 @@ class fleet_vehicle(osv.Model):
         'image': fields.related('model_id', 'image', type="binary", string="Logo"),
         'image_medium': fields.related('model_id', 'image_medium', type="binary", string="Logo"),
         'image_small': fields.related('model_id', 'image_small', type="binary", string="Logo"),
-        'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="integer", string='Contracts to renew', multi='contract_info'),
-        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="integer", string='Contracts Overdued', multi='contract_info'),
+        'contract_renewal_due_soon': fields.function(_get_contract_reminder_fnc, fnct_search=_search_contract_renewal_due_soon, type="boolean", string='Contracts to renew', multi='contract_info'),
+        'contract_renewal_overdue': fields.function(_get_contract_reminder_fnc, fnct_search=_search_get_overdue_contract_reminder, type="boolean", string='Contracts Overdued', multi='contract_info'),
         'contract_renewal_name': fields.function(_get_contract_reminder_fnc, type="text", string='Name of contract to renew soon', multi='contract_info'),
         'contract_renewal_total': fields.function(_get_contract_reminder_fnc, type="integer", string='Total of contracts due or overdue minus one', multi='contract_info'),
         'car_value': fields.float('Car Value', help='Value of the bought vehicle'),
@@ -499,11 +499,11 @@ class fleet_vehicle_log_fuel(osv.Model):
     def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
         if amount > 0 and liter > 0:
-            return {'value': {'price_per_liter': amount / liter}}
+            return {'value': {'price_per_liter': amount / liter,}}
         elif amount > 0 and price_per_liter > 0:
-            return {'value': {'liter': amount / price_per_liter}}
+            return {'value': {'liter': amount / price_per_liter,}}
         elif liter > 0 and price_per_liter > 0:
-            return {'value': {'amount': liter * price_per_liter}}
+            return {'value': {'amount': liter * price_per_liter,}}
         return {}
 
     def _get_default_service_type(self, cr, uid, context):

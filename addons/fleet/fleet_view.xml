@@ -229,7 +229,7 @@
             <field name="model">fleet.vehicle</field>
             <field name="sequence">1</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" version="7.0" colors="orange:contract_renewal_due_soon>0 and contract_renewal_overdue==0;red:contract_renewal_overdue>0">
+                <tree string="Vehicle" version="7.0" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver" />
@@ -293,7 +293,7 @@
                                             <field name="model_id" />
                                         </a>
                                     </h4>
-                                    <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
+                                    <t t-if="record.contract_renewal_due_soon.raw_value and !record.contract_renewal_overdue.raw_value">
                                         <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_3"><field name="contract_renewal_name" />
                                                <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
@@ -301,7 +301,7 @@
                                         </a>
                                     </t>
 
-                                    <t t-if="record.contract_renewal_overdue.raw_value > 0">
+                                    <t t-if="record.contract_renewal_overdue.raw_value">
                                         <a data-type="object" data-name="return_action_to_open" href="#" class="oe_kanban_action oe_kanban_action_a" data-context='{"xml_id":"fleet_vehicle_log_contract_act"}'>
                                             <span class="oe_tag oe_kanban_color_2"><field name="contract_renewal_name" />
                                                 <t t-if="record.contract_renewal_total.raw_value > 0"> and <field name="contract_renewal_total" /> other(s) </t>
