@@ -1125,6 +1125,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var url = '#' + $.param(state);
         this._current_state = _.clone(state);
         $.bbq.pushState(url);
+        this.trigger('state_pushed', state);
     },
     on_menu_action: function(options) {
         var self = this;
