@@ -1087,21 +1087,55 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     start: function() {
         var self = this;
+
         return $.when(this._super()).pipe(function() {
             self.$el.on('contextmenu','.oe_logo',function(e) {
-                instance.web.dialog($(QWeb.render('Resolution')),{
-                    title: "OpenERP Resolution" });
-
+                self.$el.find('.resolution').remove();
+                self.$el.find('.oe_logo').after(QWeb.render('Resolution'))
+                self.$el.find('.oe_leftbar').css('display','inline-block');
                 $(self.$el).click(function(){
-                    $('.resolution').dialog('close');
-                })
-                $('.resolution a').click(function() {
-                    self.$el.find('.oe_logo').css('width', $(this).attr('awidth')+"px");
-                    self.$el.find('.oe_logo').css('height', $(this).attr('aheight')+"px");
-                    self.$el.find('.oe_logo img').css('width', $(this).attr('imgw')+"px");
-                    self.$el.find('.oe_logo img').css('height', $(this).attr('imgh')+"px");
-                })
-            })
+                    self.$el.find('.resolution').hide();
+                    self.$el.find('.oe_leftbar').css('display','table-cell');
+                });
+                $('.resolution .res div[class]').each(function(){
+                    $(this).find('a').click(function(){
+                        if($(this).attr('id') == "freeto"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/logo.png')
+                        }
+                        if($(this).attr('id') == "readyto"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_ready.png')
+                        }
+                        if($(this).attr('id') == "silverto"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_silver.png')
+                        }
+                        if($(this).attr('id') == "goldto"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_gold.png')
+                        }
+                    });
+                    $(this).find('div a').click(function(){
+                        if($(this).parent().attr('id') == "free"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/logo.png')
+                        }
+                        if($(this).parent().attr('id') == "ready"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_ready.png')
+                        }
+                        if($(this).parent().attr('id') == "silver"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_silver.png')
+                        }
+                        if($(this).parent().attr('id') == "gold"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_gold.png')
+                        }
+                        if($(this).attr('id') == "low"){
+                            self.$el.find('.oe_logo').find('img').css('width','150px')
+                            self.$el.find('.oe_logo').find('img').css('height','40px')
+                        }
+                        else if($(this).attr('id') == "high"){
+                            self.$el.find('.oe_logo').find('img').css('width','185px')
+                            self.$el.find('.oe_logo').find('img').css('height','50px')
+                        }
+                    });
+                });
+            });
             self.$el.on('click', '.oe_logo', function(e) {
                 self.action_manager.do_action('home');
             });
