@@ -1420,7 +1420,7 @@ openerp.mail = function (session) {
          *     @param {String} [no_message] Message to display when there are no message
          */
         init: function (parent, action) {
-            this._super(parent);
+            this._super(parent, action);
             this.action = _.clone(action);
             this.domain = this.action.domain || this.action.params.domain || [];
             this.context = this.action.context || this.action.params.context || {};
@@ -1494,23 +1494,23 @@ openerp.mail = function (session) {
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 
-        init: function (parent, action) {
-            this._super(parent);
-            this.action = _.clone(action);
+        init: function (parent, node) {
+            this._super.apply(parent, arguments);
+            this.node = _.clone(node);
 
-            this.action.params = _.extend({
+            this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': false,
                 'show_compose_message': this.view.is_action_enabled('edit'),
                 'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
                 'show_compact_message': 1,
-            }, this.action.params);
-            this.action.context = {
+            }, this.node.params);
+            this.node.context = {
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
             };
-            this.action.domain = this.action.domain || this.action.params.domain || [];
+            this.node.domain = this.node.domain || [];
 
         },
 
@@ -1569,7 +1569,7 @@ openerp.mail = function (session) {
          *      contain default_model, default_res_id, to give it to the threads.
          */
         init: function (parent, action) {
-            this._super(parent);
+            this._super(parent, action);
 
             this.action = _.clone(action);
             this.domain = this.action.domain || this.action.params.domain || [];
