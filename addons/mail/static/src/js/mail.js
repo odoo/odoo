@@ -1022,13 +1022,10 @@ openerp.mail = function (session) {
                     'context': this.context,
                     'options': this.options,
                 });
-                if (!this.thread_level) {
-                    // root view
+                if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
                     this.compose_message.insertBefore(this.$el);
-                } else if (this.thread_level > this.options.display_indented_thread) {
-                    this.compose_message.insertAfter(this.$el);
                 } else {
-                    this.compose_message.appendTo(this.$el);
+                    this.compose_message.prependTo(this.$el);
                 }
             }
         },
