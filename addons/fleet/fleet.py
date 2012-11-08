@@ -279,7 +279,7 @@ class fleet_vehicle(osv.Model):
             limit_date = str((datetime_today + relativedelta(days=+15)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT))
             cr.execute('select cost.vehicle_id, count(contract.id) as contract_number FROM fleet_vehicle_cost cost left join fleet_vehicle_log_contract contract on contract.cost_id = cost.id WHERE contract.expiration_date is not null AND contract.expiration_date > %s AND contract.expiration_date < %s AND contract.state IN (\'open\', \'toclose\') GROUP BY cost.vehicle_id', (today, limit_date))
             res_ids = [x[0] for x in cr.fetchall()]
-            res.append(('id', search operator, res_ids))
+            res.append(('id', search_operator, res_ids))
         return res
 
     def _get_contract_reminder_fnc(self, cr, uid, ids, field_names, unknow_none, context=None):
