@@ -123,6 +123,7 @@ class sale_advance_payment_inv(osv.osv_memory):
             # create the invoice
             inv_line_values = {
                 'name': res.get('name'),
+                'origin': sale.name,
                 'account_id': res['account_id'],
                 'price_unit': inv_amount,
                 'quantity': wizard.qtty or 1.0,
