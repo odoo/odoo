@@ -640,7 +640,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
-            'offset': self.dataset_offset += self.view.limit
+            'offset': self.dataset_offset
         }).then(this.do_add_records);
     },
     do_add_records: function(records, prepend) {
