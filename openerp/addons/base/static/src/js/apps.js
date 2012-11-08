@@ -76,7 +76,7 @@ openerp.base = function(instance) {
 
         init: function(parent, action) {
             this._super(parent, action);
-            var options = actions.params || {};
+            var options = action.params || {};
 
             if (options.apps_user) {
                 sessionStorage.setItem('apps.login', options.apps_user);
