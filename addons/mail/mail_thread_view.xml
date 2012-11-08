@@ -4,6 +4,7 @@
         <record id="action_mail_inbox_feeds" model="ir.actions.client">
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', True)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'inbox'} }&quot;"/>
         </record>
@@ -11,29 +12,33 @@
         <record id="action_mail_to_me_feeds" model="ir.actions.client">
             <field name="name">To: me</field>
             <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
             <field name="params" eval="&quot;{'domain': [('partner_ids.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'inbox'} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'inbox'}, }&quot;"/>
         </record>
 
         <record id="action_mail_star_feeds" model="ir.actions.client">
             <field name="name">Favorites</field>
             <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
             <field name="params" eval="&quot;{'domain': [('favorite_user_ids.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'stared'} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'stared'}, }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]), ('to_read', '=', False)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'archives'} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'archives'}, }&quot;"/>
         </record>
 
         <record id="action_mail_sent_feeds" model="ir.actions.client">
             <field name="name">Sent</field>
             <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
             <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'send'} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'typeof_thread': 'send'}, }&quot;"/>
         </record>
 
         <!-- MENU -->
