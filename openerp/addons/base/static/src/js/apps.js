@@ -3,7 +3,6 @@ openerp.base = function(instance) {
 // FIXME do not work on safari
 // TODO test on IE
 // FIXME when apps server is not available, redirect to failback action but do not highligth the good menu
-// FIXME when back from oe_account (via oe_apps), error is show: load action 3 times !!!
 
     instance.base = {apps:{}};
 
