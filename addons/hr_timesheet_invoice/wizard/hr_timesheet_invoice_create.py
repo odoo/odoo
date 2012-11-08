@@ -29,6 +29,15 @@ from tools.translate import _
 
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+        pro_price_obj = self.pool.get('product.pricelist')
+        if account.pricelist_id:
+            pl = account.pricelist_id.id
+            price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
+        else:
+            price = 0.0
+        return price
+
 
     #
     # data = {
@@ -40,12 +49,10 @@ class account_analytic_line(osv.osv):
     # }
     def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
         analytic_account_obj = self.pool.get('account.analytic.account')
-        res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
         invoice_obj = self.pool.get('account.invoice')
         product_obj = self.pool.get('product.product')
         invoice_factor_obj = self.pool.get('hr_timesheet_invoice.factor')
-        pro_price_obj = self.pool.get('product.pricelist')
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         product_uom_obj = self.pool.get('product.uom')
         invoice_line_obj = self.pool.get('account.invoice.line')
@@ -99,15 +106,15 @@ class account_analytic_line(osv.osv):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
             invoices.append(last_invoice)
 
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id, name " \
+            cr.execute("SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id, name " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
+                    "GROUP BY product_id, user_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
 
-            for product_id, factor_id, qty, uom, line_name in cr.fetchall():
+            for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                 if data.get('product'):
-                     product_id = data['product'][0]
+                    product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
                     raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
@@ -118,16 +125,13 @@ class account_analytic_line(osv.osv):
 
                 ctx =  context.copy()
                 ctx.update({'uom':uom})
-                if account.pricelist_id:
-                    pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
-                else:
-                    price = 0.0
+
+                price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
 
                 general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
                 if not general_account:
                     raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
-                taxes = product.taxes_id
+                taxes = product.taxes_id or general_account.tax_ids
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': price,
@@ -164,7 +168,8 @@ class account_analytic_line(osv.osv):
                         details.append(line['name'])
                     note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
 
-                curr_line['name'] += "\n".join(map(lambda x: unicode(x) or '',note))
+                if note:
+                    curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
                 invoice_line_obj.create(cr, uid, curr_line, context=context)
                 cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
 
@@ -205,7 +210,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
+                raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]

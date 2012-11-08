@@ -220,6 +220,10 @@
                                 <field name="module_account_check_writing" class="oe_inline"/>
                                 <label for="module_account_check_writing"/>
                             </div>
+                            <div>
+                                <field name="group_check_supplier_invoice_total" class="oe_inline"/>
+                                <label for="group_check_supplier_invoice_total"/>
+                            </div>
                         </div>
                     </group>
                     <separator string="Bank &amp; Cash"/>
@@ -264,7 +268,7 @@
             <field name="target">inline</field>
         </record>
 
-        <menuitem id="menu_account_config" name="Accounting" parent="base.menu_config"
+        <menuitem id="menu_account_config" name="Invoicing" parent="base.menu_config"
             sequence="14" action="action_account_config"/>
 
     </data>

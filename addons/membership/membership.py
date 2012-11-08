@@ -150,11 +150,11 @@ class membership_line(osv.osv):
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
-                        string='Membership State', type='selection',
+                        string='Membership Status', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
                         'res.partner': (_get_partners, ['membership_state'], 12),
-                        }, help="""It indicates the membership state.
+                        }, help="""It indicates the membership status.
                         -Non Member: A member who has not applied for any membership.
                         -Cancelled Member: A member who has cancelled his membership.
                         -Old Member: A member whose membership date has expired.
@@ -317,25 +317,25 @@ class Partner(osv.osv):
     _columns = {
         'associate_member': fields.many2one('res.partner', 'Associate Member',help="A member with whom you want to associate your membership.It will consider the membership state of the associated member."),
         'member_lines': fields.one2many('membership.membership_line', 'partner', 'Membership'),
-        'free_member': fields.boolean('Free Member', help = "Select if you want to give membership free of cost."),
+        'free_member': fields.boolean('Free Member', help = "Select if you want to give free membership."),
         'membership_amount': fields.float(
                     'Membership Amount', digits=(16, 2),
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
                     __get_membership_state,
-                    string = 'Current Membership State', type = 'selection',
+                    string = 'Current Membership Status', type = 'selection',
                     selection = STATE,
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
                         'res.partner': (_get_partners, ['free_member', 'membership_state', 'associate_member'], 10)
                     }, help="""It indicates the membership state.
-                    -Non Member: A member who has not applied for any membership.
+                    -Non Member: A partner who has not applied for any membership.
                     -Cancelled Member: A member who has cancelled his membership.
                     -Old Member: A member whose membership date has expired.
                     -Waiting Member: A member who has applied for the membership and whose invoice is going to be created.
                     -Invoiced Member: A member whose invoice has been created.
-                    -Paid Member: A member who has paid the membership amount."""),
+                    -Paying member: A member who has paid the membership fee."""),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
                     string = 'Membership Start Date', type = 'date',
@@ -466,7 +466,7 @@ class Product(osv.osv):
     '''Product'''
     _inherit = 'product.product'
     _columns = {
-        'membership': fields.boolean('Membership', help='Select if a product is a membership product.'),
+        'membership': fields.boolean('Membership', help='Check if the product is eligible for membership.'),
         'membership_date_from': fields.date('Date from', help='Date from which membership becomes active.'),
         'membership_date_to': fields.date('Date to', help='Date until which membership remains active.'),
     }

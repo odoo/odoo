@@ -31,31 +31,31 @@
                         <button name="test_survey" states="open,draft,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
                         <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
                         <button name="action_print_survey" states="open,draft,close,cancel" string="Print Answer" type="object"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                            string="Edit Survey" type="action" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+                        <button name="edit_survey" states="open,draft,close,cancel"
+                            string="Edit Survey" type="object" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
 
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
                         <h1>
-                            <field name="title"/>
+                            <field name="title" attrs="{'readonly':[('state','=','close')]}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
-                            <field name="responsible_id" class="oe_inline"/>
-                            <field name="send_response"/>
-                            <field name="type"/>
+                            <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="send_response" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="type" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                         <group>
-                            <field name="max_response_limit" attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                            <field name="response_user" attrs="{'readonly':[('state','in',('open','close'))]}"/>
+                            <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="response_user" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                      </group>
                      <notebook>
                         <page string="Survey Details">
-                            <field name="page_ids" colspan="4" mode="tree">
+                            <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
                                 <form string="Survey Page" version="7.0">
                                     <sheet>
                                     <label for="title" class="oe_edit_only"/>
@@ -212,7 +212,7 @@
                                     </sheet>
                                     </form>
                                 </field>
-                            <field name="note" placeholder="Survey description..."/>
+                            <field name="note" placeholder="Survey description..." attrs="{'readonly':[('state','=','close')]}"/>
                         </page>
                         <page string="Invited User">
                             <field name="invited_user_ids" readonly="1"/>

@@ -34,103 +34,22 @@ class hr_timesheet_sheet(osv.osv):
     _order = "id desc"
     _description="Timesheet"
 
-    def _total_attendances(self, cr, uid, ids, name, args, context=None):
-        """ Get the total attendance for the timesheets
-            Returns a dict like :
-                {id: {'total_per_day': {day: timedelta, ...},
-                     },
-                 ...
-                }
-        """
-        context = context or {}
-        attendance_obj = self.pool.get('hr.attendance')
-        res = {}
-        for sheet_id in ids:
-            sheet = self.browse(cr, uid, sheet_id, context=context)
-            # field attendances_ids of hr_timesheet_sheet.sheet only
-            # returns attendances of timesheet's current date
-            attendance_ids = attendance_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
-            attendances = attendance_obj.browse(cr, uid, attendance_ids, context=context)
-            total_attendance = {}
-            for attendance in [att for att in attendances
-                               if att.action in ('sign_in', 'sign_out')]:
-                day = attendance.name[:10]
-                if not total_attendance.get(day, False):
-                    total_attendance[day] = timedelta(seconds=0)
-
-                attendance_in_time = datetime.strptime(attendance.name, '%Y-%m-%d %H:%M:%S')
-                attendance_interval = timedelta(hours=attendance_in_time.hour,
-                                                minutes=attendance_in_time.minute,
-                                                seconds=attendance_in_time.second)
-                if attendance.action == 'sign_in':
-                    total_attendance[day] -= attendance_interval
-                else:
-                    total_attendance[day] += attendance_interval
-
-            res[sheet_id] = {'total_per_day': total_attendance}
-        return res
-
-    def _total_timesheet(self, cr, uid, ids, name, args, context=None):
-        """ Get the total of analytic lines for the timesheets
-            Returns a dict like :
-                {id: {day: timedelta, ...}}
-        """
-        context = context or {}
-        sheet_line_obj = self.pool.get('hr.analytic.timesheet')
-
-        res = {}
-        for sheet_id in ids:
-            # field timesheet_ids of hr_timesheet_sheet.sheet only
-            # returns lines of timesheet's current date
-            sheet_lines_ids = sheet_line_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
-            sheet_lines = sheet_line_obj.browse(cr, uid, sheet_lines_ids, context=context)
-            total_timesheet = {}
-            for line in sheet_lines:
-                day = line.date
-                if not total_timesheet.get(day, False):
-                    total_timesheet[day] = timedelta(seconds=0)
-                total_timesheet[day] += timedelta(hours=line.unit_amount)
-            res[sheet_id] = total_timesheet
-        return res
-
     def _total(self, cr, uid, ids, name, args, context=None):
         """ Compute the attendances, analytic lines timesheets and differences between them
             for all the days of a timesheet and the current day
         """
-        def sum_all_days(sheet_amounts):
-            if not sheet_amounts:
-                return timedelta(seconds=0)
-            total = reduce(lambda memo, value: memo + value, sheet_amounts.values())
-            return total
-
-        def timedelta_to_hours(delta):
-            hours = 0.0
-            seconds = float(delta.seconds)
-            if delta.microseconds:
-                seconds += float(delta.microseconds) / 100000
-            hours += delta.days * 24
-            if seconds:
-                hours += seconds / 3600
-            return hours
 
         res = {}
-        all_timesheet_attendances = self._total_attendances(cr, uid, ids, name, args, context=context)
-        all_timesheet_lines = self._total_timesheet(cr, uid, ids, name, args, context=context)
-        for id in ids:
-            res[id] = {}
-
-            all_attendances_sheet = all_timesheet_attendances[id]
-
-            total_attendances_sheet = all_attendances_sheet['total_per_day']
-            total_attendances_all_days = sum_all_days(total_attendances_sheet)
-
-            total_timesheets_sheet = all_timesheet_lines[id]
-            total_timesheets_all_days = sum_all_days(total_timesheets_sheet)
-            total_difference_all_days = total_attendances_all_days - total_timesheets_all_days
-
-            res[id]['total_attendance'] = timedelta_to_hours(total_attendances_all_days)
-            res[id]['total_timesheet'] = timedelta_to_hours(total_timesheets_all_days)
-            res[id]['total_difference'] = timedelta_to_hours(total_difference_all_days)
+        for sheet in self.browse(cr, uid, ids, context=context or {}):
+            res.setdefault(sheet.id, {
+                'total_attendance': 0.0,
+                'total_timesheet': 0.0,
+                'total_difference': 0.0,
+            })
+            for period in sheet.period_ids:
+                res[sheet.id]['total_attendance'] += period.total_attendance
+                res[sheet.id]['total_timesheet'] += period.total_timesheet
+                res[sheet.id]['total_difference'] += period.total_attendance - period.total_timesheet
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -151,7 +70,7 @@ class hr_timesheet_sheet(osv.osv):
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal, like \'Timesheet\'.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
@@ -160,11 +79,11 @@ class hr_timesheet_sheet(osv.osv):
             if not new_user_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign it to a user.'))
             if not self._sheet_date(cr, uid, ids, forced_user_id=new_user_id):
-                raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlaps!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
+                raise osv.except_osv(_('Error!'), _('You cannot have 2 timesheets that overlap!\nYou should use the menu \'My Timesheet\' to avoid this problem.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
@@ -206,9 +125,9 @@ class hr_timesheet_sheet(osv.osv):
             ('draft','Open'),
             ('confirm','Waiting Approval'),
             ('done','Approved')], 'Status', select=True, required=True, readonly=True,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed timesheet. \
-                \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
-                \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed timesheet. \
+                \n* The \'Confirmed\' status is used for to confirm the timesheet by user. \
+                \n* The \'Done\' status is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status', readonly=True),
         'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
         'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
@@ -268,7 +187,7 @@ class hr_timesheet_sheet(osv.osv):
 
 
     _constraints = [
-        (_sheet_date, 'You cannot have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
+        (_sheet_date, 'You cannot have 2 timesheets that overlap!\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
     ]
 
     def action_set_to_draft(self, cr, uid, ids, *args):
@@ -283,8 +202,8 @@ class hr_timesheet_sheet(osv.osv):
             return []
         if isinstance(ids, (long, int)):
             ids = [ids]
-        return [(r['id'], r['date_from'] + ' - ' + r['date_to']) \
-                for r in self.read(cr, uid, ids, ['date_from', 'date_to'],
+        return [(r['id'], _('Week ')+datetime.strptime(r['date_from'], '%Y-%m-%d').strftime('%U')) \
+                for r in self.read(cr, uid, ids, ['date_from'],
                     context=context, load='_classic_write')]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -304,16 +223,26 @@ class hr_timesheet_sheet(osv.osv):
 
 hr_timesheet_sheet()
 
-
-class hr_timesheet_line(osv.osv):
-    _inherit = "hr.analytic.timesheet"
+class account_analytic_line(osv.osv):
+    _inherit = "account.analytic.line"
 
     def _get_default_date(self, cr, uid, context=None):
         if context is None:
             context = {}
-        if 'date' in context:
-            return context['date']
-        return time.strftime('%Y-%m-%d')
+        #get the default date (should be: today)
+        res = super(account_analytic_line, self)._get_default_date(cr, uid, context=context)
+        #if we got the dates from and to from the timesheet and if the default date is in between, we use the default
+        #but if the default isn't included in those dates, we use the date start of the timesheet as default
+        if context.get('timesheet_date_from') and context.get('timesheet_date_to'):
+            if context['timesheet_date_from'] <= res <= context['timesheet_date_to']:
+                return res
+            return context.get('timesheet_date_from')
+        #if we don't get the dates from the timesheet, we return the default value from super()
+        return res
+
+
+class hr_timesheet_line(osv.osv):
+    _inherit = "hr.analytic.timesheet"
 
     def _sheet(self, cursor, user, ids, name, args, context=None):
         sheet_obj = self.pool.get('hr_timesheet_sheet.sheet')
@@ -358,9 +287,6 @@ class hr_timesheet_line(osv.osv):
                     'hr.analytic.timesheet': (lambda self,cr,uid,ids,context=None: ids, None, 10),
                   },
             ),
-    }
-    _defaults = {
-        'date': _get_default_date,
     }
 
     def _check_sheet_state(self, cr, uid, ids, context=None):
