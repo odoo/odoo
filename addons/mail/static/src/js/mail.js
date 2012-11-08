@@ -53,8 +53,8 @@ openerp.mail = function (session) {
     mail.ChatterUtils = {
 
         /* Get an image in /web/binary/image?... */
-        get_image: function (session, model, field, id) {
-            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        get_image: function (session, model, field, id, resize) {
+            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '') + '&resize=' + (resize ? encodeURIComponent(resize) : '');
         },
 
         /* Get the url of an attachment {'id': id} */
@@ -285,6 +285,18 @@ openerp.mail = function (session) {
             return 'unknown';
         },
 
+        /* upload the file on the server, add in the attachments list and reload display
+         */
+        display_attachments: function () {
+            this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
+        },
+
+        /* return the link to resized image
+         */
+        attachments_resize_image: function (id, resize) {
+            return mail.ChatterUtils.get_image(this.session, 'ir.attachment', 'datas', id, resize);
+        },
+
         /* get all child message id linked.
          * @return array of id
         */
@@ -355,13 +367,6 @@ openerp.mail = function (session) {
 
             this.display_attachments();
             this.bind_events();
-        },
-
-        /* upload the file on the server, add in the attachments list and reload display
-         */
-        display_attachments: function () {
-            //this.$(".oe_msg_attachment_list").off('click', '.oe_mail_attachment_delete')
-            this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
         },
 
         /* when a user click on the upload button, send file read on_attachment_loaded
@@ -705,12 +710,9 @@ openerp.mail = function (session) {
             this.$('.oe_msg_delete').on('click', this.on_message_delete);
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
-
             this.$('.oe_msg_vote').on('click', this.on_vote);
+            this.$('.oe_view_attachments').on('click', this.on_view_attachments);
 
-            this.$('.oe_view_attachments').on('click', function(){
-                self.$('.oe_msg_attachment_list').toggle(200);
-            });
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -767,6 +769,17 @@ openerp.mail = function (session) {
             if (this.thread) {
                 this.thread.$el.fadeOut(fadeTime);
             }
+        },
+
+        /* Call the on_compose_message on the thread of this message. */
+        on_view_attachments:function (event) {
+            event.stopPropagation();
+            var self = this;
+            if (!this.toggle_attachment) {
+                self.display_attachments();
+                this.toggle_attachment = true;
+            } 
+            this.$('.oe_msg_attachment_list').toggle(200);
         },
 
         /**

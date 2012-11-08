@@ -83,7 +83,7 @@
             </t>
             <t t-if="widget.filetype(attachment) === 'webimage'">
                 <div class='oe_attachment oe_preview'>
-                    <a t-att-href='attachment.url'><img t-att-src="attachment.url"></img></a>
+                    <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,100])"></img></a>
                     <div class='oe_delete oe_e'>[</div>
                     <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
                     <div class='oe_progress_bar'>
@@ -211,9 +211,7 @@
                 </div>
                 <div class="oe_msg_footer">
                     <t t-if="widget.attachment_ids.length > 0">
-                        <div class="oe_msg_attachment_list">
-                            <t t-call="mail.thread.message.attachments"/>
-                        </div>
+                        <div class="oe_msg_attachment_list"></div>
                     </t>
                     <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
                     <span class='oe_subtle'>•</span>
