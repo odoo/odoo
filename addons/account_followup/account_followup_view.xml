@@ -29,15 +29,16 @@
                        	</div> 
                        	</group>
                        	<div class="oe_grey">
-                       		<label string="The actions checked below will be executed when running the wizard, the actions of the previous level were done and the current date is greater than or equal to the due date of an invoice + the amount of days above.  The action will be done at most once for every overdue invoice.  "/>
+                       		<label string="When the follow-up sending wizard is run, for every partner the most overdue invoice is checked.  If the amount of days overdue is greater or equal than the amount of days specified above
+                       			and the actions of the previous follow-up level were done, then the actions checked below will be executed.  "/>
                        	</div>
                     <separator string="Processing actions"/>
                     <group>
                       <group>
                        <field name="send_letter"/>
-                       <field name="phonecall"/>
-                       <field name="manual_action" attrs="{'invisible': [('phonecall', '=', False)]}"/>
-                       <field name="action_responsible" attrs="{'invisible': [('phonecall', '=', False)]}"/>
+                       <field name="manual_action"/>
+                       <field name="manual_action_note" attrs="{'invisible': [('manual_action', '=', False)]}"/>
+                       <field name="manual_action_responsible_id" attrs="{'invisible': [('manual_action', '=', False)]}"/>
                       </group>
                       <group>
                        <field name="send_email"/>
@@ -137,7 +138,6 @@
                     <field name="followup_date"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-
                     <field name="state"/>
                     <field name="date_maturity"/>
                 </tree>

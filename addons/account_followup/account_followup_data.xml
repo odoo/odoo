@@ -8,7 +8,7 @@
 		 <record id="email_template_account_followup_level0" model="email.template">
             <field name="name">Followup of overdue invoices level 0</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Followup</field>
+            <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -27,43 +27,58 @@ Best Regards,
 <br/>
 Best Regards,
 
+   <br/>
+${user.name}
+    
+<br/>
+<br/>
+
     <table width=80%>
+
         <tr>
         	<td>Invoice date</td>
         	<td>Reference</td>
-            <td>Maturity date</td>
+            <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
-
-% for aml in object.accountmoveline_ids : 
-
+<%
+    amls = object.accountmoveline_ids
+    mel = {}
+    for aml in amls: 
+        strbegin = "<TD> "
+        strend = "</TD> "
+        date = False
+        if aml.date_maturity: 
+            date = aml.date_maturity
+            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+        else:
+            if aml.date <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            else:
+                strbegin = "<TD>"
+                strend = "</TD>"
+            date = aml.date
+        block = " "
+        if aml.blocked: 
+            block = "X"
+        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+%>
 <tr>
-<td>
-${aml.date}
-</td>
-<td>
-${aml.ref}
-</td>
-<td>
-% if aml.date_maturity:
-${aml.date_maturity}
-% else: 
-${aml.date}
-% endif
-</td>
-<td>
-${aml.debit}
-</td>
-<td>
-% if aml.blocked:
- X
-% endif
-</td>
+</tr>
+% for aml in amls: 
+<tr>
+${mel[aml.id]}
 </tr>
 % endfor
-</table>   
+
+
+</table>
+<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
     <br/>
 </div>
             ]]></field>
@@ -75,7 +90,7 @@ ${aml.debit}
 		 <record id="email_template_account_followup_level1" model="email.template">
             <field name="name">Followup of overdue invoices level 1</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Followup</field>
+            <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -96,44 +111,58 @@ Details of due payments is printed below.
 <br/>
 Best Regards,
     
+<br/>
+${user.name}
+    
+<br/>
+<br/>
 
     <table width=80%>
 
         <tr>
         	<td>Invoice date</td>
         	<td>Reference</td>
-            <td>Maturity date</td>
+            <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
-% for aml in object.accountmoveline_ids : 
-
+<%
+    amls = object.accountmoveline_ids
+    mel = {}
+    for aml in amls: 
+        strbegin = "<TD> "
+        strend = "</TD> "
+        date = False
+        if aml.date_maturity: 
+            date = aml.date_maturity
+            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+        else:
+            if aml.date <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            else:
+                strbegin = "<TD>"
+                strend = "</TD>"
+            date = aml.date
+        block = " "
+        if aml.blocked: 
+            block = "X"
+        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+%>
 <tr>
-<td>
-${aml.date}
-</td>
-<td>
-${aml.ref}
-</td>
-<td>
-% if aml.date_maturity:
-${aml.date_maturity}
-% else: 
-${aml.date}
-% endif
-</td>
-<td>
-${aml.debit}
-</td>
-<td>
-% if aml.blocked:
- X
-% endif
-</td>
+</tr>
+% for aml in amls: 
+<tr>
+${mel[aml.id]}
 </tr>
 % endfor
-</table>   
+
+
+</table>
+<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
     <br/>
 </div>
             ]]></field>
@@ -142,7 +171,7 @@ ${aml.debit}
         <record id="email_template_account_followup_level2" model="email.template">
             <field name="name">Followup of overdue invoices level 2</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Followup</field>
+            <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -161,44 +190,59 @@ In case of any queries concerning this matter, do not hesitate to contact our ac
 <br/>
 Best Regards,
     
+<br/>
+${user.name}
+    
+<br/>
+<br/>
 
     <table width=80%>
 
         <tr>
         	<td>Invoice date</td>
         	<td>Reference</td>
-            <td>Maturity date</td>
+            <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
-% for aml in object.accountmoveline_ids : 
-
+<%
+    amls = object.accountmoveline_ids
+    mel = {}
+    for aml in amls: 
+        strbegin = "<TD> "
+        strend = "</TD> "
+        date = False
+        if aml.date_maturity: 
+            date = aml.date_maturity
+            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+        else:
+            if aml.date <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            else:
+                strbegin = "<TD>"
+                strend = "</TD>"
+            date = aml.date
+        block = " "
+        if aml.blocked: 
+            block = "X"
+        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+%>
 <tr>
-<td>
-${aml.date}
-</td>
-<td>
-${aml.ref}
-</td>
-<td>
-% if aml.date_maturity:
-${aml.date_maturity}
-% else: 
-${aml.date}
-% endif
-</td>
-<td>
-${aml.debit}
-</td>
-<td>
-% if aml.blocked:
- X
-% endif
-</td>
+</tr>
+% for aml in amls: 
+<tr>
+${mel[aml.id]}
 </tr>
 % endfor
-</table>   
+
+
+</table>
+<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
+    <br/> 
     <br/>
 </div>
             ]]></field>
@@ -229,46 +273,57 @@ Best Regards,
 Best Regards,
 </br>
 </br>
-{$user.name}
-<p>
+<br/>
+${user.name}
+    
+<br/>
+<br/>
+
     <table width=80%>
+
         <tr>
         	<td>Invoice date</td>
         	<td>Reference</td>
-            <td>Maturity date</td>
+            <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
-
-% for aml in object.accountmoveline_ids : 
-
+<%
+    amls = object.accountmoveline_ids
+    mel = {}
+    for aml in amls: 
+        strbegin = "<TD> "
+        strend = "</TD> "
+        date = False
+        if aml.date_maturity: 
+            date = aml.date_maturity
+            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+        else:
+            if aml.date <= ctx['current_date'] and aml.debit > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            else:
+                strbegin = "<TD>"
+                strend = "</TD>"
+            date = aml.date
+        block = " "
+        if aml.blocked: 
+            block = "X"
+        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+%>
 <tr>
-<td>
-${aml.date}
-</td>
-<td>
-${aml.ref}
-</td>
-<td>
-% if aml.date_maturity:
-${aml.date_maturity}
-% else: 
-${aml.date}
-% endif
-</td>
-<td>
-${aml.debit}
-</td>
-<td>
-% if aml.blocked:
- X
-% endif
-</td>
+</tr>
+% for aml in amls: 
+<tr>
+${mel[aml.id]}
 </tr>
 % endfor
+
 </table>
-</p>   
+<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
     <br/>
 </div>
             ]]></field>

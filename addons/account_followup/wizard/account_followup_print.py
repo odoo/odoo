@@ -127,13 +127,13 @@ class account_followup_print(osv.osv_memory):
         partner_obj = self.pool.get('res.partner')
         partner_ids_to_print = []
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
-            if partner.max_followup_id.phonecall:
-                partner_obj.do_partner_phonecall(cr, uid, [partner.partner_id.id], context)
+            if partner.max_followup_id.manual_action:
+                partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_email:
                 partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
-            partner_obj.message_post(cr, uid, [partner.partner_id.id], body="Follow-up letter will be sent", context=context)
+            partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent"), context=context)
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 

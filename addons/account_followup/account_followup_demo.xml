@@ -9,9 +9,8 @@
         </record>
 
         <record id="demo_followup_line1" model="account_followup.followup.line">
-            <field name="name">Level 0 : 15 net days</field>
+            <field name="name">Level 0 : 15 days</field>
             <field name="sequence">0</field>
-            <field name="start">days</field>
             <field name="delay">15</field>
             <field name="followup_id" ref="demo_followup1"/>
             <field name="description">
@@ -27,9 +26,8 @@ Best Regards,
         </record>
 
         <record id="demo_followup_line2" model="account_followup.followup.line">
-            <field name="name">Level 1 : 30 net days</field>
+            <field name="name">Level 1 : 30 days</field>
             <field name="sequence">1</field>
-            <field name="start">days</field>
             <field name="delay">30</field>
             <field name="followup_id" ref="demo_followup1"/>
             <field name="email_template_id" ref="email_template_account_followup_level1"/>
@@ -50,9 +48,8 @@ Best Regards,
         </record>
 
         <record id="demo_followup_line3" model="account_followup.followup.line">
-            <field name="name">Level 2 : 45 days end of month</field>
+            <field name="name">Level 2 : 45 days</field>
             <field name="sequence">2</field>
-            <field name="start">end_of_month</field>
             <field name="delay">45</field>
             <field name="followup_id" ref="demo_followup1"/>
             <field name="email_template_id" ref="email_template_account_followup_level2"/>
