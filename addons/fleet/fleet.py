@@ -276,6 +276,7 @@ class fleet_vehicle(osv.Model):
         for record in self.browse(cr, uid, ids, context=context):
             overdue = False
             due_soon = False
+            total = 0
             name = ''
             for element in record.log_contracts:
                 if element.state in ('open', 'toclose') and element.expiration_date:
@@ -286,8 +287,10 @@ class fleet_vehicle(osv.Model):
                     diff_time = (due_time-current_date).days
                     if diff_time < 0:
                         overdue = True
+                        total+=1
                     if diff_time<15 and diff_time>=0:
                             due_soon = True;
+                            total+=1
                     if overdue or due_soon:
                         ids = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id', '=', record.id), ('state', 'in', ('open', 'toclose'))], limit=1, order='expiration_date asc')
                         if len(ids) > 0:
@@ -297,7 +300,7 @@ class fleet_vehicle(osv.Model):
             res[record.id] = {
                 'contract_renewal_overdue': overdue,
                 'contract_renewal_due_soon': due_soon,
-                'contract_renewal_total': (overdue + due_soon - 1), #we remove 1 from the real total for display purposes
+                'contract_renewal_total': (total - 1), #we remove 1 from the real total for display purposes
                 'contract_renewal_name': name,
             }
         return res
@@ -476,6 +479,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         }
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
+        #need to cast in float because the value returned by onchange isn't automatically cast into float, so 3 is consider as an integer
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
@@ -489,6 +493,7 @@ class fleet_vehicle_log_fuel(osv.Model):
             return {}
 
     def on_change_price_per_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
+        #need to cast in float because the value returned by onchange isn't automatically cast into float, so 3 is consider as an integer
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
@@ -502,6 +507,7 @@ class fleet_vehicle_log_fuel(osv.Model):
             return {}
 
     def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
+        #need to cast in float because the value returned by onchange isn't automatically cast into float, so 3 is consider as an integer
         liter = float(liter)
         price_per_liter = float(price_per_liter)
         amount = float(amount)
