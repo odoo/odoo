@@ -67,6 +67,7 @@
 
         <record model="res.partner" id="base.partner_root">
             <field name="name">Administrator</field>
+            <field name="email">admin@example.com</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
         </record>
@@ -76,7 +77,8 @@
             <field name="company_id" ref="main_company"/>
             <field name="company_ids" eval="[(4, ref('main_company'))]"/>
             <field name="menu_id" ref="action_menu_admin"/>
-            <field name="signature">--\nAdministrator</field>
+            <field name="signature">--
+Administrator</field>
         </record>
 
         <record id="main_partner" model="res.partner">
