@@ -238,3 +238,27 @@ class TestGlobalDefaults(common.TransactionCase):
                 'user_id': False,
                 'is_default': True,
             })
+
+    @fixtures(
+        ('ir.filters', dict(name='a', user_id=False, model_id='ir.filters')),
+        ('ir.filters', dict(name='b', is_default=True, user_id=False, model_id='ir.filters')),
+    )
+    def test_update_default_filter(self):
+        """
+        Replacing the current default global filter should not generate any error
+        """
+        Filters = self.registry('ir.filters')
+        context_value = "{'some_key': True}"
+        Filters.create_or_replace(self.cr, self.USER_ID, {
+            'name': 'b',
+            'model_id': 'ir.filters',
+            'user_id': False,
+            'context': context_value,
+            'is_default': True,
+        })
+        filters = Filters.get_filters(self.cr, self.USER_ID, 'ir.filters')
+
+        self.assertItemsEqual(map(noid, filters), [
+            dict(name='a', user_id=False, is_default=False, domain='[]', context='{}'),
+            dict(name='b', user_id=False, is_default=True, domain='[]', context=context_value),
+        ])
