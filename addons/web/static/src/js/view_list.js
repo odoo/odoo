@@ -1000,7 +1000,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         } else if (column.type === 'many2many') {
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
-            if (value instanceof Array && !_.isEmpty(value)) {
+            if (value instanceof Array && !_.isEmpty(value)
+                    && !record.get(column.id + '__display')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
@@ -1016,8 +1017,13 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 }
                 new instance.web.Model(column.relation)
                     .call('name_get', [ids]).done(function (names) {
-                        record.set(column.id, _(names).pluck(1).join(', '));
-                    })
+                        // FIXME: nth horrible hack in this poor listview
+                        record.set(column.id + '__display',
+                                   _(names).pluck(1).join(', '));
+                        record.set(column.id, ids);
+                    });
+                // temp empty value
+                record.set(column.id, false);
             }
         }
         return column.format(record.toForm().data, {
@@ -2015,6 +2021,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
     'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2207,6 +2214,15 @@ instance.web.list.Many2OneButton = instance.web.list.Column.extend({
         this.has_value = !!row_data[this.id].value;
         return QWeb.render('Many2OneButton.cell', {'widget': this});
     },
+});
+instance.web.list.Many2Many = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (row_data[this.id].value) {
+            // If value, use __display version for printing
+            row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
+    }
 });
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
