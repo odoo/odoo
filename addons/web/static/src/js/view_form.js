@@ -114,7 +114,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
-        this.on_change_mutex = new $.Mutex();
+        this.on_change_list = [];
+        this.save_list = [];
         this.reload_mutex = new $.Mutex();
         this.__clicked_inside = false;
         this.__blur_timeout = null;
@@ -466,7 +467,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var splitted = field.split('.');
             if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                 if (parent_fields === null) {
-                    parent_fields = self.dataset.parent_view.get_fields_values([self.dataset.child_name]);
+                    parent_fields = self.dataset.parent_view.get_fields_values();
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
@@ -492,67 +493,72 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     do_onchange: function(widget, processed) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
-            try {
-                var def;
-                processed = processed || [];
-                processed.push(widget.name);
-                var on_change = widget.node.attrs.on_change;
-                if (on_change) {
-                    var change_spec = self.parse_on_change(on_change, widget);
-                    def = self.rpc('/web/dataset/onchange', {
-                        model: self.dataset.model,
-                        method: change_spec.method,
-                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                        context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                    });
-                } else {
-                    def = $.when({});
-                }
-                return def.pipe(function(response) {
-                    if (widget.field['change_default']) {
-                        var fieldname = widget.name
-                        var value_;
-                        if (response.value && (fieldname in response.value)) {
-                            // Use value from onchange if onchange executed
-                            value_ = response.value[fieldname];
-                        } else {
-                            // otherwise get form value for field
-                            value_ = self.fields[fieldname].get_value();
-                        }
-                        var condition = fieldname + '=' + value_;
-
-                        if (value_) {
-                            return self.rpc('/web/dataset/call', {
-                                model: 'ir.values',
-                                method: 'get_defaults',
-                                args: [self.model, condition]
-                            }).pipe(function (results) {
-                                if (!results.length) {
-                                    return response;
-                                }
-                                if (!response.value) {
-                                    response.value = {};
-                                }
-                                for(var i=0; i<results.length; ++i) {
-                                    // [whatever, key, value]
-                                    var triplet = results[i];
-                                    response.value[triplet[1]] = triplet[2];
-                                }
-                                return response;
-                            });
-                        }
-                    }
-                    return response;
-                }).pipe(function(response) {
-                    return self.on_processed_onchange(response, processed);
+        this.on_change_list = [{widget: widget, processed: processed}].concat(this.on_change_list);
+        return this._process_operations();
+    },
+    _process_onchange: function(on_change_obj) {
+        var self = this;
+        var widget = on_change_obj.widget;
+        var processed = on_change_obj.processed;
+        try {
+            var def;
+            processed = processed || [];
+            processed.push(widget.name);
+            var on_change = widget.node.attrs.on_change;
+            if (on_change) {
+                var change_spec = self.parse_on_change(on_change, widget);
+                def = self.rpc('/web/dataset/onchange', {
+                    model: self.dataset.model,
+                    method: change_spec.method,
+                    args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                    context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
                 });
-            } catch(e) {
-                console.error(e);
-                instance.webclient.crashmanager.show_message(e);
-                return $.Deferred().reject();
+            } else {
+                def = $.when({});
             }
-        });
+            return def.pipe(function(response) {
+                if (widget.field['change_default']) {
+                    var fieldname = widget.name
+                    var value_;
+                    if (response.value && (fieldname in response.value)) {
+                        // Use value from onchange if onchange executed
+                        value_ = response.value[fieldname];
+                    } else {
+                        // otherwise get form value for field
+                        value_ = self.fields[fieldname].get_value();
+                    }
+                    var condition = fieldname + '=' + value_;
+
+                    if (value_) {
+                        return self.rpc('/web/dataset/call', {
+                            model: 'ir.values',
+                            method: 'get_defaults',
+                            args: [self.model, condition]
+                        }).pipe(function (results) {
+                            if (!results.length) {
+                                return response;
+                            }
+                            if (!response.value) {
+                                response.value = {};
+                            }
+                            for(var i=0; i<results.length; ++i) {
+                                // [whatever, key, value]
+                                var triplet = results[i];
+                                response.value[triplet[1]] = triplet[2];
+                            }
+                            return response;
+                        });
+                    }
+                }
+                return response;
+            }).pipe(function(response) {
+                return self.on_processed_onchange(response, processed);
+            });
+        } catch(e) {
+            console.error(e);
+            instance.webclient.crashmanager.show_message(e);
+            return $.Deferred().reject();
+        }
     },
     on_processed_onchange: function(result, processed) {
         try {
@@ -588,6 +594,38 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
+    _process_operations: function() {
+        var self = this;
+        return this.mutating_mutex.exec(function() {
+            function iterate() {
+                var on_change_obj = self.on_change_list.shift();
+                if (on_change_obj) {
+                    return self._process_onchange(on_change_obj).pipe(function() {
+                        return iterate();
+                    });
+                }
+                var defs = [];
+                _.each(self.fields, function(field) {
+                    defs.push(field.commit_value());
+                });
+                var args = _.toArray(arguments);
+                return $.when.apply($, defs).pipe(function() {
+                    if (self.on_change_list.length !== 0) {
+                        return iterate();
+                    }
+                    var save_obj = self.save_list.pop();
+                    if (save_obj) {
+                        return self._process_save(save_obj).pipe(function() {
+                            save_obj.ret = _.toArray(arguments);
+                            return iterate();
+                        });
+                    }
+                    return $.when();
+                });
+            };
+            return iterate();
+        });
+    },
     _internal_set_values: function(values, exclude) {
         exclude = exclude || [];
         for (var f in values) {
@@ -611,7 +649,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     set_values: function(values) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
+        return this.mutating_mutex.exec(function() {
             self._internal_set_values(values);
         });
     },
@@ -765,8 +803,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     save: function(prepend_on_create) {
         var self = this;
-        return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
-            try {
+        var save_obj = {prepend_on_create: prepend_on_create, ret: null};
+        this.save_list.push(save_obj);
+        return this._process_operations().pipe(function() {
+            return $.when.apply($, save_obj.ret);
+        });
+    },
+    _process_save: function(save_obj) {
+        var self = this;
+        var prepend_on_create = save_obj.prepend_on_create;
+        try {
             var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
@@ -810,11 +856,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
                 return save_deferral;
             }
-            } catch (e) {
-                console.error(e);
-                return $.Deferred().reject();
-            }
-        });});
+        } catch (e) {
+            console.error(e);
+            return $.Deferred().reject();
+        }
     },
     on_invalid: function() {
         var warnings = _(this.fields).chain()
@@ -916,15 +961,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return obj instanceof instance.web.form.FormWidget;
         });
     },
-    get_fields_values: function(blacklist) {
-        blacklist = blacklist || [];
+    get_fields_values: function() {
         var values = {};
         var ids = this.get_selected_ids();
         values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value_, key) {
-            if (_.include(blacklist, key)) {
-                return;
-            }
             values[key] = value_.get_value();
         });
         return values;
@@ -1085,9 +1126,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     compute_domain: function(expression) {
         return instance.web.form.compute_domain(expression, this.fields);
     },
-    _build_view_fields_values: function(blacklist) {
+    _build_view_fields_values: function() {
         var a_dataset = this.dataset;
-        var fields_values = this.get_fields_values(blacklist);
+        var fields_values = this.get_fields_values();
         var active_id = a_dataset.ids[a_dataset.index];
         _.extend(fields_values, {
             active_id: active_id || false,
@@ -1096,13 +1137,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             parent: {}
         });
         if (a_dataset.parent_view) {
-            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+            fields_values.parent = a_dataset.parent_view.get_fields_values();
         }
         return fields_values;
     },
-    build_eval_context: function(blacklist) {
+    build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
 });
 
@@ -1798,7 +1839,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
      * Builds a new context usable for operations related to fields by merging
      * the fields'context with the action's context.
      */
-    build_context: function(blacklist) {
+    build_context: function() {
         // only use the model's context if there is not context on the node
         var v_context = this.node.attrs.context;
         if (! v_context) {
@@ -1806,7 +1847,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         }
 
         if (v_context.__ref || true) { //TODO: remove true
-            var fields_values = this.field_manager.build_eval_context(blacklist);
+            var fields_values = this.field_manager.build_eval_context();
             v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
         return v_context;
@@ -1979,6 +2020,11 @@ instance.web.form.FieldInterface = {
      * Called when the translate button is clicked.
      */
     on_translate: function() {},
+    /**
+        This method is called by the form view before reading on_change values and before saving. It tells
+        the field to save its value before reading it using get_value(). Must return a promise.
+    */
+    commit_value: function() {},
 };
 
 /**
@@ -2122,7 +2168,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         }
         this.$el.attr('style', style);
         this.$el.css('minHeight', height);
-    }
+    },
+    commit_value: function() {
+        return $.when();
+    },
 });
 
 /**
@@ -2216,6 +2265,13 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function() {
         this.$('input:first').focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$('input').css({
+            height: height,
+            width: width
+        });
     }
 });
 
@@ -2442,6 +2498,10 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         if (this.datewidget && this.datewidget.$input) {
             this.datewidget.$input.focus();
         }
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.datewidget.$input.css('height', height);
     }
 });
 
@@ -2502,7 +2562,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         this.$textarea.focus();
     },
     set_dimensions: function (height, width) {
-        this._super();
+        this._super(height, width);
         this.$textarea.css({
             width: width,
             minHeight: height
@@ -2664,6 +2724,13 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     },
     focus: function() {
         this.$el.find('select:first').focus();
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$('select').css({
+            height: height,
+            width: width
+        });
     }
 });
 
@@ -3146,6 +3213,62 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.$input.css('height', height);
+    }
+});
+
+instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
+    template: 'Many2OneButton',
+    init: function(field_manager, node) {
+        this._super.apply(this, arguments);
+    },
+    start: function() {
+        this._super.apply(this, arguments);
+        this.set_button();
+    },
+    set_button: function() {
+        var self = this;
+        if (this.$button) {
+            this.$button.remove();
+        }
+        var options = {};
+        try {
+            options = py.eval(this.node.attrs.options);
+        } catch (e) {}
+        if (options.label) {
+            this.string = this.get('value') ? _t(options.label.edit) : _t(options.label.create);
+        } else {
+            this.string = '';
+        }
+        this.node.attrs.icon = this.get('value') ? '/web/static/src/img/icons/gtk-yes.png' : '/web/static/src/img/icons/gtk-no.png';
+        this.$button = $(QWeb.render('WidgetButton', {'widget': this}));
+        this.$el.append(this.$button);
+        this.$button.on('click', self.on_click);
+    },
+    on_click: function(ev) {
+        var self = this;
+        this.popup =  new instance.web.form.FormOpenPopup(this);
+        this.popup.show_element(
+            this.field.relation,
+            this.get('value'),
+            this.build_context(),
+            {title: this.string}
+        );
+        this.popup.on('create_completed write_completed', self, function(r) {
+            self.set_value(r);
+        });
+    },
+    set_value: function(value_) {
+        var self = this;
+        if (value_ instanceof Array) {
+            value_ = value_[0];
+        }
+        value_ = value_ || false;
+        this.set('value', value_);
+        this.set_button();
+     },
 });
 
 /*
@@ -3235,10 +3358,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.reload_current_view();
     },
     trigger_on_change: function() {
-        var tmp = this.doing_on_change;
-        this.doing_on_change = true;
         this.trigger('changed_value');
-        this.doing_on_change = tmp;
     },
     load_views: function() {
         var self = this;
@@ -3433,7 +3553,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        this.save_any_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -3450,33 +3569,24 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
+    commit_value: function() {
+        return this.save_any_view();
+    },
     save_any_view: function() {
-        if (this.doing_on_change)
-            return false;
-        return this.session.synchronized_mode(_.bind(function() {
-            if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-                this.viewmanager.views[this.viewmanager.active_view] &&
-                this.viewmanager.views[this.viewmanager.active_view].controller) {
-                var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-                if (this.viewmanager.active_view === "form") {
-                    if (!view.is_initialized.isResolved()) {
-                        return false;
-                    }
-                    var res = $.when(view.save());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in form view.");
-                    }
-                    return res;
-                } else if (this.viewmanager.active_view === "list") {
-                    var res = $.when(view.ensure_saved());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in list view.");
-                    }
-                    return res;
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            if (this.viewmanager.active_view === "form") {
+                if (!view.is_initialized.isResolved()) {
+                    return $.when(false);
                 }
+                return $.when(view.save());
+            } else if (this.viewmanager.active_view === "list") {
+                return $.when(view.ensure_saved());
             }
-            return false;
-        }, this));
+        }
+        return $.when(false);
     },
     is_syntax_valid: function() {
         if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
@@ -3544,7 +3654,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
-        this.context = this.o2m.build_context([this.o2m.name]);
+        this.context = this.o2m.build_context();
         return this.context;
     }
 });
@@ -3699,7 +3809,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
         // FIXME: why isn't there an API for this?
         if (this.editor.form.$el.hasClass('oe_form_dirty')) {
-            this.save_edition();
+            this.ensure_saved();
             return;
         }
         this.cancel_edition();
@@ -3818,11 +3928,11 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
 });
 
 var lazy_build_o2m_kanban_view = function() {
-if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
-    return;
-instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
-});
-}
+    if (! instance.web_kanban || instance.web.form.One2ManyKanbanView)
+        return;
+    instance.web.form.One2ManyKanbanView = instance.web_kanban.KanbanView.extend({
+    });
+};
 
 instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2ManyTags",
@@ -3837,7 +3947,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         if (this.get("effective_readonly"))
             return;
         var self = this;
-        self.$text = $("textarea", this.$el);
+        self.$text = this.$("textarea");
         self.$text.textext({
             plugins : 'tags arrow autocomplete',
             autocomplete: {
@@ -3861,9 +3971,8 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                 },
                 tags: {
                     isTagAllowed: function(tag) {
-                        if (! tag.name)
-                            return false;
-                        return true;
+                        return !!tag.name;
+
                     },
                     removeTag: function(tag) {
                         var id = tag.data("id");
@@ -3895,7 +4004,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
-        $("textarea", this.$el).focusout(function() {
+        self.$text.focusout(function() {
             self.$text.trigger("setInputData", "");
         }).keydown(function(e) {
             if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
@@ -3920,8 +4029,10 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     render_value: function() {
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
-        var values = self.get("value")
+        var values = self.get("value");
         var handle_names = function(data) {
+            if (self.isDestroyed())
+                return;
             var indexed = {};
             _.each(data, function(el) {
                 indexed[el[0]] = el;
@@ -3929,7 +4040,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             data = _.map(values, function(el) { return indexed[el]; });
             if (! self.get("effective_readonly")) {
                 self.tags.containerElement().children().remove();
-                $("textarea", self.$el).css("padding-left", "3px");
+                self.$('textarea').css("padding-left", "3px");
                 self.tags.addTags(_.map(data, function(el) {return {name: el[1], id:el[0]};}));
             } else {
                 self.$el.html(QWeb.render("FieldMany2ManyTag", {elements: data}));
@@ -4332,13 +4443,14 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.create_function = function(data, sup) {
             var fct = self.options.create_function || sup;
             return fct.call(this, data).then(function(r) {
+                self.trigger('create_completed saved', r);
                 self.created_elements.push(r);
             });
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
             return fct.call(this, id, data, options).then(function() {
-                self.trigger('write_completed');
+                self.trigger('write_completed saved');
             });
         };
         this.dataset.parent_view = this.options.parent_view;
@@ -4415,9 +4527,11 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             this.select_elements(this.created_elements);
             this.created_elements = [];
         }
+        this.trigger('closed');
         this.destroy();
     },
     destroy: function () {
+        this.trigger('closed');
         this.$el.dialog('close');
         this._super();
     },
@@ -4821,6 +4935,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
+    placeholder: "/web/static/src/img/placeholder.png",
     render_value: function() {
         var self = this;
         var url;
@@ -4834,7 +4949,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
                 this.view.dataset.model +'&id=' + id + '&field=' + field + '&t=' + (new Date().getTime());
         } else {
-            url = "/web/static/src/img/placeholder.png";
+            url = this.placeholder;
         }
         var $img = $(QWeb.render("FieldBinaryImage-img", { widget: this, url: url }));
         this.$el.find('> img').remove();
@@ -4847,10 +4962,10 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             $img.css("margin-left", "" + (self.options.size[0] - $img.width()) / 2 + "px");
             $img.css("margin-top", "" + (self.options.size[1] - $img.height()) / 2 + "px");
         });
-    },
-    on_file_change: function() {
-        this.render_value();
-        this._super.apply(this, arguments);
+        $img.on('error', function() {
+            $img.attr('src', self.placeholder);
+            instance.webclient.notification.warn(_t("Image"), _t("Could not display the selected image."));
+        });
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.internal_set_value(file_base64);
@@ -5130,6 +5245,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'datetime' : 'instance.web.form.FieldDatetime',
     'selection' : 'instance.web.form.FieldSelection',
     'many2one' : 'instance.web.form.FieldMany2One',
+    'many2onebutton' : 'instance.web.form.Many2OneButton',
     'many2many' : 'instance.web.form.FieldMany2Many',
     'many2many_tags' : 'instance.web.form.FieldMany2ManyTags',
     'many2many_kanban' : 'instance.web.form.FieldMany2ManyKanban',

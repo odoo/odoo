@@ -970,7 +970,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             // set) a human-readable version. m2o does not have this issue
             // because the non-human-readable is just a number, where the
             // human-readable version is a pair
-            if (value && (ref_match = /([\w\.]+),(\d+)/.exec(value))) {
+            if (value && (ref_match = /^([\w\.]+),(\d+)$/.exec(value))) {
                 // reference values are in the shape "$model,$id" (as a
                 // string), we need to split and name_get this pair in order
                 // to get a correctly displayable value in the field
@@ -1306,9 +1306,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         process_modifiers: false
                     });
                 } catch (e) {
-                    group_label = row_data[group_column.id].value;
+                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
                 }
-                $group_column.text(_.str.sprintf("%s (%d)",
+                // group_label is html-clean (through format or explicit
+                // escaping if format failed), can inject straight into HTML
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {
@@ -2010,6 +2012,7 @@ instance.web.list.columns = new instance.web.Registry({
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
+    'field.many2onebutton': 'instance.web.list.Many2OneButton',
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2196,6 +2199,12 @@ instance.web.list.Handle = instance.web.list.Column.extend({
     _format: function (row_data, options) {
         return '<div class="oe_list_handle">';
     }
+});
+instance.web.list.Many2OneButton = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        this.has_value = !!row_data[this.id].value;
+        return QWeb.render('Many2OneButton.cell', {'widget': this});
+    },
 });
 };
 // vim:et fdc=0 fdl=0 foldnestmax=3 fdm=syntax:
