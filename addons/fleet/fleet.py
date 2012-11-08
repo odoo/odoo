@@ -210,9 +210,10 @@ class fleet_vehicle(osv.Model):
     def return_action_to_open(self, cr, uid, ids, context=None):
         """ This opens the xml view specified in xml_id for the current vehicle """
         if context is None:
-            context= {}
+            context = {}
         if context.get('xml_id'):
             res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet', context['xml_id'], context=context)
+            res['context'] = context
             res['context'].update({'default_vehicle_id': ids[0]})
             res['domain'] = [('vehicle_id','=', ids[0])]
             return res
@@ -222,7 +223,10 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle, groupby default to only show effective costs
             @return: the costs log view
         """
+        if context is None:
+            context = {}
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_costs_act', context=context)
+        res['context'] = context
         res['context'].update({
             'default_vehicle_id': ids[0],
             'search_default_parent_false': True
