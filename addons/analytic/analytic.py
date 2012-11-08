@@ -99,7 +99,10 @@ class account_analytic_account(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         full_ids = []
-        full_ids.append(ids)
+        if isinstance(ids,list):
+            full_ids.extend(ids)
+        else:
+            full_ids.append(ids)
         for id in full_ids:
             elmt = self.browse(cr, uid, id, context=context)
             res.append((id, self._get_one_full_name(elmt)))
