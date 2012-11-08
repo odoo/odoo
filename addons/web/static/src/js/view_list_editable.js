@@ -242,7 +242,9 @@ openerp.web.list_editable = function (instance) {
             if (!this.editor.is_editing()) { return; }
             for(var i=0, len=this.fields_for_resize.length; i<len; ++i) {
                 var item = this.fields_for_resize[i];
-                this.resize_field(item.field, item.cell);
+                if (!item.field.get('invisible')) {
+                    this.resize_field(item.field, item.cell);
+                }
             }
         },
         /**
@@ -254,7 +256,6 @@ openerp.web.list_editable = function (instance) {
          */
         resize_field: function (field, cell) {
             var $cell = $(cell);
-            var position = $cell.position();
 
             field.set_dimensions($cell.outerHeight(), $cell.outerWidth());
             field.$el.position({
