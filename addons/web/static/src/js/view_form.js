@@ -2498,6 +2498,10 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         if (this.datewidget && this.datewidget.$input) {
             this.datewidget.$input.focus();
         }
+    },
+    set_dimensions: function (height, width) {
+        this._super(height, width);
+        this.datewidget.$input.css('height', height);
     }
 });
 
