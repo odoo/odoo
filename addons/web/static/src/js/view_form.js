@@ -4444,8 +4444,8 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
-            return fct.call(this, id, data, options).done(function() {
-                self.trigger('write_completed saved');
+            return fct.call(this, id, data, options).done(function(r) {
+                self.trigger('write_completed saved', r);
             });
         };
         this.dataset.parent_view = this.options.parent_view;
