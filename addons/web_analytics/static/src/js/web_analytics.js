@@ -23,7 +23,7 @@ openerp.web_analytics = function(instance) {
     if (instance.webclient) {
 
         // Set the account and domain to start tracking
-        _gaq.push(['_setAccount', 'UA-35793871-1']);    // vta@openerp.com localhost
+        _gaq.push(['_setAccount', 'UA-7333765-1']);    // vta@openerp.com localhost
         _gaq.push(['_setDomainName', 'none']);  // Change for the real domain
 
         // Track user types
