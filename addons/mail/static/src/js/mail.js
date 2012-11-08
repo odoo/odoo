@@ -178,7 +178,7 @@ openerp.mail = function (session) {
             this.is_favorite = datasets.is_favorite ||  false,
             this.thread_level = datasets.thread_level ||  0,
             this.to_read = datasets.to_read || false,
-            this.author_id = datasets.author_id ||  [this.options.root_thread.pid],
+            this.author_id = datasets.author_id || false,
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
             this._date = datasets.date;
@@ -213,8 +213,10 @@ openerp.mail = function (session) {
             } 
             if (this.type == 'email') {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
-            } else {
+            } else if (this.author_id) {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
+            } else {
+                this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
             for (var l in this.attachment_ids) {
                 var attach = this.attachment_ids[l];
@@ -1442,11 +1444,6 @@ openerp.mail = function (session) {
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
-
-            new session.web.DataSetSearch(this, 'res.users').call('read', [this.session.uid, ['partner_id']])
-                .then(function (result) {
-                    self.session.partner_id = result.partner_id || false;
-                });
         },
 
         start: function (options) {
