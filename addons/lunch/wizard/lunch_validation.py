@@ -1,6 +1,6 @@
 # -*- encoding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2012 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,10 +15,15 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import osv, fields
 
-import lunch_validation
-import lunch_cancel
-import lunch_order
+class lunch_validation(osv.Model):
+    """ lunch validation """
+    _name = 'lunch.validation'
+    _description = 'lunch validation for order'
+
+    def confirm(self,cr,uid,ids,context=None):
+        return self.pool.get('lunch.order.line').confirm(cr, uid, ids, context=context)
