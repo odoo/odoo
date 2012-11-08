@@ -26,7 +26,8 @@ openerp.mail = function (session) {
                     'default_use_template', 'default_partner_ids', 'default_model',
                     'default_res_id', 'default_content_subtype', , 'default_subject',
                     'default_body', 'active_id', 'lang', 'bin_raw', 'tz',
-                    'active_model', 'edi_web_url_view', 'active_ids']
+                    'active_model', 'edi_web_url_view', 'active_ids', 
+                    'default_attachment_ids']
                 for (var key in action.context) {
                     if (_.indexOf(context_keys, key) == -1) {
                         action.context[key] = null;
@@ -162,9 +163,9 @@ openerp.mail = function (session) {
             // data of this message
             this.id = datasets.id ||  false,
             this.last_id = this.id,
-            this.model = datasets.model || false,
+            this.model = datasets.model || this.context.default_model || false,
+            this.res_id = datasets.res_id || this.context.default_res_id ||  false,
             this.parent_id = datasets.parent_id ||  false,
-            this.res_id = datasets.res_id ||  false,
             this.type = datasets.type ||  false,
             this.is_author = datasets.is_author ||  false,
             this.is_private = datasets.is_private ||  false,
@@ -433,7 +434,6 @@ openerp.mail = function (session) {
         /* unlink the file on the server and reload display
          */
         on_attachment_delete: function (event) {
-            console.log('delete');
             event.stopPropagation();
             var attachment_id=$(event.target).data("id");
             if (attachment_id) {
@@ -461,7 +461,7 @@ openerp.mail = function (session) {
 
             this.$('.oe_cancel').on('click', _.bind( this.on_cancel, this) );
             this.$('.oe_post').on('click', _.bind( this.on_message_post, this) );
-            this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, 'reply') );
+            this.$('.oe_full').on('click', _.bind( this.on_compose_fullmail, this, this.id ? 'reply' : 'comment') );
 
             /* stack for don't close the compose form if the user click on a button */
             this.$('.oe_msg_footer').on('mousedown', _.bind( function () { this.stay_open = true; }, this));
@@ -478,6 +478,8 @@ openerp.mail = function (session) {
         on_compose_fullmail: function (default_composition_mode) {
             if (default_composition_mode == 'reply') {
                 var context = {
+                    'default_model': this.context.default_model,
+                    'default_res_id': this.context.default_res_id,
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
@@ -993,8 +995,8 @@ openerp.mail = function (session) {
             // data of this thread
             this.id =  datasets.id || false,
             this.last_id =  datasets.last_id || false,
-            this.model =  datasets.model || false,
             this.parent_id =  datasets.parent_id || false,
+
             this.is_private =  datasets.is_private || false,
             this.author_id =  datasets.author_id || false,
             this.thread_level =  (datasets.thread_level+1) || 0,
@@ -1232,7 +1234,7 @@ openerp.mail = function (session) {
             // check if the message is already create
             for (var i in self.messages) {
                 if (self.messages[i] && self.messages[i].id == message.id) {
-                    console.log('Warning double', message.id);
+                    console.log('Reload message', message.id);
                     self.messages[i].destroy();
                 }
             }
@@ -1496,7 +1498,7 @@ openerp.mail = function (session) {
         template: 'mail.record_thread',
 
         init: function (parent, node) {
-            this._super.apply(parent, arguments);
+            this._super.apply(this, arguments);
             this.node = _.clone(node);
 
             this.node.params = _.extend({
@@ -1504,15 +1506,10 @@ openerp.mail = function (session) {
                 'show_reply_button': false,
                 'show_read_unread_button': false,
                 'show_compose_message': this.view.is_action_enabled('edit'),
-                'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
                 'show_compact_message': 1,
             }, this.node.params);
-            this.node.context = {
-                'default_res_id': this.view.datarecord.id || false,
-                'default_model': this.view.model || false,
-            };
-            this.node.domain = this.node.domain || [];
 
+            this.domain = this.node.params && this.node.params.domain || [];
         },
 
         start: function () {
@@ -1528,17 +1525,26 @@ openerp.mail = function (session) {
 
         render_value: function () {
             var self = this;
+
             if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('oe_mail_thread').hide();
                 return;
             }
+
+            this.node.params = _.extend({
+                'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
+            }, this.node.params);
+            this.node.context = {
+                'default_res_id': this.view.datarecord.id || false,
+                'default_model': this.view.model || false,
+            };
 
             if (this.root) {
                 $('<span class="oe_mail-placeholder"/>').insertAfter(this.root.$el);
                 this.root.destroy();
             }
             // create and render Thread widget
-            this.root = new mail.Widget(this, _.extend(this.action, {
+            this.root = new mail.Widget(this, _.extend(this.node, {
                 'domain' : (this.domain || []).concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]),
                 
             }));
