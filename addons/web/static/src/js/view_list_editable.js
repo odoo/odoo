@@ -12,6 +12,8 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             this._super.apply(this, arguments);
 
+            this.saving_mutex = new $.Mutex();
+
             this._force_editability = null;
             this._context_editable = false;
             this.editor = this.make_editor();
@@ -162,10 +164,13 @@ openerp.web.list_editable = function (instance) {
          * @returns {$.Deferred}
          */
         ensure_saved: function () {
-            if (!this.editor.is_editing()) {
-                return $.when();
-            }
-            return this.save_edition();
+            var self = this;
+            return this.saving_mutex.exec(function() {
+                if (!self.editor.is_editing()) {
+                    return $.when();
+                }
+                return self.save_edition();
+            });
         },
         /**
          * Set up the edition of a record of the list view "inline"
