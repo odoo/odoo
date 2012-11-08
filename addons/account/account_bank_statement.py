@@ -486,22 +486,16 @@ class account_bank_statement(osv.osv):
         default['move_line_ids'] = []
         return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
 
-    def button_journal_entries(self, cr, uid, ids, context=None):      
-      mod_obj = self.pool.get('ir.model.data')
-      res = mod_obj.get_object_reference(cr, uid, 'account', 'view_move_line_tree')
-      res_id = res and res[1] or False
-      ctx = dict(context)
-      ctx.update({
-        'active_model': 'account.bank.statement',
-        'active_id': ids[0],
-      })
+    def button_journal_entries(self, cr, uid, ids, context=None):
+      ctx = (context or {}).copy()
+      ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
       return {
-        'view_type':'tree',
+        'view_type':'form',
         'view_mode':'tree',
         'res_model':'account.move.line',
-        'view_id':res_id,
+        'view_id':False,
         'type':'ir.actions.act_window',
-        'domain':[('statement_id','=',ctx.get('active_id'))],
+        'domain':[('statement_id','in',ids)],
         'context':ctx,
       }
 
