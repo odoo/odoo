@@ -198,7 +198,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var form = am.dialog_widget.views.form.controller;
         form.on("on_button_cancel", am.dialog, am.dialog.close);
         form.on('record_created', self, function(r) {
-            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).then(function(new_record) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).done(function(new_record) {
                 am.dialog.close();
                 var domain = self.dataset.domain.slice(0);
                 domain.push([self.group_by, '=', new_record[0][0]]);
@@ -212,7 +212,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     aggregates: {},
                 };
                 var new_group = new instance.web_kanban.KanbanGroup(self, [], datagroup, dataset);
-                self.do_add_groups([new_group]).then(function() {
+                self.do_add_groups([new_group]).done(function() {
                     $(window).scrollTo(self.groups.slice(-1)[0].$el, { axis: 'x' });
                 });
             });
@@ -224,14 +224,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.search_domain = domain;
         this.search_context = context;
         this.search_group_by = group_by;
-        $.when(this.has_been_loaded).then(function() {
+        $.when(this.has_been_loaded).done(function() {
             self.group_by = group_by.length ? group_by[0] : self.fields_view.arch.attrs.default_group_by;
             self.group_by_field = self.fields_view.fields[self.group_by] || {};
             self.grouped_by_m2o = (self.group_by_field.type === 'many2one');
             self.$buttons.find('.oe_alternative').toggle(self.grouped_by_m2o);
             self.$el.toggleClass('oe_kanban_grouped_by_m2o', self.grouped_by_m2o);
             var grouping = new instance.web.Model(self.dataset.model, context, domain).query().group_by(self.group_by);
-            $.when(grouping).then(function(groups) {
+            $.when(grouping).done(function(groups) {
                 if (groups) {
                     self.do_process_groups(groups);
                 } else {
@@ -252,7 +252,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 var dataset = new instance.web.DataSetSearch(self, self.dataset.model,
                     new instance.web.CompoundContext(self.dataset.get_context(), group.model.context()), group.model.domain());
                 return dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit })
-                    .pipe(function(records) {
+                    .then(function(records) {
                         self.dataset.ids.push.apply(self.dataset.ids, dataset.ids);
                         groups_array[index] = new instance.web_kanban.KanbanGroup(self, records, group, dataset);
                         if (!remaining--) {
@@ -268,16 +268,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.removeClass('oe_kanban_grouped').addClass('oe_kanban_ungrouped');
         this.add_group_mutex.exec(function() {
             var def = $.Deferred();
-            self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).then(function(records) {
+            self.dataset.read_slice(self.fields_keys.concat(['__last_update']), { 'limit': self.limit }).done(function(records) {
                 self.do_clear_groups();
                 var kgroup = new instance.web_kanban.KanbanGroup(self, records, null, self.dataset);
-                self.do_add_groups([kgroup]).then(function() {
+                self.do_add_groups([kgroup]).done(function() {
                     if (_.isEmpty(records)) {
                         self.no_result();
                     }
                     def.resolve();
                 });
-            }).then(null, function() {
+            }).done(null, function() {
                 def.reject();
             });
             return def;
@@ -306,7 +306,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 return group.insertBefore($last_td);
             }
         });
-        return $.when.apply(null, groups_started).then(function () {
+        return $.when.apply(null, groups_started).done(function () {
             self.on_groups_started();
             self.$el.appendTo($parent);
             _.each(self.groups, function(group) {
@@ -375,7 +375,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                             var tmp_group = self.groups.splice(start_index, 1)[0];
                             self.groups.splice(stop_index, 0, tmp_group);
                             var new_sequence = _.pluck(self.groups, 'value');
-                            (new instance.web.DataSet(self, self.group_by_field.relation)).resequence(new_sequence).then(function(r) {
+                            (new instance.web.DataSet(self, self.group_by_field.relation)).resequence(new_sequence).done(function(r) {
                                 if (r === false) {
                                     console.error("Kanban: could not resequence model '%s'. Probably no 'sequence' field.", self.group_by_field.relation);
                                 }
@@ -404,7 +404,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             record.group = new_group;
             var data = {};
             data[this.group_by] = new_group.value;
-            this.dataset.write(record.id, data, {}).then(function() {
+            this.dataset.write(record.id, data, {}).done(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
@@ -497,7 +497,7 @@ instance.web_kanban.KanbanView.postprocessing_widget_many2many_tags = function(s
         if(model_list_id[model].length>0){
             var block = self.$el.find(".oe_form_field.oe_tags[model='" + model + "']");
             var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
-            dataset.name_get(_.uniq( model_list_id[model] )).then(
+            dataset.name_get(_.uniq( model_list_id[model] )).done(
                 function(result) {
                     for(var t=0;t<result.length;t++){
                         block.filter(function(){ return this.getAttribute("data").match(new RegExp('(^|,)'+result[t][0]+'(,|$)')); })
@@ -557,7 +557,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$records = null;
 
         this.records = [];
-        this.$has_been_started.then(function() {
+        this.$has_been_started.done(function() {
             self.do_add_records(records);
         });
     },
@@ -638,10 +638,16 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     },
     do_show_more: function(evt) {
         var self = this;
-        this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
+        return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
             'offset': self.dataset_offset += self.view.limit
-        }).then(this.do_add_records);
+        }).then(function(records) {
+            records.forEach(function(r) {
+                self.view.dataset.ids.push(r.id);
+            });
+            self.do_add_records(records);
+            return records;
+        });
     },
     do_add_records: function(records, prepend) {
         var self = this;
@@ -704,7 +710,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     do_action_delete: function() {
         var self = this;
         if (confirm(_t("Are you sure to remove this column ?"))) {
-            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.value]).then(function(r) {
+            (new instance.web.DataSet(self, self.view.group_by_field.relation)).unlink([self.value]).done(function(r) {
                 self.view.do_reload();
             });
         }
@@ -724,7 +730,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
     quick_created: function (record) {
         var id = record, self = this;
         this.dataset.read_ids([id], this.view.fields_keys)
-            .then(function (records) {
+            .done(function (records) {
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
@@ -838,13 +844,13 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
 
         if (this.$el.find('.oe_kanban_global_click,.oe_kanban_global_click_edit').length) {
             this.$el.on('click', function(ev) {
-                if (!ev.isTrigger && !$(ev.target).data('events')) {
+                if (!ev.isTrigger && !$._data(ev.target, 'events')) {
                     var trigger = true;
                     var elem = ev.target;
                     var ischild = true;
                     var children = [];
                     while (elem) {
-                        var events = $(elem).data('events');
+                        var events = $._data(elem, 'events');
                         if (elem == ev.currentTarget) {
                             ischild = false;
                         }
@@ -899,7 +905,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 var color_field = $(this).parents('.oe_kanban_colorpicker').first().data('field') || 'color';
                 var data = {};
                 data[color_field] = $(this).data('color');
-                self.view.dataset.write(self.id, data, {}).then(function() {
+                self.view.dataset.write(self.id, data, {}).done(function() {
                     self.record[color_field] = $(this).data('color');
                     self.do_reload();
                 });
@@ -909,7 +915,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     do_action_delete: function($action) {
         var self = this;
         function do_it() {
-            return $.when(self.view.dataset.unlink([self.id])).then(function() {
+            return $.when(self.view.dataset.unlink([self.id])).done(function() {
                 self.group.remove_record(self.id);
                 self.destroy();
             });
@@ -933,7 +939,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     do_reload: function() {
         var self = this;
-        this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).then(function(records) {
+        this.view.dataset.read_ids([this.id], this.view.fields_keys.concat(['__last_update'])).done(function(records) {
             if (records.length) {
                 self.set_record(records[0]);
                 self.renderElement();
@@ -1063,7 +1069,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         this._dataset.call(
             'name_create', [self.$input.val() || false, new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
-            .pipe(function(record) {
+            .then(function(record) {
                 self.$input.val("");
                 self.trigger('added', record[0]);
             }, function(error, event) {

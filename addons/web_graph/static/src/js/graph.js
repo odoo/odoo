@@ -94,7 +94,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             if (self.legend == "top") { self.legend = "inside"; }
             self.forcehtml = true;
 
-            self.graph_get_data().then(function (result) {
+            self.graph_get_data().done(function (result) {
                 self.graph_render_all(result).download.saveImage('png');
             }).always(function () {
                 self.forcehtml = false;
@@ -243,7 +243,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         var result = [];
         var ticks = {};
 
-        return obj.call("fields_view_get", [view_id, 'graph']).pipe(function(tmp) {
+        return obj.call("fields_view_get", [view_id, 'graph']).then(function(tmp) {
             view_get = tmp;
             fields = view_get['fields'];
             var toload = _.select(group_by, function(x) { return fields[x] === undefined });
@@ -251,7 +251,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 return obj.call("fields_get", [toload, context]);
             else
                 return $.when([]);
-        }).pipe(function (fields_to_add) {
+        }).then(function (fields_to_add) {
             _.extend(fields, fields_to_add);
 
             var tree = $($.parseXML(view_get['arch']));
@@ -307,7 +307,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
             }
 
             if (mode === "pie") {
-                return obj.call("read_group", [domain, yaxis.concat([xaxis[0]]), [xaxis[0]]], {context: context}).pipe(function(res) {
+                return obj.call("read_group", [domain, yaxis.concat([xaxis[0]]), [xaxis[0]]], {context: context}).then(function(res) {
                     _.each(res, function(record) {
                         result.push({
                             'data': [[_convert(xaxis[0], record[xaxis[0]]), record[yaxis[0]]]],
@@ -318,11 +318,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
             } else if ((! stacked) || (xaxis.length < 2)) {
                 var defs = [];
                 _.each(xaxis, function(x) {
-                    defs.push(obj.call("read_group", [domain, yaxis.concat([x]), [x]], {context: context}).pipe(function(res) {
+                    defs.push(obj.call("read_group", [domain, yaxis.concat([x]), [x]], {context: context}).then(function(res) {
                         return [x, res];
                     }));
                 });
-                return $.when.apply($, defs).pipe(function() {
+                return $.when.apply($, defs).then(function() {
                     _.each(_.toArray(arguments), function(res) {
                         var x = res[0];
                         res = res[1];
@@ -336,15 +336,15 @@ instance.web_graph.GraphView = instance.web.View.extend({
                 });
             } else {
                 xaxis.reverse();
-                return obj.call("read_group", [domain, yaxis.concat(xaxis.slice(0, 1)), xaxis.slice(0, 1)], {context: context}).pipe(function(axis) {
+                return obj.call("read_group", [domain, yaxis.concat(xaxis.slice(0, 1)), xaxis.slice(0, 1)], {context: context}).then(function(axis) {
                     var defs = [];
                     _.each(axis, function(x) {
                         var key = x[xaxis[0]]
-                        defs.push(obj.call("read_group", [domain, yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).pipe(function(res) {
+                        defs.push(obj.call("read_group", [domain, yaxis.concat(xaxis.slice(1, 2)), xaxis.slice(1, 2)], {context: context}).then(function(res) {
                             return [x, key, res];
                         }));
                     });
-                    return $.when.apply($, defs).pipe(function() {
+                    return $.when.apply($, defs).then(function() {
                         _.each(_.toArray(arguments), function(res) {
                             var x = res[0];
                             var key = res[1];
@@ -359,7 +359,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
                     });
                 });
             }
-        }).pipe(function() {
+        }).then(function() {
             var res = {
                 'data': result,
                 'ticks': _.map(ticks, function(el, key) { return [el, key] })
@@ -374,7 +374,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         _.extend(this, options.data);
 
         return this.graph_get_data()
-            .then(this.proxy('graph_render_all'));
+            .done(this.proxy('graph_render_all'));
     },
 
     graph_render_all: function (data) {

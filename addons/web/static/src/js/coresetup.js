@@ -57,15 +57,15 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
-        return this.session_reload().pipe(function(result) {
+        return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.do_load_qweb);
             if(self.session_is_valid()) {
-                return deferred.pipe(function() { return self.load_modules(); });
+                return deferred.then(function() { return self.load_modules(); });
             }
             return $.when(
                     deferred, 
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).pipe(function(trans) {
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).then(function(trans) {
                         instance.web._t.database.set_bundle(trans);
                     })
             );
@@ -79,7 +79,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_reload: function () {
         var self = this;
-        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+        return this.rpc("/web/session/get_session_info", {}).done(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
@@ -102,7 +102,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params).pipe(function(result) {
+        return this.rpc("/web/session/authenticate", params).then(function(result) {
             if (!result.uid) {
                 return $.Deferred().reject();
             }
@@ -160,30 +160,30 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     load_modules: function() {
         var self = this;
-        return this.rpc('/web/session/modules', {}).pipe(function(result) {
+        return this.rpc('/web/session/modules', {}).then(function(result) {
             var lang = self.user_context.lang,
                 all_modules = _.uniq(self.module_list.concat(result));
             var params = { mods: all_modules, lang: lang};
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = self.rpc('/web/webclient/translations', params).then(function(trans) {
+            var loaded = self.rpc('/web/webclient/translations', params).done(function(trans) {
                 instance.web._t.database.set_bundle(trans);
             });
             var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).then(self.do_load_css),
-                    self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                    self.rpc('/web/webclient/jslist', {mods: to_load}).then(function(files) {
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.do_load_css),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.do_load_qweb),
+                    self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                         file_list = file_list.concat(files);
                     })
                 );
             }
-            return loaded.pipe(function () {
+            return loaded.then(function () {
                 return self.do_load_js(file_list);
-            }).then(function() {
+            }).done(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
                 if (!Date.CultureInfo.pmDesignator) {
@@ -218,7 +218,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files).then(function () {
+                self.do_load_js(files).done(function () {
                     d.resolve();
                 });
             };
@@ -233,7 +233,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {
-                return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
+                return self.rpc('/web/proxy/load', {path: file}).then(function(xml) {
                     if (!xml) { return; }
                     instance.web.qweb.add_template(_.str.trim(xml));
                 });
@@ -468,7 +468,7 @@ $.Mutex = (function() {
     Mutex.prototype.exec = function(action) {
         var current = this.def;
         var next = this.def = $.Deferred();
-        return current.pipe(function() {
+        return current.then(function() {
             return $.when(action()).always(function() {
                 next.resolve();
             });
@@ -480,7 +480,7 @@ $.Mutex = (function() {
 $.async_when = function() {
     var async = false;
     var def = $.Deferred();
-    $.when.apply($, arguments).then(function() {
+    $.when.apply($, arguments).done(function() {
         var args = arguments;
         var action = function() {
             def.resolve.apply(def, args);
@@ -489,7 +489,7 @@ $.async_when = function() {
             action();
         else
             setTimeout(action, 0);
-    }, function() {
+    }).fail(function() {
         var args = arguments;
         var action = function() {
             def.reject.apply(def, args);
