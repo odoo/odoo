@@ -18,7 +18,7 @@ openerp.web_tests = function (instance) {
         start: function () {
             $.when(
                 this.dataset.read_slice(),
-                this.form.appendTo(this.$el)).then(this.on_everything_loaded);
+                this.form.appendTo(this.$el)).done(this.on_everything_loaded);
         },
         on_everything_loaded: function (slice) {
             var records = slice[0].records;

@@ -129,7 +129,7 @@ openerp.web.list_editable = function (instance) {
                 // restartable
                 this.editor = this.make_editor();
                 var editor_ready = this.editor.prependTo(this.$el)
-                    .then(this.proxy('setup_events'));
+                    .done(this.proxy('setup_events'));
 
                 return $.when(result, editor_ready);
             } else {
@@ -148,7 +148,7 @@ openerp.web.list_editable = function (instance) {
         },
         do_button_action: function (name, id, callback) {
             var self = this, args = arguments;
-            this.ensure_saved().then(function (done) {
+            this.ensure_saved().done(function (done) {
                 if (!id && done.created) {
                     id = done.record.get('id');
                 }
@@ -196,7 +196,7 @@ openerp.web.list_editable = function (instance) {
                     at: this.prepends_on_create() ? 0 : null});
             }
 
-            return this.ensure_saved().pipe(function () {
+            return this.ensure_saved().then(function () {
                 var $recordRow = self.groups.get_row_for(record);
                 var cells = self.get_cells_for($recordRow);
                 self.fields_for_resize.splice(0, self.fields_for_resize.length);
@@ -213,7 +213,7 @@ openerp.web.list_editable = function (instance) {
                         // FIXME: need better way to get the field back from bubbling (delegated) DOM events somehow
                         field.$el.attr('data-fieldname', field_name);
                         self.fields_for_resize.push({field: field, cell: cell});
-                    }, options).pipe(function () {
+                    }, options).then(function () {
                         $recordRow.addClass('oe_edition');
                         self.resize_fields();
                         return record.attributes;
@@ -273,7 +273,7 @@ openerp.web.list_editable = function (instance) {
                 form: this.editor.form,
                 cancel: false
             }, function () {
-                return this.editor.save().pipe(function (attrs) {
+                return this.editor.save().then(function (attrs) {
                     var created = false;
                     var record = self.records.get(attrs.id);
                     if (!record) {
@@ -287,9 +287,9 @@ openerp.web.list_editable = function (instance) {
                     // record which has *just* been saved, so first perform all
                     // onwrites then do a final reload of the record
                     return self.handle_onwrite(record)
-                        .pipe(function () {
+                        .then(function () {
                             return self.reload_record(record); })
-                        .pipe(function () {
+                        .then(function () {
                             return { created: created, record: record }; });
                 });
             });
@@ -305,7 +305,7 @@ openerp.web.list_editable = function (instance) {
                 form: this.editor.form,
                 cancel: false
             }, function () {
-                return this.editor.cancel(force).pipe(function (attrs) {
+                return this.editor.cancel(force).then(function (attrs) {
                     if (attrs.id) {
                         var record = self.records.get(attrs.id);
                         if (!record) {
@@ -349,7 +349,7 @@ openerp.web.list_editable = function (instance) {
                     message: _.str.sprintf("Event %s:before cancelled",
                                            event_name)});
             }
-            return $.when(action.call(this)).then(function () {
+            return $.when(action.call(this)).done(function () {
                 self.trigger.apply(self, [event_name + ':after']
                         .concat(_.toArray(arguments)));
             });
@@ -379,7 +379,7 @@ openerp.web.list_editable = function (instance) {
             var on_write_callback = self.fields_view.arch.attrs.on_write;
             if (!on_write_callback) { return $.when(); }
             return this.dataset.call(on_write_callback, [source_record.get('id')])
-                .pipe(function (ids) {
+                .then(function (ids) {
                     return $.when.apply(
                         null, _(ids).map(
                             _.bind(self.handle_onwrite_record, self, source_record)));
@@ -440,7 +440,7 @@ openerp.web.list_editable = function (instance) {
         _next: function (next_record, options) {
             next_record = next_record || 'succ';
             var self = this;
-            return this.save_edition().pipe(function (saveInfo) {
+            return this.save_edition().then(function (saveInfo) {
                 if (saveInfo.created) {
                     return self.start_edition();
                 }
@@ -647,7 +647,7 @@ openerp.web.list_editable = function (instance) {
             var _super = this._super();            
             this.form.embedded_view = this._validate_view(
                     this.delegate.edition_view(this));
-            var form_ready = this.form.appendTo(this.$el).then(
+            var form_ready = this.form.appendTo(this.$el).done(
                 self.form.proxy('do_hide'));
             return $.when(_super, form_ready);
         },
@@ -728,9 +728,9 @@ openerp.web.list_editable = function (instance) {
             var loaded = record
                 ? form.trigger('load_record', _.extend({}, record))
                 : form.load_defaults();
-            return $.when(loaded).pipe(function () {
+            return $.when(loaded).then(function () {
                 return form.do_show({reload: false});
-            }).pipe(function () {
+            }).then(function () {
                 self.record = form.datarecord;
                 _(form.fields).each(function (field, name) {
                     configureField(name, field);
@@ -743,7 +743,7 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             return this.form
                 .save(this.delegate.prepends_on_create())
-                .pipe(function (result) {
+                .then(function (result) {
                     var created = result.created && !self.record.id;
                     if (created) {
                         self.record.id = result.result;

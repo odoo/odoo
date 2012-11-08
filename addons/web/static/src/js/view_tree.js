@@ -45,7 +45,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
             context: this.dataset.get_context()
-        }, this.on_loaded);
+        }).done(this.on_loaded);
     },
     /**
      * Returns the list of fields needed to correctly read objects.
@@ -86,7 +86,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
-        this.dataset.read_slice(this.fields_list()).then(function(records) {
+        this.dataset.read_slice(this.fields_list()).done(function(records) {
             if (!has_toolbar) {
                 // WARNING: will do a second read on the same ids, but only on
                 //          first load so not very important
@@ -192,7 +192,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     getdata: function (id, children_ids) {
         var self = this;
 
-        self.dataset.read_ids(children_ids, this.fields_list()).then(function(records) {
+        self.dataset.read_ids(children_ids, this.fields_list()).done(function(records) {
             _(records).each(function (record) {
                 self.records[record.id] = record;
             });
@@ -229,7 +229,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             model: this.dataset.model,
             context: new instance.web.CompoundContext(
                 this.dataset.get_context(), local_context)
-        }).pipe(function (actions) {
+        }).then(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
             var c = new instance.web.CompoundContext(local_context);
@@ -238,7 +238,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             }
             return self.rpc('/web/session/eval_domain_and_context', {
                 contexts: [c], domains: []
-            }).pipe(function (res) {
+            }).then(function (res) {
                 action.context = res.context;
                 return self.do_action(action);
             }, null);
