@@ -920,6 +920,7 @@ openerp.mail = function (session) {
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': this});
             this.$(".oe_msg_footer:first .oe_mail_vote_count").remove();
             this.$(".oe_msg_footer:first .oe_msg_vote").replaceWith(vote_element);
+            this.$('.oe_msg_vote').on('click', this.on_vote);
         },
 
         /**
