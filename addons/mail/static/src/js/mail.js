@@ -1579,8 +1579,8 @@ openerp.mail = function (session) {
             this._super(parent, action);
 
             this.action = _.clone(action);
-            this.domain = this.action.domain || this.action.params.domain || [];
-            this.context = this.action.context || this.action.params.context || {};
+            this.domain = this.action.params.domain || this.action.domain || [];
+            this.context = this.action.params.context || this.action.context || {};
 
             this.defaults = {};
             for (var key in this.context) {
