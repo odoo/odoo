@@ -114,7 +114,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         });
         this.is_initialized = $.Deferred();
         this.mutating_mutex = new $.Mutex();
-        this.on_change_mutex = new $.Mutex();
+        this.on_change_list = [];
+        this.save_list = [];
         this.reload_mutex = new $.Mutex();
         this.__clicked_inside = false;
         this.__blur_timeout = null;
@@ -492,67 +493,72 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     do_onchange: function(widget, processed) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
-            try {
-                var def;
-                processed = processed || [];
-                processed.push(widget.name);
-                var on_change = widget.node.attrs.on_change;
-                if (on_change) {
-                    var change_spec = self.parse_on_change(on_change, widget);
-                    def = self.rpc('/web/dataset/onchange', {
-                        model: self.dataset.model,
-                        method: change_spec.method,
-                        args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                        context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                    });
-                } else {
-                    def = $.when({});
-                }
-                return def.pipe(function(response) {
-                    if (widget.field['change_default']) {
-                        var fieldname = widget.name
-                        var value_;
-                        if (response.value && (fieldname in response.value)) {
-                            // Use value from onchange if onchange executed
-                            value_ = response.value[fieldname];
-                        } else {
-                            // otherwise get form value for field
-                            value_ = self.fields[fieldname].get_value();
-                        }
-                        var condition = fieldname + '=' + value_;
-
-                        if (value_) {
-                            return self.rpc('/web/dataset/call', {
-                                model: 'ir.values',
-                                method: 'get_defaults',
-                                args: [self.model, condition]
-                            }).pipe(function (results) {
-                                if (!results.length) {
-                                    return response;
-                                }
-                                if (!response.value) {
-                                    response.value = {};
-                                }
-                                for(var i=0; i<results.length; ++i) {
-                                    // [whatever, key, value]
-                                    var triplet = results[i];
-                                    response.value[triplet[1]] = triplet[2];
-                                }
-                                return response;
-                            });
-                        }
-                    }
-                    return response;
-                }).pipe(function(response) {
-                    return self.on_processed_onchange(response, processed);
+        this.on_change_list = [{widget: widget, processed: processed}].concat(this.on_change_list);
+        return this._process_operations();
+    },
+    _process_onchange: function(on_change_obj) {
+        var self = this;
+        var widget = on_change_obj.widget;
+        var processed = on_change_obj.processed;
+        try {
+            var def;
+            processed = processed || [];
+            processed.push(widget.name);
+            var on_change = widget.node.attrs.on_change;
+            if (on_change) {
+                var change_spec = self.parse_on_change(on_change, widget);
+                def = self.rpc('/web/dataset/onchange', {
+                    model: self.dataset.model,
+                    method: change_spec.method,
+                    args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
+                    context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
                 });
-            } catch(e) {
-                console.error(e);
-                instance.webclient.crashmanager.show_message(e);
-                return $.Deferred().reject();
+            } else {
+                def = $.when({});
             }
-        });
+            return def.pipe(function(response) {
+                if (widget.field['change_default']) {
+                    var fieldname = widget.name
+                    var value_;
+                    if (response.value && (fieldname in response.value)) {
+                        // Use value from onchange if onchange executed
+                        value_ = response.value[fieldname];
+                    } else {
+                        // otherwise get form value for field
+                        value_ = self.fields[fieldname].get_value();
+                    }
+                    var condition = fieldname + '=' + value_;
+
+                    if (value_) {
+                        return self.rpc('/web/dataset/call', {
+                            model: 'ir.values',
+                            method: 'get_defaults',
+                            args: [self.model, condition]
+                        }).pipe(function (results) {
+                            if (!results.length) {
+                                return response;
+                            }
+                            if (!response.value) {
+                                response.value = {};
+                            }
+                            for(var i=0; i<results.length; ++i) {
+                                // [whatever, key, value]
+                                var triplet = results[i];
+                                response.value[triplet[1]] = triplet[2];
+                            }
+                            return response;
+                        });
+                    }
+                }
+                return response;
+            }).pipe(function(response) {
+                return self.on_processed_onchange(response, processed);
+            });
+        } catch(e) {
+            console.error(e);
+            instance.webclient.crashmanager.show_message(e);
+            return $.Deferred().reject();
+        }
     },
     on_processed_onchange: function(result, processed) {
         try {
@@ -588,6 +594,38 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return $.Deferred().reject();
         }
     },
+    _process_operations: function() {
+        var self = this;
+        return this.mutating_mutex.exec(function() {
+            function iterate() {
+                var on_change_obj = self.on_change_list.shift();
+                if (on_change_obj) {
+                    return self._process_onchange(on_change_obj).pipe(function() {
+                        return iterate();
+                    });
+                }
+                var defs = [];
+                _.each(self.fields, function(field) {
+                    defs.push(field.commit_value());
+                });
+                var args = _.toArray(arguments);
+                return $.when.apply($, defs).pipe(function() {
+                    if (self.on_change_list.length !== 0) {
+                        return iterate();
+                    }
+                    var save_obj = self.save_list.pop();
+                    if (save_obj) {
+                        return self._process_save(save_obj).pipe(function() {
+                            save_obj.ret = _.toArray(arguments);
+                            return iterate();
+                        });
+                    }
+                    return $.when();
+                });
+            };
+            return iterate();
+        });
+    },
     _internal_set_values: function(values, exclude) {
         exclude = exclude || [];
         for (var f in values) {
@@ -611,7 +649,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     set_values: function(values) {
         var self = this;
-        return this.on_change_mutex.exec(function() {
+        return this.mutating_mutex.exec(function() {
             self._internal_set_values(values);
         });
     },
@@ -765,8 +803,16 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     save: function(prepend_on_create) {
         var self = this;
-        return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
-            try {
+        var save_obj = {prepend_on_create: prepend_on_create, ret: null};
+        this.save_list.push(save_obj);
+        return this._process_operations().pipe(function() {
+            return $.when.apply($, save_obj.ret);
+        });
+    },
+    _process_save: function(save_obj) {
+        var self = this;
+        var prepend_on_create = save_obj.prepend_on_create;
+        try {
             var form_invalid = false,
                 values = {},
                 first_invalid_field = null;
@@ -810,11 +856,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 }
                 return save_deferral;
             }
-            } catch (e) {
-                console.error(e);
-                return $.Deferred().reject();
-            }
-        });});
+        } catch (e) {
+            console.error(e);
+            return $.Deferred().reject();
+        }
     },
     on_invalid: function() {
         var warnings = _(this.fields).chain()
@@ -1979,6 +2024,11 @@ instance.web.form.FieldInterface = {
      * Called when the translate button is clicked.
      */
     on_translate: function() {},
+    /**
+        This method is called by the form view before reading on_change values and before saving. It tells
+        the field to save its value before reading it using get_value(). Must return a promise.
+    */
+    commit_value: function() {},
 };
 
 /**
@@ -2122,7 +2172,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         }
         this.$el.attr('style', style);
         this.$el.css('minHeight', height);
-    }
+    },
+    commit_value: function() {
+        return $.when();
+    },
 });
 
 /**
@@ -3305,10 +3358,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.reload_current_view();
     },
     trigger_on_change: function() {
-        var tmp = this.doing_on_change;
-        this.doing_on_change = true;
         this.trigger('changed_value');
-        this.doing_on_change = tmp;
     },
     load_views: function() {
         var self = this;
@@ -3503,7 +3553,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var self = this;
         if (!this.dataset)
             return [];
-        this.save_any_view();
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -3520,33 +3569,24 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.dataset.to_delete, function(x) {
                 return commands['delete'](x.id);}));
     },
+    commit_value: function() {
+        return this.save_any_view();
+    },
     save_any_view: function() {
-        if (this.doing_on_change)
-            return false;
-        return this.session.synchronized_mode(_.bind(function() {
-            if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
-                this.viewmanager.views[this.viewmanager.active_view] &&
-                this.viewmanager.views[this.viewmanager.active_view].controller) {
-                var view = this.viewmanager.views[this.viewmanager.active_view].controller;
-                if (this.viewmanager.active_view === "form") {
-                    if (!view.is_initialized.isResolved()) {
-                        return false;
-                    }
-                    var res = $.when(view.save());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in form view.");
-                    }
-                    return res;
-                } else if (this.viewmanager.active_view === "list") {
-                    var res = $.when(view.ensure_saved());
-                    if (!res.isResolved() && !res.isRejected()) {
-                        console.warn("Asynchronous get_value() is not supported in list view.");
-                    }
-                    return res;
+        if (this.viewmanager && this.viewmanager.views && this.viewmanager.active_view &&
+            this.viewmanager.views[this.viewmanager.active_view] &&
+            this.viewmanager.views[this.viewmanager.active_view].controller) {
+            var view = this.viewmanager.views[this.viewmanager.active_view].controller;
+            if (this.viewmanager.active_view === "form") {
+                if (!view.is_initialized.isResolved()) {
+                    return $.when(false);
                 }
+                return $.when(view.save());
+            } else if (this.viewmanager.active_view === "list") {
+                return $.when(view.ensure_saved());
             }
-            return false;
-        }, this));
+        }
+        return $.when(false);
     },
     is_syntax_valid: function() {
         if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
@@ -3769,7 +3809,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
         // FIXME: why isn't there an API for this?
         if (this.editor.form.$el.hasClass('oe_form_dirty')) {
-            this.save_edition();
+            this.ensure_saved();
             return;
         }
         this.cancel_edition();
