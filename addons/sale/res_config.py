@@ -44,7 +44,7 @@ class sale_configuration(osv.osv_memory):
         'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
-                Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
+Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_uom':fields.boolean("Allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
@@ -52,9 +52,9 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
         'module_warning': fields.boolean("Allow configuring alerts by customer or products",
-            help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
-            Example: Product: this product is deprecated, do not purchase more than 5.
-            Supplier: don't forget to ask for an express delivery."""),
+            help="""Allow to configure notification on products and trigger them when a user wants to sale a given product or a given customer.
+Example: Product: this product is deprecated, do not purchase more than 5.
+                Supplier: don't forget to ask for an express delivery."""),
         'module_sale_margin': fields.boolean("Display margins on sales orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
