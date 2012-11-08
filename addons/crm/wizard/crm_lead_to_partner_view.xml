@@ -1,9 +1,8 @@
 <openerp>
-      <data>
+    <data>
 
-       <!-- Lead to Partner form view -->
-
-       <record id="view_crm_lead2partner" model="ir.ui.view">
+        <!-- Lead to Partner form view -->
+        <record id="view_crm_lead2partner" model="ir.ui.view">
           <field name="name">crm.lead2partner.view</field>
           <field name="model">crm.lead2partner</field>
           <field name="arch" type="xml">
@@ -20,9 +19,8 @@
                   </footer>
               </form>
           </field>
-       </record>
+        </record>
 
-        
         <!-- Lead to Partner wizard -->
         <record id="action_crm_lead2partner" model="ir.actions.act_window">
             <field name="name">Create a Partner</field>
@@ -33,5 +31,5 @@
             <field name="target">new</field>
         </record>
 
-     </data>
+    </data>
 </openerp>
