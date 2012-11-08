@@ -168,10 +168,8 @@
                               context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" widget="selection"/>
-                            <group>
-                                <field name="origin"/>
-                                <field name="supplier_invoice_number"/>
-                            </group>
+                            <field name="origin"/>
+                            <field name="supplier_invoice_number"/>
                             <label for="reference_type"/>
                             <div>
                                 <field name="reference_type" class="oe_inline oe_edit_only"/>
