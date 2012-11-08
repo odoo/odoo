@@ -45,7 +45,7 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="view_id" ref="product.product_kanban_view"/>
             <field name="search_view_id" ref="product.product_search_form_view"/>
-            <field name="help">No public products.</field>
+            <field name="help">There are no public products.</field>
         </record>
 
         <record id="action_invoice_tree1" model="ir.actions.act_window">
@@ -65,7 +65,7 @@
             <field name="context">{'type':'receipt'}</field>
             <field name="search_view_id" ref="account_voucher.view_voucher_filter_customer_pay"/>
             <field name="target">current</field>
-            <field name="help">You don't have any payment.</field>
+            <field name="help">You don't have any refunds or payments.</field>
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"

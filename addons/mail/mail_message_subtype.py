@@ -31,14 +31,15 @@ class mail_message_subtype(osv.osv):
     _description = 'mail_message_subtype'
     _columns = {
         'name': fields.char('Message Type', required=True, translate=True,
-            help='Message subtype, gives a more precise type on the message, '\
+            help='Message subtype gives a more precise type on the message, '\
                     'especially for system notifications. For example, it can be '\
                     'a notification related to a new record (New), or to a stage '\
                     'change in a process (Stage change). Message subtypes allow to '\
                     'precisely tune the notifications the user want to receive on its wall.'),
-        'res_model': fields.char('Model', help="link subtype to model"),
+        'res_model': fields.char('Model',
+            help="Related model of the subtype. If False, this subtype exists for all models."),
         'default': fields.boolean('Default',
-            help="When subscribing to the document, this subtype will be checked by default."),
+            help="Checked by default when subscribing."),
     }
     _defaults = {
         'default': True,

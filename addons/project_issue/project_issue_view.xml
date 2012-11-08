@@ -125,15 +125,11 @@
                                 <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
                             </div>
                             <field name="categ_ids" widget="many2many_tags"/>
+                            <field name="version_id"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Description">
-                            <group>
-                                <group>
-                                    <field name="version_id" widget="selection"/>
-                                </group>
-                            </group>
                             <field name="description" placeholder="Add a description..."/>
                         </page>
                         <page string="Extra Info" groups="base.group_no_one">
@@ -380,7 +376,9 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <field name="issue_count"/> Issues</a>
+                        <span t-if="record.issue_count.raw_value gt 1"><field name="issue_count"/> Issues</span>
+                        <span t-if="record.issue_count.raw_value lt 2"><field name="issue_count"/> Issue</span>
+                    </a>
                 </xpath>
             </field>
         </record>

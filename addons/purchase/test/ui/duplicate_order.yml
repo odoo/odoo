@@ -4,5 +4,4 @@
   I duplicate order.
 -
   !python {model: purchase.order}: |
-    context.update({'active_id':ref('purchase_order_1')})
     self.copy(cr, uid, ref('purchase_order_1'), context)
