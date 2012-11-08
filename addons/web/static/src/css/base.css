@@ -3024,7 +3024,7 @@ div.ui-widget-overlay {
   line-height: 20px;
 }
 .resolution {
-    width: 300px;
+    width: 350px;
     background-color: white;
     margin-bottom: 15px;
     margin-left: 5px;
@@ -3032,7 +3032,18 @@ div.ui-widget-overlay {
 .resolution .res {
     display: table;
     width:100%;
-    border:1px solid;
+}
+span.res {
+	border:1px solid;
+    padding-top: 10px;
+    border-bottom: 0px;
+}
+span.res span {
+	padding-left: 5px;
+}
+div.res {
+	border:1px solid;
+    border-top: 0px;
 }
 .resolution .res > div {
     border-bottom: 1px solid;
@@ -3044,9 +3055,10 @@ div.ui-widget-overlay {
     display: inline;
 }
 .res img {
-    width: 100px;
+    width: 150px;
     height: 40px;
     padding-top: 20px;
+    padding-left: 5px;
 }
 .res span a {
     font-size:10px;
