@@ -178,7 +178,7 @@ openerp.mail = function (session) {
             this.is_favorite = datasets.is_favorite ||  false,
             this.thread_level = datasets.thread_level ||  0,
             this.to_read = datasets.to_read || false,
-            this.author_id = datasets.author_id ||  [this.session.uid],
+            this.author_id = datasets.author_id ||  [this.options.root_thread.pid],
             this.attachment_ids = datasets.attachment_ids ||  [],
             this.partner_ids = datasets.partner_ids || [];
             this._date = datasets.date;
@@ -1424,6 +1424,7 @@ openerp.mail = function (session) {
          */
         init: function (parent, action) {
             this._super(parent, action);
+            var self = this;
             this.action = _.clone(action);
             this.domain = this.action.domain || this.action.params.domain || [];
             this.context = this.action.context || this.action.params.context || {};
@@ -1441,6 +1442,11 @@ openerp.mail = function (session) {
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
+
+            new session.web.DataSetSearch(this, 'res.users').call('read', [this.session.uid, ['partner_id']])
+                .then(function (result) {
+                    self.session.partner_id = result.partner_id || false;
+                });
         },
 
         start: function (options) {
