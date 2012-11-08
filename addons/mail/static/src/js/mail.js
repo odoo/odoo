@@ -350,7 +350,7 @@ openerp.mail = function (session) {
 
             if (body.match(/\S+/)) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_api', [
+                this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 

@@ -319,10 +319,12 @@ class mail_thread(osv.AbstractModel):
         """
         assert isinstance(message, Message), 'message must be an email.message.Message at this point'
         message_id = message.get('Message-Id')
+        references = decode_header(message, 'References')
+        in_reply_to = decode_header(message, 'In-Reply-To')
 
         # 1. Verify if this is a reply to an existing thread
-        references = decode_header(message, 'References') or decode_header(message, 'In-Reply-To')
-        ref_match = references and tools.reference_re.search(references)
+        thread_references = references or in_reply_to
+        ref_match = thread_references and tools.reference_re.search(thread_references)
         if ref_match:
             thread_id = int(ref_match.group(1))
             model = ref_match.group(2) or model
@@ -332,6 +334,15 @@ class mail_thread(osv.AbstractModel):
                 _logger.debug('Routing mail with Message-Id %s: direct reply to model: %s, thread_id: %s, custom_values: %s, uid: %s',
                               message_id, model, thread_id, custom_values, uid)
                 return [(model, thread_id, custom_values, uid)]
+
+        # Verify this is a reply to a private message
+        message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'ilike', in_reply_to)], limit=1, context=context)
+        if message_ids:
+            message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
+            _logger.debug('Routing mail with Message-Id %s: reply to a private message: %s, custom_values: %s, uid: %s',
+                            message_id, message.id, custom_values, uid)
+            return [(False, 0, custom_values, uid)]
+
 
         # 2. Look for a matching mail.alias entry
         # Delivered-To is a safe bet in most modern MTAs, but we have to fallback on To + Cc values
@@ -376,13 +387,18 @@ class mail_thread(osv.AbstractModel):
     def message_process(self, cr, uid, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None, context=None):
-        """Process an incoming RFC2822 email message, relying on
-           ``mail.message.parse()`` for the parsing operation,
-           and ``message_route()`` to figure out the target model.
+        """ Process an incoming RFC2822 email message, relying on
+            ``mail.message.parse()`` for the parsing operation,
+            and ``message_route()`` to figure out the target model.
 
-           Once the target model is known, its ``message_new`` method
-           is called with the new message (if the thread record did not exist)
+            Once the target model is known, its ``message_new`` method
+            is called with the new message (if the thread record did not exist)
             or its ``message_update`` method (if it did).
+
+            There is a special case where the target model is False: a reply
+            to a private message. In this case, we skip the message_new /
+            message_update step, to just post a new message using mail_thread
+            message_post.
 
            :param string model: the fallback model to use if the message
                does not match any of the currently configured mail aliases
@@ -425,15 +441,18 @@ class mail_thread(osv.AbstractModel):
         for model, thread_id, custom_values, user_id in routes:
             if self._name != model:
                 context.update({'thread_model': model})
-            model_pool = self.pool.get(model)
-            assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
-                "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                    (msg['message_id'], model)
-            if thread_id and hasattr(model_pool, 'message_update'):
-                model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
+            if model:
+                model_pool = self.pool.get(model)
+                assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
+                    "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
+                        (msg['message_id'], model)
+                if thread_id and hasattr(model_pool, 'message_update'):
+                    model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
+                else:
+                    thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
             else:
-                thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            model_pool.message_post(cr, uid, [thread_id], context=context, **msg)
+                model_pool = self.pool.get('mail.thread')
+            model_pool.message_post_user_api(cr, uid, [thread_id], context=context, **msg)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -556,7 +575,6 @@ class mail_thread(osv.AbstractModel):
         """
         msg_dict = {
             'type': 'email',
-            'subtype': 'mail.mt_comment',
             'author_id': False,
         }
         if not isinstance(message, Message):
@@ -640,10 +658,13 @@ class mail_thread(osv.AbstractModel):
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
-        context = context or {}
-        attachments = attachments or []
+        if context is None:
+            context = {}
+        if attachments is None:
+            attachments = {}
+
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
-            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id"
+            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id; should be 0, False, an ID or a list with one ID"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
         mail_message = self.pool.get('mail.message')
@@ -707,30 +728,45 @@ class mail_thread(osv.AbstractModel):
 
         return mail_message.create(cr, uid, values, context=context)
 
-    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
-        """ Wrapper on message_post, used only in Chatter (JS). The purpose is
-            to handle attachments.
-            - body is plaintext: convert it into html
-            - handle reply to a previous message
+    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
+                                attachment_ids=None, context=None, content_subtype='plaintext', **kwargs):
+        """ Wrapper on message_post, used for user input :
+            - mail gateway
+            - quick reply in Chatter (refer to mail.js), not
+                the mail.compose.message wizard
+            The purpose is to perform some pre- and post-processing:
+            - if body is plaintext: convert it into html
+            - if parent_id: handle reply to a previous message by adding the
+                parent partners to the message
+            - type and subtype: comment and mail.mt_comment by default
+            - attachment_ids: supposed not attached to any document; attach them
+                to the related document. Should only be set by Chatter.
         """
-        # 1. handle body
-        body = tools.text2html(body)
+        ir_attachment = self.pool.get('ir.attachment')
+        mail_message = self.pool.get('mail.message')
 
-        # 2. handle message partner_ids
+        # 1. Pre-processing: body, partner_ids, type and subtype
+        if content_subtype == 'plaintext':
+            body = tools.text2html(body)
+
+        partner_ids = kwargs.pop('partner_ids', [])
         if parent_id:
-            parent_data = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
-            partner_ids = [(4, partner.id) for partner in parent_data.partner_ids]
-        else:
-            partner_ids = []
+            parent_message = self.pool.get('mail.message').browse(cr, uid, parent_id, context=context)
+            partner_ids += [(4, partner.id) for partner in parent_message.partner_ids]
+            # TDE FIXME HACK: mail.thread -> private message
+            if self._name == 'mail.thread' and parent_message.author_id.id:
+                partner_ids.append((4, parent_message.author_id.id))
 
-        # 3. post message
-        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type='comment',
-                        subtype='mail.mt_comment', parent_id=parent_id, context=context, partner_ids=partner_ids)
+        message_type = kwargs.pop('type', 'comment')
+        message_subtype = kwargs.pop('type', 'mail.mt_comment')
 
-        # 4. HACK FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
+        # 2. Post message
+        new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
+                        subtype=message_subtype, parent_id=parent_id, context=context, partner_ids=partner_ids, **kwargs)
+
+        # 3. Post-processing
+        # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
-            ir_attachment = self.pool.get('ir.attachment')
-            mail_message = self.pool.get('mail.message')
             filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', 'mail.compose.message'),
                 ('res_id', '=', 0),
