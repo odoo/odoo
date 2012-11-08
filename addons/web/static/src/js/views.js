@@ -200,7 +200,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded;
         if (state.action) {
             if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
-                var action_client = {type: "ir.actions.client", tag: state.action, params: state};
+                var action_client = {
+                    type: "ir.actions.client",
+                    tag: state.action,
+                    params: state,
+                    _push_me: state._push_me,
+                };
                 this.null_action();
                 action_loaded = this.do_action(action_client);
             } else {
