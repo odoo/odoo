@@ -10,7 +10,11 @@
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <xpath expr="//footer" position="replace"/>
+                    <xpath expr="//footer" position="replace">
+                    <footer>
+                        <button string="Close" special="Cancel" class="oe_highlight"/>
+                    </footer>
+                    </xpath>
                     <xpath expr="//separator[@string='title']" position="after" version="7.0">
                         <group>
                             <field name="plugin32" widget="url"/>
@@ -19,10 +23,10 @@
                         <separator string="Installation and Configuration Steps"/>
                         <p>Click on the link above to download the installer for either 32 or 64 bits, and execute it.</p>
                         <p>System requirements:</p>
-                        <ul>
-                            <li>1. MS Outlook 2005 or above.</li>
-                            <li>2. MS .Net Framework 3.5 or above.</li>
-                        </ul>
+                        <ol>
+                            <li> MS Outlook 2005 or above.</li>
+                            <li> MS .Net Framework 3.5 or above.</li>
+                        </ol>
                     </xpath>
                     <separator string="title" position="attributes">
                         <attribute name="string"></attribute>
@@ -51,7 +55,7 @@
                     <div>
                         <field name="module_plugin_outlook" class="oe_inline"/>
                         <label for="module_plugin_outlook"/>
-                        <button name="%(action_outlook_installer)d" type="action" string="Download and install the plugin" icon="gtk-execute"
+                        <button name="%(action_outlook_installer)d" type="action" string="Download and install the plug-in" icon="gtk-execute"
                             attrs="{'invisible': [('module_plugin_outlook','=',False)]}" class="oe_link"/>
                     </div>
                 </div>

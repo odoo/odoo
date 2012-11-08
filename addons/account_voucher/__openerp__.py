@@ -64,6 +64,7 @@ This module manages:
         'static/src/js/account_voucher.js',
     ],
     'test' : [
+        'test/case5_suppl_usd_usd.yml',
         'test/account_voucher.yml',
         'test/sales_receipt.yml',
         'test/sales_payment.yml',

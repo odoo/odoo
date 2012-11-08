@@ -96,9 +96,29 @@ class account_analytic_account(osv.osv):
                 res[row['id']][field] = row[field]
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
-    def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
-        res = self.name_get(cr, uid, ids)
-        return dict(res)
+    def name_get(self, cr, uid, ids, context=None):
+        res = []
+        for id in ids:
+            elmt = self.browse(cr, uid, id, context=context)
+            res.append((id, self._get_one_full_name(elmt)))
+        return res
+
+    def _get_full_name(self, cr, uid, ids, name=None, args=None, context=None):
+        if context == None:
+            context = {}
+        res = {}
+        for elmt in self.browse(cr, uid, ids, context=context):
+            res[elmt.id] = self._get_one_full_name(elmt)
+        return res
+
+    def _get_one_full_name(self, elmt, level=6):
+        if level<=0:
+            return '...'
+        if elmt.parent_id:
+            parent_path = self._get_one_full_name(elmt.parent_id, level-1) + "/"
+        else:
+            parent_path = ''
+        return parent_path + elmt.name
 
     def _child_compute(self, cr, uid, ids, name, arg, context=None):
         result = {}
@@ -139,7 +159,7 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'name': fields.char('Account/Contract Name', size=128, required=True),
-        'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
+        'complete_name': fields.function(_get_full_name, type='char', string='Full Account Name'),
         'code': fields.char('Reference', size=24, select=True),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Contract')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
@@ -160,7 +180,7 @@ class account_analytic_account(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
-        'date_start': fields.date('Date Start'),
+        'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
@@ -285,7 +305,10 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
+            message = _("Contract <b>created</b>.")
+            if obj.partner_id:
+                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
+            self.message_post(cr, uid, [obj.id], body=message,
                 subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()

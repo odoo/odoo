@@ -17,15 +17,17 @@
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="inherit_id" ref="account.view_category_property_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="/form/sheet//group[@name='account_stock_property']" position="inside">
-                        <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_journal"/>
-                    </xpath>
+                    <group name="account_property" position="after">
+                        <group name="account_stock_property" string="Account Stock Properties" colspan="2">
+                            <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_journal"/>
+                        </group>
+                    </group>
                 </data>
             </field>
         </record>
@@ -39,7 +41,7 @@
             		<field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
             	</group>
             	<group name="delay" position="after">
-            		<group name="store" string="Storage Localization">
+            		<group name="store" string="Storage Location">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
                     	<field name="loc_case"/>
@@ -101,7 +103,7 @@
                     </group>
                 </group>
                 <group name="status" position="after" version="7.0">
-                     <group name="store" string="Storage Localization">
+                     <group name="store" string="Storage Location">
                          <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                          <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
                          <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
@@ -219,7 +221,7 @@
                 </xpath>
                 <ul position="inside">
                     <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                    <li t-if="record.type.raw_value != 'service'">Available: <field name="virtual_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value != 'service'">Forecasted: <field name="virtual_available"/> <field name="uom_id"/></li>
                 </ul>
             </field>
         </record>

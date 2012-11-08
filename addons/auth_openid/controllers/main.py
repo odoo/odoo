@@ -22,6 +22,7 @@
 import logging
 import os
 import tempfile
+import getpass
 import urllib
 
 import werkzeug.urls
@@ -43,7 +44,16 @@ from .. import utils
 _logger = logging.getLogger(__name__)
 oidutil.log = _logger.debug
 
-_storedir = os.path.join(tempfile.gettempdir(), 'openerp-auth_openid-store')
+def get_system_user():
+    """Return system user info string, such as USERNAME-EUID"""
+    info = getpass.getuser()
+    euid = getattr(os, 'geteuid', None) # Non available on some platforms
+    if euid is not None:
+        info = '%s-%d' % (info, euid())
+    return info
+
+_storedir = os.path.join(tempfile.gettempdir(), 
+                         'openerp-auth_openid-%s-store' % get_system_user())
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
     def complete(self, message, endpoint, return_to):
