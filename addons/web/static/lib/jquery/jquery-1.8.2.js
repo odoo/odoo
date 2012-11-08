@@ -1151,7 +1151,10 @@ jQuery.extend({
 		// Keep pipe for back-compat
 		//promise.pipe = promise.then;
 		promise.pipe = function() {
-            console.error("$.Deferred().pipe() is deprecated. Use .then() instead.");
+            if (window.console) {
+                console.error && console.error("$.Deferred().pipe() is deprecated. Use .then() instead.");
+                console.trace && console.trace();
+            }
             return promise.then.apply(this, arguments);
         };
 
