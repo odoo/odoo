@@ -476,6 +476,9 @@ class fleet_vehicle_log_fuel(osv.Model):
         }
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
+        liter = float(liter)
+        price_per_liter = float(price_per_liter)
+        amount = float(amount)
         if liter > 0 and price_per_liter > 0:
             return {'value' : {'amount' : liter * price_per_liter,}}
         elif liter > 0 and amount > 0:
@@ -486,7 +489,9 @@ class fleet_vehicle_log_fuel(osv.Model):
             return {}
 
     def on_change_price_per_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
-
+        liter = float(liter)
+        price_per_liter = float(price_per_liter)
+        amount = float(amount)
         if price_per_liter > 0 and liter > 0:
             return {'value' : {'amount' : liter * price_per_liter,}}
         elif price_per_liter > 0 and amount > 0:
@@ -497,7 +502,9 @@ class fleet_vehicle_log_fuel(osv.Model):
             return {}
 
     def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
-
+        liter = float(liter)
+        price_per_liter = float(price_per_liter)
+        amount = float(amount)
         if amount > 0 and liter > 0:
             return {'value': {'price_per_liter': amount / liter,}}
         elif amount > 0 and price_per_liter > 0:
