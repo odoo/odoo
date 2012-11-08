@@ -467,7 +467,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var splitted = field.split('.');
             if (splitted.length > 1 && _.str.trim(splitted[0]) === "parent" && self.dataset.parent_view) {
                 if (parent_fields === null) {
-                    parent_fields = self.dataset.parent_view.get_fields_values([self.dataset.child_name]);
+                    parent_fields = self.dataset.parent_view.get_fields_values();
                 }
                 var p_val = parent_fields[_.str.trim(splitted[1])];
                 if (p_val !== undefined) {
@@ -961,15 +961,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             return obj instanceof instance.web.form.FormWidget;
         });
     },
-    get_fields_values: function(blacklist) {
-        blacklist = blacklist || [];
+    get_fields_values: function() {
         var values = {};
         var ids = this.get_selected_ids();
         values["id"] = ids.length > 0 ? ids[0] : false;
         _.each(this.fields, function(value_, key) {
-            if (_.include(blacklist, key)) {
-                return;
-            }
             values[key] = value_.get_value();
         });
         return values;
@@ -1130,9 +1126,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     compute_domain: function(expression) {
         return instance.web.form.compute_domain(expression, this.fields);
     },
-    _build_view_fields_values: function(blacklist) {
+    _build_view_fields_values: function() {
         var a_dataset = this.dataset;
-        var fields_values = this.get_fields_values(blacklist);
+        var fields_values = this.get_fields_values();
         var active_id = a_dataset.ids[a_dataset.index];
         _.extend(fields_values, {
             active_id: active_id || false,
@@ -1141,13 +1137,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             parent: {}
         });
         if (a_dataset.parent_view) {
-            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+            fields_values.parent = a_dataset.parent_view.get_fields_values();
         }
         return fields_values;
     },
-    build_eval_context: function(blacklist) {
+    build_eval_context: function() {
         var a_dataset = this.dataset;
-        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values());
     },
 });
 
@@ -1843,7 +1839,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
      * Builds a new context usable for operations related to fields by merging
      * the fields'context with the action's context.
      */
-    build_context: function(blacklist) {
+    build_context: function() {
         // only use the model's context if there is not context on the node
         var v_context = this.node.attrs.context;
         if (! v_context) {
@@ -1851,7 +1847,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         }
 
         if (v_context.__ref || true) { //TODO: remove true
-            var fields_values = this.field_manager.build_eval_context(blacklist);
+            var fields_values = this.field_manager.build_eval_context();
             v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
         return v_context;
@@ -3654,7 +3650,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
 
 instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
-        this.context = this.o2m.build_context([this.o2m.name]);
+        this.context = this.o2m.build_context();
         return this.context;
     }
 });
