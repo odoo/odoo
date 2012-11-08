@@ -84,12 +84,12 @@ Main Features
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
-        'static/src/css/mail_compose_message.css',
     ],
     'js': [
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
+        'static/src/js/many2many_tags_email.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',

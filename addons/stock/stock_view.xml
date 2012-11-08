@@ -540,7 +540,7 @@
                         </group>
                         <group string="Chained Locations">
                             <field name="chained_location_type"/>
-                            <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')]}"/>
+                            <field name="chained_location_id"  attrs="{'required':[('chained_location_type','=','fixed')],'invisible':[('chained_location_type','in',['none','customer'])]}"/>
                             <field name="chained_auto_packing"/>
                             <field name="chained_delay"/>
                             <field name="chained_journal_id"/>
@@ -551,9 +551,9 @@
                             <field name="posx"/>
                             <field name="posy"/>
                             <field name="posz"/>
-                        </group><group string="Accounting Information">
-                            <field name="valuation_in_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
-                            <field name="valuation_out_account_id" attrs="{'readonly':[('usage','not in',('inventory','production'))]}"/>
+                        </group><group string="Accounting Information" attrs="{'invisible':[('usage','not in',('inventory','production'))]}">
+                            <field name="valuation_in_account_id"/>
+                            <field name="valuation_out_account_id"/>
                         </group>
                     </group>
                     <separator string="Additional Information"/>
@@ -782,7 +782,7 @@
                             <group>
                                 <group>
                                     <field name="move_type"/>
-                                    <field name="type" groups="base.group_no_one"/>
+                                    <field name="type" invisible="1"/>
                                     <field name="auto_picking" groups="base.group_user"/>
                                 </group>
                                 <group>
@@ -912,8 +912,8 @@
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
-                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                             <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                         </div>
                     </xpath>
                 </data>
@@ -1038,8 +1038,8 @@
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
-                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                             <field name="message_follower_ids" widget="mail_followers"/>
+                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                         </div>
                     </xpath>
                 </data>
