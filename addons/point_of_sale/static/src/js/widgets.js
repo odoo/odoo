@@ -315,7 +315,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
             this.$('input').keyup(_.bind(this.changeAmount, this));
             this.$('.delete-payment-line').click(function() {
-                self.trigger('delete_payment_line');
+                self.trigger('delete_payment_line', self);
             });
         },
     });
