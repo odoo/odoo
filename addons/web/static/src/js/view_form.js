@@ -2639,22 +2639,18 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     }
 });
 
+/**
+    The progressbar field expect a float from 0 to 100.
+*/
 instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     template: 'FieldProgressBar',
-    start: function() {
-        this._super.apply(this, arguments);
+    render_value: function() {
         this.$el.progressbar({
-            value: this.get('value'),
+            value: this.get('value') || 0,
             disabled: this.get("effective_readonly")
         });
-    },
-    render_value: function() {
-        var show_value = Number(this.get('value'));
-        if (isNaN(show_value)) {
-            show_value = 0;
-        }
-        var formatted_value = instance.web.format_value(show_value, { type : 'float' }, '0');
-        this.$el.progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
+        var formatted_value = instance.web.format_value(this.get('value') || 0, { type : 'float' });
+        this.$('span').html(formatted_value + '%');
     }
 });
 
