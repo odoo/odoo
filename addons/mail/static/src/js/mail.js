@@ -567,7 +567,7 @@ openerp.mail = function (session) {
                             thread = thread.parent_message.parent_thread;
                         }
                         // create object and attach to the thread object
-                        thread.message_fetch(false, false, [record], function (arg, data) {
+                        thread.message_fetch([['id', 'child_of', [self.id]]], false, [record], function (arg, data) {
                             data[0].no_sorted = true;
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
@@ -1194,6 +1194,7 @@ openerp.mail = function (session) {
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
         message_fetch: function (replace_domain, replace_context, ids, callback) {
+            console.log(arguments);
             return this.ds_message.call('message_read', [
                     // ids force to read
                     ids == false ? undefined : ids, 
