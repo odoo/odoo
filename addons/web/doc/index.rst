@@ -11,12 +11,15 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
+    presentation
+
     changelog-7.0
 
     async
     rpc
 
     widget
+    qweb
     search-view
 
     list-view
