@@ -236,7 +236,7 @@ my.FacetView = instance.web.Widget.extend({
     start: function () {
         var self = this;
         var $e = this.$('> span:last-child');
-        return $.when(this._super()).pipe(function () {
+        return $.when(this._super()).then(function () {
             return $.when.apply(null, self.model.values.map(function (value) {
                 return new my.FacetValueView(self, value).appendTo($e);
             }));
@@ -270,15 +270,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             if (e.target === this.$('.oe_searchview_facets')[0]) {
                 this.$('.oe_searchview_input:last').focus();
             }
-        },
-        // when the completion list opens/refreshes, automatically select the
-        // first completion item so if the user just hits [RETURN] or [TAB] it
-        // automatically selects it
-        'autocompleteopen': function () {
-            var menu = this.$el.data('autocomplete').menu;
-            menu.activate(
-                $.Event({ type: "mouseenter" }),
-                menu.element.children().first());
         },
         // search button
         'click button.oe_searchview_search': function (e) {
@@ -356,7 +347,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 context: this.dataset.get_context() });
 
             $.when(load_view)
-                .pipe(function(r) {
+                .then(function(r) {
                     self.search_view_loaded(r)
                 }).fail(function () {
                     self.ready.reject.apply(null, arguments);
@@ -417,58 +408,46 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     setup_global_completion: function () {
         var self = this;
 
-        // autocomplete only correctly handles being initialized on the actual
-        // editable element (and only an element with a @value in 1.8 e.g.
-        // input or textarea), cheat by setting val() on $el
-        this.$el.on('keydown', function () {
-            // keydown is triggered *before* the element's value is set, so
-            // delay this. Pray that setTimeout are executed in FIFO (if they
-            // have the same delay) as autocomplete uses the exact same trick.
-            // FIXME: brittle as fuck
-            setTimeout(function () {
-                self.$el.val(self.currentInputValue());
-            }, 0);
-
-        });
-
-        this.$el.autocomplete({
+        var autocomplete = this.$el.autocomplete({
             source: this.proxy('complete_global_search'),
             select: this.proxy('select_completion'),
             focus: function (e) { e.preventDefault(); },
             html: true,
+            autoFocus: true,
             minLength: 1,
             delay: 0
-        }).data('autocomplete')._renderItem = function (ul, item) {
-            // item of completion list
-            var $item = $( "<li></li>" )
-                .data( "item.autocomplete", item )
-                .appendTo( ul );
+        }).data('autocomplete');
 
-            if (item.facet !== undefined) {
-                // regular completion item
-                return $item.append(
-                    (item.label)
-                        ? $('<a>').html(item.label)
-                        : $('<a>').text(item.value));
-            }
-            return $item.text(item.label)
-                .css({
-                    borderTop: '1px solid #cccccc',
-                    margin: 0,
-                    padding: 0,
-                    zoom: 1,
-                    'float': 'left',
-                    clear: 'left',
-                    width: '100%'
-                });
-        };
-    },
-    /**
-     * Gets value out of the currently focused "input" (a
-     * div[contenteditable].oe_searchview_input)
-     */
-    currentInputValue: function () {
-        return this.$('div.oe_searchview_input:focus').text();
+        // MonkeyPatch autocomplete instance
+        _.extend(autocomplete, {
+            _renderItem: function (ul, item) {
+                // item of completion list
+                var $item = $( "<li></li>" )
+                    .data( "item.autocomplete", item )
+                    .appendTo( ul );
+
+                if (item.facet !== undefined) {
+                    // regular completion item
+                    return $item.append(
+                        (item.label)
+                            ? $('<a>').html(item.label)
+                            : $('<a>').text(item.value));
+                }
+                return $item.text(item.label)
+                    .css({
+                        borderTop: '1px solid #cccccc',
+                        margin: 0,
+                        padding: 0,
+                        zoom: 1,
+                        'float': 'left',
+                        clear: 'left',
+                        width: '100%'
+                    });
+            },
+            _value: function() {
+                return self.$('div.oe_searchview_input').text();
+            },
+        });
     },
     /**
      * Provide auto-completion result for req.term (an array to `resp`)
@@ -480,7 +459,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     complete_global_search:  function (req, resp) {
         $.when.apply(null, _(this.inputs).chain()
             .invoke('complete', req.term)
-            .value()).then(function () {
+            .value()).done(function () {
                 resp(_(_(arguments).compact()).flatten(true));
         });
     },
@@ -548,7 +527,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             childView.on('blurred', self, self.proxy('childBlurred'));
         });
 
-        $.when.apply(null, started).then(function () {
+        $.when.apply(null, started).done(function () {
             var input_to_focus;
             // options.at: facet inserted at given index, focus next input
             // otherwise just focus last input
@@ -656,12 +635,12 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-            'facet_for_defaults', this.defaults)).then(function () {
+            'facet_for_defaults', this.defaults)).done(function () {
                 self.query.reset(_(arguments).compact(), {preventSearch: true});
             });
         
         return $.when(drawer_started, defaults_fetched)
-            .then(function () { 
+            .done(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });
@@ -1430,7 +1409,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             name: needle,
             limit: 8,
             context: {}
-        }).pipe(function (results) {
+        }).then(function (results) {
             if (_.isEmpty(results)) { return null; }
             return [{label: self.attrs.string}].concat(
                 _(results).map(function (result) {
@@ -1453,7 +1432,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             // to handle this as if it were a single value.
             value = value[0];
         }
-        return this.model.call('name_get', [value]).pipe(function (names) {
+        return this.model.call('name_get', [value]).then(function (names) {
             if (_(names).isEmpty()) { return null; }
             return facet_from(self, names[0]);
         })
@@ -1500,7 +1479,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         // FIXME: local eval of domain and context to get rid of special endpoint
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
-        }).pipe(this.proxy('set_filters'));
+        }).then(this.proxy('set_filters'));
     },
     clear_selection: function () {
         this.$('li.oe_selected').removeClass('oe_selected');
@@ -1523,7 +1502,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             $('<a class="oe_searchview_custom_delete">x</a>')
                 .click(function (e) {
                     e.stopPropagation();
-                    self.model.call('unlink', [id]).then(function () {
+                    self.model.call('unlink', [id]).done(function () {
                         $filter.remove();
                     });
                 })
@@ -1558,7 +1537,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
             domains: search.domains,
             contexts: search.contexts,
             group_by_seq: search.groupbys || []
-        }).then(function (results) {
+        }).done(function (results) {
             if (!_.isEmpty(results.group_by)) {
                 results.context.group_by = results.group_by;
             }
@@ -1570,7 +1549,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 domain: results.domain
             };
             // FIXME: current context?
-            return self.model.call('create_or_replace', [filter]).then(function (id) {
+            return self.model.call('create_or_replace', [filter]).done(function (id) {
                 filter.id = id;
                 self.append_filter(filter);
                 self.$el
@@ -1647,18 +1626,18 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            this.rpc("/web/searchview/fields_get", {model: this.view.model}).then(function(data) {
+            this.rpc("/web/searchview/fields_get", {model: this.view.model}).done(function(data) {
                 self.fields = _.extend({
                     id: { string: 'ID', type: 'id' }
                 }, data.fields);
-        })).then(function () {
+        })).done(function () {
             self.append_proposition();
         });
     },
     append_proposition: function () {
         var self = this;
         return (new instance.web.search.ExtendedSearchProposition(this, this.fields))
-            .appendTo(this.$('ul')).then(function () {
+            .appendTo(this.$('ul')).done(function () {
                 self.$('button.oe_apply').prop('disabled', false);
             });
     },
@@ -1723,7 +1702,7 @@ instance.web.search.ExtendedSearchProposition = instance.web.Widget.extend(/** @
         this.value = null;
     },
     start: function () {
-        return this._super().then(this.proxy('changed'));
+        return this._super().done(this.proxy('changed'));
     },
     changed: function() {
         var nval = this.$(".searchview_extended_prop_field").val();

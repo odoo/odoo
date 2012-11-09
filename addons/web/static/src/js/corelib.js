@@ -809,12 +809,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         return false;
     },
     rpc: function(url, data, success, error) {
-        var def = $.Deferred().then(success, error);
+        var def = $.Deferred().done(success).fail(error);
         var self = this;
-        instance.session.rpc(url, data).then(function() {
+        instance.session.rpc(url, data).done(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
-        }, function() {
+        }).fail(function() {
             if (!self.isDestroyed())
                 def.reject.apply(def, arguments);
         });
@@ -1287,7 +1287,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         };
         var deferred = $.Deferred();
         this.trigger('request', url, payload);
-        var request = this.rpc_function(url, payload).then(
+        var request = this.rpc_function(url, payload).done(
             function (response, textStatus, jqXHR) {
                 self.trigger('response', response);
                 if (!response.error) {
@@ -1300,7 +1300,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 } else {
                     deferred.reject(response.error, $.Event());
                 }
-            },
+            }
+        ).fail(
             function(jqXHR, textStatus, errorThrown) {
                 self.trigger('response_failed', jqXHR);
                 var error = {
@@ -1387,10 +1388,11 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 $iframe.unbind('load').bind('load', function() {
                     $.ajax(ajax).always(function() {
                         cleanUp();
-                    }).then(
-                        function() { deferred.resolve.apply(deferred, arguments); },
-                        function() { deferred.reject.apply(deferred, arguments); }
-                    );
+                    }).done(function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    }).fail(function() {
+                        deferred.reject.apply(deferred, arguments);
+                    });
                 });
                 // now that the iframe can receive data, we fill and submit the form
                 $form.submit();
