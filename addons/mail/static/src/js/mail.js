@@ -276,7 +276,7 @@ openerp.mail = function (session) {
             } 
             if (this.type == 'email' && !this.author_id) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
-            } else if (this.author_id) {
+            } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
@@ -325,6 +325,38 @@ openerp.mail = function (session) {
                 });
             }
             return res;
+        },
+
+        /**
+         * search a message in all thread and child thread.
+         * This method return an object message.
+         * @param {object}{int} option.id
+         * @param {object}{string} option.model
+         * @param {object}{boolean} option._go_thread_wall
+         *      private for check the top thread
+         * @return thread object
+         */
+        browse_message: function (options) {
+            // goto the wall thread for launch browse
+            if (!options._go_thread_wall) {
+                options._go_thread_wall = true;
+                for (var i in this.options.root_thread.messages) {
+                    var res=this.options.root_thread.messages[i].browse_message(options);
+                    if (res) return res;
+                }
+            }
+
+            if (this.id==options.id)
+                return this;
+
+            for (var i in this.thread.messages) {
+                if (this.thread.messages[i].thread) {
+                    var res=this.thread.messages[i].browse_message(options);
+                    if (res) return res;
+                }
+            }
+
+            return false;
         },
 
         /**
@@ -442,7 +474,6 @@ openerp.mail = function (session) {
          */
         on_attachment_delete: function (event) {
             event.stopPropagation();
-            console.log(event);
             var attachment_id=$(event.target).data("id");
             if (attachment_id) {
                 var attachments=[];
@@ -814,21 +845,26 @@ openerp.mail = function (session) {
         * @param {callback} apply function
         */
         check_for_rerender: function () {
-            var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain ).concat([["id", "in", [this.id].concat(this.get_child_ids()) ]]);
-            return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], 0, this.context, this.parent_thread.id])
-                .then( _.bind(function (record) {
-                    if (!record || !record.length) {
+            var self = this;
 
-                        this.animated_destroy(150);
+            var messages = [this].concat(this.get_childs());
+            var message_ids = _.map(messages, function (msg) { return msg.id;});
+            var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain )
+                .concat([["id", "in", message_ids ]]);
 
-                    } else if (this.options.rerender) {
+            return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], this.parent_thread.options.display_indented_thread, this.context, this.parent_thread.id])
+                .then( function (records) {
+                    // remove message not loaded
+                    _.map(messages, function (msg) {
+                        if(!_.find(records, function (record) { return record.id == msg.id; })) {
+                            msg.animated_destroy(150);
+                        } else {
+                            msg.renderElement();
+                            msg.start()
+                        }
+                    });
 
-                        this.renderElement();
-                        this.start();
-
-                    }
-
-                }, this) );
+                });
         },
 
         on_message_read: function (event) {
@@ -861,46 +897,17 @@ openerp.mail = function (session) {
 
             this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
-                    self.to_read = !read_value;
-                    if (self.options.toggle_read) {
-                        self.options.show_read = self.to_read;
-                        self.options.show_unread = !self.to_read;
-                    }
+                    // apply modification
+                    _.each(messages, function (msg) {
+                        msg.to_read = !read_value;
+                        if (msg.options.toggle_read) {
+                            msg.options.show_read = msg.to_read;
+                            msg.options.show_unread = !msg.to_read;
+                        }
+                    });
                     // check if the message must be display, destroy or rerender
                     self.check_for_rerender();
                 });
-            return false;
-        },
-
-        /**
-         * search a message in all thread and child thread.
-         * This method return an object message.
-         * @param {object}{int} option.id
-         * @param {object}{string} option.model
-         * @param {object}{boolean} option._go_thread_wall
-         *      private for check the top thread
-         * @return thread object
-         */
-        browse_message: function (options) {
-            // goto the wall thread for launch browse
-            if (!options._go_thread_wall) {
-                options._go_thread_wall = true;
-                for (var i in this.options.root_thread.messages) {
-                    var res=this.options.root_thread.messages[i].browse_message(options);
-                    if (res) return res;
-                }
-            }
-
-            if (this.id==options.id)
-                return this;
-
-            for (var i in this.thread.messages) {
-                if (this.thread.messages[i].thread) {
-                    var res=this.thread.messages[i].browse_message(options);
-                    if (res) return res;
-                }
-            }
-
             return false;
         },
 
@@ -999,7 +1006,7 @@ openerp.mail = function (session) {
             this.options = options.options;
             this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
             this.options.show_compose_message = this.options.show_compose_message && (this.options.display_indented_thread >= this.thread_level || !this.thread_level);
-
+            
             // record options and data
             this.parent_message= parent.thread!= undefined ? parent : false ;
 
@@ -1013,7 +1020,9 @@ openerp.mail = function (session) {
             this.thread_level =  (datasets.thread_level+1) || 0,
             this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
             this.messages = [];
-            
+
+            this.options.flat_mode = (this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
+
             // object compose message
             this.compose_message = false;
 
@@ -1208,7 +1217,7 @@ openerp.mail = function (session) {
                     // ids allready loaded
                     (this.id ? [this.id].concat( this.get_child_ids() ) : this.get_child_ids()), 
                     // option for sending in flat mode by server
-                    (this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0), 
+                    this.options.flat_mode, 
                     // context + additional
                     (replace_context ? replace_context : this.context), 
                     // parent_id
@@ -1308,6 +1317,9 @@ openerp.mail = function (session) {
         on_message_detroy: function (message) {
 
             this.messages = _.filter(this.messages, function (val) { return !val.isDestroyed(); });
+            if (this.options.root_thread == this && !this.messages.length) {
+                this.no_message();
+            }
             return false;
 
         },
