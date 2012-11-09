@@ -197,8 +197,8 @@
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons'>
-                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Read" class="oe_e">X</a></span>
-                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Set back to unread" class="oe_e">v</a></span>
+                    <span class='oe_read' t-if="widget.show_read_unread_button"><a title="Mark as read" class="oe_e">X</a></span>
+                    <span class='oe_unread' t-if="widget.show_read_unread_button"><a title="Mark as unread" class="oe_e">v</a></span>
                     <span class='oe_reply' t-if="widget.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
                     <span t-attf-class="oe_star #{widget.is_favorite?'oe_starred':''}"><a title="Add To Favorites" class="oe_e">7</a></span>
                 </div>
