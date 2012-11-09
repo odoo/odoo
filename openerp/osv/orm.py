@@ -1325,7 +1325,8 @@ class BaseModel(object):
         messages = []
 
         fields = map(fix_import_export_id_paths, fields)
-        ModelData = self.pool['ir.model.data']
+        ModelData = self.pool['ir.model.data'].clear_caches()
+
         fg = self.fields_get(cr, uid, context=context)
 
         mode = 'init'

@@ -7,6 +7,7 @@ OpenERP Server
 
    import
    module-versioning
+   on_change_tips
    test-framework
 
 Changed in 7.0
