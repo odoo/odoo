@@ -103,9 +103,9 @@ class stock_partial_picking(osv.osv_memory):
         result = self.do_partial(cr, uid, ids, context=context)
         partial = self.browse(cr, uid, ids[0], context=context)
         if partial.picking_id.backorder_id:
-            active_ids = partial.picking_id.backorder_id.id
+            active_ids = [partial.picking_id.backorder_id.id]
         else:
-            active_ids = partial.picking_id.id
+            active_ids = [partial.picking_id.id]
         
         context.update(active_model='stock.picking',
                    active_ids=active_ids)
