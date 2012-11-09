@@ -97,7 +97,7 @@ class hr_timesheet_sheet(osv.osv):
                 wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
-        return True
+        return True        
 
     def attendance_action_change(self, cr, uid, ids, context=None):
         hr_employee = self.pool.get('hr.employee')
@@ -220,7 +220,6 @@ class hr_timesheet_sheet(osv.osv):
         if employee_id:
             department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
         return {'value': {'department_id': department_id}}
-
 hr_timesheet_sheet()
 
 class account_analytic_line(osv.osv):
