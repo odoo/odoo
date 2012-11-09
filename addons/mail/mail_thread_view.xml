@@ -19,8 +19,15 @@
                 'view_inbox': True,
                 'read_action': 'read'
             }&quot;"/>
-            <field name="help">
-                There are no message in your mailbox for this search.
+            <field name="help" type="html">
+                <p>
+                    <b>Hurray! No message here!</b>
+                </p><p>
+                    Congratulations! You have processed all your incoming emails.
+                    Remember that when you receive new messages, you can either
+                    set them as done, or use the star button to send those messages
+                    into your <i>Todo</i> mailbox.
+                </p>
             </field>
         </record>
 
@@ -37,8 +44,15 @@
                 'domain': [('partner_ids.user_ids', 'in', [uid])],
                 'view_mailbox': True,
                 'read_action': 'read', }&quot;"/>
-            <field name="help">
-                There are no message in your private mailbox for this search.
+            <field name="help" type="html">
+                <p>
+                    No message here!
+                </p><p>
+                    There are no new messages matching the current search
+                    that were directly sent to you.
+                    Remember you can always uncheck the Read filter to see
+                    messages sent to you that you already read.
+                </p>
             </field>
         </record>
 
@@ -55,8 +69,15 @@
                 'domain': [('favorite_user_ids', 'in', [uid])],
                 'view_mailbox': True,
                 'read_action': 'read', }&quot;"/>
-            <field name="help">
-                There are no message in your todo mailbox for this search.
+            <field name="help" type="html">
+                <p>
+                    <b>Hurray! No message here!</b>
+                </p><p>
+                    Congratulations! You have processed all your messages in
+                    your todo list, or at least those matching your search.
+                    Remember you can always search for read messages by
+                    unchecking the Read filter.
+                </p>
             </field>
         </record>
 
@@ -72,8 +93,10 @@
                 'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
                 'view_mailbox': True,
                 'read_action': 'unread', }&quot;"/>
-            <field name="help">
-                There are no message for this search.
+            <field name="help" type="html">
+                <p>
+                    There are no message for this search.
+                </p>
             </field>
         </record>
 
@@ -87,8 +110,10 @@
             <field name="params" eval="&quot;{
                 'domain': [('author_id.user_ids', 'in', [uid])],
                 'view_mailbox': True, }&quot;"/>
-            <field name="help">
-                There are no message for this search.
+            <field name="help" type="html">
+                <p>
+                    There are no message for this search.
+                </p>
             </field>
         </record>
 
