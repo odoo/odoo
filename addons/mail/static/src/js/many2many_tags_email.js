@@ -46,7 +46,7 @@ instance.web.form.FieldMany2ManyTagsEmail = instance.web.form.FieldMany2ManyTags
                 ["email", "=", false], 
                 ["notification_email_send", "in", ['all', 'comment']] ]], 
                 {context: this.build_context()})
-            .pipe(function (record_ids) {
+            .then(function (record_ids) {
                 // valid partner
                 var valid_partner = _.difference(ids, record_ids);
                 self.values = self.values.concat(valid_partner);
