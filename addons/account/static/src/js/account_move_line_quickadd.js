@@ -3,7 +3,7 @@ openerp.account = function (instance) {
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
     
-    instance.web.account = {};
+    instance.web.account = instance.web.account || {};
     
     instance.web.views.add('tree_account_move_line_quickadd', 'instance.web.account.QuickAddListView');
     instance.web.account.QuickAddListView = instance.web.ListView.extend({
@@ -54,14 +54,16 @@ openerp.account = function (instance) {
         search_by_journal_period: function() {
             var self = this;
             
-            compoundDomain = new instance.web.CompoundDomain(self.last_domain, 
+            var compoundDomain = new instance.web.CompoundDomain(self.last_domain, 
                 [
                 ["journal_id", "=", self.current_journal], 
                 ["period_id", "=", self.current_period] 
                 ]);
-            self.last_context["journal_id"] = self.current_journal;
-            self.last_context["period_id"] = self.current_period;
-            return self.old_search(compoundDomain, self.last_context, self.last_group_by);
+            var cc = new instance.web.CompoundContext(this.last_context, {
+                "journal_id": self.current_journal,
+                "period_id" :self.current_period,
+            });
+            return self.old_search(compoundDomain, cc, self.last_group_by);
         },
         _next: function (next_record, options) {
             next_record = next_record || 'succ';
