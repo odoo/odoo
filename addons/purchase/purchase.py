@@ -1105,6 +1105,12 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
         self.purchase_order_create_note(cr, uid, ids, context=context)
         return res
+    
+    def _product_virtual_get(self, cr, uid, order_point):
+        procurement = order_point.procurement_id
+        if procurement and procurement.state != 'exception' and procurement.purchase_id and procurement.purchase_id.state in ('draft', 'confirmed'):
+            return None
+        return super(procurement_order, self)._product_virtual_get(cr, uid, order_point)
 
     def purchase_order_create_note(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
