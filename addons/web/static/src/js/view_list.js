@@ -2217,7 +2217,7 @@ instance.web.list.Many2OneButton = instance.web.list.Column.extend({
 });
 instance.web.list.Many2Many = instance.web.list.Column.extend({
     _format: function (row_data, options) {
-        if (row_data[this.id].value) {
+        if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
             row_data[this.id] = row_data[this.id + '__display'];
         }
