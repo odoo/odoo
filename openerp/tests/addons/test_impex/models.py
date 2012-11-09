@@ -79,6 +79,7 @@ class One2ManyMultiple(orm.Model):
     _name = 'export.one2many.multiple'
 
     _columns = {
+        'parent_id': fields.many2one('export.one2many.recursive'),
         'const': fields.integer(),
         'child1': fields.one2many('export.one2many.child.1', 'parent_id'),
         'child2': fields.one2many('export.one2many.child.2', 'parent_id'),
@@ -134,4 +135,12 @@ class SelectionWithDefault(orm.Model):
     _defaults = {
         'const': 4,
         'value': 2,
+    }
+
+class RecO2M(orm.Model):
+    _name = 'export.one2many.recursive'
+
+    _columns = {
+        'value': fields.integer(),
+        'child': fields.one2many('export.one2many.multiple', 'parent_id')
     }
