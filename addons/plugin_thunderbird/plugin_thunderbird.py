@@ -35,7 +35,6 @@ class plugin_thunderbird_installer(osv.osv_memory):
     _defaults = {
         'thunderbird': True,
         'plugin_name': 'openerp_plugin.xpi',
-        'pdf_file' : 'http://doc.openerp.com/v6.1/book/2/3_CRM_Contacts/communicate.html#managing-your-crm-from-mozilla-thunderbird',
     }
 
     def default_get(self, cr, uid, fields, context=None):
