@@ -352,7 +352,8 @@ class res_partner(osv.osv, format_address):
     def unlink(self, cr, uid, ids, context=None):
         if not ids:
             return True
-        res_id = self.pool.get('res.users').search(cr, uid, [('partner_id', '=', ids)], context=context)
+        res_user = self.pool.get('res.users')
+        res_id = res_user.search(cr, uid, [('partner_id', '=', ids)], context=context)
         res_user.unlink(cr, uid, res_id)
         return super(res_partner,self).unlink(cr, uid, ids, context=context)
 
