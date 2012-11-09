@@ -80,7 +80,6 @@ class stock_partial_picking(osv.osv_memory):
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
         'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
-    
 
     def create_invoice(self, cr, uid, ids, context=None):
         if context is None:
@@ -99,11 +98,17 @@ class stock_partial_picking(osv.osv_memory):
         """Launch Create invoice wizard.
         """
         if context is None: context = {}
+        active_ids = []
         data_pool = self.pool.get('ir.model.data')
         result = self.do_partial(cr, uid, ids, context=context)
         partial = self.browse(cr, uid, ids[0], context=context)
+        if partial.picking_id.backorder_id:
+            active_ids = partial.picking_id.backorder_id.id
+        else:
+            active_ids = partial.picking_id.id
+        
         context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.backorder_id.id])
+                   active_ids=active_ids)
         if partial.picking_id.invoice_state == '2binvoiced':
             invoice_ids = []
             res = self.create_invoice(cr, uid, ids, context=context)
@@ -142,17 +147,18 @@ class stock_partial_picking(osv.osv_memory):
         if type:
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//button[@name='do_partial']"):
-                if type == 'in':
-                    node.set('string', _('_Receive'))
-                elif type == 'out':
-                    node.set('string', _('_Deliver'))
                 if picking and picking.invoice_state == '2binvoiced':
                     buttonnode = node.makeelement('button')
                     buttonnode.set('name', "open_invoice")
-                    buttonnode.set('String', "Receive & Control Invoice")
                     buttonnode.set('class', "oe_highlight")
                     buttonnode.set('type', "object")
-                    node.addnext(buttonnode)
+                if type == 'in':
+                    node.set('string', _('_Receive'))
+                    buttonnode.set('String', _("Receive & Control Invoice"))
+                elif type == 'out':
+                    node.set('string', _('_Deliver'))
+                    buttonnode.set('String', _("Delivery & Control Invoice"))
+                node.addnext(buttonnode)
             for node in doc.xpath("//separator[@name='product_separator']"):
                 if type == 'in':
                     node.set('string', _('Receive Products'))
