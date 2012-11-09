@@ -19,20 +19,22 @@ openerp.base = function(instance) {
             i.onload = function() {
                 console.log('client is available', client);
 
-                client.session.session_bind(client.origin).done(function() {
+                client.session.session_bind(client.origin).then(function() {
                     // check if client can authenticate
-                    client.authenticate().done(function() {
+                    client.authenticate().then(
+                       function() {     /* done */
                         d.resolve(client);
-                    }).fail(function() {
+                    }, function() {     /* fail */
                         if (client.login === 'anonymous') {
                             d.reject(client);
                         } else {
                             sessionStorage.removeItem('apps.login');
                             sessionStorage.removeItem('apps.access_token');
                             client.bind(client.dbname, 'anonymous', 'anonymous');
-                            client.authenticate().done(function() {
+                            client.authenticate().then(
+                               function() {     /* done */
                                 d.resolve(client);
-                            }).fail(function() {
+                            }, function() {     /* fail */
                                 d.reject(client);
                             });
                         }
@@ -118,7 +120,10 @@ openerp.base = function(instance) {
                 }).
                 fail(function(client) {
                     self.do_warn('Apps Server not reachable.', 'Showing local modules.', true);
-                    self.do_action(self.failback_action_id);
+                    self.rpc('/web/action/load', {action_id: self.failback_action_id}).done(function(action) {
+                        self.do_action(action);
+                        instance.webclient.menu.open_action(action.id);
+                    });
                 });
         },
 
