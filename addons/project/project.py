@@ -204,7 +204,7 @@ class project(osv.osv):
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-            '|', 
+             '|', 
              '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
              '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
 		]
