@@ -975,7 +975,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if view_type != 'tree':
+        if (view_type != 'tree') or view_id:
             #Remove the toolbar from the form view
             if view_type == 'form':
                 if result.get('toolbar', False):

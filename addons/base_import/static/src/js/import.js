@@ -139,7 +139,7 @@ openerp.base_import = function (instance) {
                 this._super(),
                 this.Import.call('create', [{
                     'res_model': this.res_model
-                }]).then(function (id) {
+                }]).done(function (id) {
                     self.id = id;
                     self.$('input[name=import_id]').val(id);
                 })
@@ -200,7 +200,7 @@ openerp.base_import = function (instance) {
                 !this.$('input.oe_import_has_header').prop('checked'));
             this.Import.call(
                 'parse_preview', [this.id, this.import_options()])
-                .then(function (result) {
+                .done(function (result) {
                     var signal = result.error ? 'preview_failed' : 'preview_succeeded';
                     self[signal](result);
                 });
@@ -341,11 +341,11 @@ openerp.base_import = function (instance) {
         },
         onvalidate: function () {
             return this.call_import({ dryrun: true })
-                .then(this.proxy('validated'));
+                .done(this.proxy('validated'));
         },
         onimport: function () {
             var self = this;
-            return this.call_import({ dryrun: false }).then(function (message) {
+            return this.call_import({ dryrun: false }).done(function (message) {
                 if (!_.any(message, function (message) {
                         return message.type === 'error' })) {
                     self['import_succeeded']();

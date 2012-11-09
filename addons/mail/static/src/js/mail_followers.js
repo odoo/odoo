@@ -85,7 +85,7 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function () {
             var self = this;
-            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).then(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
         },
@@ -98,9 +98,9 @@ openerp_mail_followers = function(session, mail) {
         fetch_followers: function (value_) {
             this.value = value_ || {};
             return this.ds_follow.call('read', [this.value, ['name', 'user_ids']])
-                .pipe(this.proxy('display_followers'), this.proxy('fetch_generic'))
-                .pipe(this.proxy('display_buttons'))
-                .pipe(this.proxy('fetch_subtypes'));
+                .then(this.proxy('display_followers'), this.proxy('fetch_generic'))
+                .then(this.proxy('display_buttons'))
+                .then(this.proxy('fetch_subtypes'));
         },
 
         /** Read on res.partner failed: fall back on a generic case
@@ -109,10 +109,10 @@ openerp_mail_followers = function(session, mail) {
         fetch_generic: function (error, event) {
             var self = this;
             event.preventDefault();
-            return this.ds_users.call('read', [this.session.uid, ['partner_id']]).pipe(function (results) {
+            return this.ds_users.call('read', [this.session.uid, ['partner_id']]).then(function (results) {
                 var pid = results['partner_id'][0];
                 self.message_is_follower = (_.indexOf(self.get('value'), pid) != -1);
-            }).pipe(self.proxy('display_generic'));
+            }).then(self.proxy('display_generic'));
         },
         _format_followers: function(count){
             // TDE note: why redefining _t ?
@@ -179,7 +179,7 @@ openerp_mail_followers = function(session, mail) {
             var subtype_list_ul = this.$('.oe_subtype_list').empty();
             if (! this.message_is_follower) return;
             var context = new session.web.CompoundContext(this.build_context(), {});
-            this.ds_model.call('message_get_subscription_data', [[this.view.datarecord.id], context]).pipe(this.proxy('display_subtypes'));
+            this.ds_model.call('message_get_subscription_data', [[this.view.datarecord.id], context]).then(this.proxy('display_subtypes'));
         },
 
         /** Display subtypes: {'name': default, followed} */
@@ -206,7 +206,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked',false);
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).pipe(this.proxy('read_value'));
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).then(this.proxy('read_value'));
         },
 
         do_update_subscription: function (event) {
@@ -221,7 +221,7 @@ openerp_mail_followers = function(session, mail) {
 
             var context = new session.web.CompoundContext(this.build_context(), {});
             return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], this.message_is_follower ? checklist:undefined, context])
-                .pipe(this.proxy('read_value'));
+                .then(this.proxy('read_value'));
         },
     });
 };
