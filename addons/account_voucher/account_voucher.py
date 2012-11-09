@@ -712,14 +712,14 @@ class account_voucher(osv.osv):
                 'move_line_id':line.id,
                 'account_id':line.account_id.id,
                 'amount_original': amount_original,
-                'amount': (move_line_found == line.id) and min(price, amount_unreconciled) or 0.0,
+                'amount': (move_line_found == line.id) and min(abs(price), amount_unreconciled) or 0.0,
                 'date_original':line.date,
                 'date_due':line.date_maturity,
                 'amount_unreconciled': amount_unreconciled,
                 'currency_id': line_currency_id,
             }
-
-            #split voucher amount by most old first, but only for lines in the same currency
+            #in case a corresponding move_line hasn't been found, we now try to assign the voucher amount
+            #on existing invoices: we split voucher amount by most old first, but only for lines in the same currency
             if not move_line_found:
                 if currency_id == line_currency_id:
                     if line.credit:

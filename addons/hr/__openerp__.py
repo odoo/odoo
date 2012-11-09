@@ -24,12 +24,12 @@
     'version': '1.1',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
-    'sequence': 12,
+    'sequence': 21,
     'website': 'http://www.openerp.com',
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
 Human Resources Management
-=========================
+==========================
 
 This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
 

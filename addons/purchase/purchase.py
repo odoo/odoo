@@ -137,6 +137,17 @@ class purchase_order(osv.osv):
                 invoiced = True
             res[purchase.id] = invoiced
         return res
+    
+    def _get_journal(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        company_id = context.get('company_id', user.company_id.id)
+        journal_obj = self.pool.get('account.journal')
+        res = journal_obj.search(cr, uid, [('type', '=', 'purchase'),
+                                            ('company_id', '=', company_id)],
+                                                limit=1)
+        return res and res[0] or False  
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
@@ -204,6 +215,7 @@ class purchase_order(osv.osv):
         'product_id': fields.related('order_line','product_id', type='many2one', relation='product.product', string='Product'),
         'create_uid':  fields.many2one('res.users', 'Responsible'),
         'company_id': fields.many2one('res.company','Company',required=True,select=1),
+        'journal_id': fields.many2one('account.journal', 'Journal'),
     }
     _defaults = {
         'date_order': fields.date.context_today,
@@ -214,6 +226,7 @@ class purchase_order(osv.osv):
         'invoiced': 0,
         'pricelist_id': lambda self, cr, uid, context: context.get('partner_id', False) and self.pool.get('res.partner').browse(cr, uid, context['partner_id']).property_product_pricelist_purchase.id,
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'purchase.order', context=c),
+        'journal_id': _get_journal,
     }
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
@@ -890,14 +903,16 @@ class purchase_order_line(osv.osv):
         account_tax = self.pool.get('account.tax')
 
         # - check for the presence of partner_id and pricelist_id
-        if not partner_id:
-            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
-        if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
+        #if not partner_id:
+        #    raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        #if not pricelist_id:
+        #    raise osv.except_osv(_('No Pricelist !'), _('Select a price list in the purchase order form before choosing a product.'))
 
         # - determine name and notes based on product in partner lang.
-        lang = res_partner.browse(cr, uid, partner_id).lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+        context_partner = context.copy()
+        if partner_id:
+            lang = res_partner.browse(cr, uid, partner_id).lang
+            context_partner.update( {'lang': lang, 'partner_id': partner_id} )
         product = product_product.browse(cr, uid, product_id, context=context_partner)
         name = product.name
         if product.description_purchase:
@@ -926,7 +941,7 @@ class purchase_order_line(osv.osv):
         qty = qty or 1.0
         supplierinfo = False
         for supplier in product.seller_ids:
-            if supplier.name.id == partner_id:
+            if partner_id and (supplier.name.id == partner_id):
                 supplierinfo = supplier
                 if supplierinfo.product_uom.id != uom_id:
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
@@ -940,8 +955,11 @@ class purchase_order_line(osv.osv):
         res['value'].update({'date_planned': date_planned or dt, 'product_qty': qty})
 
         # - determine price_unit and taxes_id
-        price = product_pricelist.price_get(cr, uid, [pricelist_id],
-                    product.id, qty or 1.0, partner_id, {'uom': uom_id, 'date': date_order})[pricelist_id]
+        if pricelist_id:
+            price = product_pricelist.price_get(cr, uid, [pricelist_id],
+                    product.id, qty or 1.0, partner_id or False, {'uom': uom_id, 'date': date_order})[pricelist_id]
+        else:
+            price = product.standard_price
 
         taxes = account_tax.browse(cr, uid, map(lambda x: x.id, product.supplier_taxes_id))
         fpos = fiscal_position_id and account_fiscal_position.browse(cr, uid, fiscal_position_id, context=context) or False
@@ -1087,6 +1105,12 @@ class procurement_order(osv.osv):
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
         self.purchase_order_create_note(cr, uid, ids, context=context)
         return res
+    
+    def _product_virtual_get(self, cr, uid, order_point):
+        procurement = order_point.procurement_id
+        if procurement and procurement.state != 'exception' and procurement.purchase_id and procurement.purchase_id.state in ('draft', 'confirmed'):
+            return None
+        return super(procurement_order, self)._product_virtual_get(cr, uid, order_point)
 
     def purchase_order_create_note(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
@@ -1111,7 +1135,7 @@ class product_template(osv.osv):
     _name = 'product.template'
     _inherit = 'product.template'
     _columns = {
-        'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
+        'purchase_ok': fields.boolean('Can be Purchased', help="Specify if the product can be selected in a purchase order line."),
     }
     _defaults = {
         'purchase_ok': 1,

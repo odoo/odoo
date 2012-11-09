@@ -1,6 +1,6 @@
 -
-  In order to test mrp_subproduct with OpenERP, I add subproduct in bill of material.
-  I make a production order, confirm it so stock moves for subproducts are generated.
+  In order to test mrp_byproduct with OpenERP, I add byproduct in bill of material.
+  I make a production order, confirm it so stock moves for byproducts are generated.
 -
   I add a sub product in Bill of material for product External Hard Disk.
 -
@@ -37,7 +37,7 @@
   !assert {model: mrp.production, id: mrp_production_mo0, severity: error, string: Production order should be in state confirmed}:
     - state == 'confirmed'
 -
-  Now I check the stock moves for the subproduct I created in the bill of material.
+  Now I check the stock moves for the byproduct I created in the bill of material.
   This move is created automatically when I confirmed the production order.
 -
   !python {model: stock.move}: |
