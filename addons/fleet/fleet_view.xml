@@ -256,7 +256,7 @@
                     <field name="location"/>
                     <field name="state" />
                     <field name="state" />
-                    <filter name="alert_true" domain="['|',('contract_renewal_due_soon','>',0),('contract_renewal_overdue','>',0)]" string="Has Alert(s)"/>
+                    <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
                </search>
             </field>
         </record>

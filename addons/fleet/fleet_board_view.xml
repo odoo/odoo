@@ -43,7 +43,7 @@
       <field name="view_id" ref="fleet_vehicle_kanban"></field>
       <field name="view_type">form</field>
       <field name="view_mode">tree</field>
-      <field name="domain">['|',('contract_renewal_due_soon','>',0),('contract_renewal_overdue','>',0)]</field>
+      <field name="domain">['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]</field>
       <field name="help" type="html">
         <p>
           Here are displayed vehicles for which one or more contracts need to be renewed. If you see this message, then there is no contracts to renew.
