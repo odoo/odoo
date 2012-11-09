@@ -560,7 +560,7 @@ openerp.mail = function (session) {
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
-                    ]).then(function (record) {
+                    ]).done(function (record) {
                         var thread = self.parent_thread;
 
                         if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
@@ -1194,7 +1194,6 @@ openerp.mail = function (session) {
          * @param {Array} ids read (if the are some ids, the method don't use the domain)
          */
         message_fetch: function (replace_domain, replace_context, ids, callback) {
-            console.log(arguments);
             return this.ds_message.call('message_read', [
                     // ids force to read
                     ids == false ? undefined : ids, 

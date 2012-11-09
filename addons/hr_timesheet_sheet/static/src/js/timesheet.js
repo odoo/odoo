@@ -46,7 +46,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             var commands = this.field_manager.get_field_value("timesheet_ids");
             this.res_o2m_drop.add(new instance.web.Model(this.view.model).call("resolve_2many_commands", ["timesheet_ids", commands, [], 
                     new instance.web.CompoundContext()]))
-                .then(function(result) {
+                .done(function(result) {
                 self.querying = true;
                 self.set({sheets: result});
                 self.querying = false;
@@ -57,7 +57,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             if (self.querying)
                 return;
             self.updating = true;
-            self.field_manager.set_values({timesheet_ids: self.get("sheets")}).then(function() {
+            self.field_manager.set_values({timesheet_ids: self.get("sheets")}).done(function() {
                 self.updating = false;
             });
         },
@@ -85,7 +85,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             var default_get;
             return this.render_drop.add(new instance.web.Model("hr.analytic.timesheet").call("default_get", [
                 ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount'],
-                new instance.web.CompoundContext({'user_id': self.get('user_id')})]).pipe(function(result) {
+                new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(result) {
                 default_get = result;
                 // calculating dates
                 dates = [];
@@ -108,9 +108,9 @@ openerp.hr_timesheet_sheet = function(instance) {
                 var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el) });
 
                 return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
-                    new instance.web.CompoundContext({'user_id': self.get('user_id')})]).pipe(function(accounts_defaults) {
+                    new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
                     accounts = _(accounts).chain().map(function(lines, account_id) {
-                        account_defaults = _.extend({}, default_get, accounts_defaults[account_id]);
+                        account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
                         // group by days
                         account_id = account_id === "false" ? false :  Number(account_id);
                         var index = _.groupBy(lines, "date");
@@ -136,7 +136,7 @@ openerp.hr_timesheet_sheet = function(instance) {
 
                     // we need the name_get of the analytic accounts
                     return new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(accounts, "account"),
-                        new instance.web.CompoundContext()]).pipe(function(result) {
+                        new instance.web.CompoundContext()]).then(function(result) {
                         account_names = {};
                         _.each(result, function(el) {
                             account_names[el[0]] = el[1];
@@ -146,7 +146,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                         });
                     });;
                 });
-            })).pipe(function(result) {
+            })).then(function(result) {
                 // we put all the gathered data in self, then we render
                 self.dates = dates;
                 self.accounts = accounts;
@@ -222,7 +222,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                     return;
                 }
                 var ops = self.generate_o2m_value();
-                new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], id]).pipe(function(res) {
+                new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], id]).then(function(res) {
                     var def = _.extend({}, self.default_get, res.value, {
                         name: self.description_line,
                         unit_amount: 0,
