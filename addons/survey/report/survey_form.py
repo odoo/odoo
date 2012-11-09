@@ -165,7 +165,7 @@ class survey_form(report_rml):
                 seq += 1
                 rml += """
                 <blockTable colWidths='"""+_tbl_widths+"""' style="page_tbl">
-                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para></td></tr>
+                    <tr><td><para style="page">"""+ tools.ustr(seq) + """. """ + to_xml(tools.ustr(page.title)) + """</para><para style="P2"><font></font></para></td></tr>
                 </blockTable>"""
                 if page.note:
                     rml += """<para style="P2"></para><blockTable colWidths='"""+_tbl_widths+"""' style="note_table">
