@@ -102,11 +102,10 @@ class stock_partial_picking(osv.osv_memory):
         data_pool = self.pool.get('ir.model.data')
         result = self.do_partial(cr, uid, ids, context=context)
         partial = self.browse(cr, uid, ids[0], context=context)
-        if partial.picking_id.backorder_id:
+        if partial.picking_id.backorder_id and partial.picking_id.backorder_id.invoice_state <> 'invoiced':
             active_ids = [partial.picking_id.backorder_id.id]
         else:
             active_ids = [partial.picking_id.id]
-        
         context.update(active_model='stock.picking',
                    active_ids=active_ids)
         if partial.picking_id.invoice_state == '2binvoiced':
@@ -132,8 +131,6 @@ class stock_partial_picking(osv.osv_memory):
                 action['domain'] = "[('id','in', ["+','.join(map(str,invoice_ids))+"])]"
             return action
         return {'type': 'ir.actions.act_window_close'}
-    
-    
     
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
