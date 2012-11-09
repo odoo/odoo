@@ -25,7 +25,7 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
 HOST = '127.0.0.1'
 
 ADMIN_USER = 'admin'
-ADMIN_USER_ID = 1
+ADMIN_USER_ID = openerp.SUPERUSER_ID
 ADMIN_PASSWORD = 'admin'
 
 def start_openerp():
