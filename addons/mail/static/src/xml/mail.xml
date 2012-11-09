@@ -72,21 +72,21 @@
         -->
     <t t-name="mail.thread.message.attachments">
         <t t-foreach='widget.attachment_ids' t-as='attachment'>
-            <t t-if="widget.filetype(attachment) !== 'webimage'">
+            <t t-if="attachment.filetype !== 'webimage'">
                 <div class='oe_attachment'>
-                    <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + widget.filetype(attachment) + '.png'"></img></a>
+                    <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img></a>
                     <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
-                    <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
+                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
                 </div>
             </t>
-            <t t-if="widget.filetype(attachment) === 'webimage'">
+            <t t-if="attachment.filetype === 'webimage'">
                 <div class='oe_attachment oe_preview'>
                     <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,100])"></img></a>
                     <div class='oe_delete oe_e'>[</div>
-                    <div class='oe_name'><t t-raw='widget.breakword(attachment.name || attachment.filename)' /></div>
+                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>

@@ -114,6 +114,69 @@ openerp.mail = function (session) {
             return domain;
         },
 
+        // inserts zero width space between each letter of a string so that
+        // the word will correctly wrap in html boxes smaller than the text
+        breakword: function(str){
+            var out = '';
+            if (!str) {
+                return str;
+            }
+            for(var i = 0, len = str.length; i < len; i++){
+                out += _.str.escapeHTML(str[i]) + '&#8203;';
+            }
+            return out;
+        },
+
+        // returns the file type of a file based on its extension 
+        // As it only looks at the extension it is quite approximative. 
+        filetype: function(url){
+            url = url.filename || url;
+            var tokens = url.split('.');
+            if(tokens.length <= 1){
+                return 'unknown';
+            }
+            var extension = tokens[tokens.length -1];
+            if(extension.length === 0){
+                return 'unknown';
+            }else{
+                extension = extension.toLowerCase();
+            }
+            var filetypes = {
+                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
+                'image':        ['tif','tiff','tga',
+                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
+                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
+                                 'jp2','jpx','dng','djvu','dds'],
+                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
+                'print':        ['dvi','pdf','ps'],
+                'document':     ['doc','docx','odm','odt'],
+                'presentation': ['key','keynote','odp','pps','ppt'],
+                'font':         ['otf','ttf','woff','eot'],
+                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
+                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
+                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
+                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
+                                 'm4a','ra','mid','midi'],
+                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
+                'text':         ['txt','rtf','ass'],
+                'html':         ['html','xhtml','xml','htm','css'],
+                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
+                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
+                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
+                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
+                'binary':       ['exe','com','bin','app'],
+            };
+            for(filetype in filetypes){
+                var ext_list = filetypes[filetype];
+                for(var i = 0, len = ext_list.length; i < len; i++){
+                    if(extension === ext_list[i]){
+                        return filetype;
+                    }
+                }
+            }
+            return 'unknown';
+        },
+
     };
 
 
@@ -211,87 +274,29 @@ openerp.mail = function (session) {
                 this.date = session.web.format_value(this._date, {type:"datetime"});
                 this.timerelative = $.timeago(this.date);
             } 
-            if (this.type == 'email') {
+            if (this.type == 'email' && !this.author_id) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id) {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);
             } else {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             }
-            for (var l in this.attachment_ids) {
-                var attach = this.attachment_ids[l];
-                attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
 
-                if (attach.filename.match(/[.](jpg|jpg|gif|png|tif|svg)$/i)) {
-                    attach.is_image = true;
-                    attach['url'] = mail.ChatterUtils.get_image(this.session, 'ir.attachment', 'datas', attach.id); 
-                }
-            }
         },
 
-        // inserts zero width space between each letter of a string so that
-        // the word will correctly wrap in html boxes smaller than the text
-        breakword: function(str){
-            var out = '';
-            for(var i = 0, len = str.length; i < len; i++){
-                out += _.str.escapeHTML(str[i]) + '&#8203;';
-            }
-            return out;
-        },
-
-        // returns the file type of a file based on its extension 
-        // As it only looks at the extension it is quite approximative. 
-        filetype: function(url){
-            url = url.name || url.filename || url;
-            var tokens = url.split('.');
-            if(tokens.length <= 1){
-                return 'unknown';
-            }
-            var extension = tokens[tokens.length -1];
-            if(extension.length === 0){
-                return 'unknown';
-            }else{
-                extension = extension.toLowerCase();
-            }
-            var filetypes = {
-                'webimage':     ['png','jpg','jpeg','jpe','gif'], // those have browser preview
-                'image':        ['tif','tiff','tga',
-                                 'bmp','xcf','psd','ppm','pbm','pgm','pnm','mng',
-                                 'xbm','ico','icon','exr','webp','psp','pgf','xcf',
-                                 'jp2','jpx','dng','djvu','dds'],
-                'vector':       ['ai','svg','eps','vml','cdr','xar','cgm','odg','sxd'],
-                'print':        ['dvi','pdf','ps'],
-                'document':     ['doc','docx','odm','odt'],
-                'presentation': ['key','keynote','odp','pps','ppt'],
-                'font':         ['otf','ttf','woff','eot'],
-                'archive':      ['zip','7z','ace','apk','bzip2','cab','deb','dmg','gzip','jar',
-                                 'rar','tar','gz','pak','pk3','pk4','lzip','lz','rpm'],
-                'certificate':  ['cer','key','pfx','p12','pem','crl','der','crt','csr'],
-                'audio':        ['aiff','wav','mp3','ogg','flac','wma','mp2','aac',
-                                 'm4a','ra','mid','midi'],
-                'video':        ['asf','avi','flv','mkv','m4v','mpeg','mpg','mpe','wmv','mp4','ogm'],
-                'text':         ['txt','rtf','ass'],
-                'html':         ['html','xhtml','xml','htm','css'],
-                'disk':         ['iso','nrg','img','ccd','sub','cdi','cue','mds','mdx'],
-                'script':       ['py','js','c','cc','cpp','cs','h','java','bat','sh',
-                                 'd','rb','pl','as','cmd','coffee','m','r','vbs','lisp'],
-                'spreadsheet':  ['123','csv','ods','numbers','sxc','xls','vc','xlsx'],
-                'binary':       ['exe','com','bin','app'],
-            };
-            for(filetype in filetypes){
-                var ext_list = filetypes[filetype];
-                for(var i = 0, len = ext_list.length; i < len; i++){
-                    if(extension === ext_list[i]){
-                        return filetype;
-                    }
-                }
-            }
-            return 'unknown';
-        },
 
         /* upload the file on the server, add in the attachments list and reload display
          */
         display_attachments: function () {
+            for (var l in this.attachment_ids) {
+                var attach = this.attachment_ids[l];
+                if (!attach.formating) {
+                    attach.url = mail.ChatterUtils.get_attachment_url(this.session, attach);
+                    attach.filetype = mail.ChatterUtils.filetype(attach.filename);
+                    attach.name = mail.ChatterUtils.breakword(attach.name || attach.filename);
+                    attach.formating = true;
+                }
+            }
             this.$(".oe_msg_attachment_list").html( session.web.qweb.render('mail.thread.message.attachments', {'widget': this}) );
         },
 
@@ -437,6 +442,7 @@ openerp.mail = function (session) {
          */
         on_attachment_delete: function (event) {
             event.stopPropagation();
+            console.log(event);
             var attachment_id=$(event.target).data("id");
             if (attachment_id) {
                 var attachments=[];
@@ -476,7 +482,7 @@ openerp.mail = function (session) {
             this.$('textarea:not(.oe_compact)').on('blur', _.bind( this.on_compose_expandable, this));
 
             // event: delete child attachments off the oe_msg_attachment_list box
-            this.$(".oe_msg_attachment_list").off('click').on('click', '.oe_mail_attachment_delete', this.on_attachment_delete);
+            this.$(".oe_msg_attachment_list").on('click', '.oe_delete', this.on_attachment_delete);
         },
 
         on_compose_fullmail: function (default_composition_mode) {
@@ -1043,7 +1049,7 @@ openerp.mail = function (session) {
         */
         on_scroll: function () {
             var expandables = 
-            _.each( _.filter(this.messages, function (val) {return val.id == -1;}), function (val) {
+            _.each( _.filter(this.messages, function (val) {return val.max_limit && !val.parent_id;}), function (val) {
                 var pos = val.$el.position();
                 if (pos.top) {
                     /* bottom of the screen */
