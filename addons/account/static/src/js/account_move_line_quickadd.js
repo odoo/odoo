@@ -40,17 +40,15 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            var getarray = [];
-            getarray.push(mod.call("list_journals", []).then(function(result) {
+            return new instance.web.Model("account.move.line", context, domain);
+            $.when(mod.call("list_journals", []).then(function(result) {
                 self.journals = result;
-            }));
-            getarray.push(mod.call("list_periods", []).then(function(result) {
+            }),mod.call("list_periods", []).then(function(result) {
                 self.periods = result;
-            }));
-            $.when.apply($, getarray).done(function () {
+            })).then(function () {
                 self.current_journal = self.current_journal === null ? self.journals[0][0] : self.current_journal;
                 self.current_period = self.current_period === null ? self.periods[0][0] :self.current_period;
-                var tmp = self.search_by_journal_period();
+                return self.search_by_journal_period();
             });
         },
         search_by_journal_period: function() {
