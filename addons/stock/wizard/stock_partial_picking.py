@@ -103,7 +103,7 @@ class stock_partial_picking(osv.osv_memory):
         result = self.do_partial(cr, uid, ids, context=context)
         partial = self.browse(cr, uid, ids[0], context=context)
         context.update(active_model='stock.picking',
-                       active_ids=[partial.picking_id.id])
+                       active_ids=[partial.picking_id.backorder_id.id])
         if partial.picking_id.invoice_state == '2binvoiced':
             invoice_ids = []
             res = self.create_invoice(cr, uid, ids, context=context)
