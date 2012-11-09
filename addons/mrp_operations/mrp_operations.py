@@ -50,17 +50,6 @@ class stock_move(osv.osv):
 stock_move()
 
 class mrp_production_workcenter_line(osv.osv):
-    def _get_date_date(self, cr, uid, ids, field_name, arg, context=None):
-        """ Finds starting date.
-        @return: Dictionary of values.
-        """
-        res={}
-        for op in self.browse(cr, uid, ids, context=context):
-            if op.date_start:
-                res[op.id] = op.date_start[:10]
-            else:
-                res[op.id]=False
-        return res
 
     def _get_date_end(self, cr, uid, ids, field_name, arg, context=None):
         """ Finds ending date.
@@ -87,12 +76,11 @@ class mrp_production_workcenter_line(osv.osv):
 
     _columns = {
        'state': fields.selection([('draft','Draft'),('cancel','Cancelled'),('pause','Pending'),('startworking', 'In Progress'),('done','Finished')],'Status', readonly=True,
-                                 help="* When a work order is created it is set in 'Draft' state.\n" \
-                                       "* When user sets work order in start mode that time it will be set in 'In Progress' state.\n" \
-                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' state.\n" \
-                                       "* When the user cancels the work order it will be set in 'Canceled' state.\n" \
-                                       "* When order is completely processed that time it is set in 'Finished' state."),
-       'date_start_date': fields.function(_get_date_date, string='Start Date', type='date'),
+                                 help="* When a work order is created it is set in 'Draft' status.\n" \
+                                       "* When user sets work order in start mode that time it will be set in 'In Progress' status.\n" \
+                                       "* When work order is in running mode, during that time if user wants to stop or to make changes in order then can set in 'Pending' status.\n" \
+                                       "* When the user cancels the work order it will be set in 'Canceled' status.\n" \
+                                       "* When order is completely processed that time it is set in 'Finished' status."),
        'date_planned': fields.datetime('Scheduled Date', select=True),
        'date_planned_end': fields.function(_get_date_end, string='End Date', type='datetime'),
        'date_start': fields.datetime('Start Date'),

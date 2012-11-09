@@ -425,7 +425,7 @@ class stock_location(osv.osv):
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
                     # state, we return False as if the products were not available, and log it:
                     cr.execute("ROLLBACK TO stock_location_product_reserve")
-                    _logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
+                    _logger.warning("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
                     _logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
                     return False
 
@@ -618,7 +618,7 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            seq_obj_name =  'stock.picking.' + vals['type']
+            seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if new_id:
@@ -627,9 +627,9 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'origin': fields.char('Source', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
+        'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, readonly=True, help="Shipping type specify, goods coming in or going out."),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
@@ -653,8 +653,8 @@ class stock_picking(osv.osv):
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
-        'date': fields.datetime('Date', help="Creation date, usually the date of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                 store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+        'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -2130,7 +2130,7 @@ class stock_move(osv.osv):
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
-                    'date_moved': time.strftime('%Y-%m-%d'),
+                    'date': time.strftime('%Y-%m-%d'),
                     'picking_id': pickid,
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
@@ -3039,7 +3039,7 @@ class stock_picking_in(osv.osv):
             ('assigned', 'Ready to Receive'),
             ('done', 'Received'),
             ('cancel', 'Cancelled'),],
-            'State', readonly=True, select=True,
+            'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n
@@ -3084,7 +3084,7 @@ class stock_picking_out(osv.osv):
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
             ('cancel', 'Cancelled'),],
-            'State', readonly=True, select=True,
+            'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n

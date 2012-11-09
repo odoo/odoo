@@ -61,7 +61,7 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid,context=context)
         if periods:
             return periods[0]
         return False
@@ -123,8 +123,8 @@ class account_bank_statement(osv.osv):
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
                                    'Status', required=True, readonly="1",
-                                   help='When new statement is created the state will be \'Draft\'.\n'
-                                        'And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
+                                   help='When new statement is created the status will be \'Draft\'.\n'
+                                        'And after getting confirmation from the bank it will be in \'Confirmed\' status.'),
         'currency': fields.function(_currency, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
