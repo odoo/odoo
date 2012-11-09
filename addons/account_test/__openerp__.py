@@ -34,7 +34,7 @@
         'account_test_report.xml',
         'account_test_data.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'account_test_demo.xml',
     ],
     'active': False,
