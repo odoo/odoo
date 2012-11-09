@@ -917,8 +917,9 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
-                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
+            if partner_id:
+                if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+                    partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
