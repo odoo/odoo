@@ -1352,7 +1352,8 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <field name="origin" string="Reference"/>
+                    <field name="picking_id" string="Reference"/>
+                    <field name="origin" string="Source"/>
                     <field name="date" groups="base.group_no_one"/>
 
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
