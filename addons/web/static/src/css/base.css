@@ -3024,23 +3024,24 @@ div.ui-widget-overlay {
     background-color: white;
     margin-bottom: 15px;
     margin-left: 5px;
+    position: relative;
 }
 .resolution .res {
     display: table;
     width:100%;
 }
+div.res {
+	border:1px solid;
+}
+.resolution .res > div:not(.simtext) {
+    border-bottom: 1px solid;
+    height: 70px;
+    clear: both;
+}
 .res .simtext {
     border-bottom: 0px;
     padding: 5px;
     height: auto;
-}
-div.res {
-	border:1px solid;
-}
-.resolution .res > div {
-    border-bottom: 1px solid;
-    height: 70px;
-    clear: both;
 }
 .resolution .res div div {
     display: inline;
