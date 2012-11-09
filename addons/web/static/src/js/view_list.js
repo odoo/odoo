@@ -508,7 +508,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name')
-        ).then(function (records) {
+        ).done(function (records) {
             _(records[0]).each(function (value, key) {
                 record.set(key, value, {silent: true});
             });
@@ -553,7 +553,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.no_leaf = !!context['group_by_no_leaf'];
         this.grouped = !!group_by;
 
-        return this.load_view(context).pipe(
+        return this.load_view(context).then(
             this.proxy('reload_content'));
     },
     /**
@@ -566,7 +566,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             return;
         }
         var self = this;
-        return $.when(this.dataset.unlink(ids)).then(function () {
+        return $.when(this.dataset.unlink(ids)).done(function () {
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
@@ -970,13 +970,13 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             // set) a human-readable version. m2o does not have this issue
             // because the non-human-readable is just a number, where the
             // human-readable version is a pair
-            if (value && (ref_match = /([\w\.]+),(\d+)/.exec(value))) {
+            if (value && (ref_match = /^([\w\.]+),(\d+)$/.exec(value))) {
                 // reference values are in the shape "$model,$id" (as a
                 // string), we need to split and name_get this pair in order
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new instance.web.DataSet(this.view, model).name_get([id]).then(function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -992,7 +992,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // and let the various registered events handle refreshing the
                 // row
                 new instance.web.DataSet(this.view, column.relation)
-                        .name_get([value]).then(function (names) {
+                        .name_get([value]).done(function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
@@ -1000,7 +1000,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         } else if (column.type === 'many2many') {
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
-            if (value instanceof Array && !_.isEmpty(value)) {
+            if (value instanceof Array && !_.isEmpty(value)
+                    && !record.get(column.id + '__display')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
@@ -1015,9 +1016,14 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     ids = value;
                 }
                 new instance.web.Model(column.relation)
-                    .call('name_get', [ids]).then(function (names) {
-                        record.set(column.id, _(names).pluck(1).join(', '));
-                    })
+                    .call('name_get', [ids]).done(function (names) {
+                        // FIXME: nth horrible hack in this poor listview
+                        record.set(column.id + '__display',
+                                   _(names).pluck(1).join(', '));
+                        record.set(column.id, ids);
+                    });
+                // temp empty value
+                record.set(column.id, false);
             }
         }
         return column.format(record.toForm().data, {
@@ -1306,9 +1312,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         process_modifiers: false
                     });
                 } catch (e) {
-                    group_label = row_data[group_column.id].value;
+                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
                 }
-                $group_column.text(_.str.sprintf("%s (%d)",
+                // group_label is html-clean (through format or explicit
+                // escaping if format failed), can inject straight into HTML
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {
@@ -1383,43 +1391,45 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().then(function() {dataset.read_slice(fields, options).then(function (records) {
-            // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
-            if (self.records.length) {
-                self.records.reset(null, {silent: true});
-            }
-            if (!self.datagroup.openable) {
-                view.configure_pager(dataset);
-            } else {
-                if (dataset.size() == records.length) {
-                    // only one page
-                    self.$row.find('td.oe_list_group_pagination').empty();
-                } else {
-                    var pages = Math.ceil(dataset.size() / limit);
-                    self.$row
-                        .find('.oe_list_pager_state')
-                            .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
-                                page: page + 1,
-                                page_count: pages
-                            }))
-                        .end()
-                        .find('button[data-pager-action=previous]')
-                            .css('visibility',
-                                 page === 0 ? 'hidden' : '')
-                        .end()
-                        .find('button[data-pager-action=next]')
-                            .css('visibility',
-                                 page === pages - 1 ? 'hidden' : '');
+        $.async_when().done(function() {
+            dataset.read_slice(fields, options).done(function (records) {
+                // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
+                if (self.records.length) {
+                    self.records.reset(null, {silent: true});
                 }
-            }
+                if (!self.datagroup.openable) {
+                    view.configure_pager(dataset);
+                } else {
+                    if (dataset.size() == records.length) {
+                        // only one page
+                        self.$row.find('td.oe_list_group_pagination').empty();
+                    } else {
+                        var pages = Math.ceil(dataset.size() / limit);
+                        self.$row
+                            .find('.oe_list_pager_state')
+                                .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
+                                    page: page + 1,
+                                    page_count: pages
+                                }))
+                            .end()
+                            .find('button[data-pager-action=previous]')
+                                .css('visibility',
+                                     page === 0 ? 'hidden' : '')
+                            .end()
+                            .find('button[data-pager-action=next]')
+                                .css('visibility',
+                                     page === pages - 1 ? 'hidden' : '');
+                    }
+                }
 
-            self.records.add(records, {silent: true});
-            list.render();
-            d.resolve(list);
-            if (_.isEmpty(records)) {
-                view.no_result();
-            }
-        });});
+                self.records.add(records, {silent: true});
+                list.render();
+                d.resolve(list);
+                if (_.isEmpty(records)) {
+                    view.no_result();
+                }
+            });
+        });
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
@@ -1475,7 +1485,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
                     (function (dataset, id, seq) {
-                        $.async_when().then(function () {
+                        $.async_when().done(function () {
                             var attrs = {};
                             attrs[seqname] = seq;
                             dataset.write(id, attrs);
@@ -1500,7 +1510,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.render_dataset(dataset).then(function (list) {
+                self.render_dataset(dataset).done(function (list) {
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($el)[0]];
@@ -1560,7 +1570,7 @@ var DataGroup =  instance.web.CallbackEnabled.extend({
    list: function (fields, ifGroups, ifRecords) {
        var self = this;
        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
-       $.when(query).then(function (querygroups) {
+       $.when(query).done(function (querygroups) {
            // leaf node
            if (!querygroups) {
                var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
@@ -2010,6 +2020,8 @@ instance.web.list.columns = new instance.web.Registry({
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
+    'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2195,6 +2207,21 @@ instance.web.list.Handle = instance.web.list.Column.extend({
      */
     _format: function (row_data, options) {
         return '<div class="oe_list_handle">';
+    }
+});
+instance.web.list.Many2OneButton = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        this.has_value = !!row_data[this.id].value;
+        return QWeb.render('Many2OneButton.cell', {'widget': this});
+    },
+});
+instance.web.list.Many2Many = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (row_data[this.id].value) {
+            // If value, use __display version for printing
+            row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
     }
 });
 };
