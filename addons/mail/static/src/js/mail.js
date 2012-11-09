@@ -5,6 +5,7 @@ openerp.mail = function (session) {
     var mail = session.mail = {};
 
     openerp_mail_followers(session, mail);        // import mail_followers.js
+    openerp_FieldMany2ManyTagsEmail(session);      // import manyy2many_tags_email.js
 
     /**
      * ------------------------------------------------------------
@@ -356,7 +357,7 @@ openerp.mail = function (session) {
                         this.context.default_parent_id, 
                         attachments,
                         this.parent_thread.context
-                    ]).then(function (record) {
+                    ]).done(function (record) {
                         var thread = self.parent_thread;
                         // create object and attach to the thread object
                         thread.message_fetch(false, false, [record], function (arg, data) {
@@ -744,7 +745,7 @@ openerp.mail = function (session) {
             }
 
             // if this message is read, all childs message display is read
-            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).pipe(function () {
+            this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).then(function () {
                 self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
                 self.to_read = !self.to_read;
             });
@@ -801,7 +802,7 @@ openerp.mail = function (session) {
         on_vote: function (event) {
             event.stopPropagation();
             var self=this;
-            return this.ds_message.call('vote_toggle', [[self.id]]).pipe(function (vote) {
+            return this.ds_message.call('vote_toggle', [[self.id]]).then(function (vote) {
                 self.has_voted = vote;
                 self.vote_nb += self.has_voted ? 1 : -1;
                 self.display_vote();
@@ -826,7 +827,7 @@ openerp.mail = function (session) {
             event.stopPropagation();
             var self=this;
             var button = self.$('.oe_star:first');
-            return this.ds_message.call('favorite_toggle', [[self.id]]).pipe(function (star) {
+            return this.ds_message.call('favorite_toggle', [[self.id]]).then(function (star) {
                 self.is_favorite=star;
                 if (self.is_favorite) {
                     button.addClass('oe_starred');
@@ -1111,7 +1112,7 @@ openerp.mail = function (session) {
             var thread_level = this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0;
 
             return this.ds_message.call('message_read', [ids, fetch_domain, message_loaded_ids, thread_level, fetch_context, this.context.default_parent_id || undefined])
-                .then(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
+                .done(callback ? _.bind(callback, this, arguments) : this.proxy('switch_new_message'));
         },
 
         /**
@@ -1580,7 +1581,7 @@ openerp.mail = function (session) {
         load_searchview: function (defaults, hidden) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
-            return this.searchview.appendTo(this.$('.oe_view_manager_view_search')).then(function () {
+            return this.searchview.appendTo(this.$('.oe_view_manager_view_search')).done(function () {
                 self.searchview.on('search_data', self, self.do_searchview_search);
             });
         },
@@ -1598,7 +1599,7 @@ openerp.mail = function (session) {
                 domains: domains || [],
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
-            }).then(function (results) {
+            }).done(function (results) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
                 self.root.destroy();
@@ -1630,7 +1631,22 @@ openerp.mail = function (session) {
 
         bind_events: function () {
             var self=this;
-            this.$(".oe_write_full").click(function(){ self.root.thread.compose_message.on_compose_fullmail(); });
+            this.$(".oe_write_full").click(function (event) {
+                event.stopPropagation();
+                var action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.compose.message',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    action_from: 'mail.ThreadComposeMessage',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: {
+                        'default_content_subtype': 'html',
+                    },
+                };
+                session.client.action_manager.do_action(action);
+            });
             this.$(".oe_write_onwall").click(function(){ self.root.thread.on_compose_message(); });
         }
     });
@@ -1645,17 +1661,6 @@ openerp.mail = function (session) {
      */
     session.web.ComposeMessageTopButton = session.web.Widget.extend({
         template:'mail.compose_message.button_top_bar',
-
-        init: function (parent, options) {
-            this._super.apply(this, options);
-            this.options = this.options || {};
-            this.options.domain = this.options.domain || [];
-            this.options.context = {
-                'default_model': false,
-                'default_res_id': 0,
-                'default_content_subtype': 'html',
-            };
-        },
 
         start: function (parent, params) {
             var self = this;
@@ -1673,11 +1678,11 @@ openerp.mail = function (session) {
                 action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
-                context: _.extend(this.options.context, {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
+                context: {
+                    'default_model': '',
+                    'default_res_id': false,
                     'default_content_subtype': 'html',
-                }),
+                },
             };
             session.client.action_manager.do_action(action);
         },
