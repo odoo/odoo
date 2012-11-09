@@ -655,7 +655,6 @@ class test_mail(TestMailMockups):
         # Test: expandable, conditions in domain
         for condition in pigs_domain:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
-        print 'domain', domain
         self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an parent_id')
         # Do: message_read with domain, thread_level=1 (should be imposed by JS)
         read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=1, thread_level=1)
