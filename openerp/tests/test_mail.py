@@ -23,9 +23,9 @@
 ##############################################################################
 
 import unittest2
-from openerp.tools.mail import html_sanitize, html_email_clean, append_content_to_html, text2html
+from openerp.tools import html_sanitize, html_email_clean, append_content_to_html, plaintext2html
 
-test_case = """
+HTML_SOURCE = """
 <font size="2" style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; ">test1</font>
 <div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; font-style: normal; ">
 <b>test2</b></div><div style="color: rgb(31, 31, 31); font-family: monospace; font-variant: normal; line-height: normal; font-size: 12px; ">
@@ -43,88 +43,65 @@ test12</font></div><div><font color="#1f1f1f" face="monospace" size="2"><br></fo
 <a href="javascript:alert('malicious code')">test link</a>
 """
 
-GMAIL_REPLY_SAN = """<div>R&#233;ponse via thunderbird, classique.<br><br>
-      On 11/05/2012 10:51 AM, Raoul Tartopoils wrote:<br></div>
-    <blockquote>
-      <div>Plop !</div>
-      <ul><li>Vive les lapins rapides !<br></li>
-        <li>Nouille</li>
-        <li>Frites</li>
-      </ul><div><br></div>
-      <div>Clairement, hein ?</div>
-      -- <br>
-      Raoul Tartopoils<br></blockquote>
-    <br><br><pre>-- 
-Raoul Tartopoils
-</pre>"""
+TEXT_MAIL1 = """I contact you about our meeting for tomorrow. Here is the schedule I propose:
+9 AM: brainstorming about our new amazing business app</span></li>
+9.45 AM: summary
+10 AM: meeting with Fabien to present our app
+Is everything ok for you ?
+--
+Administrator"""
 
-GMAIL_REPLY2_SAN = """<div>Je r&#233;ponds, hop, via thunderbird. Mais
-      je vais r&#233;podnre aussi au milieu du thread.<br><br>
-      On 11/05/2012 10:53 AM, Raoul Tartopoils wrote:<br></div>
-    <blockquote>Reply rapide de gmail.</blockquote>
-    <br>
-    Jamais.<br><br><blockquote>
-      <div><br><br><div>2012/11/5 Thibault Delavall&#233;e <span>&lt;<a href="mailto:tde@openerp.com">tde@openerp.com</a>&gt;</span><br><blockquote>
-            <div>
-              <div>R&#233;ponse via thunderbird, classique.
-                <div>
-                  <div><br><br>
-                    On 11/05/2012 10:51 AM, Raoul Tartopoils wrote:<br></div>
-                </div>
-              </div>
-              <div>
-                <div>
-                  <blockquote>
-                    <div>Plop !</div>
-                    <ul><li>Vive les lapins rapides !<br></li>
-                      <li>Nouille</li>
-                    </ul></blockquote>
-                </div>
-              </div>
-            </div>
-          </blockquote>
-        </div>
+HTML_MAIL1 = """<div>
+<font><span>I contact you about our meeting for tomorrow. Here is the schedule I propose:</span></font>
+</div>
+<div><ul>
+<li><span>9 AM: brainstorming about our new amazing business app</span></li>
+<li><span>9.45 AM: summary</span></li>
+<li><span>10 AM: meeting with Fabien to present our app</span></li>
+</ul></div>
+<div><font><span>Is everything ok for you ?</span></font></div>"""
+
+GMAIL_REPLY1_SAN = """Hello,<div><br></div><div>Ok for me. I am replying directly in gmail, without signature.</div><div><br></div><div>Kind regards,</div><div><br></div><div>Demo.<br><br><div>On Thu, Nov 8, 2012 at 5:29 PM,  <span>&lt;<a href="mailto:dummy@example.com">dummy@example.com</a>&gt;</span> wrote:<br><blockquote><div>I contact you about our meeting for tomorrow. Here is the schedule I propose:</div><div><ul><li>9 AM: brainstorming about our new amazing business app&lt;/span&gt;&lt;/li&gt;</li>
+<li>9.45 AM: summary</li><li>10 AM: meeting with Fabien to present our app</li></ul></div><div>Is everything ok for you ?</div>
+<div><p>--<br>Administrator</p></div>
+
+<div><p>Log in our portal at: <a href="http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo">http://localhost:8069#action=login&amp;db=mail_1&amp;login=demo</a></p></div>
+</blockquote></div><br></div>"""
+
+THUNDERBIRD_16_REPLY1_SAN = """    <div>On 11/08/2012 05:29 PM,
+      <a href="mailto:dummy@example.com">dummy@example.com</a> wrote:<br></div>
+    <blockquote>
+      <div>I contact you about our meeting for tomorrow. Here is the
+        schedule I propose:</div>
+      <div>
+        <ul><li>9 AM: brainstorming about our new amazing business
+            app&lt;/span&gt;&lt;/li&gt;</li>
+          <li>9.45 AM: summary</li>
+          <li>10 AM: meeting with Fabien to present our app</li>
+        </ul></div>
+      <div>Is everything ok for you ?</div>
+      <div>
+        <p>--<br>
+          Administrator</p>
+      </div>
+      <div>
+        <p>Log in our portal at:
+<a href="http://localhost:8069#action=login&amp;db=mail_1&amp;token=rHdWcUART5PhEnJRaXjH">http://localhost:8069#action=login&amp;db=mail_1&amp;token=rHdWcUART5PhEnJRaXjH</a></p>
       </div>
     </blockquote>
-    je rajotuerais bien pommes de terre dans la liste.<br><blockquote>
-      <div>
-        <div>
-          <blockquote>
-            <div>
-              <div>
-                <div>
-                  <blockquote>
-                    <ul><li>Frites</li>
-                    </ul><div><br></div>
-                    <div>Clairement, hein ?</div>
-                    -- <br>
-                    Raoul Tartopoils<br></blockquote>
-                  <br><br></div>
-              </div>
-              <span><font>
-                  <pre>-- 
-Raoul Tartopoils
-</pre>
-                </font></span></div>
-          </blockquote>
-        </div>
-        <br><br><div><br></div>
-        -- <br>
-        Raoul Tartopoils<br></div>
-    </blockquote>
-    <br><br><pre>-- 
-Raoul Tartopoils
+    Ok for me. I am replying directly below your mail, using
+    Thunderbird, with a signature.<br><br>
+    Did you receive my email about my new laptop, by the way ?<br><br>
+    Raoul.<br><pre>-- 
+Raoul Grosbedonn&#233;e
 </pre>"""
-
 
 TEXT_TPL = """Salut Raoul!
 Le 28 oct. 2012 à 00:02, Raoul Grosbedon a écrit :
 
 > C'est sûr que je suis intéressé (quote)!
 
-Trouloulou pouet pouet.
-
-Je ne vais quand même pas écrire de vrais mails, non mais ho.
+Trouloulou pouet pouet. Je ne vais quand même pas écrire de vrais mails, non mais ho.
 
 > 2012/10/27 Bert Tartopoils :
 >> Diantre, me disè-je en envoyant un message similaire à Martine, mais comment vas-tu (quote)?
@@ -138,7 +115,6 @@ Je ne vais quand même pas écrire de vrais mails, non mais ho.
 >> 
 > 
 > 
-> 
 > -- 
 > Raoul Grosbedon
 
@@ -147,21 +123,8 @@ bert.tartopoils@miam.miam
 """
 
 
-class TestAppendContentToHtml(unittest2.TestCase):
-    """ Test some of our generic utility functions """
-
-    def test_append_to_html(self):
-        test_samples = [
-            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True,
-             '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
-            ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False,
-             '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
-        ]
-        for html, content, flag, expected in test_samples:
-            self.assertEqual(append_content_to_html(html, content, flag), expected, 'append_content_to_html is broken')
-
-
 class TestSanitizer(unittest2.TestCase):
+    """ Test the html sanitizer """
     # TDE note: could be improved by actually checking the output
 
     def test_simple(self):
@@ -173,32 +136,66 @@ class TestSanitizer(unittest2.TestCase):
         self.assertEqual(x, html_sanitize(x))
 
     def test_no_exception(self):
-        html_sanitize(test_case)
+        html_sanitize(HTML_SOURCE)
 
     def test_unicode(self):
         html_sanitize("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci")
 
 
 class TestCleaner(unittest2.TestCase):
+    """ Test the email cleaner function that filter the content of incoming emails """
 
-    def test_gmail(self):
-        # Test1: blahblah
-        new_html = html_email_clean(GMAIL_REPLY_SAN)
-        self.assertNotIn(new_html, 'blockquote')
-        self.assertNotIn(new_html, 'Vive les lapins rapides !')
-        self.assertNotIn(new_html, 'Bert Tartopoils')
+    def test_html_email_clean(self):
+        # Test1: reply through gmail: quote in blockquote, signature --\nAdministrator
+        new_html = html_email_clean(GMAIL_REPLY1_SAN)
+        self.assertNotIn('blockquote', new_html, 'html_email_cleaner did not remove a blockquote')
+        self.assertNotIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
+        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
+        self.assertIn('Ok for me', new_html, 'html_email_cleaner erased too much content')
+
+        # Test2: reply through Tunderbird 16.0.2
+        new_html = html_email_clean(THUNDERBIRD_16_REPLY1_SAN)
+        self.assertNotIn('blockquote', new_html, 'html_email_cleaner did not remove a blockquote')
+        self.assertNotIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
+        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
+        self.assertNotIn('Grosbedonn', new_html, 'html_email_cleaner did not erase the signature')
+        self.assertIn('Ok for me', new_html, 'html_email_cleaner erased too much content')
+
+        # Test3: text email
+        new_html = html_email_clean(TEXT_MAIL1)
+        self.assertIn('I contact you about our meeting', new_html, 'html_email_cleaner wrongly removed the quoted content')
+        self.assertNotIn('Administrator', new_html, 'html_email_cleaner did not erase the signature')
+
+        # Test4: more complex text email
+        new_html = html_email_clean(TEXT_TPL)
+        self.assertNotIn('quote', new_html, 'html_email_cleaner did not remove correctly plaintext quotes')
 
 
-class TestText2Html(unittest2.TestCase):
+class TestAppendContentToHtml(unittest2.TestCase):
+    """ Test some of our generic utility functions about html """
 
-    def test_text2html(self):
+    def test_plaintext2html(self):
         cases = [
             ("First \nSecond \nThird\n \nParagraph\n\r--\nSignature paragraph", 'div',
              "<div><p>First <br/>Second <br/>Third</p><p>Paragraph</p><p>--<br/>Signature paragraph</p></div>"),
+            ("First<p>It should be escaped</p>\nSignature", False,
+             "<p>First&lt;p&gt;It should be escaped&lt;/p&gt;<br/>Signature</p>")
         ]
         for content, container_tag, expected in cases:
-            html = text2html(content, container_tag)
+            html = plaintext2html(content, container_tag)
             self.assertEqual(html, expected, 'text2html is broken')
+
+    def test_append_to_html(self):
+        test_samples = [
+            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, True, False,
+             '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
+            ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False,
+             '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<p>--<br/>Yours truly</p>\n</html>'),
+            ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False,
+             '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
+        ]
+        for html, content, plaintext_flag, preserve_flag, container_tag, expected in test_samples:
+            self.assertEqual(append_content_to_html(html, content, plaintext_flag, preserve_flag, container_tag), expected, 'append_content_to_html is broken')
 
 
 if __name__ == '__main__':

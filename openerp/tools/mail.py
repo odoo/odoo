@@ -121,6 +121,7 @@ def html_email_clean(html):
             be present in the html string. This method therefore takes as input
             html code coming from a sanitized source, like fields.html.
     """
+    html = ustr(html)
     modified_html = ''
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
@@ -131,6 +132,7 @@ def html_email_clean(html):
         idx = item.end()
     modified_html += html[idx:]
     html = modified_html
+    # TDE note: seems to have lots of <div><br></div> in emails... needs to be checks, could be cleaned
 
     # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
     root = lxml.html.fromstring(html)
@@ -138,9 +140,28 @@ def html_email_clean(html):
         html = '<div>%s</div>' % html
         root = lxml.html.fromstring(html)
 
+    # 2.5 remove quoted text in nodes
+    quote_tags = re.compile(r'(\n(>)+[^\n\r]*)')
+    for node in root.getiterator():
+        if not node.text:
+            continue
+        idx = 0
+        text = ''
+        for item in re.finditer(quote_tags, node.text):
+            print item
+            text += node.text[idx:item.start()]
+            idx = item.end()
+        text += node.text[idx:]
+        node.text = text
+
     # 3. remove blockquotes
     quotes = [el for el in root.getiterator(tag='blockquote')]
     for node in quotes:
+        # copy the node tail into parent text
+        if node.tail:
+            parent = node.getparent()
+            parent.text = parent.text or '' + node.tail
+        # remove the node
         node.getparent().remove(node)
 
     # 4. strip signatures
@@ -187,9 +208,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
     ## download here: http://www.peterbe.com/plog/html2plaintext
 
     html = ustr(html)
-
-    from lxml.etree import tostring, fromstring, HTMLParser
-    tree = fromstring(html, parser=HTMLParser())
+    tree = etree.fromstring(html, parser=etree.HTMLParser())
 
     if body_id is not None:
         source = tree.xpath('//*[@id=%s]' % (body_id,))
@@ -208,7 +227,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
             link.text = '%s [%s]' % (link.text, i)
             url_index.append(url)
 
-    html = ustr(tostring(tree, encoding=encoding))
+    html = ustr(etree.tostring(tree, encoding=encoding))
 
     html = html.replace('<strong>', '*').replace('</strong>', '*')
     html = html.replace('<b>', '*').replace('</b>', '*')
@@ -233,7 +252,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     return html
 
-def text2html(text, container_tag='div'):
+def plaintext2html(text, container_tag=False):
     """ Convert plaintext into html. Content of the text is escaped to manage
         html entities, using cgi.escape().
         - all \n,\r are replaced by <br />
@@ -243,7 +262,7 @@ def text2html(text, container_tag='div'):
         :param string container_tag: container of the html; by default the
             content is embedded into a <div>
     """
-    text = cgi.escape(text)
+    text = cgi.escape(ustr(text))
 
     # 1. replace \n and \r
     text = text.replace('\n', '<br/>')
@@ -261,7 +280,45 @@ def text2html(text, container_tag='div'):
     # 4. container
     if container_tag:
         final = '<%s>%s</%s>' % (container_tag, final, container_tag)
-    return final
+    return ustr(final)
+
+def append_content_to_html(html, content, plaintext=True, preserve=False, container_tag=False):
+    """ Append extra content at the end of an HTML snippet, trying
+        to locate the end of the HTML document (</body>, </html>, or
+        EOF), and converting the provided content in html unless ``plaintext``
+        is False.
+        Content conversion can be done in two ways:
+        - wrapping it into a pre (preserve=True)
+        - use plaintext2html (preserve=False, using container_tag to wrap the
+            whole content)
+        A side-effect of this method is to coerce all HTML tags to
+        lowercase in ``html``, and strip enclosing <html> or <body> tags in
+        content if ``plaintext`` is False.
+
+        :param str html: html tagsoup (doesn't have to be XHTML)
+        :param str content: extra content to append
+        :param bool plaintext: whether content is plaintext and should
+            be wrapped in a <pre/> tag.
+        :param bool preserve: if content is plaintext, wrap it into a <pre>
+            instead of converting it into html
+    """
+    html = ustr(html)
+    if plaintext and preserve:
+        content = u'\n<pre>%s</pre>\n' % ustr(content)
+    elif plaintext:
+        content = '\n%s\n' % plaintext2html(content, container_tag)
+    else:
+        content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
+        content = u'\n%s\n' % ustr(content)
+    # Force all tags to lowercase
+    html = re.sub(r'(</?)\W*(\w+)([ >])',
+        lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
+    insert_location = html.find('</body>')
+    if insert_location == -1:
+        insert_location = html.find('</html>')
+    if insert_location == -1:
+        return '%s%s' % (html, content)
+    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
 
 #----------------------------------------------------------
 # Emails
@@ -339,33 +396,3 @@ def email_split(text):
     if not text:
         return []
     return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
-
-def append_content_to_html(html, content, plaintext=True):
-    """Append extra content at the end of an HTML snippet, trying
-       to locate the end of the HTML document (</body>, </html>, or
-       EOF), and wrapping the provided content in a <pre/> block
-       unless ``plaintext`` is False. A side-effect of this
-       method is to coerce all HTML tags to lowercase in ``html``,
-       and strip enclosing <html> or <body> tags in content if
-       ``plaintext`` is False.
-
-       :param str html: html tagsoup (doesn't have to be XHTML)
-       :param str content: extra content to append
-       :param bool plaintext: whether content is plaintext and should
-           be wrapped in a <pre/> tag.
-    """
-    html = ustr(html)
-    if plaintext:
-        content = u'\n<pre>%s</pre>\n' % ustr(content)
-    else:
-        content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
-        content = u'\n%s\n' % ustr(content)
-    # Force all tags to lowercase
-    html = re.sub(r'(</?)\W*(\w+)([ >])',
-        lambda m: '%s%s%s' % (m.group(1), m.group(2).lower(), m.group(3)), html)
-    insert_location = html.find('</body>')
-    if insert_location == -1:
-        insert_location = html.find('</html>')
-    if insert_location == -1:
-        return '%s%s' % (html, content)
-    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])
