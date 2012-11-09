@@ -39,11 +39,11 @@ instance.edi.EdiImport = instance.web.Widget.extend({
     },
 
     do_import: function() {
-        this.rpc('/edi/import_edi_url', {url: this.url}).then(this.on_imported, this.on_imported_error);
+        this.rpc('/edi/import_edi_url', {url: this.url}).done(this.on_imported).fail(this.on_imported_error);
     },
     on_imported: function(response) {
         if ('action' in response) {
-            this.rpc("/web/session/save_session_action", {the_action: response.action}).then(function(key) {
+            this.rpc("/web/session/save_session_action", {the_action: response.action}).done(function(key) {
                 window.location = "/#sa="+encodeURIComponent(key);
             });
         }
@@ -78,7 +78,7 @@ instance.edi.EdiImport = instance.web.Widget.extend({
 });
 
 instance.edi.edi_import = function (url) {
-    instance.session.session_bind().then(function () {
+    instance.session.session_bind().done(function () {
         new instance.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
     });
 }
