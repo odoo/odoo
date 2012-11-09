@@ -547,7 +547,7 @@ class test_mail(TestMailMockups):
 
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}', 'content_subtype': 'html'},
+            {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
@@ -622,7 +622,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -667,7 +667,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -714,7 +714,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
 
         # Do: fetch new messages, domain from expandable

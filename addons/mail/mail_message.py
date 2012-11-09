@@ -408,7 +408,6 @@ class mail_message(osv.Model):
                 ancestors and expandables
             :return list: list of message structure for the Chatter widget
         """
-        # print '\n>>>>message_read begin', ids, domain, thread_level, parent_id, '\n'
         assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
         domain = domain if domain is not None else []
         message_unload_ids = message_unload_ids if message_unload_ids is not None else []
@@ -491,7 +490,6 @@ class mail_message(osv.Model):
             - uid have read access to the related document is model, res_id
             - otherwise: remove the id
         """
-        # print '\n>>>>>_search on mail.message', uid, args, '\n'
         # Rules do not apply to administrator
         if uid == SUPERUSER_ID:
             return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
@@ -526,7 +524,6 @@ class mail_message(osv.Model):
             allowed_ids |= set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
 
         final_ids = author_ids | partner_ids | allowed_ids
-        # print '\n>>>>>end _search on mail.message\n'
         if count:
             return len(final_ids)
         else:
@@ -551,7 +548,6 @@ class mail_message(osv.Model):
                 - uid has write access on the related document if model, res_id
                 - Otherwise: raise
         """
-        # print '\n>>>>>check_access_rule on mail.message', uid, ids, operation, '\n'
         if uid == SUPERUSER_ID:
             return
         if isinstance(ids, (int, long)):
@@ -623,7 +619,6 @@ class mail_message(osv.Model):
 
         # Calculate remaining ids: if not void, raise an error
         other_ids = other_ids - set(document_related_ids)
-        # print '\n>>>>>end check_access_rule on mail.message\n'
         if not other_ids:
             return
         raise orm.except_orm(_('Access Denied'),

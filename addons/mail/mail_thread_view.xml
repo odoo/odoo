@@ -58,7 +58,7 @@
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
-            <field name="name">Done</field>
+            <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
             <field name="context">{
               'default_model': 'res.users', 
@@ -120,7 +120,7 @@
           <field name="parent_id" ref="mail.mail_feeds"/>
         </record>
         <record id="mail_archivesfeeds" model="ir.ui.menu">
-          <field name="name">Done</field>
+          <field name="name">Archives</field>
           <field name="sequence" eval="16"/>
           <field name="action" ref="action_mail_archives_feeds"/>
           <field name="parent_id" ref="mail.mail_feeds"/>

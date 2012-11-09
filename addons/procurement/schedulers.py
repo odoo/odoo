@@ -197,6 +197,12 @@ class procurement_order(osv.osv):
                 'location_id': orderpoint.location_id.id,
                 'procure_method': 'make_to_order',
                 'origin': orderpoint.name}
+        
+    def _product_virtual_get(self, cr, uid, order_point):
+        location_obj = self.pool.get('stock.location')
+        return location_obj._product_virtual_get(cr, uid,
+                order_point.location_id.id, [order_point.product_id.id],
+                {'uom': order_point.product_uom.id})[order_point.product_id.id]
 
     def _procure_orderpoint_confirm(self, cr, uid, automatic=False,\
             use_new_cursor=False, context=None, user_id=False):
@@ -217,7 +223,7 @@ class procurement_order(osv.osv):
         if use_new_cursor:
             cr = pooler.get_db(use_new_cursor).cursor()
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
-        location_obj = self.pool.get('stock.location')
+        
         procurement_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
         offset = 0
@@ -227,14 +233,9 @@ class procurement_order(osv.osv):
         while ids:
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
-                if op.procurement_id.state != 'exception':
-                    if op.procurement_id and hasattr(op.procurement_id, 'purchase_id'):
-                        if op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                            continue
-                prods = location_obj._product_virtual_get(cr, uid,
-                        op.location_id.id, [op.product_id.id],
-                        {'uom': op.product_uom.id})[op.product_id.id]
-
+                prods = self._product_virtual_get(cr, uid, op)
+                if prods is None:
+                    continue
                 if prods < op.product_min_qty:
                     qty = max(op.product_min_qty, op.product_max_qty)-prods
 

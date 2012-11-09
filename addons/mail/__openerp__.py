@@ -89,6 +89,7 @@ Main Features
         'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
         'static/src/js/mail_followers.js',
+        'static/src/js/many2many_tags_email.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
