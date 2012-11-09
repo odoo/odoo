@@ -1317,6 +1317,9 @@ openerp.mail = function (session) {
         on_message_detroy: function (message) {
 
             this.messages = _.filter(this.messages, function (val) { return !val.isDestroyed(); });
+            if (this.options.root_thread == this && !this.messages.length) {
+                this.no_message();
+            }
             return false;
 
         },
