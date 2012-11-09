@@ -99,7 +99,7 @@ class account_analytic_account(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         if not ids:
-            return []
+            return res
         if isinstance(ids, (int, long)):
             ids = [ids]
         for id in ids:
