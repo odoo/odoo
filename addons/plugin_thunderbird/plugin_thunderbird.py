@@ -30,13 +30,11 @@ class plugin_thunderbird_installer(osv.osv_memory):
         'thunderbird': fields.boolean('Thunderbird Plug-in', help="Allows you to select an object that you would like to add to your email and its attachments."),
         'plugin_name': fields.char('File name', size=64),
         'plugin_file': fields.char('Thunderbird Plug-in', size=256, readonly=True, help="Thunderbird plug-in file. Save this file and install it in Thunderbird."),
-        'pdf_file': fields.char('Installation Manual', size=256, help="The documentation file :- how to install Thunderbird Plug-in.", readonly=True),
     }
 
     _defaults = {
         'thunderbird': True,
         'plugin_name': 'openerp_plugin.xpi',
-        'pdf_file': 'http://doc.openerp.com/book/2/2_6_Comms/2_6_Comms_thunderbird.html',
     }
 
     def default_get(self, cr, uid, fields, context=None):
