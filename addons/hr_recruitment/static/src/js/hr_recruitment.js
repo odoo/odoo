@@ -16,7 +16,7 @@ openerp.hr_recruitment = function(openerp) {
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'hr.applicant_category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
                     self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
