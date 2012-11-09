@@ -12,7 +12,7 @@ openerp.pad = function(instance) {
                         model: self.view.model,
                         field_name: self.name,
                         object_id: self.view.datarecord.id
-                    }}).then(function(data) {
+                    }}).done(function(data) {
                     if(data&&data.url){
                         _super(data.url);
                         self.renderElement();

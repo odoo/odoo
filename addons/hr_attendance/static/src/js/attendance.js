@@ -57,7 +57,7 @@ openerp.hr_attendance = function (instance) {
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [
                 ['user_id', '=', self.session.uid]
             ]);
-            return employee.read_slice(['id', 'name', 'state', 'last_sign', 'attendance_access']).pipe(function (res) {
+            return employee.read_slice(['id', 'name', 'state', 'last_sign', 'attendance_access']).then(function (res) {
                 if (_.isEmpty(res) )
                     return;
                 if (res[0].attendance_access == false){
@@ -75,7 +75,7 @@ openerp.hr_attendance = function (instance) {
         do_update: function () {
             this._super();
             var self = this;
-            this.update_promise = this.update_promise.then(function () {
+            this.update_promise = this.update_promise.done(function () {
                 if (self.attendanceslider)
                     return;
                 self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
