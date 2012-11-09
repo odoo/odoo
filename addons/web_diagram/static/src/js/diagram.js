@@ -26,7 +26,7 @@ instance.web.DiagramView = instance.web.View.extend({
     },
     start: function() {
         var self = this;
-        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).then(function(r) {
+        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).done(function(r) {
             self.load_diagram(r);
         });
     },
@@ -105,7 +105,7 @@ instance.web.DiagramView = instance.web.View.extend({
         });
 
         this.rpc(
-            '/web_diagram/diagram/get_diagram_info',params).then(function(result) {
+            '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
                 self.draw_diagram(result);
             }
         );
@@ -256,7 +256,7 @@ instance.web.DiagramView = instance.web.View.extend({
             );
 
         pop.on('write_completed', self, function() {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
             });
         
         var form_fields = [self.parent_field];
@@ -290,7 +290,7 @@ instance.web.DiagramView = instance.web.View.extend({
             self.context || self.dataset.context
         );
         pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
 
         var form_controller = pop.view_form;
@@ -320,7 +320,7 @@ instance.web.DiagramView = instance.web.View.extend({
             }
         );
         pop.on('write_completed', self, function() {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
     },
 
@@ -342,7 +342,7 @@ instance.web.DiagramView = instance.web.View.extend({
             this.context || this.dataset.context
         );
         pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
         // This is not a problem since the diagram is completely redrawn on saved changes.
@@ -390,7 +390,7 @@ instance.web.DiagramView = instance.web.View.extend({
     
     pager_action_trigger: function(){
         var loaded = this.dataset.read_index(_.keys(this.fields_view.fields))
-                .pipe(this.on_diagram_loaded);
+                .then(this.on_diagram_loaded);
         this.do_update_pager();
         return loaded;
     },
