@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    
+    <t t-name="AccountMoveLineQuickAdd">
+        <div class="oe_account_quickadd">
+            <div>
+                Journal : 
+                <select id="oe_account_select_journal">
+                    <t t-foreach="widget.journals" t-as="journal">
+                        <option t-if=" journal[0] === widget.current_journal" t-att-value="journal[0]" t-att-selected="'selected'">
+                            <t t-esc="journal[1]"/>
+                        </option>
+                        <option t-if="journal[0] !== widget.current_journal" t-att-value="journal[0]">
+                            <t t-esc="journal[1]"/>
+                        </option>
+                    </t>
+                </select>
+                Period : 
+                <select id="oe_account_select_period">
+                    <t t-foreach="widget.periods" t-as="period">
+                        <option t-if=" period[0] === widget.current_period" t-att-value="period[0]" t-att-selected="'selected'">
+                            <t t-esc="period[1]"/>
+                        </option>
+                        <option t-if=" period[0] !== widget.current_period" t-att-value="period[0]">
+                            <t t-esc="period[1]"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+        </div>
+    </t>
+
+</templates>
