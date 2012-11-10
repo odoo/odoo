@@ -1,5 +1,5 @@
-User Interaction: Widget
-========================
+Widget
+======
 
 This is the base class for all visual components. It corresponds to an MVC
 view. It provides a number of services to handle a section of a page:

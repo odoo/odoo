@@ -15,7 +15,7 @@ DataSet -> Model
 ----------------
 
 The 6.1 ``DataSet`` API has been deprecated in favor of the smaller
-and more orthogonal :doc:`Model </rpc>` API, which more closely
+and more orthogonal :doc:`Model </dev_rpc>` API, which more closely
 matches the API in OpenERP Web's Python side and in OpenObject addons
 and removes most stateful behavior of DataSet.
 
