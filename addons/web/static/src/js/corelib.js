@@ -427,7 +427,70 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
     }
 });
 
-instance.web.WidgetMixin = _.extend({},instance.web.PropertiesMixin, {
+// Classes
+
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ *
+ * Guide to create implementations of the Widget class:
+ * ==============================================
+ *
+ * Here is a sample child class:
+ *
+ * MyWidget = instance.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *         this.$el.find(".my_button").click(/* an example of event binding * /);
+ *
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ *
+ * Now this class can simply be used with the following syntax:
+ *
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ *
+ * And of course, when you don't need that widget anymore, just do:
+ *
+ * my_widget.destroy();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
+instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
+    // Backbone-ish API
+    tagName: 'div',
+    id: null,
+    className: null,
+    attributes: {},
+    events: {},
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
+     *
+     * @type string
+     */
+    template: null,
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
@@ -449,6 +512,9 @@ instance.web.WidgetMixin = _.extend({},instance.web.PropertiesMixin, {
                 }
             }
         }
+        // FIXME: this should not be
+        this.setElement(this._make_descriptive());
+        this.session = instance.session;
     },
     /**
      * Destroys the current widget, also destroys all its children before destroying itself.
@@ -563,86 +629,6 @@ instance.web.WidgetMixin = _.extend({},instance.web.PropertiesMixin, {
             var fn = (typeof method === 'string') ? self[method] : method;
             return fn.apply(self, arguments);
         }
-    }
-});
-
-// Classes
-/**
- * Base class for all visual components. Provides a lot of functionalities helpful
- * for the management of a part of the DOM.
- *
- * Widget handles:
- * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
- * - Insertion in DOM.
- *
- * Guide to create implementations of the Widget class:
- * ==============================================
- *
- * Here is a sample child class:
- *
- * MyWidget = instance.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
- *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         // stuff you want to make after the rendering, `this.$el` holds a correct value
- *         this.$el.find(".my_button").click(/* an example of event binding * /);
- *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this.rpc(...);
- *         return promise;
- *     }
- * });
- *
- * Now this class can simply be used with the following syntax:
- *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
- *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
- *
- * And of course, when you don't need that widget anymore, just do:
- *
- * my_widget.destroy();
- *
- * That will kill the widget in a clean way and erase its content from the dom.
- */
-instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
-    // Backbone-ish API
-    tagName: 'div',
-    id: null,
-    className: null,
-    attributes: {},
-    events: {},
-    /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the default render() method can not be used.
-     *
-     * @type string
-     */
-    template: null,
-    /**
-     * Constructs the widget and sets its parent if a parent is given.
-     *
-     * @constructs instance.web.Widget
-     *
-     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling destroy(), the current instance will be
-     * destroyed too. Can be null.
-     */
-    init: function(parent) {
-        instance.web.WidgetMixin.init.call(this,parent);
-        // FIXME: this should not be
-        this.setElement(this._make_descriptive());
-        this.session = instance.session;
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -659,7 +645,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
         this.replaceElement($el);
     },
-
     /**
      * Re-sets the widget's root element and replaces the old root element
      * (if any) by the new one in the DOM.
