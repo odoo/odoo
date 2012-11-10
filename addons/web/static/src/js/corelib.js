@@ -429,17 +429,11 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
 instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
     init: function() {
         instance.web.PropertiesMixin.init.call(this);
-        var self = this;
         // Transform on_/do_* methods into callbacks
-        var callback_maker = function(fn) {
-            return function() {
-                return fn.apply(self, arguments);
-            }
-        };
         for (var name in this) {
             if(typeof(this[name]) == "function") {
                 if((/^on_|^do_/).test(name)) {
-                    this[name] = callback_maker(this[name]);
+                    this[name] = this[name].bind(this);
                 }
             }
         }
