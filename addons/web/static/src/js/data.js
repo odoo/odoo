@@ -358,7 +358,7 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.DataSet =  instance.web.Class.extend({
+instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, {
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
      *
@@ -367,6 +367,7 @@ instance.web.DataSet =  instance.web.Class.extend({
      * @param {String} model the OpenERP model this dataset will manage
      */
     init: function(parent, model, context) {
+        instance.web.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
         this.index = null;
