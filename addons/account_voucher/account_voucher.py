@@ -1557,6 +1557,14 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
 
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        res = super(account_bank_statement_line, self).onchange_partner_id(cr, uid, ids, partner_id, context=context)
+        res['value'].update({'voucher_id' : False})
+        return res
+
+    def onchange_amount(self, cr, uid, ids, amount, context=None):
+        return {'value' :  {'voucher_id' : False}}
+
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
             return {}
