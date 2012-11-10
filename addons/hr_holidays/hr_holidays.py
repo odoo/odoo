@@ -94,6 +94,7 @@ class hr_holidays_status(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
+        res = []
         for record in self.browse(cr, uid, ids, context=context):
             name = record.name
             if not record.limit:
