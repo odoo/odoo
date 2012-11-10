@@ -189,7 +189,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     }
 });
 
-instance.web.CrashManager = instance.web.CallbackEnabled.extend({
+instance.web.CrashManager = instance.web.Class.extend({
     rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
