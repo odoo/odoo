@@ -53,7 +53,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.session_id = this.get_cookie('session_id');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.do_load_qweb);
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
             if(self.session_is_valid()) {
                 return deferred.then(function() { return self.load_modules(); });
             }
@@ -168,15 +168,15 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.do_load_css),
-                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.do_load_qweb),
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.load_qweb.bind(self)),
                     self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                         file_list = file_list.concat(files);
                     })
                 );
             }
             return loaded.then(function () {
-                return self.do_load_js(file_list);
+                return self.load_js(file_list);
             }).done(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
@@ -190,7 +190,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             });
         });
     },
-    do_load_css: function (files) {
+    load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
@@ -200,7 +200,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }));
         });
     },
-    do_load_js: function(files) {
+    load_js: function(files) {
         var self = this;
         var d = $.Deferred();
         if(files.length != 0) {
@@ -212,7 +212,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files).done(function () {
+                self.load_js(files).done(function () {
                     d.resolve();
                 });
             };
@@ -223,7 +223,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         }
         return d;
     },
-    do_load_qweb: function(files) {
+    load_qweb: function(files) {
         var self = this;
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {

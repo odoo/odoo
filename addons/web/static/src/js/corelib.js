@@ -243,15 +243,17 @@ instance.web.ParentedMixin = {
 
 /**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
+ * 
+ * This class just handle the dispatching of events, it is not meant to be extended,
+ * nor used directly. All integration with parenting and automatic unregistration of
+ * events is done in EventDispatcherMixin.
+ *
+ * Copyright notice for the following Class:
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
  * Backbone may be freely distributed under the MIT license.
  * For all details and documentation:
  * http://backbonejs.org
- * 
- * This class just handle the dispatching of events, it is not meant to be extended,
- * nor used directly. All integration with parenting and automatic unregistration of
- * events is done in EventDispatcherMixin.
  *
  */
 var Events = instance.web.Class.extend({
@@ -334,7 +336,6 @@ var Events = instance.web.Class.extend({
         return this;
     }
 });
-// end of Jeremy Ashkenas' code
 
 instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     __eventDispatcherMixin: true,
@@ -426,10 +427,21 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
     }
 });
 
-instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
-    init: function() {
+instance.web.WidgetMixin = _.extend({},instance.web.PropertiesMixin, {
+    /**
+     * Constructs the widget and sets its parent if a parent is given.
+     *
+     * @constructs instance.web.Widget
+     *
+     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
+     * When that widget is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     */
+    init: function(parent) {
         instance.web.PropertiesMixin.init.call(this);
-        // Transform on_/do_* methods into callbacks
+        this.setParent(parent);
+        // Bind on_/do_* methods to this
+        // We might remove this automatic binding in the future
         for (var name in this) {
             if(typeof(this[name]) == "function") {
                 if((/^on_|^do_/).test(name)) {
@@ -437,49 +449,6 @@ instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
                 }
             }
         }
-    },
-    /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
-     *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String|Function} method function or name of the method to invoke
-     * @returns {Function} proxied method
-     */
-    proxy: function (method) {
-        var self = this;
-        return function () {
-            var fn = (typeof method === 'string') ? self[method] : method;
-            return fn.apply(self, arguments);
-        }
-    }
-});
-
-instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
-    /**
-     * Constructs the widget and sets its parent if a parent is given.
-     *
-     * @constructs instance.web.Widget
-     * @extends instance.web.CallbackEnabled
-     *
-     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling destroy(), the current instance will be
-     * destroyed too. Can be null.
-     */
-    init: function(parent) {
-        instance.web.CallbackEnabledMixin.init.call(this);
-        this.setParent(parent);
     },
     /**
      * Destroys the current widget, also destroys all its children before destroying itself.
@@ -568,17 +537,36 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     start: function() {
         return $.when();
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String|Function} method function or name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method) {
+        var self = this;
+        return function () {
+            var fn = (typeof method === 'string') ? self[method] : method;
+            return fn.apply(self, arguments);
+        }
     }
 });
 
 // Classes
-
-instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEnabledMixin, {
-    init: function() {
-        instance.web.CallbackEnabledMixin.init.call(this);
-    }
-});
-
 /**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
@@ -645,7 +633,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * Constructs the widget and sets its parent if a parent is given.
      *
      * @constructs instance.web.Widget
-     * @extends instance.web.CallbackEnabled
      *
      * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
@@ -935,7 +922,7 @@ instance.web.Registry = instance.web.Class.extend({
     }
 });
 
-instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
+instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
@@ -944,13 +931,12 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     },
     /**
      * @constructs instance.web.JsonRPC
-     * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
     init: function() {
-        this._super();
+        instance.web.PropertiesMixin.init.call(this);
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
     },
