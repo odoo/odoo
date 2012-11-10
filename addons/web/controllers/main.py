@@ -81,57 +81,6 @@ def rjsmin(script):
     ).strip()
     return result
 
-def sass2scss(src):
-    # Validated by diff -u of sass2scss against:
-    # sass-convert -F sass -T scss openerp.sass openerp.scss
-    block = []
-    sass = ('', block)
-    reComment = re.compile(r'//.*$')
-    reIndent = re.compile(r'^\s+')
-    reIgnore = re.compile(r'^\s*(//.*)?$')
-    reFixes = { re.compile(r'\(\((.*)\)\)') : r'(\1)', }
-    lastLevel = 0
-    prevBlocks = {}
-    for l in src.split('\n'):
-        l = l.rstrip()
-        if reIgnore.search(l): continue
-        l = reComment.sub('', l)
-        l = l.rstrip()
-        indent = reIndent.match(l)
-        level = indent.end() if indent else 0
-        l = l[level:]
-        if level>lastLevel:
-            prevBlocks[lastLevel] = block
-            newBlock = []
-            block[-1] = (block[-1], newBlock)
-            block = newBlock
-        elif level<lastLevel:
-            block = prevBlocks[level]
-        lastLevel = level
-        if not l: continue
-        # Fixes
-        for ereg, repl in reFixes.items():
-            l = ereg.sub(repl if type(repl)==str else repl(), l)
-        block.append(l)
-
-    def write(sass, level=-1):
-        out = ""
-        indent = '  '*level
-        if type(sass)==tuple:
-            if level>=0:
-                out += indent+sass[0]+" {\n"
-            for e in sass[1]:
-                out += write(e, level+1)
-            if level>=0:
-                out = out.rstrip(" \n")
-                out += ' }\n'
-            if level==0:
-                out += "\n"
-        else:
-            out += indent+sass+";\n"
-        return out
-    return write(sass)
-
 def db_list(req):
     dbs = []
     proxy = req.session.proxy("db")
@@ -231,8 +180,6 @@ def module_installed_bypass_session(dbname):
 
 def module_boot(req):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
-    return [m for m in server_wide_modules if m in openerpweb.addons_manifest]
-    # TODO the following will be enabled once we separate the module code and translation loading
     serverside = []
     dbside = []
     for i in server_wide_modules:
@@ -549,7 +496,7 @@ def _local_web_translations(trans_file):
             messages.append({'id': x.id, 'string': x.string})
     return messages
 
-def from_elementtree(el, preserve_whitespaces=False):
+def xml2json_from_elementtree(el, preserve_whitespaces=False):
     """ xml2json-direct
     Simple and straightforward XML-to-JSON converter in Python
     New BSD Licensed
@@ -569,12 +516,11 @@ def from_elementtree(el, preserve_whitespaces=False):
     if el.text and (preserve_whitespaces or el.text.strip() != ''):
         kids.append(el.text)
     for kid in el:
-        kids.append(from_elementtree(kid, preserve_whitespaces))
+        kids.append(xml2json_from_elementtree(kid, preserve_whitespaces))
         if kid.tail and (preserve_whitespaces or kid.tail.strip() != ''):
             kids.append(kid.tail)
     res["children"] = kids
     return res
-
 
 def content_disposition(filename, req):
     filename = filename.encode('utf8')
@@ -612,8 +558,7 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-        <script type="text/javascript" 
-            src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>
             var test = function() {
                 CFInstall.check({
@@ -750,12 +695,13 @@ class WebClient(openerpweb.Controller):
 
         translations_per_module = {}
         for addon_name in mods:
-            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-            f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
-            if not os.path.exists(f_name):
-                continue
-            translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
-            
+            if openerpweb.addons_manifest[addon_name].get('bootstrap'):
+                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+                f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
+
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
@@ -1342,7 +1288,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = from_elementtree(xml, preserve_whitespaces)
+        fvg['arch'] = xml2json_from_elementtree(xml, preserve_whitespaces)
 
         if 'id' in fvg['fields']:
             # Special case for id's

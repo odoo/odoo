@@ -155,16 +155,14 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     load_modules: function() {
         var self = this;
         return this.rpc('/web/session/modules', {}).then(function(result) {
-            var lang = self.user_context.lang,
-                all_modules = _.uniq(self.module_list.concat(result));
-            var params = { mods: all_modules, lang: lang};
+            var all_modules = _.uniq(self.module_list.concat(result));
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = self.rpc('/web/webclient/translations', params).done(function(trans) {
-                instance.web._t.database.set_bundle(trans);
-            });
-            var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+            var loaded = self.load_translations();
+            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
+
+            var file_list = [ datejs_locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
@@ -188,6 +186,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                     Date.CultureInfo.pmDesignator = 'PM';
                 }
             });
+        });
+    },
+    load_translations: function() {
+        var params = { mods: this.module_list, lang: this.user_context.lang };
+        return this.rpc('/web/webclient/translations', params).done(function(trans) {
+            instance.web._t.database.set_bundle(trans);
         });
     },
     load_css: function (files) {

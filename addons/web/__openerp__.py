@@ -38,7 +38,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
         "static/lib/cleditor/jquery.cleditor.js",
-        "static/lib/py.js/lib/py.js",        
+        "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/corelib.js",
         "static/src/js/coresetup.js",
@@ -67,4 +67,5 @@ This module provides the core of the OpenERP Web Client.
     'qweb' : [
         "static/src/xml/*.xml",
     ],
+    'bootstrap': True,
 }
