@@ -58,9 +58,6 @@ class lang(osv.osv):
         default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.partner'])
         if not default_value:
             ir_values_obj.set(cr, uid, 'default', False, 'lang', ['res.partner'], lang)
-        default_value = ir_values_obj.get(cr, uid, 'default', False, ['res.users'])
-        if not default_value:
-            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], lang)
         return True
 
     def load_lang(self, cr, uid, lang, lang_name=None):
@@ -80,7 +77,7 @@ class lang(osv.osv):
             _logger.warning(msg, lang, lc)
 
         if not lang_name:
-            lang_name = tools.get_languages().get(lang, lang)
+            lang_name = tools.ALL_LANGUAGES.get(lang, lang)
 
 
         def fix_xa0(s):
@@ -146,14 +143,14 @@ class lang(osv.osv):
         'thousands_sep':fields.char('Thousands Separator',size=64),
     }
     _defaults = {
-        'active': lambda *a: 1,
-        'translatable': lambda *a: 0,
-        'direction': lambda *a: 'ltr',
+        'active': 1,
+        'translatable': 0,
+        'direction': 'ltr',
         'date_format':_get_default_date_format,
         'time_format':_get_default_time_format,
-        'grouping':lambda *a: '[]',
-        'decimal_point':lambda *a: '.',
-        'thousands_sep':lambda *a: ',',
+        'grouping': '[]',
+        'decimal_point': '.',
+        'thousands_sep': ',',
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The name of the language must be unique !'),

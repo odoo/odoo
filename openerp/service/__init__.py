@@ -33,7 +33,7 @@ import openerp.modules
 import openerp.netsvc
 import openerp.osv
 import openerp.tools
-import openerp.wsgi
+import openerp.service.wsgi_server
 
 #.apidoc title: RPC Services
 
@@ -48,33 +48,49 @@ import openerp.wsgi
 
 _logger = logging.getLogger(__name__)
 
-# TODO block until the server is really up, accepting connections
-# TODO be idemptotent (as long as stop_service was not called).
-def start_services():
-    """ Start all services.
+def load_server_wide_modules():
+    for m in openerp.conf.server_wide_modules:
+        try:
+            openerp.modules.module.load_openerp_module(m)
+        except Exception:
+            msg = ''
+            if m == 'web':
+                msg = """
+The `web` module is provided by the addons found in the `openerp-web` project.
+Maybe you forgot to add those addons in your addons_path configuration."""
+            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
 
-    Services include the different servers and cron threads.
+start_internal_done = False
 
-    """
+def start_internal():
+    global start_internal_done
+    if start_internal_done:
+        return
+    openerp.netsvc.init_logger()
+    openerp.modules.loading.open_openerp_namespace()
     # Instantiate local services (this is a legacy design).
     openerp.osv.osv.start_object_proxy()
     # Export (for RPC) services.
     web_services.start_web_services()
+    load_server_wide_modules()
+    start_internal_done = True
+
+def start_services():
+    """ Start all services including http, netrpc and cron """
+    start_internal()
 
     # Initialize the HTTP stack.
-    #http_server.init_servers()
-    #http_server.init_static_http()
     netrpc_server.init_servers()
 
     # Start the main cron thread.
-    openerp.cron.start_master_thread()
+    if openerp.conf.max_cron_threads:
+        openerp.cron.start_master_thread()
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
 
     # Start the WSGI server.
-    openerp.wsgi.core.start_server()
-
+    openerp.service.wsgi_server.start_server()
 
 def stop_services():
     """ Stop all services. """
@@ -82,7 +98,7 @@ def stop_services():
     openerp.cron.cancel_all()
 
     openerp.netsvc.Server.quitAll()
-    openerp.wsgi.core.stop_server()
+    openerp.service.wsgi_server.stop_server()
     config = openerp.tools.config
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
@@ -100,6 +116,12 @@ def stop_services():
                 time.sleep(0.05)
 
     openerp.modules.registry.RegistryManager.delete_all()
+
+def start_services_workers():
+    import openerp.service.workers
+    openerp.multi_process = True # Nah!
+
+    openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

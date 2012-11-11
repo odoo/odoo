@@ -1,6 +1,5 @@
-
-OpenERP Server Documentation
-''''''''''''''''''''''''''''
+OpenERP Server
+''''''''''''''
 
 .. toctree::
    :maxdepth: 2
@@ -31,3 +30,26 @@ Main revisions and new features
    revisions/user_img_specs
    revisions/need_action_specs
    revisions/font_style
+
+
+OpenERP Server
+''''''''''''''
+
+.. toctree::
+   :maxdepth: 1
+
+   import
+   module-versioning
+   on_change_tips
+   test-framework
+
+Changed in 7.0
+++++++++++++++
+
+.. toctree::
+   :maxdepth: 1
+
+   api/user_img_specs
+   api/need_action_specs
+   api/font_style
+   api/field_level_acl

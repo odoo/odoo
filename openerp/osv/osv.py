@@ -184,16 +184,19 @@ class object_proxy(object):
             cr.close()
         return res
 
-    def exec_workflow_cr(self, cr, uid, obj, method, *args):
-        wf_service = netsvc.LocalService("workflow")
-        return wf_service.trg_validate(uid, obj, args[0], method, cr)
+    def exec_workflow_cr(self, cr, uid, obj, signal, *args):
+        object = pooler.get_pool(cr.dbname).get(obj)
+        if not object:
+            raise except_osv('Object Error', 'Object %s doesn\'t exist' % str(obj))
+        res_id = args[0]
+        return object._workflow_signal(cr, uid, [res_id], signal)[res_id]
 
     @check
-    def exec_workflow(self, db, uid, obj, method, *args):
+    def exec_workflow(self, db, uid, obj, signal, *args):
         cr = pooler.get_db(db).cursor()
         try:
             try:
-                res = self.exec_workflow_cr(cr, uid, obj, method, *args)
+                res = self.exec_workflow_cr(cr, uid, obj, signal, *args)
                 cr.commit()
             except Exception:
                 cr.rollback()

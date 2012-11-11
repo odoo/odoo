@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    Copyright (C) 2004-2010 OpenERP s.a. (<http://www.openerp.com>).
+#    Copyright (C) 2004-2012 OpenERP s.a. (<http://www.openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -46,7 +46,7 @@ _ALLOWED_MODULES = ['_strptime', 'time']
 _CONST_OPCODES = set(opmap[x] for x in [
     'POP_TOP', 'ROT_TWO', 'ROT_THREE', 'ROT_FOUR', 'DUP_TOP', 'DUP_TOPX',
     'POP_BLOCK','SETUP_LOOP', 'BUILD_LIST', 'BUILD_MAP', 'BUILD_TUPLE',
-    'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR'] if x in opmap)
+    'LOAD_CONST', 'RETURN_VALUE', 'STORE_SUBSCR', 'STORE_MAP'] if x in opmap)
 
 _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     'UNARY_POSITIVE', 'UNARY_NEGATIVE', 'UNARY_NOT',
@@ -61,7 +61,7 @@ _EXPR_OPCODES = _CONST_OPCODES.union(set(opmap[x] for x in [
     ] if x in opmap))
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(set(opmap[x] for x in [
-    'STORE_MAP', 'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
+    'LOAD_NAME', 'CALL_FUNCTION', 'COMPARE_OP', 'LOAD_ATTR',
     'STORE_NAME', 'GET_ITER', 'FOR_ITER', 'LIST_APPEND', 'DELETE_NAME',
     'JUMP_FORWARD', 'JUMP_IF_TRUE', 'JUMP_IF_FALSE', 'JUMP_ABSOLUTE',
     'MAKE_FUNCTION', 'SLICE+0', 'SLICE+1', 'SLICE+2', 'SLICE+3',
@@ -238,6 +238,10 @@ def safe_eval(expr, globals_dict=None, locals_dict=None, mode="eval", nocopy=Fal
                 'set' : set
             }
     )
-    return eval(test_expr(expr,_SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    try:
+        return eval(test_expr(expr, _SAFE_OPCODES, mode=mode), globals_dict, locals_dict)
+    except Exception:
+        _logger.exception('Cannot eval %r', expr)
+        raise
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,7 +23,6 @@ import copy
 import re
 import reportlab
 import reportlab.lib.units
-from lxml import etree
 from openerp.tools.safe_eval import safe_eval as eval
 
 _regex = re.compile('\[\[(.+?)\]\]')
@@ -38,7 +37,7 @@ def _child_get(node, self=None, tagname=None):
                     if n.get('rml_except', False):
                         try:
                             eval(n.get('rml_except'), {}, self.localcontext)
-                        except:
+                        except Exception:
                             continue
                     if n.get('rml_tag'):
                         try:
@@ -47,7 +46,7 @@ def _child_get(node, self=None, tagname=None):
                             n2.tag = tag
                             n2.attrib.update(attr)
                             yield n2
-                        except:
+                        except Exception:
                             yield n
                     else:
                         yield n
@@ -56,7 +55,7 @@ def _child_get(node, self=None, tagname=None):
         if self and self.localcontext and n.get('rml_except', False):
             try:
                 eval(n.get('rml_except'), {}, self.localcontext)
-            except:
+            except Exception:
                 continue
         if (tagname is None) or (n.tag==tagname):
             yield n
@@ -74,11 +73,11 @@ def _process_text(self, txt):
             if sps:
                 try:
                     txt2 = eval(sps.pop(0),self.localcontext)
-                except:
+                except Exception:
                     txt2 = ''
-                if type(txt2) == type(0) or type(txt2) == type(0.0):
+                if isinstance(txt2, (int, float)):
                     txt2 = str(txt2)
-                if type(txt2)==type('') or type(txt2)==type(u''):
+                if isinstance(txt2, basestring):
                     result += txt2
         return result
 

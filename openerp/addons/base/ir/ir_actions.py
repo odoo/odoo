@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-import ast
-import copy
 import logging
 import os
 import re
 import time
 import tools
-from xml import dom
 
 import netsvc
 from osv import fields,osv
@@ -35,6 +32,7 @@ from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 from socket import gethostname
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -43,9 +41,12 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64),
+        'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
+            translate=True),
     }
     _defaults = {
         'usage': lambda *a: False,
@@ -106,6 +107,7 @@ class report_xml(osv.osv):
                         r['report_xsl'] and opj('addons',r['report_xsl']))
 
     _name = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
@@ -117,36 +119,36 @@ class report_xml(osv.osv):
         'usage': fields.char('Action Usage', size=32),
         'report_type': fields.char('Report Type', size=32, required=True, help="Report Type, e.g. pdf, html, raw, sxw, odt, html2html, mako2html, ..."),
         'groups_id': fields.many2many('res.groups', 'res_groups_report_rel', 'uid', 'gid', 'Groups'),
-        'multi': fields.boolean('On multiple doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
-        'attachment': fields.char('Save As Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
+        'multi': fields.boolean('On Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view."),
+        'attachment': fields.char('Save as Attachment Prefix', size=128, help='This is the filename of the attachment used to store the printing result. Keep empty to not save the printed reports. You can use a python expression with the object and time variables.'),
         'attachment_use': fields.boolean('Reload from Attachment', help='If you check this, then the second time the user prints with same attachment name, it returns the previous report.'),
-        'auto': fields.boolean('Custom python parser'),
+        'auto': fields.boolean('Custom Python Parser'),
 
-        'header': fields.boolean('Add RML header', help="Add or not the corporate RML header"),
+        'header': fields.boolean('Add RML Header', help="Add or not the corporate RML header"),
 
-        'report_xsl': fields.char('XSL path', size=256),
-        'report_xml': fields.char('XML path', size=256, help=''),
+        'report_xsl': fields.char('XSL Path', size=256),
+        'report_xml': fields.char('XML Path', size=256, help=''),
 
         # Pending deprecation... to be replaced by report_file as this object will become the default report object (not so specific to RML anymore)
-        'report_rml': fields.char('Main report file path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
+        'report_rml': fields.char('Main Report File Path', size=256, help="The path to the main report file (depending on Report Type) or NULL if the content is in another data field"),
         # temporary related field as report_rml is pending deprecation - this field will replace report_rml after v6.0
-        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report file', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
+        'report_file': fields.related('report_rml', type="char", size=256, required=False, readonly=False, string='Report File', help="The path to the main report file (depending on Report Type) or NULL if the content is in another field", store=True),
 
-        'report_sxw': fields.function(_report_sxw, type='char', string='SXW path'),
-        'report_sxw_content_data': fields.binary('SXW content'),
-        'report_rml_content_data': fields.binary('RML content'),
-        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW content',),
-        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML content'),
+        'report_sxw': fields.function(_report_sxw, type='char', string='SXW Path'),
+        'report_sxw_content_data': fields.binary('SXW Content'),
+        'report_rml_content_data': fields.binary('RML Content'),
+        'report_sxw_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='SXW Content',),
+        'report_rml_content': fields.function(_report_content, fnct_inv=_report_content_inv, type='binary', string='RML Content'),
 
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.report.xml',
-        'multi': lambda *a: False,
-        'auto': lambda *a: True,
-        'header': lambda *a: True,
-        'report_sxw_content': lambda *a: False,
-        'report_type': lambda *a: 'pdf',
-        'attachment': lambda *a: False,
+        'type': 'ir.actions.report.xml',
+        'multi': False,
+        'auto': True,
+        'header': True,
+        'report_sxw_content': False,
+        'report_type': 'pdf',
+        'attachment': False,
     }
 
 report_xml()
@@ -154,6 +156,7 @@ report_xml()
 class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
@@ -203,58 +206,12 @@ class act_window(osv.osv):
 
     def _search_view(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        def encode(s):
-            if isinstance(s, unicode):
-                return s.encode('utf8')
-            return s
         for act in self.browse(cr, uid, ids, context=context):
-            fields_from_fields_get = self.pool.get(act.res_model).fields_get(cr, uid, context=context)
-            search_view_id = False
-            if act.search_view_id:
-                search_view_id = act.search_view_id.id
-            else:
-                res_view = self.pool.get('ir.ui.view').search(cr, uid,
-                        [('model','=',act.res_model),('type','=','search'),
-                        ('inherit_id','=',False)], context=context)
-                if res_view:
-                    search_view_id = res_view[0]
-            if search_view_id:
-                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid, search_view_id,
-                            'search', context)
-                fields_from_fields_get.update(field_get['fields'])
-                field_get['fields'] = fields_from_fields_get
-                res[act.id] = str(field_get)
-            else:
-                def process_child(node, new_node, doc):
-                    for child in node.childNodes:
-                        if child.localName=='field' and child.hasAttribute('select') \
-                                and child.getAttribute('select')=='1':
-                            if child.childNodes:
-                                fld = doc.createElement('field')
-                                for attr in child.attributes.keys():
-                                    fld.setAttribute(attr, child.getAttribute(attr))
-                                new_node.appendChild(fld)
-                            else:
-                                new_node.appendChild(child)
-                        elif child.localName in ('page','group','notebook'):
-                            process_child(child, new_node, doc)
-
-                form_arch = self.pool.get(act.res_model).fields_view_get(cr, uid, False, 'form', context)
-                dom_arc = dom.minidom.parseString(encode(form_arch['arch']))
-                new_node = copy.deepcopy(dom_arc)
-                for child_node in new_node.childNodes[0].childNodes:
-                    if child_node.nodeType == child_node.ELEMENT_NODE:
-                        new_node.childNodes[0].removeChild(child_node)
-                process_child(dom_arc.childNodes[0],new_node.childNodes[0],dom_arc)
-
-                form_arch['arch'] = new_node.toxml()
-                form_arch['fields'].update(fields_from_fields_get)
-                res[act.id] = str(form_arch)
+            field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
+                act.search_view_id and act.search_view_id.id or False,
+                'search', context=context)
+            res[act.id] = str(field_get)
         return res
-
-    def _get_help_status(self, cr, uid, ids, name, arg, context=None):
-        activate_tips = self.pool.get('res.users').browse(cr, uid, uid).menu_tips
-        return dict([(id, activate_tips) for id in ids])
 
     _columns = {
         'name': fields.char('Action Name', size=64, translate=True),
@@ -264,15 +221,16 @@ class act_window(osv.osv):
             help="Optional domain filtering of the destination data, as a Python expression"),
         'context': fields.char('Context Value', size=250, required=True,
             help="Context dictionary as Python expression, empty by default (Default: {})"),
-        'res_model': fields.char('Object', size=64, required=True,
+        'res_id': fields.integer('Record ID', help="Database ID of record to open in form view, when ``view_mode`` is set to 'form' only"),
+        'res_model': fields.char('Destination Model', size=64, required=True,
             help="Model name of the object to open in the view window"),
-        'src_model': fields.char('Source Object', size=64,
+        'src_model': fields.char('Source Model', size=64,
             help="Optional model name of the objects on which this action should be visible"),
-        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline')], 'Target Window'),
-        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
-            help="View type: set to 'tree' for a hierarchical tree view, or 'form' for other views"),
+        'target': fields.selection([('current','Current Window'),('new','New Window'),('inline','Inline Edit'),('inlineview','Inline View')], 'Target Window'),
         'view_mode': fields.char('View Mode', size=250, required=True,
             help="Comma-separated list of allowed view modes, such as 'form', 'tree', 'calendar', etc. (Default: tree,form)"),
+        'view_type': fields.selection((('tree','Tree'),('form','Form')), string='View Type', required=True,
+            help="View type: Tree type to use for the tree view, set to 'tree' for a hierarchical tree view, or 'form' for a regular list view"),
         'usage': fields.char('Action Usage', size=32,
             help="Used to filter menu and home actions from the user form."),
         'view_ids': fields.one2many('ir.actions.act_window.view', 'act_window_id', 'Views'),
@@ -289,23 +247,18 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'help': fields.text('Action description',
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-            translate=True),
-        'display_menu_tip':fields.function(_get_help_status, type='boolean', string='Display Menu Tips',
-            help='It gives the status if the tip has to be displayed or not when a user executes an action'),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_window',
-        'view_type': lambda *a: 'form',
-        'view_mode': lambda *a: 'tree,form',
-        'context': lambda *a: '{}',
-        'limit': lambda *a: 80,
-        'target': lambda *a: 'current',
-        'auto_refresh': lambda *a: 0,
-        'auto_search':lambda *a: True,
+        'type': 'ir.actions.act_window',
+        'view_type': 'form',
+        'view_mode': 'tree,form',
+        'context': '{}',
+        'limit': 80,
+        'target': 'current',
+        'auto_refresh': 0,
+        'auto_search':True,
         'multi': False,
     }
 
@@ -318,7 +271,7 @@ class act_window(osv.osv):
         :return: A read() view of the ir.actions.act_window
         """
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id (cr, 1, module, xml_id)
+        data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, res_id, [], context)
 
@@ -345,7 +298,7 @@ class act_window_view(osv.osv):
             help="If set to true, the action will not be displayed on the right toolbar of a form view."),
     }
     _defaults = {
-        'multi': lambda *a: False,
+        'multi': False,
     }
     def _auto_init(self, cr, context=None):
         super(act_window_view, self)._auto_init(cr, context)
@@ -369,14 +322,15 @@ class act_wizard(osv.osv):
         'model': fields.char('Object', size=64),
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.wizard',
-        'multi': lambda *a: False,
+        'type': 'ir.actions.wizard',
+        'multi': False,
     }
 act_wizard()
 
 class act_url(osv.osv):
-    _name = 'ir.actions.url'
+    _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
@@ -390,8 +344,8 @@ class act_url(osv.osv):
         )
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_url',
-        'target': lambda *a: 'new'
+        'type': 'ir.actions.act_url',
+        'target': 'new'
     }
 act_url()
 
@@ -434,7 +388,7 @@ class server_object_lines(osv.osv):
         ], 'Type', required=True, size=32, change_default=True),
     }
     _defaults = {
-        'type': lambda *a: 'equation',
+        'type': 'equation',
     }
 server_object_lines()
 
@@ -478,6 +432,7 @@ class actions_server(osv.osv):
 
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
     _columns = {
@@ -535,11 +490,11 @@ class actions_server(osv.osv):
         'copy_object': fields.reference('Copy Of', selection=_select_objects, size=256),
     }
     _defaults = {
-        'state': lambda *a: 'dummy',
-        'condition': lambda *a: 'True',
-        'type': lambda *a: 'ir.actions.server',
-        'sequence': lambda *a: 5,
-        'code': lambda *a: """# You can use the following variables:
+        'state': 'dummy',
+        'condition': 'True',
+        'type': 'ir.actions.server',
+        'sequence': 5,
+        'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
 #  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
@@ -619,7 +574,7 @@ class actions_server(osv.osv):
     #   ids : original ids
     #   id  : current id of the object
     # OUT:
-    #   False : Finnished correctly
+    #   False : Finished correctly
     #   ACTION_ID : Action to launch
 
     # FIXME: refactor all the eval() calls in run()!
@@ -672,8 +627,8 @@ class actions_server(osv.osv):
 
                 if not email_from:
                     _logger.debug('--email-from command line option is not specified, using a fallback value instead.')
-                    if user.user_email:
-                        email_from = user.user_email
+                    if user.email:
+                        email_from = user.email
                     else:
                         email_from = "%s@%s" % (user.login, gethostname())
 
@@ -792,23 +747,9 @@ class act_window_close(osv.osv):
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_window_close',
+        'type': 'ir.actions.act_window_close',
     }
 act_window_close()
-
-class ir_actions_todo_category(osv.osv):
-    """
-    Category of Configuration Wizards
-    """
-
-    _name = 'ir.actions.todo.category'
-    _description = "Configuration Wizard Category"
-    _columns = {
-         'name':fields.char('Name', size=64, translate=True, required=True),
-         'sequence': fields.integer('Sequence'),
-         'wizards_ids': fields.one2many('ir.actions.todo', 'category_id', 'Configuration Wizards'),
-    }
-ir_actions_todo_category()
 
 # This model use to register action services.
 TODO_STATES = [('open', 'To Do'),
@@ -823,25 +764,23 @@ class ir_actions_todo(osv.osv):
     _description = "Configuration Wizards"
     _columns={
         'action_id': fields.many2one(
-            'ir.actions.act_window', 'Action', select=True, required=True,
-            ondelete='cascade'),
+            'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
-        'state': fields.selection(TODO_STATES, string='State', required=True),
+        'state': fields.selection(TODO_STATES, string='Status', required=True),
         'name': fields.char('Name', size=64),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
 Automatic: Runs whenever the system is reconfigured.
-Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
+Launch Manually Once: after having been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
-        'category_id': fields.many2one('ir.actions.todo.category','Category'),
     }
     _defaults={
         'state': 'open',
         'sequence': 10,
         'type': 'manual',
     }
-    _order="sequence,name,id"
+    _order="sequence,id"
 
     def action_launch(self, cr, uid, ids, context=None):
         """ Launch Action of Wizard"""
@@ -851,7 +790,11 @@ Launch Manually Once: after hacing been launched manually, it sets automatically
             wizard.write({'state': 'done'})
 
         # Load action
-        res = self.pool.get('ir.actions.act_window').read(cr, uid, wizard.action_id.id, [], context=context)
+        act_type = self.pool.get('ir.actions.actions').read(cr, uid, wizard.action_id.id, ['type'], context=context)
+
+        res = self.pool.get(act_type['type']).read(cr, uid, wizard.action_id.id, [], context=context)
+        if act_type<>'ir.actions.act_window':
+            return res
         res.setdefault('context','{}')
         res['nodestroy'] = True
 
@@ -919,21 +862,27 @@ class act_client(osv.osv):
     _order = 'name'
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
-        return dict([
-            ((record.id, ast.literal_eval(record.params_store))
-             if record.params_store else (record.id, False))
-            for record in self.browse(cr, uid, ids, context=context)
-        ])
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
+        return result
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
-        assert isinstance(field_value, dict), "params can only be dictionaries"
-        self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        if isinstance(field_value, dict):
+            self.write(cr, uid, id, {'params_store': repr(field_value)}, context=context)
+        else:
+            self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
+        'name': fields.char('Action Name', required=True, size=64, translate=True),
         'tag': fields.char('Client action tag', size=64, required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
+        'res_model': fields.char('Destination Model', size=64, 
+            help="Optional model, mostly used for needactions."),
+        'context': fields.char('Context Value', size=250, required=True,
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 
                                   string="Supplementary arguments",
@@ -943,6 +892,7 @@ class act_client(osv.osv):
     }
     _defaults = {
         'type': 'ir.actions.client',
+        'context': '{}',
 
     }
 act_client()

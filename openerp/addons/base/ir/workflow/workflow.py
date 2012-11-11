@@ -109,7 +109,7 @@ class wkf_transition(osv.osv):
     _columns = {
         'trigger_model': fields.char('Trigger Object', size=128),
         'trigger_expr_id': fields.char('Trigger Expression', size=128),
-        'signal': fields.char('Signal (button Name)', size=64,
+        'signal': fields.char('Signal (Button Name)', size=64,
                               help="When the operation of transition comes from a button pressed in the client form, "\
                               "signal tests the name of the pressed button. If signal is NULL, no button is necessary to validate this transition."),
         'group_id': fields.many2one('res.groups', 'Group Required',
@@ -136,7 +136,7 @@ class wkf_instance(osv.osv):
         'wkf_id': fields.many2one('workflow', 'Workflow', ondelete='cascade', select=True),
         'res_id': fields.integer('Resource ID'),
         'res_type': fields.char('Resource Object', size=64),
-        'state': fields.char('State', size=32),
+        'state': fields.char('Status', size=32),
     }
     def _auto_init(self, cr, context=None):
         super(wkf_instance, self)._auto_init(cr, context)
@@ -159,7 +159,7 @@ class wkf_workitem(osv.osv):
         'wkf_id': fields.related('act_id','wkf_id', type='many2one', relation='workflow', string='Workflow'),
         'subflow_id': fields.many2one('workflow.instance', 'Subflow', ondelete="cascade", select=True),
         'inst_id': fields.many2one('workflow.instance', 'Instance', required=True, ondelete="cascade", select=True),
-        'state': fields.char('State', size=64, select=True),
+        'state': fields.char('Status', size=64, select=True),
     }
 wkf_workitem()
 

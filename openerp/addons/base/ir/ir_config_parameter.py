@@ -26,6 +26,7 @@ from osv import osv,fields
 import uuid
 import datetime
 from tools import misc, config
+from openerp import SUPERUSER_ID
 
 """
 A dictionary holding some configuration parameters to be initialized when the database is created.
@@ -55,9 +56,9 @@ class ir_config_parameter(osv.osv):
         Initializes the parameters listed in _default_parameters.
         """
         for key, func in _default_parameters.iteritems():
-            ids = self.search(cr, 1, [('key','=',key)])
+            ids = self.search(cr, SUPERUSER_ID, [('key','=',key)])
             if not ids:
-                self.set_param(cr, 1, key, func())
+                self.set_param(cr, SUPERUSER_ID, key, func())
 
     def get_param(self, cr, uid, key, default=False, context=None):
         """Retrieve the value for a given key.

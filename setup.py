@@ -74,6 +74,19 @@ def py2exe_options():
 
 execfile(join(os.path.dirname(__file__), 'openerp', 'release.py'))
 
+# Notes for OpenERP developer on windows:
+#
+# To setup a windows developer evironement install python2.7 then pip and use
+# "pip install <depencey>" for every dependency listed below.
+#
+# Dependecies that requires DLLs are not installable with pip install, for
+# them we added comments with links where you can find the installers.
+#
+# OpenERP on windows also require the pywin32, the binary can be found at
+# http://pywin32.sf.net
+#
+# Both python2.7 32bits and 64bits are known to work.
+
 setuptools.setup(
       name             = 'openerp',
       version          = version,
@@ -87,38 +100,37 @@ setuptools.setup(
       scripts          = ['openerp-server'],
       data_files       = data(),
       packages         = setuptools.find_packages(),
+      dependency_links = ['http://download.gna.org/pychart/'],
       #include_package_data = True,
       install_requires = [
-        # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
-        # It seems there is a single difference, which is a spurious print in generate_docs.py.
-        # It is probably safe to move to PyChart 1.39 (the latest one).
-        # (Let setup.py choose the latest one, and we should check we can remove pychart from
-        # our tree.) http://download.gna.org/pychart/
-        # TODO  'pychart',
+          'pychart', # not on pypi, use: pip install http://download.gna.org/pychart/PyChart-1.39.tar.gz
           'babel',
+          'docutils',
           'feedparser',
           'gdata',
-          'lxml',
+          'lxml < 3', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
           'mako',
+          'PIL', # windows binary http://www.lfd.uci.edu/~gohlke/pythonlibs/
+          'psutil', # windows binary code.google.com/p/psutil/downloads/list
           'psycopg2',
           'pydot',
           'python-dateutil < 2',
-          'python-ldap',
+          'python-ldap', # optional
           'python-openid',
           'pytz',
           'pywebdav',
           'pyyaml',
-          'reportlab',
+          'reportlab', # windows binary pypi.python.org/pypi/reportlab
           'simplejson',
           'vatnumber',
           'vobject',
           'werkzeug',
           'xlwt',
-          'zsi',
       ],
       extras_require = {
           'SSL' : ['pyopenssl'],
       },
+      tests_require = ['unittest2'],
       **py2exe_options()
 )
 
