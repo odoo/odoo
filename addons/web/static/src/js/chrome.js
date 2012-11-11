@@ -303,7 +303,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).then(
             function(result) {
-                self.db_list = result.db_list;
+                self.db_list = result;
             },
             function (_, ev) {
                 ev.preventDefault();
@@ -548,7 +548,7 @@ instance.web.Login =  instance.web.Widget.extend({
         return d;
     },
     on_db_loaded: function (result) {
-        this.db_list = result.db_list;
+        this.db_list = result;
         this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
         if(this.db_list.length === 0) {
             this.do_action("database_manager");

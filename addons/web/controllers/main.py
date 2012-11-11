@@ -91,6 +91,17 @@ def db_list(req):
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
+def db_monodb(req):
+    # if only one db is listed returns it else return False
+    try:
+        dbs = db_list(req)
+        if len(dbs) == 1:
+            return dbs[0]
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    return False
+
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
     modules are listed before the module itself
@@ -185,15 +196,9 @@ def module_boot(req):
     for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
-    # if only one db load every module at boot
-    dbs = []
-    try:
-        dbs = db_list(req)
-    except xmlrpclib.Fault:
-        # ignore access denied
-        pass
-    if len(dbs) == 1:
-        dbside = module_installed_bypass_session(dbs[0])
+    monodb = db_monodb(req)
+    if monodb:
+        dbside = module_installed_bypass_session(monodb)
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
     return addons
@@ -760,8 +765,7 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
-        dbs = db_list(req)
-        return {"db_list": dbs}
+        return db_list(req)
 
     @openerpweb.jsonrequest
     def create(self, req, fields):
@@ -1243,17 +1247,6 @@ class DataSet(openerpweb.Controller):
         for i, id in enumerate(ids):
             m.write(id, { field: i + offset })
         return True
-
-class DataGroup(openerpweb.Controller):
-    _cp_path = "/web/group"
-    @openerpweb.jsonrequest
-    def read(self, req, model, fields, group_by_fields, domain=None, sort=None):
-        Model = req.session.model(model)
-        context, domain = eval_context_and_domain(req.session, req.context, domain)
-
-        return Model.read_group(
-            domain or [], fields, group_by_fields, 0, False,
-            dict(context, group_by=group_by_fields), sort or False)
 
 class View(openerpweb.Controller):
     _cp_path = "/web/view"
