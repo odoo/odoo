@@ -36,9 +36,6 @@ Next step is to initialize the shared repository and download the sources. Get t
 This will create the following structure inside your ``source`` directory, and fetch the latest source code from ``trunk``::
 
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 addons
-  drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 client
-  drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 client-web
-  drwxrwxr-x  2 openerp openerp 4096 2012-04-17 11:10 dump
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 misc
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 server
   drwxrwxr-x  3 openerp openerp 4096 2012-04-17 11:10 web
@@ -52,7 +49,7 @@ Some dependencies are necessary to use OpenERP. Depending on your environment, y
     python-psycopg2 python-pybabel python-pychart python-pydot
     python-pyparsing python-reportlab python-simplejson python-tz
     python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt
-    python-yaml python-zsi python-imaging python-matplotlib 
+    python-yaml python-imaging python-matplotlib 
 
 Next step is to initialize the database. This will create a new openerp role::
 
