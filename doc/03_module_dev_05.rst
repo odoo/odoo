@@ -8,7 +8,7 @@ Getting the skeleton directory
 
 Create a ``travel`` directory, that will contain our addon. Create **__init__.py** file and **__openerp__.py** files.
 
-Edit the **__openerp__.py** module configuration file:
+Edit the **__openerp__.py** module manifest file:
 
 .. code-block:: python
     
@@ -85,7 +85,8 @@ people call accounting "comptabilité", which explains the compta bit).
 Defining a view is defining the interfaces the user will get when accessing
 your module. Just defining a bunch of fields here should already get you
 started on a complete interface. However, due to the complexity of doing it
-right, we recommend, once again, that download the travel agency module example from this link http://www.openerp.com/download/modules/5.0/.
+right, we recommend, once again, that download the travel agency module example
+from this link http://apps.openerp.com/
 
 Next you should be able to create different views using other files to separate
 them from your basic/admin view.

@@ -10,3 +10,4 @@ Modules
    03_module_dev_03
    03_module_dev_04
    03_module_dev_05
+   03_module_dev_06

@@ -27,8 +27,6 @@ along with icons and other fields.
         name="My Menu" 
         action="action_xml_id" 
         icon="NAME_FROM_LIST" 
-        web_icon="static/src/img/icon.png"
-        web_icon_hover="static/src/img/icon-hover.png" 
         groups="groupname" 
         sequence="<integer>"
 	parent="parent_menu_xml_id"
@@ -46,11 +44,6 @@ Where
    to them. This is useful when defining custom icons for menu elements
    that will act as folders. This is how custom icons for "Projects" or
    "Human Resources" in OpenERP are defined).
- - ``icon`` specifies which icon will be displayed for the menu item
-   using the menu item. The default icon is STOCK_OPEN.
-
-    - The available icons are : STOCK_ABOUT, STOCK_ADD, STOCK_APPLY, STOCK_BOLD, STOCK_CANCEL, STOCK_CDROM, STOCK_CLEAR, STOCK_CLOSE, STOCK_COLOR_PICKER, STOCK_CONNECT,   STOCK_CONVERT, STOCK_COPY, STOCK_CUT, STOCK_DELETE, STOCK_DIALOG_AUTHENTICATION, STOCK_DIALOG_ERROR, STOCK_DIALOG_INFO, STOCK_DIALOG_QUESTION, STOCK_DIALOG_WARNING, STOCK_DIRECTORY, STOCK_DISCONNECT, STOCK_DND, STOCK_DND_MULTIPLE, STOCK_EDIT, STOCK_EXECUTE, STOCK_FILE, STOCK_FIND, STOCK_FIND_AND_REPLACE, STOCK_FLOPPY, STOCK_GOTO_BOTTOM, STOCK_GOTO_FIRST, STOCK_GOTO_LAST, STOCK_GOTO_TOP, STOCK_GO_BACK, STOCK_GO_DOWN, STOCK_GO_FORWARD, STOCK_GO_UP, STOCK_HARDDISK, STOCK_HELP, STOCK_HOME, STOCK_INDENT, STOCK_INDEX, STOCK_ITALIC, STOCK_JUMP_TO, STOCK_JUSTIFY_CENTER, STOCK_JUSTIFY_FILL, STOCK_JUSTIFY_LEFT, STOCK_JUSTIFY_RIGHT, STOCK_MEDIA_FORWARD, STOCK_MEDIA_NEXT, STOCK_MEDIA_PAUSE, STOCK_MEDIA_PLAY, STOCK_MEDIA_PREVIOUS, STOCK_MEDIA_RECORD, STOCK_MEDIA_REWIND, STOCK_MEDIA_STOP, STOCK_MISSING_IMAGE, STOCK_NETWORK, STOCK_NEW, STOCK_NO, STOCK_OK, STOCK_OPEN, STOCK_PASTE, STOCK_PREFERENCES, STOCK_PRINT, STOCK_PRINT_PREVIEW, STOCK_PROPERTIES, STOCK_QUIT,STOCK_REDO, STOCK_REFRESH, STOCK_REMOVE, STOCK_REVERT_TO_SAVED, STOCK_SAVE, STOCK_SAVE_AS, STOCK_SELECT_COLOR, STOCK_SELECT_FONT, STOCK_SORT_ASCENDING, STOCK_SORT_DESCENDING, STOCK_SPELL_CHECK, STOCK_STOP, STOCK_STRIKETHROUGH, STOCK_UNDELETE, STOCK_UNDERLINE, STOCK_UNDO, STOCK_UNINDENT, STOCK_YES, STOCK_ZOOM_100, STOCK_ZOOM_FIT, STOCK_ZOOM_IN, STOCK_ZOOM_OUT, terp-account, terp-crm, terp-mrp, terp-product, terp-purchase, terp-sale, terp-tools, terp-administration, terp-hr, terp-partner, terp-project, terp-report, terp-stock
-
  - ``groups`` specifies which group of user can see the menu item.
    (example : groups="admin"). See section " Management of Access Rights"
    for more information. Multiple groups should be separated by a ','
@@ -89,7 +82,6 @@ There are different types of simple actions:
     * **Report**: The printing of a report
           o Custom Report: The personalized reports
           o RML Report: The XSL:RML reports
-    * **Wizard**: The beginning of a Wizard
     * **Execute**: The execution of a method on the server side
     * **Group**: Gather some actions in one group
 
@@ -248,44 +240,6 @@ This action is declared in server/bin/addons/stock/stock_view.xml.
 Url Action
 -----------
 
-
-Wizard Action
--------------
-
-Here's an example of a .XML file that declares a wizard.
-::
-
-	<?xml version="1.0"?>
-	<openerp>
-	    <data>
-		 <wizard string="Employee Info"
-		         model="hr.employee"
-		         name="employee.info.wizard"
-		         id="wizard_employee_info"/>
-	    </data>
-	</openerp>
-
-A wizard is declared using a wizard tag. See "Add A New Wizard" for more information about wizard XML.
-
-also you can add wizard in menu using following xml entry
-::
-
-    <?xml version="1.0"?>
-    <openerp>
-         <data>
-         <wizard string="Employee Info"
-                 model="hr.employee"
-                 name="employee.info.wizard"
-                 id="wizard_employee_info"/>
-         <menuitem
-                 name="Human Resource/Employee Info"
-                 action="wizard_employee_info"
-                 type="wizard"
-                 id="menu_wizard_employee_info"/>
-         </data>
-    </openerp>
-
-
 Report Action
 -------------
 
@@ -365,7 +319,6 @@ The action will be triggered if the user clicks on the account.journal.period nÂ
 
 When you declare wizard, report or menus, the ir.values creation is automatically made with these tags:
 
-  * <wizard... />
   * <menuitem... />
   * <report... /> 
 

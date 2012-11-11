@@ -15,16 +15,8 @@ OpenERP Server
    03_module_dev
    04_security
    05_test_framework
-   90_using_gunicorn
-
-   field_level_acl
-   import
-   module-versioning
-   on_change_tips
-   test-framework
-   user_img_specs
-   need_action_specs
-   font_style
+   06_misc
+   09_deployment
 
 OpenERP Server API
 ''''''''''''''''''

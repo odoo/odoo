@@ -416,43 +416,6 @@ OpenERP uses a flexible and powerful reporting system. Reports are generated eit
 
 Reports are described more in details in the `Reporting <http://openobject.com/wiki/index.php/Developers:Developper%27s_Book/Reports>`_ chapter.
 
-Wizards
-"""""""
-
-Here's an example of a .XML file that declares a wizard.
-
-.. code-block:: xml
-
-    <?xml version="1.0"?>
-    <openerp>
-        <data>
-         <wizard string="Employee Info"
-                 model="hr.employee"
-                 name="employee.info.wizard"
-                 id="wizard_employee_info"/>
-        </data>
-    </openerp>
-
-A wizard is declared using a wizard tag. See "Add A New Wizard" for more information about wizard XML.
-
-also you can add wizard in menu using following xml entry
-
-.. code-block:: xml
-
-    <?xml version="1.0"?>
-    </openerp>
-         <data>
-         <wizard string="Employee Info"
-                 model="hr.employee"
-                 name="employee.info.wizard"
-                 id="wizard_employee_info"/>
-         <menuitem
-                 name="Human Resource/Employee Info"
-                 action="wizard_employee_info"
-                 type="wizard"
-                 id="menu_wizard_employee_info"/>
-         </data>
-    </openerp>
 
 Workflow
 """"""""
@@ -489,63 +452,6 @@ The squared nodes represent other Workflows;
 
     * the invoice
     * the shipping
-
-
-Profile Module
-++++++++++++++
-
-The purpose of a profile is to initialize OpenERP with a set of modules directly after the database has been created. A profile is a special kind of module that contains no code, only *dependencies on other modules*.
-
-In order to create a profile, you only have to create a new directory in server/addons (you *should* call this folder profile_modulename), in which you put an *empty* __init__.py file (as every directory Python imports must contain an __init__.py file), and a __openerp__.py whose structure is as follows :
-
-.. code-block:: python
-
-    {
-         "name":"''Name of the Profile'',
-         "version":"''Version String''",
-         "author":"''Author Name''",
-         "category":"Profile",
-         "depends":[''List of the modules to install with the profile''],
-         "demo_xml":[],
-         "update_xml":[],
-         "active":False,
-         "installable":True,
-    }
-
-Here's the code of the file source/addons/profile_tools/__openerp__.py,
-which corresponds to the tools profile in OpenERP.
-
-.. code-block:: python
-
-    {
-        "name" : "Miscellaneous Tools",
-        "version" : "1.0",
-        "depends" : ["base", "base_setup"],
-        "author" : "OpenERP SA",
-        "category" : "Hidden/Dependency",
-        'complexity': "easy",
-        "description": """
-    Installer for extra Hidden like lunch, survey, idea, share, etc.
-    ================================================================
-    
-    Makes the Extra Hidden Configuration available from where you can install
-    modules like share, lunch, pad, idea, survey and subscription.
-        """,
-        'website': 'http://www.openerp.com',
-        'init_xml': [],
-        'update_xml': [
-        ],
-        'demo_xml': [],
-        'installable': True,
-        'auto_install': False,
-        'certificate' : '00557100228403879621',
-        'images': ['images/config_extra_Hidden.jpeg'],
-    }
-
-
-
-
-
 
 
 
