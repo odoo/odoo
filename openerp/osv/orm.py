@@ -5216,14 +5216,17 @@ def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
                  r'not-null constraint\n',
                  str(e))
-    if not m or m.group('field') not in fields:
+    field_name = m.group('field')
+    if not m or field_name not in fields:
         return {'message': unicode(e)}
-    field = fields[m.group('field')]
+    message = _(u"Missing required value for the field '%s'.") % field_name
+    field = fields.get(field_name)
+    if field:
+        message = _(u"%s This might be '%s' in the current model, or a field "
+                    u"of the same name in an o2m.") % (message, field['string'])
     return {
-        'message': _(u"Missing required value for the field '%(field)s'") % {
-            'field': field['string']
-        },
-        'field': m.group('field'),
+        'message': message,
+        'field': field_name,
     }
 
 PGERROR_TO_OE = collections.defaultdict(
