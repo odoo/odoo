@@ -5026,7 +5026,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
             }
 
             // block UI or not
-            if(this.node.attrs.blockui) {
+            if(this.node.attrs.blockui>0) {
                 instance.web.blockUI();
             }
 
@@ -5060,7 +5060,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
     },
     on_file_loaded: function (event, result) {
         // unblock UI
-        if(this.node.attrs.blockui) {
+        if(this.node.attrs.blockui>0) {
             instance.web.unblockUI();
         }
 
