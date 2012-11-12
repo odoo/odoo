@@ -21,10 +21,10 @@
        <field name="inherit_id" ref="account.view_move_form"/>
        <field name="arch" type="xml">
            <xpath expr="/form/sheet/notebook/page/field[@name='line_id']/tree/field[@name='analytic_account_id']" position="replace">
-               <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
+               <field name="analytics_id" context="{'journal_id':parent.journal_id}" groups="analytic.group_analytic_accounting"/>
            </xpath>
            <xpath expr="/form/sheet/notebook/page/field[@name='line_id']/form/notebook/page/group/group/field[@name='analytic_account_id']" position="replace">
-               <field name="analytics_id" context="{'journal_id':journal_id}" groups="analytic.group_analytic_accounting"/>
+               <field name="analytics_id" context="{'journal_id':parent.journal_id}" groups="analytic.group_analytic_accounting"/>
            </xpath>
        </field>
     </record>
