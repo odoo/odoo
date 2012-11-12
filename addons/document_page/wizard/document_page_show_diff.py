@@ -43,7 +43,7 @@ class showdiff(osv.osv_memory):
 
         elif len(ids) == 1:
             old = history.browse(cr, uid, ids[0])
-            nids = history.search(cr, uid, [('document_id', '=', old.document_id.id)])
+            nids = history.search(cr, uid, [('page_id', '=', old.page_id.id)])
             nids.sort()
             diff = history.getDiff(cr, uid, ids[0], nids[-1])
         else:
