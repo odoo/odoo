@@ -2,6 +2,11 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- Update demo user to avoid mail bombing -->
+        <record id="base.partner_demo" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
