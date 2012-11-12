@@ -397,7 +397,6 @@ openerp.mail = function (session) {
             this._super(parent, datasets, options);
             this.show_compact_message = false;
             this.show_delete_attachment = true;
-            console.log(this);
         },
 
         start: function () {
@@ -1385,7 +1384,6 @@ openerp.mail = function (session) {
             } else {
                 // create a expandable message
                 var expandable = new mail.ThreadExpandable(this, {
-                    'id': message.id,
                     'model': message.model,
                     'parent_id': message.parent_id,
                     'nb_messages': 1,
@@ -1537,8 +1535,6 @@ openerp.mail = function (session) {
             }, this.node.params);
 
             this.domain = this.node.params && this.node.params.domain || [];
-
-            console.log(this);
         },
 
         start: function () {
