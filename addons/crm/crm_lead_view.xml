@@ -169,7 +169,7 @@
                         <group>
                             <label for="contact_name" />
                             <div>
-                                <field name="contact_name" class="oe_inline"/>,
+                                <field name="contact_name" class="oe_inline"/><span attrs="{'invisible': [('title', '=', '')]}">, </span>
                                 <field name="title" placeholder="Title" domain="[('domain', '=', 'contact')]" class="oe_inline" options='{"no_open": True}'/>
                             </div>
                             <field name="email_from" widget="email"/>
