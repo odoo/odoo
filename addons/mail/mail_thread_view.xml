@@ -21,12 +21,11 @@
             }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    <b>Hurray! No message here!</b>
+                    <b>Good Job! Your inbox is empty.</b>
                 </p><p>
-                    Congratulations! You have processed all your incoming emails.
-                    Remember that when you receive new messages, you can either
-                    set them as done, or use the star button to send those messages
-                    into your <i>Todo</i> mailbox.
+                    Your inbox contains private messages or emails sent to you
+                    as well as information related to documents or people you
+                    follow.
                 </p>
             </field>
         </record>
@@ -46,12 +45,9 @@
                 'read_action': 'read', }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    No message here!
+                    <b>No private message.</b>
                 </p><p>
-                    There are no new messages matching the current search
-                    that were directly sent to you.
-                    Remember you can always uncheck the Read filter to see
-                    messages sent to you that you already read.
+                    This list contains messages sent to you.
                 </p>
             </field>
         </record>
@@ -71,12 +67,9 @@
                 'read_action': 'read', }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    <b>Hurray! No message here!</b>
+                    <b>You did it!</b>
                 </p><p>
-                    Congratulations! You have processed all your messages in
-                    your todo list, or at least those matching your search.
-                    Remember you can always search for read messages by
-                    unchecking the Read filter.
+                    No more todo.
                 </p>
             </field>
         </record>
@@ -95,7 +88,7 @@
                 'read_action': 'unread', }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    There are no message for this search.
+                    No message found.
                 </p>
             </field>
         </record>
@@ -112,7 +105,10 @@
                 'view_mailbox': True, }&quot;"/>
             <field name="help" type="html">
                 <p>
-                    There are no message for this search.
+                    <b>No message sent yet.</b>
+                </p><p>
+                    Click on the top-right icon to compose a message. This
+                    message will be sent by email if it's an internal contact.
                 </p>
             </field>
         </record>
