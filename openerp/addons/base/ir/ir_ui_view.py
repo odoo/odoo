@@ -121,8 +121,10 @@ class view(osv.osv):
                if no error occurred, else False.  
         """
         try:
-            fvg = self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
-            return fvg['arch']
+            fvg = self.pool.get(view.model) and self.pool.get(view.model).fields_view_get(cr, uid, view_id=view.id, view_type=view.type, context=context)
+            if not fvg:
+                _logger.exception("Your view definition is wrong, model = '%s' defined on view = '%s' doesn't exist " % (view.model,view.name) )
+            return fvg and fvg['arch'] or False
         except:
             _logger.exception("Can't render view %s for model: %s", view.xml_id, view.model)
             return False
