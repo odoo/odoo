@@ -1059,7 +1059,7 @@
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
-                <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="true" on_write="on_create_write" version="7.0" editable="top">
+                <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
                     <field name="date"/>
                     <field name="move_id" required="0"/>
                     <field name="ref"/>
@@ -1575,7 +1575,7 @@
         </record>
 
         <record id="action_account_manual_account_move_line_quickadd" model="ir.actions.act_window">
-            <field name="context">{'view_mode':True}</field>
+            <field name="context">{'view_mode':True,'journal_type':'bank'}</field>
             <field name="name">Quick Journal Items</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_quickadd_tree"/>

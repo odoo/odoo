@@ -17,6 +17,8 @@ openerp.account.quickadd = function (instance) {
             this.periods = [];
             this.current_journal = null;
             this.current_period = null;
+            this.default_period = null;
+            this.default_journal = null;
         },
         load_list: function() {
             var self = this;
@@ -45,9 +47,13 @@ openerp.account.quickadd = function (instance) {
                 self.journals = result;
             }),mod.call("list_periods", []).then(function(result) {
                 self.periods = result;
+            }),mod.call("default_get", [['journal_id','period_id'],self.last_context]).then(function(result) {
+                self.default_period = result['period_id'];
+                self.default_journal = result['journal_id'];
+                console.log(result);
             })).then(function () {
-                self.current_journal = self.current_journal === null ? self.journals[0][0] : self.current_journal;
-                self.current_period = self.current_period === null ? self.periods[0][0] :self.current_period;
+                self.current_journal = self.current_journal === null ? self.default_journal : self.current_journal;
+                self.current_period = self.current_period === null ? self.default_period :self.current_period;
                 return self.search_by_journal_period();
             });
         },
@@ -79,6 +85,7 @@ openerp.account.quickadd = function (instance) {
             self.last_context["journal_id"] = self.current_journal;
             self.last_context["period_id"] = self.current_period;
             var compoundContext = self.last_context;
+            debugger;
             return self.old_search(compoundDomain, compoundContext, self.last_group_by);
         },
         /*_next: function (next_record, options) {
