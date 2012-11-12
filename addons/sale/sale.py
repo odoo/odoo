@@ -903,7 +903,7 @@ class sale_order_line(osv.osv):
 
         result = {}
         warning_msgs = {}
-        product_obj = product_obj.browse(cr, uid, product, context=context)
+        product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
         if uom:
@@ -922,7 +922,7 @@ class sale_order_line(osv.osv):
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
 
         if not flag:
-            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            result['name'] = product_obj.name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
             if product_obj.description_sale:
                 result['name'] += '\n'+product_obj.description_sale
         domain = {}
