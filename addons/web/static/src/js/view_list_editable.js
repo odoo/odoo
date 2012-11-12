@@ -173,6 +173,22 @@ openerp.web.list_editable = function (instance) {
             });
         },
         /**
+         * Builds a record with the provided id (``false`` for a creation),
+         * setting all columns with ``false`` value so code which relies on
+         * having an actual value behaves correctly
+         *
+         * @param {*} id
+         * @return {instance.web.list.Record}
+         */
+        make_empty_record: function (id) {
+            var attrs = {id: id};
+            _(this.columns).chain()
+                .filter(function (x) { return x.tag === 'field'})
+                .pluck('name')
+                .each(function (field) { attrs[field] = false; });
+            return new instance.web.list.Record(attrs);
+        },
+        /**
          * Set up the edition of a record of the list view "inline"
          *
          * @param {instance.web.list.Record} [record] record to edit, leave empty to create a new record
@@ -186,12 +202,7 @@ openerp.web.list_editable = function (instance) {
             if (record) {
                 item = record.attributes;
             } else {
-                var attrs = {id: false};
-                _(this.columns).chain()
-                    .filter(function (x) { return x.tag === 'field'})
-                    .pluck('name')
-                    .each(function (field) { attrs[field] = false; });
-                record = new instance.web.list.Record(attrs);
+                record = this.make_empty_record(false);
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
@@ -391,7 +402,7 @@ openerp.web.list_editable = function (instance) {
             if (!record) {
                 // insert after the source record
                 var index = this.records.indexOf(source_record) + 1;
-                record = new instance.web.list.Record({id: id});
+                record = this.make_empty_record(id);
                 this.records.add(record, {at: index});
                 this.dataset.ids.splice(index, 0, id);
             }

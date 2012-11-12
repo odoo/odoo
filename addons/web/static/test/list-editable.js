@@ -346,4 +346,80 @@ $(document).ready(function () {
             })
             .fail(function (e) { ok(false, e && e.message || e); });
     });
+
+    module('list-edition-onwrite', {
+        setup: function () {
+            baseSetup();
+        }
+    });
+
+    asyncTest('record-to-read', 4, function () {
+        instance.session.responses['/web/view/load'] = function () {
+            return {result: {
+                type: 'tree',
+                fields: {
+                    a: {type: 'char', string: "A"}
+                },
+                arch: {
+                    tag: 'tree',
+                    attrs: { on_write: 'on_write', colors: 'red:a == "foo"' },
+                    children: [
+                        {tag: 'field', attrs: {name: 'a'}}
+                    ]
+                }
+            }};
+        };
+        instance.session.responses['/web/dataset/call_kw:read'] = function (req) {
+            if (_.isEmpty(req.params.args[0])) {
+                return {result: []};
+            } else if (_.isEqual(req.params.args[0], [1])) {
+                return {result: [
+                    {id: 1, a: 'some value'}
+                ]};
+            } else if (_.isEqual(req.params.args[0], [42])) {
+                return {result: [
+                    {id: 42, a: 'foo'}
+                ]};
+            }
+            throw new Error(JSON.stringify(req.params));
+        };
+        instance.session.responses['/web/dataset/call_kw:default_get'] = function () {
+            return {result: {}};
+        };
+        instance.session.responses['/web/dataset/call_kw:create'] = function () {
+            return {result: 1};
+        };
+        instance.session.responses['/web/dataset/call_kw:on_write'] = function () {
+            return {result: [42]};
+        };
+
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, []);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        l.appendTo($fix)
+        .then(l.proxy('reload_content'))
+        .then(function () {
+            return l.start_edition();
+        })
+        .then(function () {
+            $fix.find('.oe_form_field input').val("some value").change();
+        })
+        .then(function () {
+            return l.save_edition();
+        })
+        .always(function () { start(); })
+        .then(function () {
+            strictEqual(ds.ids.length, 2,
+                'should have id of created + on_write');
+            strictEqual(l.records.length, 2,
+                'should have record of created + on_write');
+            strictEqual(
+                $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
+                'shoud have color applied');
+            strictEqual(
+                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(0, 0, 0)',
+                'should have default color applied');
+        }, function (e) {
+            ok(false, e && e.message || e);
+        });
+    });
 });
