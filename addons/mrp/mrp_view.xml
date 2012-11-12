@@ -677,17 +677,18 @@
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
-                                                icon="gtk-go-forward" context="{'consume': True}"
+                                                icon="gtk-go-forward" context="{'consume': True,'form_view_ref': False}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                             <button
                                                    name="%(stock.track_line)d"
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned" 
+                                                   states="draft,waiting,confirmed,assigned"
+                                                   context="{'form_view_ref': False}"
                                                    groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="gtk-convert" context="{'scrap': True,'form_view_ref': False}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -705,6 +706,7 @@
                                                name="%(stock.move_scrap)d"
                                                string="Scrap Products" type="action"
                                                icon="gtk-convert"
+                                               context="{'form_view_ref': False}"
                                                states="done,cancel"/>
                                        </tree>
                                     </field>
@@ -723,10 +725,11 @@
                                             <button name="%(stock.action_partial_move_server)d"
                                                 string="Partial"
                                                 type="action" states="confirmed,assigned"
+                                                context="{'form_view_ref': False}"
                                                 icon="gtk-justify-fill"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
-                                                icon="gtk-convert" context="{'scrap': True}"
+                                                icon="gtk-convert" context="{'scrap': True,'form_view_ref': False}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
                                     </field>
@@ -742,9 +745,10 @@
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.track_line)d"
-                                                 string="Split in Serial Numbers" type="action" icon="gtk-justify-fill" states="done,cancel"/>
+                                                 string="Split in Serial Numbers" type="action" context="{'form_view_ref': False}" icon="gtk-justify-fill" states="done,cancel"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action" icon="gtk-convert"
+                                                context="{'form_view_ref': False}"
                                                 states="done,cancel"/>
                                         </tree>
                                     </field>
