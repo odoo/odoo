@@ -21,7 +21,7 @@ import urlparse
 import uuid
 import xmlrpclib
 
-from babel.core import LOCALE_ALIASES
+import babel.core
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -92,29 +92,24 @@ class WebRequest(object):
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         self.session = self.httpsession.get(self.session_id)
         if not self.session:
-            self.httpsession[self.session_id] = self.session = session.OpenERPSession()
+            self.session = session.OpenERPSession()
+            self.httpsession[self.session_id] = self.session
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) is not False
-        self._params_lang = self.params.pop('lang')
-
-    @property
-    def lang(self):
-        if not hasattr(self, '_lang'):
-            lang = self._params_lang
-            if lang is None:
-                lang = self.httprequest.cookies.get('lang')
-            if lang is None:
-                context = self.session.eval_context(self.context)
-                lang = context.get('lang')
-            if lang is None:
-                lang = self.httprequest.accept_languages.best
-            if lang is None:
-                lang = 'en_US'
-
-            lang = LOCALE_ALIASES.get(lang, lang)
-            lang = lang.replace('-', '_')  # RFC2616 uses '-' separators for sublanguages
-            self._lang = lang
-        return self._lang
+        # Determine self.lang
+        lang = self.params.get('lang', None)
+        if lang is None:
+            lang = self.session.eval_context(self.context).get('lang')
+        if lang is None:
+            lang = self.httprequest.cookies.get('lang')
+        if lang is None:
+            lang = self.httprequest.accept_languages.best
+        if lang is None:
+            lang = 'en_US'
+        # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
+        lang = babel.core.LOCALE_ALIASES.get(lang, lang)
+        # we use _ as seprator where RFC2616 uses '-'
+        self.lang = lang.replace('-', '_')
 
 
 class JsonRequest(WebRequest):
