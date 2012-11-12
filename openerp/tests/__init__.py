@@ -11,9 +11,11 @@ See the :ref:`test-framework` section in the :ref:`features` list.
 from . import test_expression, test_mail, test_ir_sequence, test_orm,\
               test_fields, test_basecase, \
               test_view_validation, test_uninstall, test_misc, test_db_cursor
+from . import test_ir_filters
 
 fast_suite = [
     test_ir_sequence,
+    test_ir_filters
 ]
 
 checks = [

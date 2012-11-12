@@ -21,7 +21,7 @@ This class also offers several global services,:
  - ``needaction_get_action_count``: as ``needaction_get_record_ids`` but returns only the number of action, not the ids (performs a search with count=True)
  - ``needaction_get_user_record_references``: for a given uid, get all the records that ask this user to perform an action. Records are given as references, a list of tuples (model_name, record_id).
 
-.. versionadded:: openobject-server.XXXX
+.. versionadded:: openobject-server.4137
 
 This revision of the needaction_mixin mechanism slighty modifies the class behavior. The ``ir_needaction_mixin`` class now adds a function field on models inheriting from the class. This field allows to state whether a given record has a needaction for the current user. This is usefull if you want to customize views according to the needaction feature. For example, you may want to set records in bold in a list view if the current user has an action to perform on the record. This makes the class not a pure abstract class, but allows to easily use the action information. The field definition is::
 
@@ -61,7 +61,7 @@ users (those whose attention is required on the record)
 Menu modification
 +++++++++++++++++
 
-.. versionchanged:: openobject-server.XXXX
+.. versionchanged:: openobject-server.4137
 
 This revision adds three functional fields to ``ir.ui.menu`` model :
  - ``uses_needaction``: boolean field. If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.
