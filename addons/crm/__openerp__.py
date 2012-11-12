@@ -67,7 +67,6 @@ Dashboard for CRM will include:
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
-        'wizard/crm_lead_to_partner_view.xml',
         'wizard/crm_lead_to_opportunity_view.xml',
 
         'wizard/crm_phonecall_to_phonecall_view.xml',
