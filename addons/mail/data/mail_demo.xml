@@ -7,6 +7,38 @@
             <field name="notification_email_send">none</field>
         </record>
 
+        <!-- Demo user and admin conversation -->
+        <record id="message_discussion" model="mail.message">
+            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root'), ref('base.partner_demo')])]"/>
+        </record>
+        <record id="message_discussion_answer1" model="mail.message">
+            <field name="body">No specific issues, I think everything is clear.</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+        <record id="message_discussion_answer2" model="mail.message">
+            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+        <record id="message_discussion_answer3" model="mail.message">
+            <field name="body">Absolutely!</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root'), ref('base.partner_demo')])]"/>
+        </record>
+
         <!-- Pushed to all employees -->
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
@@ -51,39 +83,6 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             <field name="subtype_id" ref="mt_comment"/>
         </record>
 
-        <!-- Demo user and admin conversation -->
-        <record id="message_discussion" model="mail.message">
-            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
-        </record>
-        <record id="message_discussion_answer1" model="mail.message">
-            <field name="body">No specific issues, I think everything is clear.</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
-        </record>
-        <record id="message_discussion_answer2" model="mail.message">
-            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
-        </record>
-        <record id="message_discussion_answer3" model="mail.message">
-            <field name="body">Absolutely!</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
-        </record>
-
         <!-- External mail + reply with attachment conversation -->
         <record id="message_video2" model="mail.message">
             <field name="subject">Plan to install OpenERP</field>
@@ -96,8 +95,10 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
                 Sophie
             </field>
             <field name="type">email</field>
+            <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_2"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date">2012-11-12 9:13:32</field>
         </record>
         <record id="message_video2_attachment1" model="ir.attachment">
             <field name="model">ir.attachment</field>
@@ -117,9 +118,10 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="message_video2"/>
-            <field name="author_id" ref="base.partner_demo"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('message_video2_attachment1')])]"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'),ref('base.partner_root'),ref('base.res_partner_2')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root'),ref('base.res_partner_2')])]"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
         </record>
 
         <!-- Employee & other + attachments conversation -->
@@ -199,6 +201,7 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             <field name="author_id" ref="base.partner_demo"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('message_video1_attachment1'), ref('message_video1_attachment2')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date">2012-11-12 10:53:32</field>
         </record>
         <record id="message_video1_message1" model="mail.message">
             <field name="model">mail.group</field>
@@ -216,31 +219,31 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
 
         <!-- Network admin & employee conversation -->
         <record id="message_video0" model="mail.message">
-            <field name="model">mail.group</field>
+            <field name="model">res.partner</field>
+            <field name="res_id" ref="base.partner_demo"/>
             <field name="body">I changed the infrastructure of networks, if there are still changes to be made please do not hesitate to contact me.</field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date">2012-11-12 9:49:32</field>
+        </record>
+        <record id="message_video0_message1" model="mail.message">
+            <field name="body">Thank you, the networks is perfect now ! Could you add a IP phone for Jhon ?</field>
+            <field name="parent_id" ref="message_video0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date">2012-11-12 10:09:32</field>
         </record>
-        <record id="message_video0_message1" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="body">Thank you, the networks is perfect now ! Could you add a IP phone for Jhon ?</field>
+        <record id="message_video0_message2" model="mail.message">
+            <field name="body">It's right, his internal phone number is 0093</field>
             <field name="parent_id" ref="message_video0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
-        <record id="message_video0_message2" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="body">It's right, his internal phone number is 0093</field>
-            <field name="parent_id" ref="message_video0"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-        </record>
-
     </data>
 </openerp>
