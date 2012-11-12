@@ -397,6 +397,7 @@ openerp.mail = function (session) {
             this._super(parent, datasets, options);
             this.show_compact_message = false;
             this.show_delete_attachment = true;
+            console.log(this);
         },
 
         start: function () {
@@ -1536,6 +1537,8 @@ openerp.mail = function (session) {
             }, this.node.params);
 
             this.domain = this.node.params && this.node.params.domain || [];
+
+            console.log(this);
         },
 
         start: function () {

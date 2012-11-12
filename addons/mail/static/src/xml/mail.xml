@@ -109,7 +109,7 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             To:
-            <span t-if="!widget.is_private" class="oe_all_follower">Followers <t t-raw="' of &quot;' + widget.parent_thread.parent_message.record_name + '&quot;' "/></span>
+            <span t-if="!widget.is_private" class="oe_all_follower">Followers <t t-raw="' of ' + (widget.parent_thread.parent_message.record_name ? '&quot;' + widget.parent_thread.parent_message.record_name + '&quot;' : 'this document')"/></span>
             <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
             <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
