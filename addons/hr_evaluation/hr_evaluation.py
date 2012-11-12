@@ -189,6 +189,7 @@ class hr_evaluation(osv.osv):
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
         val = {}
         val['evaluation_plan_id']=False
+        val['date']=False
         if employee_id:
             employee_obj=self.pool.get('hr.employee')
             for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
