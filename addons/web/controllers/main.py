@@ -81,57 +81,6 @@ def rjsmin(script):
     ).strip()
     return result
 
-def sass2scss(src):
-    # Validated by diff -u of sass2scss against:
-    # sass-convert -F sass -T scss openerp.sass openerp.scss
-    block = []
-    sass = ('', block)
-    reComment = re.compile(r'//.*$')
-    reIndent = re.compile(r'^\s+')
-    reIgnore = re.compile(r'^\s*(//.*)?$')
-    reFixes = { re.compile(r'\(\((.*)\)\)') : r'(\1)', }
-    lastLevel = 0
-    prevBlocks = {}
-    for l in src.split('\n'):
-        l = l.rstrip()
-        if reIgnore.search(l): continue
-        l = reComment.sub('', l)
-        l = l.rstrip()
-        indent = reIndent.match(l)
-        level = indent.end() if indent else 0
-        l = l[level:]
-        if level>lastLevel:
-            prevBlocks[lastLevel] = block
-            newBlock = []
-            block[-1] = (block[-1], newBlock)
-            block = newBlock
-        elif level<lastLevel:
-            block = prevBlocks[level]
-        lastLevel = level
-        if not l: continue
-        # Fixes
-        for ereg, repl in reFixes.items():
-            l = ereg.sub(repl if type(repl)==str else repl(), l)
-        block.append(l)
-
-    def write(sass, level=-1):
-        out = ""
-        indent = '  '*level
-        if type(sass)==tuple:
-            if level>=0:
-                out += indent+sass[0]+" {\n"
-            for e in sass[1]:
-                out += write(e, level+1)
-            if level>=0:
-                out = out.rstrip(" \n")
-                out += ' }\n'
-            if level==0:
-                out += "\n"
-        else:
-            out += indent+sass+";\n"
-        return out
-    return write(sass)
-
 def db_list(req):
     dbs = []
     proxy = req.session.proxy("db")
@@ -141,6 +90,17 @@ def db_list(req):
     r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
+
+def db_monodb(req):
+    # if only one db is listed returns it else return False
+    try:
+        dbs = db_list(req)
+        if len(dbs) == 1:
+            return dbs[0]
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    return False
 
 def module_topological_sort(modules):
     """ Return a list of module names sorted so that their dependencies of the
@@ -231,22 +191,14 @@ def module_installed_bypass_session(dbname):
 
 def module_boot(req):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
-    return [m for m in server_wide_modules if m in openerpweb.addons_manifest]
-    # TODO the following will be enabled once we separate the module code and translation loading
     serverside = []
     dbside = []
     for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
-    # if only one db load every module at boot
-    dbs = []
-    try:
-        dbs = db_list(req)
-    except xmlrpclib.Fault:
-        # ignore access denied
-        pass
-    if len(dbs) == 1:
-        dbside = module_installed_bypass_session(dbs[0])
+    monodb = db_monodb(req)
+    if monodb:
+        dbside = module_installed_bypass_session(monodb)
         dbside = [i for i in dbside if i not in serverside]
     addons = serverside + dbside
     return addons
@@ -549,7 +501,7 @@ def _local_web_translations(trans_file):
             messages.append({'id': x.id, 'string': x.string})
     return messages
 
-def from_elementtree(el, preserve_whitespaces=False):
+def xml2json_from_elementtree(el, preserve_whitespaces=False):
     """ xml2json-direct
     Simple and straightforward XML-to-JSON converter in Python
     New BSD Licensed
@@ -569,12 +521,11 @@ def from_elementtree(el, preserve_whitespaces=False):
     if el.text and (preserve_whitespaces or el.text.strip() != ''):
         kids.append(el.text)
     for kid in el:
-        kids.append(from_elementtree(kid, preserve_whitespaces))
+        kids.append(xml2json_from_elementtree(kid, preserve_whitespaces))
         if kid.tail and (preserve_whitespaces or kid.tail.strip() != ''):
             kids.append(kid.tail)
     res["children"] = kids
     return res
-
 
 def content_disposition(filename, req):
     filename = filename.encode('utf8')
@@ -612,8 +563,7 @@ html_template = """<!DOCTYPE html>
     </head>
     <body>
         <!--[if lte IE 8]>
-        <script type="text/javascript" 
-            src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
         <script>
             var test = function() {
                 CFInstall.check({
@@ -750,12 +700,13 @@ class WebClient(openerpweb.Controller):
 
         translations_per_module = {}
         for addon_name in mods:
-            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-            f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
-            if not os.path.exists(f_name):
-                continue
-            translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
-            
+            if openerpweb.addons_manifest[addon_name].get('bootstrap'):
+                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+                f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
+                if not os.path.exists(f_name):
+                    continue
+                translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
+
         return {"modules": translations_per_module,
                 "lang_parameters": None}
 
@@ -814,8 +765,7 @@ class Database(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_list(self, req):
-        dbs = db_list(req)
-        return {"db_list": dbs}
+        return db_list(req)
 
     @openerpweb.jsonrequest
     def create(self, req, fields):
@@ -1298,17 +1248,6 @@ class DataSet(openerpweb.Controller):
             m.write(id, { field: i + offset })
         return True
 
-class DataGroup(openerpweb.Controller):
-    _cp_path = "/web/group"
-    @openerpweb.jsonrequest
-    def read(self, req, model, fields, group_by_fields, domain=None, sort=None):
-        Model = req.session.model(model)
-        context, domain = eval_context_and_domain(req.session, req.context, domain)
-
-        return Model.read_group(
-            domain or [], fields, group_by_fields, 0, False,
-            dict(context, group_by=group_by_fields), sort or False)
-
 class View(openerpweb.Controller):
     _cp_path = "/web/view"
 
@@ -1342,7 +1281,7 @@ class View(openerpweb.Controller):
             xml = self.transform_view(arch, session, evaluation_context)
         else:
             xml = ElementTree.fromstring(arch)
-        fvg['arch'] = from_elementtree(xml, preserve_whitespaces)
+        fvg['arch'] = xml2json_from_elementtree(xml, preserve_whitespaces)
 
         if 'id' in fvg['fields']:
             # Special case for id's
@@ -1516,11 +1455,24 @@ class Binary(openerpweb.Controller):
         try:
             if not id:
                 res = Model.default_get([field], context).get(field)
-                image_data = base64.b64decode(res)
+                image_base64 = res
             else:
                 res = Model.read([id], [last_update, field], context)[0]
                 retag = hashlib.md5(res.get(last_update)).hexdigest()
-                image_data = base64.b64decode(res.get(field))
+                image_base64 = res.get(field)
+
+            if kw.get('resize'):
+                resize = kw.get('resize').split(',');
+                if len(resize) == 2 and int(resize[0]) and int(resize[1]):
+                    width = int(resize[0])
+                    height = int(resize[1])
+                    # resize maximum 500*500
+                    if width > 500: width = 500
+                    if height > 500: height = 500
+                    image_base64 = openerp.tools.image_resize_image(base64_source=image_base64, size=(width, height), encoding='base64', filetype='PNG')
+            
+            image_data = base64.b64decode(image_base64)
+
         except (TypeError, xmlrpclib.Fault):
             image_data = self.placeholder(req)
         headers.append(('ETag', retag))
