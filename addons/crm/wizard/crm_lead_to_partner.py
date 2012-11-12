@@ -23,80 +23,59 @@ from osv import osv, fields
 from tools.translate import _
 
 class crm_lead2partner(osv.osv_memory):
-    """ Converts lead to partner """
     _name = 'crm.lead2partner'
-    _description = 'Lead to Partner'
-
+    _description = 'Generate a partner from a CRM item (lead, phonecall, ...) either by explicitly converting the element to a partner, either by triggering an action that will create a partner (e.g. convert a lead into an opportunity).'
     _columns = {
         'action': fields.selection([
                 ('exist', 'Link to an existing customer'),
-                ('create', 'Create a new customer')
+                ('create', 'Create a new customer'),
+                ('nothing', 'Do not link to a customer')
             ], 'Related Customer', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer'),
     }
 
-    def view_init(self, cr, uid, fields, context=None):
+    def _find_matching_partner(self, cr, uid, context=None):
         """
-        Check for precondition before wizard executes.
+        Try to find a matching partner regarding the active model data, like the customer's name, email, phone number, etc.
+        @return partner_id if any, False otherwise
         """
         if context is None:
             context = {}
-        model = context.get('active_model')
-        model = self.pool.get(model)
-        rec_ids = context and context.get('active_ids', [])
-        for this in model.browse(cr, uid, rec_ids, context=context):
-            if this.partner_id:
-                raise osv.except_osv(_('Warning!'),
-                        _('A partner is already defined.'))
-
-    def _select_partner(self, cr, uid, context=None):
-        if context is None:
-            context = {}
-        if not context.get('active_model') == 'crm.lead' or not context.get('active_id'):
-            return False
-        partner = self.pool.get('res.partner')
-        lead = self.pool.get('crm.lead')
-        this = lead.browse(cr, uid, context.get('active_id'), context=context)
-        if this.partner_id:
-            return this.partner_id.id
         partner_id = False
-        if this.email_from:
-            partner_ids = partner.search(cr, uid, [('email', '=', this.email_from)], context=context)
-            if partner_ids:
-                partner_id = partner_ids[0]
-        if not this.partner_id and this.partner_name:
-            partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
-            if partner_ids:
-                partner_id = partner_ids[0]
+        partner_obj = self.pool.get('res.partner')
+
+        # The active model has to be a lead or a phonecall
+        if (context.get('active_model') == 'crm.lead') and context.get('active_id'):
+            lead_obj = self.pool.get('crm.lead')
+            lead = lead_obj.browse(cr, uid, context.get('active_id'), context=context)
+            if lead.partner_id:
+                partner_id = lead.partner_id.id
+            if lead.email_from:
+                partner_ids = partner_obj.search(cr, uid, [('email', '=', lead.email_from)], context=context)
+                if partner_ids:
+                    partner_id = partner_ids[0]
+            if not lead.partner_id and lead.partner_name:
+                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
+                if partner_ids:
+                    partner_id = partner_ids[0]
+        elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
+            phonecall_obj = self.pool.get('crm.phonecall')
+            phonecall = phonecall_obj.browse(cr, uid, context.get('active_id'), context=context)
+            print ">>>>>>>>>> Phonecall case"
+            #do stuff
+
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
-        partner_id = self._select_partner(cr, uid, context=context)
+        partner_id = self._find_matching_partner(cr, uid, context=context)
 
-        if 'partner_id' in fields:
-            res.update({'partner_id': partner_id})
         if 'action' in fields:
             res.update({'action': partner_id and 'exist' or 'create'})
+        if 'partner_id' in fields:
+            res.update({'partner_id': partner_id})
 
         return res
-
-    def open_create_partner(self, cr, uid, ids, context=None):
-        """
-        Open form of create partner.
-        """
-        view_obj = self.pool.get('ir.ui.view')
-        view_id = view_obj.search(cr, uid, [('model', '=', self._name), \
-                                     ('name', '=', self._name+'.view')])
-        return {
-            'view_mode': 'form',
-            'view_type': 'form',
-            'view_id': view_id or False,
-            'res_model': self._name,
-            'context': context,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
 
     def _create_partner(self, cr, uid, ids, context=None):
         """
@@ -115,10 +94,10 @@ class crm_lead2partner(osv.osv_memory):
         Make a partner based on action.
         Only called from form view, so only meant to convert one lead at a time.
         """
-        lead_id = context and context.get('active_id') or False
+        if context is None:
+            context = {}
+        lead_id = context.get('active_id', False)
         partner_ids_map = self._create_partner(cr, uid, ids, context=context)
         return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids_map.get(lead_id, False), context=context)
-
-crm_lead2partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

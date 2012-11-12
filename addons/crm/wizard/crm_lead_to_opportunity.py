@@ -30,11 +30,6 @@ class crm_lead2opportunity_partner(osv.osv_memory):
     _inherit = 'crm.lead2partner'
 
     _columns = {
-        'action': fields.selection([
-                ('exist', 'Link to an existing customer'),
-                ('create', 'Create a new customer'),
-                ('nothing', 'Do not link to a customer')
-            ], 'Related Customer', required=True),
         'name': fields.selection([
                 ('convert', 'Convert to opportunity'),
                 ('merge', 'Merge with existing opportunities')
