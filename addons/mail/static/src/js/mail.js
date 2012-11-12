@@ -274,7 +274,7 @@ openerp.mail = function (session) {
                 this.date = session.web.format_value(this._date, {type:"datetime"});
                 this.timerelative = $.timeago(this.date);
             } 
-            if (this.type == 'email' && !this.author_id) {
+            if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
             } else if (this.author_id && this.template != 'mail.compose_message') {
                 this.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', this.author_id[0]);

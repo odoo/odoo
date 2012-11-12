@@ -87,6 +87,7 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
         <!-- External mail + reply with attachment conversation -->
         <record id="message_video2" model="mail.message">
             <field name="subject">Plan to install OpenERP</field>
+            <field name="model">mail.message</field>
             <field name="body">
                 &lt;![CDATA[Email0 inquiry]]&gt;
                 &lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;
@@ -95,7 +96,6 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
                 Sophie
             </field>
             <field name="type">email</field>
-            <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_2"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
@@ -106,7 +106,7 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             <field name="name">catalogue 2012.pdf</field>
         </record>
         <record id="message_video2_message1" model="mail.message">
-            <field name="subject">Re: Plan to buy a Laptop</field>
+            <field name="subject">Re: Plan to install OpenERP</field>
             <field name="body">
                 Dear Customer,&lt;br/&gt;
                 Thanks for showing interest in our products.&lt;br/&gt;
