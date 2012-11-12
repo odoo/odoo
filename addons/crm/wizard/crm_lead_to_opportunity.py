@@ -27,7 +27,7 @@ import re
 class crm_lead2opportunity_partner(osv.osv_memory):
     _name = 'crm.lead2opportunity.partner'
     _description = 'Lead To Opportunity Partner'
-    _inherit = 'crm.lead2partner'
+    _inherit = 'crm.generate.partner'
 
     _columns = {
         'name': fields.selection([

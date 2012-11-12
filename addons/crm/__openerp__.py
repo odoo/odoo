@@ -97,7 +97,6 @@ Dashboard for CRM will include:
         'board_crm_view.xml',
 
         'res_config_view.xml',
-
     ],
     'demo': [
         'crm_demo.xml',

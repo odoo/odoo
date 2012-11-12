@@ -22,9 +22,15 @@
 from osv import osv, fields
 from tools.translate import _
 
-class crm_lead2partner(osv.osv_memory):
-    _name = 'crm.lead2partner'
-    _description = 'Generate a partner from a CRM item (lead, phonecall, ...) either by explicitly converting the element to a partner, either by triggering an action that will create a partner (e.g. convert a lead into an opportunity).'
+class crm_generate_partner(osv.osv_memory):
+    """
+    Handle the partner generation from any CRM item (lead, phonecall, ...)
+    either by explicitly converting the element to a partner, either by
+    triggering an action that will create a partner (e.g. convert a lead into
+    an opportunity).
+    """
+    _name = 'crm.generate.partner'
+    _description = 'Generate a partner from a CRM item.'
     _columns = {
         'action': fields.selection([
                 ('exist', 'Link to an existing customer'),
@@ -36,7 +42,8 @@ class crm_lead2partner(osv.osv_memory):
 
     def _find_matching_partner(self, cr, uid, context=None):
         """
-        Try to find a matching partner regarding the active model data, like the customer's name, email, phone number, etc.
+        Try to find a matching partner regarding the active model data, like
+        the customer's name, email, phone number, etc.
         @return partner_id if any, False otherwise
         """
         if context is None:
@@ -67,7 +74,7 @@ class crm_lead2partner(osv.osv_memory):
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
+        res = super(crm_generate_partner, self).default_get(cr, uid, fields, context=context)
         partner_id = self._find_matching_partner(cr, uid, context=context)
 
         if 'action' in fields:
