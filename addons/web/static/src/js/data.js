@@ -358,17 +358,16 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.DataSet =  instance.web.CallbackEnabled.extend({
+instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, {
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
      *
      * @constructs instance.web.DataSet
-     * @extends instance.web.CallbackEnabled
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
     init: function(parent, model, context) {
-        this._super(parent);
+        instance.web.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
         this.index = null;

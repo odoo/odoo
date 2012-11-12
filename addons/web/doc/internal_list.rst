@@ -451,7 +451,7 @@ formview, delegating instead to its
         created.
 
         The result should be a valid form view, see :doc:`Form Notes
-        <form-notes>` for various peculiarities of the form view
+        <internal_form>` for various peculiarities of the form view
         format.
 
         :param editor: editor object asking for the view
