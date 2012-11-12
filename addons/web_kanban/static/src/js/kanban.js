@@ -27,6 +27,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.group_by = null;
         this.group_by_field = {};
         this.grouped_by_m2o = false;
+        this.many2manys = [];
         this.state = {
             groups : {},
             records : {}
@@ -130,12 +131,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         switch (node.tag) {
             case 'field':
-                if(this.fields_view.fields[ node.attrs['name'] ].type == 'many2many'){
-                    node.tag =  'div';
-                    node.attrs['class'] = 'oe_form_field oe_tags';
-                    node.attrs['model'] = this.fields_view.fields[node.attrs['name']].relation;
-                    node.attrs['t-att-data'] = 'record.' + node.attrs['name'] + '.raw_value';
-                }else {
+                if (this.fields_view.fields[node.attrs.name].type === 'many2many') {
+                    this.many2manys.push(node.attrs.name);
+                    node.tag = 'div';
+                    node.attrs['class'] = (node.attrs['class'] || '') + ' oe_form_field oe_tags';
+                } else {
                     node.tag = QWeb.prefix;
                     node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
                 }
@@ -388,7 +388,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         } else {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
-        instance.web_kanban.KanbanView.postprocessing_widget_many2many_tags(self);
+        this.postprocess_m2m_tags();
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
@@ -470,44 +470,48 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.find('.oe_view_nocontent').click(function() {
             create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
         });
+    },
+
+    /*
+    *  postprocessing of fields type many2many
+    *  make the rpc request for all ids/model and insert value inside .oe_tags fields
+    */
+    postprocess_m2m_tags: function() {
+        var self = this;
+        if (!this.many2manys.length) {
+            return;
+        }
+        var relations = {};
+        this.groups.forEach(function(group) {
+            group.records.forEach(function(record) {
+                self.many2manys.forEach(function(name) {
+                    var field = record.record[name];
+                    var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']');
+                    if (!relations[field.relation]) {
+                        relations[field.relation] = { ids: [], elements: {}};
+                    }
+                    var rel = relations[field.relation];
+                    field.raw_value.forEach(function(id) {
+                        rel.ids.push(id);
+                        if (!rel.elements[id]) {
+                            rel.elements[id] = [];
+                        }
+                        rel.elements[id].push($el[0]);
+                    });
+                });
+            });
+        });
+       _.each(relations, function(rel, rel_name) {
+            var dataset = new instance.web.DataSetSearch(self, rel_name, self.dataset.get_context());
+            dataset.name_get(_.uniq(rel.ids)).done(function(result) {
+                result.forEach(function(nameget) {
+                    $(rel.elements[nameget[0]]).append('<span class="oe_tag">' + _.str.escapeHTML(nameget[1]) + '</span>');
+                });
+            });
+        });
     }
 });
 
-/* 
-*  widget for list of tags/categories
-*  make the rpc request for all ids/model and insert value inside .oe_tags fields
-*/
-instance.web_kanban.KanbanView.postprocessing_widget_many2many_tags = function(self){
-    var model_list_id={};
-
-    // select all widget for the kanban view or the widget inside the record
-    self.$el.find(".oe_form_field.oe_tags").each(function(){
-         var model = $(this).attr("model");
-        if(model.length){
-            var data = $(this).attr("data");
-            var list = data.split(",");
-
-            //select all id (per model)
-            if(!model_list_id[model]) model_list_id[model]=[];
-            for(var t=0;t<list.length;t++) if(list[t]!="") model_list_id[model].push( list[t] );
-        }
-    });
-    // rpc and insert
-    for(var model in model_list_id){
-        if(model_list_id[model].length>0){
-            var block = self.$el.find(".oe_form_field.oe_tags[model='" + model + "']");
-            var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
-            dataset.name_get(_.uniq( model_list_id[model] )).done(
-                function(result) {
-                    for(var t=0;t<result.length;t++){
-                        block.filter(function(){ return this.getAttribute("data").match(new RegExp('(^|,)'+result[t][0]+'(,|$)')); })
-                            .append('<span class="oe_tag" data-list_id="' + result[t][0] +'"">'+result[t][1]+'</span>');
-                    }
-                }
-            );
-        }
-    }
-}
 
 function get_class(name) {
     return new instance.web.Registry({'tmp' : name}).get_object("tmp");
@@ -946,7 +950,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 self.$el.data('widget', self);
                 self.bind_events();
                 self.group.compute_cards_auto_height();
-                instance.web_kanban.KanbanView.postprocessing_widget_many2many_tags(self);
+                self.view.postprocess_m2m_tags();
             } else {
                 self.destroy();
             }
