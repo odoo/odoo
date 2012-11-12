@@ -43,8 +43,8 @@ directly to asynchronous methods is the ability to :ref:`compose them
 Using deferreds
 ~~~~~~~~~~~~~~~
 
-deferreds have only one method of importance: :js:func:`Deferred.then`. This
-method is used to attach new callbacks to the deferred object.
+Deferreds's most important method is :js:func:`Deferred.then`. It is
+used to attach new callbacks to the deferred object.
 
 * the first parameter attaches a success callback, called when the
   deferred object is successfully resolved and provided with the
@@ -176,9 +176,9 @@ Deferred chaining
 
 A second useful composition is starting an asynchronous operation as
 the result of an other asynchronous operation, and wanting the result
-of both: :js:func:`Deferred.then` returns the deferred on which it was
-called, so handle e.g. OpenERP's search/read sequence with this would
-require something along the lines of:
+of both: with the tools described so far, handling e.g. OpenERP's
+search/read sequence with this would require something along the lines
+of:
 
 .. code-block:: javascript
 
@@ -193,21 +193,14 @@ require something along the lines of:
 While it doesn't look too bad for trivial code, this quickly gets
 unwieldy.
 
-Instead, jQuery provides a tool to handle this kind of chains:
-:js:func:`Deferred.pipe`.
-
-:js:func:`~Deferred.pipe` has the same signature as
-:js:func:`~Deferred.then` and could be used in the same manner
-provided its return value was not used.
-
-It differs from :js:func:`~Deferred.then` in two ways: it returns a
-new promise object, not the one it was called with, and the return
-values of the callbacks is actually important to it: whichever
-callback is called,
+But :js:func:`~Deferred.then` also allows handling this kind of
+chains: it returns a new promise object, not the one it was called
+with, and the return values of the callbacks is actually important to
+it: whichever callback is called,
 
 * If the callback is not set (not provided or left to null), the
   resolution or rejection value(s) is simply forwarded to
-  :js:func:`~Deferred.pipe`'s promise (it's essentially a noop)
+  :js:func:`~Deferred.then`'s promise (it's essentially a noop)
 
 * If the callback is set and does not return an observable object (a
   deferred or a promise), the value it returns (``undefined`` if it
@@ -215,7 +208,7 @@ callback is called,
 
   .. code-block:: javascript
 
-      promise.pipe(function () {
+      promise.then(function () {
           console.log('called');
       });
 
@@ -232,7 +225,7 @@ callback is called,
 
   .. code-block:: javascript
 
-      return Model.search(condition).pipe(function (ids) {
+      return Model.search(condition).then(function (ids) {
           return Model.read(ids, fields);
       });
 
@@ -241,10 +234,10 @@ callback is called,
   will be resolved with ``read``'s resolution values if the chain
   executes correctly.
 
-:js:func:`~Deferred.pipe` is also useful to adapt third-party
+:js:func:`~Deferred.then` is also useful to adapt third-party
 promise-based APIs, in order to filter their resolution value counts
-for instance (to take advantage of :js:func:`when` 's special treatment
-of single-value promises).
+for instance (to take advantage of :js:func:`when` 's special
+treatment of single-value promises).
 
 
 .. _promises: http://en.wikipedia.org/wiki/Promise_(programming)
