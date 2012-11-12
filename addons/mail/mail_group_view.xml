@@ -39,8 +39,8 @@
                                         <t t-raw="record.message_summary.raw_value"/>
                                     </div>
                                     <div class="oe_group_button">
-                                        <button t-if="record.message_is_follower.raw_value" name="action_follow" type="object">Unfollow</button>
-                                        <button t-if="! record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Join Group</button>
+                                        <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
+                                        <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Join Group</button>
                                     </div>
                                 </div>
                             </div>
