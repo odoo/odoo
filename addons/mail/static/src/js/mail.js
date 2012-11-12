@@ -748,7 +748,13 @@ openerp.mail = function (session) {
             this.ds_notification.call('set_message_read', [ [this.id].concat( this.get_child_ids() ) , this.to_read, this.context]).then(function () {
                 self.$el.removeClass(self.to_read ? 'oe_msg_unread':'oe_msg_read').addClass(self.to_read ? 'oe_msg_read':'oe_msg_unread');
                 self.to_read = !self.to_read;
+                // CHM note: put this function inside a check of display message after star/read...
+                // we can make a function for manualy set the counter (menu.needaction_counter) and don't reload all the widget menu
+                if( self.options._parents[0].__parentedParent.__parentedParent.get_menu_emails ) {
+                    self.options._parents[0].__parentedParent.__parentedParent.get_menu_emails().widget.do_reload();
+                }
             });
+
             return false;
         },
 
@@ -1556,10 +1562,10 @@ openerp.mail = function (session) {
          */
         init: function (parent, action) {
             this._super(parent);
-            var options = action.params || {};
-            this.options = options;
-            this.options.domain = options.domain || [];
-            this.options.context = options.context || {};
+            this.action = action;
+            this.options = action.params;
+            this.options.domain = action.params.domain || [];
+            this.options.context = action.params.context || {};
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
         },
@@ -1571,6 +1577,28 @@ openerp.mail = function (session) {
             this.options.domain = this.options.domain.concat(this.search_results['domain']);
             this.bind_events();
             return $.when(searchview_ready, thread_displayed);
+        },
+
+        /**
+        * crete an object "related_menu"
+        * contain the menu widget and the the sub menu related of this wall
+        */
+        get_menu_emails: function () {
+            var self = this;
+            if (!this.related_menu) {
+                var menu = this.__parentedParent.__parentedParent.menu;
+                var sub_menu = _.filter(menu.data.data.children, function (val) {return val.id == 100;})[0];
+
+                var menu_active = false;
+                _.find(sub_menu.children, function (sub_menu) {
+                    return _.find(sub_menu.children, function (sub_sub_menu) {
+                        menu_active = sub_sub_menu;
+                        return sub_sub_menu.id == self.action.menu_id;
+                    });
+                });
+                this.related_menu = {'widget': menu, 'menu': menu_active};
+            }
+            return this.related_menu;
         },
 
         /**
