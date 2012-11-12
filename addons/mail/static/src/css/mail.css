@@ -1,7 +1,36 @@
+/* ------------ TOPBAR MAIL BUTTON --------------- */
+
+/* FIXME this css is not very pretty because it uses a 
+ * 'button' element wich comes with a lot of inappropriate 
+ * styling. Entypo is also a headache to center properly
+ * */
+
+.openerp .oe_topbar_item.oe_topbar_compose_full_email{ 
+    padding: 0px;
+    width: 32px;
+    height: 32px;
+}
+.openerp .oe_topbar_item.oe_topbar_compose_full_email button{
+    position: relative;
+    top: -3px;  /* centering entypo ... urgh */
+    box-sizing: border-box;
+    border: none;
+    box-shadow: none;
+    color: white;
+    background: none;
+    text-shadow: 0px 1px 2px black;
+    width: 32px;
+    height: 32px;
+    padding: 0px;
+    margin: 0px
+    border-radius: 0px;
+}
 
 /* ------------ MAIL WIDGET --------------- */
 .openerp .oe_mail, .openerp .oe_mail *{
-    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
 .openerp .oe_mail {
     display: block;
@@ -42,9 +71,10 @@
 }
 .openerp .oe_mail .oe_msg .oe_msg_footer{
     padding-left: 4px;
+    padding-top: 3px;
     overflow: hidden;
-    opacity:0.8;
-    -webkit-transition: opacity 0.2s linear;
+    margin-bottom: 4px;
+    font-size: 11px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_content{
     display: block;
@@ -80,18 +110,24 @@
 .openerp .oe_mail .oe_msg.oe_msg_indented .oe_msg_content{
     padding-top:2px;
 }
+.openerp .oe_mail .oe_msg.oe_msg_indented .oe_msg_footer{
+    margin-bottom: 0px;
+}
+
 /* b) Votes (likes) */
+
 .openerp .oe_mail .oe_mail_vote_count{
     display: inline;
     position: relative;
-    background: #7C7BAD;
-    color: white;
+    background: white;
+    box-shadow: 0px 0px 0px 1px rgba(124, 123, 173, 0.36) inset;
+    color: #7c7bad;
     text-shadow: none;
     border-radius: 3px;
     margin: 0px;
     padding-left: 3px;
-    padding-right: 18px;
-    margin-right: 3px;
+    padding-right: 15px;
+    margin-right: 5px;
 }
 .openerp .oe_mail .oe_mail_vote_count .oe_e{
     position: absolute;
@@ -102,12 +138,6 @@
 
 /* c) Message action icons */
 
-.openerp .oe_mail .oe_msg.oe_msg_unread .oe_unread{
-    display:none;
-}
-.openerp .oe_mail .oe_msg.oe_msg_read .oe_read{
-    display:none;
-}
 .openerp .oe_mail .oe_msg .oe_msg_icons{
     float: right;
     margin-top: 4px;
@@ -115,6 +145,9 @@
     margin-left: 8px;
     height: 24px;
     -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
 }
 .openerp .oe_mail .oe_msg .oe_msg_icons span{
     float:right;
@@ -128,10 +161,16 @@
     color: #FFF;
     text-shadow: 0px 1px #AAA,0px -1px #AAA, -1px 0px #AAA, 1px 0px #AAA, 0px 3px 3px rgba(0,0,0,0.1);
     -webkit-transition: all 0.2s linear;
+       -moz-transition: all 0.2s linear;
+         -o-transition: all 0.2s linear;
+            transition: all 0.2s linear;
 }
 .openerp .oe_mail .oe_msg:hover .oe_msg_icons a{
     opacity: 1;
     -webkit-transition: all 0.1s linear;
+       -moz-transition: all 0.1s linear;
+         -o-transition: all 0.1s linear;
+            transition: all 0.1s linear;
 }
 .openerp .oe_mail .oe_msg .oe_msg_icons .oe_star:hover a{
     color: #FFF6C0;
@@ -155,7 +194,7 @@
 }
 .openerp .oe_mail .oe_msg .oe_msg_content textarea{
     width: 100%;
-    height: 32px;
+    height: 64px;
     margin: 0px;
     padding: 0px;
     resize: vertical;
@@ -171,43 +210,156 @@
     width: 100%;
 }
 
+/* --------------------- ATTACHMENTS --------------------- */
+
+.openerp .oe_mail .oe_msg_attachment_list{
+    display: none;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+.openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
+    display: block;
+}
+.openerp .oe_mail .oe_attachment{
+    display: inline-block;
+    width: 100px;
+    margin: 2px;
+    min-height: 80px;
+    position: relative;
+    border-radius: 3px;
+    text-align: center;
+    vertical-align: top;
+}
+.openerp .oe_mail .oe_attachment .oe_name{
+    display: inline-block;
+    max-width: 100%;
+    padding: 1px 3px;
+    margin-top: 50px;
+    margin-bottom: 5px;
+    background: rgba(124, 123, 173, 0.13);
+    overflow: hidden;
+    color: #4c4c4c;
+    text-shadow: none;
+    border-radius: 3px;
+}
+
+.openerp .oe_mail .oe_attachment.oe_preview{
+    background: url( data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAJ0lEQVQYV2MsLS39z4AGLCws0IUYGIeCwrVr12J45sSJE5ieGQIKAbuZKf/EMCs7AAAAAElFTkSuQmCC );
+}
+.openerp .oe_mail .oe_attachment .oe_progress_bar{
+    display: none;
+    position: absolute;
+    top: 18px;
+    left: 16px;
+    right: 16px;
+    height: 17px;
+    line-height: 13px;
+    padding: 0px;
+    background: #4BBD00;
+    color: white;
+    text-align: center;
+    border-radius: 3px;
+    border: solid 1px rgba(0,0,0,0.2);
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.34);
+    -webkit-animation: oe_mail_attach_loading_anim 0.75s infinite linear;
+       -moz-animation: oe_mail_attach_loading_anim 0.75s infinite linear;
+         -o-animation: oe_mail_attach_loading_anim 0.75s infinite linear;
+            animation: oe_mail_attach_loading_anim 0.75s infinite linear;
+}
+.openerp .oe_mail .oe_attachment.oe_uploading .oe_progress_bar{
+    display: block;
+}
+@-webkit-keyframes oe_mail_attach_loading_anim{
+    0% { background: #4BBD00 }
+    50% { background: #009123 } 
+    100% { background: #4BBD00 }
+}
+@-moz-keyframes oe_mail_attach_loading_anim{
+    0% { background: #4BBD00 }
+    50% { background: #009123 } 
+    100% { background: #4BBD00 }
+}
+@-o-keyframes oe_mail_attach_loading_anim{
+    0% { background: #4BBD00 }
+    50% { background: #009123 } 
+    100% { background: #4BBD00 }
+}
+@keyframes oe_mail_attach_loading_anim{
+    0% { background: #4BBD00 }
+    50% { background: #009123 } 
+    100% { background: #4BBD00 }
+}
+.openerp .oe_mail .oe_attachment.oe_preview .oe_name{
+    position: absolute;
+    bottom: 0px;
+    margin: 0px;
+    left: 0px;
+    right: 0px;
+    max-height: 64px;
+    background: rgba(0,0,0,0.8); 
+    color: white;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s linear; 
+       -moz-transition: opacity 0.2s linear; 
+         -o-transition: opacity 0.2s linear; 
+            transition: opacity 0.2s linear; 
+}
+.openerp .oe_mail .oe_attachment.oe_preview:hover .oe_name{
+    opacity: 1;
+    -webkit-transition: opacity 0.2s linear; 
+       -moz-transition: opacity 0.2s linear; 
+         -o-transition: opacity 0.2s linear; 
+            transition: opacity 0.2s linear; 
+}
+.openerp .oe_mail .oe_attachment img{
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    top: 0px;
+    left: 50%;
+    margin-left: -24px;
+}
+.openerp .oe_mail .oe_attachment.oe_preview img{
+    display: block;
+    position: relative;
+    margin:0px;
+    width: 100px;
+    height: 100px;
+    border-radius: 3px;
+    margin-left: -50px;
+}
+.openerp .oe_mail .oe_attachment .oe_delete{
+    display: none;
+}
+.openerp .oe_mail .oe_msg_composer .oe_attachment .oe_delete{
+    display: block;
+    position: absolute;
+    top: -7px;
+    right: 0px;
+    color: black;
+    text-shadow: 1px 0px white, -1px 0px white, 0px 1px white, 0px -1px white;
+    cursor: pointer;
+    opacity: 0;
+    -webkit-transition: opacity 0.2s linear; 
+       -moz-transition: opacity 0.2s linear; 
+         -o-transition: opacity 0.2s linear; 
+            transition: opacity 0.2s linear; 
+}
+.openerp .oe_mail .oe_msg_composer .oe_attachment:hover .oe_delete{
+    opacity: 1;
+    -webkit-transition: opacity 0.2s linear; 
+       -moz-transition: opacity 0.2s linear; 
+         -o-transition: opacity 0.2s linear; 
+            transition: opacity 0.2s linear; 
+}
 /* ---------------- MESSAGE QUICK COMPOSER --------------- */
 
 .openerp .oe_mail .oe_msg_composer .oe_msg_footer{
     padding-right:4px;
     padding-top: 2px;
     padding-bottom:6px;
-}
-.openerp .oe_mail .oe_msg_attachments.oe_hidden,
-.openerp .oe_mail .oe_msg_images.oe_hidden{
-    margin:0px;
-    border: none;
-    display: none;
-}
-.openerp .oe_mail .oe_msg_attachments{
-    margin-bottom: 4px;
-    margin-right: 0px;
-    font-size: 12px;
-    border-radius: 2px;
-    border: solid 1px rgba(124,123,173,0.14);
-}
-.openerp .oe_mail .oe_msg_attachments .oe_attachment{
-    padding: 2px;
-    padding-left: 4px;
-    padding-right: 4px;
-}
-.openerp .oe_mail .oe_msg_attachments .oe_attachment .oe_e{
-    font-size: 23px;
-    margin-top: -5px;
-}
-.openerp .oe_mail .oe_msg_attachments .oe_attachment .oe_e:hover{
-    text-decoration: none;
-}
-.openerp .oe_mail .oe_msg_attachments .oe_attachment:nth-child(odd){
-    background:white;
-}
-.openerp .oe_mail .oe_msg_attachments .oe_attachment:nth-child(even){
-    background: #F4F5FA;
 }
 .openerp .oe_mail .oe_msg_images {
     display: block;
@@ -269,6 +421,7 @@
 
 .openerp .oe_mail .oe_msg_content.oe_msg_more_message{
     text-align: right;
+    cursor: pointer;
 }
 .openerp .oe_mail .oe_msg_content.oe_msg_more_message .oe_separator{
     height: 0;
@@ -280,7 +433,7 @@
 }
 .openerp .oe_mail .oe_msg_more_message .oe_msg_fetch_more {
     background: white;
-    margin-right: 280px;
+    margin-right: 210px;
     padding-left: 8px;
     padding-right: 8px;
     text-decoration: none;
@@ -298,6 +451,7 @@
     padding-top: 5px;
     width: 160px;
     float: right;
+    margin-right: 16px;
 }
 
 /*  a) THE FOLLOW BUTTON */
@@ -308,9 +462,22 @@
     width:100%;
 }
 .openerp .oe_followers button.oe_follower.oe_following{
+    color: white;
     background-color: #3465A4;
     background-image: -webkit-linear-gradient(top, #729FCF, #3465A4);
+    background-image:    -moz-linear-gradient(top, #729FCF, #3465A4);
+    background-image:     -ms-linear-gradient(top, #729FCF, #3465A4);
+    background-image:      -o-linear-gradient(top, #729FCF, #3465A4);
+    background-image:         linear-gradient(to bottom, #729FCF, #3465A4);
+}
+.openerp .oe_followers button.oe_follower.oe_following:hover{
     color: white;
+    background-color: #A21A1A;
+    background-image: -webkit-linear-gradient(top, #DF3F3F, #A21A1A);
+    background-image:    -moz-linear-gradient(top, #DF3F3F, #A21A1A);
+    background-image:     -ms-linear-gradient(top, #DF3F3F, #A21A1A);
+    background-image:      -o-linear-gradient(top, #DF3F3F, #A21A1A);
+    background-image:         linear-gradient(to bottom, #DF3F3F, #A21A1A);
 }
 
 .openerp .oe_followers button.oe_follower .oe_follow, 
@@ -371,12 +538,13 @@
 
 .openerp .oe_record_thread{
     display: block;
-    margin-right: 180px;
+    margin-left: 16px;
+    margin-right: 212px;
 }
 
 /* ----------- INBOX INTEGRATION ----------- */
 
 .openerp .oe_mail_wall .oe_mail{
     margin: 16px;
-    width: 720px;
+    width: 600px;
 }
