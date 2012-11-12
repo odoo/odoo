@@ -1118,6 +1118,10 @@ instance.web.WebClient = instance.web.Client.extend({
                         if($(this).attr('id') == "goldto"){
                             self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_gold.png')
                         }
+                        if($(this).attr('id') == "community"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_community.png')
+                        }
+                        self.$el.find('.oe_logo').find('img').removeAttr("style");
                     });
                     $(this).find('div a').click(function(){
                         if($(this).parent().attr('id') == "free"){
@@ -1131,6 +1135,12 @@ instance.web.WebClient = instance.web.Client.extend({
                         }
                         if($(this).parent().attr('id') == "gold"){
                             self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_partner_gold.png')
+                        }
+                         if($(this).parent().attr('id') == "community"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/openerp_community.png')
+                        }
+                        if($(this).attr('id') == "vec"){
+                            self.$el.find('.oe_logo').find('img').attr('src','web/static/src/img/logo1.png')
                         }
                         if($(this).attr('id') == "low"){
                             self.$el.find('.oe_logo').find('img').css('width','150px')
