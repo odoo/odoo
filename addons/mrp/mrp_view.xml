@@ -668,7 +668,7 @@
                         <page string="Consumed Products">
                             <group>
                                 <group string="Products to Consume">
-                                    <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
+                                    <field name="move_lines" nolabel="1" context="{'form_view_ref': 'stock.view_move_form'}" options="{'reload_on_button': true}">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
@@ -693,7 +693,7 @@
                                     </field>
                                 </group>
                                 <group string="Consumed Products">
-                                    <field name="move_lines2" nolabel="1">
+                                    <field name="move_lines2" nolabel="1" context="{'form_view_ref': 'stock.view_move_form'}">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
@@ -714,7 +714,7 @@
                         <page string="Finished Products">
                             <group>
                                 <group string="Products to Produce">
-                                    <field name="move_created_ids" nolabel="1">
+                                    <field name="move_created_ids" nolabel="1" context="{'form_view_ref': 'stock.view_move_form'}" >
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
                                             <field name="product_qty"/>
@@ -729,50 +729,10 @@
                                                 icon="gtk-convert" context="{'scrap': True}"
                                                 states="draft,waiting,confirmed,assigned"/>
                                         </tree>
-                                        <form string="Products to Produce" version="7.0">
-                                            <header>
-                                                    <button name="force_assign" states="confirmed" string="Force Availability" type="object" groups="base.group_user"/>
-                                                    <button name="action_confirm" states="draft" string="Confirm" type="object" groups="base.group_user"/>
-                                                    <button name="cancel_assign" states="assigned" string="Cancel Availability" type="object" groups="base.group_user"/>
-                                                    <field name="state" widget="statusbar" statusbar_visible="draft,assigned,done"/>
-                                            </header>
-                                            <group>
-                                                <group>
-                                                    <field name="name" invisible="1"/>
-                                                    <field name="product_id" on_change="onchange_product_id(product_id,location_id,location_dest_id, False)"/>
-                                                    <field name="type" invisible="1"/>
-                                                    <label for="product_qty"/>
-                                                    <div>
-                                                        <field name="product_qty" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                                        <field name="product_uom" string="Unit Of Measure" groups="product.group_uom" class="oe_inline"/>
-                                                        <button name="%(stock.move_scrap)d"
-                                                            string="Scrap" type="action"
-                                                            icon="gtk-convert" context="{'scrap': True}"
-                                                            states="draft,waiting,confirmed,assigned"
-                                                            groups="base.group_user"/>
-                                                    </div>
-                                                    <label for="product_uos_qty" groups="product.group_uos"/>
-                                                    <div groups="product.group_uos">
-                                                        <field name="product_uos_qty" on_change="onchange_uos_quantity(product_id, product_uos_qty, product_uos, product_uom)" class="oe_inline"/>
-                                                        <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
-                                                    </div>
-                                                    <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
-                                                </group>
-                                                <group>
-                                                    <field name="create_date" invisible="1"/>
-                                                    <field name="date"/>
-                                                    <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
-                                                </group>
-                                                <group string="Locations" groups="stock.group_locations">
-                                                    <field name="location_id" domain="[('usage','&lt;&gt;','view')]"/>
-                                                    <field name="location_dest_id" domain="[('usage','=','internal')]" groups="stock.group_locations"/>
-                                                </group>
-                                            </group>
-                                        </form>
                                     </field>
                                 </group>
                                 <group string="Produced Products">
-                                    <field name="move_created_ids2" nolabel="1">
+                                    <field name="move_created_ids2" nolabel="1"  context="{'form_view_ref': 'stock.view_move_form'}">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_qty" readonly="1"/>
