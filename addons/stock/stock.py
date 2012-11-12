@@ -1351,14 +1351,14 @@ class stock_picking(osv.osv):
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 # Then we finish the good picking
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
-                self.action_move(cr, uid, [new_picking])
+                self.action_move(cr, uid, [new_picking], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.back_order_send_note(cr, uid, ids, back_order_name, context)
             else:
-                self.action_move(cr, uid, [pick.id])
+                self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
                 delivered_pack_id = pick.id
                 self.ship_done_send_note(cr, uid, ids, context)
@@ -2123,7 +2123,7 @@ class stock_move(osv.osv):
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name}, context=context)
+                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
             else:
                 pickid = False
             for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:

@@ -16,9 +16,9 @@ var _t = instance.web._t,
             var view = self.getParent();
             var ids = ( view.fields_view.type != "form" )? view.groups.get_selection().ids : [ view.datarecord.id ];
             if( !_.isEmpty(ids) ){
-                view.sidebar_context().then(function (context) {
+                view.sidebar_context().done(function (context) {
                     var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                    ds.call('google_doc_get', [view.dataset.model, ids, context]).then(function(r) {
+                    ds.call('google_doc_get', [view.dataset.model, ids, context]).done(function(r) {
                         if (r == 'False') {
                             var params = {
                                 error: response,

@@ -264,6 +264,22 @@ class sale_order(osv.osv):
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
+    def copy_quotation(self, cr, uid, ids, context=None):
+        id = self.copy(cr, uid, ids[0], context=None)
+        view_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'sale', 'view_order_form')
+        view_id = view_ref and view_ref[1] or False,
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Sales Order'),
+            'res_model': 'sale.order',
+            'res_id': id,
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': view_id,
+            'target': 'current',
+            'nodestroy': True,
+        }
+
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         if not pricelist_id:
             return {}
@@ -903,7 +919,7 @@ class sale_order_line(osv.osv):
 
         result = {}
         warning_msgs = {}
-        product_obj = product_obj.browse(cr, uid, product, context=context)
+        product_obj = product_obj.browse(cr, uid, product, context=context_partner)
 
         uom2 = False
         if uom:
