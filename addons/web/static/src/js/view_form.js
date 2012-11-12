@@ -4790,15 +4790,6 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
         this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
     },
-    human_filesize : function(size) {
-        var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        var i = 0;
-        while (size >= 1024) {
-            size /= 1024;
-            ++i;
-        }
-        return size.toFixed(2) + ' ' + units[i];
-    },
     on_file_change: function(e) {
         var self = this;
         var file_node = e.target;
@@ -4915,7 +4906,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.binary_value = true;
         this.internal_set_value(file_base64);
-        var show_value = name + " (" + this.human_filesize(size) + ")";
+        var show_value = name + " (" + instance.web.human_size(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
         this.set_filename(name);
     },
