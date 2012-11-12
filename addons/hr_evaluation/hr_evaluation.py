@@ -265,6 +265,15 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids,{'state': 'draft'}, context=context)
         return True
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        if context is None:
+            context = {}
+        default = default.copy()
+        default['survey_request_ids'] = []
+        return super(hr_evaluation, self).copy(cr, uid, id, default, context=context)
+    
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('employee_id'):
             employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
