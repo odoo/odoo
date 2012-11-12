@@ -1,4 +1,5 @@
-openerp.account = function (instance) {
+
+openerp.account.quickadd = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
@@ -23,11 +24,11 @@ openerp.account = function (instance) {
 
             this.$el.prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
             
-            this.$("#oe_account_select_journal").change(function() {
+            this.$(".oe_account_select_journal").change(function() {
                     self.current_journal = parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
-            this.$("#oe_account_select_period").change(function() {
+            this.$(".oe_account_select_period").change(function() {
                     self.current_period = parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
@@ -40,8 +41,7 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return new instance.web.Model("account.move.line", context, domain);
-            $.when(mod.call("list_journals", []).then(function(result) {
+            return $.when(mod.call("list_journals", []).then(function(result) {
                 self.journals = result;
             }),mod.call("list_periods", []).then(function(result) {
                 self.periods = result;
@@ -59,13 +59,29 @@ openerp.account = function (instance) {
                 ["journal_id", "=", self.current_journal], 
                 ["period_id", "=", self.current_period] 
                 ]);
-            var cc = new instance.web.CompoundContext(this.last_context, {
+            //1
+            /*var ncontext = {
+                "journal_id": self.current_journal,
+                "period_id" :self.current_period,
+            };
+            var new instance.web.CompoundDomain(self.last_domain = new instance.web.CompoundContext(this.last_context, ncontext);
+
+            _.extend(this.dataset.context, ncontext);
+            */
+            //2
+            /*
+            var compoundContext = new instance.web.CompoundContext(self.last_context,{
                 "journal_id": self.current_journal,
                 "period_id" :self.current_period,
             });
-            return self.old_search(compoundDomain, cc, self.last_group_by);
+            */
+            //3
+            self.last_context["journal_id"] = self.current_journal;
+            self.last_context["period_id"] = self.current_period;
+            var compoundContext = self.last_context;
+            return self.old_search(compoundDomain, compoundContext, self.last_group_by);
         },
-        _next: function (next_record, options) {
+        /*_next: function (next_record, options) {
             next_record = next_record || 'succ';
             var self = this;
             return this.save_edition().then(function (saveInfo) {
@@ -76,6 +92,6 @@ openerp.account = function (instance) {
                         saveInfo.record, {wraparound: true});
                 return self.start_edition(record, options);
             });
-        },
+        },*/
     });
 };
