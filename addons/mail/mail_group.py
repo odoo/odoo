@@ -30,6 +30,7 @@ class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
         group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
+    _order = 'name'
     _name = 'mail.group'
     _mail_flat_thread = False
     _inherit = ['mail.thread']
