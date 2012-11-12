@@ -166,17 +166,17 @@ class project(osv.osv):
                 res[id]['progress_rate'] = 0.0
         return res
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
-        for proj in self.browse(cr, uid, ids):
+        for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise osv.except_osv(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
-        res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
-        mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
+        res =  super(project, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
     
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
