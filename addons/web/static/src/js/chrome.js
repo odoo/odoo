@@ -667,6 +667,10 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
+        var $button = self.$el.find('.oe_form_button');
+        var footer_panel = this.getParent().$buttons.find('footer');
+        $button.eq(0).prependTo(footer_panel);
+        $button.eq(1).appendTo(footer_panel);
         self.$el.validate({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
