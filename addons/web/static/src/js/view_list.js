@@ -2173,7 +2173,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
                         row_data[this.filename].value, {type: 'char'}));
             }
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
+        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
             size: row_data[this.id].value
