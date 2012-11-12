@@ -236,16 +236,6 @@ class product_product(osv.osv):
         'hr_expense_ok': fields.boolean('Can be Expensed', help="Specify if the product can be selected in an HR expense line."),
     }
 
-    def on_change_hr_expense_ok(self, cr, uid, id, hr_expense_ok):
-
-        if not hr_expense_ok:
-            return {}
-        data_obj = self.pool.get('ir.model.data')
-        cat_id = data_obj._get_id(cr, uid, 'hr_expense', 'cat_expense')
-        categ_id = data_obj.browse(cr, uid, cat_id).res_id
-        res = {'value' : {'type':'service','sale_ok' :False,'categ_id':categ_id }}
-        return res
-
 product_product()
 
 class hr_expense_line(osv.osv):
