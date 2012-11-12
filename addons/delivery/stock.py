@@ -66,6 +66,7 @@ class stock_picking(osv.osv):
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
+        'uom_id': fields.related('uom_id', 'product_id', type='many2one', relation='product.uom', string='UoM', readonly=True),
         }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
@@ -132,6 +133,18 @@ class stock_picking(osv.osv):
                 invoice_line_obj.create(cr, uid, invoice_line)
                 invoice_obj.button_compute(cr, uid, [invoice.id], context=context)
         return result
+
+    def _get_uom(self, cr, uid, context=None):
+        try:
+            product = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'product_uom_kgm')
+        except ValueError:
+            # a ValueError is returned if the xml id given is not found in the table ir_model_data
+            return False
+        return product.id
+
+    _defaults = {
+        'uom_id': _get_uom,
+    }
 
 stock_picking()
 
