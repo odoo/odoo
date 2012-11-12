@@ -51,15 +51,15 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         // TODO: session store in cookie should be optional
         this.session_id = this.get_cookie('session_id');
-        return this.session_reload().pipe(function(result) {
+        return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).pipe(self.do_load_qweb);
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
             if(self.session_is_valid()) {
-                return deferred.pipe(function() { return self.load_modules(); });
+                return deferred.then(function() { return self.load_modules(); });
             }
             return $.when(
                     deferred, 
-                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).pipe(function(trans) {
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).then(function(trans) {
                         instance.web._t.database.set_bundle(trans);
                     })
             );
@@ -73,7 +73,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     session_reload: function () {
         var self = this;
-        return this.rpc("/web/session/get_session_info", {}).then(function(result) {
+        return this.rpc("/web/session/get_session_info", {}).done(function(result) {
             // If immediately follows a login (triggered by trying to restore
             // an invalid session or no session at all), refresh session data
             // (should not change, but just in case...)
@@ -96,7 +96,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         var base_location = document.location.protocol + '//' + document.location.host;
         var params = { db: db, login: login, password: password, base_location: base_location };
-        return this.rpc("/web/session/authenticate", params).pipe(function(result) {
+        return this.rpc("/web/session/authenticate", params).then(function(result) {
             if (!result.uid) {
                 return $.Deferred().reject();
             }
@@ -154,30 +154,28 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
      */
     load_modules: function() {
         var self = this;
-        return this.rpc('/web/session/modules', {}).pipe(function(result) {
-            var lang = self.user_context.lang,
-                all_modules = _.uniq(self.module_list.concat(result));
-            var params = { mods: all_modules, lang: lang};
+        return this.rpc('/web/session/modules', {}).then(function(result) {
+            var all_modules = _.uniq(self.module_list.concat(result));
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = self.rpc('/web/webclient/translations', params).then(function(trans) {
-                instance.web._t.database.set_bundle(trans);
-            });
-            var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+            var loaded = self.load_translations();
+            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
+
+            var file_list = [ datejs_locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).then(self.do_load_css),
-                    self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                    self.rpc('/web/webclient/jslist', {mods: to_load}).then(function(files) {
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.load_qweb.bind(self)),
+                    self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                         file_list = file_list.concat(files);
                     })
                 );
             }
-            return loaded.pipe(function () {
-                return self.do_load_js(file_list);
-            }).then(function() {
+            return loaded.then(function () {
+                return self.load_js(file_list);
+            }).done(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
                 if (!Date.CultureInfo.pmDesignator) {
@@ -190,7 +188,13 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             });
         });
     },
-    do_load_css: function (files) {
+    load_translations: function() {
+        var params = { mods: this.module_list, lang: this.user_context.lang };
+        return this.rpc('/web/webclient/translations', params).done(function(trans) {
+            instance.web._t.database.set_bundle(trans);
+        });
+    },
+    load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
@@ -200,7 +204,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             }));
         });
     },
-    do_load_js: function(files) {
+    load_js: function(files) {
         var self = this;
         var d = $.Deferred();
         if(files.length != 0) {
@@ -212,7 +216,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files).then(function () {
+                self.load_js(files).done(function () {
                     d.resolve();
                 });
             };
@@ -223,11 +227,11 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         }
         return d;
     },
-    do_load_qweb: function(files) {
+    load_qweb: function(files) {
         var self = this;
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {
-                return self.rpc('/web/proxy/load', {path: file}).pipe(function(xml) {
+                return self.rpc('/web/proxy/load', {path: file}).then(function(xml) {
                     if (!xml) { return; }
                     instance.web.qweb.add_template(_.str.trim(xml));
                 });
@@ -462,7 +466,7 @@ $.Mutex = (function() {
     Mutex.prototype.exec = function(action) {
         var current = this.def;
         var next = this.def = $.Deferred();
-        return current.pipe(function() {
+        return current.then(function() {
             return $.when(action()).always(function() {
                 next.resolve();
             });
@@ -474,7 +478,7 @@ $.Mutex = (function() {
 $.async_when = function() {
     var async = false;
     var def = $.Deferred();
-    $.when.apply($, arguments).then(function() {
+    $.when.apply($, arguments).done(function() {
         var args = arguments;
         var action = function() {
             def.resolve.apply(def, args);
@@ -483,7 +487,7 @@ $.async_when = function() {
             action();
         else
             setTimeout(action, 0);
-    }, function() {
+    }).fail(function() {
         var args = arguments;
         var action = function() {
             def.reject.apply(def, args);

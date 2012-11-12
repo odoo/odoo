@@ -32,20 +32,20 @@ openerp.test_support = {
                 window.openerp.web[tested_core](oe);
                 var done = openerp.test_support.setup_session(oe.session);
                 if (nonliterals) {
-                    done = done.pipe(function () {
+                    done = done.then(function () {
                         return oe.session.rpc('/tests/add_nonliterals', {
                             domains: nonliterals.domains || [],
                             contexts: nonliterals.contexts || []
-                        }).then(function (r) {
+                        }).done(function (r) {
                             oe.domains = r.domains;
                             oe.contexts = r.contexts;
                         });
                     });
                 }
                 done.always(QUnit.start)
-                    .then(function () {
+                    .done(function () {
                         conf.openerp = oe;
-                    }, function (e) {
+                    }).fail(function (e) {
                         QUnit.test(title, function () {
                             console.error(e);
                             QUnit.ok(false, 'Could not obtain a session:' + e.debug);

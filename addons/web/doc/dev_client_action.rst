@@ -1,7 +1,7 @@
 .. highlight:: javascript
 
-Creating a new client action
-============================
+Client actions
+==============
 
 Client actions are the client-side version of OpenERP's "Server
 Actions": instead of allowing for semi-arbitrary code to be executed

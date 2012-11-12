@@ -2030,10 +2030,8 @@ $sheet-padding: 16px
                     background-color: #eee
 
     $row-height: 27px
-    .oe_list_editable
-        .oe_list_content
-            td.oe_list_field_cell
-                padding: 4px 6px 3px 6px
+    .oe_list_editable .oe_list_content td.oe_list_field_cell
+        padding: 4px 6px 3px
     .oe_list.oe_list_editable.oe_editing
         .oe_edition .oe_list_field_cell:not(.oe_readonly)
             *
@@ -2106,6 +2104,10 @@ $sheet-padding: 16px
                 position: absolute
                 margin: 0 !important // dammit
                 padding: 0
+            .oe_form_field_boolean
+                // use padding similar to actual cell to correctly position the
+                // checkbox
+                padding: 1px 6px 3px
         .oe_list_content .oe_group_header
             @include vertical-gradient(#fcfcfc, #dedede)
 

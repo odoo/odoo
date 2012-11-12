@@ -11,18 +11,20 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
+    presentation
+    async
+
+    dev_rpc
+    dev_widget
+    dev_qweb
+    dev_client_action
+
+    internal_form
+    internal_list
+    internal_search
+
     changelog-7.0
 
-    async
-    rpc
-
-    widget
-    search-view
-
-    list-view
-    form-notes
-
-    guides/client-action
 
 Indices and tables
 ==================

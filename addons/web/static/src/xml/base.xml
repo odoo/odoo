@@ -567,16 +567,14 @@
 </t>
 
 <t t-name="TreeView">
-    <div class = "tree_header">
-         <select t-if="toolbar" ></select>
-         <button id = "tree_view_collapse">Collapse All</button>
-         <button id = "tree_view_expand">Expand All</button>
-     </div>
-    <table class="oe-treeview-table">
+    <select t-if="toolbar" style="width: 30%">
+    </select>
+    <table class="oe_tree_table oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible">
+                    t-if="!field.attrs.modifiers.tree_invisible"
+                    class="treeview-header">
                     <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -588,11 +586,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level">
+        t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + (4 + 19*(level-1)) + 'px;'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level) + 'px; padding-left: ' + (4 + 19*(level)) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -1031,6 +1029,13 @@
             </div>
         </t>
     </span>
+</t>
+<t t-name="Many2OneButton">
+    <span class="oe_form_field">
+    </span>
+</t>
+<t t-name="Many2OneButton.cell"
+    ><img t-attf-src="#{_s}/web/static/src/img/icons/gtk-#{widget.has_value ? 'yes' : 'no'}.png" width="16" height="16"/>
 </t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
