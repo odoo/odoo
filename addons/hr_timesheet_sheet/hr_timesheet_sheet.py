@@ -95,9 +95,10 @@ class hr_timesheet_sheet(osv.osv):
             if (abs(sheet.total_difference) < di) or not di:
                 wf_service = netsvc.LocalService("workflow")
                 wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'confirm', cr)
+                self.confirm_send_note(cr, uid, ids, context)
             else:
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
-        return True        
+        return True
 
     def attendance_action_change(self, cr, uid, ids, context=None):
         hr_employee = self.pool.get('hr.employee')
@@ -220,6 +221,21 @@ class hr_timesheet_sheet(osv.osv):
         if employee_id:
             department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
         return {'value': {'department_id': department_id}}
+
+    # ------------------------------------------------
+    # OpenChatter methods and notifications
+    # ------------------------------------------------
+    
+    def needaction_domain_get(self, cr, uid, ids, context=None):
+        emp_obj = self.pool.get('hr.employee')
+        empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
+        dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
+        return dom
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("Timesheet has been Submitted by %s .") % (obj.employee_id.name), context=context)
+
 hr_timesheet_sheet()
 
 class account_analytic_line(osv.osv):
