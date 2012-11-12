@@ -1580,14 +1580,25 @@
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_quickadd_tree"/>
             <field name="view_mode">tree_account_move_line_quickadd</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a new journal item.
+              </p><p>
+                This view can be used by accountants in order to quickly record
+                entries in OpenERP. If you want to record a supplier invoice,
+                start by recording the line of the expense account. OpenERP
+                will propose to you automatically the Tax related to this
+                account and the counterpart "Account Payable".
+              </p>
+            </field>
         </record>
 
         <menuitem
              name="Quick Journal Items"
              action="action_account_manual_account_move_line_quickadd"
              id="menu_manual_account_move_line_quickadd"
-             sequence="20"
-             parent="account.menu_finance_bank_and_cash"/>
+             sequence="2"
+             parent="account.menu_finance_entries"/>
 
         <menuitem
              name="Journal Items to Reconcile"

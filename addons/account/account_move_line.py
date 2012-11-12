@@ -575,7 +575,6 @@ class account_move_line(osv.osv):
             if not jids:
                 raise osv.except_osv(_('Configuration Error!'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
             journal_id = jids[0]
-        print context
         return journal_id
 
 

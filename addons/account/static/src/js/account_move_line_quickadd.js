@@ -50,7 +50,6 @@ openerp.account.quickadd = function (instance) {
             }),mod.call("default_get", [['journal_id','period_id'],self.last_context]).then(function(result) {
                 self.default_period = result['period_id'];
                 self.default_journal = result['journal_id'];
-                console.log(result);
             })).then(function () {
                 self.current_journal = self.current_journal === null ? self.default_journal : self.current_journal;
                 self.current_period = self.current_period === null ? self.default_period :self.current_period;
