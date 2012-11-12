@@ -38,7 +38,6 @@ import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.assertion_report as assertion_report
 from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
@@ -61,7 +60,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases, and even raise osv_except if certificate is invalid)
+                              for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
@@ -285,7 +284,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
-        report = assertion_report.assertion_report()
+        report = pool._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:

@@ -24,8 +24,11 @@ import re
 import time
 import types
 
-from openerp.osv import fields,osv
+import openerp
+from openerp import SUPERUSER_ID
 from openerp import netsvc, pooler, tools
+from openerp.osv import fields,osv
+from openerp.osv.orm import Model
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
@@ -57,7 +60,6 @@ def _in_modules(self, cr, uid, ids, field_name, arg, context=None):
     for k,v in xml_ids.iteritems():
         result[k] = ', '.join(sorted(installed_modules & set(xml_id.split('.')[0] for xml_id in v)))
     return result
-
 
 class ir_model(osv.osv):
     _name = 'ir.model'
@@ -104,7 +106,7 @@ class ir_model(osv.osv):
     }
 
     _defaults = {
-        'model': lambda *a: 'x_',
+        'model': 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
 
@@ -204,7 +206,6 @@ class ir_model(osv.osv):
         else:
             x_name = a._columns.keys()[0]
         x_custom_model._rec_name = x_name
-ir_model()
 
 class ir_model_fields(osv.osv):
     _name = 'ir.model.fields'
@@ -462,18 +463,143 @@ class ir_model_fields(osv.osv):
                 obj._auto_init(cr, ctx)
         return res
 
-ir_model_fields()
+class ir_model_constraint(Model):
+    """
+    This model tracks PostgreSQL foreign keys and constraints used by OpenERP
+    models.
+    """
+    _name = 'ir.model.constraint'
+    _columns = {
+        'name': fields.char('Constraint', required=True, size=128, select=1,
+            help="PostgreSQL constraint or foreign key name."),
+        'model': fields.many2one('ir.model', string='Model',
+            required=True, select=1),
+        'module': fields.many2one('ir.module.module', string='Module',
+            required=True, select=1),
+        'type': fields.char('Constraint Type', required=True, size=1, select=1,
+            help="Type of the constraint: `f` for a foreign key, "
+                "`u` for other constraints."),
+        'date_update': fields.datetime('Update Date'),
+        'date_init': fields.datetime('Initialization Date')
+    }
+
+    _sql_constraints = [
+        ('module_name_uniq', 'unique(name, module)',
+            'Constraints with the same name are unique per module.'),
+    ]
+
+    def _module_data_uninstall(self, cr, uid, ids, context=None):
+        """
+        Delete PostgreSQL foreign keys and constraints tracked by this model.
+        """ 
+
+        if uid != SUPERUSER_ID and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
+            raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+
+        context = dict(context or {})
+
+        ids_set = set(ids)
+        ids.sort()
+        ids.reverse()
+        for data in self.browse(cr, uid, ids, context):
+            model = data.model.model
+            model_obj = self.pool.get(model)
+            name = openerp.tools.ustr(data.name)
+            typ = data.type
+
+            # double-check we are really going to delete all the owners of this schema element
+            cr.execute("""SELECT id from ir_model_constraint where name=%s""", (data.name,))
+            external_ids = [x[0] for x in cr.fetchall()]
+            if (set(external_ids)-ids_set):
+                # as installed modules have defined this element we must not delete it!
+                continue
+
+            if typ == 'f':
+                # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
+                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
+                if cr.fetchone():
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
+
+            if typ == 'u':
+                # test if constraint exists
+                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
+                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
+                if cr.fetchone():
+                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
+                    _logger.info('Dropped CONSTRAINT %s@%s', name, model)
+
+        self.unlink(cr, uid, ids, context)
+
+class ir_model_relation(Model):
+    """
+    This model tracks PostgreSQL tables used to implement OpenERP many2many
+    relations.
+    """
+    _name = 'ir.model.relation'
+    _columns = {
+        'name': fields.char('Relation Name', required=True, size=128, select=1,
+            help="PostgreSQL table name implementing a many2many relation."),
+        'model': fields.many2one('ir.model', string='Model',
+            required=True, select=1),
+        'module': fields.many2one('ir.module.module', string='Module',
+            required=True, select=1),
+        'date_update': fields.datetime('Update Date'),
+        'date_init': fields.datetime('Initialization Date')
+    }
+
+    def _module_data_uninstall(self, cr, uid, ids, context=None):
+        """
+        Delete PostgreSQL many2many relations tracked by this model.
+        """ 
+
+        if uid != SUPERUSER_ID and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
+            raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
+
+        ids_set = set(ids)
+        to_drop_table = []
+        ids.sort()
+        ids.reverse()
+        for data in self.browse(cr, uid, ids, context):
+            model = data.model
+            model_obj = self.pool.get(model)
+            name = openerp.tools.ustr(data.name)
+
+            # double-check we are really going to delete all the owners of this schema element
+            cr.execute("""SELECT id from ir_model_relation where name = %s""", (data.name,))
+            external_ids = [x[0] for x in cr.fetchall()]
+            if (set(external_ids)-ids_set):
+                # as installed modules have defined this element we must not delete it!
+                continue
+
+            cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
+            if cr.fetchone() and not name in to_drop_table:
+                to_drop_table.append(name)
+
+        self.unlink(cr, uid, ids, context)
+
+        # drop m2m relation tables
+        for table in to_drop_table:
+            cr.execute('DROP TABLE %s CASCADE'% (table),)
+            _logger.info('Dropped table %s', table)
+
+        cr.commit()
 
 class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
+        'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
         'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
         'perm_unlink': fields.boolean('Delete Access'),
+    }
+    _defaults = {
+        'active': True,
     }
 
     def check_groups(self, cr, uid, group):
@@ -499,14 +625,16 @@ class ir_model_access(osv.osv):
             cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
-                   " WHERE m.model = %s AND a.group_id = %s", (model_name, group_id)
+                   " WHERE m.model = %s AND a.active IS True "
+                   " AND a.group_id = %s", (model_name, group_id)
                    )
             r = cr.fetchone()
             if r is None:
                 cr.execute("SELECT perm_" + mode + " "
                        "  FROM ir_model_access a "
                        "  JOIN ir_model m ON (m.id = a.model_id) "
-                       " WHERE m.model = %s AND a.group_id IS NULL", (model_name, )
+                       " WHERE m.model = %s AND a.active IS True "
+                       " AND a.group_id IS NULL", (model_name, )
                        )
                 r = cr.fetchone()
 
@@ -531,6 +659,7 @@ class ir_model_access(osv.osv):
                         LEFT JOIN ir_module_category c ON (c.id=g.category_id)
                       WHERE
                         m.model=%s AND
+                        a.active IS True AND
                         a.perm_''' + access_mode, (model_name,))
         return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
@@ -550,7 +679,9 @@ class ir_model_access(osv.osv):
             model_name = model
 
         # TransientModel records have no access rights, only an implicit access rule
-        if self.pool.get(model_name).is_transient():
+        if not self.pool.get(model_name):
+            _logger.error('Missing model %s' % (model_name, ))
+        elif self.pool.get(model_name).is_transient():
             return True
 
         # We check if a specific rule exists
@@ -560,6 +691,7 @@ class ir_model_access(osv.osv):
                    '  JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
                    ' WHERE m.model = %s '
                    '   AND gu.uid = %s '
+                   '   AND a.active IS True '
                    , (model_name, uid,)
                    )
         r = cr.fetchone()[0]
@@ -571,6 +703,7 @@ class ir_model_access(osv.osv):
                        '  JOIN ir_model m ON (m.id = a.model_id) '
                        ' WHERE a.group_id IS NULL '
                        '   AND m.model = %s '
+                       '   AND a.active IS True '
                        , (model_name,)
                        )
             r = cr.fetchone()[0]
@@ -631,8 +764,6 @@ class ir_model_access(osv.osv):
         self.call_cache_clearing_methods(cr)
         res = super(ir_model_access, self).unlink(cr, uid, *args, **argv)
         return res
-
-ir_model_access()
 
 class ir_model_data(osv.osv):
     """Holds external identifier keys for records in the database.
@@ -747,11 +878,18 @@ class ir_model_data(osv.osv):
             id = False
         return id
 
+    def clear_caches(self):
+        """ Clears all orm caches on the object's methods
+
+        :returns: itself
+        """
+        self._get_id.clear_cache(self)
+        self.get_object_reference.clear_cache(self)
+        return self
 
     def unlink(self, cr, uid, ids, context=None):
         """ Regular unlink method, but make sure to clear the caches. """
-        self._get_id.clear_cache(self)
-        self.get_object_reference.clear_cache(self)
+        self.clear_caches()
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
@@ -966,6 +1104,5 @@ class ir_model_data(osv.osv):
                 if self.pool.get(model):
                     _logger.info('Deleting %s@%s', res_id, model)
                     self.pool.get(model).unlink(cr, uid, [res_id])
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

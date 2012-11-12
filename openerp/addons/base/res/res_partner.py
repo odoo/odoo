@@ -22,6 +22,7 @@
 import math
 import openerp
 from osv import osv, fields
+from openerp import SUPERUSER_ID
 import re
 import tools
 from tools.translate import _
@@ -33,7 +34,7 @@ from lxml import etree
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
         user_obj = self.pool.get('res.users')
-        fmt = user_obj.browse(cr, uid, uid,context).company_id.country_id
+        fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
         fmt = fmt and fmt.address_format
         layouts = {
             '%(city)s %(state_code)s\n%(zip)s': """
@@ -134,7 +135,7 @@ class res_partner_category(osv.osv):
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _parent_store = True
     _parent_order = 'name'
@@ -156,7 +157,7 @@ def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')
     ids = lang_pool.search(cr, uid, [], context=context)
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res] + [('','')]
+    return [(r['code'], r['name']) for r in res]
 
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
@@ -185,31 +186,34 @@ class res_partner(osv.osv, format_address):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Company'),
+        'parent_id': fields.many2one('res.partner', 'Related Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
-            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+            help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
-        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
+        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
+        'address': fields.one2many('res.partner.address', 'partner_id', 'Addresses',
+                deprecated="The address information is now directly stored on each Partner record. "\
+                           "Multiple contacts with their own address can be added via the child_ids relationship. "\
+                           "This field will be removed as of OpenERP 7.1."),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
+        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position', size=128),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
-                                   ('delivery', 'Delivery'), ('contact', 'Contact'),
+                                   ('delivery', 'Shipping'), ('contact', 'Contact'),
                                    ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
@@ -218,23 +222,24 @@ class res_partner(osv.osv, format_address):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
+        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
+                                  deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
         'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
+        'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as avatar for the partner, limited to 1024x1024px"),
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the partner. It is automatically "\
+            help="Medium-sized image of this contact. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
@@ -242,7 +247,7 @@ class res_partner(osv.osv, format_address):
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the partner. It is automatically "\
+            help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
@@ -259,10 +264,15 @@ class res_partner(osv.osv, format_address):
         return False
 
     def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
-        if is_company:
-            image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
-        else:
-            image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        img_path = openerp.modules.get_module_resource('base', 'static/src/img',
+                                                       ('company_image.png' if is_company else 'avatar.png'))
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        # colorize user avatars
+        if not is_company:
+            image = tools.image_colorize(image)
+
         return tools.image_resize_image_big(image.encode('base64'))
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -296,7 +306,7 @@ class res_partner(osv.osv, format_address):
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         # get value as for an onchange on the image
-        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True)
+        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True, return_medium=False, return_small=False)
         value['title'] = False
         if is_company:
             value['parent_id'] = False
@@ -313,6 +323,12 @@ class res_partner(osv.osv, format_address):
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
+        return {}
+
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
@@ -392,7 +408,7 @@ class res_partner(osv.osv, format_address):
             - otherwise: default, everything is set as the name """
         match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
         if match:
-            email = match.group(1) 
+            email = match.group(1)
             name = text[:text.index(email)].replace('"','').replace('<','').strip()
         else:
             name, email = text, ''
@@ -440,7 +456,7 @@ class res_partner(osv.osv, format_address):
     def find_or_create(self, cr, uid, email, context=None):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
-            
+
             :param str email: email-like string, which should contain at least one email,
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'

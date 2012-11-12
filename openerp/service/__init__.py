@@ -34,7 +34,6 @@ import openerp.netsvc
 import openerp.osv
 import openerp.tools
 import openerp.service.wsgi_server
-import openerp.service.workers
 
 #.apidoc title: RPC Services
 
@@ -78,8 +77,6 @@ def start_internal():
 
 def start_services():
     """ Start all services including http, netrpc and cron """
-    openerp.multi_process = False # Nah!
-
     start_internal()
 
     # Initialize the HTTP stack.
@@ -87,7 +84,8 @@ def start_services():
 
     # Start the main cron thread.
     # TODO GEVENT if event use greenlet in cron
-    # openerp.cron.start_master_thread()
+    #if openerp.conf.max_cron_threads:
+    #    openerp.cron.start_master_thread()
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
@@ -121,6 +119,9 @@ def stop_services():
     openerp.modules.registry.RegistryManager.delete_all()
 
 def start_services_workers():
+    import openerp.service.workers
+    openerp.multi_process = True # Nah!
+
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
 

@@ -44,7 +44,6 @@ class view_custom(osv.osv):
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = \'ir_ui_view_custom_user_id_ref_id\'')
         if not cr.fetchone():
             cr.execute('CREATE INDEX ir_ui_view_custom_user_id_ref_id ON ir_ui_view_custom (user_id, ref_id)')
-view_custom()
 
 class view(osv.osv):
     _name = 'ir.ui.view'
@@ -60,7 +59,7 @@ class view(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('View Name',size=64,  required=True),
+        'name': fields.char('View Name', required=True),
         'model': fields.char('Object', size=64, required=True, select=True),
         'priority': fields.integer('Sequence', required=True),
         'type': fields.function(_type_field, type='selection', selection=[
@@ -88,11 +87,17 @@ class view(osv.osv):
     _order = "priority,name"
 
     # Holds the RNG schema
-    _relaxng_validator = None  
+    _relaxng_validator = None
 
     def create(self, cr, uid, values, context=None):
         if 'type' in values:
             _logger.warning("Setting the `type` field is deprecated in the `ir.ui.view` model.")
+        if not values.get('name'):
+            if values.get('inherit_id'):
+                inferred_type = self.browse(cr, uid, values['inherit_id'], context).type
+            else:
+                inferred_type = etree.fromstring(values['arch'].encode('utf8')).tag
+            values['name'] = "%s %s" % (values['model'], inferred_type)
         return super(osv.osv, self).create(cr, uid, values, context)
 
     def _relaxng(self):
@@ -106,8 +111,7 @@ class view(osv.osv):
             finally:
                 frng.close()
         return self._relaxng_validator
-        
-        
+
     def _check_render_view(self, cr, uid, view, context=None):
         """Verify that the given view's hierarchy is valid for rendering, along with all the changes applied by
            its inherited views, by rendering it using ``fields_view_get()``.
@@ -192,7 +196,6 @@ class view(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
-        result = super(view, self).write(cr, uid, ids, vals, context)
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -200,7 +203,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        return result
+        return super(view, self).write(cr, uid, ids, vals, context)
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         nodes=[]
@@ -268,7 +271,6 @@ class view(osv.osv):
                 'label' : labels,
                 'blank_nodes': blank_nodes,
                 'node_parent_field': _Model_Field,}
-view()
 
 class view_sc(osv.osv):
     _name = 'ir.ui.view_sc'
@@ -298,14 +300,12 @@ class view_sc(osv.osv):
 
     _order = 'sequence,name'
     _defaults = {
-        'resource': lambda *a: 'ir.ui.menu',
+        'resource': 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _sql_constraints = [
         ('shortcut_unique', 'unique(res_id, resource, user_id)', 'Shortcut for this menu already exists!'),
     ]
-
-view_sc()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

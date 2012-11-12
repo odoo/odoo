@@ -1152,96 +1152,51 @@ class related(function):
     """
 
     def _fnct_search(self, tobj, cr, uid, obj=None, name=None, domain=None, context=None):
-        self._field_get2(cr, uid, obj, context)
-        i = len(self._arg)-1
-        sarg = name
-        while i>0:
-            if type(sarg) in [type([]), type( (1,) )]:
-                where = [(self._arg[i], 'in', sarg)]
-            else:
-                where = [(self._arg[i], '=', sarg)]
-            if domain:
-                where = map(lambda x: (self._arg[i],x[1], x[2]), domain)
-                domain = []
-            sarg = obj.pool.get(self._relations[i]['object']).search(cr, uid, where, context=context)
-            i -= 1
-        return [(self._arg[0], 'in', sarg)]
+        # assume self._arg = ('foo', 'bar', 'baz')
+        # domain = [(name, op, val)]   =>   search [('foo.bar.baz', op, val)]
+        field = '.'.join(self._arg)
+        return map(lambda x: (field, x[1], x[2]), domain)
 
     def _fnct_write(self,obj,cr, uid, ids, field_name, values, args, context=None):
-        self._field_get2(cr, uid, obj, context=context)
-        if type(ids) != type([]):
-            ids=[ids]
-        objlst = obj.browse(cr, uid, ids)
-        for data in objlst:
-            t_id = data.id
-            t_data = data
-            for i in range(len(self.arg)):
-                if not t_data: break
-                field_detail = self._relations[i]
-                if not t_data[self.arg[i]]:
-                    if self._type not in ('one2many', 'many2many'):
-                        t_id = t_data['id']
-                    t_data = False
-                elif field_detail['type'] in ('one2many', 'many2many'):
-                    if self._type != "many2one":
-                        t_id = t_data.id
-                        t_data = t_data[self.arg[i]][0]
-                    else:
-                        t_data = False
-                else:
-                    t_id = t_data['id']
-                    t_data = t_data[self.arg[i]]
-            else:
-                model = obj.pool.get(self._relations[-1]['object'])
-                model.write(cr, uid, [t_id], {args[-1]: values}, context=context)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for record in obj.browse(cr, uid, ids, context=context):
+            # traverse all fields except the last one
+            for field in self.arg[:-1]:
+                record = record[field] or False
+                if not record:
+                    break
+                elif isinstance(record, list):
+                    # record is the result of a one2many or many2many field
+                    record = record[0]
+            if record:
+                # write on the last field
+                record.write({self.arg[-1]: values})
 
     def _fnct_read(self, obj, cr, uid, ids, field_name, args, context=None):
-        self._field_get2(cr, uid, obj, context)
-        if not ids: return {}
-        relation = obj._name
-        if self._type in ('one2many', 'many2many'):
-            res = dict([(i, []) for i in ids])
-        else:
-            res = {}.fromkeys(ids, False)
-
-        objlst = obj.browse(cr, SUPERUSER_ID, ids, context=context)
-        for data in objlst:
-            if not data:
-                continue
-            t_data = data
-            relation = obj._name
-            for i in range(len(self.arg)):
-                field_detail = self._relations[i]
-                relation = field_detail['object']
-                try:
-                    if not t_data[self.arg[i]]:
-                        t_data = False
-                        break
-                except:
-                    t_data = False
+        res = {}
+        for record in obj.browse(cr, SUPERUSER_ID, ids, context=context):
+            value = record
+            for field in self.arg:
+                if isinstance(value, list):
+                    value = value[0]
+                value = value[field] or False
+                if not value:
                     break
-                if field_detail['type'] in ('one2many', 'many2many') and i != len(self.arg) - 1:
-                    t_data = t_data[self.arg[i]][0]
-                elif t_data:
-                    t_data = t_data[self.arg[i]]
-            if type(t_data) == type(objlst[0]):
-                res[data.id] = t_data.id
-            elif t_data:
-                res[data.id] = t_data
-        if self._type=='many2one':
-            ids = filter(None, res.values())
-            if ids:
-                # name_get as root, as seeing the name of a related
-                # object depends on access right of source document,
-                # not target, so user may not have access.
-                ng = dict(obj.pool.get(self._obj).name_get(cr, SUPERUSER_ID, ids, context=context))
-                for r in res:
-                    if res[r]:
-                        res[r] = (res[r], ng[res[r]])
+            res[record.id] = value
+
+        if self._type == 'many2one':
+            # res[id] is a browse_record or False; convert it to (id, name) or False.
+            # Perform name_get as root, as seeing the name of a related object depends on
+            # access right of source document, not target, so user may not have access.
+            value_ids = list(set(value.id for value in res.itervalues() if value))
+            value_name = dict(obj.pool.get(self._obj).name_get(cr, SUPERUSER_ID, value_ids, context=context))
+            res = dict((id, value and (value.id, value_name[value.id])) for id, value in res.iteritems())
+
         elif self._type in ('one2many', 'many2many'):
-            for r in res:
-                if res[r]:
-                    res[r] = [x.id for x in res[r]]
+            # res[id] is a list of browse_record or False; convert it to a list of ids
+            res = dict((id, value and map(int, value) or []) for id, value in res.iteritems())
+
         return res
 
     def __init__(self, *arg, **args):
@@ -1252,22 +1207,6 @@ class related(function):
             # TODO: improve here to change self.store = {...} according to related objects
             pass
 
-    def _field_get2(self, cr, uid, obj, context=None):
-        if self._relations:
-            return
-        result = []
-        obj_name = obj._name
-        for i in range(len(self._arg)):
-            f = obj.pool.get(obj_name).fields_get(cr, uid, [self._arg[i]], context=context)[self._arg[i]]
-            result.append({
-                'object': obj_name,
-                'type': f['type']
-
-            })
-            if f.get('relation',False):
-                obj_name = f['relation']
-                result[-1]['relation'] = f['relation']
-        self._relations = result
 
 class sparse(function):   
 
@@ -1552,23 +1491,15 @@ def field_to_dict(model, cr, user, field, context=None):
         res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
         res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
-        res['func_obj'] = field._obj or False
     if isinstance(field, many2many):
         (table, col1, col2) = field._sql_names(model)
-        res['related_columns'] = [col1, col2]
-        res['third_table'] = table
-    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-            'change_default', 'translate', 'help', 'select', 'selectable', 'groups'):
-        if getattr(field, arg):
-            res[arg] = getattr(field, arg)
-    for arg in ('digits', 'invisible', 'filters'):
+        res['m2m_join_columns'] = [col1, col2]
+        res['m2m_join_table'] = table
+    for arg in ('string', 'readonly', 'states', 'size', 'group_operator', 'required',
+            'change_default', 'translate', 'help', 'select', 'selectable', 'groups',
+            'deprecated', 'digits', 'invisible', 'filters'):
         if getattr(field, arg, None):
             res[arg] = getattr(field, arg)
-
-    if field.string:
-        res['string'] = field.string
-    if field.help:
-        res['help'] = field.help
 
     if hasattr(field, 'selection'):
         if isinstance(field.selection, (tuple, list)):
@@ -1588,19 +1519,32 @@ def field_to_dict(model, cr, user, field, context=None):
 
 
 class column_info(object):
-    """Struct containing details about an osv column, either one local to
-       its model, or one inherited via _inherits.
+    """ Struct containing details about an osv column, either one local to
+        its model, or one inherited via _inherits.
 
-       :attr name: name of the column
-       :attr column: column instance, subclass of osv.fields._column
-       :attr parent_model: if the column is inherited, name of the model
-                           that contains it, None for local columns.
-       :attr parent_column: the name of the column containing the m2o
-                            relationship to the parent model that contains
-                            this column, None for local columns.
-       :attr original_parent: if the column is inherited, name of the original
-                            parent model that contains it i.e in case of multilevel
-                            inheritence, None for local columns.
+        .. attribute:: name
+
+            name of the column
+
+        .. attribute:: column
+
+            column instance, subclass of :class:`_column`
+
+        .. attribute:: parent_model
+
+            if the column is inherited, name of the model that contains it,
+            ``None`` for local columns.
+
+        .. attribute:: parent_column
+
+            the name of the column containing the m2o relationship to the
+            parent model that contains this column, ``None`` for local columns.
+
+        .. attribute:: original_parent
+
+            if the column is inherited, name of the original parent model that
+            contains it i.e in case of multilevel inheritance, ``None`` for
+            local columns.
     """
     def __init__(self, name, column, parent_model=None, parent_column=None, original_parent=None):
         self.name = name
@@ -1608,6 +1552,11 @@ class column_info(object):
         self.parent_model = parent_model
         self.parent_column = parent_column
         self.original_parent = original_parent
+
+    def __str__(self):
+        return '%s(%s, %s, %s, %s, %s)' % (
+            self.__name__, self.name, self.column,
+            self.parent_model, self.parent_column, self.original_parent)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

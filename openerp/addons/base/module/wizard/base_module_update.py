@@ -25,12 +25,11 @@ class base_module_update(osv.osv_memory):
 
     _name = "base.module.update"
     _description = "Update Module"
-    _inherit = "ir.wizard.screen"
 
     _columns = {
         'update': fields.integer('Number of modules updated', readonly=True),
         'add': fields.integer('Number of modules added', readonly=True),
-        'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
+        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
     }
 
     _defaults = {  
@@ -54,8 +53,5 @@ class base_module_update(osv.osv_memory):
             'type': 'ir.actions.act_window',
         }
         return res
-
-
-base_module_update()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

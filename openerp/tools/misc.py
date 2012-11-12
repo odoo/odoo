@@ -27,12 +27,11 @@ Miscellaneous tools used by OpenERP.
 """
 
 from functools import wraps
-import inspect
 import subprocess
 import logging
 import os
+import random
 import re
-import smtplib
 import socket
 import sys
 import threading
@@ -40,13 +39,6 @@ import time
 import zipfile
 from collections import defaultdict
 from datetime import datetime
-from email.MIMEText import MIMEText
-from email.MIMEBase import MIMEBase
-from email.MIMEMultipart import MIMEMultipart
-from email.Header import Header
-from email.Utils import formatdate, COMMASPACE
-from email import Utils
-from email import Encoders
 from itertools import islice, izip
 from lxml import etree
 from which import which
@@ -312,16 +304,8 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    from lxml.etree import tostring
-    try:
-        from lxml.html.soupparser import fromstring
-        kwargs = {}
-    except ImportError:
-        _logger.debug('tools.misc.html2plaintext: cannot use BeautifulSoup, fallback to lxml.etree.HTMLParser')
-        from lxml.etree import fromstring, HTMLParser
-        kwargs = dict(parser=HTMLParser())
-
-    tree = fromstring(html, **kwargs)
+    from lxml.etree import tostring, fromstring, HTMLParser
+    tree = fromstring(html, parser=HTMLParser())
 
     if body_id is not None:
         source = tree.xpath('//*[@id=%s]'%(body_id,))
@@ -371,7 +355,12 @@ def generate_tracking_message_id(res_id):
        Used to track the replies related to a given object thanks to the "In-Reply-To"
        or "References" fields that Mail User Agents will set.
     """
-    return "<%s-openerp-%s@%s>" % (time.time(), res_id, socket.gethostname())
+    try:
+        rnd = random.SystemRandom().random()
+    except NotImplementedError:
+        rnd = random.random()
+    rndstr = ("%.15f" % rnd)[2:] 
+    return "<%.15f.%s-openerp-%s@%s>" % (time.time(), rndstr, res_id, socket.gethostname())
 
 def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=None, reply_to=False,
                attachments=None, message_id=None, references=None, openobject_id=False, debug=False, subtype='plain', headers=None,
@@ -608,7 +597,7 @@ def get_iso_codes(lang):
 
 ALL_LANGUAGES = {
         'ab_RU': u'Abkhazian / аҧсуа',
-        'ar_AR': u'Arabic / الْعَرَبيّة',
+        'ar_SY': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
         'bs_BS': u'Bosnian / bosanski jezik',
         'ca_ES': u'Catalan / Català',
@@ -1221,4 +1210,38 @@ class mute_logger(object):
             with self:
                 return func(*args, **kwargs)
         return deco
+
+_ph = object()
+class CountingStream(object):
+    """ Stream wrapper counting the number of element it has yielded. Similar
+    role to ``enumerate``, but for use when the iteration process of the stream
+    isn't fully under caller control (the stream can be iterated from multiple
+    points including within a library)
+
+    ``start`` allows overriding the starting index (the index before the first
+    item is returned).
+
+    On each iteration (call to :meth:`~.next`), increases its :attr:`~.index`
+    by one.
+
+    .. attribute:: index
+
+        ``int``, index of the last yielded element in the stream. If the stream
+        has ended, will give an index 1-past the stream
+    """
+    def __init__(self, stream, start=-1):
+        self.stream = iter(stream)
+        self.index = start
+        self.stopped = False
+    def __iter__(self):
+        return self
+    def next(self):
+        if self.stopped: raise StopIteration()
+        self.index += 1
+        val = next(self.stream, _ph)
+        if val is _ph:
+            self.stopped = True
+            raise StopIteration()
+        return val
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-import ast
-import copy
 import logging
 import os
 import re
 import time
 import tools
-from xml import dom
 
 import netsvc
 from osv import fields,osv
@@ -47,6 +44,9 @@ class actions(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
+            translate=True),
     }
     _defaults = {
         'usage': lambda *a: False,
@@ -107,6 +107,7 @@ class report_xml(osv.osv):
                         r['report_xsl'] and opj('addons',r['report_xsl']))
 
     _name = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
@@ -141,13 +142,13 @@ class report_xml(osv.osv):
 
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.report.xml',
-        'multi': lambda *a: False,
-        'auto': lambda *a: True,
-        'header': lambda *a: True,
-        'report_sxw_content': lambda *a: False,
-        'report_type': lambda *a: 'pdf',
-        'attachment': lambda *a: False,
+        'type': 'ir.actions.report.xml',
+        'multi': False,
+        'auto': True,
+        'header': True,
+        'report_sxw_content': False,
+        'report_type': 'pdf',
+        'attachment': False,
     }
 
 report_xml()
@@ -155,6 +156,7 @@ report_xml()
 class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
@@ -245,21 +247,18 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'help': fields.text('Action description',
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-            translate=True),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_window',
-        'view_type': lambda *a: 'form',
-        'view_mode': lambda *a: 'tree,form',
-        'context': lambda *a: '{}',
-        'limit': lambda *a: 80,
-        'target': lambda *a: 'current',
-        'auto_refresh': lambda *a: 0,
-        'auto_search':lambda *a: True,
+        'type': 'ir.actions.act_window',
+        'view_type': 'form',
+        'view_mode': 'tree,form',
+        'context': '{}',
+        'limit': 80,
+        'target': 'current',
+        'auto_refresh': 0,
+        'auto_search':True,
         'multi': False,
     }
 
@@ -299,7 +298,7 @@ class act_window_view(osv.osv):
             help="If set to true, the action will not be displayed on the right toolbar of a form view."),
     }
     _defaults = {
-        'multi': lambda *a: False,
+        'multi': False,
     }
     def _auto_init(self, cr, context=None):
         super(act_window_view, self)._auto_init(cr, context)
@@ -323,14 +322,15 @@ class act_wizard(osv.osv):
         'model': fields.char('Object', size=64),
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.wizard',
-        'multi': lambda *a: False,
+        'type': 'ir.actions.wizard',
+        'multi': False,
     }
 act_wizard()
 
 class act_url(osv.osv):
-    _name = 'ir.actions.url'
+    _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
@@ -344,8 +344,8 @@ class act_url(osv.osv):
         )
     }
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_url',
-        'target': lambda *a: 'new'
+        'type': 'ir.actions.act_url',
+        'target': 'new'
     }
 act_url()
 
@@ -388,7 +388,7 @@ class server_object_lines(osv.osv):
         ], 'Type', required=True, size=32, change_default=True),
     }
     _defaults = {
-        'type': lambda *a: 'equation',
+        'type': 'equation',
     }
 server_object_lines()
 
@@ -432,6 +432,7 @@ class actions_server(osv.osv):
 
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
     _columns = {
@@ -489,11 +490,11 @@ class actions_server(osv.osv):
         'copy_object': fields.reference('Copy Of', selection=_select_objects, size=256),
     }
     _defaults = {
-        'state': lambda *a: 'dummy',
-        'condition': lambda *a: 'True',
-        'type': lambda *a: 'ir.actions.server',
-        'sequence': lambda *a: 5,
-        'code': lambda *a: """# You can use the following variables:
+        'state': 'dummy',
+        'condition': 'True',
+        'type': 'ir.actions.server',
+        'sequence': 5,
+        'code': """# You can use the following variables:
 #  - self: ORM model of the record on which the action is triggered
 #  - object: browse_record of the record on which the action is triggered if there is one, otherwise None
 #  - pool: ORM model pool (i.e. self.pool)
@@ -746,7 +747,7 @@ class act_window_close(osv.osv):
     _inherit = 'ir.actions.actions'
     _table = 'ir_actions'
     _defaults = {
-        'type': lambda *a: 'ir.actions.act_window_close',
+        'type': 'ir.actions.act_window_close',
     }
 act_window_close()
 
@@ -765,7 +766,7 @@ class ir_actions_todo(osv.osv):
         'action_id': fields.many2one(
             'ir.actions.actions', 'Action', select=True, required=True),
         'sequence': fields.integer('Sequence'),
-        'state': fields.selection(TODO_STATES, string='State', required=True),
+        'state': fields.selection(TODO_STATES, string='Status', required=True),
         'name': fields.char('Name', size=64),
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
