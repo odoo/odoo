@@ -5,6 +5,7 @@
             <field name="name">Demo User</field>
             <field name="company_id" ref="main_company"/>
             <field name="customer" eval="False"/>
+            <field name="email">demo@example.com</field>
         </record>
         <record id="user_demo" model="res.users">
             <field name="partner_id" ref="base.partner_demo"/>
@@ -13,6 +14,10 @@
             <field name="signature">Mr Demo</field>
             <field name="company_id" ref="main_company"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>
+        </record>
+
+        <record model="res.partner" id="base.partner_root">
+            <field name="email">admin@example.com</field>
         </record>
 
         <!-- new rate for demo transactions in multi currency -->

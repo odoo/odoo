@@ -25,7 +25,7 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
 HOST = '127.0.0.1'
 
 ADMIN_USER = 'admin'
-ADMIN_USER_ID = 1
+ADMIN_USER_ID = openerp.SUPERUSER_ID
 ADMIN_PASSWORD = 'admin'
 
 def start_openerp():
@@ -89,8 +89,10 @@ class TransactionCase(BaseCase):
     """
 
     def setUp(self):
-        self.cr = self.cursor()
-        self.uid = openerp.SUPERUSER_ID
+        # Store cr and uid in class variables, to allow ref() and browse_ref to be BaseCase @classmethods
+        # and still access them
+        TransactionCase.cr = self.cursor()
+        TransactionCase.uid = openerp.SUPERUSER_ID
 
     def tearDown(self):
         self.cr.rollback()
