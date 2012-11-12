@@ -326,6 +326,7 @@ class hr_payslip(osv.osv):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
     def hr_verify_sheet(self, cr, uid, ids, context=None):
+        self.compute_sheet(cr, uid, ids, context)
         return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
 
     def refund_sheet(self, cr, uid, ids, context=None):

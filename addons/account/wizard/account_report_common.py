@@ -119,7 +119,11 @@ class account_common_report(osv.osv_memory):
 
     def _get_fiscalyear(self, cr, uid, context=None):
         now = time.strftime('%Y-%m-%d')
-        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
+        company_id = None
+        ids = context.get('active_ids', [])
+        for wiz in self.browse(cr, uid, ids, context=context):
+            company_id = wiz.company_id
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now), ('company_id', '=', company_id)], limit=1 )
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):

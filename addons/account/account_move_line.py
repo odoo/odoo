@@ -208,7 +208,7 @@ class account_move_line(osv.osv):
             if type(period_id) == str:
                 ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
                 context.update({
-                    'period_id': ids[0]
+                    'period_id': ids and ids[0] or False
                 })
         return context
 
@@ -917,7 +917,7 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
                 partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
