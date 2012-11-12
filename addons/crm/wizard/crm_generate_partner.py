@@ -24,7 +24,7 @@ from tools.translate import _
 
 class crm_generate_partner(osv.osv_memory):
     """
-    Handle the partner generation from any CRM item (lead, phonecall, ...)
+    Handle the partner generation from any CRM item (lead, phonecall)
     either by explicitly converting the element to a partner, either by
     triggering an action that will create a partner (e.g. convert a lead into
     an opportunity).
@@ -55,22 +55,28 @@ class crm_generate_partner(osv.osv_memory):
         if (context.get('active_model') == 'crm.lead') and context.get('active_id'):
             lead_obj = self.pool.get('crm.lead')
             lead = lead_obj.browse(cr, uid, context.get('active_id'), context=context)
+            # A partner is set already
             if lead.partner_id:
                 partner_id = lead.partner_id.id
-            if lead.email_from:
+            # Search through the existing partners based on the lead's email
+            elif lead.email_from:
                 partner_ids = partner_obj.search(cr, uid, [('email', '=', lead.email_from)], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
-            if not lead.partner_id and lead.partner_name:
-                partner_ids = partner_obj.search(cr, uid, [('name', '=', lead.partner_name)], context=context)
+            # Search through the existing partners based on the lead's partner or contact name
+            elif lead.partner_name:
+                partner_ids = partner_obj.search(cr, uid, [('name', 'ilike', '%'+lead.partner_name+'%')], context=context)
+                if partner_ids:
+                    partner_id = partner_ids[0]
+            elif lead.contact_name:
+                partner_ids = partner_obj.search(cr, uid, [
+                        ('name', 'ilike', '%'+lead.contact_name+'%')], context=context)
                 if partner_ids:
                     partner_id = partner_ids[0]
         elif (context.get('active_model') == 'crm.phonecall') and context.get('active_id'):
             phonecall_obj = self.pool.get('crm.phonecall')
             phonecall = phonecall_obj.browse(cr, uid, context.get('active_id'), context=context)
-            print ">>>>>>>>>> Phonecall case"
             #do stuff
-
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
