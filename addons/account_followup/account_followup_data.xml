@@ -6,7 +6,7 @@
 
 <!--Mail template level 0-->
 		 <record id="email_template_account_followup_level0" model="email.template">
-            <field name="name">Followup of overdue invoices level 0</field>
+            <field name="name">Follow-up of overdue invoices level 0</field>
             <field name="email_from">${user.email or ''}</field>
             <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
@@ -78,7 +78,7 @@ ${mel[aml.id]}
 
 
 </table>
-<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
+<center>Total overdue amount: ${object.payment_amount_overdue} ${object.company_id.currency_id.name} </center>   
     <br/>
 </div>
             ]]></field>
@@ -88,7 +88,7 @@ ${mel[aml.id]}
 
 		<!--Mail template level 1 -->
 		 <record id="email_template_account_followup_level1" model="email.template">
-            <field name="name">Followup of overdue invoices level 1</field>
+            <field name="name">Follow-up of overdue invoices level 1</field>
             <field name="email_from">${user.email or ''}</field>
             <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
@@ -162,14 +162,14 @@ ${mel[aml.id]}
 
 
 </table>
-<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
+<center>Total overdue amount: ${object.payment_amount_overdue} ${object.company_id.currency_id.name} </center>   
     <br/>
 </div>
             ]]></field>
         </record>
         <!--Email template -->
         <record id="email_template_account_followup_level2" model="email.template">
-            <field name="name">Followup of overdue invoices level 2</field>
+            <field name="name">Follow-up of overdue invoices level 2</field>
             <field name="email_from">${user.email or ''}</field>
             <field name="subject">${object.company_id.name} Payments Follow-up</field>
             <field name="email_to">${object.email}</field>
@@ -241,7 +241,7 @@ ${mel[aml.id]}
 
 
 </table>
-<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
+<center>Total overdue amount: ${object.payment_amount_overdue} ${object.company_id.currency_id.name}  </center>   
     <br/> 
     <br/>
 </div>
@@ -323,7 +323,7 @@ ${mel[aml.id]}
 % endfor
 
 </table>
-<center>Total overdue amount: ${object.payment_amount_overdue} </center>   
+<center>Total overdue amount: ${object.payment_amount_overdue} ${object.company_id.currency_id.name} </center>   
     <br/>
 </div>
             ]]></field>

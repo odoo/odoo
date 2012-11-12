@@ -18,7 +18,6 @@
  						<field name="phone" />
  						<!--<field name="sales" readonly="True"/>-->
  					</group>
- 					
  					<separator string="Detail of accounts" />
  					<group>
  					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
@@ -58,10 +57,9 @@
  					 <group>
  						<field name="payment_note"/>
  						<!--<field name="payment_followup_level_id"/>--> 
- 						<field name="latest_followup_level_id"/>
+ 						<field name="latest_followup_level_id"/> 						
  						<field name="latest_followup_date"/>
  						<field name="next_followup_level_id"/>
- 						
  					</group>
  				</form>
  			</field>
@@ -141,8 +139,8 @@
             <field name="name">res.partner.followup.form.inherit</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="model">res.partner</field>
-            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/><!-- or user? --> 
-            <field name="arch" type="xml">
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/><!-- or user? --> 
+            <field name="arch" type="xml" eval="[(4, ref('account.group_account_manager'))]">
             		<div name="buttons" position="inside">
             			<button name="do_button_print" type="object" string="Print Overdue Payments Report" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
             			<button name="do_button_mail" type="object" string="Send Overdue Email" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
@@ -164,9 +162,10 @@
             			<field name="latest_followup_level_id"/>
             			<field name="latest_followup_date"/>
  						<field name="next_followup_level_id"/>
- 						
+ 						<!-- test field
+ 						<field name="latest_fol"/>
+ 						<field name="latest_num"/>-->
             			</group>
-            			
             			<group>
             			<!--<field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the current date when processing the follow-ups asks for a phone call"/>-->
             			<field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
@@ -177,23 +176,14 @@
             			</group>
  					 	</group>			 	            			
  						<group>
- 					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
- 						<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> <!---->
+ 					 <field name="accountmoveline_ids" nolabel="1" >
+ 						<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/>
-                    		<!--<field name="ref" readonly="True"/>-->
- 							<!--<field name="debit" readonly="True"/>
- 							<field name="credit" readonly="True"/>-->
  							<field name="result" readonly="True"/>
- 							<field name="followup_date" readonly="True"/>
- 							<!--<field name="followup_line_id" readonly="True"/>-->
  							<field name="blocked" string="Litigation"/>
- 							<!--<field name="payment_commitment"/>
- 							<field name="payment_date"/>-->
  							<field name="date_maturity" readonly="True"/>
- 							<!--<field name="reconcile_id" invisible="True"/>-->
  							<field name="reconcile_partial_id" readonly="True"/>
- 							<!--<field name="invoice"/>-->
  						</tree>
  					</field>
  					</group>
@@ -201,13 +191,7 @@
             		</page>
             	
             		   
-            	<!--<field name="name" position="after">
-            		<field name="payment_next_action"/>
-            	</field>-->  	
-                <!--<field name="payment_amount_outstanding" position="after">
-                    <separator string="Account Move Lines" colspan="4"/>
-                    <field name="accountmoveline_ids" nolabel="1" colspan="4"/>
-            </field>-->
+            	
             </field>
         </record>
        
@@ -229,7 +213,7 @@
  		</record>
  		
          <!-- Menus about followup of customers -->
-        <menuitem id="account_followup_" action="action_customer_followup"  parent="account.menu_configuration_misc" name="Customer follow up"/>
+        <menuitem id="account_followup_s" action="action_customer_followup"  parent="account.menu_finance_periodical_processing_billing" name="Customer Follow-up"/>
 
   	    </data>
 </openerp>

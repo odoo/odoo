@@ -29,7 +29,7 @@
                        	</div> 
                        	</group>
                        	<div class="oe_grey">
-                       		<label string="When the follow-up sending wizard is run, for every partner the most overdue invoice is checked.  If the amount of days overdue is greater or equal than the amount of days specified above
+                       		<label string="When the wizard for processing the follow-ups is run, for every partner the most overdue invoice (without litigation) is checked.  If the amount of days overdue is greater or equal than the amount of days specified above
                        			and the actions of the previous follow-up level were done, then the actions checked below will be executed.  "/>
                        	</div>
                     <separator string="Processing actions"/>
@@ -168,11 +168,11 @@
             </field>
         </record>
 
-        <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="Receivable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
+      <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="Receivable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
-      <!--<menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
+      <!-- <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
 
-        <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="Payable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
+      <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="Payable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 

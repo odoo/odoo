@@ -28,13 +28,3 @@
 - 
   !assert {model: account.invoice, id: account.demo_invoice_0}:
     - check_total == 14.0
--
-  Test latest followup level changed Python
--
-  !python {model: res.partner, id: base.res_partner_12}:  |
-    assert(latest_followup_level_id == ref("demo_followup_line1"))
--
-  Test latest followup level changed
--
-    !assert {model: res.partner, id: base.res_partner_12} :
-      - latest_followup_level_id == ref("demo_followup_line1")

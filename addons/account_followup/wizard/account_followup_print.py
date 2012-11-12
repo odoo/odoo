@@ -142,12 +142,13 @@ class account_followup_print(osv.osv_memory):
         #update the followupo level on account.move.line
         for id in to_update.keys():
             if to_update[id]['partner_id'] in partner_list:
-                cr.execute(
-                    "UPDATE account_move_line "\
-                    "SET followup_line_id=%s, followup_date=%s "\
-                    "WHERE id=%s",
-                    (to_update[id]['level'],
-                    date, int(id),))
+                self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 'followup_date': date})
+#                cr.execute(
+#                    "UPDATE account_move_line "\
+#                    "SET followup_line_id=%s, followup_date=%s "\
+#                    "WHERE id=%s",
+#                    (to_update[id]['level'],
+#                    date, int(id),))
 
     def do_process(self, cr, uid, ids, context=None):
         tmp = self._get_partners_followp(cr, uid, ids, context=context)
@@ -250,6 +251,8 @@ class account_followup_print(osv.osv_memory):
         return {'partner_ids': partner_list, 'to_update': to_update}
         
 
+
+#OLD FUNCTION!
     def do_print(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -261,12 +264,13 @@ class account_followup_print(osv.osv_memory):
         if not data['test_print']:
             for id in to_update.keys():
                 if to_update[id]['partner_id'] in data['partner_ids']:
-                    cr.execute(
-                        "UPDATE account_move_line "\
-                        "SET followup_line_id=%s, followup_date=%s "\
-                        "WHERE id=%s",
-                        (to_update[id]['level'],
-                        date, int(id),))
+                     self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id], 'followup_date': date})
+#                    cr.execute(
+#                        "UPDATE account_move_line "\
+#                        "SET followup_line_id=%s, followup_date=%s "\
+#                        "WHERE id=%s",
+#                        (to_update[id]['level'],
+#                        date, int(id),))
         data.update({'date': context['date']})
         datas = {
              'ids': [],

@@ -22,17 +22,21 @@
 from osv import fields, osv
 from datetime import date
 import time
+import datetime
+
 
 from tools.translate import _
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
     _description = 'Account Follow-up'
+    #_rec_name = 'company_id'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Name', size=64, required=True), 
+        
         'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),        
+        'company_id': fields.many2one('res.company', 'Company', required=True),   
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -41,13 +45,13 @@ class followup(osv.osv):
     
 followup()
 
-class followup_line(osv.osv):
-    
+
+
+class followup_line(osv.osv):    
     
     def _get_default_template(self, cr, uid, ids, context=None):
         res = False        
         templ = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')
-        print templ
         res = templ[1]        
         return res
     
@@ -63,7 +67,7 @@ class followup_line(osv.osv):
         'send_email':fields.boolean('Send email', help="When processing, it will send an email"),
         'send_letter':fields.boolean('Send letter', help="When processing, it will print a letter"),
         'manual_action':fields.boolean('Manual action', help="When processing, it will set the manual action to be taken for that customer. "),
-        'manual_action_note':fields.text('Action text', placeholder="e.g. Give a phonecall, check with others , ..."),
+        'manual_action_note':fields.text('Action text', placeholder="e.g. Give a phone call, check with others , ..."),
         'manual_action_responsible_id':fields.many2one('res.users', 'Responsible', ondelete='set null'),
         'email_template_id':fields.many2one('email.template', 'Email template', ondelete='set null'), 
         'email_body':fields.related('email_template_id', 'body_html', type='text', string="Email Message", relation="email.template", translate="True"),
@@ -153,17 +157,15 @@ class res_partner(osv.osv):
 
     def _get_latest_followup_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for partner in self.browse(cr, uid, ids): 
-            amls = partner.accountmoveline_ids            
+        for partner in self.browse(cr, uid, ids, context): 
+            amls = partner.accountmoveline_ids      
             res[partner.id] = max([x.followup_date for x in amls]) if len(amls) else False
         return res
-
-   
-
+    
     
     def _get_latest_followup_level_id(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for partner in self.browse(cr, uid, ids):
+        for partner in self.browse(cr, uid, ids, context):
             amls = partner.accountmoveline_ids
             level_id = 0
             level_days = False
@@ -177,23 +179,58 @@ class res_partner(osv.osv):
             #res[partner.id] = max(x.followup_line_id.delay for x in amls) if len(amls) else False
         return res
     
-    def _get_latest_followup_level_id_without_lit(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        for partner in self.browse(cr, uid, ids):
+    
+    def _get_latest(self, cr, uid, ids, names, arg, context=None):
+        res={}
+        print "change field"
+        for partner in self.browse(cr, uid, ids, context):
             amls = partner.accountmoveline_ids
-            level_id = 0
-            level_days = False
-            latest_level = False            
-            res[partner.id] = False
-            for accountmoveline in amls:
-                if (not accountmoveline.blocked) and (accountmoveline.followup_line_id != False) and (not level_days or level_days < accountmoveline.followup_line_id.delay): 
-                    level_days = accountmoveline.followup_line_id.delay
-                    latest_level = accountmoveline.followup_line_id.id
-                    res[partner.id] = latest_level
+            latest_date = False
+            latest_level = False
+            latest_level_without_lit = False
+            latest_days_without_lit = False
+            for aml in amls:
+               
+                if latest_date == False:
+                    latest_date = aml.followup_date
+                    latest_level = aml.followup_line_id.id
+                    latest_days = aml.followup_line_id.delay
+                    if not aml.blocked: 
+                        latest_level_without_lit = latest_level 
+                        latest_days_without_lit = latest_days
+                if latest_date and latest_level:
+                    if aml.followup_date > latest_date:
+                        latest_date = aml.followup_date
+                    if aml.followup_line_id.delay > latest_days:
+                        latest_days = aml.followup_line_id.delay
+                        latest_level = aml.followup_line_id.id
+                        if not aml.blocked: 
+                            latest_level_without_lit = latest_level 
+                            latest_days_without_lit = latest_days
+            res[partner.id] = {'latest_followup_date': latest_date, 
+                               'latest_followup_level_id': latest_level, 
+                               'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
+                
+            
+    
+#    def _get_latest_followup_level_id_without_lit(self, cr, uid, ids, name, arg, context=None):
+#        res = {}
+#        for partner in self.browse(cr, uid, ids):
+#            amls = partner.accountmoveline_ids
+#            level_id = 0
+#            level_days = False
+#            latest_level = False            
+#            res[partner.id] = False
+#            for accountmoveline in amls:
+#                if (not accountmoveline.blocked) and (accountmoveline.followup_line_id != False) and (not level_days or level_days < accountmoveline.followup_line_id.delay): 
+#                    level_days = accountmoveline.followup_line_id.delay
+#                    latest_level = accountmoveline.followup_line_id.id
+#                    res[partner.id] = latest_level
+#        return res
 
-    def get_latest_followup_level(self):
-        amls = self.accountmoveline_ids
+    #def get_latest_followup_level(self):
+    #    amls = self.accountmoveline_ids
 
 #    def _get_next_followup_level_id_optimized(self, cr, uid, ids, name, arg, context=None):
 #        #Apparently there is still an error in this function
@@ -333,25 +370,45 @@ class res_partner(osv.osv):
                 partnerlist.append(aml.partner_id.id)
         return partnerlist
     
+    def _get_other_aml_storeids(self, cr, uid, ids, context=None):
+        partnerlist = []
+        for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context):
+            if aml.partner_id not in partnerlist: 
+                partnerlist.append(aml.partner_id.id)
+        return partnerlist
 
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Responsible', help="Responsible for making sure the action happens."), 
         #'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
-        'payment_note':fields.text('Payment note', help="Payment Note"), 
-        'payment_next_action':fields.char('Next Action', 50, help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), #Just a note
-        'payment_next_action_date':fields.date('Next Action Date', help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), # next action date
+        'payment_note':fields.text('Payment Note', help="Payment Note"), 
+        'payment_next_action':fields.char('Next Action', 50, 
+                                    help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), #Just an action
+        'payment_next_action_date':fields.date('Next Action Date', 
+                                    help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), # next action date
         'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
-            ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
-        'latest_followup_date':fields.function(_get_latest_followup_date, method=True, type='date', string="Latest Follow-up Date", store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 20)}, help="Latest date that the follow-up level of the partner was changed" ), #
-        'latest_followup_level_id':fields.function(_get_latest_followup_level_id, method=True, 
-            type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level", store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 20)}, help="The maximum follow-up level"), 
-        'latest_followup_level_id_without_lit':fields.function(_get_latest_followup_level_id_without_lit, method=True, 
-            type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level without litigation", help="The maximum follow-up level without taking into account the account move lines with litigation"), 
-        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",  store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 20)}),
-        'payment_amount_overdue':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", help="Amount Overdue: The amount the customer should already have paid"),
+                            ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
+        'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
+                            help="Latest date that the follow-up level of the partner was changed", 
+                            store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)},  
+                            multi="latest"), 
+        'latest_followup_level_id':fields.function(_get_latest, method=True, 
+            type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level", 
+            help="The maximum follow-up level", 
+            store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}, 
+            multi="latest"), 
+        'latest_followup_level_id_without_lit':fields.function(_get_latest, method=True, 
+            type='many2one', relation='account_followup.followup.line', string="Latest Follow-up Level without litigation", 
+            help="The maximum follow-up level without taking into account the account move lines with litigation", 
+            store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}, 
+            multi="latest"), 
+        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', 
+                                                 string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
+                                                 store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}),
+        'payment_amount_overdue':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", 
+                                                 help="Amount Overdue: The amount the customer should already have paid"),
     }
-
+    
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
