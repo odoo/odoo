@@ -1,9 +1,6 @@
 Asynchronous Operations
 =======================
 
-This documentation is outdated as then() is now pipe. Please never copy api
-from other libraries just link to it.
-
 As a language (and runtime), javascript is fundamentally
 single-threaded. This means any blocking request or computation will
 blocks the whole page (and, in older browsers, the software itself
