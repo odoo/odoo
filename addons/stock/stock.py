@@ -1725,7 +1725,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
-        'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
+        'type': fields.selection( (('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')), 'Shipping Type', select=True),
     }
 
     def _check_location(self, cr, uid, ids, context=None):
