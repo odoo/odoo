@@ -691,12 +691,10 @@ class WebClient(openerpweb.Controller):
             until we have established a valid session. This is meant only
             for translating the login page and db management chrome, using
             the browser's language. """
-        lang = req.httprequest.accept_languages.best or 'en'
         # For performance reasons we only load a single translation, so for
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
-        if '-' in lang: # RFC2616 uses '-' separators for sublanguages
-            lang = lang.split('-')[0]
+        lang = req.lang.split('_')[0]
 
         translations_per_module = {}
         for addon_name in mods:

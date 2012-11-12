@@ -21,6 +21,7 @@ import urlparse
 import uuid
 import xmlrpclib
 
+from babel.core import LOCALE_ALIASES
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -93,7 +94,28 @@ class WebRequest(object):
         if not self.session:
             self.httpsession[self.session_id] = self.session = session.OpenERPSession()
         self.context = self.params.pop('context', None)
-        self.debug = self.params.pop('debug', False) != False
+        self.debug = self.params.pop('debug', False) is not False
+        self._params_lang = self.params.pop('lang')
+
+    @property
+    def lang(self):
+        if not hasattr(self, '_lang'):
+            lang = self._params_lang
+            if lang is None:
+                lang = self.httprequest.cookies.get('lang')
+            if lang is None:
+                context = self.session.eval_context(self.context)
+                lang = context.get('lang')
+            if lang is None:
+                lang = self.httprequest.accept_languages.best
+            if lang is None:
+                lang = 'en_US'
+
+            lang = LOCALE_ALIASES.get(lang, lang)
+            lang = lang.replace('-', '_')  # RFC2616 uses '-' separators for sublanguages
+            self._lang = lang
+        return self._lang
+
 
 class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
