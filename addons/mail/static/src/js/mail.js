@@ -870,11 +870,13 @@ openerp.mail = function (session) {
         on_message_read: function (event) {
             event.stopPropagation();
             this.on_message_read_unread(true);
+            return false;
         },
 
         on_message_unread: function (event) {
             event.stopPropagation();
             this.on_message_read_unread(false);
+            return false;
         },
 
         /*The selected thread and all childs (messages/thread) became read
@@ -916,7 +918,7 @@ openerp.mail = function (session) {
         */
         on_vote: function (event) {
             event.stopPropagation();
-            return this.ds_message.call('vote_toggle', [[this.id]])
+            this.ds_message.call('vote_toggle', [[this.id]])
                 .then(
                     _.bind(function (vote) {
                         this.has_voted = vote;
