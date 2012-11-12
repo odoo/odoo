@@ -428,8 +428,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 } else if (262*unfolded<self.$el.width()) {
                     group.$el.children(':first').css('width', "250px");
                 } else {
-		    // -12 because of padding 6 between cards
-		    // -1 because of the border of the latest dummy column
+            // -12 because of padding 6 between cards
+            // -1 because of the border of the latest dummy column
                     group.$el.children(':first').css('width', Math.floor((self.$el.width()-1)/unfolded)-12 + 'px');
                 }
             }
@@ -640,11 +640,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         return this.dataset.read_slice(this.view.fields_keys.concat(['__last_update']), {
             'limit': self.view.limit,
-<<<<<<< TREE
             'offset': self.dataset_offset
-        }).then(this.do_add_records);
-=======
-            'offset': self.dataset_offset += self.view.limit
         }).then(function(records) {
             records.forEach(function(r) {
                 self.view.dataset.ids.push(r.id);
@@ -652,7 +648,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             self.do_add_records(records);
             return records;
         });
->>>>>>> MERGE-SOURCE
     },
     do_add_records: function(records, prepend) {
         var self = this;
