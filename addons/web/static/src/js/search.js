@@ -1600,6 +1600,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 .appendTo(this.$('.oe_searchview_custom_list'))
                 .addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
+                .toggleClass('oe_searchview_custom_default', filter.is_default)
                 .text(filter.name);
 
             $('<a class="oe_searchview_custom_delete">x</a>')
