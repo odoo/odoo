@@ -676,8 +676,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return filter.user_id && filter.is_default;
             });
             if (personal_filter) {
-                this.query.reset([this.custom_filters.facet_for(personal_filter)],
-                                 {preventSearch: true});
+                this.custom_filters.enable_filter(personal_filter, true);
                 return;
             }
 
@@ -685,8 +684,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
                 return !filter.user_id && filter.is_default;
             });
             if (global_filter) {
-                this.query.reset([this.custom_filters.facet_for(global_filter)],
-                                 {preventSearch: true});
+                this.custom_filters.enable_filter(global_filter, true);
                 return;
             }
         }
@@ -1617,9 +1615,13 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         }
 
         $filter.unbind('click').click(function () {
-            self.view.query.reset([self.facet_for(filter)]);
-            $filter.addClass('oe_selected');
+            self.enable_filter(filter);
         });
+    },
+    enable_filter: function (filter, preventSearch) {
+        this.view.query.reset([this.facet_for(filter)], {
+            preventSearch: preventSearch || false});
+        this.$filters[this.key_for(filter)].addClass('oe_selected');
     },
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
