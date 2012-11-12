@@ -1,9 +1,13 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <!-- <data noupdate="1"> -->
+    <data>
 
-        <!-- Update demo user to avoid mail bombing -->
+        <!-- Update demo user and Agrolait to avoid mail bombing -->
         <record id="base.partner_demo" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
             <field name="notification_email_send">none</field>
         </record>
 
@@ -35,78 +39,75 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root'), ref('base.partner_demo')])]"/>
         </record>
 
         <!-- Pushed to all employees -->
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="body">Your monthly meal vouchers arrived. You can get them at Christine's office.
-This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</field>
+            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at Christine's office.</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_blogpost0_comment0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[Great.]]></field>
+            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_blogpost0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Thanks, but where is Christine's office, if I may ask? (I'm new here)</field>
+            <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <!-- This one is starred for having mailboxes with demo data -->
         <record id="message_blogpost0_comment2" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Building B3, second floor on the right :-)</field>
+            <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root'), ref('base.user_demo')])]"/>
         </record>
         <record id="message_blogpost0_comment3" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Great news, I need to buy a new fridge, I think I can pay it with the eco-vouchers!</field>
+            <field name="body"><![CDATA[<p>Many thanks. Actually that's good news, next year I'll have to buy a new fridge, I think I will pay it with the eco-vouchers!</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
 
-        <!-- External mail + reply with attachment conversation -->
-        <record id="message_video2" model="mail.message">
+        <!-- Discussion: email and attachment -->
+        <record id="msg_discussion2_0" model="mail.message">
             <field name="subject">Plan to install OpenERP</field>
             <field name="model">mail.message</field>
-            <field name="body">
-                &lt;![CDATA[Email0 inquiry]]&gt;
-                &lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;
-                &lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to install OpenERP for my company and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;br/&gt;
-                &lt;div&gt;&lt;font size="2"&gt;Can you please send me services catalogue?&lt;/font&gt;&lt;/div&gt;&lt;br/&gt;
-                Sophie
-            </field>
+            <field name="body"><![CDATA[<p>Hello
+I am interested in your company's product and I plan to install OpenERP for my company and affordable price.
+Can you please send me services catalogue?
+Sophie]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.res_partner_2"/>
+            <field name="email_from">virginie@agrolait.fr</field>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date">2012-11-12 9:13:32</field>
         </record>
-        <record id="message_video2_attachment1" model="ir.attachment">
-            <field name="model">ir.attachment</field>
+        <record id="msg_discussion2_1_attach" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
             <field name="datas_fname">catalogue 2012.pdf</field>
             <field name="name">catalogue 2012.pdf</field>
         </record>
-        <record id="message_video2_message1" model="mail.message">
+        <record id="msg_discussion2_1" model="mail.message">
             <field name="subject">Re: Plan to install OpenERP</field>
             <field name="body">
                 Dear Customer,&lt;br/&gt;
@@ -117,11 +118,9 @@ This month you also get 250 EUR of eco-vouchers if you have been in the company 
             </field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="parent_id" ref="message_video2"/>
+            <field name="parent_id" ref="msg_discussion2_0"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="attachment_ids" eval="[(6, 0, [ref('message_video2_attachment1')])]"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root'),ref('base.res_partner_2')])]"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discussion2_1_attach')])]"/>
         </record>
 
         <!-- Employee & other + attachments conversation -->

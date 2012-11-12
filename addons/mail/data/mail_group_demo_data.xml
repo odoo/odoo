@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <!-- <data noupdate="1"> -->
+    <data>
+
+        <record model="mail.group" id="group_best_sales_practices">
+            <field name="name">Best Sales Practices</field>
+            <field name="description">Discussion about best sales practices and deals.</field>
+        </record>
+
+        <record model="mail.group" id="group_board">
+            <field name="name">Board meetings</field>
+            <field name="description">Board meetings and agenda</field>
+        </record>
+
+        <record model="mail.group" id="group_rd">
+            <field name="name">RD</field>
+            <field name="description">Research and development discussion group</field>
+        </record>
+
+        <record model="mail.group" id="group_leasing">
+            <field name="name">Leasing</field>
+            <field name="description">Leasing, cars and fuel cards</field>
+        </record>
+
+        <record model="mail.group" id="group_support">
+            <field name="name">Support</field>
+            <field name="description">Support team</field>
+        </record>
+
+        <record id="message_group_0" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>MESSAGE UNREAD</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+        </record>
+        <record id="message_group_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>MESSAGE UNREAD</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+        </record>
+        <record id="message_group_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>MESSAGE UNREAD LIKED</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+        </record>
+        <record id="message_group_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>MESSAGE UNREAD LIKES</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+        </record>
+    </data>
+</openerp>
+
+
