@@ -852,7 +852,7 @@ openerp.mail = function (session) {
             var domain = mail.ChatterUtils.expand_domain( this.options.root_thread.domain )
                 .concat([["id", "in", message_ids ]]);
 
-            return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], this.parent_thread.options.display_indented_thread, this.context, this.parent_thread.id])
+            return this.parent_thread.ds_message.call('message_read', [undefined, domain, [], !!this.parent_thread.options.display_indented_thread, this.context, this.parent_thread.id])
                 .then( function (records) {
                     // remove message not loaded
                     _.map(messages, function (msg) {
@@ -1023,7 +1023,7 @@ openerp.mail = function (session) {
             this.partner_ids =  _.filter(datasets.partner_ids, function (partner) { return partner[0]!=datasets.author_id[0]; } ) 
             this.messages = [];
 
-            this.options.flat_mode = (this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
+            this.options.flat_mode = !!(this.options.display_indented_thread > this.thread_level ? this.options.display_indented_thread - this.thread_level : 0);
 
             // object compose message
             this.compose_message = false;
