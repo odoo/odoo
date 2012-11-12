@@ -152,8 +152,11 @@
                     <group>
                         <group>
                             <field name="partner_name" string="Company Name"/>
+                            <!-- Preload all the partner's information -->
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)" options='{"create_name_field": "name"}'/>
+                                on_change="on_change_partner(partner_id)"
+                                options='{"create_name_field": "name"}'
+                                context="{'name': contact_name, 'street': street, 'city': city, 'state_id': state_id, 'zip': zip, 'country_id': country_id, 'function': function, 'phone': phone, 'mobile': mobile, 'fax': fax, 'email': email, 'user_id': user_id, 'section_id': section_id}"/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
