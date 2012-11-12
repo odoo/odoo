@@ -2,6 +2,22 @@
  * OpenERP web_calendar
  *---------------------------------------------------------*/
 
+(function() {
+    // Monkey patch dhtml scheduler in order to fix a bug.
+    // It manually implements some kind of dbl click event
+    // bubbling but fails to do it properly.
+    if (this.scheduler) {
+        var old_scheduler_dblclick = scheduler._on_dbl_click;
+        scheduler._on_dbl_click = function(e, src) {
+            if (src && !src.className) {
+                return;
+            } else {
+                old_scheduler_dblclick.apply(this, arguments);
+            }
+        };
+    }
+}());
+
 openerp.web_calendar = function(instance) {
 var _t = instance.web._t,
    _lt = instance.web._lt;
