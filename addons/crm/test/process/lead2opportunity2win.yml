@@ -13,13 +13,13 @@
 -
   I fill in a lead2partner wizard.
 -
-  !record {model: crm.generate.partner, id: crm_generate_partner_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_4")]}'}:
+  !record {model: crm.partner.binding, id: crm_partner_binding_id1, context: '{"active_model": "crm.lead", "active_ids": [ref("crm_case_4")]}'}:
 -
   I create a partner from the lead2partner wizard.
 -
-   !python {model: crm.generate.partner}: |
+   !python {model: crm.partner.binding}: |
      context.update({'active_model': 'crm.lead', 'active_ids': [ref('crm_case_4')], 'active_id': ref('crm_case_4')})
-     self.make_partner(cr, uid ,[ref("crm_generate_partner_id1")], context=context)
+     self.make_partner(cr, uid ,[ref("crm_partner_binding_id1")], context=context)
 -
   I convert lead into opportunity for exiting customer.
 -

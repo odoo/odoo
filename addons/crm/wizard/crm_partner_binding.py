@@ -22,15 +22,17 @@
 from osv import osv, fields
 from tools.translate import _
 
-class crm_generate_partner(osv.osv_memory):
+class crm_partner_binding(osv.osv_memory):
     """
-    Handle the partner generation from any CRM item (lead, phonecall)
-    either by explicitly converting the element to a partner, either by
-    triggering an action that will create a partner (e.g. convert a lead into
-    an opportunity).
+    Handle the partner binding or generation in any CRM wizard that requires
+    such feature, like the lead2opportunity wizard, or the
+    phonecall2opportunity wizard.  Try to find a matching partner from the
+    CRM model's information (name, email, phone number, etc) or create a new
+    one on the fly.
+    Use it like a mixin with the wizard of your choice.
     """
-    _name = 'crm.generate.partner'
-    _description = 'Generate a partner from a CRM item.'
+    _name = 'crm.partner.binding'
+    _description = 'Handle partner binding or generation in CRM wizards.'
     _columns = {
         'action': fields.selection([
                 ('exist', 'Link to an existing customer'),
@@ -80,7 +82,7 @@ class crm_generate_partner(osv.osv_memory):
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
-        res = super(crm_generate_partner, self).default_get(cr, uid, fields, context=context)
+        res = super(crm_partner_binding, self).default_get(cr, uid, fields, context=context)
         partner_id = self._find_matching_partner(cr, uid, context=context)
 
         if 'action' in fields:
