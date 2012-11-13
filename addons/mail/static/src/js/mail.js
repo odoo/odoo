@@ -1003,10 +1003,7 @@ openerp.mail = function (session) {
         init: function (parent, datasets, options) {
             this._super(parent, options);
             this.domain = options.domain || [];
-            this.context = _.extend({
-                default_model: 'mail.thread',
-                default_res_id: 0,
-                default_parent_id: false }, options.context || {});
+            this.context = _.extend(options.context || {});
 
             this.options = options.options;
             this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
@@ -1031,7 +1028,7 @@ openerp.mail = function (session) {
             // object compose message
             this.compose_message = false;
 
-            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
+            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model);
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
         },
         
