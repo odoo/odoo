@@ -267,7 +267,7 @@ class account_voucher(osv.osv):
     _order = "date desc, id desc"
 #    _rec_name = 'number'
     _columns = {
-        'active':fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the payment term without removing it."),
+        'active': fields.boolean('Active', help="By default, reconciliation vouchers made on draft bank statements are set as inactive, which allow to hide the customer/supplier payment while the bank statement isn't confirmed."),
         'type':fields.selection([
             ('sale','Sale'),
             ('purchase','Purchase'),
@@ -329,7 +329,7 @@ class account_voucher(osv.osv):
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
     }
     _defaults = {
-        'active': lambda *a: True,
+        'active': True,
         'period_id': _get_period,
         'partner_id': _get_partner,
         'journal_id':_get_journal,
@@ -1510,12 +1510,12 @@ class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
     def button_confirm_bank(self, cr, uid, ids, context=None):
-        statementLine = self.pool.get('account.bank.statement.line')
-        voucher = self.pool.get('account.voucher')
+        voucher_obj = self.pool.get('account.voucher')
+        voucher_ids = []
         for statement in self.browse(cr, uid, ids, context=context):
-            for line in statement.line_ids:
-                if line.voucher_id:
-                    voucher.write(cr, uid, line.voucher_id.id, {'active':True}, context=context)
+            voucher_ids += [line.voucher_id.id for line in statement.line_ids if line.voucher_id]
+        if voucher_ids:
+            voucher_obj.write(cr, uid, voucher_ids, {'active': True}, context=context)
         return super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -1548,13 +1548,6 @@ class account_bank_statement(osv.osv):
             return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
-    def unlink(self, cr, uid, ids, context=None):
-        statementLine = self.pool.get('account.bank.statement.line')
-        for statement in self.read(cr, uid, ids, ['line_ids'], context=context):
-            statementLine.unlink(cr, uid, statement['line_ids'], context=context)
-        return super(account_bank_statement, self).unlink(cr, uid, ids, context=context)
-
-
 account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
@@ -1562,6 +1555,8 @@ class account_bank_statement_line(osv.osv):
 
     def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
         res = super(account_bank_statement_line, self).onchange_partner_id(cr, uid, ids, partner_id, context=context)
+        if 'value' not in res:
+            res['value'] = {}
         res['value'].update({'voucher_id' : False})
         return res
 
