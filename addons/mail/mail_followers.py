@@ -61,10 +61,10 @@ class mail_notification(osv.Model):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
-                        ondelete='cascade', required=True),
-        'read': fields.boolean('Read'),
+                        ondelete='cascade', required=True, select=1),
+        'read': fields.boolean('Read', select=1),
         'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True),
+                        ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
@@ -102,7 +102,7 @@ class mail_notification(osv.Model):
         # some messages do not have notifications: find which one, create notification, update read status
         exist_notification = dict.fromkeys(msg_ids, False)
         for notification in self.browse(cr, uid, notif_ids, context=context):
-            exist_notification[notification.message_id] = True
+            exist_notification[notification.message_id.id] = True
         for msg_id in exist_notification.keys():
             self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return self.write(cr, uid, notif_ids, {'read': read}, context=context)
