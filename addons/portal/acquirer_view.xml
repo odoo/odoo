@@ -54,14 +54,12 @@
             </field>
         </record>
 
+        <!--  Acquirers list action is visible in Invoicing Settings  -->
         <record model="ir.actions.act_window" id="action_acquirer_list">
             <field name="name">Payment Acquirers</field>
             <field name="res_model">portal.payment.acquirer</field>
         </record>
 
-        <menuitem id="menu_acquirers" parent="portal_menu" action="action_acquirer_list"/>
-        <menuitem id="menu_acquirers2" parent="menu_acquirers" action="action_acquirer_list"/>
-        <menuitem id="menu_acquirers3" parent="menu_acquirers2" action="action_acquirer_list"/>
 
     </data>
 </openerp>

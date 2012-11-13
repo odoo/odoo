@@ -23,7 +23,6 @@ import logging
 from urllib import quote as quote
 
 from openerp.osv import osv, fields
-from openerp.tools import ustr
 from openerp.tools.translate import _
 from openerp.tools import float_repr
 
@@ -41,7 +40,7 @@ class acquirer(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True),
         'form_template': fields.text('Payment form template (HTML)', translate=True, required=True), 
-        'visible': fields.boolean('Visible', help="Whether this payment acquirer is currently displayed in portal forms"),
+        'visible': fields.boolean('Visible', help="Make this payment acquirer available in portal forms (Customer invoices, etc.)"),
     }
 
     _default = {
