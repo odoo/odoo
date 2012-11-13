@@ -52,8 +52,9 @@ class mail_compose_message(osv.TransientModel):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         result['template_id'] = context.get('default_template_id', context.get('mail.compose.template_id', False))
+
         # pre-render the template if any
-        if result.get('use_template'):
+        if result.get('use_template') and result.get('template_id'):
             onchange_res = self.onchange_use_template(cr, uid, [], result.get('use_template'), result.get('template_id'),
                 result.get('composition_mode'), result.get('model'), result.get('res_id'), context=context)
             result.update(onchange_res['value'])
@@ -63,6 +64,10 @@ class mail_compose_message(osv.TransientModel):
         'use_template': fields.boolean('Use Template'),
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
+    }
+
+    _defaults = {
+        'use_template': True,
     }
 
     def onchange_template_id(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
@@ -154,7 +159,7 @@ class mail_compose_message(osv.TransientModel):
         # transform email_to, email_cc into partner_ids
         values['partner_ids'] = []
 
-        mails = tools.email_split( values.pop('email_to', '') + ' ' + values.pop('email_cc', '') )
+        mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             values['partner_ids'].append(partner_id)
