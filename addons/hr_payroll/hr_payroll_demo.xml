@@ -75,7 +75,7 @@
         <record id="hr_salary_rule_meal_voucher" model="hr.salary.rule">
             <field name="amount_select">fix</field>
             <field eval="10" name="amount_fix"/>
-            <field name="quantity">worked_days.WORK100.number_of_days</field>
+            <field name="quantity">worked_days.WORK100 and worked_days.WORK100.number_of_days</field>
             <field name="code">MA</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="register_id" ref="hr_meal_voucher_register"/>
@@ -89,7 +89,7 @@
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">Get 1% of sales</field>
             <field name="sequence" eval="17"/>
-            <field name="amount_python_compute">result = (inputs.SALEURO.amount + inputs.SALASIA.amount) * 0.01</field>
+            <field name="amount_python_compute">result = ((inputs.SALEURO and inputs.SALEURO.amount) + (inputs.SALASIA and inputs.SALASIA.amount)) * 0.01</field>
          </record>
 
         <!-- Rule Inputs -->
