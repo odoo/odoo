@@ -955,6 +955,9 @@ class account_voucher(osv.osv):
         if voucher_brw.number:
             name = voucher_brw.number
         elif voucher_brw.journal_id.sequence_id:
+            if not voucher_brw.journal_id.sequence_id.active:
+                raise osv.except_osv(_('Configuration Error !'),
+                    _('Please activate the sequence of selected journal !'))
             name = seq_obj.next_by_id(cr, uid, voucher_brw.journal_id.sequence_id.id, context=context)
         else:
             raise osv.except_osv(_('Error!'),

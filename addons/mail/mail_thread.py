@@ -74,17 +74,17 @@ class mail_thread(osv.AbstractModel):
             - message_unread: has uid unread message for the document
             - message_summary: html snippet summarizing the Chatter for kanban views """
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
-        # search for unread messages, by reading directly mail.notification, as SUPERUSER
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, SUPERUSER_ID, [
-            ('partner_id.user_ids', 'in', [uid]),
-            ('message_id.res_id', 'in', ids),
-            ('message_id.model', '=', self._name),
-            ('read', '=', False)
-        ], context=context)
-        for notif in notif_obj.browse(cr, SUPERUSER_ID, notif_ids, context=context):
-            res[notif.message_id.res_id]['message_unread'] = True
+        # search for unread messages, directly in SQL to improve performances
+        cr.execute("""  SELECT m.res_id FROM mail_message m
+                        RIGHT JOIN mail_notification n
+                        ON (n.message_id = m.id AND n.partner_id = %s AND n.read = False)
+                        WHERE m.model = %s AND m.res_id in %s""",
+                    (user_pid, self._name, tuple(ids),))
+        msg_ids = [result[0] for result in cr.fetchall()]
+        for msg_id in msg_ids:
+            res[msg_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
             cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
