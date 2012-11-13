@@ -582,7 +582,7 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                raise osv.except_osv(_('Error!'), _('You cannot create journal items on “View” type account %s %s.') % (l.account_id.code, l.account_id.name))
+                return False
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):

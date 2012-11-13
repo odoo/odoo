@@ -779,14 +779,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
         return res
 
-    def unlink(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error!'),
-                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
-                      "You can still cancel it, instead of deleting it.") % lead.name)
-        return super(crm_lead, self).unlink(cr, uid, ids, context)
-
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id') and not vals.get('probability'):
             # change probability of lead(s) if required by stage

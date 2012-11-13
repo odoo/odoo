@@ -474,7 +474,7 @@ def Project():
     resource = %s
 """       % (
             project.id,
-            project.date_start, working_days,
+            project.date_start or time.strftime('%Y-%m-%d'), working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
