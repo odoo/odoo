@@ -65,6 +65,8 @@ class partner_vat(osv.osv_memory):
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
+        if not partner_ids:
+             raise osv.except_osv(_('Error'),_('No belgian contact with a VAT number in your database.'))
         cr.execute("""SELECT sub1.partner_id, sub1.name, sub1.vat, sub1.turnover, sub2.vat_amount
                 FROM (SELECT l.partner_id, p.name, p.vat, SUM(CASE WHEN c.code ='49' THEN -l.tax_amount ELSE l.tax_amount END) as turnover
                       FROM account_move_line l
@@ -190,7 +192,7 @@ class partner_vat_list(osv.osv_memory):
         addr = obj_partner.address_get(cr, uid, [obj_cmpny.partner_id.id], ['invoice'])
         if addr.get('invoice',False):
             ads = obj_partner.browse(cr, uid, [addr['invoice']], context=context)[0]
-            phone = ads.phone.replace(' ','') or ''
+            phone = ads.phone and ads.phone.replace(' ','') or ''
             email = ads.email or ''
             name = ads.name or ''
             city = ads.city or ''
@@ -259,6 +261,8 @@ class partner_vat_list(osv.osv_memory):
 
         # Turnover and Farmer tags are not included
         client_datas = self._get_datas(cr, uid, ids, context=context)
+        if not client_datas:
+            raise osv.except_osv(_('Data Insufficient!'),_('No data available for the client.'))
         data_client_info = ''
         for amount_data in client_datas:
             data_client_info += """
@@ -309,6 +313,8 @@ class partner_vat_list(osv.osv_memory):
         datas['year'] = context['year']
         datas['limit_amount'] = context['limit_amount']
         datas['client_datas'] = self._get_datas(cr, uid, ids, context=context)
+        if not datas['client_datas']:
+            raise osv.except_osv(_('Error!'),_('No record to print.'))
         return {
             'type': 'ir.actions.report.xml',
             'report_name': 'partner.vat.listing.print',
