@@ -645,6 +645,7 @@ class sale_order(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
             'mark_so_as_sent': True
         })
         return {
