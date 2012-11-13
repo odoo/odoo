@@ -55,7 +55,10 @@ openerp.base = function(instance) {
             return ICP.call('get_param', ['loempia.server', DEFAULT_SERVER]).then(function(u) {
                 var link = $(_.str.sprintf('<a href="%s"></a>', u))[0];
                 var host = _.str.sprintf('%s//%s', link.protocol, link.host);
-                var dbname = link.pathname.substr(1);
+                var dbname = link.pathname;
+                if (dbname[0] === '/') {
+                    dbname = dbname.substr(1);
+                }
 
                 var login = (sessionStorage ? sessionStorage.getItem('apps.login') : null) || 'anonymous';
                 var passwd = (sessionStorage ? sessionStorage.getItem('apps.access_token') : null) || 'anonymous';
