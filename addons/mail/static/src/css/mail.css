@@ -218,8 +218,8 @@
 
 .openerp .oe_mail .oe_msg_attachment_list{
     display: none;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 .openerp .oe_mail .oe_msg_composer .oe_msg_attachment_list{
     display: block;
@@ -227,7 +227,7 @@
 .openerp .oe_mail .oe_attachment{
     display: inline-block;
     width: 100px;
-    margin: 2px;
+    margin: 4px 2px;
     min-height: 80px;
     position: relative;
     border-radius: 3px;
@@ -240,7 +240,7 @@
     padding: 1px 3px;
     margin-top: 50px;
     margin-bottom: 5px;
-    background: rgba(124, 123, 173, 0.13);
+    background: #F4F5FA;
     overflow: hidden;
     color: #4c4c4c;
     text-shadow: none;
@@ -296,12 +296,13 @@
 .openerp .oe_mail .oe_attachment.oe_preview .oe_name{
     position: absolute;
     bottom: 0px;
-    margin: 0px;
+    margin: 3px;
     left: 0px;
     right: 0px;
     max-height: 64px;
     background: rgba(0,0,0,0.8); 
     color: white;
+    border-radius: 1px;
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
     opacity: 0;
@@ -330,9 +331,11 @@
     position: relative;
     margin:0px;
     width: 100px;
-    height: 100px;
-    border-radius: 3px;
+    height: 80px;
+    border-radius: 1px;
+    border: solid 3px #FFF;
     margin-left: -50px;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.19);
 }
 .openerp .oe_mail .oe_attachment .oe_delete{
     display: none;
