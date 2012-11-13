@@ -74,9 +74,8 @@ class stock_report_prodlots(osv.osv):
                 group by location_id, product_id, prodlot_id
             )""")
 
-    def unlink(self, cr, uid, ids, context={}):
+    def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
-
 
 stock_report_prodlots()
 
@@ -130,8 +129,8 @@ class stock_report_tracklots(osv.osv):
                 ) as report
                 group by location_id, product_id, tracking_id
             )""")
-        
-    def unlink(self, cr, uid, ids, context={}):
+
+    def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot delete any record!'))
 
 stock_report_tracklots()
@@ -162,6 +161,7 @@ class report_stock_lines_date(osv.osv):
                 where p.active='true'
                 group by p.id
             )""")
+
 report_stock_lines_date()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

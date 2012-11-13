@@ -10,7 +10,7 @@
     lead = self.browse(cr, uid, ref('crm_case_1'))
     assert lead.stage_id.id == ref('crm.stage_lead7'), "Stage should be 'Dead' and is %s." % (lead.stage_id.name)
     assert lead.state == 'cancel', "Opportunity is not in 'cancel' state."
-    assert lead.probability == 0.0, 'Opportunity probability is wrong and should be 0.0.'
+    assert lead.probability == 0.0, 'Opportunity is probably wrong and should be 0.0.'
 -
   I reset cancelled lead into unqualified lead.
 -

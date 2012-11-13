@@ -7,18 +7,24 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('event.event_main_menu')}"/>
         </record>
-        <record id="todo_open_event_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_event_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
+        </record>
+
+        <!-- mail: event subtype -->
+        <record id="event.mt_event_registration" model="mail.message.subtype">
+            <field name="name">New Registrations</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Events Organisation has been installed</value>
             <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
+            <value>Module Events has been installed</value>
         </function>
     </data>
 </openerp>

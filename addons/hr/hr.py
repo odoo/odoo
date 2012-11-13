@@ -90,16 +90,17 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Total Employees',
+        'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees",
+        'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
@@ -111,7 +112,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
@@ -180,17 +181,16 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
+        # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
-            help="This field holds the image used as a photo for the "\
-                 "employee. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
@@ -198,7 +198,7 @@ class hr_employee(osv.osv):
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
@@ -212,7 +212,7 @@ class hr_employee(osv.osv):
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
-            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+            self.pool.get('mail.group').message_post(cr, uid, [mail_group_id], body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name), context=context)
         except:
             pass # group deleted: do not push a message
         return employee_id
@@ -231,7 +231,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
+            return {'value': {'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):
@@ -262,7 +262,6 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'image': _get_default_image,
-        'marital': 'single',
         'color': 0,
     }
 
@@ -290,8 +289,12 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-hr_department()
-
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['member_ids'] = []
+        return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
 class res_users(osv.osv):
     _name = 'res.users'

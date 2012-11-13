@@ -25,13 +25,13 @@
         <record model="ir.ui.view" id="res_groups_search_sharing">
             <field name="name">res.groups.search.share</field>
             <field name="model">res.groups</field>
-            <field name="priority" eval="8"/>
+            <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
-                <search string="Groups">
-                    <field name="name" string="Group"/>
-                    <field name="share"/>
-                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner" domain="[('share','=',False)]"/>
-                </search>
+                <field name="name" position="after">
+                    <filter name="share" string="Share Groups" domain="[('share','=',True)]"/>
+                    <filter name="no_share" string="Non-Share Groups" domain="[('share','=',False)]"/>
+                    <separator orientation="vertical"/>
+                </field>
             </field>
         </record>
 

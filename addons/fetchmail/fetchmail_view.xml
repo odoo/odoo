@@ -24,9 +24,9 @@
             <field name="arch" type="xml">
                 <form string="Incoming Mail Server" version="7.0">
                     <header attrs="{'invisible' : [('type', '=', 'local')]}">
-                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft" icon="gtk-apply"/>
-                        <button string="Fetch Now" type="object" name="fetch_mail" states="done" icon="gtk-network"/>
-                        <button string="Reset Confirmation" type="object" name="set_draft" icon="gtk-convert" states="done"/>
+                        <button string="Test &amp; Confirm" type="object" name="button_confirm_login" states="draft"/>
+                        <button string="Fetch Now" type="object" name="fetch_mail" states="done"/>
+                        <button string="Reset Confirmation" type="object" name="set_draft" states="done"/>
                         <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
@@ -104,24 +104,13 @@
         />
 
       <record model="ir.ui.view" id="email_message_tree_view">
-          <field name="name">mail.message.list.fetchmail</field>
-          <field name="model">mail.message</field>
-          <field name="inherit_id" ref="mail.view_email_message_tree"/>
+          <field name="name">mail.mail.form.fetchmail</field>
+          <field name="model">mail.mail</field>
+          <field name="inherit_id" ref="mail.view_mail_form"/>
           <field name="arch" type="xml">
-              <field name="user_id" position="after">
+              <field name="references" position="after">
                   <field name="fetchmail_server_id"/>
               </field>
-          </field>
-      </record>
-
-      <record model="ir.ui.view" id="email_message_search_view">
-          <field name="name">mail.message.inherit.search</field>
-          <field name="model">mail.message</field>
-          <field name="inherit_id" ref="mail.view_email_message_search"/>
-          <field name="arch" type="xml">
-            <xpath expr="/search/group/filter[@string='Thread']" position="before">
-                <filter string="Mail Server" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'fetchmail_server_id'}"/>
-            </xpath>
           </field>
       </record>
 

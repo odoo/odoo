@@ -10,7 +10,7 @@ OpenERP Web LinkedIn module.
 This module provides the Integration of the LinkedIn with OpenERP.
         """,
     'data': ['web_linkedin_view.xml'],
-    'depends' : ['base'],
+    'depends' : ['crm'],
     'js': ['static/src/js/*.js'],
     'css': ['static/src/css/*.css'],
     'qweb': ['static/src/xml/*.xml'],

@@ -8,9 +8,10 @@
             <field name="name">google_docs.config.tree</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
+                <tree string="Google Docs Configuration">
                     <field name="model_id"/>
-                </group>
+                    <field name="name_template"/>
+                </tree>
             </field>
         </record>
 
@@ -18,11 +19,25 @@
             <field name="name">google_docs.config.form</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
-            <group colspan='4'>
-                <field name="model_id"/>
-                <field name='gdocs_resource_id'/>
-                <field name='name_template'/>
-            </group>
+                <form string="Google Docs Configuration" version="7.0">
+                <group>
+                    <field name="model_id"/>
+                    <label for='gdocs_resource_id'/>
+                    <div>
+                        <field name='gdocs_resource_id'/>
+                        <p class="oe_grey">
+This is the id of the template document, on google side. You can find it thanks to its URL:
+<ul>
+<li>for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`</li>
+<li>for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`</li>
+<li>for a presentation (slide show) document with url like `https://docs.google.com/a/openerp.com/presentation/d/123456789/edit#slide=id.p`, the ID is `presentation:123456789`</li>
+<li>for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`</li>
+</ul>
+                        </p>
+                    </div>
+                    <field name='name_template'/>
+                </group>
+                </form>
             </field>
         </record>
 

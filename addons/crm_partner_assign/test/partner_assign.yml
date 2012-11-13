@@ -29,8 +29,8 @@
   I forward this opportunity to its nearest partner.
 -
   !python {model: crm.lead.forward.to.partner}: |
-    context.update({'active_model': 'crm.lead', 'active_id': ref('crm.crm_case_19'), 'active_ids': [ref('crm.crm_case_19')]})
-    forward_id = self.create(cr, uid, {'email_from': 'test@openerp.com', 'send_to': 'partner'}, context=context)
+    context.update({'default_model': 'crm.lead', 'default_res_id': ref('crm.crm_case_19'), 'active_ids': [ref('crm.crm_case_19')]})
+    forward_id = self.create(cr, uid, {}, context=context)
     try:
       self.action_forward(cr, uid, [forward_id], context=context)
     except:

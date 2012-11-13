@@ -197,7 +197,8 @@
           </para>
         </td>
         <td>
-          <para style="P4">[[o.employee_id.address_home_id and o.employee_id.address_home_id.name or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.street or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.street2 or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.zip or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.city or '' ]],[[o.employee_id.address_home_id and o.employee_id.address_home_id.state_id and o.employee_id.address_home_id.state_id.name or '' ]] [[o.employee_id.address_home_id and o.employee_id.address_home_id.country_id and o.employee_id.address_home_id.country_id.name or '' ]]</para>
+          <para style="P4">[[o.employee_id.address_home_id and o.employee_id.address_home_id.name or '' ]]
+                           [[o.employee_id.address_home_id and display_address(o.employee_id.address_home_id)]]</para>
         </td>
       </tr>
     </blockTable>
@@ -293,7 +294,7 @@
             <para style="P4">[[ formatLang(p.amount) ]]</para>
           </td>
           <td>
-            <para style="P5">[[ formatLang(p.total) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+            <para style="P5">[[ formatLang(p.total, currency_obj = o.company_id and o.company_id.currency_id)]]</para>
           </td>
         </tr>
       </blockTable>

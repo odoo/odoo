@@ -24,11 +24,11 @@ import sys, zipfile, xml.dom.minidom
 import StringIO
 
 class OpenDocumentTextFile :
-    def __init__ (self, filepath) :
+    def __init__ (self, filepath):
         zip = zipfile.ZipFile(filepath)
         self.content = xml.dom.minidom.parseString(zip.read("content.xml"))
 
-    def toString (self) :
+    def toString (self):
         """ Converts the document to a string. """
         buffer = u""
         for val in ["text:p", "text:h", "text:list"]:
@@ -36,7 +36,7 @@ class OpenDocumentTextFile :
                 buffer += self.textToString(paragraph) + "\n"
         return buffer
 
-    def textToString(self, element) :
+    def textToString(self, element):
         buffer = u""
         for node in element.childNodes :
             if node.nodeType == xml.dom.Node.TEXT_NODE :

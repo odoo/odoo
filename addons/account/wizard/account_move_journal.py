@@ -38,7 +38,7 @@ class account_move_journal(osv.osv_memory):
     _defaults = {
         'target_move': 'all'
     }
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         """
         Return  default account period value
         """
@@ -92,14 +92,14 @@ class account_move_journal(osv.osv_memory):
 
             journal = False
             if journal_id:
-                journal = journal_pool.read(cr, uid, [journal_id], ['name'])[0]['name']
+                journal = journal_pool.read(cr, uid, journal_id, ['name'], context=context).get('name',False)
                 journal_string = _("Journal: %s") % tools.ustr(journal)
             else:
                 journal_string = _("Journal: All")
 
             period = False
             if period_id:
-                period = period_pool.browse(cr, uid, [period_id], ['name'])[0]['name']
+                period = period_pool.browse(cr, uid, period_id, context=context).name
                 period_string = _("Period: %s") % tools.ustr(period)
 
             open_string = _("Open")

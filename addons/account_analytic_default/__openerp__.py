@@ -38,7 +38,7 @@ Allows to automatically select analytic accounts based on criterions:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_defaults.jpeg'],
-    'depends': ['sale'],
+    'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv', 
         'security/account_analytic_default_security.xml', 
@@ -47,7 +47,6 @@ Allows to automatically select analytic accounts based on criterions:
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0074229833581',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

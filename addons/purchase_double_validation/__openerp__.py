@@ -46,9 +46,7 @@ exceeds minimum amount set by configuration wizard.
     ],
     'demo': [],
     'installable': True,
-    'auto_install': False,
-    'certificate' : '00436592682510544157',
-
+    'auto_install': False
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

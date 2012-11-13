@@ -518,7 +518,6 @@
         <!--
         Account Statement Sequences
         -->
-
         <record id="sequence_reconcile" model="ir.sequence.type">
             <field name="name">Account Reconcile</field>
             <field name="code">account.reconcile</field>
@@ -554,8 +553,6 @@
             <field eval="1" name="number_next"/>
             <field eval="1" name="number_increment"/>
         </record>
-
-
         <!--
         Invoice requests (deprecated)
         -->
@@ -564,7 +561,14 @@
             <field name="object">account.invoice</field>
         </record>
 
-
-
+        <!-- mail: subtypes -->
+        <record id="mt_invoice_new" model="mail.message.subtype">
+            <field name="name">created</field>
+            <field name="res_model">account.invoice</field>
+        </record>
+        <record id="mt_invoice_paid" model="mail.message.subtype">
+            <field name="name">paid</field>
+            <field name="res_model">account.invoice</field>
+        </record>
     </data>
 </openerp>

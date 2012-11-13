@@ -79,7 +79,6 @@ The analytic plan validates the minimum and maximum percentage at the time of cr
     'test': ['test/acount_analytic_plans_report.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0036417675373',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -23,6 +23,7 @@ import time
 
 from osv import fields, osv
 from tools.translate import _
+import decimal_precision as dp
 
 class account_move_line_reconcile(osv.osv_memory):
     """
@@ -32,9 +33,9 @@ class account_move_line_reconcile(osv.osv_memory):
     _description = 'Account move line reconcile'
     _columns = {
         'trans_nbr': fields.integer('# of Transaction', readonly=True),
-        'credit': fields.float('Credit amount', readonly=True),
-        'debit': fields.float('Debit amount', readonly=True),
-        'writeoff': fields.float('Write-Off amount', readonly=True),
+        'credit': fields.float('Credit amount', readonly=True, digits_compute=dp.get_precision('Account')),
+        'debit': fields.float('Debit amount', readonly=True, digits_compute=dp.get_precision('Account')),
+        'writeoff': fields.float('Write-Off amount', readonly=True, digits_compute=dp.get_precision('Account')),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -86,19 +87,6 @@ class account_move_line_reconcile(osv.osv_memory):
         ids = period_obj.find(cr, uid, dt=date, context=context)
         if ids:
             period_id = ids[0]
-        #stop the reconciliation process by partner (manual reconciliation) only if there is nothing more to reconcile for this partner
-        if 'active_ids' in context and context['active_ids']:
-            tmp_ml_id = account_move_line_obj.browse(cr, uid, context['active_ids'], context)[0]
-            partner_id = tmp_ml_id.partner_id and tmp_ml_id.partner_id.id or False
-            debit_ml_ids = account_move_line_obj.search(cr, uid, [('partner_id', '=', partner_id), ('account_id.reconcile', '=', True), ('reconcile_id', '=', False), ('debit', '>', 0)], context=context)
-            credit_ml_ids = account_move_line_obj.search(cr, uid, [('partner_id', '=', partner_id), ('account_id.reconcile', '=', True), ('reconcile_id', '=', False), ('credit', '>', 0)], context=context)
-            for ml_id in context['active_ids']:
-                if ml_id in debit_ml_ids:
-                    debit_ml_ids.remove(ml_id)
-                if ml_id in credit_ml_ids:
-                    credit_ml_ids.remove(ml_id)
-            if not debit_ml_ids and credit_ml_ids:
-                context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                                         period_id, journal_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
@@ -166,7 +154,6 @@ class account_move_line_reconcile_writeoff(osv.osv_memory):
         if ids:
             period_id = ids[0]
 
-        context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                 period_id, journal_id, context=context)
         return {'type': 'ir.actions.act_window_close'}

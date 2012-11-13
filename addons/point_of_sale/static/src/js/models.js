@@ -1,9 +1,6 @@
 function openerp_pos_models(instance, module){ //module is instance.point_of_sale
     var QWeb = instance.web.qweb;
 
-    var fetch = function(model, fields, domain, ctx){
-        return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
-    };
     
     // The PosModel contains the Point Of Sale's representation of the backend.
     // Since the PoS must work in standalone ( Without connection to the server ) 
@@ -27,6 +24,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
+            this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode
+
 
             // default attributes values. If null, it will be loaded below.
             this.set({
@@ -51,19 +50,38 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'units':            null,
                 'units_by_id':      null,
 
-                'selectedOrder':    undefined,
+                'selectedOrder':    null,
             });
 
             this.get('orders').bind('remove', function(){ self.on_removed_order(); });
             
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
+            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+            $.when(this.load_server_data())
+                .done(function(){
+                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
+                    self.ready.resolve();
+                }).fail(function(){
+                    //we failed to load some backend data, or the backend was badly configured.
+                    //the error messages will be displayed in PosWidget
+                    self.ready.reject();
+                });
+        },
 
-            var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
-                .pipe(function(users){
+        // helper function to load data from the server
+        fetch: function(model, fields, domain, ctx){
+            return new instance.web.Model(model).query(fields).filter(domain).context(ctx).all()
+        },
+        // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
+        load_server_data: function(){
+            var self = this;
+
+            var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+                .then(function(users){
                     self.set('user',users[0]);
 
-                    return fetch('res.company',
+                    return self.fetch('res.company',
                     [
                         'currency_id',
                         'email',
@@ -75,19 +93,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'partner_id',
                     ],
                     [['id','=',users[0].company_id[0]]]);
-                }).pipe(function(companies){
+                }).then(function(companies){
                     self.set('company',companies[0]);
 
-                    return fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
-                }).pipe(function(company_partners){
+                    return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
+                }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
 
-                    return fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
-                }).pipe(function(currencies){
+                    return self.fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
+                }).then(function(currencies){
                     self.set('currency',currencies[0]);
 
-                    return fetch('product.uom', null, null);
-                }).pipe(function(units){
+                    return self.fetch('product.uom', null, null);
+                }).then(function(units){
                     self.set('units',units);
                     var units_by_id = {};
                     for(var i = 0, len = units.length; i < len; i++){
@@ -95,27 +113,27 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     self.set('units_by_id',units_by_id);
                     
-                    return fetch('product.packaging', null, null);
-                }).pipe(function(packagings){
+                    return self.fetch('product.packaging', null, null);
+                }).then(function(packagings){
                     self.set('product.packaging',packagings);
 
-                    return fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
-                }).pipe(function(users){
+                    return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
+                }).then(function(users){
                     self.set('user_list',users);
 
-                    return fetch('account.tax', ['amount', 'price_include', 'type']);
-                }).pipe(function(taxes){
+                    return self.fetch('account.tax', ['amount', 'price_include', 'type']);
+                }).then(function(taxes){
                     self.set('taxes', taxes);
 
-                    return fetch(
+                    return self.fetch(
                         'pos.session', 
                         ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
                         [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
                     );
-                }).pipe(function(sessions){
+                }).then(function(sessions){
                     self.set('pos_session', sessions[0]);
 
-                    return fetch(
+                    return self.fetch(
                         'pos.config',
                         ['name','journal_ids','shop_id','journal_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
@@ -123,7 +141,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                          'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
                         [['id','=', self.get('pos_session').config_id[0]]]
                     );
-                }).pipe(function(configs){
+                }).then(function(configs){
                     var pos_config = configs[0];
                     self.set('pos_config', pos_config);
                     self.iface_electronic_scale    =  !!pos_config.iface_electronic_scale;  
@@ -132,33 +150,41 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
 
-                    return fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
-                }).pipe(function(shops){
+                    return self.fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
+                }).then(function(shops){
                     self.set('shop',shops[0]);
 
-                    return fetch('pos.category', ['id','name','parent_id','child_id','image'])
-                }).pipe(function(categories){
+                    return self.fetch('product.packaging',['ean','product_id']);
+                }).then(function(packagings){
+                    self.db.add_packagings(packagings);
+
+                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                }).then(function(categories){
                     self.db.add_categories(categories);
 
-                    return fetch(
+                    return self.fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
-                        [['pos_categ_id','!=', false]],
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
+                        [['pos_categ_id','!=', false],['sale_ok','=',true]],
                         {pricelist: self.get('shop').pricelist_id[0]} // context for price
                     );
-                }).pipe(function(products){
+                }).then(function(products){
                     self.db.add_products(products);
 
-                    return fetch(
+                    return self.fetch(
                         'account.bank.statement',
                         ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
                         [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
                     );
-                }).pipe(function(bank_statements){
+                }).then(function(bank_statements){
+                    var journals = new Array();
+                    _.each(bank_statements,function(statement) {
+                        journals.push(statement.journal_id[0])
+                    });
                     self.set('bank_statements', bank_statements);
-
-                    return fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
-                }).pipe(function(journals){
+                    return self.fetch('account.journal', undefined, [['id','in', journals]]);
+                }).then(function(journals){
                     self.set('journals',journals);
 
                     // associate the bank statements with their journals. 
@@ -173,17 +199,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                 });
-
-            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(loaded)
-                .then(function(){ 
-                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
-                    self.ready.resolve();
-                },function(){
-                    //we failed to load some backend data, or the backend was badly configured.
-                    //the error messages will be displayed in PosWidget
-                    self.ready.reject();
-                });
+        
+            return loaded;
         },
 
         // logs the usefull posmodel data to the console for debug purposes
@@ -219,6 +236,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
+            console.log('PUSHING NEW ORDER:',record);
             this.db.add_order(record);
             this.flush();
         },
@@ -234,10 +252,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // and remove the successfully sent ones from the db once
         // it has been confirmed that they have been sent correctly.
         flush: function() {
+            //TODO make the mutex work 
+            console.log('FLUSH');
             //this makes sure only one _int_flush is called at the same time
+            /*
             return this.flush_mutex.exec(_.bind(function() {
                 return this._flush(0);
             }, this));
+            */
+            this._flush(0);
         },
         // attempts to send an order of index 'index' in the list of order to send. The index
         // is used to skip orders that failed. do not call this method outside the mutex provided
@@ -246,6 +269,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
             var orders = this.db.get_orders();
             self.set('nbr_pending_operations',orders.length);
+            console.log('TRYING TO FLUSH ORDER:',index,'Of',orders.length);
 
             var order  = orders[index];
             if(!order){
@@ -261,6 +285,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 })
                 .done(function(){
                     //remove from db if success
+                    console.log('Order successfully sent');
                     self.db.remove_order(order.id);
                     self._flush(index);
                 });
@@ -294,6 +319,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     });
 
     module.Product = Backbone.Model.extend({
+        get_image_url: function(){
+            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+this.get('id');
+        },
     });
 
     module.ProductCollection = Backbone.Collection.extend({
@@ -323,7 +351,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_discount: function(){
             return this.discount;
         },
-        // FIXME
         get_product_type: function(){
             return this.type;
         },
@@ -417,6 +444,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
                 tax:                this.get_tax(),
+                product_description:      this.get_product().get('description'),
+                product_description_sale: this.get_product().get('description_sale'),
             };
         },
         get_price_without_tax: function(){
@@ -436,7 +465,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var product_list = this.pos.get('product_list');
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = product.get('taxes_id');;
             var taxes =  self.pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
@@ -537,6 +566,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos =     attributes.pos; 
             this.selected_orderline = undefined;
             this.screen_data = {};  // see ScreenSelector
+            this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             return this;
         },
         generateUniqueId: function() {
@@ -587,6 +617,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return sum + orderLine.get_price_with_tax();
             }), 0);
         },
+        getDiscountTotal: function() {
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            }), 0);
+        },
         getTotalTaxExcluded: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_without_tax();
@@ -607,6 +642,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
+        },
+        // sets the type of receipt 'receipt'(default) or 'invoice'
+        set_receipt_type: function(type){
+            this.receipt_type = type;
+        },
+        get_receipt_type: function(){
+            return this.receipt_type;
         },
         // the client related to the current order.
         set_client: function(client){

@@ -30,7 +30,6 @@ class report_rappel(report_sxw.rml_parse):
         self.localcontext.update({
             'time': time,
             'ids_to_objects': self._ids_to_objects,
-            'adr_get': self._adr_get,
             'getLines': self._lines_get,
             'get_text': self._get_text
         })
@@ -42,11 +41,6 @@ class report_rappel(report_sxw.rml_parse):
             if line not in all_lines:
                 all_lines.append(line)
         return all_lines
-
-    def _adr_get(self, stat_line, type):
-        res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
-        adr = res_partner.address_get(self.cr, self.uid, [stat_line.partner_id.id], [type])[type]
-        return adr and res_partner.read(self.cr, self.uid, [adr]) or [{}]
 
     def _lines_get(self, stat_by_partner_line):
         pool = pooler.get_pool(self.cr.dbname)

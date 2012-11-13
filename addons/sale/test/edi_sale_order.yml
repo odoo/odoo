@@ -73,7 +73,6 @@
                 "__import_module": "sale",
                 "__import_model": "sale.order.line",
                 "name": "PC Assemble SC234",
-                "date_planned": "2011-09-30",
                 "price_unit": 150.0,
                 "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_3", "[PCSC234] PC Assemble SC234"],
                 "product_qty": 1.0,
@@ -86,7 +85,6 @@
                 "__import_module": "sale",
                 "__import_model": "sale.order.line",
                 "name": "PC on Demand",
-                "date_planned": "2011-09-15",
                 "price_unit": 100.0,
                 "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_5", "[PC-DEM] PC on Demand"],
                 "product_qty": 2.0,
@@ -108,12 +106,10 @@
     assert len(order_new.order_line) == 2, "Sale order lines mismatch"
     for sale_line in order_new.order_line:
         if sale_line.name == 'PC Assemble SC234':
-            assert sale_line.delay == 18 , "incorrect delay: got %s, expected 18"%(sale_line.delay,)
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
             assert sale_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 1 , "product qty is not same"
         elif sale_line.name == 'PC on Demand':
-            assert sale_line.delay == 3 , "incorrect delay: got %s, expected 3"%(sale_line.delay,)
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
             assert sale_line.price_unit == 100 , "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 2 , "product qty is not same"

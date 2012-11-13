@@ -32,7 +32,6 @@ class report_print_check(report_sxw.rml_parse):
             'time': time,
             'get_lines': self.get_lines,
             'fill_stars' : self.fill_stars,
-            'get_zip_line': self.get_zip_line,
         })
     def fill_stars(self, amount):
         amount = amount.replace('Dollars','')
@@ -41,25 +40,6 @@ class report_print_check(report_sxw.rml_parse):
             return ' '.join([amount,'*'*stars])
 
         else: return amount
-
-    def get_zip_line(self, address):
-        '''
-        Get the address line
-        '''
-        ret = ''
-        if address:
-            if address.city:
-                ret += address.city
-            if address.state_id:
-                if address.state_id.name:
-                    if ret:
-                        ret += ', '
-                    ret += address.state_id.name
-            if address.zip:
-                if ret:
-                    ret += ' '
-                ret += address.zip
-        return ret
     
     def get_lines(self, voucher_lines):
         result = []

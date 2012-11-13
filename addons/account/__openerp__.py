@@ -63,6 +63,8 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_use_model_view.xml',
         'account_installer.xml',
         'wizard/account_period_close_view.xml',
+        'wizard/account_reconcile_view.xml',
+        'wizard/account_unreconcile_view.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',
@@ -85,14 +87,12 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_journal_select_view.xml',
         'wizard/account_change_currency_view.xml',
         'wizard/account_validate_move_view.xml',
-        'wizard/account_unreconcile_view.xml',
         'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
         'wizard/account_report_partner_balance_view.xml',
         'wizard/account_report_account_balance_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
-        'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'wizard/account_financial_report_view.xml',
@@ -126,6 +126,14 @@ for a particular financial year and for preparation of vouchers there is a modul
         'res_config_view.xml',
         'account_pre_install.yml'
     ],
+    'js': [
+        'static/src/js/account_move_reconciliation.js',
+    ],
+    'qweb' : [
+        "static/src/xml/account_move_reconciliation.xml",
+    ],
+    'css':['static/src/css/account_move_reconciliation.css'
+    ],
     'demo': [
         'demo/account_demo.xml',
         'project/project_demo.xml',
@@ -151,6 +159,5 @@ for a particular financial year and for preparation of vouchers there is a modul
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

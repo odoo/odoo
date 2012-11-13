@@ -15,7 +15,7 @@
                 <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}">
                     <separator string="Accounting Information" colspan="2"/>
                     <field name="journal_id"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                 </group>
             </group>
         </field>
@@ -28,7 +28,7 @@
         <field name="inherit_id" ref="base.view_partner_bank_tree"/>
         <field name="arch" type="xml">
             <field name="acc_number" position="after">
-                <field name="currency_id"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
             </field>
         </field>
     </record>

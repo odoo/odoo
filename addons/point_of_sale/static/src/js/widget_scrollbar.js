@@ -63,12 +63,12 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             this.update_scroller_dimensions(false);
             this.update_button_status();
             this.auto_hide(false);
-            this.$element.bind('mousewheel',function(event,delta){
+            this.$el.bind('mousewheel',function(event,delta){
                 self.scroll(delta*self.wheel_step);
                 return false;
             });
-            this.$element.bind('click',function(event){
-                var vpos = event.pageY - self.$element.offset().top;
+            this.$el.bind('click',function(event){
+                var vpos = event.pageY - self.$el.offset().top;
                 var spos = self.scroller_dimensions();
                 if(vpos > spos.bar_pos && vpos < spos.pos){
                     self.page_up();
@@ -106,9 +106,9 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         // shows the scrollbar. if animated is true, it will do it in an animated fashion
         show: function(animated){   //FIXME: animated show and hide don't work ... ? 
             if(animated){
-                this.$element.show().animate({'width':'48px'}, 500, 'swing');
+                this.$el.show().animate({'width':'48px'}, 500, 'swing');
             }else{
-                this.$element.show().css('width','48px');
+                this.$el.show().css('width','48px');
             }
             this.on_show(this);
         },
@@ -117,9 +117,9 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
         hide: function(animated){
             var self = this;
             if(animated){
-                this.$element.animate({'width':'0px'}, 500, 'swing', function(){ self.$element.hide();});
+                this.$el.animate({'width':'0px'}, 500, 'swing', function(){ self.$el.hide();});
             }else{
-                this.$element.hide().css('width','0px');
+                this.$el.hide().css('width','0px');
             }
             this.on_hide(this);
         },
@@ -136,7 +136,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
             var button_up_height = this.$('.up-button')[0].offsetHeight || 48;
             var button_down_height = this.$('.down-button')[0].offsetHeight || 48;
             
-            var bar_height = this.$element[0].offsetHeight || 96;
+            var bar_height = this.$el[0].offsetHeight || 96;
             var scrollbar_height = bar_height - button_up_height - button_down_height;
             
             scroller_pos = scroller_pos * scrollbar_height + button_up_height;
@@ -205,7 +205,7 @@ function openerp_pos_scrollbar(instance, module){ //module is instance.point_of_
                 if(this.target_selector){
                     return this.target_widget.$(this.target_selector);
                 }else{
-                    return this.target_widget.$element;
+                    return this.target_widget.$el;
                 }
             }else if(this.target_selector){
                 return $(this.target_selector);

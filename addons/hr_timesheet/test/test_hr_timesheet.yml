@@ -23,7 +23,7 @@
     import time
     uid = ref('base.user_demo')
     new_id = self.create(cr, uid, {'emp_id': ref('hr.employee_qdp'), 'name': 'Quentin Paolino',
-    'server_date': time.strftime('%Y-%m-%d %H:%M:%S'), 'state': 'present'})
+    'server_date': time.strftime('%Y-%m-%d %H:%M:%S')})
     self.sign_in_result(cr, uid, [new_id], context)
 -
   I change my project "Thymbra" and I click on the "Change Work" button of this wizard

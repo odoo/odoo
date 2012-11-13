@@ -22,6 +22,11 @@
         </field>
     </record>
 
+    <!-- the presence of 'analytics_id' makes the order lines non-editable -->
+    <record id="sale.view_order_form_editable_list" model="ir.ui.view">
+        <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+    </record>
+
     <record model="ir.ui.view" id="view_order_line_form2_inherit">
         <field name="name">sale.order.line.form2.inherit</field>
         <field name="model">sale.order.line</field>

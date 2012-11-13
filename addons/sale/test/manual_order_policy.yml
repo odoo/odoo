@@ -1,5 +1,5 @@
 -
-  I confirm the Quotation with "Deliver & invoice on demand".
+  I confirm the Quotation with "On Demand" order policy.
 -
   !workflow {model: sale.order, action: order_confirm, ref: sale_order_2}
 -
@@ -9,44 +9,34 @@
     sale_order = self.browse(cr, uid, ref("sale_order_2"))
     assert len(sale_order.invoice_ids) == False, "Invoice should not created."
 -
-  I create advance invoice.
+  I create advance invoice where type is 'Fixed Price'.
 -
   !python {model: sale.advance.payment.inv}: |
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
     order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("sale_order_line_4"), context=context)
-    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'product_id': order_line.product_id.id, 'amount': order_line.price_unit})
     self.create_invoices(cr, uid, [pay_id], context=ctx)
 -
-  I check Invoice which made advance
+  I check Invoice which made advance.
 -
   !python {model: sale.order}: |
     order = self.browse(cr, uid, ref('sale_order_2'))
     assert order.invoice_ids, "Invoice should be created after make advance invoice."
 -
-  I create Invoice from sale order line.
+  I create advance invoice where type is 'Invoice all the Sale Order'.
 -
-  !python {model: sale.order.line.make.invoice}: |
+  !python {model: sale.advance.payment.inv}: |
     ctx = context.copy()
-    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_5")], "active_id":ref("sale_order_line_5")})
-    self.make_invoices(cr, uid, [], context=ctx)
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
 -
-  I check Invoice which made from sale order line.
+  I check Invoice which made advance where type is 'Invoice all the Sale Order'.
 -
-  !python {model: sale.order.line}: |
-    line = self.browse(cr, uid, ref('sale_order_line_5'))
-    assert line.invoiced, "Line is not invoiced."
-    assert line.invoice_lines, "Invoice line should be created."
--
-  I create manual Invoice for order.
--
-  !record {model: sale.make.invoice, id: sale_make_invoice_1}:
-    invoice_date: !eval time.strftime('%Y-%m-%d')
--
-  !python {model: sale.make.invoice}: |
-    ctx = context.copy()
-    ctx = ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_2")], "active_id":ref("sale_order_2")})
-    self.make_invoices(cr, uid, [ref("sale_make_invoice_1")], context)
+  !python {model: sale.order}: |
+    order = self.browse(cr, uid, ref('sale_order_2'))
+    assert order.invoice_ids, "Invoice should be created after make advance invoice where type is 'Invoice all the Sale Order'."
 -
   I open the Invoice.
 -
@@ -57,7 +47,7 @@
     for invoice in so.invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
 -
-  I pay the invoice
+  I pay the invoice.
 -
   !python {model: account.invoice}: |
     sale_order = self.pool.get('sale.order')
@@ -75,14 +65,6 @@
   !python {model: sale.order}: |
     sale_order = self.browse(cr, uid, ref("sale_order_2"))
     assert sale_order.invoice_ids, "Invoice should be created."
-    assert sale_order.invoiced, "Order is not invoiced."
-    assert sale_order.state == 'manual', 'Order should be in Manual.'
-    
--
-  I set order policy "Deliver & invoice on demand" as default policy.
--
-  !record {model: sale.config.settings, id: sale_configuration_0}:
-    default_order_policy: 'manual'
--
-  !python {model: sale.config.settings}: |
-    self.execute(cr, uid, [ref("sale_configuration_0")], context=context)
+    assert sale_order.invoice_exists, "Order is not invoiced."
+    assert sale_order.invoiced, "Order is not paid."
+    assert sale_order.state == 'done', 'Order should be Done.'

@@ -9,6 +9,43 @@
   box-shadow: $bsval
 
 .openerp
+  .oe_dashboard_layout_1 .oe_dashboard_column
+    &.index_0
+      width: 100%
+    &.index_1, &.index_2
+      display: none
+  .oe_dashboard_layout_1-1 .oe_dashboard_column
+    width: 50% 
+    &.index_2
+      display: none
+  .oe_dashboard_layout_1-1-1 .oe_dashboard_column
+    width: 33% 
+  .oe_dashboard_layout_2-1 .oe_dashboard_column
+    &.index_0
+      width: 70%
+    &.index_1
+      width: 30%
+    &.index_2
+      display: none
+  .oe_dashboard_layout_1-2 .oe_dashboard_column
+    &.index_0
+      width: 30%
+    &.index_1
+      width: 70%
+    &.index_2
+      display: none
+  .oe_dashboard_layout_selector
+    ul
+      white-space: nowrap
+    li
+      margin: 0
+      padding: 0
+      list-style-type: none
+      float: left
+      .oe_dashboard_selected_layout
+        margin-left: -30px
+        vertical-align: bottom
+        margin-bottom: 10px
   .oe_dashboard_links
     text-align: right
     margin: 0 4px 6px 0
@@ -49,6 +86,11 @@
         .oe_maximize:after
           content: "+"
           margin-left: 4px
+        .oe_header_text
+          visibility: hidden
+          cursor: text
+        span
+          cursor: pointer
       .oe_header_empty
         padding-top: 0
         padding-bottom: 2px
@@ -81,3 +123,4 @@
           > tbody
             tr:nth-child(odd)
               background: transparent
+

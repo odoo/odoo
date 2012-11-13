@@ -49,14 +49,14 @@
   !python {model: product.product}: |
     context.update({'quantity':1, 'date': False, 'partner': ref('base.res_partner_4'), 'pricelist': ref("supplier_pricelist")})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == 785, "cost price is not correspond."
+    assert product.price == 792, "cost price is not correspond."
 -
   I check cost price of LCD Monitor if more than 3 Unit.
 -
   !python {model: product.product}: |
     context.update({'quantity':3})
     product = self.browse(cr, uid, ref("product_product_6"), context=context)
-    assert product.price == 780, "cost price is not correspond."
+    assert product.price == 787, "cost price is not correspond."
 
 -
  I print the sale prices report.

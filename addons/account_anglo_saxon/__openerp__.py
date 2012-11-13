@@ -46,7 +46,6 @@ account.""",
     'data': ['product_view.xml',],
     'auto_install': False,
     'installable': True,
-    'certificate':'00557423080410733581',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

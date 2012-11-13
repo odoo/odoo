@@ -30,7 +30,7 @@ class project_timebox_empty(osv.osv_memory):
         'name': fields.char('Name', size=32)
     }
 
-    def view_init(self, cr , uid , fields_list, context=None):
+    def view_init(self, cr, uid, fields_list, context=None):
         if context is None:
             context = {}
         self._empty(cr, uid, context=context)

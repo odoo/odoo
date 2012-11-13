@@ -47,7 +47,6 @@ associated to every resource. It also manages the leaves of every resource.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '00746371192190459469',
     'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }
 

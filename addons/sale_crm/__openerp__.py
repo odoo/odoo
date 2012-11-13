@@ -49,6 +49,5 @@ modules.
     'test': ['test/sale_crm.yml'],
     'installable': True,
     'auto_install': True,
-    'certificate': '0064360130141',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

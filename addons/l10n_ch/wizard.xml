@@ -1,13 +1,7 @@
 <openerp>
-    <data>
-        <record id="config_call_account_template_l10n_ch" model="ir.actions.todo">
-            <field name="name">Generate Chart of Accounts for l10n_ch</field>
-            <field name="note">Generate Chart of Accounts from a Chart Template. Please let the nuber to 0 for Swiss charts. 
-                This is the same wizard that runs from Financial Management/Configuration/Financial Accounting/Financial
-                Accounts/Generate Chart of Accounts from a Chart Template.</field>
-            <field name="action_id" ref="account.action_wizard_multi_chart"/>
-            <field name="sequence">4</field>
-            <field name="type">automatic</field>
+    <data noupdate="1">
+        <record id="account.action_wizard_multi_chart_todo" model="ir.actions.todo">
+            <field name="state">open</field>
         </record>
     </data>
 </openerp>

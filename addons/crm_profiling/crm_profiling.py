@@ -77,7 +77,7 @@ def _get_parents(cr, uid, ids):
     return ids_to_check
 
 
-def test_prof(cr, uid, seg_id, pid, answers_ids = []):
+def test_prof(cr, uid, seg_id, pid, answers_ids=None):
 
     """ return True if the partner pid fetch the segmentation rule seg_id
         @param cr: the current row, from the database cursor,
@@ -244,6 +244,7 @@ class crm_segmentation(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param ids: List of crm segmentation’s IDs """
 
+        partner_obj = self.pool.get('res.partner')
         categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', \
                             'sales_purchase_active', 'profiling_active'])
         for categ in categs:
@@ -280,8 +281,10 @@ class crm_segmentation(osv.osv):
                 for pid in to_remove_list:
                     partners.remove(pid)
 
-            for partner_id in partners:
-                cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
+            for partner in partner_obj.browse(cr, uid, partners):
+                category_ids = [categ_id.id for categ_id in partner.category_id]
+                if categ['categ_id'][0] not in category_ids:
+                    cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner.id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True

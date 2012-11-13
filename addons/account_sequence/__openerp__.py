@@ -49,7 +49,6 @@ You can customize the following attributes of the sequence:
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '00475376442024623469',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

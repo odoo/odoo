@@ -41,7 +41,6 @@ You can now define the following for a product:
     ],
     'auto_install': False,
     'installable': True,
-    'certificate': '00720153953662760781',
     'images': ['images/products_manufacturer.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
