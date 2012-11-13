@@ -708,17 +708,9 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
         return this.do_reload();
     },
-    do_reload: function(id) {
+    do_reload: function() {
         var self = this;
-        return this.rpc("/web/menu/load", id ? {'context': {'default_menu': id}} : {}).done(function(r) {
-            if (id) {
-                _.each(self.data.data.children, function (val) {
-                    if (val.id == id) {
-                        val.children = _.find(r.data.children, function (r_val) {return r_val.id == id;}).children;
-                    }
-                });
-                var r = self.data;
-            }
+        return this.rpc("/web/menu/load", {}).done(function(r) {
             self.menu_loaded(r);
         });
     },
