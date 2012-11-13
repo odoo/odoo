@@ -163,9 +163,10 @@ class mail_compose_message(osv.TransientModel):
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             values['partner_ids'].append(partner_id)
-        partner_ids = values.pop('email_recipients', '').split(',')
-        for partner_id in partner_ids:
-            values['partner_ids'].append(int(partner_id))
+        email_recipients = values.pop('email_recipients', '')
+        if email_recipients:
+            for partner_id in email_recipients.split(','):
+                values['partner_ids'].append(int(partner_id))
 
         values['partner_ids'] = list(set(values['partner_ids']))
 
