@@ -2152,17 +2152,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
 
     set_dimensions: function (height, width) {
-        // remove width css property
-        this.$el.css('width', '');
-        // extract style (without width)
-        var old_style = this.$el.attr('style');
-        // jQuery doesn't understand/use !important
-        var style = 'width:' + width + 'px !important;';
-        if (old_style) {
-            style += old_style
-        }
-        this.$el.attr('style', style);
-        this.$el.css('minHeight', height);
+        this.$el.css({
+            width: width,
+            minHeight: height
+        });
     },
     commit_value: function() {
         return $.when();
