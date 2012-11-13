@@ -2156,7 +2156,7 @@ instance.web.list.Boolean = instance.web.list.Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+        return _.str.sprintf('<input type="checkbox" %s readonly="readonly"/>',
                  row_data[this.id].value ? 'checked="checked"' : '');
     }
 });
