@@ -28,7 +28,7 @@ class hr_config_settings(osv.osv_memory):
     _columns = {
         'module_hr_timesheet_sheet': fields.boolean('Allow timesheets validation by managers',
             help ="""This installs the module hr_timesheet_sheet."""),
-        'module_hr_attendance': fields.boolean('Track attendances',
+        'module_hr_attendance': fields.boolean('Install attendances feature',
             help ="""This installs the module hr_attendance."""),
         'module_hr_timesheet': fields.boolean('Manage timesheets',
             help ="""This installs the module hr_timesheet."""),
@@ -42,6 +42,8 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_contract."""),
         'module_hr_evaluation': fields.boolean('Organize employees periodic evaluation',
             help ="""This installs the module hr_evaluation."""),
+        'module_account_analytic_analysis': fields.boolean('Allow invoicing based on timesheets (the sale application will be installed)',
+            help ="""This installs the module account_analytic_analysis, which will install sales management too."""),
         'module_hr_payroll': fields.boolean('Manage payroll',
             help ="""This installs the module hr_payroll."""),
     }

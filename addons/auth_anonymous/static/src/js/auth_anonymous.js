@@ -3,7 +3,7 @@ openerp.auth_anonymous = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
-            return $.when(this._super()).pipe(function() {
+            return $.when(this._super()).then(function() {
                 var dblist = self._db_list || [];
                 if (!self.session.session_is_valid() && dblist.length === 1) {
                     self.remember_credentials = false;

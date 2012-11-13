@@ -208,7 +208,7 @@ class account_move_line(osv.osv):
             if type(period_id) == str:
                 ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
                 context.update({
-                    'period_id': ids[0]
+                    'period_id': ids and ids[0] or False
                 })
         return context
 
@@ -514,8 +514,7 @@ class account_move_line(osv.osv):
         'analytic_lines': fields.one2many('account.analytic.line', 'move_id', 'Analytic lines'),
         'centralisation': fields.selection([('normal','Normal'),('credit','Credit Centralisation'),('debit','Debit Centralisation'),('currency','Currency Adjustment')], 'Centralisation', size=8),
         'balance': fields.function(_balance, fnct_search=_balance_search, string='Balance'),
-        'state': fields.selection([('draft','Unbalanced'), ('valid','Valid')], 'Status', readonly=True,
-                                  help='When new move line is created the state will be \'Draft\'.\n* When all the payments are done it will be in \'Valid\' state.'),
+        'state': fields.selection([('draft','Unbalanced'), ('valid','Balanced')], 'Status', readonly=True),
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Account', help="The Account can either be a base tax code or a tax code account."),
         'tax_amount': fields.float('Tax/Base Amount', digits_compute=dp.get_precision('Account'), select=True, help="If the Tax account is a tax code account, this field will contain the taxed amount.If the tax account is base tax code, "\
                     "this field will contain the basic amount(without tax)."),
@@ -583,7 +582,7 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                raise osv.except_osv(_('Error!'), _('You cannot create journal items on “View” type account %s %s.') % (l.account_id.code, l.account_id.name))
+                return False
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
@@ -918,7 +917,7 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
                 partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
@@ -976,7 +975,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if view_type != 'tree':
+        if (view_type != 'tree') or view_id:
             #Remove the toolbar from the form view
             if view_type == 'form':
                 if result.get('toolbar', False):
@@ -1235,16 +1234,16 @@ class account_move_line(osv.osv):
                 vals['company_id'] = company_id[0]
         if ('account_id' in vals) and not account_obj.read(cr, uid, vals['account_id'], ['active'])['active']:
             raise osv.except_osv(_('Bad Account!'), _('You cannot use an inactive account.'))
-        if 'journal_id' in vals:
+        if 'journal_id' in vals and vals['journal_id']:
             context['journal_id'] = vals['journal_id']
-        if 'period_id' in vals:
+        if 'period_id' in vals and vals['period_id']:
             context['period_id'] = vals['period_id']
         if ('journal_id' not in context) and ('move_id' in vals) and vals['move_id']:
             m = move_obj.browse(cr, uid, vals['move_id'])
             context['journal_id'] = m.journal_id.id
             context['period_id'] = m.period_id.id
         #we need to treat the case where a value is given in the context for period_id as a string
-        if 'period_id' not in context or not isinstance(context.get('period_id', ''), (int, long)):
+        if 'period_id' in context and not isinstance(context.get('period_id', ''), (int, long)):
             period_candidate_ids = self.pool.get('account.period').name_search(cr, uid, name=context.get('period_id',''))
             if len(period_candidate_ids) != 1:
                 raise osv.except_osv(_('Error!'), _('No period found or more than one period found for the given date.'))
@@ -1254,6 +1253,9 @@ class account_move_line(osv.osv):
         self._update_journal_check(cr, uid, context['journal_id'], context['period_id'], context)
         move_id = vals.get('move_id', False)
         journal = journal_obj.browse(cr, uid, context['journal_id'], context=context)
+        vals['journal_id'] = vals.get('journal_id') or context.get('journal_id')
+        vals['period_id'] = vals.get('period_id') or context.get('period_id')
+        vals['date'] = vals.get('date') or context.get('date')
         if not move_id:
             if journal.centralisation:
                 #Check for centralisation

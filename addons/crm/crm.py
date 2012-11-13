@@ -77,7 +77,7 @@ class crm_case_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(AVAILABLE_STATES, 'Related Status', required=True,
             help="The status of your document will automatically change regarding the selected stage. " \
-                "For example, if a stage is related to the state 'Close', when your document reaches this stage, it is automatically closed."),
+                "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
@@ -115,7 +115,6 @@ class crm_case_section(osv.osv):
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
-        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
@@ -137,7 +136,6 @@ class crm_case_section(osv.osv):
 
     _defaults = {
         'active': 1,
-        'allow_unlink': 1,
         'stage_ids': _get_stage_common,
         'alias_domain': False, # always hide alias during creation
     }

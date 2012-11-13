@@ -99,7 +99,8 @@ class res_users(osv.Model):
 
     def write(self, cr, uid, ids, vals, context=None):
         # User alias is sync'ed with login
-        if vals.get('login'): vals['alias_name'] = vals['login']
+        if vals.get('login'):
+            vals['alias_name'] = vals['login']
         return super(res_users, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -110,13 +111,31 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
+        """ Redirect the posting of message on res.users to the related partner.
+            This is done because when giving the context of Chatter on the
+            various mailboxes, we do not have access to the current partner_id.
+            We therefore post on the user and redirect on its partner. """
         assert thread_id, "res.users does not support posting global messages"
         if context and 'thread_model' in context:
             context['thread_model'] = 'res.partner'
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
-        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
+        return self.pool.get('res.partner').message_post_api(cr, uid, partner_id, body=body, subject=subject,
+            parent_id=parent_id, attachment_ids=attachment_ids, context=context)
+
+    def message_post(self, cr, uid, thread_id, context=None, **kwargs):
+        """ Redirect the posting of message on res.users to the related partner.
+            This is done because when giving the context of Chatter on the
+            various mailboxes, we do not have access to the current partner_id.
+            We therefore post on the user and redirect on its partner. """
+        assert thread_id, "res.users does not support posting global messages"
+        if context and 'thread_model' in context:
+            context['thread_model'] = 'res.partner'
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):

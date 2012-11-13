@@ -22,11 +22,12 @@
 import mail_message_subtype
 import mail_alias
 import mail_followers
+import mail_vote
+import mail_favorite
 import mail_message
 import mail_mail
 import mail_thread
 import mail_group
-import mail_vote
 import res_partner
 import res_users
 import report
@@ -36,4 +37,3 @@ import mail_group_menu
 import update
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

@@ -94,6 +94,8 @@ class TestMailMockups(common.TransactionCase):
         self._build_email_kwargs_list = []
 
     def _mock_build_email(self, *args, **kwargs):
+        """ Mock build_email to be able to test its values. Store them into
+            some internal variable for latter processing. """
         self._build_email_args_list.append(args)
         self._build_email_kwargs_list.append(kwargs)
         return self._build_email(*args, **kwargs)
@@ -123,6 +125,7 @@ class test_mail(TestMailMockups):
 
     def setUp(self):
         super(test_mail, self).setUp()
+        cr, uid = self.cr, self.uid
         self.ir_model = self.registry('ir.model')
         self.mail_alias = self.registry('mail.alias')
         self.mail_thread = self.registry('mail.thread')
@@ -135,19 +138,27 @@ class test_mail(TestMailMockups):
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
-        self.user_demo = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+        # Find Employee group
+        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
+        group_employee_id = group_employee_ref and group_employee_ref[1] or False
+        # Test users
+        self.user_raoul_id = self.res_users.create(cr, uid,
+            {'name': 'Raoul Grosbedon', 'email': 'raoul@raoul.fr', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
+        self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
+        self.user_admin = self.res_users.browse(cr, uid, uid)
 
         # Mock send_get_mail_body to test its functionality without other addons override
         self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
         self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
 
         # groups@.. will cause the creation of new mail groups
-        self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model', '=', 'mail.group')])[0]
-        self.mail_alias.create(self.cr, self.uid, {'alias_name': 'groups',
+        self.mail_group_model_id = self.ir_model.search(cr, uid, [('model', '=', 'mail.group')])[0]
+        self.mail_alias.create(cr, uid, {'alias_name': 'groups',
                                                    'alias_model_id': self.mail_group_model_id})
         # create a 'pigs' group that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
+        self.group_pigs_id = self.mail_group.create(cr, uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+        self.group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
     def tearDown(self):
         # Remove mocks
@@ -155,7 +166,8 @@ class test_mail(TestMailMockups):
         super(test_mail, self).tearDown()
 
     def test_00_message_process(self):
-        cr, uid = self.cr, self.uid
+        """ Testing incoming emails processing. """
+        cr, uid, user_raoul = self.cr, self.uid, self.user_raoul
         # Incoming mail creates a new mail_group "frogs"
         self.assertEqual(self.mail_group.search(cr, uid, [('name', '=', 'frogs')]), [])
         mail_frogs = MAIL_TEMPLATE.format(to='groups@example.com, other@gmail.com', subject='frogs', extra='')
@@ -193,18 +205,35 @@ class test_mail(TestMailMockups):
         self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
                          'plaintext mail incorrectly parsed')
 
-    def test_10_many2many_reference_field(self):
+        # Do: post a new message, with a known partner
+        test_msg_id = '<deadcafe.1337-2@smtp.agrolait.com>'
+        TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', user_raoul.email)
+        mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='extra news', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_new)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
+        # Test: author_id set, not email_from
+        self.assertEqual(new_mail.author_id, user_raoul.partner_id, 'message process wrong author found')
+        self.assertFalse(new_mail.email_from, 'message process should not set the email_from when an author is found')
+
+        # Do: post a new message, with a unknown partner
+        test_msg_id = '<deadcafe.1337-3@smtp.agrolait.com>'
+        TEMPLATE_MOD = MAIL_TEMPLATE_PLAINTEXT.replace('Sylvie Lelitre <sylvie.lelitre@agrolait.com>', '_abcd_')
+        mail_new = TEMPLATE_MOD.format(to='Friendly Frogs <group+frogs@example.com>', subject='super news', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_new)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
+        # Test: author_id set, not email_from
+        self.assertFalse(new_mail.author_id, 'message process shnould not have found a partner for _abcd_ email address')
+        self.assertIn('_abcd_', new_mail.email_from, 'message process should set en email_from when not finding a partner_id')
+
+    def test_10_followers_function_field(self):
         """ Tests designed for the many2many function field 'follower_ids'.
             We will test to perform writes using the many2many commands 0, 3, 4,
             5 and 6. """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
 
-        # Create partner Bert Poilu
+        # Data: create partner Bert Poilu
         partner_bert_id = self.res_partner.create(cr, uid, {'name': 'Bert Poilu'})
-
-        # Create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
+        # Data: create 'disturbing' values in mail.followers: same res_id, other res_model; same res_model, other res_id
         group_dummy_id = self.mail_group.create(cr, uid,
             {'name': 'Dummy group'})
         self.mail_followers.create(cr, uid,
@@ -257,11 +286,9 @@ class test_mail(TestMailMockups):
 
     def test_11_message_followers_and_subtypes(self):
         """ Tests designed for the subscriber API as well as message subtypes """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         # Data: user Raoul
-        user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul'})
+        user_raoul_id = self.user_raoul_id
         user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
         # Data: message subtypes
         self.mail_message_subtype.create(cr, uid, {'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.group'})
@@ -281,7 +308,6 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
-        self.assertEqual(len(follower_ids), 2, 'There should be 2 Pigs fans')
         self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]), 'Admin and Raoul should be the only 2 Pigs fans')
         # Test: Raoul follows default subtypes
         fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_raoul.partner_id.id)])
@@ -307,19 +333,34 @@ class test_mail(TestMailMockups):
         # CASE2: test mail_thread fields
         # ----------------------------------------
 
-        group_pigs.refresh()
-        self.assertEqual(set(group_pigs.message_subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
-        self.assertFalse(group_pigs.message_subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
-        self.assertTrue(group_pigs.message_subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
-        self.assertTrue(group_pigs.message_subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
+        subtype_data = group_pigs._get_subscription_data(None, None)[group_pigs.id]['message_subtype_data']
+        self.assertEqual(set(subtype_data.keys()), set(['Discussions', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['Discussions']['followed'], 'Admin should not follow Discussions in pigs')
+        self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
+        self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
-    def test_20_message_post(self):
+    def test_20_message_quote_context(self):
         """ Tests designed for message_post. """
-        cr, uid = self.cr, self.uid
-        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
 
+        msg1_id = self.mail_message.create(cr, uid, {'body': 'Thread header about Zap Brannigan', 'subject': 'My subject'})
+        msg2_id = self.mail_message.create(cr, uid, {'body': 'First answer, should not be displayed', 'subject': 'Re: My subject', 'parent_id': msg1_id})
+        msg3_id = self.mail_message.create(cr, uid, {'body': 'Second answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
+        msg4_id = self.mail_message.create(cr, uid, {'body': 'Third answer', 'subject': 'Re: My subject', 'parent_id': msg1_id})
+        msg_new_id = self.mail_message.create(cr, uid, {'body': 'My answer I am propagating', 'subject': 'Re: My subject', 'parent_id': msg1_id})
+
+        result = self.mail_message.message_quote_context(cr, uid, msg_new_id, limit=3)
+        self.assertIn('Thread header about Zap Brannigan', result, 'Thread header content should be in quote.')
+        self.assertIn('Second answer', result, 'Answer should be in quote.')
+        self.assertIn('Third answer', result, 'Answer should be in quote.')
+        self.assertIn('expandable', result, 'Expandable should be present.')
+        self.assertNotIn('First answer, should not be displayed', result, 'Old answer should not be in quote.')
+        self.assertNotIn('My answer I am propagating', result, 'Thread header content should be in quote.')
+
+    def test_21_message_post(self):
+        """ Tests designed for message_post. """
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -345,11 +386,12 @@ class test_mail(TestMailMockups):
         # CASE1: post comment, body and subject specified
         # ----------------------------------------
 
+        # 1. Post a new comment on Pigs
         self._init_mock_build_email()
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment', subtype='mt_comment')
         message = self.mail_message.browse(cr, uid, msg_id)
         sent_emails = self._build_email_kwargs_list
-        # Test: notifications have been deleted
+        # Test: mail.mail notifications have been deleted
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id)]), 'mail.mail notifications should have been auto-deleted!')
         # Test: mail_message: subject is _subject, body is _body1 (no formatting done)
         self.assertEqual(message.subject, _subject, 'mail.message subject incorrect')
@@ -361,11 +403,11 @@ class test_mail(TestMailMockups):
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
             self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
-        # Test: mail_message: partner_ids = group followers
-        message_pids = set([partner.id for partner in message.partner_ids])
+        # Test: mail_message: notified_partner_ids = group followers
+        message_pids = set([partner.id for partner in message.notified_partner_ids])
         test_pids = set([p_b_id, p_c_id])
         self.assertEqual(test_pids, message_pids, 'mail.message partners incorrect')
-        # Test: notification linked to this message = group followers = partner_ids
+        # Test: notification linked to this message = group followers = notified_partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
@@ -377,29 +419,28 @@ class test_mail(TestMailMockups):
         # CASE2: post an email with attachments, parent_id, partner_ids
         # ----------------------------------------
 
-        # TESTS: automatic subject, signature in body_html, attachments propagation
+        # 1. Post a new email comment on Pigs
         self._init_mock_build_email()
         msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
-
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
         self.assertEqual(message.body, html_sanitize(_body2), 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
-        # Test: sent_email: email send by server: correct subject, body, body_alternative
+        # Test: sent_email: email send by server: correct automatic subject, body, body_alternative
         self.assertEqual(len(sent_emails), 2, 'sent_email number of sent emails incorrect')
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
             self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
             self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
-        # Test: mail_message: partner_ids = group followers
-        message_pids = set([partner.id for partner in message.partner_ids])
+        # Test: mail_message: notified_partner_ids = group followers
+        message_pids = set([partner.id for partner in message.notified_partner_ids])
         test_pids = set([p_b_id, p_c_id, p_d_id])
         self.assertEqual(message_pids, test_pids, 'mail.message partners incorrect')
-        # Test: notifications linked to this message = group followers = partner_ids
+        # Test: notifications linked to this message = group followers = notified_partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
@@ -413,13 +454,16 @@ class test_mail(TestMailMockups):
             self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
                 'mail.message attachment name / data incorrect')
 
-    def test_21_message_compose_wizard(self):
+        # 3. Reply to the last message, check that its parent will be the first message
+        msg_id3 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Test', parent_id=msg_id2)
+        message = self.mail_message.browse(cr, uid, msg_id3)
+        self.assertEqual(message.parent_id.id, msg_id, 'message_post did not flatten the thread structure')
+
+    def test_25_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
-        cr, uid = self.cr, self.uid
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         mail_compose = self.registry('mail.compose.message')
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'})
         group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
@@ -434,7 +478,6 @@ class test_mail(TestMailMockups):
             ]
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
-        # Create partners
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -466,13 +509,12 @@ class test_mail(TestMailMockups):
         # Test: mail.message: subject, body inside pre
         self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
         self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
-        # Test: mail.message: partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
-        msg_pids = [partner.id for partner in message.partner_ids]
+        # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
+        msg_pids = [partner.id for partner in message.notified_partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
-
         self.assertEqual(len(notif_ids), 3, 'mail.message: too much notifications created')
-        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
+        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message notified_partner_ids incorrect')
 
         # ----------------------------------------
         # CASE2: reply to last comment with attachments
@@ -491,7 +533,7 @@ class test_mail(TestMailMockups):
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
         # Test: mail.message: subject as Re:.., body in html, parent_id
         self.assertEqual(compose.subject, _msg_reply, 'mail.message incorrect subject')
-        self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
+        # self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
         self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
@@ -505,7 +547,7 @@ class test_mail(TestMailMockups):
 
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}', 'content_type': 'html'},
+            {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
@@ -529,14 +571,174 @@ class test_mail(TestMailMockups):
         self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message2.body, group_bird.description, 'mail.message body incorrect')
 
+    def test_30_message_read(self):
+        """ Tests for message_read and expandables. """
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        pigs_domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)]
+
+        # Data: create a discussion in Pigs (3 threads, with respectively 0, 4 and 4 answers)
+        msg_id0 = self.group_pigs.message_post(body='0', subtype='mt_comment')
+        msg_id1 = self.group_pigs.message_post(body='1', subtype='mt_comment')
+        msg_id2 = self.group_pigs.message_post(body='2', subtype='mt_comment')
+        msg_id3 = self.group_pigs.message_post(body='1-1', subtype='mt_comment', parent_id=msg_id1)
+        msg_id4 = self.group_pigs.message_post(body='2-1', subtype='mt_comment', parent_id=msg_id2)
+        msg_id5 = self.group_pigs.message_post(body='1-2', subtype='mt_comment', parent_id=msg_id1)
+        msg_id6 = self.group_pigs.message_post(body='2-2', subtype='mt_comment', parent_id=msg_id2)
+        msg_id7 = self.group_pigs.message_post(body='1-1-1', subtype='mt_comment', parent_id=msg_id3)
+        msg_id8 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
+        msg_id9 = self.group_pigs.message_post(body='1-1-1', subtype='mt_comment', parent_id=msg_id3)
+        msg_id10 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
+        msg_ids = [msg_id10, msg_id9, msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0]
+        ordered_msg_ids = [msg_id2, msg_id4, msg_id6, msg_id8, msg_id10, msg_id1, msg_id3, msg_id5, msg_id7, msg_id9, msg_id0]
+
+        # Test: read some specific ids
+        read_msg_list = self.mail_message.message_read(cr, uid, ids=msg_ids[2:4], domain=[('body', 'like', 'dummy')])
+        read_msg_ids = [msg.get('id') for msg in read_msg_list]
+        self.assertEqual(msg_ids[2:4], read_msg_ids, 'message_read with direct ids should read only the requested ids')
+
+        # Test: read messages of Pigs through a domain, being thread or not threaded
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=200)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list]
+        self.assertEqual(msg_ids, read_msg_ids, 'message_read flat with domain on Pigs should equal all messages of Pigs')
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=200, thread_level=1)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list]
+        self.assertEqual(ordered_msg_ids, read_msg_ids,
+            'message_read threaded with domain on Pigs should equal all messages of Pigs, and sort them with newer thread first, last message last in thread')
+
+        # ----------------------------------------
+        # CASE1: message_read with domain, threaded
+        # We simulate an entire flow, using the expandables to test them
+        # ----------------------------------------
+
+        # Do: read last message, threaded
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=1, thread_level=1)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # TDE TODO: test expandables order
+        type_list = map(lambda item: item.get('type'), read_msg_list)
+        # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
+        self.assertEqual(len(read_msg_list), 4, 'message_read on last Pigs message should return 2 messages and 2 expandables')
+        self.assertEqual(set([msg_id2, msg_id10]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
+        self.assertEqual(read_msg_list[1].get('parent_id'), read_msg_list[0].get('id'), 'message_read should set the ancestor to the thread header')
+        # Data: get expandables
+        new_threads_exp, new_msg_exp = None, None
+        for msg in read_msg_list:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
+                new_threads_exp = msg
+            elif msg.get('type') == 'expandable':
+                new_msg_exp = msg
+
+        # Do: fetch new messages in first thread, domain from expandable
+        self.assertIsNotNone(new_msg_exp, 'message_read on last Pigs message should have returned a new messages expandable')
+        domain = new_msg_exp.get('domain', [])
+        # Test: expandable, conditions in domain
+        self.assertIn(('id', 'child_of', msg_id2), domain, 'new messages expandable domain should contain a child_of condition')
+        self.assertIn(('id', '>=', msg_id4), domain, 'new messages expandable domain should contain an id greater than condition')
+        self.assertIn(('id', '<=', msg_id8), domain, 'new messages expandable domain should contain an id less than condition')
+        self.assertEqual(new_msg_exp.get('parent_id'), msg_id2, 'new messages expandable should have parent_id set to the thread header')
+        # Do: message_read with domain, thread_level=0, parent_id=msg_id2 (should be imposed by JS), 2 messages
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=2, thread_level=0, parent_id=msg_id2)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        new_msg_exp = [msg for msg in read_msg_list if msg.get('type') == 'expandable'][0]
+        # Test: structure content, 2 messages and 1 thread expandable
+        self.assertEqual(len(read_msg_list), 3, 'message_read in Pigs thread should return 2 messages and 1 expandables')
+        self.assertEqual(set([msg_id6, msg_id8]), set(read_msg_ids), 'message_read in Pigs thread should return 2 more previous messages in thread')
+        # Do: read the last message
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=new_msg_exp.get('domain'), limit=2, thread_level=0, parent_id=msg_id2)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, 1 message
+        self.assertEqual(len(read_msg_list), 1, 'message_read in Pigs thread should return 1 message')
+        self.assertEqual(set([msg_id4]), set(read_msg_ids), 'message_read in Pigs thread should return the last message in thread')
+
+        # Do: fetch a new thread, domain from expandable
+        self.assertIsNotNone(new_threads_exp, 'message_read on last Pigs message should have returned a new threads expandable')
+        domain = new_threads_exp.get('domain', [])
+        # Test: expandable, conditions in domain
+        for condition in pigs_domain:
+            self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
+        self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an parent_id')
+        # Do: message_read with domain, thread_level=1 (should be imposed by JS)
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=1, thread_level=1)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
+        self.assertEqual(len(read_msg_list), 4, 'message_read on Pigs should return 2 messages and 2 expandables')
+        self.assertEqual(set([msg_id1, msg_id9]), set(read_msg_ids), 'message_read on a Pigs message should also get its parent')
+        self.assertEqual(read_msg_list[1].get('parent_id'), read_msg_list[0].get('id'), 'message_read should set the ancestor to the thread header')
+        # Data: get expandables
+        new_threads_exp, new_msg_exp = None, None
+        for msg in read_msg_list:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
+                new_threads_exp = msg
+            elif msg.get('type') == 'expandable':
+                new_msg_exp = msg
+
+        # Do: fetch new messages in second thread, domain from expandable
+        self.assertIsNotNone(new_msg_exp, 'message_read on Pigs message should have returned a new messages expandable')
+        domain = new_msg_exp.get('domain', [])
+        # Test: expandable, conditions in domain
+        self.assertIn(('id', 'child_of', msg_id1), domain, 'new messages expandable domain should contain a child_of condition')
+        self.assertIn(('id', '>=', msg_id3), domain, 'new messages expandable domain should contain an id greater than condition')
+        self.assertIn(('id', '<=', msg_id7), domain, 'new messages expandable domain should contain an id less than condition')
+        self.assertEqual(new_msg_exp.get('parent_id'), msg_id1, 'new messages expandable should have ancestor_id set to the thread header')
+        # Do: message_read with domain, thread_level=0, parent_id=msg_id1 (should be imposed by JS)
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=200, thread_level=0, parent_id=msg_id1)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: other message in thread have been fetch
+        self.assertEqual(set([msg_id3, msg_id5, msg_id7]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
+
+        # Test: fetch a new thread, domain from expandable
+        self.assertIsNotNone(new_threads_exp, 'message_read should have returned a new threads expandable')
+        domain = new_threads_exp.get('domain', [])
+        # Test: expandable, conditions in domain
+        for condition in pigs_domain:
+            self.assertIn(condition, domain, 'general expandable domain should contain the message_read domain parameter')
+        # Do: message_read with domain, thread_level=1 (should be imposed by JS)
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=1, thread_level=1)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
+        self.assertEqual(len(read_msg_list), 1, 'message_read on Pigs should return 1 message because everything else has been fetched')
+        self.assertEqual([msg_id0], read_msg_ids, 'message_read after 2 More should return only 1 last message')
+
+        # ----------------------------------------
+        # CASE2: message_read with domain, flat
+        # ----------------------------------------
+
+        # Do: read 2 lasts message, flat
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=2, thread_level=0)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is not set, 1 expandable
+        self.assertEqual(len(read_msg_list), 3, 'message_read on last Pigs message should return 2 messages and 1 expandable')
+        self.assertEqual(set([msg_id9, msg_id10]), set(read_msg_ids), 'message_read flat on Pigs last messages should only return those messages')
+        self.assertFalse(read_msg_list[0].get('parent_id'), 'message_read flat should set the ancestor as False')
+        self.assertFalse(read_msg_list[1].get('parent_id'), 'message_read flat should set the ancestor as False')
+        # Data: get expandables
+        new_threads_exp, new_msg_exp = None, None
+        for msg in read_msg_list:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
+                new_threads_exp = msg
+
+        # Do: fetch new messages, domain from expandable
+        self.assertIsNotNone(new_threads_exp, 'message_read flat on the 2 last Pigs messages should have returns a new threads expandable')
+        domain = new_threads_exp.get('domain', [])
+        # Test: expandable, conditions in domain
+        for condition in pigs_domain:
+            self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
+        # Do: message_read with domain, thread_level=0 (should be imposed by JS)
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=20, thread_level=0)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
+        self.assertEqual(len(read_msg_list), 9, 'message_read on Pigs should return 9 messages and 0 expandable')
+        self.assertEqual([msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0], read_msg_ids,
+            'message_read, More on flat, should return all remaning messages')
+
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
-        cr, uid = self.cr, self.uid
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        group_pigs_demo = self.mail_group.browse(cr, self.user_demo, self.group_pigs_id)
-        user_admin = self.res_users.browse(cr, uid, uid)
+        cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
+        user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
+        group_pigs_demo = self.mail_group.browse(cr, self.user_raoul_id, self.group_pigs_id)
+        na_admin_base = self.mail_message._needaction_count(cr, uid, domain=[])
+        na_demo_base = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
 
-        # Demo values: check unread notification = needaction on mail.message
+        # Test: number of unread notification = needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
@@ -544,36 +746,32 @@ class test_mail(TestMailMockups):
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
-        na_count1 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        # Post 2 message on group_pigs as admin, 3 messages as demo user
+        # Do: post 2 message on group_pigs as admin, 3 messages as demo user
         for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
         for dummy in range(3):
             group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
 
-        # Check there are 4 new needaction on mail.message
+        # Test: admin has 3 new notifications (from demo), and 3 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
             ])
-        na_count = self.mail_message._needaction_count(cr, uid, domain=[])
-        self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
-
-        # Check there are 4 needaction on mail.message with particular domain
-        na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(len(notif_ids), na_admin_base + 3, 'Admin should have 3 new unread notifications')
+        na_admin = self.mail_message._needaction_count(cr, uid, domain=[])
+        na_admin_group = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_admin, na_admin_base + 3, 'Admin should have 3 new needaction')
+        self.assertEqual(na_admin_group, 3, 'Admin should have 3 needaction related to Pigs')
+        # Test: demo has 0 new notifications (not a follower, not receiving its own messages), and 0 new needaction
         notif_ids = self.mail_notification.search(cr, uid, [
-            ('partner_id', '=', user_admin.partner_id.id),
-            ('read', '=', False),
-            ('message_id.model','=','mail.group'),
-            ('message_id.res_id','=',self.group_pigs_id)
+            ('partner_id', '=', user_raoul.partner_id.id),
+            ('read', '=', False)
             ])
-        self.assertEqual(len(notif_ids), na_count, 'posted message count does not match needaction count')
-
-        na_count3 = self.mail_message._needaction_count(cr, self.user_demo, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count3-na_count1, 0, 'demo has 0 message: not a follower and do not follow his own messages')
-
-        na_count2 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count2-na_count1, 3, 'admin has 3 messages: 0 from itself as they are marked as read, 3 from demo')
+        self.assertEqual(len(notif_ids), na_demo_base + 0, 'Demo should have 0 new unread notifications')
+        na_demo = self.mail_message._needaction_count(cr, user_raoul.id, domain=[])
+        na_demo_group = self.mail_message._needaction_count(cr, user_raoul.id, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_demo, na_demo_base + 0, 'Demo should have 0 new needaction')
+        self.assertEqual(na_demo_group, 0, 'Demo should have 0 needaction related to Pigs')
 
     def test_50_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""
@@ -603,34 +801,56 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         msg1.refresh()
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
+        # TDE note: python test + debug because of the random error we see with the next assert
+        if len(msg1.child_ids) != 2:
+            msg_ids = self.mail_message.search(cr, uid, [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], limit=10)
+            for new_msg in self.mail_message.browse(cr, uid, msg_ids):
+                print new_msg.subject, '(id', new_msg.id, ')', 'parent_id:', new_msg.parent_id
+                print '\tchild_ids', [child.id for child in new_msg.child_ids]
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
 
-    def test_60_vote(self):
+    def test_60_message_vote(self):
         """ Test designed for the vote/unvote feature. """
-        cr, uid = self.cr, self.uid
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        msg1 = group_pigs.message_post(body='My Body', subject='1')
-        msg1 = self.mail_message.browse(cr, uid, msg1)
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        # Data: post a message on Pigs
+        msg_id = group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
 
-        # Create user Bert Tartopoils
-        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert', 'login': 'bert'})
-        user_bert = self.res_users.browse(cr, uid, user_bert_id)
+        # Do: Admin vote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg has Admin as voter
+        self.assertEqual(set(msg.vote_user_ids), set([user_admin]), 'mail_message vote: after voting, Admin should be in the voter')
+        # Do: Bert vote for msg
+        self.mail_message.vote_toggle(cr, user_raoul.id, [msg.id])
+        msg.refresh()
+        # Test: msg has Admin and Bert as voters
+        self.assertEqual(set(msg.vote_user_ids), set([user_admin, user_raoul]), 'mail_message vote: after voting, Admin and Bert should be in the voters')
+        # Do: Admin unvote for msg
+        self.mail_message.vote_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg has Bert as voter
+        self.assertEqual(set(msg.vote_user_ids), set([user_raoul]), 'mail_message vote: after unvoting, Bert should be in the voter')
 
-        # Test: msg1 and msg2 have void vote_user_ids
-        self.assertFalse(msg1.vote_user_ids, 'newly created message msg1 has not void vote_user_ids')
-        # Do: Admin vote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id])
-        msg1.refresh()
-        # Test: msg1 has Admin as voter
-        self.assertEqual(set(msg1.vote_user_ids), set([user_admin]), 'after voting, Admin is not the voter')
-        # Do: Bert vote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id], [user_bert_id])
-        msg1.refresh()
-        # Test: msg1 has Admin and Bert as voters
-        self.assertEqual(set(msg1.vote_user_ids), set([user_admin, user_bert]), 'after voting, Admin and Bert are not the voters')
-        # Do: Admin unvote for msg1
-        self.mail_message.vote_toggle(cr, uid, [msg1.id])
-        msg1.refresh()
-        # Test: msg1 has Bert as voter
-        self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
+    def test_70_message_favorite(self):
+        """ Tests for favorites. """
+        cr, uid, user_admin, user_raoul, group_pigs = self.cr, self.uid, self.user_admin, self.user_raoul, self.group_pigs
+        # Data: post a message on Pigs
+        msg_id = group_pigs.message_post(body='My Body', subject='1')
+        msg = self.mail_message.browse(cr, uid, msg_id)
+
+        # Do: Admin stars msg
+        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Admin
+        self.assertEqual(set(msg.favorite_user_ids), set([user_admin]), 'mail_message favorite: after starring, Admin should be in favorite_user_ids')
+        # Do: Bert stars msg
+        self.mail_message.favorite_toggle(cr, user_raoul.id, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Admin and Raoul
+        self.assertEqual(set(msg.favorite_user_ids), set([user_admin, user_raoul]), 'mail_message favorite: after starring, Admin and Raoul should be in favorite_user_ids')
+        # Do: Admin unvote for msg
+        self.mail_message.favorite_toggle(cr, uid, [msg.id])
+        msg.refresh()
+        # Test: msg starred by Raoul
+        self.assertEqual(set(msg.favorite_user_ids), set([user_raoul]), 'mail_message favorite: after unstarring, Raoul should be in favorite_user_ids')

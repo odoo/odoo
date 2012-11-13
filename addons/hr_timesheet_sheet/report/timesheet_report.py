@@ -32,6 +32,7 @@ class timesheet_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
+        'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
         'product_id' : fields.many2one('product.product', 'Product'),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
@@ -46,6 +47,7 @@ class timesheet_report(osv.osv):
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
         'date_to': fields.date('Date to',readonly=True),
+        'date_current': fields.date('Current date', required=True),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),
@@ -62,8 +64,12 @@ class timesheet_report(osv.osv):
                     select
                         min(aal.id) as id,
                         htss.name,
+                        aal.date as date,
                         htss.date_from,
                         htss.date_to,
+                        to_char(htss.date_from, 'YYYY-MM-DD') as day,
+                        to_char(htss.date_from, 'YYYY') as year,
+                        to_char(htss.date_from, 'MM') as month,
                         count(*) as nbr,
                         aal.unit_amount as quantity,
                         aal.amount as cost,
@@ -92,6 +98,7 @@ class timesheet_report(osv.osv):
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
                     group by
                         aal.account_id,
+                        aal.date,
                         htss.date_from,
                         htss.date_to,
                         aal.unit_amount,

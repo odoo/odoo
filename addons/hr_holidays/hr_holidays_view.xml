@@ -8,14 +8,14 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_holidays"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_holidays_unread" model="ir.values">
             <field name="name">action_holidays_unread</field>
             <field name="action_id" ref="actions_server_holidays_unread"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_unread'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_unread'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_hr_holidays" />
+            <field name="model_id" ref="model_hr_holidays"/>
             <field name="model">hr.holidays</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -26,14 +26,14 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_hr_holidays"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_holidays_read" model="ir.values">
             <field name="name">action_holidays_read</field>
             <field name="action_id" ref="actions_server_holidays_read"/>
-            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_read'))" />
+            <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_holidays_read'))"/>
             <field name="key">action</field>
-            <field name="model_id" ref="model_hr_holidays" />
+            <field name="model_id" ref="model_hr_holidays"/>
             <field name="model">hr.holidays</field>
             <field name="key2">client_action_multi</field>
         </record>
@@ -46,7 +46,7 @@
                     <field name="date_from"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
-                    <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
+                    <filter icon="terp-camera_test" domain="[('state','in',('confirm','validate1'))]" string="To Approve" name="approve"/>
                     <filter icon="terp-camera_test" domain="[('state','=','validate')]" string="Validated" name="validated"/>
                     <separator/>
                     <filter icon="terp-go-year" name="year" string="Year" domain="[('holiday_status_id.active','=',True)]" help="Filters only on allocations and requests that belong to an holiday type that is 'active' (active field is True)"/>
@@ -83,7 +83,7 @@
             </field>
         </record>
 
-         <record model="ir.ui.view" id="edit_holiday_new">
+        <record id="edit_holiday_new" model="ir.ui.view">
             <field name="name">Leave Request</field>
             <field name="model">hr.holidays</field>
             <field name="priority">1</field>
@@ -93,7 +93,7 @@
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user" />
+                    <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet string="Leave Request">
@@ -101,11 +101,11 @@
                         <group>
                             <field name="name" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <label for="number_of_days_temp" string="Duration"/>
+                            <label for="number_of_days_temp" string="Duration" help="The default duration interval between the start date and the end date is 8 hours.  Feel free to adapt it to your needs."/>
                             <div>
                                 <group col="3">
-                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/><label string="-" class="oe_inline" /> 
-                                    <field name="date_to" nolabel="1" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/>
+                                    <field name="date_from" nolabel="1" on_change="onchange_date_from(date_to, date_from)" required="1" class="oe_inline"/><label string="-" class="oe_inline"/>
+                                    <field name="date_to" nolabel="1" on_change="onchange_date_to(date_to, date_from)" required="1" class="oe_inline"/>
                                 </group>
                                 <div>
                                     <field name="number_of_days_temp" class="oe_inline"/> days
@@ -115,14 +115,14 @@
                         </group>
                         <group>
                             <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" width="130" string="Mode" groups="base.group_hr_user"/>
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')],'invisible':[('holiday_type','=','category')]}" on_change="onchange_employee(employee_id)" groups="base.group_hr_user"/>
                             <field name="department_id" attrs="{'readonly':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                         </group>
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </div>
                 </form>
             </field>
@@ -138,7 +138,7 @@
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
-                    <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user" />
+                    <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
                 <sheet>
@@ -158,8 +158,8 @@
                     <field name="notes" nolabel="1" colspan="4" placeholder="Add a reason..."/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </div>
                 </form>
             </field>
@@ -233,7 +233,6 @@
             </field>
         </record>
 
-
         <record model="ir.ui.view" id="view_holiday">
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
@@ -251,7 +250,6 @@
                     <field name="holiday_status_id" invisible="1"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
-                    <!--field name="type"/-->
                 </tree>
             </field>
         </record>
@@ -268,7 +266,7 @@
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to create a new leave request. 
+                Click to create a new leave request.
               </p><p>
                 Once you have recorded your leave request, it will be sent
                 to a manager for validation. Be sure to set the right leave
@@ -298,7 +296,7 @@
             <field name="view_id" ref="view_holiday_new_calendar"/>
             <field name="act_window_id" ref="open_ask_holidays"/>
         </record>
-        
+
         <menuitem name="My Leave Requests" parent="menu_open_ask_holidays" id="menu_open_ask_holidays_new" action="open_ask_holidays"/>
 
         <record model="ir.actions.act_window" id="request_approve_holidays">
@@ -392,7 +390,7 @@
 
         <menuitem name="Leaves Summary" parent="menu_open_ask_holidays" id="menu_open_company_allocation" action="open_company_allocation" sequence="40"/>
 
-        <!-- holidays status -->
+        <!-- Holidays status -->
         <record id="view_holidays_status_filter" model="ir.ui.view">
             <field name="name">hr.holidays.status.filter</field>
             <field name="model">hr.holidays.status</field>
@@ -443,6 +441,7 @@
                 </tree>
             </field>
         </record>
+
         <record model="ir.ui.view" id="view_holiday_status_normal_tree">
             <field name="name">hr.holidays.status.normal.tree</field>
             <field name="model">hr.holidays.status</field>
@@ -467,7 +466,7 @@
         </record>
 
         <record id="open_view_holiday_status" model="ir.actions.act_window">
-            <field name="name">Leave Type</field>
+            <field name="name">Leave Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>
@@ -477,9 +476,9 @@
         </record>
 
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10" />
+        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10"/>
 
-    <!-- holiday on resource leave -->
+        <!-- Holiday on resource leave -->
         <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
             <field name="name">resource.calendar.leaves.form.inherit</field>
             <field name="model">resource.calendar.leaves</field>
@@ -491,7 +490,7 @@
             </field>
         </record>
 
-    <!--  Shortcuts -->
+        <!-- Shortcuts -->
         <record id="act_hr_employee_holiday_request" model="ir.actions.act_window">
             <field name="name">Leaves</field>
             <field name="type">ir.actions.act_window</field>
@@ -504,8 +503,7 @@
             <field name="view_id" eval="view_holiday"/>
         </record>
 
-       <!--  Assing leave       -->
-
+       <!-- Assing leave -->
         <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
             <field name="name">hr.employee.leave.tree</field>
             <field name="model">hr.employee</field>
@@ -534,7 +532,6 @@
        </record>
 
         <!-- Hr employee inherit Legal Leaves -->
-
         <record id="view_employee_form_leave_inherit" model="ir.ui.view">
             <field name="name">hr.employee.leave.form.inherit</field>
             <field name="model">hr.employee</field>

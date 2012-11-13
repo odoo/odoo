@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:02+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:52+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: event
 #: view:event.event:0
@@ -137,7 +137,7 @@ msgstr "Hendelseregistrering"
 #. module: event
 #: field:event.event,parent_id:0
 msgid "Parent Event"
-msgstr ""
+msgstr "Overordnede hendelse."
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_make_invoices
@@ -152,12 +152,13 @@ msgstr "Subtotal"
 #. module: event
 #: view:report.event.registration:0
 msgid "Event on Registration"
-msgstr ""
+msgstr "Hendelse på registrering"
 
 #. module: event
 #: help:event.event,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
 msgstr ""
+"E-postadressen som satt i \"Svar til\" av alle e-poster sendt av OpenERP."
 
 #. module: event
 #: view:event.registration:0
@@ -195,7 +196,7 @@ msgstr "event.registration.badge"
 #. module: event
 #: field:event.event,mail_auto_confirm:0
 msgid "Mail Auto Confirm"
-msgstr ""
+msgstr "Mail Automatisk Bekreft"
 
 #. module: event
 #: model:product.template,name:event.event_product_1_product_template
@@ -240,7 +241,7 @@ msgstr "Juli"
 #. module: event
 #: help:event.event,register_prospect:0
 msgid "Total of Prospect Registrations"
-msgstr ""
+msgstr "Totalt Prospekt Registreringer"
 
 #. module: event
 #: help:event.event,mail_auto_confirm:0
@@ -248,6 +249,8 @@ msgid ""
 "Check this box if you want to use automatic confirmation emailing or "
 "reminder."
 msgstr ""
+"Kryss av her hvis du ønsker å bruke automatisk bekreftelse av e-post eller "
+"påminnelse."
 
 #. module: event
 #: field:event.registration,ref:0
@@ -322,12 +325,12 @@ msgstr "Bekreftet"
 #. module: event
 #: view:event.confirm.registration:0
 msgid "Registration Confirmation"
-msgstr ""
+msgstr "Registrering Bekreftelse"
 
 #. module: event
 #: view:event.event:0
 msgid "Events in New state"
-msgstr ""
+msgstr "Hendelser i ny stat."
 
 #. module: event
 #: view:report.event.registration:0
@@ -343,7 +346,7 @@ msgstr "Andre talere"
 #. module: event
 #: model:ir.model,name:event.model_event_make_invoice
 msgid "Event Make Invoice"
-msgstr ""
+msgstr "hendelse Gjør Faktura"
 
 #. module: event
 #: help:event.registration,nb_register:0
@@ -367,7 +370,7 @@ msgstr "Send ny e-post"
 #. module: event
 #: help:event.event,register_min:0
 msgid "Provide Minimum Number of Registrations"
-msgstr ""
+msgstr "Gi Minimum antall registreringer"
 
 #. module: event
 #: view:event.event:0
@@ -390,7 +393,7 @@ msgstr "Bekreftede registreringer"
 #. module: event
 #: field:event.event,mail_auto_registr:0
 msgid "Mail Auto Register"
-msgstr ""
+msgstr "Mail Registreres Automatisk"
 
 #. module: event
 #: field:event.event,type:0
@@ -410,6 +413,9 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
+"Denne e-posten vil bli sendt når hendelsen blir bekreftet eller når noen "
+"abonnerer på en bekreftet hendelsen. Dette er også e-post sendt til minne "
+"noen om hendelsen."
 
 #. module: event
 #: field:event.registration,tobe_invoiced:0
@@ -449,7 +455,7 @@ msgstr "Kanseller registrering"
 #: code:addons/event/event.py:399
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Registrert partner har ikke en adresse for å få fakturaen."
 
 #. module: event
 #: view:report.event.registration:0
@@ -497,7 +503,7 @@ msgstr "Bekreft uansett"
 #: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr ""
+msgstr "Advarsel: Hendelsen '% s' har nådd maksimums grensen (% s)."
 
 #. module: event
 #: view:report.event.registration:0
@@ -520,7 +526,7 @@ msgstr "Antall arrangementer"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who will be giving speech at the event."
-msgstr ""
+msgstr "Foredragsholder som skal gi tale på arrangementet."
 
 #. module: event
 #: help:event.event,state:0
@@ -529,6 +535,10 @@ msgid ""
 "particular dates the state is set to 'Confirmed'. If the event is over, the "
 "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
 msgstr ""
+"Hvis hendelse er opprettet, er staten \"Kladd\". Hvis hendelse er bekreftet "
+"for de spesielle datoer staten er satt til \"bekreftet\". Hvis hendelsen er "
+"over, er staten satt til \"Done\". Hvis hendelsen blir avlyst staten er satt "
+"til 'Avbrutt'."
 
 #. module: event
 #: view:event.event:0
@@ -554,7 +564,7 @@ msgstr "Partner"
 #: model:ir.actions.act_window,name:event.act_event_reg
 #: view:report.event.registration:0
 msgid "Events Filling Status"
-msgstr ""
+msgstr "Hendelser Påfyllings Status"
 
 #. module: event
 #: field:event.make.invoice,grouped:0
@@ -564,12 +574,12 @@ msgstr "Gruppering av fakturaer"
 #. module: event
 #: view:event.event:0
 msgid "Mailing"
-msgstr ""
+msgstr "Mailing"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events States"
-msgstr ""
+msgstr "Hendelser stater."
 
 #. module: event
 #: view:board.board:0
@@ -585,7 +595,7 @@ msgstr "Partner fakturert"
 #. module: event
 #: help:event.event,register_max:0
 msgid "Provide Maximum Number of Registrations"
-msgstr ""
+msgstr "Gir maksimal antall registreringer."
 
 #. module: event
 #: field:event.registration,log_ids:0
@@ -600,7 +610,7 @@ msgstr "Logger"
 #: view:report.event.registration:0
 #: field:report.event.registration,state:0
 msgid "State"
-msgstr ""
+msgstr "Stat"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -636,12 +646,12 @@ msgstr "Arrangement gjennomført"
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr ""
+msgstr "Registreringer i ubekreftet staten."
 
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "Totalt Av Åpne og Ferdig Registreringer."
 
 #. module: event
 #: field:event.confirm.registration,msg:0
@@ -651,7 +661,7 @@ msgstr "Melding"
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! You cannot create recursive event."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursive hendelse."
 
 #. module: event
 #: field:event.registration,ref2:0
@@ -688,6 +698,8 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Disse e-postadressene vil bli lagt til kopi-feltet for alle inngående og "
+"utgående e-poster før de sendes. Skill flere e-postadresser med komma."
 
 #. module: event
 #: view:event.make.invoice:0
@@ -707,7 +719,7 @@ msgstr "Lukket"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
+msgstr "Hendelser som er i ny staten."
 
 #. module: event
 #: view:event.event:0
@@ -726,7 +738,7 @@ msgstr "Antall registreringer"
 #. module: event
 #: field:event.event,child_ids:0
 msgid "Child Events"
-msgstr ""
+msgstr "hendelser"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -746,6 +758,9 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"Fakturaer av denne hendelsen registrering vil bli opprettet med dette "
+"produktet. Dermed tillater det deg å angi standard etiketten og regnskap "
+"info du ønsker som standard på disse fakturaene."
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -773,6 +788,8 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
+"Advarsel: Denne hendelsen har ikke nådd sitt Minimum registrering Limit. Er "
+"du sikker på at du vil bekrefte det?"
 
 #. module: event
 #: field:event.registration,active:0
@@ -828,7 +845,7 @@ msgstr "Disse personene vil motta e-post."
 #. module: event
 #: view:event.event:0
 msgid "Set To Draft"
-msgstr ""
+msgstr "Satt til utkast."
 
 #. module: event
 #: code:addons/event/event.py:499
@@ -849,17 +866,17 @@ msgstr "Dato"
 #. module: event
 #: view:event.event:0
 msgid "Registration Email Body"
-msgstr ""
+msgstr "Registrering e-mail Kropp"
 
 #. module: event
 #: view:event.event:0
 msgid "Confirmation Email Body"
-msgstr ""
+msgstr "Bekreftelsen email kropp"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "Registreringer i bekreftet eller gjort staten."
 
 #. module: event
 #: view:event.registration:0
@@ -892,12 +909,12 @@ msgstr "Prisliste"
 #: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
-msgstr ""
+msgstr "Hendelse relaterte har ikke noen definerte produktet."
 
 #. module: event
 #: view:event.event:0
 msgid "Auto Confirmation Email"
-msgstr ""
+msgstr "Automatisk bekreftelse av Email."
 
 #. module: event
 #: view:event.registration:0
@@ -952,7 +969,7 @@ msgstr "Lukk"
 #. module: event
 #: view:event.event:0
 msgid "Event by Registration"
-msgstr ""
+msgstr "Hendelse av registrering."
 
 #. module: event
 #: code:addons/event/event.py:436
@@ -1013,13 +1030,14 @@ msgstr "Svar"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current month"
-msgstr ""
+msgstr "Hendelser opprettet i nåværende måned."
 
 #. module: event
 #: help:event.event,mail_auto_registr:0
 msgid ""
 "Check this box if you want to use automatic emailing for new registration."
 msgstr ""
+"Sjekk denne boksen vis du vil bruke automatisk Emailing for ny registrering."
 
 #. module: event
 #: field:event.event,date_end:0
@@ -1065,7 +1083,7 @@ msgstr "Arrangemnetsregistrering"
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr ""
+msgstr "Denne Emailen vil bli sent når noen abonnerer til hendelsen."
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
@@ -1096,7 +1114,7 @@ msgstr "_Abonner"
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
 msgid "  event Registration "
-msgstr ""
+msgstr "  Hendelse Registrering. "
 
 #. module: event
 #: help:event.event,date_begin:0
@@ -1128,7 +1146,7 @@ msgstr "Februar"
 #. module: event
 #: view:board.board:0
 msgid "Association Dashboard"
-msgstr ""
+msgstr "Tilknytning kontrollpanel."
 
 #. module: event
 #: view:event.event:0
@@ -1175,6 +1193,9 @@ msgid ""
 "This will be the default price used as registration cost when invoicing this "
 "event. Note that you can specify a specific amount for each registration."
 msgstr ""
+"Dette vil være standard som benyttes som registrering kostnader når "
+"fakturering denne hendelsen. Merk at du kan angi et bestemt beløp for hver "
+"registrering."
 
 #. module: event
 #: view:report.event.registration:0
@@ -1212,47 +1233,47 @@ msgstr "Maksimum registreringer"
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursive tilknyttede medlemmer."
 
 #. module: event
 #: field:report.event.registration,date:0
 msgid "Event Start Date"
-msgstr ""
+msgstr "Hendelsens startdato."
 
 #. module: event
 #: view:partner.event.registration:0
 msgid "Event For Registration"
-msgstr ""
+msgstr "Hendelse for registrering."
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
-msgstr ""
+msgstr "Faktura kan ikke opprettes hvis registreringen er i% s tilstand."
 
 #. module: event
 #: view:event.confirm:0
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "Hendelse ."
 
 #. module: event
 #: view:event.event:0
 msgid "Auto Registration Email"
-msgstr ""
+msgstr "Automatisk registrering for Email."
 
 #. module: event
 #: view:event.registration:0
 #: view:report.event.registration:0
 #: field:report.event.registration,total:0
 msgid "Total"
-msgstr ""
+msgstr "Totalt"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
-msgstr ""
+msgstr "Foredragsholder Bekreftet."
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1262,3 +1283,7 @@ msgid ""
 "caldav. Most of the users should work in the Calendar menu, and not in the "
 "list of events."
 msgstr ""
+"Hendelsen er det lave nivået objektet brukes av møte-og andre dokumenter som "
+"skal synkroniseres med mobile enheter eller kalender applikasjoner gjennom "
+"CalDAV. De fleste av brukerne bør arbeide i Kalender-menyen, og ikke i "
+"listen over hendelser."

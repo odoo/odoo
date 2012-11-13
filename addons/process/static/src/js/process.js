@@ -20,7 +20,7 @@ instance.web.ViewManager.include({
         if(this.active_view == 'form') {
             this.record_id = this.views[this.active_view].controller.datarecord.id;
         }
-        this.process_get_object().pipe(function(process) {
+        this.process_get_object().then(function(process) {
             if(process && process.length) {
                 if(process.length > 1) {
                     self.process_selection = process;
@@ -30,7 +30,7 @@ instance.web.ViewManager.include({
                 }
             }
             return $.Deferred().resolve();
-        }).pipe(function() {
+        }).then(function() {
             var def = $.Deferred();
             if(self.process_id) {
                 $.when(self.process_graph_get()).done(function(res) {
@@ -176,6 +176,11 @@ instance.web.ViewManager.include({
                 var notes = new_notes.substring(0,60) +'..';
             }
             r.text(nodes.x+60, nodes.y+30, (notes || new_notes)).attr({"title":nodes.notes,"cursor": "default"});
+            r['image']('/web/static/src/img/icons/gtk-info.png', nodes.x, nodes.y+75, 16, 16)
+              .attr({"cursor": "pointer", "title": "Help"})
+              .click(function() {
+                   window.open(nodes.url || "http://doc.openerp.com/v6.1/index.php?model=" + nodes.model);
+              });
             if(nodes.menu) {
                  r['image']('/web/static/src/img/icons/gtk-jump-to.png', nodes.x+100, nodes.y+75, 16, 16)
                     .attr({"cursor": "pointer", "title": nodes.menu.name})
@@ -216,12 +221,12 @@ instance.web.ViewManager.include({
         var dataset = new instance.web.DataSet(this, 'ir.values', this.session.user_context);
         var action_manager = new instance.web.ActionManager(self);
         dataset.call('get',
-            ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context]).then(function(res) {
+            ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context]).done(function(res) {
                 var action = res[0][res[0].length - 1];
                 self.rpc("/web/action/load", {
                     action_id: action.id,
                     context: dataset.context
-                    }).then(function(result) {
+                    }).done(function(result) {
                         action_manager.replace(self.$el);
                         action_manager.do_action(result.result);
                     })

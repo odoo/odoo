@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-11 04:50+0000\n"
-"X-Generator: Launchpad (build 15924)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:27+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: share
 #: field:share.wizard,embed_option_title:0
 msgid "Display title"
-msgstr "Название отображения"
+msgstr "Показ заголовка"
 
 #. module: share
 #: view:share.wizard:0
 msgid "Access granted!"
-msgstr "Access granted!"
+msgstr "Доступ предоставлен!"
 
 #. module: share
 #: field:share.wizard,user_type:0
@@ -40,7 +40,7 @@ msgstr "Совместный доступ с этими людьми (один �
 #. module: share
 #: field:share.wizard,name:0
 msgid "Share Title"
-msgstr "Название совместного доступа"
+msgstr "Заголовок совместного доступа"
 
 #. module: share
 #: model:ir.module.category,name:share.module_category_share
@@ -90,13 +90,15 @@ msgstr "Адрес совместного доступа"
 #: code:addons/share/wizard/share_wizard.py:776
 #, python-format
 msgid "These are your credentials to access this protected area:\n"
-msgstr "Это ваши учетные данные для доступа с защищенной области:\n"
+msgstr "Это ваши учетные данные для доступа к защищенной области:\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:643
 #, python-format
 msgid "You must be a member of the Share/User group to use the share wizard"
 msgstr ""
+"Для использования мастера совместного использования, вы должны быть членом "
+"группы совместный доступ/пользователь"
 
 #. module: share
 #: view:share.wizard:0
@@ -117,7 +119,7 @@ msgstr "(Дублирован для измененных прав совмес�
 #. module: share
 #: help:share.wizard,domain:0
 msgid "Optional domain for further data filtering"
-msgstr "Дополнительный домен для дальнейшей фильтрации данных"
+msgstr "Дополнительное ограничение для дальнейшей фильтрации данных"
 
 #. module: share
 #: sql_constraint:res.users:0
@@ -281,7 +283,8 @@ msgstr ""
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
-"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
+"Выбранная компания отсутствует в списке разрешённых компаний для этого "
+"пользователя"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:526
@@ -356,7 +359,7 @@ msgstr "База данных"
 #. module: share
 #: field:share.wizard,domain:0
 msgid "Domain"
-msgstr "Домен"
+msgstr "Ограничение"
 
 #. module: share
 #: view:share.wizard:0 field:share.wizard,result_line_ids:0
@@ -439,7 +442,7 @@ msgid ""
 "External user with limited access, created only for the purpose of sharing "
 "data."
 msgstr ""
-"Внешний пользователь с ограниченным доступом, созданы только для обмена "
+"Внешний пользователь с ограниченным доступом, создан только для обмена "
 "данными."
 
 #. module: share
@@ -693,3 +696,30 @@ msgstr "Совместный доступ с..."
 
 #~ msgid "Congratulations, you have successfully setup a new shared access!"
 #~ msgstr "Поздравляю, вы успешно установили новый совместный доступ!"
+
+#~ msgid "Share with these people (one e-mail per line)"
+#~ msgstr "Совместный доступ с этими людьми (один e-mail в строке)"
+
+#~ msgid "Use this link"
+#~ msgstr "Используйте эту ссылку"
+
+#~ msgid ""
+#~ "An optional personal message, to be included in the e-mail notification."
+#~ msgstr "Необязательное личное сообщение для включения в e-mail уведомление."
+
+#~ msgid ""
+#~ "An e-mail notification with instructions has been sent to the following "
+#~ "people:"
+#~ msgstr "E-mail уведомление с инструкциями было отправлено следующим людям:"
+
+#, python-format
+#~ msgid "No e-mail address configured"
+#~ msgstr "Нет настроенного адреса e-mail"
+
+#, python-format
+#~ msgid ""
+#~ "You must configure your e-mail address in the user preferences before using "
+#~ "the Share button."
+#~ msgstr ""
+#~ "Вы должны настроить ваш адрес e-mail в параметрах пользователя перед "
+#~ "использованием кнопки совместного доступа."

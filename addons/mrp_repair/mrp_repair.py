@@ -131,16 +131,16 @@ class mrp_repair(osv.osv):
             ('invoice_except','Invoice Exception'),
             ('done','Repaired')
             ], 'Status', readonly=True,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed repair order. \
-            \n* The \'Confirmed\' state is used when a user confirms the repair order. \
-            \n* The \'Ready to Repair\' state is used to start to repairing, user can start repairing only after repair order is confirmed. \
-            \n* The \'To be Invoiced\' state is used to generate the invoice before or after repairing done. \
-            \n* The \'Done\' state is set when repairing is completed.\
-            \n* The \'Cancelled\' state is used when user cancel repair order.'),
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed repair order. \
+            \n* The \'Confirmed\' status is used when a user confirms the repair order. \
+            \n* The \'Ready to Repair\' status is used to start to repairing, user can start repairing only after repair order is confirmed. \
+            \n* The \'To be Invoiced\' status is used to generate the invoice before or after repairing done. \
+            \n* The \'Done\' status is set when repairing is completed.\
+            \n* The \'Cancelled\' status is used when user cancel repair order.'),
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
-        'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
+        'guarantee_limit': fields.date('Warranty Expiration', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id':fields.many2one('res.partner', 'Invoicing Address'),
@@ -690,7 +690,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference',ondelete='cascade', select=True),
         'type': fields.selection([('add','Add'),('remove','Remove')],'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'invoiced': fields.boolean('Invoiced',readonly=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Account')),
@@ -707,10 +707,10 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
                     ('confirmed','Confirmed'),
                     ('done','Done'),
                     ('cancel','Cancelled')], 'Status', required=True, readonly=True,
-                    help=' * The \'Draft\' state is set automatically as draft when repair order in draft state. \
-                        \n* The \'Confirmed\' state is set automatically as confirm when repair order in confirm state. \
-                        \n* The \'Done\' state is set automatically when repair order is completed.\
-                        \n* The \'Cancelled\' state is set automatically when user cancel repair order.'),
+                    help=' * The \'Draft\' status is set automatically as draft when repair order in draft status. \
+                        \n* The \'Confirmed\' status is set automatically as confirm when repair order in confirm status. \
+                        \n* The \'Done\' status is set automatically when repair order is completed.\
+                        \n* The \'Cancelled\' status is set automatically when user cancel repair order.'),
     }
     _defaults = {
      'state': lambda *a: 'draft',

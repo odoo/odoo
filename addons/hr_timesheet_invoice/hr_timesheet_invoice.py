@@ -26,8 +26,9 @@ from tools.translate import _
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
     _description = "Invoice Rate"
+    _order = 'factor'
     _columns = {
-        'name': fields.char('Internal name', size=128, required=True, translate=True),
+        'name': fields.char('Internal Name', size=128, required=True, translate=True),
         'customer_name': fields.char('Name', size=128, help="Label for the customer"),
         'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
@@ -70,8 +71,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
-            help="This field allows you to define the rate in case you plan to reinvoice " \
-            "the costs in this analytic account: timesheets, expenses, ..."),
+            help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sale order), you should invoice the rest on timesheet with a 80% ratio."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
@@ -95,13 +95,13 @@ class account_analytic_account(osv.osv):
     def set_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_account_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_closed", context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
         message = _("Contract has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_account_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_canceled", context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
@@ -123,23 +123,24 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
     def _default_journal(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        return employee.journal_id and employee.journal_id.id or False
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            return employee.journal_id and employee.journal_id.id or False
+        return False
 
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        if not record_ids:
-            raise osv.except_osv(_('Error!'), _('Please create an employee associated to this user.'))
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee.product_id and employee.product_id.property_account_income:
-            return employee.product_id.property_account_income.id
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            if employee.product_id and employee.product_id.property_account_income:
+                return employee.product_id.property_account_income.id
         return False
 
     _defaults = {
@@ -176,7 +177,7 @@ account_analytic_line()
 
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
         res = {}
         if not account_id:
             return res

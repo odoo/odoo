@@ -11,7 +11,7 @@ openerp.account = function (instance) {
             this._super.apply(this, arguments);
             var self = this;
             this.current_partner = null;
-            this.do_select.add(function() {
+            this.on('record_selected', this, function() {
                 if (self.get_selected_ids().length === 0) {
                     self.$(".oe_account_recon_reconcile").attr("disabled", "");
                 } else {
@@ -19,7 +19,7 @@ openerp.account = function (instance) {
                 }
             });
         },
-        on_loaded: function() {
+        load_list: function() {
             var self = this;
             var tmp = this._super.apply(this, arguments);
             if (this.partners) {
@@ -48,7 +48,7 @@ openerp.account = function (instance) {
             this.last_group_by = group_by;
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model("account.move.line", context, domain);
-            return mod.call("list_partners_to_reconcile", []).pipe(function(result) {
+            return mod.call("list_partners_to_reconcile", []).then(function(result) {
                 var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = result;
                 var index = _.find(_.range(self.partners.length), function(el) {
@@ -74,7 +74,7 @@ openerp.account = function (instance) {
                 return fct();
             } else {
                 return new instance.web.Model("res.partner").call("read",
-                    [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).pipe(function(res) {
+                    [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).then(function(res) {
                     self.last_reconciliation_date = 
                         instance.web.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
                     return fct();
@@ -92,7 +92,7 @@ openerp.account = function (instance) {
                 return false;
             }
 
-            new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_view_account_move_line_reconcile"]).pipe(function(result) {
+            new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_view_account_move_line_reconcile"]).then(function(result) {
                 var additional_context = _.extend({
                     active_id: ids[0],
                     active_ids: ids,
@@ -101,13 +101,14 @@ openerp.account = function (instance) {
                 return self.rpc("/web/action/load", {
                     action_id: result[1],
                     context: additional_context
-                }).then(function (result) {
-                    result = result.result;
+                }).done(function (result) {
                     result.context = _.extend(result.context || {}, additional_context);
                     result.flags = result.flags || {};
                     result.flags.new_window = true;
-                    return self.do_action(result, function () {
-                        self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                    return self.do_action(result, {
+                        on_close: function () {
+                            self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                        }
                     });
                 });
             });
@@ -115,9 +116,13 @@ openerp.account = function (instance) {
         mark_as_reconciled: function() {
             var self = this;
             var id = self.partners[self.current_partner][0];
-            new instance.web.Model("res.partner").call("mark_as_reconciled", [[id]]).pipe(function() {
+            new instance.web.Model("res.partner").call("mark_as_reconciled", [[id]]).then(function() {
                 self.do_search(self.last_domain, self.last_context, self.last_group_by);
             });
+        },
+        do_select: function (ids, records) {
+            this.trigger('record_selected')
+            this._super.apply(this, arguments);
         },
     });
     

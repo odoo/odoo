@@ -12,7 +12,7 @@ openerp.auth_oauth = function(instance) {
             } else if(this.params.oauth_error === 2) {
                 this.do_warn("Authentication error","");
             }
-            return d.then(this.do_oauth_load).fail(function() {
+            return d.done(this.do_oauth_load).fail(function() {
                 self.do_oauth_load([]);
             });
         },
@@ -23,7 +23,7 @@ openerp.auth_oauth = function(instance) {
         do_oauth_load: function() {
             var db = this.$("form [name=db]").val();
             if (db) {
-                this.rpc("/auth_oauth/list_providers", { dbname: db }).then(this.on_oauth_loaded);
+                this.rpc("/auth_oauth/list_providers", { dbname: db }).done(this.on_oauth_loaded);
             }
         },
         on_oauth_loaded: function(result) {

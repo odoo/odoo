@@ -10,7 +10,7 @@
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_crm_meeting"/>
         <field name="state">code</field>
-        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+        <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
     </record>
     <record id="action_crm_meeting_read" model="ir.values">
         <field name="name">action_crm_meeting_read</field>
@@ -28,7 +28,7 @@
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_crm_meeting"/>
         <field name="state">code</field>
-        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+        <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
     </record>
     <record id="action_crm_meeting_unread" model="ir.values">
         <field name="name">action_crm_meeting_unread</field>
@@ -86,10 +86,11 @@
                         </h2>
                     </div>
                     <notebook>
-                    <page string="Meeting Detail">
+                    <page string="Meeting Details">
                         <group>
                             <group>
-                                <field name="date" string="Starting at"/>
+                                <field name="date" string="Starting at"
+                                    on_change="onchange_dates(date, duration, False, allday)"/>
                                 <label for="duration"/>
                                 <div>
                                     <field name="duration" widget="float_time"
@@ -100,7 +101,7 @@
                                     <label for="allday" string="All Day?"/>)
                                 </div>
                                 <field name="date_deadline" groups="base.group_no_one"
-                                    attrs="{'invisible': [('allday','=',True)]}"
+                                    attrs="{'invisible': ['|', ('allday','=',True), ('duration','&lt;', 24)]}"
                                     on_change="onchange_dates(date,False,date_deadline)"/>
                             </group>
                             <group>
@@ -170,12 +171,7 @@
                             </group>
                         </group>
                     </page>
-                    <!--
-                        Temporarily removing invitation feature as the implementation
-                        was not clean. Invitation should be trigerred automatically
-                        based on partner_ids.
-                    -->
-                    <page string="Invitations">
+                    <page string="Invitations" groups="base.group_no_one">
                         <field name="attendee_ids" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
                                 <field name="partner_id"/>
@@ -224,8 +220,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>
@@ -332,9 +328,6 @@
         <field name="view_mode">gantt</field>
         <field name="view_id" ref="view_crm_meeting_gantt"/>
     </record>
-
-    <menuitem id="menu_crm_meeting" parent="base.menu_sales" sequence="8"
-        name="Calendar" action="action_crm_meeting"/>
 
     <menuitem name="Calendar"
         id="mail_menu_calendar" parent="mail.mail_my_stuff"

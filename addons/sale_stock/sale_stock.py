@@ -123,23 +123,20 @@ class sale_order(osv.osv):
             ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
-            ], 'Status', readonly=True,help="Gives the state of the quotation or sales order.\
-              \nThe exception state is automatically set when a cancel operation occurs \
-              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' state is set when the invoice is confirmed\
+            ], 'Status', readonly=True,help="Gives the status of the quotation or sales order.\
+              \nThe exception status is automatically set when a cancel operation occurs \
+              in the invoice validation (Invoice Exception) or in the picking list process (Shipping Exception).\nThe 'Waiting Schedule' status is set when the invoice is confirmed\
                but waiting for the scheduler to run on the order date.", select=True),
-        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="Incoterm which stands for 'International Commercial terms' implies its a series of sales terms which are used in the commercial transaction."),
+        'incoterm': fields.many2one('stock.incoterms', 'Incoterm', help="International Commercial Terms are a series of predefined commercial terms used in international transactions."),
         'picking_policy': fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')],
             'Shipping Policy', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""If you don't have enough stock available to deliver all at once, do you accept partial shipments or not?"""),
+            help="""Pick 'Deliver each product when available' if you allow partial delivery."""),
         'order_policy': fields.selection([
                 ('manual', 'On Demand'),
                 ('picking', 'On Delivery Order'),
                 ('prepaid', 'Before Delivery'),
             ], 'Create Invoice', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-            help="""This field controls how invoice and delivery operations are synchronized.
-  - With 'On Demand', the invoice is created manually when needed.
-  - With 'On Delivery Order', a draft invoice is generated after all pickings have been processed.
-  - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
+            help="""On demand: A draft invoice can be created from the sales order when needed. \nOn delivery order: A draft invoice can be created from the delivery order when the products have been delivered. \nBefore delivery: A draft invoice is created from the sales order and must be paid before the products can be delivered."""),
         'picking_ids': fields.one2many('stock.picking.out', 'sale_id', 'Related Picking', readonly=True, help="This is a list of delivery orders that has been generated for this sales order."),
         'shipped': fields.boolean('Delivered', readonly=True, help="It indicates that the sales order has been delivered. This field is updated only after the scheduler(s) have been launched."),
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
@@ -488,10 +485,8 @@ class sale_order_line(osv.osv):
 
     _inherit = 'sale.order.line'
     _columns = { 
-        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
+        'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation and the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
-        'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
-            help="If 'on order', it triggers a procurement when the sale order is confirmed to create a task, purchase order or manufacturing order linked to this sale order line."),
         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
@@ -499,7 +494,6 @@ class sale_order_line(osv.osv):
     }
     _defaults = {
         'delay': 0.0,
-        'type': 'make_to_stock',
         'product_packaging': False,
     }
 
@@ -639,7 +633,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = super(sale_advance_payment_inv, self)._create_invoices(cr, uid, inv_values, sale_id, context=context)
         sale_obj = self.pool.get('sale.order')
         sale_line_obj = self.pool.get('sale.order.line')
-        wizard = self.browse(cr, uid, ids[0], context)
+        wizard = self.browse(cr, uid, [result], context)
         sale = sale_obj.browse(cr, uid, sale_id, context=context)
         if sale.order_policy == 'postpaid':
             raise osv.except_osv(
@@ -649,8 +643,8 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         # If invoice on picking: add the cost on the SO
         # If not, the advance will be deduced when generating the final invoice
-        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[2].get('name') or ''
-        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[2].get('invoice_line_tax_id') or False
+        line_name = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('name') or ''
+        line_tax = inv_values.get('invoice_line') and inv_values.get('invoice_line')[0][2].get('invoice_line_tax_id') or False
         if sale.order_policy == 'picking':
             vals = {
                 'order_id': sale.id,
