@@ -1255,7 +1255,7 @@ openerp.mail = function (session) {
 
             // check if the message is already create
             for (var i in self.messages) {
-                if (self.messages[i] && self.messages[i].id == message.id) {
+                if (message.id && self.messages[i] && self.messages[i].id == message.id) {
                     console.log('Reload message', message.id);
                     self.messages[i].destroy();
                 }
