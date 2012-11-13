@@ -32,8 +32,6 @@ class test_message_compose(test_mail.TestMailMockups):
         self.mail_message = self.registry('mail.message')
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
-        self.mail_compose = self.registry('mail.compose.message')
-        self.email_template = self.registry('email.template')
 
         # create a 'pigs' and 'bird' groups that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
@@ -42,8 +40,9 @@ class test_message_compose(test_mail.TestMailMockups):
             {'name': 'Bird', 'description': 'I am angry !'})
 
     def test_00_message_compose_wizard(self):
-        """ Tests designed for the mail.compose.message wizard updated by self.email_template. """
+        """ Tests designed for the mail.compose.message wizard updated by email_template. """
         cr, uid = self.cr, self.uid
+        mail_compose = self.registry('mail.compose.message')
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a.a'})
         user_admin = self.res_users.browse(cr, uid, uid)
         p_a_id = user_admin.partner_id.id
@@ -63,48 +62,56 @@ class test_message_compose(test_mail.TestMailMockups):
 
         # Create template on mail.group, with attachments
         group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
-        self.email_template_id = self.email_template.create(cr, uid, {'model_id': group_model_id,
-            'name': 'Pigs Template', 'subject': '${object.name}',
-            'body_html': '${object.description}', 'user_signature': True,
+        email_template = self.registry('email.template')
+        email_template_id = email_template.create(cr, uid, {
+            'model_id': group_model_id,
+            'name': 'Pigs Template',
+            'subject': '${object.name}',
+            'body_html': '${object.description}',
+            'user_signature': True,
             'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])],
-            'email_to': 'b@b.b c@c.c', 'email_cc': 'd@d.d'})
+            'email_to': 'b@b.b c@c.c',
+            'email_cc': 'd@d.d'
+            })
 
         # ----------------------------------------
         # CASE1: comment and save as template
         # ----------------------------------------
 
         # 1. Comment on pigs
-        compose_id = self.mail_compose.create(cr, uid,
+        compose_id = mail_compose.create(cr, uid,
             {'subject': 'Forget me subject', 'body': '<p>Dummy body</p>'},
-            {'default_composition_mode': 'comment', 'default_model': 'mail.group',
+            {'default_composition_mode': 'comment',
+                'default_model': 'mail.group',
                 'default_res_id': self.group_pigs_id,
-                'default_template_id': self.email_template_id,
                 'active_ids': [self.group_pigs_id, self.group_bird_id]})
-        compose = self.mail_compose.browse(cr, uid, compose_id)
+        compose = mail_compose.browse(cr, uid, compose_id)
 
         # 2. Save current composition form as a template
-        self.mail_compose.save_as_template(cr, uid, [compose_id], context={'default_model': 'mail.group'})
-        # Test: self.email_template subject, body_html, model
-        last_template_id = self.email_template.search(cr, uid, [('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)[0]
-        self.assertTrue(last_template_id, 'self.email_template not found for model mail.group, subject Forget me subject')
-        last_template = self.email_template.browse(cr, uid, last_template_id)
-        self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'self.email_template incorrect body_html')
+        mail_compose.save_as_template(cr, uid, [compose_id], context={'default_model': 'mail.group'})
+        # Test: email_template subject, body_html, model
+        last_template_id = email_template.search(cr, uid, [('model', '=', 'mail.group'), ('subject', '=', 'Forget me subject')], limit=1)[0]
+        self.assertTrue(last_template_id, 'email_template not found for model mail.group, subject Forget me subject')
+        last_template = email_template.browse(cr, uid, last_template_id)
+        self.assertEqual(last_template.body_html, '<p>Dummy body</p>', 'email_template incorrect body_html')
 
         # ----------------------------------------
         # CASE2: comment with template, save as template
         # ----------------------------------------
 
         # 1. Comment on pigs
-        compose_id = self.mail_compose.create(cr, uid,
+        compose_id = mail_compose.create(cr, uid,
             {'subject': 'Forget me subject', 'body': 'Dummy body'},
-            {'default_composition_mode': 'comment', 'default_model': 'mail.group',
+            {'default_composition_mode': 'comment',
+                'default_model': 'mail.group',
                 'default_res_id': self.group_pigs_id,
-                'default_template_id': self.email_template_id,
+                'default_use_template': False,
+                'default_template_id': email_template_id,
                 'active_ids': [self.group_pigs_id, self.group_bird_id]})
-        compose = self.mail_compose.browse(cr, uid, compose_id)
+        compose = mail_compose.browse(cr, uid, compose_id)
 
         # 2. Perform 'toggle_template', to set use_template and use template_id
-        self.mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
         compose.refresh()
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
@@ -122,7 +129,7 @@ class test_message_compose(test_mail.TestMailMockups):
                 'mail.message attachment name / data incorrect')
 
         # 3. Perform 'toggle_template': template is not set anymore
-        self.mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
         compose.refresh()
         # Test: subject, body, partner_ids
         self.assertEqual(compose.subject, False, 'mail.compose.message subject incorrect')
@@ -133,17 +140,19 @@ class test_message_compose(test_mail.TestMailMockups):
         # ----------------------------------------
 
         # 1. Mass_mail on pigs and bird, with a default_partner_ids set to check he is correctly added
-        compose_id = self.mail_compose.create(cr, uid,
+        compose_id = mail_compose.create(cr, uid,
             {'subject': 'Forget me subject', 'body': 'Dummy body'},
-            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group',
+            {'default_composition_mode': 'mass_mail',
+                'default_model': 'mail.group',
                 'default_res_id': self.group_pigs_id,
-                'default_template_id': self.email_template_id,
+                'default_use_template': False,
+                'default_template_id': email_template_id,
                 'default_partner_ids': [p_a_id],
                 'active_ids': [self.group_pigs_id, self.group_bird_id]})
-        compose = self.mail_compose.browse(cr, uid, compose_id)
+        compose = mail_compose.browse(cr, uid, compose_id)
 
         # 2. Perform 'toggle_template', to set use_template and use template_id
-        self.mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
         compose.refresh()
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
@@ -154,7 +163,7 @@ class test_message_compose(test_mail.TestMailMockups):
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 3. Post the comment, get created message
-        self.mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
+        mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
         group_pigs.refresh()
         group_bird.refresh()
         message_pigs = group_pigs.message_ids[0]
@@ -171,33 +180,25 @@ class test_message_compose(test_mail.TestMailMockups):
         self.assertEqual(set(message_pigs_pids), set(partner_ids), 'mail.message on pigs incorrect number of notified_partner_ids')
         self.assertEqual(set(message_bird_pids), set(partner_ids), 'mail.message on bird notified_partner_ids incorrect')
 
-
         # ----------------------------------------
-        # CASE4: Created message with template, test recipients
+        # CASE4: test newly introduced email_recipients field
         # ----------------------------------------
 
-        # 1 - Admin, with email, object to send message, add his partner_id from email_to
-        # p_a_id
-        # 2 - Carine Poilvache, with email, add his partner_id from email_to and email_recipients
-        p_b_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c'})
-        # 3 - Dédé Grosbedon, without email, add his partner_id from email_recipients
-        p_c_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon'})
-        # 4 - Truc Much, without email, add his partner_id from email_cc
-        p_d_id = self.res_partner.create(cr, uid, {'name': 'Truc Much', 'email': 'd@d'})
-        # Create template on res.users
+        # get already-created partners back
+        p_b_id = self.res_partner.search(cr, uid, [('email', '=', 'b@b.b')])[0]
+        p_c_id = self.res_partner.search(cr, uid, [('email', '=', 'c@c.c')])[0]
+        p_d_id = self.res_partner.search(cr, uid, [('email', '=', 'd@d.d')])[0]
+        # modify template: use email_recipients, use template and email address in email_to to test all features together
         user_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'res.users')])[0]
-        self.email_template_id = self.email_template.create(cr, uid, {
+        email_template.write(cr, uid, [email_template_id], {
             'model_id': user_model_id,
-            'name': 'Pigs Template',
-            'subject': '${object.name}',
             'body_html': '${object.login}',
             'email_to': '${object.email} c@c',
             'email_recipients': '%i,%i' % (p_b_id, p_c_id),
-            'email_cc': 'd@d'
+            'email_cc': 'd@d',
             })
-
         # patner by email + partner by id (no double)
-        send_to = [p_a_id, p_b_id, p_c_id, p_d_id];
+        send_to = [p_a_id, p_b_id, p_c_id, p_d_id]
         # Generate messsage with default email and partner on template
-        mail_value = self.mail_compose.generate_email_for_composer(cr, uid, self.email_template_id, u_a_id)
-        self.assertEqual(set(mail_value['partner_ids']), set(send_to), 'mail.message the partner_ids list create by template is incorrect')
+        mail_value = mail_compose.generate_email_for_composer(cr, uid, email_template_id, uid)
+        self.assertEqual(set(mail_value['partner_ids']), set(send_to), 'mail.message partner_ids list created by template is incorrect')
