@@ -423,7 +423,7 @@ $sheet-padding: 16px
         clear: both
         visibility: hidden
     .oe_button_box
-        width: 270px
+        width: 280px
         text-align: right
         button
             margin: 4px
@@ -691,7 +691,7 @@ $sheet-padding: 16px
         background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
-        height: 100%
+        height: 600px
         ul, li
             margin: 0
             list-style-type: none
@@ -766,8 +766,8 @@ $sheet-padding: 16px
         .oe_login_footer
             position: absolute
             bottom: -40px
-            left: 0
-            width: 100%
+            left: -134px
+            width: 600px
             text-align: center
             a
                 color: #eee
@@ -934,6 +934,7 @@ $sheet-padding: 16px
             height: 40px
             width: 157px
             margin: 14px 0
+            border: none
     .oe_footer
         position: fixed
         bottom: 0
@@ -1069,11 +1070,12 @@ $sheet-padding: 16px
         > div
             height: 100%
         .oe_breadcrumb_item:not(:last-child)
-            display: inline-block
             max-width: 7em
             white-space: nowrap
-            overflow: hidden
             text-overflow: ellipsis
+        .oe_breadcrumb_title > *
+            display: inline-block
+            overflow: hidden
     // }}}
     // ViewManager common {{{
     .oe_view_manager
@@ -1083,6 +1085,7 @@ $sheet-padding: 16px
             height: inherit
 
         table.oe_view_manager_header
+            border-collapse: separate
             width: 100%
             table-layout: fixed
             .oe_header_row

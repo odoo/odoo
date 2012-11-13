@@ -462,7 +462,7 @@
   visibility: hidden;
 }
 .openerp .oe_button_box {
-  width: 270px;
+  width: 280px;
   text-align: right;
 }
 .openerp .oe_button_box button {
@@ -824,7 +824,7 @@
   background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=);
   text-align: center;
   font-size: 14px;
-  height: 100%;
+  height: 600px;
 }
 .openerp .oe_login ul, .openerp .oe_login li {
   margin: 0;
@@ -939,8 +939,8 @@
 .openerp .oe_login .oe_login_footer {
   position: absolute;
   bottom: -40px;
-  left: 0;
-  width: 100%;
+  left: -134px;
+  width: 600px;
   text-align: center;
 }
 .openerp .oe_login .oe_login_footer a {
@@ -1158,6 +1158,7 @@
   height: 40px;
   width: 157px;
   margin: 14px 0;
+  border: none;
 }
 .openerp .oe_footer {
   position: fixed;
@@ -1339,11 +1340,13 @@
   height: 100%;
 }
 .openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
-  display: inline-block;
   max-width: 7em;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+}
+.openerp .oe_application .oe_breadcrumb_title > * {
+  display: inline-block;
+  overflow: hidden;
 }
 .openerp .oe_view_manager .oe_view_manager_body {
   height: inherit;
@@ -1352,6 +1355,7 @@
   height: inherit;
 }
 .openerp .oe_view_manager table.oe_view_manager_header {
+  border-collapse: separate;
   width: 100%;
   table-layout: fixed;
 }
