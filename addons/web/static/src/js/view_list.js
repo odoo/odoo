@@ -503,12 +503,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return this.reload_content();
     },
     reload_record: function (record) {
+        var self = this;
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name')
         ).done(function (records) {
+            if (!records[0]) {
+                self.records.remove(record);
+                return;
+            }
             _(records[0]).each(function (value, key) {
                 record.set(key, value, {silent: true});
             });
