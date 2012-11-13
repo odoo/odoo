@@ -75,7 +75,7 @@ class pos_make_payment(osv.osv_memory):
 
     def launch_payment(self, cr, uid, ids, context=None):
         return {
-            'name': _('Paiement'),
+            'name': _('Payment'),
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
@@ -83,6 +83,7 @@ class pos_make_payment(osv.osv_memory):
             'target': 'new',
             'views': False,
             'type': 'ir.actions.act_window',
+            'context': context,
         }
 
     def print_report(self, cr, uid, ids, context=None):

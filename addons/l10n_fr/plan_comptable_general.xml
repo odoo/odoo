@@ -3903,7 +3903,7 @@
       <field name="name">Associés - Comptes courants</field>
       <field name="code">455</field>
       <field name="type">view</field>
-      <field name="user_type" ref="account.data_account_type_view"/>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="note">Pour frais avancés personnellement</field>
       <field name="parent_id" ref="pcg_45"/>
       <field name="reconcile" eval="True"/>
@@ -3912,8 +3912,8 @@
     <record id="pcg_4551" model="account.account.template">
       <field name="name">Principal</field>
       <field name="code">4551</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_455"/>
       <field name="reconcile" eval="True"/>
     </record>
@@ -3921,8 +3921,8 @@
     <record id="pcg_4558" model="account.account.template">
       <field name="name">Intérêts courus</field>
       <field name="code">4558</field>
-      <field name="type">receivable</field>
-      <field name="user_type" ref="account.data_account_type_receivable"/>
+      <field name="type">payable</field>
+      <field name="user_type" ref="account.data_account_type_payable"/>
       <field name="parent_id" ref="pcg_455"/>
       <field name="reconcile" eval="True"/>
     </record>
