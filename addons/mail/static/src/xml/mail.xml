@@ -84,7 +84,7 @@
             </t>
             <t t-if="attachment.filetype === 'webimage'">
                 <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,100])"></img></a>
+                    <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img></a>
                     <div class='oe_delete oe_e'>[</div>
                     <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
