@@ -508,7 +508,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        r = $.when(view_promise).done(function () {
+        return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -524,7 +524,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
         });
-        return r;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -1280,6 +1279,27 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_hide: function () {
         this.$el.hide();
+    },
+    is_active: function () {
+        var manager = this.getParent();
+        return !manager || !manager.active_view
+             || manager.views[manager.active_view].controller === this;
+    }, /**
+     * Wraps fn to only call it if the current view is the active one. If the
+     * current view is not active, doesn't call fn.
+     *
+     * fn can not return anything, as a non-call to fn can't return anything
+     * either
+     *
+     * @param {Function} fn function to wrap in the active guard
+     */
+    guard_active: function (fn) {
+        var self = this;
+        return function () {
+            if (self.is_active()) {
+                fn.apply(self, arguments);
+            }
+        }
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {

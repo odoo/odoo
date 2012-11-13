@@ -173,10 +173,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
         }
-        this.$buttons.on('click', '.oe_form_button_create', this.on_button_create);
-        this.$buttons.on('click', '.oe_form_button_edit', this.on_button_edit);
-        this.$buttons.on('click', '.oe_form_button_save', this.on_button_save);
-        this.$buttons.on('click', '.oe_form_button_cancel', this.on_button_cancel);
+        this.$buttons.on('click', '.oe_form_button_create',
+                         this.guard_active(this.on_button_create));
+        this.$buttons.on('click', '.oe_form_button_edit',
+                         this.guard_active(this.on_button_edit));
+        this.$buttons.on('click', '.oe_form_button_save',
+                         this.guard_active(this.on_button_save));
+        this.$buttons.on('click', '.oe_form_button_cancel',
+                         this.guard_active(this.on_button_cancel));
         if (this.options.footer_to_buttons) {
             this.$el.find('footer').appendTo(this.$buttons);
         }
