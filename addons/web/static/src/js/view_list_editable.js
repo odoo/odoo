@@ -117,13 +117,6 @@ openerp.web.list_editable = function (instance) {
                         e.preventDefault();
                         self.cancel_edition();
                     });
-                this.$el
-                    .off('click', 'tbody td:not(.oe_list_field_cell)')
-                    .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
-                        if (!self.editor.is_editing()) {
-                            self.start_edition();
-                        }
-                    });
                 this.editor.destroy();
                 // Editor is not restartable due to formview not being
                 // restartable
