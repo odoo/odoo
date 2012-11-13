@@ -281,6 +281,7 @@ class sale_order(osv.osv):
         }
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
+        context = context or {}
         if not pricelist_id:
             return {}
         value = {
@@ -617,6 +618,7 @@ class sale_order(osv.osv):
         }
 
     def action_wait(self, cr, uid, ids, context=None):
+        context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
