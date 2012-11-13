@@ -93,14 +93,15 @@
         <record id="msg_discussion2_0" model="mail.message">
             <field name="subject">Plan to install OpenERP</field>
             <field name="model">mail.message</field>
-            <field name="body"><![CDATA[<p>Hello
-I am interested in your company's product and I plan to install OpenERP for my company and affordable price.
-Can you please send me services catalogue?
-Sophie]]></field>
+            <field name="body"><![CDATA[<p>Hello,<br/>
+I am interested in your company's product and I plan to install OpenERP for my company and affordable price.<br/>
+Can you please send me services catalogue?<br/>
+Virginie</p>]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
         <record id="msg_discussion2_1_attach" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
@@ -109,13 +110,13 @@ Sophie]]></field>
         </record>
         <record id="msg_discussion2_1" model="mail.message">
             <field name="subject">Re: Plan to install OpenERP</field>
-            <field name="body">
-                Dear Customer,&lt;br/&gt;
-                Thanks for showing interest in our products.&lt;br/&gt;
-                We have attached the catalogue,&lt;br/&gt;
-                We would like to know your interests, so let us know when we can call you for more details.&lt;br/&gt;
+            <field name="body"><![CDATA[
+                Dear Customer,<br/>
+                Thanks for showing interest in our products.<br/>
+                We have attached the catalogue,<br/>
+                We would like to know your interests, so let us know when we can call you for more details.<br/>
                 Regards
-            </field>
+            ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discussion2_0"/>
@@ -202,30 +203,31 @@ Sophie]]></field>
         </record>
         <record id="message_video1" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="body">
-                Hi,&lt;br/&gt;
-                The beta OpenERP 7 is scheduled for November 12.&lt;br/&gt;
-                You will find attached the document for migration from version 6 to 7, and the activity graph for the current year. Good reading.&lt;br/&gt;
+            <field name="body"><![CDATA[
+                Hi,<br/>
+                The beta OpenERP 7 is scheduled for November 12.<br/>
+                You will find attached the document for migration from version 6 to 7, and the activity graph for the current year. Good reading.<br/>
                 Sincerely
-            </field>
+            ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('message_video1_attachment1'), ref('message_video1_attachment2')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="date">2012-11-12 10:53:32</field>
         </record>
         <record id="message_video1_message1" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="body">
-                Thank you,&lt;br/&gt;
-                Could you prepare and send us also the document for version 7.1 which will come soon?&lt;br/&gt;
+            <field name="body"><![CDATA[
+                Thank you,<br/>
+                Could you prepare and send us also the document for version 7.1 which will come soon?<br/>
                 Sincerely
-            </field>
+            ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="message_video1"/>
-            <field name="author_id" ref="base.partner_root"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
 
