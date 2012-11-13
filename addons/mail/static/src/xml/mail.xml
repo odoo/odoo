@@ -217,13 +217,6 @@
                     <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
-                    <t t-if='widget.attachment_ids.length > 0'>
-                        <span class='oe_subtle'>•</span>
-                        <a class="oe_view_attachments">
-                            <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
-                            <t t-if="widget.attachment_ids.length > 1"><t t-raw="widget.attachment_ids.length"/> Attachments</t>
-                        </a>
-                    </t>
                     <span class='oe_subtle'>•</span>
                     <t t-call="mail.thread.message.vote"/>
                 </div>

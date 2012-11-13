@@ -737,7 +737,7 @@ openerp.mail = function (session) {
             if(this.thread_level < this.options.display_indented_thread) {
                 this.create_thread();
             }
-            this.$('.oe_msg_attachments, .oe_msg_images').addClass("oe_hidden");
+            this.display_attachments();
 
             this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
@@ -755,8 +755,6 @@ openerp.mail = function (session) {
             this.$('.oe_reply').on('click', this.on_message_reply);
             this.$('.oe_star').on('click', this.on_star);
             this.$('.oe_msg_vote').on('click', this.on_vote);
-            this.$('.oe_view_attachments').on('click', this.on_view_attachments);
-
         },
 
         /* Call the on_compose_message on the thread of this message. */
@@ -813,17 +811,6 @@ openerp.mail = function (session) {
             if (this.thread) {
                 this.thread.$el.fadeOut(fadeTime);
             }
-        },
-
-        /* Call the on_compose_message on the thread of this message. */
-        on_view_attachments:function (event) {
-            event.stopPropagation();
-            var self = this;
-            if (!this.toggle_attachment) {
-                self.display_attachments();
-                this.toggle_attachment = true;
-            } 
-            this.$('.oe_msg_attachment_list').toggle(200);
         },
 
         /**
