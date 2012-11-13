@@ -49,6 +49,7 @@ $sheet-padding: 16px
     background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
     background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
     background-image:         linear-gradient(to bottom, $startColor, $endColor)
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#{ie-hex-str($startColor)}', endColorstr='#{ie-hex-str($endColor)}')"/* IE9 */
 
 @mixin radial-gradient($gradient)
     background-position: center center
@@ -95,6 +96,8 @@ $sheet-padding: 16px
     background: -moz-linear-gradient(135deg, $endColor, $startColor)
     background: -o-linear-gradient(135deg, $startColor, $endColor)
     background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+    background: -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(GradientType=0, startColorstr='#{ie-hex-str($startColor)}', endColorstr='#{ie-hex-str($endColor)}', enabled=true)"/* IE9 */
 
 @mixin transform($transform)
     -webkit-transform: $transform
@@ -167,6 +170,9 @@ $sheet-padding: 16px
         color: $tag-border !important
         font-style: italic !important
     \::-webkit-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \:-ms-input-placeholder
         color: $tag-border !important
         font-style: italic !important
     //}}}
