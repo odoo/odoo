@@ -32,17 +32,18 @@
                                 </div>
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
-                                    <ul>
-                                        <li><t t-raw="record.message_summary.raw_value"/></li>
-                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_follow" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.message_is_follower.raw_value"><a name="action_unfollow" string="Leave" type="object" class="oe_group_leave">Following</a></li>
-                                    </ul>
+                                    <div class="oe_grey">
+                                        <field name="description"/>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <t t-raw="record.message_summary.raw_value"/>
+                                    </div>
+                                    <div class="oe_group_button">
+                                        <button t-if="record.message_is_follower.raw_value" name="action_unfollow" type="object" class="oe_group_join">Unfollow</button>
+                                        <button t-if="! record.message_is_follower.raw_value" name="action_follow" type="object">Join Group</button>
+                                    </div>
                                 </div>
                             </div>
-                            <script>
-                                $('.oe_group_join').mouseover(function () { $(this).html('Follow'); }).mouseleave(function () { $(this).html('Not following'); });
-                                $('.oe_group_leave').mouseover(function () { $(this).html('Unfollow'); }).mouseleave(function () { $(this).html('Following'); });
-                            </script>
                         </t>
                     </templates>
                 </kanban>

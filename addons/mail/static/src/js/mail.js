@@ -1281,7 +1281,7 @@ openerp.mail = function (session) {
                 this.compose_message.do_show_compact();
             }
 
-            this.$('.oe_wall_no_message').remove();
+            this.$('.oe_view_nocontent').remove();
 
 
             if (dom_insert_after) {
