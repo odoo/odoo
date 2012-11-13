@@ -27,8 +27,9 @@ class analytical_timesheet_employee(osv.osv_memory):
     _name = 'hr.analytical.timesheet.employee'
     _description = 'Print Employee Timesheet & Print My Timesheet'
     _columns = {
-        'month': fields.selection([(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)],
-                                  'Month', required=True),
+        'month': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
+            (5,'May'), (6,'June'), (7,'July'), (8,'August'), (9,'September'),
+            (10,'October'), (11,'November'), (12,'December')], 'Month', required=True),
         'year': fields.integer('Year', required=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True)
 

@@ -59,7 +59,7 @@ class fleet_vehicle_cost(osv.Model):
             if (record.date):
                 res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
             else:
-                res[record.id] = 'Unknown'
+                res[record.id] = _('Unknown')
         return res
 
     def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):

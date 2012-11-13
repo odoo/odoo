@@ -388,6 +388,8 @@ class audittrail_objects_proxy(object_proxy):
         }
         # loop on all the fields
         for field_name, field_definition in pool.get(model.model)._all_columns.items():
+            if field_name in ('__last_update', 'id'):
+                continue
             #if the field_list param is given, skip all the fields not in that list
             if field_list and field_name not in field_list:
                 continue

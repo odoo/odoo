@@ -98,6 +98,10 @@ class account_analytic_account(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
+        if not ids:
+            return res
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for id in ids:
             elmt = self.browse(cr, uid, id, context=context)
             res.append((id, self._get_one_full_name(elmt)))

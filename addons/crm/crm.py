@@ -115,7 +115,6 @@ class crm_case_section(osv.osv):
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
-        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
@@ -137,7 +136,6 @@ class crm_case_section(osv.osv):
 
     _defaults = {
         'active': 1,
-        'allow_unlink': 1,
         'stage_ids': _get_stage_common,
         'alias_domain': False, # always hide alias during creation
     }

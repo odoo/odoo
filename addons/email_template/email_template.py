@@ -118,7 +118,8 @@ class email_template(osv.osv):
                                               "of the message"),
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
-        'email_to': fields.char('To', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_recipients': fields.char('To (Partners)', help="Comma-separated ids of recipient partners (placeholders may be used here)"),
         'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -286,7 +287,7 @@ class email_template(osv.osv):
         template = self.get_email_template(cr, uid, template_id, res_id, context)
         values = {}
         for field in ['subject', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'reply_to']:
+                      'email_to', 'email_recipients', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
