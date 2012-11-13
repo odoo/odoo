@@ -73,6 +73,7 @@ for a particular financial year and for preparation of vouchers there is a modul
         'wizard/account_fiscalyear_close_state.xml',
         'wizard/account_chart_view.xml',
         'wizard/account_tax_chart_view.xml',
+        'wizard/account_move_journal_view.xml',
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_open_closed_fiscalyear_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
@@ -128,7 +129,6 @@ for a particular financial year and for preparation of vouchers there is a modul
     'js': [
         'static/src/js/account_move_reconciliation.js',
         'static/src/js/account_move_line_quickadd.js',
-        
     ],
     'qweb' : [
         "static/src/xml/account_move_reconciliation.xml",
