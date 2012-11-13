@@ -1047,8 +1047,13 @@ class Menu(openerpweb.Controller):
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([], 0, False, False, context)
+        if req.context and 'default_menu' in req.context and int(req.context['default_menu']):
+            # for load only one sub menu
+            menu_ids = Menus.search([['id', 'child_of', req.context['default_menu']]], 0, False, False, context)
+        else:
+            menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled', 'needaction_counter'], context)
+        
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
