@@ -56,7 +56,10 @@ class fleet_vehicle_cost(osv.Model):
     def _year_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
         res = {}
         for record in self.browse(cr, uid, ids, context=context):
-            res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
+            if (record.date):
+                res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
+            else:
+                res[record.id] = _('Unknown')
         return res
 
     def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
@@ -253,7 +256,6 @@ class fleet_vehicle(osv.Model):
 
     def _search_get_overdue_contract_reminder(self, cr, uid, obj, name, args, context):
         res = []
-        today = fields.date.today(self, cr, uid, context=context)
         for field, operator, value in args:
             assert operator in ('=', '!=', '<>') and value in (True, False), 'Operation not supported'
             if (operator == '=' and value == True) or (operator in ('<>', '!=') and value == False):
@@ -343,7 +345,7 @@ class fleet_vehicle(osv.Model):
         'seats': fields.integer('Seats Number', help='Number of seats of the vehicle'),
         'doors': fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag', 'fleet_vehicle_vehicle_tag_rel', 'vehicle_tag_id','tag_id', 'Tags'),
-        'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Odometer Value', help='Odometer measure of the vehicle at the moment of this log'),
+        'odometer': fields.function(_get_odometer, fnct_inv=_set_odometer, type='float', string='Last Odometer', help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=True),
         'transmission': fields.selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle'),
         'fuel_type': fields.selection([('gasoline', 'Gasoline'), ('diesel', 'Diesel'), ('electric', 'Electric'), ('hybrid', 'Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle'),
@@ -718,7 +720,7 @@ class fleet_vehicle_log_contract(osv.Model):
                 'start_date': datetime.datetime.strftime(str_to_datetime(element.expiration_date) + datetime.timedelta(days=1), tools.DEFAULT_SERVER_DATE_FORMAT),
                 'expiration_date': datetime.datetime.strftime(enddate + diffdate, tools.DEFAULT_SERVER_DATE_FORMAT),
             }
-            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, [element.id], default, context=context)
+            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, element.id, default, context=context)
         mod, modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
         return {
             'name':_("Renew Contract"),
@@ -769,8 +771,8 @@ class fleet_vehicle_log_contract(osv.Model):
         'start_date': fields.date('Contract Start Date', help='Date when the coverage of the contract begins'),
         'expiration_date': fields.date('Contract Expiration Date', help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'days_left': fields.function(get_days_left, type='integer', string='Warning Date'),
-        'insurer_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
-        'purchaser_id': fields.many2one('res.partner', 'Contractor', domain="['|', ('customer','=',True), ('employee','=',True)]",help='Person to which the contract is signed for'),
+        'insurer_id' :fields.many2one('res.partner', 'Supplier'),
+        'purchaser_id': fields.many2one('res.partner', 'Contractor', help='Person to which the contract is signed for'),
         'ins_ref': fields.char('Contract Reference', size=64),
         'state': fields.selection([('open', 'In Progress'), ('toclose','To Close'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
         'notes': fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
