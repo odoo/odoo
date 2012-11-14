@@ -1625,15 +1625,15 @@ openerp.mail = function (session) {
         */
         do_reload_menu_emails: function () {
             var menu = this.__parentedParent.__parentedParent.menu;
-            return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
-                _.each(menu.data.data.children, function (val) {
-                    if (val.id == 100) {
-                        val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
-                    }
-                });
-                var r = menu.data;
-                menu.menu_loaded(r);
-            });
+            // return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
+            //     _.each(menu.data.data.children, function (val) {
+            //         if (val.id == 100) {
+            //             val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
+            //         }
+            //     });
+            //     var r = menu.data;
+            //     menu.menu_loaded(r);
+            // });
         },
 
         /**
