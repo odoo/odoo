@@ -85,7 +85,6 @@
             <field name="parent_id" ref="msg_discussion5"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=23)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
 
         <!-- Demo user and admin conversation -->
         <record id="message_discussion" model="mail.message">

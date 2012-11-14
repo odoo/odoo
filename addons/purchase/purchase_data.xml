@@ -7,10 +7,10 @@
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Purchase Management application installed!</field>
-            <field name="body">From the top menu Purchases, create purchase orders to buy products from your suppliers, enter supplier invoices and manage payments.
-
-You can also manage purchase requisitions, see also the Purchase Settings.</field>
+            <field name="body"><![CDATA[<p>From the top menu Purchases, create purchase orders to buy products from your suppliers, enter supplier invoices and manage payments.</p>
+<p>You can also manage purchase requisitions, see also the Purchase Settings.</p>]]></field>
         </record>
 
         <record id="req_link_purchase_order" model="res.request.link">

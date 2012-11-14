@@ -19,11 +19,11 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail
+from openerp.addons.mail.tests import test_mail_mockup
 from osv.orm import except_orm
 
 
-class test_mail_access_rights(test_mail.TestMailMockups):
+class test_mail_access_rights(test_mail_mockup.TestMailMockups):
 
     def setUp(self):
         super(test_mail_access_rights, self).setUp()

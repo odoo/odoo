@@ -590,7 +590,7 @@ openerp.mail = function (session) {
 
             if (body.match(/\S+/)) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_api', [
+                this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
@@ -727,7 +727,6 @@ openerp.mail = function (session) {
 
     mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
-
         
         start: function () {
             this._super.apply(this, arguments);
