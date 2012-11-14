@@ -29,7 +29,7 @@
             Override the original action to set another help field and/or
             another context field, more suited for portal members
         -->
-        <record id="action_order_tree5" model="ir.actions.act_window">
+        <record id="action_quotations_portal" model="ir.actions.act_window">
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
@@ -39,7 +39,7 @@
             <field name="help">You don't have any quotation.</field>
         </record>
 
-        <record id="action_order_form" model="ir.actions.act_window">
+        <record id="action_orders_portal" model="ir.actions.act_window">
             <field name="name">Sale Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
@@ -104,9 +104,9 @@
         </record>
 
         <menuitem id="portal_quotations" parent="portal.portal_orders"
-            action="action_order_tree5" sequence="10"/>
+            action="action_quotations_portal" sequence="10"/>
         <menuitem id="portal_sales_orders" parent="portal.portal_orders"
-            action="action_order_form" sequence="20"/>
+            action="action_orders_portal" sequence="20"/>
         <menuitem id="portal_delivery" parent="portal.portal_orders"
             action="action_picking_tree" sequence="30"/>
         <menuitem id="portal_products" parent="portal.portal_orders"
