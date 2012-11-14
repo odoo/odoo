@@ -158,9 +158,9 @@ class mail_notification(osv.Model):
         body_html = msg.body
         # if quote_context:
             # body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
-        signature = msg.author_id and msg.author_id.user_id and msg.author_id.user_ids[0].signature or ''
+        signature = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].signature or ''
         if signature:
-            body_html = tools.append_content_to_html(body_html, tools.text2html(signature), plaintext=False)
+            body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
 
         mail_values = {
             'mail_message_id': msg.id,
