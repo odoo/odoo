@@ -21,23 +21,6 @@
             <field name="name">Usability</field>
         </record>
 
-        <!-- Projects -->
-        <record id="project_project_internal" model="project.project">
-            <field name="name">Internal Projects</field>
-            <field name="parent_id" ref="all_projects_account"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="alias_model">project.task</field>
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
-        </record>
-
-        <record id="project_project_customer" model="project.project">
-            <field name="name">Customer Projects</field>
-            <field name="parent_id" ref="all_projects_account"/>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="alias_model">project.task</field>
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_analysis'),ref('project_tt_specification'),ref('project_tt_negotiation'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_deployment')])]"/>
-        </record>
-
         <record id="project_project_1" model="project.project">
             <field name="date_start" eval="time.strftime('%Y-%m-01 10:00:00')"/>
             <field name="state">open</field>
