@@ -2383,7 +2383,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 self.$input.focus();
                 return;
             }
-            self.picker('setDate', self.value ? instance.web.auto_str_to_date(self.value) : new Date());
+            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
             self.$input_picker.show();
             self.picker('show');
             self.$input_picker.hide();
