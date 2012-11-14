@@ -235,7 +235,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
             this.ranged_search();
-            this.$el.find(".dhx_cal_navline div").removeAttr('style');
         }
         this.ready.resolve();
     },
