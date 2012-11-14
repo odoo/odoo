@@ -49,6 +49,7 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="message_blogpost0_comment0" model="mail.message">
             <field name="model">mail.group</field>
@@ -58,6 +59,7 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=57)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="message_blogpost0_comment1" model="mail.message">
             <field name="model">mail.group</field>
@@ -67,6 +69,7 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <!-- This one is starred for having mailboxes with demo data -->
         <record id="message_blogpost0_comment2" model="mail.message">
@@ -77,7 +80,8 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root'), ref('base.user_demo')])]"/>
+            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="message_blogpost0_comment3" model="mail.message">
             <field name="model">mail.group</field>
@@ -87,29 +91,31 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=9)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <!-- Discussion: email and attachment -->
         <record id="msg_discussion2_0" model="mail.message">
-            <field name="subject">Plan to install OpenERP</field>
+            <field name="subject">Plan to install servers</field>
             <field name="model">mail.message</field>
             <field name="body"><![CDATA[<p>Hello,<br/>
-I am interested in your company's product and I plan to install OpenERP for my company and affordable price.<br/>
+I am interested in your company's product and I plan to install 2 servers for my company.<br/>
 Can you please send me services catalogue?<br/>
 Virginie</p>]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="author_id" ref="base.res_partner_2"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=14)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_discussion2_1_attach" model="ir.attachment">
+        <!--record id="msg_discussion2_1_attach" model="ir.attachment">
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
             <field name="datas_fname">catalogue 2012.pdf</field>
             <field name="name">catalogue 2012.pdf</field>
         </record>
         <record id="msg_discussion2_1" model="mail.message">
-            <field name="subject">Re: Plan to install OpenERP</field>
+            <field name="subject">Re: Plan to install servers</field>
             <field name="body"><![CDATA[
                 Dear Customer,<br/>
                 Thanks for showing interest in our products.<br/>
@@ -122,16 +128,17 @@ Virginie</p>]]></field>
             <field name="parent_id" ref="msg_discussion2_0"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="attachment_ids" eval="[(6, 0, [ref('msg_discussion2_1_attach')])]"/>
-        </record>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record-->
 
         <!-- Employee & other + attachments conversation -->
-        <record id="message_video1_attachment1" model="ir.attachment">
+        <record id="msg_discussion3_attachment1" model="ir.attachment">
             <field name="model">ir.attachment</field>
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
             <field name="datas_fname">migration.doc</field>
             <field name="name">migration.doc</field>
         </record>
-        <record id="message_video1_attachment2" model="ir.attachment">
+        <record id="msg_discussion3_attachment2" model="ir.attachment">
             <field name="model">ir.attachment</field>
             <field name="datas">
                 /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEP
@@ -201,38 +208,39 @@ Virginie</p>]]></field>
             <field name="datas_fname">activity graph 2012.jpg</field>
             <field name="name">activity graph 2012</field>
         </record>
-        <record id="message_video1" model="mail.message">
+        <record id="msg_discussion3" model="mail.message">
             <field name="model">mail.group</field>
             <field name="body"><![CDATA[
                 Hi,<br/>
-                The beta OpenERP 7 is scheduled for November 12.<br/>
-                You will find attached the document for migration from version 6 to 7, and the activity graph for the current year. Good reading.<br/>
+                The next version of catalogue price list is scheduled for this next month.<br/>
+                You will find attached the catalogue and the activity graph for the current year. Good reading.<br/>
                 Sincerely
             ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="attachment_ids" eval="[(6, 0, [ref('message_video1_attachment1'), ref('message_video1_attachment2')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discussion3_attachment1'), ref('msg_discussion3_attachment2')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date">2012-11-12 10:53:32</field>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=4)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="message_video1_message1" model="mail.message">
+        <record id="msg_discussion3_message1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="body"><![CDATA[
                 Thank you,<br/>
-                Could you prepare and send us also the document for version 7.1 which will come soon?<br/>
+                Could you add the price list of us services into this document ?<br/>
                 Sincerely
             ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="parent_id" ref="message_video1"/>
+            <field name="parent_id" ref="msg_discussion3"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=7)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <!-- Network admin & employee conversation -->
-        <record id="message_video0" model="mail.message">
+        <record id="msg_discussion4" model="mail.message">
             <field name="model">res.partner</field>
             <field name="res_id" ref="base.partner_demo"/>
             <field name="body">I changed the infrastructure of networks, if there are still changes to be made please do not hesitate to contact me.</field>
@@ -241,23 +249,26 @@ Virginie</p>]]></field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="date">2012-11-12 9:49:32</field>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="message_video0_message1" model="mail.message">
+        <record id="msg_discussion4_message1" model="mail.message">
             <field name="body">Thank you, the networks is perfect now ! Could you add a IP phone for Jhon ?</field>
-            <field name="parent_id" ref="message_video0"/>
+            <field name="parent_id" ref="msg_discussion4"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="date">2012-11-12 10:09:32</field>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=2, minutes=40)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="message_video0_message2" model="mail.message">
+        <record id="msg_discussion4_message2" model="mail.message">
             <field name="body">It's right, his internal phone number is 0093</field>
-            <field name="parent_id" ref="message_video0"/>
+            <field name="parent_id" ref="msg_discussion4"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=2, minutes=4)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
     </data>
 </openerp>
