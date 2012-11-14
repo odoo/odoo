@@ -4839,6 +4839,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             link.href = "data:application/octet-stream;base64," + value;
         } else {
             instance.web.blockUI();
+            var c = instance.webclient.crashmanager;
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
@@ -4849,7 +4850,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             });
             ev.stopPropagation();
             return false;

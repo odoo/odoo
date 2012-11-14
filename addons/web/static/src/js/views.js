@@ -401,6 +401,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }).done(function(res) {
             action = _.clone(action);
             action.context = res.context;
+            var c = instance.webclient.crashmanager;
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
@@ -411,7 +412,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     self.dialog_stop();
                 },
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             })
         });
     },

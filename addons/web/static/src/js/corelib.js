@@ -1276,7 +1276,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
                 };
                 deferred.reject(error, $.Event());
             });
-        // Allow deferred user to disable on_rpc_error in fail
+        // Allow deferred user to disable rpc_error call in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
