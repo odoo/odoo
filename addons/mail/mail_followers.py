@@ -151,14 +151,12 @@ class mail_notification(osv.Model):
 
         # add the context in the email
         # TDE FIXME: commented, to be improved in a future branch
-        quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
+        # quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
 
         mail_mail = self.pool.get('mail.mail')
         # add signature
         body_html = msg.body
-        if quote_context:
-            pass
-            # print quote_context
+        # if quote_context:
             # body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
         signature = msg.author_id and msg.author_id.user_id and msg.author_id.user_ids[0].signature or ''
         if signature:
