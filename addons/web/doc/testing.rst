@@ -224,7 +224,8 @@ Loading templates
 To avoid the corresponding processing costs, by default templates are
 not loaded into QWeb. If you need to render e.g. widgets making use of
 QWeb templates, you can request their loading through the
-:js:attr:`~TestOptions.templates` option.
+:js:attr:`~TestOptions.templates` option to the :js:func:`test case
+function <openerp.testing.case>`.
 
 This will automatically load all relevant templates in the instance's
 qweb before running the test case:
@@ -286,10 +287,9 @@ case callback::
         return d;
     });
 
-This example also introduces an options object to the test case. In
-this case, it's used to specify the number of assertions the test case
-should expect, if less or more assertions are specified the case will
-count as failed.
+This example also uses the :js:class:`options parameter <TestOptions>`
+to specify the number of assertions the case should expect, if less or
+more assertions are specified the case will count as failed.
 
 Asynchronous test cases *must* specify the number of assertions they
 will run. This allows more easily catching situations where e.g. the
@@ -297,13 +297,13 @@ test architecture was not warned about asynchronous operations.
 
 .. note::
 
-    asynchronous test cases also have a 10 seconds timeout: if the
+    Asynchronous test cases also have a 10 seconds timeout: if the
     test does not finish within 10 seconds, it will be considered
     failed. This pretty much always means the test will not resolve.
 
 .. note::
 
-    if the returned deferred is rejected, the test will be failed
+    If the returned deferred is rejected, the test will be failed
     unless :js:attr:`~TestOptions.fail_on_rejection` is set to
     ``false``.
 
