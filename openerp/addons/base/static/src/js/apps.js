@@ -1,9 +1,5 @@
 openerp.base = function(instance) {
 
-// FIXME do not work on safari
-// TODO test on IE
-// FIXME when apps server is not available, redirect to failback action but do not highligth the good menu
-
     instance.base = {apps:{}};
 
     instance.base.apps.remote_instance = null;
@@ -17,8 +13,6 @@ openerp.base = function(instance) {
                 d.reject(client);
             };
             i.onload = function() {
-                console.log('client is available', client);
-
                 client.session.session_bind(client.origin).then(function() {
                     // check if client can authenticate
                     client.authenticate().then(
@@ -68,8 +62,6 @@ openerp.base = function(instance) {
                 }
                 var client = new instance.base.apps.remote_instance.web.EmbeddedClient(null, host,
                                                                          dbname, login, passwd);
-
-                console.log('new client', client);
                 instance.base.apps._client = client;
                 return check_client_available(client);
             });
@@ -108,16 +100,11 @@ openerp.base = function(instance) {
 
         start: function() {
             var self = this;
-            console.time('apps');
-            console.time('client');
-            console.log('Apps.start()');
             return instance.base.apps.get_client().
                 done(function(client) {
-                    console.timeEnd('client');
                     client.replace(self.$el).
                         done(function() {
                             client.$el.removeClass('openerp');
-                            console.timeEnd('apps');
                             client.do_action(self.remote_action_id);
                         });
                 }).
