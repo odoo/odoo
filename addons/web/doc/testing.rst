@@ -47,9 +47,9 @@ and to create the corresponding test file(s)
 
 .. note::
 
-    test files which do not exist will be ignored, if all test files
+    Test files which do not exist will be ignored, if all test files
     of a module are ignored (can not be found), the test runner will
-    consider that the module has no javascript tests
+    consider that the module has no javascript tests.
 
 After that, refreshing the runner selector will display the new module
 and allow running all of its (0 so far) tests:
@@ -214,7 +214,7 @@ scratchpad your code can do whatever it wants::
 
 .. note::
 
-    the top-level element of the scratchpad is not cleaned up, test
+    The top-level element of the scratchpad is not cleaned up, test
     cases can add text or DOM children but shoud not alter
     ``$scratchpad`` itself.
 
@@ -315,9 +315,9 @@ need to perform (and chain, to an extent) RPC calls.
 
 .. note::
 
-    because they are a subset of asynchronous cases, RPC cases must
+    Because they are a subset of asynchronous cases, RPC cases must
     also provide a valid :js:attr:`assertions count
-    <TestOptions.asserts>`
+    <TestOptions.asserts>`.
 
 By default, test cases will fail when trying to perform an RPC
 call. The ability to perform RPC calls must be explicitly requested by
@@ -404,10 +404,10 @@ To do this, set the :js:attr:`rpc option <TestOptions.rpc>` to
 
 .. note::
 
-    mock handlers can contain assertions, these assertions should be
+    Mock handlers can contain assertions, these assertions should be
     part of the assertions count (and if multiple calls are made to a
     handler containing assertions, it multiplies the effective number
-    of assertions)
+    of assertions).
 
 .. _testing-rpc-rpc:
 
