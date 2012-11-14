@@ -7,7 +7,6 @@
         <record id="view_survey_send_invitation" model="ir.ui.view">
             <field name="name">Send Invitation</field>
             <field name="model">survey.send.invitation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send Invitation" version="7.0">
                     <header>
@@ -17,7 +16,7 @@
                     </header>
                     <group col="4">
                         <separator string="Select Partner" colspan="4"/>
-                        <field name="partner_ids" nolabel="1"  colspan="4"/>
+                        <field name="partner_ids" nolabel="1" colspan="4" widget="many2many_tags"/>
                         <separator colspan="4" string="Send Mail for New User"/>
                         <field name="send_mail" nolabel="1"/>
                         <field name="mail_subject" colspan="3"/>
@@ -53,7 +52,6 @@
         <record id="view_survey_send_invitation_log" model="ir.ui.view">
             <field name="name">survey send invitation log</field>
             <field name="model">survey.send.invitation.log</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User creation" version="7.0">
                     <group string="Results :">

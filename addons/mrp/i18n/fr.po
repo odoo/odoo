@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:39+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:49+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -241,11 +241,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
 msgstr "Pour un produit acheté"
-
-#. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Révision"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
@@ -524,11 +519,6 @@ msgid "For Services."
 msgstr "Pour les services."
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Date de modification"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -588,11 +578,6 @@ msgstr "Configurer les centres de travails"
 #: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "Forcer la réservation"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Auteur"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -864,6 +849,12 @@ msgid ""
 "resource leave are not taken into account in the time computation of the "
 "work center."
 msgstr ""
+"Les centres de travaux vous permettent de créer et de gérer des unités de "
+"production. Elles consistent en des opérateurs et/ou des machines, qui sont "
+"considérés comme des unités pour les prévisions de la capacité et de la "
+"planification. Rappelez-vous que le temps de travail et les congés des "
+"ressources ne sont pas prises en compte dans le calcul du temps du centre de "
+"travail."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -885,11 +876,6 @@ msgstr "Cycles Totaux"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Prêt à Produire"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Nom de la Modification"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1487,11 +1473,6 @@ msgid "Work Center Loads"
 msgstr "Occupation des postes de charge"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Révision des nomenclatures"
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -1623,7 +1604,7 @@ msgstr "Production à la demande"
 #: code:addons/mrp/mrp.py:358
 #, python-format
 msgid "Copy"
-msgstr "Copier"
+msgstr "Copie"
 
 #. module: mrp
 #: help:mrp.workcenter,note:0
@@ -1771,6 +1752,8 @@ msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
 "But you can only consume up to total %s quantities."
 msgstr ""
+"Vous allez consommer un total de %s \"%s\".\n"
+"Mais vous ne pouvez consommer qu'un maximum de %s."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_bom0
@@ -2029,12 +2012,6 @@ msgid "Orange Juice"
 msgstr "Jus d'orange"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "Nomenclature"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -2050,17 +2027,6 @@ msgstr "Affectation à partir du stock."
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "En attente de marchandises"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "Dernier Indice"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "Révisions des Nomenclatures"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2133,6 +2099,8 @@ msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
 "But you can only produce up to total %s quantities."
 msgstr ""
+"Vous allez produire un total de %s \"%s\".\n"
+"Mais vous ne pouvez produire qu'un maximum de %s."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stockproduct0
@@ -2249,19 +2217,6 @@ msgstr "Changer la quantité"
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
 msgstr "Changer la Qté de Produits"
-
-#. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Description"
 
 #. module: mrp
 #: view:board.board:0
@@ -2409,6 +2364,9 @@ msgstr "Produits à consommer"
 #~ msgid "Moves Created"
 #~ msgstr "Mouvements créés"
 
+#~ msgid "Revision"
+#~ msgstr "Révision"
+
 #~ msgid "Packing list"
 #~ msgstr "Liste des Colisages"
 
@@ -2457,6 +2415,12 @@ msgstr "Produits à consommer"
 #~ msgid "Print product price"
 #~ msgstr "Imprimer le prix du produit"
 
+#~ msgid "Modification Date"
+#~ msgstr "Date de modification"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
+
 #~ msgid "Latest error"
 #~ msgstr "Dernière Erreur"
 
@@ -2486,6 +2450,9 @@ msgstr "Produits à consommer"
 
 #~ msgid "Security Days"
 #~ msgstr "Jours de sécurité"
+
+#~ msgid "Modification name"
+#~ msgstr "Nom de la Modification"
 
 #~ msgid "Exception"
 #~ msgstr "Exception"
@@ -2601,8 +2568,17 @@ msgstr "Produits à consommer"
 #~ msgid "plus"
 #~ msgstr "plus"
 
+#~ msgid "BoM"
+#~ msgstr "Nomenclature"
+
 #~ msgid "New Production Order"
 #~ msgstr "Nouvel Ordre de Production"
+
+#~ msgid "last indice"
+#~ msgstr "Dernier Indice"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Révisions des Nomenclatures"
 
 #~ msgid "Retry"
 #~ msgstr "Réessayez"
@@ -2615,6 +2591,9 @@ msgstr "Produits à consommer"
 
 #~ msgid "Warehouse"
 #~ msgstr "Entrepôt"
+
+#~ msgid "Description"
+#~ msgstr "Description"
 
 #~ msgid "Running"
 #~ msgstr "En cours"
@@ -3271,6 +3250,9 @@ msgstr "Produits à consommer"
 #, python-format
 #~ msgid "Total Cost of "
 #~ msgstr "Coût total "
+
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Révision des nomenclatures"
 
 #, python-format
 #~ msgid "Work Cost of "

@@ -25,6 +25,8 @@ from tools.safe_eval import safe_eval as eval
 import time
 import urllib
 import uuid
+from openerp import SUPERUSER_ID
+
 try:
     from tools.dict_tools import dict_filter
 except ImportError:
@@ -233,7 +235,7 @@ class node_acl_mixin(object):
         
         if props_to_delete:
             # explicitly delete, as admin, any of the ids we have identified.
-            propobj.unlink(cr, 1, props_to_delete)
+            propobj.unlink(cr, SUPERUSER_ID, props_to_delete)
         
         if lock_data.get('unlock_mode', False):
             return lock_found and True

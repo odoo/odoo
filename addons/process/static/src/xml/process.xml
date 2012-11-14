@@ -1,0 +1,93 @@
+<template>
+<!-- vim:fdl=1:
+-->
+<t t-extend="ViewManagerAction">
+    <t t-jquery="h2.oe_view_title" t-operation="after">
+        <t t-if="widget.session.debug &amp;&amp; widget.flags.display_title !== false">
+            <a class="oe_process" title="Process View" href="javascript: void(0)"></a>
+        </t>
+    </t>
+</t>
+<t t-name="process.ProcessView">
+    <table class="view" border="0" width="auto" height="auto" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="70%" valign="top" class="fields collapsed">
+                <div class="oe_view_manager oe_view_manager_current">
+                   <div class="oe_view_manager_header" style="padding: 8px;">
+                       <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title"><t t-esc="action.name"/> (<a t-attf-href="http://doc.openerp.com/v6.1/index.php?model=#{action.res_model}"><t t-esc="action.res_model"/></a>)</span>
+                            </h2>
+                       </div>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-left:10px;">
+                <p><t t-raw="process_help"/></p>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding-left:10px;">
+                <h2> <t t-esc="process_title"/> Process </h2>
+                <t t-if="process_notes">
+                    <p>
+                        <strong>Notes:</strong> <t t-esc="process_notes"/>
+                    </p>
+                    <p>
+                        <strong>Last modified by:</strong> N/A
+                    </p>
+                    <t t-if="process_subflows.length">
+                        <strong>Subflows:</strong>
+                        <t t-foreach="process_subflows" t-as="subflow">
+                            <t t-if="subflow.subflow[0] != process_id">
+                                <p>
+                                    <a class="oe_bold process_subflow" t-att-id="subflow.subflow[0]" href="javascript: void(0)">
+                                        <t t-esc="subflow.subflow[1]"/>
+                                    </a>
+                                </p>
+                            </t>
+                        </t>
+                    </t>
+                    <t t-if="process_related.length and process_related[0][0] != process_id">
+                        <strong>Related:</strong>
+                        <p>
+                            <a class="oe_bold process_subflow" t-att-id="process_related[0][0]" href="javascript: void(0)">
+                                <t t-esc="process_related[0][1]"/>
+                            </a>
+                        </p>
+                    </t>
+                </t>
+            </td>
+        </tr>
+        <tr t-if="process_selection">
+            <td style="padding-left:10px;">
+                <fieldset>
+                    <legend>
+                        Select Process
+                        </legend>
+                    <select id="select_process">
+                        <t t-foreach="process_selection" t-as="prc">
+                            <option t-att-value="prc[0]">
+                                <t t-esc="prc[1]"/>
+                            </option>
+                        </t>
+                    </select>
+                    <button class="oe_button oe_highlight" id="change_process">Select</button>
+                </fieldset>
+            </td>
+        </tr>
+        <tr t-if="process_id">
+            <td>
+                <div class="process_canvas"></div>
+            </td>
+        </tr>
+        <tr t-if="process_id">
+            <td style="padding-left:10px;">
+                <button class="oe_button oe_highlight" id="edit_process">Edit Process</button>
+            </td>
+        </tr>
+    </table>
+</t>
+</template>

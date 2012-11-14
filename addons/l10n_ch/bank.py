@@ -48,24 +48,9 @@ class ResPartnerBank(osv.osv):
         'dta_code': fields.char('DTA code', size=5),
         'print_bank': fields.boolean('Print Bank on BVR'),
         'print_account': fields.boolean('Print Account Number on BVR'),
-        'acc_number': fields.char('Account/IBAN Number', size=64),
+        'acc_number': fields.char('Account Number', size=64),
         'my_bank': fields.boolean('Use my account to print BVR ?', help="Check to print BVR invoices"),
     }
-
-    def name_get(self, cursor, uid, ids, context=None):
-        if not len(ids):
-            return []
-        bank_type_obj = self.pool.get('res.partner.bank.type')
-
-        type_ids = bank_type_obj.search(cursor, uid, [])
-        bank_type_names = {}
-        for bank_type in bank_type_obj.browse(cursor, uid, type_ids,
-                context=context):
-            bank_type_names[bank_type.code] = bank_type.name
-        res = []
-        for r in self.read(cursor, uid, ids, ['name','state'], context):
-            res.append((r['id'], r['name']+' : '+bank_type_names.get(r['state'], '')))
-        return res
 
     def _prepare_name(self, bank):
         "Hook to get bank number of bank account"

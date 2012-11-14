@@ -14,18 +14,19 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
-msgstr ""
+msgstr "Vorlagen für die Bilanz"
 
 #. module: l10n_multilang
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
 msgstr ""
+"Die Kurzbezeichnung muss innerhalb eines Unternehmens eindeutig sein!"
 
 #. module: l10n_multilang
 #: constraint:account.account.template:0
@@ -34,6 +35,8 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Konfigurationsfehler!\n"
+"Ein untergeordnetes Konto muss den Typ \"Sicht\" haben! "
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_journal
@@ -63,7 +66,7 @@ msgstr "Die Beschreibung muss je Unternehmen eindeutig sein."
 #. module: l10n_multilang
 #: constraint:account.tax.code.template:0
 msgid "Error ! You can not create recursive Tax Codes."
-msgstr ""
+msgstr "Fehler! Steuerschlüssel dürfen sich nicht auf sich selbst beziehen."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
@@ -107,6 +110,10 @@ msgid ""
 "the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
 msgstr ""
+"Geben Sie hier an, für welche Sprachen Vorlagenübersetzungen bei der "
+"Installation der Sprachanpassungsmodule geladen und von der Vorlage in das "
+"endgültige Objekt kopiert werden sollen. Sie müssen die Landeskennungen "
+"durch ';' getrennt angeben."
 
 #. module: l10n_multilang
 #: constraint:account.account:0
@@ -120,6 +127,9 @@ msgid ""
 "You can not select an account type with a deferral method different of "
 "\"Unreconciled\" for accounts with internal type \"Payable/Receivable\"! "
 msgstr ""
+"Konfigurationsfehler!\n"
+"Forderungen und Verbindlichkeiten müssen, von der Vortragsmethode her, "
+"\"unausgegleichen\" sein "
 
 #. module: l10n_multilang
 #: sql_constraint:account.journal:0
@@ -136,11 +146,13 @@ msgstr "Konstenstellenkonto"
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
 msgstr ""
+"Die Kurzbezeichnung des Berichts muss je Unternehmen (Mandant) eindeutig "
+"sein ."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Bilanz"
 
 #. module: l10n_multilang
 #: constraint:account.account:0
@@ -149,18 +161,22 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"Konfigurationsfehler!\n"
+"Das übergeordnete Konto muss den Typ \"Sicht\" haben. "
 
 #. module: l10n_multilang
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
 msgstr ""
+"Fehler ! Analytische Konten dürfen sich nicht auf sich selbst beziehen, also "
+"nicht rekursiv definiert sein."
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_tax_code_template
 msgid "Tax Code Template"
-msgstr ""
+msgstr "Vorlagen für Steuerschlüssel"
 
 #. module: l10n_multilang
 #: field:account.chart.template,spoken_languages:0
 msgid "Spoken Languages"
-msgstr ""
+msgstr "Gesprochene Sprachen"

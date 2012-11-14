@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:43+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:53+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: event
 #: view:event.event:0
@@ -24,7 +24,7 @@ msgstr "Fatura Bilgileri"
 #. module: event
 #: view:partner.event.registration:0
 msgid "Event Details"
-msgstr "Olay Ayrıntıları"
+msgstr "Etkinlik Ayrıntıları"
 
 #. module: event
 #: field:event.event,main_speaker_id:0
@@ -46,7 +46,7 @@ msgstr "Enaz Kayıt"
 #. module: event
 #: model:ir.model,name:event.model_event_confirm_registration
 msgid "Confirmation for Event Registration"
-msgstr "Olay Kayıtı Onaylama"
+msgstr "Etkinlik Kaydı Onaylama"
 
 #. module: event
 #: field:event.registration.badge,title:0
@@ -82,7 +82,7 @@ msgstr "Bon Jovi Konseri"
 #. module: event
 #: view:report.event.registration:0
 msgid "Invoiced Registrations only"
-msgstr ""
+msgstr "Yalnızca Faturalı Kayıtlar"
 
 #. module: event
 #: selection:report.event.registration,month:0
@@ -157,6 +157,8 @@ msgstr "Kayıttaki Etkinlik"
 #: help:event.event,reply_to:0
 msgid "The email address put in the 'Reply-To' of all emails sent by OpenERP"
 msgstr ""
+"OpenERP tarafından gönderilen tüm epostaların 'Bunu Yanıtla'ya konan eposta "
+"adresi"
 
 #. module: event
 #: view:event.registration:0
@@ -166,12 +168,12 @@ msgstr "İç Not Ekle"
 #. module: event
 #: view:event.event:0
 msgid "Confirmed events"
-msgstr ""
+msgstr "Onaylı etkinlikler"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Event Beginning Date"
-msgstr ""
+msgstr "Etkinlik Başlama Tarihi"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_report_event_registration
@@ -179,7 +181,7 @@ msgstr ""
 #: model:ir.ui.menu,name:event.menu_report_event_registration
 #: view:report.event.registration:0
 msgid "Events Analysis"
-msgstr "Etkinlik Analizi"
+msgstr "Etkinlik İncelemesi"
 
 #. module: event
 #: field:event.registration,message_ids:0
@@ -189,7 +191,7 @@ msgstr "İletiler"
 #. module: event
 #: model:ir.model,name:event.model_event_registration_badge
 msgid "event.registration.badge"
-msgstr ""
+msgstr "etkinlik.kayıt.rozet"
 
 #. module: event
 #: field:event.event,mail_auto_confirm:0
@@ -206,7 +208,7 @@ msgstr "Opera İçin Bilet"
 #: view:event.event:0
 #, python-format
 msgid "Confirm Event"
-msgstr "Etkinlik Onayı"
+msgstr "Etkinlik Onayla"
 
 #. module: event
 #: selection:event.event,state:0
@@ -224,7 +226,7 @@ msgstr "Yanıtla"
 #: model:ir.actions.act_window,name:event.open_board_associations_manager
 #: model:ir.ui.menu,name:event.menu_board_associations_manager
 msgid "Event Dashboard"
-msgstr "Etkinlik Panosu"
+msgstr "Etkinlik Kontrol Paneli"
 
 #. module: event
 #: model:event.event,name:event.event_1
@@ -239,7 +241,7 @@ msgstr "Temmuz"
 #. module: event
 #: help:event.event,register_prospect:0
 msgid "Total of Prospect Registrations"
-msgstr ""
+msgstr "Toplam Umutlar Kayıtları"
 
 #. module: event
 #: help:event.event,mail_auto_confirm:0
@@ -247,6 +249,7 @@ msgid ""
 "Check this box if you want to use automatic confirmation emailing or "
 "reminder."
 msgstr ""
+"Otomatik eposta ve anımsatma onaylama kullanımı için bu kutuyu işaretle."
 
 #. module: event
 #: field:event.registration,ref:0
@@ -326,12 +329,12 @@ msgstr "Kayıt Onaylama"
 #. module: event
 #: view:event.event:0
 msgid "Events in New state"
-msgstr ""
+msgstr "Yeni durumundaki Etkinlikler"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Confirm"
-msgstr ""
+msgstr "Onayla"
 
 #. module: event
 #: view:event.event:0
@@ -366,7 +369,7 @@ msgstr "Yeni Eposta gönder"
 #. module: event
 #: help:event.event,register_min:0
 msgid "Provide Minimum Number of Registrations"
-msgstr ""
+msgstr "Enaz Sayıda Kayıt Sağlayın"
 
 #. module: event
 #: view:event.event:0
@@ -378,7 +381,7 @@ msgstr "Konum"
 #: view:event.registration:0
 #: view:report.event.registration:0
 msgid "New"
-msgstr ""
+msgstr "Yeni"
 
 #. module: event
 #: field:event.event,register_current:0
@@ -409,6 +412,9 @@ msgid ""
 "subscribes to a confirmed event. This is also the email sent to remind "
 "someone about the event."
 msgstr ""
+"Bu eposta etkinlik onaylandığında ya da biri onaylanmış bir etkinliğe abone "
+"olduğunda gönderilmiş olacaktır. Bu aynı zamanda etkinlik hakkında birine "
+"anımsatma için gönderilen epostadır."
 
 #. module: event
 #: field:event.registration,tobe_invoiced:0
@@ -418,7 +424,7 @@ msgstr "Faturalanacak"
 #. module: event
 #: view:event.event:0
 msgid "My Sales Team(s)"
-msgstr ""
+msgstr "Satış Takım(lar)ım"
 
 #. module: event
 #: code:addons/event/event.py:398
@@ -430,7 +436,7 @@ msgstr "Hata !"
 #: field:event.event,name:0
 #: field:event.registration,name:0
 msgid "Summary"
-msgstr ""
+msgstr "Özet"
 
 #. module: event
 #: field:event.registration,create_date:0
@@ -448,27 +454,27 @@ msgstr "Kaydı İptal Et"
 #: code:addons/event/event.py:399
 #, python-format
 msgid "Registered partner doesn't have an address to make the invoice."
-msgstr ""
+msgstr "Fatura oluşturmak için kayıtlı paydaşın adresi yok."
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in last month"
-msgstr ""
+msgstr "Son ayda oluşturulan Etkinlikler"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current year"
-msgstr ""
+msgstr "Geçerli ayda oluşturulan Etkinlikler"
 
 #. module: event
 #: help:event.event,type:0
 msgid "Type of Event like Seminar, Exhibition, Conference, Training."
-msgstr "Etkinlik Türü, Seminer, Sergi, Konferansi Eğitim gibi."
+msgstr "Etkinlik Türü; Seminer, Sergi, Konferans, Eğitim gibi."
 
 #. module: event
 #: view:event.registration:0
 msgid "Confirmed registrations"
-msgstr ""
+msgstr "Onaylı kayıtlar"
 
 #. module: event
 #: view:event.event:0
@@ -495,12 +501,12 @@ msgstr "Herdurumda Yazdır"
 #: code:addons/event/wizard/event_confirm_registration.py:54
 #, python-format
 msgid "Warning: The Event '%s' has reached its Maximum Limit (%s)."
-msgstr ""
+msgstr "Uyarı: Etkinlik '%s' Ençok Sınırına (%s) ulaşmıştır."
 
 #. module: event
 #: view:report.event.registration:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Ay-1    "
 
 #. module: event
 #: view:event.event:0
@@ -518,7 +524,7 @@ msgstr "Etkinlik Sayısı"
 #. module: event
 #: help:event.event,main_speaker_id:0
 msgid "Speaker who will be giving speech at the event."
-msgstr ""
+msgstr "Bu etkinlikte konuşmayı yapacak konuşmacı."
 
 #. module: event
 #: help:event.event,state:0
@@ -527,6 +533,10 @@ msgid ""
 "particular dates the state is set to 'Confirmed'. If the event is over, the "
 "state is set to 'Done'.If event is cancelled the state is set to 'Cancelled'."
 msgstr ""
+"Eğer etkinlik oluşturulmuşsa, durumu 'Taslak'tır. Etkinlik belirli tarihler "
+"için onaylanmışsa durumu 'Onaylı'ya ayarlanır. Etkinlik bitmişse, durum "
+"'Bitti'ye ayarlanır. Etkinlik iptal edildiyse durum 'İptal edildi'ye "
+"ayarlanır."
 
 #. module: event
 #: view:event.event:0
@@ -567,7 +577,7 @@ msgstr "Postalama"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events States"
-msgstr ""
+msgstr "Etkinliklerin Durumları"
 
 #. module: event
 #: view:board.board:0
@@ -583,12 +593,12 @@ msgstr "Faturalanan Ortak"
 #. module: event
 #: help:event.event,register_max:0
 msgid "Provide Maximum Number of Registrations"
-msgstr ""
+msgstr "Ençok Sayıda Kayıt Sağlayın"
 
 #. module: event
 #: field:event.registration,log_ids:0
 msgid "Logs"
-msgstr ""
+msgstr "Günlükler"
 
 #. module: event
 #: view:event.event:0
@@ -598,33 +608,33 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,state:0
 msgid "State"
-msgstr ""
+msgstr "Durum"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "September"
-msgstr ""
+msgstr "Eylül"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "December"
-msgstr ""
+msgstr "Aralık"
 
 #. module: event
 #: field:event.registration,event_product:0
 msgid "Invoice Name"
-msgstr ""
+msgstr "Fatura Adı"
 
 #. module: event
 #: field:report.event.registration,draft_state:0
 msgid " # No of Draft Registrations"
-msgstr ""
+msgstr " # Taslak Kayıtlar Sayısı"
 
 #. module: event
 #: view:report.event.registration:0
 #: field:report.event.registration,month:0
 msgid "Month"
-msgstr ""
+msgstr "Ay"
 
 #. module: event
 #: view:event.event:0
@@ -634,50 +644,50 @@ msgstr "Etkinlik Bitti"
 #. module: event
 #: view:event.registration:0
 msgid "Registrations in unconfirmed state"
-msgstr ""
+msgstr "Kayıt onaylanmamış durumda"
 
 #. module: event
 #: help:event.event,register_current:0
 msgid "Total of Open and Done Registrations"
-msgstr ""
+msgstr "Toplam Açık ve Biten Kayıtlar"
 
 #. module: event
 #: field:event.confirm.registration,msg:0
 msgid "Message"
-msgstr ""
+msgstr "İleti"
 
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! You cannot create recursive event."
-msgstr ""
+msgstr "Hata ! Özyinelemeli etkinlik oluşturmazsınız."
 
 #. module: event
 #: field:event.registration,ref2:0
 msgid "Reference 2"
-msgstr ""
+msgstr "Referans 2"
 
 #. module: event
 #: code:addons/event/event.py:361
 #: view:report.event.registration:0
 #, python-format
 msgid "Invoiced"
-msgstr ""
+msgstr "Faturalandı"
 
 #. module: event
 #: view:event.event:0
 #: view:report.event.registration:0
 msgid "My Events"
-msgstr ""
+msgstr "Etkinliklerim"
 
 #. module: event
 #: view:event.event:0
 msgid "Speakers"
-msgstr ""
+msgstr "Konuşmacılar"
 
 #. module: event
 #: view:event.make.invoice:0
 msgid "Create invoices"
-msgstr ""
+msgstr "Fatura oluştur"
 
 #. module: event
 #: help:event.registration,email_cc:0
@@ -686,26 +696,28 @@ msgid ""
 "outbound emails for this record before being sent. Separate multiple email "
 "addresses with a comma"
 msgstr ""
+"Bu e-posta adresleri gönderilmeden önce bütün gelen ve giden e-postaların CC "
+"satırına eklenecektir. Birden fazla e-posta adresini virgül ile ayırınız."
 
 #. module: event
 #: view:event.make.invoice:0
 msgid "Do you really want to create the invoice(s) ?"
-msgstr ""
+msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
 
 #. module: event
 #: view:event.event:0
 msgid "Beginning Date"
-msgstr ""
+msgstr "Başlama Tarihi"
 
 #. module: event
 #: field:event.registration,date_closed:0
 msgid "Closed"
-msgstr ""
+msgstr "Kapalı"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in New state"
-msgstr ""
+msgstr "Yeni durumundaki etkinlikler"
 
 #. module: event
 #: view:event.event:0
@@ -724,18 +736,18 @@ msgstr "Kayıt Numarası"
 #. module: event
 #: field:event.event,child_ids:0
 msgid "Child Events"
-msgstr ""
+msgstr "Alt Etkinlikler"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "August"
-msgstr ""
+msgstr "Ağustos"
 
 #. module: event
 #: field:res.partner,event_ids:0
 #: field:res.partner,event_registration_ids:0
 msgid "unknown"
-msgstr ""
+msgstr "bilinmeyen"
 
 #. module: event
 #: help:event.event,product_id:0
@@ -744,11 +756,14 @@ msgid ""
 "Thus it allows you to set the default label and the accounting info you want "
 "by default on these invoices."
 msgstr ""
+"Bu etkinlik kaydının faturaları bu ürünle birlikte oluşturulacaktır. "
+"Böylece, bu faturalarda varsayılan olarak istediğiniz öntanımlı etiket ve "
+"muhasebe bilgileri ayarlamanıza izin verir."
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "June"
-msgstr ""
+msgstr "Haziran"
 
 #. module: event
 #: model:product.template,name:event.event_product_0_product_template
@@ -758,12 +773,12 @@ msgstr "Konser için Bilet"
 #. module: event
 #: field:event.registration,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Yazım Tarihi"
 
 #. module: event
 #: view:event.registration:0
 msgid "My Registrations"
-msgstr ""
+msgstr "Kayıtlarım"
 
 #. module: event
 #: view:event.confirm:0
@@ -771,57 +786,59 @@ msgid ""
 "Warning: This Event has not reached its Minimum Registration Limit. Are you "
 "sure you want to confirm it?"
 msgstr ""
+"Uyarı: Bu Etkinlik Enaz Kayıt Sınırına erişmemiştir. Bunu onaylamak "
+"istediğinizden emin misiniz?"
 
 #. module: event
 #: field:event.registration,active:0
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #. module: event
 #: field:event.registration,date:0
 msgid "Start Date"
-msgstr ""
+msgstr "Başlama Tarihi"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "November"
-msgstr ""
+msgstr "Kasım"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Genişletilmiş Süzgeçler..."
 
 #. module: event
 #: field:partner.event.registration,start_date:0
 msgid "Start date"
-msgstr ""
+msgstr "Başlama Tarihi"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "October"
-msgstr ""
+msgstr "Ekim"
 
 #. module: event
 #: field:event.event,language:0
 msgid "Language"
-msgstr ""
+msgstr "Dil"
 
 #. module: event
 #: view:event.registration:0
 #: field:event.registration,email_cc:0
 msgid "CC"
-msgstr ""
+msgstr "CC"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "January"
-msgstr ""
+msgstr "Ocak"
 
 #. module: event
 #: help:event.registration,email_from:0
 msgid "These people will receive email."
-msgstr ""
+msgstr "Bu kişilere e-posta alacaktır"
 
 #. module: event
 #: view:event.event:0
@@ -842,22 +859,22 @@ msgstr "Kaydı Onayla"
 #: view:report.event.registration:0
 #: view:res.partner:0
 msgid "Date"
-msgstr ""
+msgstr "Tarih"
 
 #. module: event
 #: view:event.event:0
 msgid "Registration Email Body"
-msgstr ""
+msgstr "Kayıt Epostası Gövdesi"
 
 #. module: event
 #: view:event.event:0
 msgid "Confirmation Email Body"
-msgstr ""
+msgstr "Onaylı Eposta Gövdesi"
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Registrations in confirmed or done state"
-msgstr ""
+msgstr "Kayıtlar onaylanmış ya da bitmiş durumdadır"
 
 #. module: event
 #: view:event.registration:0
@@ -868,7 +885,7 @@ msgstr "Geçmiş Bilgisi"
 #. module: event
 #: field:event.event,address_id:0
 msgid "Location Address"
-msgstr ""
+msgstr "Konum Adresi"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_type
@@ -890,7 +907,7 @@ msgstr "Fiyat Listesi"
 #: code:addons/event/wizard/event_make_invoice.py:59
 #, python-format
 msgid "Event related doesn't have any product defined"
-msgstr ""
+msgstr "İlgili Etkinliğe tanımlı herhangi bir ürün yoktur"
 
 #. module: event
 #: view:event.event:0
@@ -905,7 +922,7 @@ msgstr "Çeşitli"
 #. module: event
 #: constraint:event.event:0
 msgid "Error ! Closing Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Hata ! Kapanış Tarihi, Başlama Tarihinden önceye ayarlanamaz."
 
 #. module: event
 #: code:addons/event/event.py:446
@@ -932,7 +949,7 @@ msgstr "Fatura"
 #: view:report.event.registration:0
 #: field:report.event.registration,year:0
 msgid "Year"
-msgstr ""
+msgstr "Yıl"
 
 #. module: event
 #: code:addons/event/event.py:465
@@ -945,12 +962,12 @@ msgstr "İptal"
 #: view:event.confirm.registration:0
 #: view:event.make.invoice:0
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #. module: event
 #: view:event.event:0
 msgid "Event by Registration"
-msgstr ""
+msgstr "Kayıta göre Etkinlik"
 
 #. module: event
 #: code:addons/event/event.py:436
@@ -961,14 +978,14 @@ msgstr "Açık"
 #. module: event
 #: field:event.event,user_id:0
 msgid "Responsible User"
-msgstr ""
+msgstr "Sorumlu Kullanıcı"
 
 #. module: event
 #: code:addons/event/event.py:561
 #: code:addons/event/event.py:568
 #, python-format
 msgid "Auto Confirmation: [%s] %s"
-msgstr ""
+msgstr "Oto Onaylama:[%s] %s"
 
 #. module: event
 #: view:event.event:0
@@ -977,14 +994,14 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Sorumlu"
 
 #. module: event
 #: field:event.event,unit_price:0
 #: view:event.registration:0
 #: field:partner.event.registration,unit_price:0
 msgid "Registration Cost"
-msgstr ""
+msgstr "Kayıt Ücreti"
 
 #. module: event
 #: field:event.registration,unit_price:0
@@ -996,7 +1013,7 @@ msgstr "Birim Fiyat"
 #: field:report.event.registration,speaker_id:0
 #: field:res.partner,speaker:0
 msgid "Speaker"
-msgstr ""
+msgstr "Konuşmacı"
 
 #. module: event
 #: model:event.event,name:event.event_2
@@ -1011,19 +1028,21 @@ msgstr "Yanıtla"
 #. module: event
 #: view:report.event.registration:0
 msgid "Events created in current month"
-msgstr ""
+msgstr "Geçerli ayda oluşturulan Etkinlikler"
 
 #. module: event
 #: help:event.event,mail_auto_registr:0
 msgid ""
 "Check this box if you want to use automatic emailing for new registration."
 msgstr ""
+"Yeni kayıtlar için otomatik epostalama kullanmak istiyorsanız bu kutuyu "
+"işaretleyin."
 
 #. module: event
 #: field:event.event,date_end:0
 #: field:partner.event.registration,end_date:0
 msgid "Closing date"
-msgstr ""
+msgstr "Kapanış tarihi"
 
 #. module: event
 #: field:event.event,product_id:0
@@ -1038,32 +1057,32 @@ msgstr "Ürün"
 #: view:event.registration:0
 #: field:event.registration,description:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: event
 #: field:report.event.registration,confirm_state:0
 msgid " # No of Confirmed Registrations"
-msgstr ""
+msgstr " Onaylanmış Kayıtların #"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.act_register_event_partner
 msgid "Subscribe"
-msgstr ""
+msgstr "Abone ol"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "May"
-msgstr ""
+msgstr "Mayıs"
 
 #. module: event
 #: view:res.partner:0
 msgid "Events Registration"
-msgstr ""
+msgstr "Etkinlik Kaydı"
 
 #. module: event
 #: help:event.event,mail_registr:0
 msgid "This email will be sent when someone subscribes to the event."
-msgstr "Birisi Etkinliğe abone olduğunda bu e-posta gönderilecek."
+msgstr "Birisi Etkinliğe abone olduğunda bu e-posta gönderilmiş olacaktır."
 
 #. module: event
 #: model:product.template,name:event.event_product_2_product_template
@@ -1073,60 +1092,60 @@ msgstr "Konferans için Bilet"
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_type_association
 msgid "Events Type"
-msgstr ""
+msgstr "Etkinliklerin Türü"
 
 #. module: event
 #: field:event.registration.badge,address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Adres"
 
 #. module: event
 #: view:board.board:0
 #: model:ir.actions.act_window,name:event.act_event_view
 msgid "Next Events"
-msgstr ""
+msgstr "Sonraki Etkinlikler"
 
 #. module: event
 #: view:partner.event.registration:0
 msgid "_Subcribe"
-msgstr ""
+msgstr "_Abone ol"
 
 #. module: event
 #: model:ir.model,name:event.model_partner_event_registration
 msgid "  event Registration "
-msgstr ""
+msgstr "  etkinlik Kaydı "
 
 #. module: event
 #: help:event.event,date_begin:0
 #: help:partner.event.registration,start_date:0
 msgid "Beginning Date of Event"
-msgstr ""
+msgstr "Etkinliğin Başlama Tarihi"
 
 #. module: event
 #: selection:event.registration,state:0
 msgid "Unconfirmed"
-msgstr ""
+msgstr "Onaysız"
 
 #. module: event
 #: code:addons/event/event.py:565
 #, python-format
 msgid "Auto Registration: [%s] %s"
-msgstr ""
+msgstr "Oto Kayıt: [%s] %s"
 
 #. module: event
 #: field:event.registration,date_deadline:0
 msgid "End Date"
-msgstr ""
+msgstr "Bitiş Tarihi"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "February"
-msgstr ""
+msgstr "Şubat"
 
 #. module: event
 #: view:board.board:0
 msgid "Association Dashboard"
-msgstr ""
+msgstr "Dernek Kontrol Paneli"
 
 #. module: event
 #: view:event.event:0
@@ -1140,18 +1159,18 @@ msgstr "Adı"
 #: view:report.event.registration:0
 #: field:report.event.registration,section_id:0
 msgid "Sale Team"
-msgstr ""
+msgstr "Satış Takımı"
 
 #. module: event
 #: field:event.event,country_id:0
 msgid "Country"
-msgstr ""
+msgstr "Ülke"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:55
 #, python-format
 msgid "Registration is set as Cannot be invoiced"
-msgstr ""
+msgstr "Kayıt Faturalandırılamaz olarak ayarlı"
 
 #. module: event
 #: code:addons/event/event.py:527
@@ -1160,12 +1179,12 @@ msgstr ""
 #: view:res.partner:0
 #, python-format
 msgid "Close Registration"
-msgstr ""
+msgstr "Kaydı Kapat"
 
 #. module: event
 #: selection:report.event.registration,month:0
 msgid "April"
-msgstr ""
+msgstr "Nisan"
 
 #. module: event
 #: help:event.event,unit_price:0
@@ -1173,11 +1192,14 @@ msgid ""
 "This will be the default price used as registration cost when invoicing this "
 "event. Note that you can specify a specific amount for each registration."
 msgstr ""
+"Bu fiyat, etkinliğin faturalandırılması sırasında varsayılan kayıt ücreti "
+"olarak kullanılacaktır. Her kayıt için özel bir tutar belirleyebileceğinizi "
+"unutmayın."
 
 #. module: event
 #: view:report.event.registration:0
 msgid "Events which are in confirm state"
-msgstr ""
+msgstr "Onaylama durumundaki Etkinlikler"
 
 #. module: event
 #: view:event.event:0
@@ -1185,7 +1207,7 @@ msgstr ""
 #: view:report.event.registration:0
 #: field:report.event.registration,type:0
 msgid "Event Type"
-msgstr "Etkinlik Tipi"
+msgstr "Etkinlik Türü"
 
 #. module: event
 #: view:event.event:0
@@ -1199,7 +1221,7 @@ msgstr "Kayıtlar"
 #. module: event
 #: field:event.registration,id:0
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: event
 #: field:event.event,register_max:0
@@ -1210,30 +1232,30 @@ msgstr "Maksimum Kayıtlar"
 #. module: event
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Hata ! Özyinelemeli ilişkili üyeler oluşturamazsınız."
 
 #. module: event
 #: field:report.event.registration,date:0
 msgid "Event Start Date"
-msgstr ""
+msgstr "Etkinlik Başlama Tarihi"
 
 #. module: event
 #: view:partner.event.registration:0
 msgid "Event For Registration"
-msgstr ""
+msgstr "Kayıt için Etkinlik"
 
 #. module: event
 #: code:addons/event/wizard/event_make_invoice.py:51
 #, python-format
 msgid "Invoice cannot be created if the registration is in %s state."
-msgstr ""
+msgstr "Kayıt %s durumunda ise fatura oluşturulamaz."
 
 #. module: event
 #: view:event.confirm:0
 #: model:ir.actions.act_window,name:event.action_event_confirm
 #: model:ir.model,name:event.model_event_confirm
 msgid "Event Confirmation"
-msgstr ""
+msgstr "Etkinlik Onaylama"
 
 #. module: event
 #: view:event.event:0
@@ -1245,12 +1267,12 @@ msgstr "Otomatik Kayıt E-Postası"
 #: view:report.event.registration:0
 #: field:report.event.registration,total:0
 msgid "Total"
-msgstr ""
+msgstr "Toplam"
 
 #. module: event
 #: field:event.event,speaker_confirmed:0
 msgid "Speaker Confirmed"
-msgstr ""
+msgstr "Onaylı Konuşmacı"
 
 #. module: event
 #: model:ir.actions.act_window,help:event.action_event_view
@@ -1260,6 +1282,10 @@ msgid ""
 "caldav. Most of the users should work in the Calendar menu, and not in the "
 "list of events."
 msgstr ""
+"Etkinlik, mobil aygıtlarla ya da caldav yoluyla takvim uygulamaları "
+"eşitlenecek toplantılar ve diğer belgeler tarafından kullanılan düşük "
+"seviyeli nesnelerdir. Kullanıcıların çoğu Takvim menüsünden çalışmalıdır, "
+"etkinlik listesinden değil."
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"

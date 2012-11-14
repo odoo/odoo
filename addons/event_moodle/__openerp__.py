@@ -34,10 +34,10 @@ to avoid wasting time.
 Now you have a simple way to create training or courses with OpenERP and moodle.
 
 STEPS TO CONFIGURE:
-------------------
+-------------------
 
 1. Activate web service in moodle.
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 >site administration >plugins >web services >manage protocols activate the xmlrpc web service 
 
 
@@ -48,26 +48,27 @@ STEPS TO CONFIGURE:
 
 
 2. Create confirmation email with login and password.
------------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 We strongly suggest you to add those following lines at the bottom of your event
 confirmation email to communicate the login/password of moodle to your subscribers.
 
 
 ........your configuration text.......
 
-URL: your moodle link for exemple: http://openerp.moodle.com
-LOGIN: ${object.moodle_username}
-PASSWORD: ${object.moodle_user_password}
+**URL:** your moodle link for exemple: http://openerp.moodle.com
+
+**LOGIN:** ${object.moodle_username}
+
+**PASSWORD:** ${object.moodle_user_password}
 """,
     'author': 'OpenERP SA',
     'depends': ['event'],
-    'init_xml': [],
     'data': [
-            'wizard_moodle.xml',
-            'event_view.xml',
-            'security/ir.model.access.csv'
-            ],
-    'demo_xml': [],
+        'wizard_moodle.xml',
+        'event_view.xml',
+        'security/ir.model.access.csv'
+    ],
+    'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,

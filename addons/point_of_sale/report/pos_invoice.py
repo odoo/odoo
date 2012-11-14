@@ -43,7 +43,7 @@ class pos_invoice(report_sxw.rml_parse):
 
             if order.invoice_id and order.invoice_id not in iids:
                 if not order.invoice_id:
-                    raise osv.except_osv(_('Error !'), _('Please create an invoice for this sale.'))
+                    raise osv.except_osv(_('Error!'), _('Please create an invoice for this sale.'))
                 iids.append(order.invoice_id)
                 nids.append(order.invoice_id.id)
         data['ids'] = nids

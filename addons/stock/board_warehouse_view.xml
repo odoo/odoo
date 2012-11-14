@@ -5,7 +5,6 @@
         <record id="view_stock_graph_board" model="ir.ui.view">
             <field name="name">report.stock.move.graph</field>
             <field name="model">report.stock.move</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Moves Analysis" type="bar">
                     <field name="day"/>
@@ -13,26 +12,6 @@
                     <field name="categ_id" group="True"/>
                 </graph>
             </field>
-        </record>
-
-        <record id="action_incoming_product_board" model="ir.actions.act_window">
-            <field name="name">Incoming Shipments</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',('confirmed','assigned')),'|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
-            <field name="view_id" ref="stock.view_move_tree_reception_picking"/>
-        </record>
-
-        <record id="action_outgoing_product_board" model="ir.actions.act_window">
-            <field name="name">Delivery Orders</field>
-            <field name="res_model">stock.move</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('state','in',('confirmed','assigned')),'|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
-            <field name="view_id" ref="stock.view_move_tree_reception_picking"/>
         </record>
 
         <record model="ir.actions.act_window" id="action_stock_incoming_product_delay">
@@ -56,17 +35,13 @@
         <record id="board_warehouse_form" model="ir.ui.view">
             <field name="name">board.warehouse.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Warehouse board" version="7.0">
-                    <board style="2-1">
-                        <column>
-                            <action name="%(action_incoming_product_board)d" string="Incoming Shipments" creatable="true"/>
-                            <action name="%(action_outgoing_product_board)d" string="Delivery Orders" creatable="true"/>
-                        </column>
-
+                    <board style="1-1">
                         <column>
                             <action name="%(action_stock_incoming_product_delay)d" string="Incoming Products"/>
+                        </column>
+                        <column>
                             <action name="%(action_stock_outgoing_product_delay)d" string="Outgoing Products"/>
                         </column>
                     </board>
@@ -86,7 +61,7 @@
                     parent="base.menu_reporting_dashboard" 
                     action="open_board_warehouse" 
                     sequence="25" 
-                    groups="group_stock_manager"/>
+                    groups="stock.group_stock_user"/>
 
     </data>
 </openerp>

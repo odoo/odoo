@@ -5,7 +5,6 @@
         <record id="view_account_move_form_inherit" model="ir.ui.view">
            <field name="name">account.move.form.inherit</field>
            <field name="model">account.move</field>
-           <field name="type">form</field>
            <field name="inherit_id" ref="account.view_move_form"/>
            <field name="arch" type="xml">
                 <field name="period_id" position="after">
@@ -17,7 +16,6 @@
         <record id="view_account_journal_form_inherit" model="ir.ui.view">
            <field name="name">account.journal.form.inherit</field>
            <field name="model">account.journal</field>
-           <field name="type">form</field>
            <field name="inherit_id" ref="account.view_account_journal_form"/>
            <field name="arch" type="xml">
                 <field name="sequence_id" position="after">
@@ -29,7 +27,6 @@
         <record id="view_account_move_tree_inherit" model="ir.ui.view">
             <field name="name">account.move.tree.inherit</field>
             <field name="model">account.move</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_move_tree"/>
             <field name="arch" type="xml">
                 <field name="ref" position="before">

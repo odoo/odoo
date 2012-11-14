@@ -40,13 +40,11 @@ Belgian Payroll Rules.
     """,
 
     'auto_install': False,
-    'demo': [
-     'l10n_be_hr_payroll_demo.xml',
-    ],
+    'demo': ['l10n_be_hr_payroll_demo.xml'],
     'data':[
-     'l10n_be_hr_payroll_view.xml',
-     'l10n_be_hr_payroll_data.xml',
-     'data/hr.salary.rule.csv',
+        'l10n_be_hr_payroll_view.xml',
+        'l10n_be_hr_payroll_data.xml',
+        'data/hr.salary.rule.csv',
     ],
     'installable': True
 }

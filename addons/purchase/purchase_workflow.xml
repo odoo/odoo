@@ -145,7 +145,7 @@
         <record id="trans_router_invoice_no_order" model="workflow.transition">
             <field name="act_from" ref="act_router"/>
             <field name="act_to" ref="act_invoice_end"/>
-            <field name="condition">invoice_method&lt;&gt;'order'</field>
+            <field name="condition">invoice_method&lt;&gt;'order' and invoiced</field>
         </record>
         <record id="trans_except_picking_picking_done" model="workflow.transition">
             <field name="act_from" ref="act_except_picking"/>

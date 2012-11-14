@@ -37,20 +37,22 @@
     'version': '0.1',
     'category': 'Localization/Account Charts',
     'description': """
+This is the base module to manage the accounting chart for Honduras.
+====================================================================
+    
 Agrega una nomenclatura contable para Honduras. También incluye impuestos y la
 moneda Lempira. -- Adds accounting chart for Honduras. It also includes taxes
 and the Lempira currency.""",
     'author': 'Salvatore Josue Trimarchi Pinto',
     'website': 'http://trimarchi.co.cc',
     'depends': ['base', 'account', 'account_chart'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account_types.xml',
         'account_chart.xml',
         'account_tax.xml',
         'l10n_hn_base.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

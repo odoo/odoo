@@ -73,7 +73,7 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
-   
+
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
@@ -81,7 +81,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                             'DELETE', 'TRACE', 'REPORT', ]
                     }
 
-    def get_userinfo(self,user,pw):
+    def get_userinfo(self, user, pw):
         return False
 
     def _log(self, message):
@@ -119,7 +119,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]
         else:
-            raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+            raise DAV_Forbidden("Not allowed to copy/move outside webdav path.")
         # TODO: locks
         DAVRequestHandler.copymove(self, CLASS)
 
@@ -167,7 +167,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             self.close_connection = 1
         DAVRequestHandler.send_header(self, key, value)
 
-    def send_body(self, DATA, code = None, msg = None, desc = None, ctype='application/octet-stream', headers=None):
+    def send_body(self, DATA, code=None, msg=None, desc=None, ctype='application/octet-stream', headers=None):
         if headers and 'Connection' in headers:
             pass
         elif self.request_version in ('HTTP/1.0', 'HTTP/0.9'):
@@ -304,7 +304,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             res = dc.unlock(uri, token)
         except DAV_Error, (ec, dd):
             return self.send_status(ec, dd)
-        
+
         if res == True:
             self.send_body(None, '204', 'OK', 'Resource unlocked.')
         else:
@@ -338,7 +338,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             if isinstance(ldif, list):
                 if len(ldif) !=1 or (not isinstance(ldif[0], TagList)) \
                         or len(ldif[0].list) != 1:
-                    raise DAV_Error(400, "Cannot accept multiple tokens")
+                    raise DAV_Error(400, "Cannot accept multiple tokens.")
                 ldif = ldif[0].list[0]
                 if ldif[0] == '<' and ldif[-1] == '>':
                     ldif = ldif[1:-1]
@@ -352,7 +352,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             lock_data.update(self._lock_unlock_parse(body))
 
         if lock_data['refresh'] and not lock_data.get('token', False):
-            raise DAV_Error(400, 'Lock refresh must specify token')
+            raise DAV_Error(400, 'Lock refresh must specify token.')
 
         lock_data['depth'] = depth
 
@@ -441,10 +441,10 @@ class dummy_dav_interface(object):
     def __init__(self, parent):
         self.parent = parent
 
-    def get_propnames(self,uri):
+    def get_propnames(self, uri):
         return self.PROPS
 
-    def get_prop(self,uri,ns,propname):
+    def get_prop(self, uri, ns, propname):
         if self.M_NS.has_key(ns):
             prefix=self.M_NS[ns]
         else:
@@ -460,10 +460,10 @@ class dummy_dav_interface(object):
     def get_data(self, uri, range=None):
         raise DAV_NotFound
 
-    def _get_dav_creationdate(self,uri):
+    def _get_dav_creationdate(self, uri):
         return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
-    def _get_dav_getlastmodified(self,uri):
+    def _get_dav_getlastmodified(self, uri):
         return time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())
 
     def _get_dav_displayname(self, uri):
@@ -487,7 +487,7 @@ class dummy_dav_interface(object):
 class DAVStaticHandler(http_server.StaticHTTPHandler):
     """ A variant of the Static handler, which will serve dummy DAV requests
     """
-    
+
     verbose = False
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
@@ -503,13 +503,13 @@ class DAVStaticHandler(http_server.StaticHTTPHandler):
         self.end_headers()
         if hasattr(self, '_flush'):
             self._flush()
-        
+
         if self.command != 'HEAD':
             self.wfile.write(content)
 
     def do_PROPFIND(self):
         """Answer to PROPFIND with generic data.
-        
+
         A rough copy of python-webdav's do_PROPFIND, but hacked to work
         statically.
         """
@@ -575,7 +575,7 @@ try:
         handler._config = conf
         reg_http_service(directory, DAVHandler, DAVAuthProvider)
         _logger.info("WebDAV service registered at path: %s/ "% directory)
-        
+
         if not (config.get_misc('webdav', 'no_root_hack', False)):
             # Now, replace the static http handler with the dav-enabled one.
             # If a static-http service has been specified for our server, then
@@ -592,7 +592,7 @@ try:
                 # an _ugly_ hack: we put that dir back in tools.config.misc, so that
                 # the StaticHttpHandler can find its dir_path.
                 config.misc.setdefault('static-http',{})['dir_path'] = dir_path
-    
+
             reg_http_service('/', DAVStaticHandler)
 
 except Exception, e:
@@ -617,10 +617,10 @@ def init_well_known():
 init_well_known()
 
 class PrincipalsRedirect(RedirectHTTPHandler):
-    
-    
+
+
     redirect_paths = {}
-    
+
     def _find_redirect(self):
         for b, r in self.redirect_paths.items():
             if self.path.startswith(b):
@@ -628,7 +628,7 @@ class PrincipalsRedirect(RedirectHTTPHandler):
         return False
 
 def init_principals_redirect():
-    """ Some devices like the iPhone will look under /principals/users/xxx for 
+    """ Some devices like the iPhone will look under /principals/users/xxx for
     the user's properties. In OpenERP we _cannot_ have a stray /principals/...
     working path, since we have a database path and the /webdav/ component. So,
     the best solution is to redirect the url with 301. Luckily, it does work in

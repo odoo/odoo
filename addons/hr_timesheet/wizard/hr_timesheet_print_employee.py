@@ -27,8 +27,9 @@ class analytical_timesheet_employee(osv.osv_memory):
     _name = 'hr.analytical.timesheet.employee'
     _description = 'Print Employee Timesheet & Print My Timesheet'
     _columns = {
-        'month': fields.selection([(x, datetime.date(2000, x, 1).strftime('%B')) for x in range(1, 13)],
-                                  'Month', required=True),
+        'month': fields.selection([(1,'January'), (2,'February'), (3,'March'), (4,'April'),
+            (5,'May'), (6,'June'), (7,'July'), (8,'August'), (9,'September'),
+            (10,'October'), (11,'November'), (12,'December')], 'Month', required=True),
         'year': fields.integer('Year', required=True),
         'employee_id': fields.many2one('hr.employee', 'Employee', required=True)
 
@@ -39,7 +40,7 @@ class analytical_timesheet_employee(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if not emp_id:
-            raise osv.except_osv(_("Warning"), _("No employee defined for this user"))
+            raise osv.except_osv(_("Warning!"), _("Please define employee for this user!"))
         return emp_id and emp_id[0] or False
 
     _defaults = {

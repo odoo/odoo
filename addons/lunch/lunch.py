@@ -19,234 +19,451 @@
 #
 ##############################################################################
 
+from xml.sax.saxutils import escape
+import time
 from osv import osv, fields
+from datetime import datetime
+from lxml import etree
+import tools
+from tools.translate import _
 
-class lunch_category(osv.osv):
-    """ Lunch category """
-
-    _name = 'lunch.category'
-    _description = "Category"
-
-    _columns = {
-        'name': fields.char('Name', required=True, size=50),
-    }
-    _order = 'name'
-
-lunch_category()
-
-
-class lunch_product(osv.osv):
-    """ Lunch Product """
-
-    _name = 'lunch.product'
-    _description = "Lunch Product"
-
-    _columns = {
-        'name': fields.char('Name', size=50, required=True),
-        'category_id': fields.many2one('lunch.category', 'Category'),
-        'description': fields.text('Description', size=128, required=False),
-        'price': fields.float('Price', digits=(16,2)),
-        'active': fields.boolean('Active'),
-    }
-
-    _defaults = {
-        'active': lambda *a : True,
-    }
-
-lunch_product()
-
-
-class lunch_cashbox(osv.osv):
-    """ cashbox for Lunch """
-
-    _name = 'lunch.cashbox'
-    _description = "Cashbox for Lunch "
-
-
-    def amount_available(self, cr, uid, ids, field_name, arg, context=None):
-
-        """ count available amount
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of create menu’s IDs
-        @param context: A standard dictionary for contextual values """
-
-        cr.execute("SELECT box,sum(amount) from lunch_cashmove where active = 't' group by box")
-        amount = dict(cr.fetchall())
-        for i in ids:
-            amount.setdefault(i, 0)
-        return amount
-
-    _columns = {
-        'manager': fields.many2one('res.users', 'Manager'),
-        'name': fields.char('Name', size=30, required=True, unique = True),
-        'sum_remain': fields.function(amount_available, string='Total Remaining'),
-    }
-
-lunch_cashbox()
-
-
-class lunch_cashmove(osv.osv):
-    """ Move cash """
-
-    _name = 'lunch.cashmove'
-    _description = "Cash Move"
-
-    _columns = {
-        'name': fields.char('Description', size=128),
-        'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
-        'amount': fields.float('Amount', digits=(16, 2)),
-        'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
-        'active': fields.boolean('Active'),
-        'create_date': fields.datetime('Creation Date', readonly=True),
-    }
-
-    _defaults = {
-        'active': lambda *a: True,
-    }
-
-lunch_cashmove()
-
-
-class lunch_order(osv.osv):
-    """ Apply lunch order """
-
+class lunch_order(osv.Model):
+    """ 
+    lunch order (contains one or more lunch order line(s))
+    """
     _name = 'lunch.order'
-    _description = "Lunch Order"
-    _rec_name = "user_id"
+    _description = 'Lunch Order'
 
-    def _price_get(self, cr, uid, ids, name, args, context=None):
+    def _price_get(self, cr, uid, ids, name, arg, context=None):
+        """ 
+        get and sum the order lines' price
+        """
+        result = dict.fromkeys(ids, 0)
+        for order in self.browse(cr, uid, ids, context=context):
+            result[order.id] = sum(order_line.product_id.price
+                                   for order_line in order.order_line_ids)
+        return result
 
-        """ Get Price of Product
-         @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
-         @param ids: List of Lunch order’s IDs
-         @param context: A standard dictionary for contextual values """
+    def _fetch_orders_from_lines(self, cr, uid, ids, name, context=None):
+        """ 
+        return the list of lunch orders to which belong the order lines `ids´
+        """
+        result = set()
+        for order_line in self.browse(cr, uid, ids, context=context):
+            if order_line.order_id:
+                result.add(order_line.order_id.id)
+        return list(result)
 
-        res = {}
-        for price in self.browse(cr, uid, ids, context=context):
-            res[price.id] = price.product.price
+    def add_preference(self, cr, uid, ids, pref_id, context=None):
+        """ 
+        create a new order line based on the preference selected (pref_id)
+        """
+        assert len(ids) == 1
+        orderline_ref = self.pool.get('lunch.order.line')
+        prod_ref = self.pool.get('lunch.product')
+        order = self.browse(cr, uid, ids[0], context=context)
+        pref = orderline_ref.browse(cr, uid, pref_id, context=context)
+        new_order_line = {
+            'date': order.date,
+            'user_id': uid,
+            'product_id': pref.product_id.id,
+            'note': pref.note,
+            'order_id': order.id,
+            'price': pref.product_id.price,
+            'supplier': pref.product_id.supplier.id
+        }
+        return orderline_ref.create(cr, uid, new_order_line, context=context)
+
+    def _alerts_get(self, cr, uid, ids, name, arg, context=None):
+        """ 
+        get the alerts to display on the order form 
+        """
+        result = {}
+        alert_msg = self._default_alerts_get(cr, uid, context=context)
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.state == 'new':
+                result[order.id] = alert_msg
+        return result
+
+    def check_day(self, alert):
+        """ 
+        This method is used by can_display_alert
+        to check if the alert day corresponds
+        to the current day 
+        """
+        today = datetime.now().isoweekday()
+        assert 1 <= today <= 7, "Should be between 1 and 7"
+        mapping = dict((idx, name) for idx, name in enumerate('monday tuestday wednesday thursday friday saturday sunday'.split()))
+        if today in mapping:
+            return mapping[today]
+
+    def can_display_alert(self, alert):
+        """ 
+        This method check if the alert can be displayed today
+        """
+        if alert.alter_type == 'specific':
+            #the alert is only activated on a specific day
+            return alert.specific_day == time.strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
+        elif alert.alter_type == 'week':
+            #the alert is activated during some days of the week
+            return self.check_day(alert)
+
+    def _default_alerts_get(self, cr, uid, context=None):
+        """ 
+        get the alerts to display on the order form
+        """
+        alert_ref = self.pool.get('lunch.alert')
+        alert_ids = alert_ref.search(cr, uid, [], context=context)
+        alert_msg = []
+        for alert in alert_ref.browse(cr, uid, alert_ids, context=context):
+            #check if the address must be displayed today
+            if self.can_display_alert(alert):
+                #display the address only during its active time
+                mynow = fields.datetime.context_timestamp(cr, uid, datetime.now(), context=context)
+                hour_to = int(alert.active_to)
+                min_to = int((alert.active_to - hour_to) * 60)
+                to_alert = datetime.strptime(str(hour_to) + ":" + str(min_to), "%H:%M")
+                hour_from = int(alert.active_from)
+                min_from = int((alert.active_from - hour_from) * 60)
+                from_alert = datetime.strptime(str(hour_from) + ":" + str(min_from), "%H:%M")
+                if mynow.time() >= from_alert.time() and mynow.time() <= to_alert.time():
+                    alert_msg.append(alert.message)
+        return '\n'.join(alert_msg)
+
+    def onchange_price(self, cr, uid, ids, order_line_ids, context=None):
+        """
+        Onchange methode that refresh the total price of order
+        """
+        res = {'value': {'total': 0.0}}
+        order_line_ids = self.resolve_o2m_commands_to_record_dicts(cr, uid, "order_line_ids", order_line_ids, ["price"], context=context)
+        if order_line_ids:
+            tot = 0.0
+            product_ref = self.pool.get("lunch.product")
+            for prod in order_line_ids:
+                if 'product_id' in prod:
+                    tot += product_ref.browse(cr, uid, prod['product_id'], context=context).price
+                else:
+                    tot += prod['price']
+            res = {'value': {'total': tot}}
+        return res
+
+    def __getattr__(self, attr):
+        """ 
+        this method catch unexisting method call and if it starts with
+        add_preference_'n' we execute the add_preference method with 
+        'n' as parameter 
+        """
+        if attr.startswith('add_preference_'):
+            pref_id = int(attr[15:])
+            def specific_function(cr, uid, ids, context=None):
+                return self.add_preference(cr, uid, ids, pref_id, context=context)
+            return specific_function
+        return super(lunch_order,self).__getattr__(self,attr)
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        """ 
+        Add preferences in the form view of order.line 
+        """
+        res = super(lunch_order,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        line_ref = self.pool.get("lunch.order.line")
+        if view_type == 'form':
+            doc = etree.XML(res['arch'])
+            pref_ids = line_ref.search(cr, uid, [('user_id', '=', uid)], order='create_date desc', context=context)
+            xml_start = etree.Element("div")
+            #If there are no preference (it's the first time for the user)
+            if len(pref_ids)==0:
+                #create Elements
+                xml_no_pref_1 = etree.Element("div")
+                xml_no_pref_1.set('class','oe_inline oe_lunch_intro')
+                xml_no_pref_2 = etree.Element("h3")
+                xml_no_pref_2.text = _("This is the first time you order a meal")
+                xml_no_pref_3 = etree.Element("p")
+                xml_no_pref_3.set('class','oe_grey')
+                xml_no_pref_3.text = _("Select a product and put your order comments on the note.")
+                xml_no_pref_4 = etree.Element("p")
+                xml_no_pref_4.set('class','oe_grey')
+                xml_no_pref_4.text = _("Your favorite meals will be created based on your last orders.")
+                xml_no_pref_5 = etree.Element("p")
+                xml_no_pref_5.set('class','oe_grey')
+                xml_no_pref_5.text = _("Don't forget the alerts displayed in the reddish area")
+                #structure Elements
+                xml_start.append(xml_no_pref_1)
+                xml_no_pref_1.append(xml_no_pref_2)
+                xml_no_pref_1.append(xml_no_pref_3)
+                xml_no_pref_1.append(xml_no_pref_4)
+                xml_no_pref_1.append(xml_no_pref_5)
+            #Else: the user already have preferences so we display them
+            else:
+                preferences = line_ref.browse(cr, uid, pref_ids, context=context)
+                categories = {} #store the different categories of products in preference
+                count = 0
+                for pref in preferences:
+                    #For each preference
+                    categories.setdefault(pref.product_id.category_id.name, {})
+                    #if this product has already been added to the categories dictionnary
+                    if pref.product_id.id in categories[pref.product_id.category_id.name]:
+                        #we check if for the same product the note has already been added
+                        if pref.note not in categories[pref.product_id.category_id.name][pref.product_id.id]:
+                            #if it's not the case then we add this to preferences
+                            categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
+                    #if this product is not in the dictionnay, we add it
+                    else:
+                        categories[pref.product_id.category_id.name][pref.product_id.id] = {}
+                        categories[pref.product_id.category_id.name][pref.product_id.id][pref.note] = pref
+
+                currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+
+                #For each preferences that we get, we will create the XML structure
+                for key,value in categories.items():
+                    xml_pref_1 = etree.Element("div")
+                    xml_pref_1.set('class','oe_lunch_30pc')
+                    xml_pref_2 = etree.Element("h2")
+                    xml_pref_2.text = key
+                    xml_pref_1.append(xml_pref_2)
+                    i = 0
+                    value = value.values()
+                    for val in value:
+                        for pref in val.values():
+                            #We only show 5 preferences per category (or it will be too long)
+                            if i==5: break
+                            i+=1
+                            xml_pref_3 = etree.Element("div")
+                            xml_pref_3.set('class','oe_lunch_vignette')
+                            xml_pref_1.append(xml_pref_3)
+
+                            xml_pref_4 = etree.Element("span")
+                            xml_pref_4.set('class','oe_lunch_button')
+                            xml_pref_3.append(xml_pref_4)
+
+                            xml_pref_5 = etree.Element("button")
+                            xml_pref_5.set('name',"add_preference_"+str(pref.id))
+                            xml_pref_5.set('class','oe_link oe_i oe_button_plus')
+                            xml_pref_5.set('type','object')
+                            xml_pref_5.set('string','+')
+                            xml_pref_4.append(xml_pref_5)
+
+                            xml_pref_6 = etree.Element("button")
+                            xml_pref_6.set('name',"add_preference_"+str(pref.id))
+                            xml_pref_6.set('class','oe_link oe_button_add')
+                            xml_pref_6.set('type','object')
+                            xml_pref_6.set('string',_("Add"))
+                            xml_pref_4.append(xml_pref_6)
+
+                            xml_pref_7 = etree.Element("div")
+                            xml_pref_7.set('class','oe_group_text_button')
+                            xml_pref_3.append(xml_pref_7)
+
+                            xml_pref_8 = etree.Element("div")
+                            xml_pref_8.set('class','oe_lunch_text')
+                            xml_pref_8.text = escape(pref.product_id.name)+str(" ")
+                            xml_pref_7.append(xml_pref_8)
+
+                            price = pref.product_id.price or 0.0
+                            cur = currency.name or ''
+                            xml_pref_9 = etree.Element("span")
+                            xml_pref_9.set('class','oe_tag')
+                            xml_pref_9.text = str(price)+str(" ")+cur
+                            xml_pref_8.append(xml_pref_9)
+
+                            xml_pref_10 = etree.Element("div")
+                            xml_pref_10.set('class','oe_grey')
+                            xml_pref_10.text = escape(pref.note or '')
+                            xml_pref_3.append(xml_pref_10)
+
+                            xml_start.append(xml_pref_1)
+
+            first_node = doc.xpath("//div[@name='preferences']")
+            if first_node and len(first_node)>0:
+                first_node[0].append(xml_start)
+            res['arch'] = etree.tostring(doc)
         return res
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'User Name', required=True, \
-            readonly=True, states={'draft':[('readonly', False)]}),
-        'product': fields.many2one('lunch.product', 'Product', required=True, \
-            readonly=True, states={'draft':[('readonly', False)]}, change_default=True),
-        'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
-        'cashmove': fields.many2one('lunch.cashmove', 'Cash Move' , readonly=True),
-        'descript': fields.char('Comment', readonly=True, size=250, \
-            states = {'draft':[('readonly', False)]}),
-        'state': fields.selection([('draft', 'New'), ('confirmed', 'Confirmed'), ], \
-            'Status', readonly=True, select=True),
-        'price': fields.function(_price_get, string="Price"),
-        'category': fields.many2one('lunch.category','Category'),
+        'user_id': fields.many2one('res.users', 'User Name', required=True, readonly=True, states={'new':[('readonly', False)]}),
+        'date': fields.date('Date', required=True, readonly=True, states={'new':[('readonly', False)]}),
+        'order_line_ids': fields.one2many('lunch.order.line', 'order_id', 'Products', ondelete="cascade", readonly=True, states={'new':[('readonly', False)]}),
+        'total': fields.function(_price_get, string="Total", store={
+                 'lunch.order.line': (_fetch_orders_from_lines, ['product_id','order_id'], 20),
+            }),
+        'state': fields.selection([('new', 'New'), \
+                                    ('confirmed','Confirmed'), \
+                                    ('cancelled','Cancelled'), \
+                                    ('partially','Partially Confirmed')] \
+                                ,'Status', readonly=True, select=True),
+        'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
     }
 
     _defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'date': fields.date.context_today,
-        'state': lambda self, cr, uid, context: 'draft',
+        'state': 'new',
+        'alerts': _default_alerts_get,
     }
 
-    def confirm(self, cr, uid, ids, box, context=None):
 
-        """ confirm order
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of confirm order’s IDs
-        @param context: A standard dictionary for contextual values """
+class lunch_order_line(osv.Model):
+    """ 
+    lunch order line: one lunch order can have many order lines
+    """
+    _name = 'lunch.order.line'
+    _description = 'lunch order line'
 
+    def onchange_price(self, cr, uid, ids, product_id, context=None):
+        if product_id:
+            price = self.pool.get('lunch.product').browse(cr, uid, product_id, context=context).price
+            return {'value': {'price': price}}
+        return {'value': {'price': 0.0}}
+
+    def order(self, cr, uid, ids, context=None):
+        """ 
+        The order_line is ordered to the supplier but isn't received yet
+        """
+        for order_line in self.browse(cr, uid, ids, context=context):
+            order_line.write({'state': 'ordered'}, context=context)
+        return self._update_order_lines(cr, uid, ids, context=context)
+
+    def confirm(self, cr, uid, ids, context=None):
+        """ 
+        confirm one or more order line, update order status and create new cashmove 
+        """
         cashmove_ref = self.pool.get('lunch.cashmove')
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.state == 'confirmed':
-                continue
-            new_id = cashmove_ref.create(cr, uid, {'name': order.product.name+' order',
-                            'amount':-order.product.price,
-                            'user_cashmove':order.user_id.id,
-                            'box':box,
-                            'active':True,
-                            })
-            self.write(cr, uid, [order.id], {'cashmove': new_id, 'state': 'confirmed'})
+        for order_line in self.browse(cr, uid, ids, context=context):
+            if order_line.state != 'confirmed':
+                values = {
+                    'user_id': order_line.user_id.id,
+                    'amount': -order_line.price,
+                    'description': order_line.product_id.name,
+                    'order_id': order_line.id,
+                    'state': 'order',
+                    'date': order_line.date,
+                }
+                cashmove_ref.create(cr, uid, values, context=context)
+                order_line.write({'state': 'confirmed'}, context=context)
+        return self._update_order_lines(cr, uid, ids, context=context)
+
+    def _update_order_lines(self, cr, uid, ids, context=None):
+        """
+        Update the state of lunch.order based on its orderlines
+        """
+        orders_ref = self.pool.get('lunch.order')
+        orders = []
+        for order_line in self.browse(cr, uid, ids, context=context):
+            orders.append(order_line.order_id)
+        for order in set(orders):
+            isconfirmed = True
+            for orderline in order.order_line_ids:
+                if orderline.state == 'new':
+                    isconfirmed = False
+                if orderline.state == 'cancelled':
+                    isconfirmed = False
+                    orders_ref.write(cr, uid, [order.id], {'state': 'partially'}, context=context)
+            if isconfirmed:
+                orders_ref.write(cr, uid, [order.id], {'state': 'confirmed'}, context=context)
         return {}
 
-    def lunch_order_cancel(self, cr, uid, ids, context=None):
-
-        """" cancel order
-         @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
-         @param ids: List of create menu’s IDs
-         @param context: A standard dictionary for contextual values """
-
-        orders = self.browse(cr, uid, ids, context=context)
-        for order in orders:
-            if not order.cashmove:
-                continue
-        if order.cashmove.id:
-            self.pool.get('lunch.cashmove').unlink(cr, uid, [order.cashmove.id])
-        self.write(cr, uid, ids, {'state':'draft'})
-        return {}
-
-    def onchange_product(self, cr, uid, ids, product):
-
-        """ Get price for Product
-         @param cr: the current row, from the database cursor,
-         @param uid: the current user’s ID for security checks,
-         @param ids: List of create menu’s IDs
-         @product: Product To Ordered """
-
-        if not product:
-            return {'value': {'price': 0.0}}
-        price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-        categ_id = self.pool.get('lunch.product').browse(cr, uid, product).category_id.id
-        return {'value': {'price': price,'category':categ_id}}
-
-lunch_order()
-
-
-class report_lunch_amount(osv.osv):
-    """ Lunch Amount Report """
-
-    _name = 'report.lunch.amount'
-    _description = "Amount available by user and box"
-    _auto = False
-    _rec_name = "user"
+    def cancel(self, cr, uid, ids, context=None):
+        """
+        cancel one or more order.line, update order status and unlink existing cashmoves
+        """
+        cashmove_ref = self.pool.get('lunch.cashmove')
+        for order_line in self.browse(cr, uid, ids, context=context):
+            order_line.write({'state':'cancelled'}, context=context)
+            cash_ids = [cash.id for cash in order_line.cashmove]
+            cashmove_ref.unlink(cr, uid, cash_ids, context=context)
+        return self._update_order_lines(cr, uid, ids, context=context)
 
     _columns = {
-        'user_id': fields.many2one('res.users', 'User Name', readonly=True),
-        'amount': fields.float('Amount', readonly=True, digits=(16, 2)),
-        'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, readonly=True),
-        'year': fields.char('Year', size=4, readonly=True),
-        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
-        'day': fields.char('Day', size=128, readonly=True),
-        'date': fields.date('Created Date', readonly=True),
+        'name': fields.related('product_id', 'name', readonly=True),
+        'order_id': fields.many2one('lunch.order', 'Order', ondelete='cascade'),
+        'product_id': fields.many2one('lunch.product', 'Product', required=True),
+        'date': fields.related('order_id', 'date', type='date', string="Date", readonly=True, store=True),
+        'supplier': fields.related('product_id', 'supplier', type='many2one', relation='res.partner', string="Supplier", readonly=True, store=True),
+        'user_id': fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True, store=True),
+        'note': fields.text('Note'),
+        'price': fields.float("Price"),
+        'state': fields.selection([('new', 'New'), \
+                                    ('confirmed', 'Received'), \
+                                    ('ordered', 'Ordered'),  \
+                                    ('cancelled', 'Cancelled')], \
+                                'Status', readonly=True, select=True),
+        'cashmove': fields.one2many('lunch.cashmove', 'order_id', 'Cash Move', ondelete='cascade'),
+
+    }
+    _defaults = {
+        'state': 'new',
     }
 
-    def init(self, cr):
 
-        """ @param cr: the current row, from the database cursor"""
+class lunch_product(osv.Model):
+    """ 
+    lunch product 
+    """
+    _name = 'lunch.product'
+    _description = 'lunch product'
+    _columns = {
+        'name': fields.char('Product', required=True, size=64),
+        'category_id': fields.many2one('lunch.product.category', 'Category', required=True),
+        'description': fields.text('Description', size=256),
+        'price': fields.float('Price', digits=(16,2)), #TODO: use decimal precision of 'Account', move it from product to decimal_precision
+        'supplier': fields.many2one('res.partner', 'Supplier'),
+    }
 
-        cr.execute("""
-            create or replace view report_lunch_amount as (
-                select
-                    min(lc.id) as id,
-                    to_date(to_char(lc.create_date, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
-                    to_char(lc.create_date, 'YYYY') as year,
-                    to_char(lc.create_date, 'MM') as month,
-                    to_char(lc.create_date, 'YYYY-MM-DD') as day,
-                    lc.user_cashmove as user_id,
-                    sum(amount) as amount,
-                    lc.box as box
-                from
-                    lunch_cashmove lc
-                where
-                    active = 't'
-                group by lc.user_cashmove, lc.box, lc.create_date
-                )""")
+class lunch_product_category(osv.Model):
+    """ 
+    lunch product category 
+    """
+    _name = 'lunch.product.category'
+    _description = 'lunch product category'
+    _columns = {
+        'name': fields.char('Category', required=True), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
+    }
 
-report_lunch_amount()
+class lunch_cashmove(osv.Model):
+    """ 
+    lunch cashmove => order or payment 
+    """
+    _name = 'lunch.cashmove'
+    _description = 'lunch cashmove'
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User Name', required=True),
+        'date': fields.date('Date', required=True),
+        'amount': fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
+        'description': fields.text('Description'), #the description can be an order or a payment
+        'order_id': fields.many2one('lunch.order.line', 'Order', ondelete='cascade'),
+        'state': fields.selection([('order','Order'), ('payment','Payment')], 'Is an order or a Payment'),
+    }
+    _defaults = {
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': fields.date.context_today,
+        'state': 'payment',
+    }
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
+class lunch_alert(osv.Model):
+    """ 
+    lunch alert 
+    """
+    _name = 'lunch.alert'
+    _description = 'Lunch Alert'
+    _columns = {
+        'message': fields.text('Message', size=256, required=True),
+        'alter_type': fields.selection([('specific', 'Specific Day'), \
+                                    ('week', 'Every Week'), \
+                                    ('days', 'Every Day')], \
+                                string='Recurrency', required=True, select=True),
+        'specific_day': fields.date('Day'),
+        'monday': fields.boolean('Monday'),
+        'tuesday': fields.boolean('Tuesday'),
+        'wednesday': fields.boolean('Wednesday'),
+        'thursday': fields.boolean('Thursday'),
+        'friday': fields.boolean('Friday'),
+        'saturday': fields.boolean('Saturday'),
+        'sunday':  fields.boolean('Sunday'),
+        'active_from': fields.float('Between', required=True),
+        'active_to': fields.float('And', required=True),
+    }
+    _defaults = {
+        'alter_type': 'specific',
+        'specific_day': fields.date.context_today,
+        'active_from': 7,
+        'active_to': 23,
+    }

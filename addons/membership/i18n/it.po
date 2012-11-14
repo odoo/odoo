@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:44+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:53+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_invoicetoassociate0
 msgid "invoice to associate"
-msgstr "fatture da associare"
+msgstr "fattura da associare"
 
 #. module: membership
 #: model:process.process,name:membership.process_process_membershipprocess0
@@ -67,7 +67,7 @@ msgstr ""
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetopaid0
 msgid "Invoice is be paid."
-msgstr "Fatture pagate"
+msgstr "La fattura deve essere pagata."
 
 #. module: membership
 #: field:membership.membership_line,company_id:0
@@ -79,7 +79,7 @@ msgstr "Azienda"
 #. module: membership
 #: view:res.partner:0
 msgid "Ending Date Of Membership"
-msgstr ""
+msgstr "Data di fine dell'iscrizione"
 
 #. module: membership
 #: field:product.product,membership_date_to:0
@@ -146,7 +146,7 @@ msgstr "Membro associato"
 #. module: membership
 #: view:report.membership:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mese   "
 
 #. module: membership
 #: field:report.membership,tot_pending:0
@@ -156,7 +156,7 @@ msgstr "Importo in sospeso"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_associationpartner0
 msgid "Associated partner."
-msgstr "Partner associato"
+msgstr "Partner associato."
 
 #. module: membership
 #: view:res.partner:0
@@ -243,6 +243,18 @@ msgid ""
 "                    -Paid Member: A member who has paid the membership "
 "amount."
 msgstr ""
+"Indica lo stato di iscrizione.\n"
+"                    -Non Membro: Un membro che non ha richiesto alcuna "
+"iscrizione.\n"
+"                    -Membro Annullato: Un membro che ha annullato la sua "
+"iscrizione.\n"
+"                    -Ex-Membro: Un membro la cui iscrizione è scaduta.\n"
+"                    -Membro in Attesa: Un membro che ha richiesto "
+"l'iscrizione e la cui fattura deve ancora essere generata.\n"
+"                    -Membro Fatturato: Un membro per cui la fattura è stata "
+"generata.\n"
+"                    -Membro Pagato: Un membro che ha pagato l'importo "
+"dell'iscrizione."
 
 #. module: membership
 #: model:process.transition.action,name:membership.process_transition_action_create0
@@ -268,7 +280,7 @@ msgstr "Data Inizio Iscrizione"
 #. module: membership
 #: view:report.membership:0
 msgid "Events created in current month"
-msgstr ""
+msgstr "Eventi creati nel mese corrente"
 
 #. module: membership
 #: view:report.membership:0
@@ -285,27 +297,27 @@ msgstr "Errore !"
 #. module: membership
 #: model:process.node,name:membership.process_node_paidmember0
 msgid "Paid member"
-msgstr "Membri pagati"
+msgstr "Membro pagato"
 
 #. module: membership
 #: view:report.membership:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Mese-1    "
 
 #. module: membership
 #: view:report.membership:0
 msgid "Events created in last month"
-msgstr ""
+msgstr "Eventi creati il mese scorso"
 
 #. module: membership
 #: field:report.membership,num_waiting:0
 msgid "# Waiting"
-msgstr "# in attesa"
+msgstr "# In attesa"
 
 #. module: membership
 #: view:report.membership:0
 msgid "Events created in current year"
-msgstr ""
+msgstr "Eventi creati nell'anno corrente"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_members
@@ -317,7 +329,7 @@ msgstr "Membri"
 #. module: membership
 #: view:res.partner:0
 msgid "Invoiced/Paid/Free"
-msgstr ""
+msgstr "Fatturati/Pagati/Gratuiti"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_invoicedmember0
@@ -332,14 +344,14 @@ msgstr "Luglio"
 #. module: membership
 #: model:product.template,name:membership.membership_0_product_template
 msgid "Golden Membership"
-msgstr "Iscrizione golden"
+msgstr "Iscrizione Golden"
 
 #. module: membership
 #: help:res.partner,associate_member:0
 msgid ""
 "A member with whom you want to associate your membership.It will consider "
 "the membership state of the associated member."
-msgstr ""
+msgstr "Un membro a cui associare la tua iscrizione"
 
 #. module: membership
 #: field:membership.membership_line,membership_id:0
@@ -351,7 +363,7 @@ msgstr "Prodotto Iscrizione"
 #. module: membership
 #: model:process.transition,note:membership.process_transition_producttomember0
 msgid "Define product for membership."
-msgstr "Definisci prodotto per la qualifica di socio"
+msgstr "Definisci il prodotto per l'iscrizione"
 
 #. module: membership
 #: model:process.transition,note:membership.process_transition_invoicetoassociate0
@@ -367,7 +379,7 @@ msgstr "Partecipa"
 #: help:product.product,membership_date_to:0
 #: help:res.partner,membership_stop:0
 msgid "Date until which membership remains active."
-msgstr ""
+msgstr "Date fino a cui l'iscrizione rimarrà attiva."
 
 #. module: membership
 #: field:res.partner,membership_cancel:0
@@ -382,7 +394,7 @@ msgstr "Data di iscrizione"
 #. module: membership
 #: help:res.partner,free_member:0
 msgid "Select if you want to give membership free of cost."
-msgstr "Seleziona se volete fornire iscrizioni libere da costi."
+msgstr "Seleziona se vuoi offrire iscrizioni gratuite."
 
 #. module: membership
 #: model:process.node,name:membership.process_node_setassociation0
@@ -492,7 +504,7 @@ msgstr "Fattura iscrizione"
 #: field:report.membership,user_id:0
 #: view:res.partner:0
 msgid "Salesman"
-msgstr "Commerciale"
+msgstr "Venditore"
 
 #. module: membership
 #: model:process.node,note:membership.process_node_membershipproduct0
@@ -509,7 +521,7 @@ msgstr "Categoria"
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Free Member"
-msgstr "Iscrizioni Gratuite"
+msgstr "Membro Gratuito"
 
 #. module: membership
 #: model:product.pricelist.version,name:membership.ver1m
@@ -537,7 +549,7 @@ msgstr "Membro"
 #. module: membership
 #: view:product.product:0
 msgid "Date From"
-msgstr "Dalla data"
+msgstr "Data Iniziale"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_associatedmember0
@@ -547,7 +559,7 @@ msgstr "Membro associato"
 #. module: membership
 #: view:product.product:0
 msgid "Accounting Info"
-msgstr ""
+msgstr "Informazioni Contabili"
 
 #. module: membership
 #: help:report.membership,date_to:0
@@ -604,7 +616,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Waiting Member"
-msgstr "Membri in attesa"
+msgstr "Membro in attesa"
 
 #. module: membership
 #: model:process.transition,name:membership.process_transition_associationpartner0
@@ -655,7 +667,7 @@ msgstr ""
 #. module: membership
 #: view:product.product:0
 msgid "Membership Fee"
-msgstr "Iscrizione gratuita"
+msgstr "Quota d'iscrizione"
 
 #. module: membership
 #: field:res.partner,membership_amount:0
@@ -665,24 +677,24 @@ msgstr "Importo iscrizioni"
 #. module: membership
 #: help:res.partner,membership_amount:0
 msgid "The price negotiated by the partner"
-msgstr ""
+msgstr "Prezzo negoziato dal partner"
 
 #. module: membership
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Il numero fattura deve essere univoco per ogni azienda!"
 
 #. module: membership
 #: view:res.partner:0
 msgid "None/Canceled/Old/Waiting"
-msgstr ""
+msgstr "Non iscritti/Annullati/Scaduti/In attesa"
 
 #. module: membership
 #: selection:membership.membership_line,state:0
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Old Member"
-msgstr "Vecchio Membro"
+msgstr "Iscrizione scaduta"
 
 #. module: membership
 #: field:membership.membership_line,date_to:0
@@ -745,7 +757,7 @@ msgstr "Categorizzazione"
 #. module: membership
 #: model:process.node,note:membership.process_node_waitingmember0
 msgid "Draft invoice for membership."
-msgstr "Fatture bozza per iscrizione"
+msgstr "Fattura in bozza per l'iscrizione"
 
 #. module: membership
 #: field:membership.invoice,member_price:0
@@ -753,7 +765,7 @@ msgstr "Fatture bozza per iscrizione"
 #: model:product.price.type,name:membership.product_price_type_memberprice
 #: field:product.template,member_price:0
 msgid "Member Price"
-msgstr "Prezzo Membro"
+msgstr "Prezzo Iscrizione"
 
 #. module: membership
 #: view:product.product:0
@@ -773,7 +785,7 @@ msgstr "Descrizione"
 #. module: membership
 #: field:res.partner,free_member:0
 msgid "Free member"
-msgstr "Membro Gratuito"
+msgstr "Iscrizione gratuita"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -783,12 +795,12 @@ msgstr "Maggio"
 #. module: membership
 #: model:product.template,name:membership.membership_1_product_template
 msgid "Silver Membership"
-msgstr "Iscrizione silver"
+msgstr "Iscrizione Silver"
 
 #. module: membership
 #: view:product.product:0
 msgid "Sale Taxes"
-msgstr ""
+msgstr "Imposte su vendite"
 
 #. module: membership
 #: field:report.membership,date_to:0
@@ -804,7 +816,7 @@ msgstr "Febbraio"
 #. module: membership
 #: model:process.node,name:membership.process_node_invoicedmember0
 msgid "Invoiced member"
-msgstr ""
+msgstr "Iscrizione fatturata"
 
 #. module: membership
 #: selection:report.membership,month:0
@@ -814,7 +826,7 @@ msgstr "Aprile"
 #. module: membership
 #: view:res.partner:0
 msgid "Starting Date Of Membership"
-msgstr ""
+msgstr "Data di inizio dell'Iscrizione"
 
 #. module: membership
 #: help:res.partner,membership_cancel:0
@@ -824,17 +836,17 @@ msgstr "Data in cui l'iscrizione è stata annullata"
 #. module: membership
 #: field:membership.membership_line,date_cancel:0
 msgid "Cancel date"
-msgstr "Annulla Data"
+msgstr "Data di annullamento"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_waitingmember0
 msgid "Waiting member"
-msgstr "Attendendo membro"
+msgstr "Iscrizione in attesa"
 
 #. module: membership
 #: model:ir.actions.act_window,name:membership.action_membership_invoice_view
 msgid "Invoice Membership"
-msgstr "Fatturazione Iscrizione"
+msgstr "Fattura l'iscrizione"
 
 #. module: membership
 #: model:process.node,name:membership.process_node_membershipproduct0
@@ -844,7 +856,7 @@ msgstr "Prodotto Iscrizione"
 #. module: membership
 #: help:membership.membership_line,member_price:0
 msgid "Amount for the membership"
-msgstr "Importo per l'iscrizione"
+msgstr "Importo dell'Iscrizione"
 
 #. module: membership
 #: constraint:res.partner:0
@@ -856,7 +868,7 @@ msgstr ""
 #: selection:report.membership,membership_state:0
 #: selection:res.partner,membership_state:0
 msgid "Cancelled Member"
-msgstr ""
+msgstr "Iscrizione annullata"
 
 #. module: membership
 #: constraint:product.product:0

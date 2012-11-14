@@ -99,6 +99,8 @@ class res_partner_bank(osv.osv):
             @param iban: IBAN as string
             @return: True if IBAN is valid, False otherwise
         """
+        if not iban:
+            return False
         iban = _format_iban(iban).lower()
         if iban[:2] in _ref_iban and len(iban) != len(_format_iban(_ref_iban[iban[:2]])):
             return False
@@ -128,9 +130,9 @@ class res_partner_bank(osv.osv):
     def _construct_constraint_msg(self, cr, uid, ids, context=None):
 
         def default_iban_check(iban_cn):
-            return iban_cn[0] in string.ascii_lowercase and iban_cn[1] in string.ascii_lowercase
+             return iban_cn and iban_cn[0] in string.ascii_lowercase and iban_cn[1] in string.ascii_lowercase
 
-        iban_country = self.browse(cr, uid, ids)[0].acc_number[:2].lower()
+        iban_country = self.browse(cr, uid, ids)[0].acc_number and self.browse(cr, uid, ids)[0].acc_number[:2].lower()
         if default_iban_check(iban_country):
             if iban_country in _ref_iban:
                 return _('The IBAN does not seem to be correct. You should have entered something like this %s'), \

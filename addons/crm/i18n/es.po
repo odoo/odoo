@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-10 17:48+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"PO-Revision-Date: 2012-11-09 12:10+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:47+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-10 04:59+0000\n"
+"X-Generator: Launchpad (build 16251)\n"
 
 #. module: crm
 #: view:crm.lead.report:0
@@ -172,7 +172,7 @@ msgstr "Mes esperado de cierre"
 #. module: crm
 #: view:crm.lead2opportunity.partner.mass:0
 msgid "Assigned Opportunities to"
-msgstr ""
+msgstr "Oportunidades asignadas a"
 
 #. module: crm
 #: view:crm.lead:0 field:crm.lead,partner_id:0 view:crm.lead.report:0
@@ -598,7 +598,7 @@ msgstr "Fecha de fin"
 #. module: crm
 #: view:crm.opportunity2phonecall:0 view:crm.phonecall2phonecall:0
 msgid "Schedule/Log a Call"
-msgstr ""
+msgstr "Planificar/Registrar una llamada"
 
 #. module: crm
 #: constraint:base.action.rule:0
@@ -792,7 +792,7 @@ msgstr "Siguiente"
 #. module: crm
 #: field:crm.segmentation,som_interval:0
 msgid "Days per Period"
-msgstr ""
+msgstr "Días por periodo"
 
 #. module: crm
 #: field:crm.meeting,byday:0
@@ -959,7 +959,7 @@ msgstr "Días para abrir"
 #. module: crm
 #: view:crm.meeting:0
 msgid "Show Time as"
-msgstr ""
+msgstr "Mostrar hora como"
 
 #. module: crm
 #: view:crm.phonecall2partner:0
@@ -1342,7 +1342,7 @@ msgstr "Fecha escritura"
 #. module: crm
 #: view:crm.meeting:0
 msgid "End of Recurrency"
-msgstr ""
+msgstr "Fin de recurrencia"
 
 #. module: crm
 #: view:crm.meeting:0
@@ -1392,6 +1392,12 @@ msgid ""
 "       \n"
 "If the call needs to be done then the state is set to 'Not Held'."
 msgstr ""
+"El estado se establece a 'Para hacer' cuando se crea el caso.\n"
+"Si es caso está en marcha, el estado se establece a 'Abierto.\n"
+"Cuando la llamada se termina, el estado se establece en 'Realizada'.         "
+"                         \n"
+"Si la llamada está pendiente de ser realizada, entonces el estado se "
+"establece en 'Pendiente'."
 
 #. module: crm
 #: selection:crm.meeting,week_list:0
@@ -1449,7 +1455,7 @@ msgstr "Oportunidades por categorías"
 #. module: crm
 #: model:crm.case.section,name:crm.section_sales_marketing_department
 msgid "Sales Marketing Department"
-msgstr ""
+msgstr "Departamento de ventas y marketing"
 
 #. module: crm
 #: view:crm.phonecall.report:0
@@ -1900,7 +1906,7 @@ msgstr "Responder a"
 #. module: crm
 #: view:crm.case.section:0
 msgid "Select Stages for this Sales Team"
-msgstr ""
+msgstr "Seleccione etapas para este equipo de ventas"
 
 #. module: crm
 #: view:board.board:0
@@ -2015,7 +2021,7 @@ msgstr "Ubicación"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead2opportunity_partner_mass
 msgid "Mass Lead To Opportunity Partner"
-msgstr ""
+msgstr "Transformación masiva de iniciativa a oportunidad"
 
 #. module: crm
 #: view:crm.lead:0
@@ -2777,7 +2783,7 @@ msgstr "e-mail del contacto"
 #. module: crm
 #: field:crm.lead,referred:0
 msgid "Referred by"
-msgstr ""
+msgstr "Referido por"
 
 #. module: crm
 #: view:crm.lead:0 model:ir.model,name:crm.model_crm_add_note
@@ -3541,7 +3547,7 @@ msgstr "Nuevas oportunidades"
 #: code:addons/crm/crm_action_rule.py:61
 #, python-format
 msgid "No E-Mail Found for your Company address!"
-msgstr ""
+msgstr "No se encontró dirección de e-mail para el contacto de su compañía"
 
 #. module: crm
 #: field:crm.lead.report,email:0
@@ -3561,7 +3567,7 @@ msgstr "Oportunidades por usuario y equipo"
 #. module: crm
 #: view:crm.phonecall:0
 msgid "Reset to Todo"
-msgstr ""
+msgstr "Cambiar a 'Para hacer'"
 
 #. module: crm
 #: field:crm.case.section,working_hours:0
@@ -3643,6 +3649,10 @@ msgid ""
 "partner. From the phone call form, you can trigger a request for another "
 "call, a meeting or an opportunity."
 msgstr ""
+"Esta herramienta permite registrar sus llamadas entrantes sobre la marcha. "
+"Cada llamada que recibe aparecerá en el formulario de la empresa para trazar "
+"cada contacto que tiene con una empresa. Desde el formulario de llamadas, "
+"puede lanzar una petición para otra llamada, una reunión u oportunidad."
 
 #. module: crm
 #: selection:crm.lead.report,creation_month:0
@@ -3673,6 +3683,10 @@ msgid ""
 "channels that will be maintained at the creation of a document in the "
 "system. Some examples of channels can be: Website, Phone Call, Reseller, etc."
 msgstr ""
+"Controle el origen de sus iniciativas y oportunidades de venta mediante la "
+"creación de canales específicos que se usarán en la creación de documentos "
+"en el sistema. Algunos ejemplos de canales son: Sitio web, llamada "
+"telefónica, distribuidores, ..."
 
 #. module: crm
 #: selection:crm.lead2opportunity.partner,name:0
@@ -3740,7 +3754,7 @@ msgstr "Año"
 #. module: crm
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "¡Error! No puede crear miembros asociados recursivamente."
 
 #. module: crm
 #: model:crm.case.resource.type,name:crm.type_lead8

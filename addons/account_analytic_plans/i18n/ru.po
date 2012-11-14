@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2011-04-15 19:38+0000\n"
+"PO-Revision-Date: 2012-10-25 12:32+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:03+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:12+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -92,7 +92,7 @@ msgstr "Счет 2 уровня"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Номер счета должен быть уникальным для компании!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -105,6 +105,8 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Ошибка настройки! Выбранная валюта должна соответствовать валюте счетов по "
+"умолчанию."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -129,17 +131,17 @@ msgstr "Позиция банковской выписки"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "Определить аналитический план счетов"
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Неверна структурная связь BBA!"
 
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "Журнал и период должны относиться к одной компании."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -147,6 +149,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Дата проводки в журнале не в определённом периоде! Вы должны сменить дату "
+"или удалить это ограничение из журнала."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -249,6 +253,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Выбранный счёт проводки в журнале нуждается во вторичной валюте. Вы должны "
+"удалить вторичную валюту по счёту или выбрать мульти-валютный вид по журналу."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -305,7 +311,7 @@ msgstr "analytic.plan.create.model.action"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Позиция аналитики"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -363,7 +369,7 @@ msgstr "Сохранить это разнесение как шаблон"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Нельзя создать элемент журнала по счету с типом вид."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -406,7 +412,7 @@ msgstr "Счет 3 уровня"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Нельзя создать проводку аналитики по счету с типом вид."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -427,7 +433,7 @@ msgstr "Счет 4 уровня"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Для счета и периода должна быть одна компания."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -513,11 +519,14 @@ msgid ""
 "analytic accounts for each plan set. Then, you must attach a plan set to "
 "your account journals."
 msgstr ""
+"Для настройки нескольких планов счетов аналитики, вы должны определить "
+"корневые счета аналитики для каждого набора плана. Затем вы можете "
+"прикрепить набор плана к вашим учётным журналам."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Нельзя создать элемент журнала по закрытому счету ."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0

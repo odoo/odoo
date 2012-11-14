@@ -34,16 +34,14 @@ and can check logs.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'wizard/audittrail_view_log_view.xml',
         'audittrail_view.xml',
         'security/ir.model.access.csv',
     ],
-    'demo_xml': ['audittrail_demo.xml'],
+    'demo': ['audittrail_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0062572348749',
     'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

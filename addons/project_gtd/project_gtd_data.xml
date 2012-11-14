@@ -22,6 +22,18 @@
             <field name="name">Long Term</field>
             <field name="icon">terp-project</field>
         </record>
+    </data>
+
+    <data noupdate="1">
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Todo Lists application installed!</field>
+            <field name="body">Add todo items on project tasks, to help you organize your work.
+This application supports the Getting Things Done (GTD) methodology, based on David Allen's book.</field>
+        </record>
 
     </data>
 </openerp>
