@@ -333,6 +333,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.find("tr td:first-child").addClass("oe_form_group_cell_label");
         self.$el.find("label").addClass("oe_form_label");
         self.$el.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+        self.$el.find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
         self.$el.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
         self.$el.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
         self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
@@ -416,6 +417,18 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 },
             };
             self.do_action(client_action);
+        });
+    },
+    do_duplicate: function(form) {
+        var self = this;
+        var fields = $(form).serializeArray();
+        self.rpc("/web/database/duplicate", {'fields': fields}).then(function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Duplicating database", "The database has been duplicated.");
+            self.start();
         });
     },
     do_drop: function(form) {

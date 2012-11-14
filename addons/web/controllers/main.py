@@ -768,15 +768,20 @@ class Database(openerpweb.Controller):
     @openerpweb.jsonrequest
     def create(self, req, fields):
         params = dict(map(operator.itemgetter('name', 'value'), fields))
-        create_attrs = (
+        return req.session.proxy("db").create_database(
             params['super_admin_pwd'],
             params['db_name'],
             bool(params.get('demo_data')),
             params['db_lang'],
-            params['create_admin_pwd']
-        )
+            params['create_admin_pwd'])
 
-        return req.session.proxy("db").create_database(*create_attrs)
+    @openerpweb.jsonrequest
+    def duplicate(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        return req.session.proxy("db").duplicate_database(
+            params['super_admin_pwd'],
+            params['db_original_name'],
+            params['db_name'])
 
     @openerpweb.jsonrequest
     def drop(self, req, fields):
