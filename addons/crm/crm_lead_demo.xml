@@ -551,6 +551,7 @@ Andrew</field>
                 <div><font size="2">Hello,</font></div><div><font size="2"></font></div><div><font size="2">I am interested in your company's product and I plan to buy a new laptop having latest technologies and affordable price.</font></div><div><font size="2">Can you please send me product catalogue?</font></div>
             ]]></field>
             <field name="type">email</field>
+            <field name="author_id" ref="base.res_partner_2"/>
         </record>
         <record id="message_note0" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
@@ -563,7 +564,7 @@ We have attached the catalogue,<br/>
 We would like to know your interests, so let us know when we can call you for more details.<br/>
 Regards]]></field>
             <field name="parent_id" ref="message_email0"/>
-            <field name="author_id" ref="base.partner_root"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_note0_comment0" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
@@ -572,7 +573,7 @@ Regards]]></field>
             <field name="type">comment</field>
             <field name="body">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
             <field name="parent_id" ref="message_email0"/>
-            <field name="author_id" ref="base.partner_demo"/>
+            <field name="author_id" ref="base.res_partner_2"/>
         </record>
         <record id="message_note0_comment1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
@@ -581,7 +582,7 @@ Regards]]></field>
             <field name="type">comment</field>
             <field name="body">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
             <field name="parent_id" ref="message_email0"/>
-            <field name="author_id" ref="base.partner_demo"/>
+            <field name="author_id" ref="base.res_partner_2"/>
         </record>
         <record id="message_email1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
@@ -590,7 +591,7 @@ Regards]]></field>
             <field name="body">Yes, its open till 10:00 PM, you are welcome!</field>
             <field name="type">email</field>
             <field name="parent_id" ref="message_email0"/>
-            <field name="author_id" ref="base.partner_root"/>
+            <field name="author_id" ref="base.partner_demo"/>
             <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_demo'), ref('base.user_root')])]"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
