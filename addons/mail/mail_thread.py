@@ -520,7 +520,7 @@ class mail_thread(osv.AbstractModel):
             body = tools.ustr(body, encoding, errors='replace')
             if message.get_content_type() == 'text/plain':
                 # text/plain -> <pre/>
-                body = tools.append_content_to_html(u'', body)
+                body = tools.append_content_to_html(u'', body, preserve=True)
         else:
             alternative = (message.get_content_type() == 'multipart/alternative')
             for part in message.walk():
@@ -535,7 +535,7 @@ class mail_thread(osv.AbstractModel):
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
                     body = tools.append_content_to_html(body, tools.ustr(part.get_payload(decode=True),
-                                                                         encoding, errors='replace'))
+                                                                         encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
