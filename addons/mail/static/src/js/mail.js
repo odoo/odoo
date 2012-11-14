@@ -599,10 +599,10 @@ openerp.mail = function (session) {
                         this.parent_thread.context
                     ]).done(function (record) {
                         var thread = self.parent_thread;
-                        if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                            var hread = thread.parent_message.parent_thread;
-                        }
                         var root = thread == self.options.root_thread;
+                        if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
+                            var thread = thread.parent_message.parent_thread;
+                        }
                         // create object and attach to the thread object
                         thread.message_fetch([['id', 'child_of', [self.id]]], false, [record], function (arg, data) {
                             var message = thread.create_message_object( data[0] );
@@ -1268,10 +1268,9 @@ openerp.mail = function (session) {
 
             this.$('.oe_view_nocontent').remove();
 
-
             if (dom_insert_after) {
                 message.insertAfter(dom_insert_after);
-            }if (prepend) {
+            } else if (prepend) {
                 message.prependTo(self.$el);
             } else {
                 message.appendTo(self.$el);
