@@ -3,10 +3,13 @@
  *--------------------------------------------------------*/
 var console;
 if (!console) {
-    console = {log: function () {}};
-}
-if (!console.debug) {
-    console.debug = console.log;
+    // Even IE9 only exposes console object if debug window opened
+    console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
 }
 
 openerp.web.coresetup = function(instance) {
