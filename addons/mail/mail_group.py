@@ -114,7 +114,7 @@ class mail_group(osv.Model):
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
-                          {'alias_name': "group+"+vals['name']},
+                          {'alias_name': "group+" + vals['name']},
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
@@ -161,6 +161,13 @@ class mail_group(osv.Model):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, ids, context=context)
+        # if description is changed: update client action
+        if vals.get('description'):
+            cobj = self.pool.get('ir.actions.client')
+            for action in [group.action for group in self.browse(cr, SUPERUSER_ID, ids, context=context) if group.action]:
+                new_params = action.params
+                new_params['header_description'] = vals.get('description')
+                cobj.write(cr, SUPERUSER_ID, [action.id], {'params': str(new_params)}, context=context)
         return result
 
     def action_follow(self, cr, uid, ids, context=None):
