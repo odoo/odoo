@@ -849,8 +849,8 @@ openerp.mail = function (session) {
                             msg.renderElement();
                             msg.start();
                         }
-                        if( self.options.root_thread.__parentedParent.__parentedParent.get_menu_emails ) {
-                            self.options.root_thread.__parentedParent.__parentedParent.get_menu_emails().do_reload();
+                        if( self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails ) {
+                            self.options.root_thread.__parentedParent.__parentedParent.do_reload_menu_emails();
                         }
                     });
 
@@ -1623,14 +1623,17 @@ openerp.mail = function (session) {
         * crete an object "related_menu"
         * contain the menu widget and the the sub menu related of this wall
         */
-        get_menu_emails: function () {
-            var self = this;
-            if (!this.related_menu) {
-                var menu = this.__parentedParent.__parentedParent.menu;
-                var sub_menu = _.filter(menu.data.data.children, function (val) {return val.id == 100;})[0];
-                this.related_menu = menu;
-            }
-            return this.related_menu;
+        do_reload_menu_emails: function () {
+            var menu = this.__parentedParent.__parentedParent.menu;
+            return this.rpc("/web/menu/load", {'menu_id': 100}).done(function(r) {
+                _.each(menu.data.data.children, function (val) {
+                    if (val.id == 100) {
+                        val.children = _.find(r.data.children, function (r_val) {return r_val.id == 100;}).children;
+                    }
+                });
+                var r = menu.data;
+                menu.menu_loaded(r);
+            });
         },
 
         /**
