@@ -716,7 +716,8 @@ instance.web.Menu =  instance.web.Widget.extend({
     },
     menu_loaded: function(data) {
         var self = this;
-        this.data = data;
+        // TODO remove data.data
+        this.data = {"data": data};
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one

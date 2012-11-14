@@ -1002,10 +1002,6 @@ class Menu(openerpweb.Controller):
     _cp_path = "/web/menu"
 
     @openerpweb.jsonrequest
-    def load(self, req):
-        return {'data': self.do_load(req)}
-
-    @openerpweb.jsonrequest
     def get_user_roots(self, req):
         return self.do_get_user_roots(req)
 
@@ -1031,7 +1027,8 @@ class Menu(openerpweb.Controller):
 
         return Menus.search(menu_domain, 0, False, False, context)
 
-    def do_load(self, req):
+    @openerpweb.jsonrequest
+    def load(self, req, menu_id=None):
         """ Loads all menu items (all applications and their sub-menus).
 
         :param req: A request object, with an OpenERP session attribute
@@ -1047,7 +1044,11 @@ class Menu(openerpweb.Controller):
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
-        menu_ids = Menus.search([], 0, False, False, context)
+        if menu_id:
+            # for load only one sub menu
+            menu_ids = Menus.search([['id', 'child_of', menu_id]], 0, False, False, context)
+        else:
+            menu_ids = Menus.search([], 0, False, False, context)
         menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled', 'needaction_counter'], context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
