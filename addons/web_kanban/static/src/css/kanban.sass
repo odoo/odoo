@@ -140,7 +140,7 @@
         padding: 0
         margin: 0px
     .oe_kanban_group_folded
-        .oe_kanban_group_title, &.oe_kanban_column > *, .oe_kanban_aggregates, .oe_kanban_add
+        .oe_kanban_group_title, &.oe_kanban_column *, .oe_kanban_aggregates, .oe_kanban_add
             display: none
         .oe_kanban_group_title_vertical
             display: block
@@ -168,7 +168,10 @@
         margin-left: 4px
         cursor: pointer
         position: relative
+    .oe_kanban_add
         top: -8px
+    .oe_kanban_header .oe_dropdown_toggle
+        top: -2px
     .oe_kanban_card, .oe_dropdown_toggle
         cursor: pointer
         display: inline-block
@@ -414,7 +417,6 @@
     // KanbanDropDown {{{
     .oe_dropdown_kanban
         float: right
-        clear: both
         cursor: pointer
         margin-top: -6px
         &:hover
@@ -502,6 +504,15 @@
                 @include vertical-gradient(#f6f6f6, #e3e3e3)
                 @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
 
-
+@media print
+    .openerp
+        .oe_kanban_groups
+            button
+                visibility: hidden
+            a
+                &[data-type=object], &[data-type=delete]
+                    visibility: hidden
+        .oe_kanban_view .oe_kanban_group_title
+            text-shadow: none !important
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

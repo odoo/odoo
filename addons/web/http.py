@@ -21,6 +21,7 @@ import urlparse
 import uuid
 import xmlrpclib
 
+import babel.core
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -91,9 +92,25 @@ class WebRequest(object):
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         self.session = self.httpsession.get(self.session_id)
         if not self.session:
-            self.httpsession[self.session_id] = self.session = session.OpenERPSession()
+            self.session = session.OpenERPSession()
+            self.httpsession[self.session_id] = self.session
         self.context = self.params.pop('context', None)
-        self.debug = self.params.pop('debug', False) != False
+        self.debug = self.params.pop('debug', False) is not False
+        # Determine self.lang
+        lang = self.params.get('lang', None)
+        if lang is None:
+            lang = self.session.eval_context(self.context).get('lang')
+        if lang is None:
+            lang = self.httprequest.cookies.get('lang')
+        if lang is None:
+            lang = self.httprequest.accept_languages.best
+        if lang is None:
+            lang = 'en_US'
+        # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
+        lang = babel.core.LOCALE_ALIASES.get(lang, lang)
+        # we use _ as seprator where RFC2616 uses '-'
+        self.lang = lang.replace('-', '_')
+
 
 class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
@@ -128,10 +145,9 @@ class JsonRequest(WebRequest):
            "id": null}
 
     """
-    def dispatch(self, controller, method):
+    def dispatch(self, method):
         """ Calls the method asked for by the JSON-RPC2 or JSONP request
 
-        :param controller: the instance of the controller which received the request
         :param method: the method which received the request
 
         :returns: an utf8 encoded JSON-RPC2 or JSONP reply
@@ -170,9 +186,9 @@ class JsonRequest(WebRequest):
                 self.jsonrequest = simplejson.loads(request, object_hook=nonliterals.non_literal_decoder)
             self.init(self.jsonrequest.get("params", {}))
             if _logger.isEnabledFor(logging.DEBUG):
-                _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
+                _logger.debug("--> %s.%s\n%s", method.im_class.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
-            response["result"] = method(controller, self, **self.params)
+            response["result"] = method(self, **self.params)
         except session.AuthenticationError:
             error = {
                 'code': 100,
@@ -230,16 +246,13 @@ def jsonrequest(f):
     the ``session_id``, ``context`` and ``debug`` keys (which are stripped out
     beforehand)
     """
-    @functools.wraps(f)
-    def json_handler(controller, request):
-        return JsonRequest(request).dispatch(controller, f)
-    json_handler.exposed = True
-    return json_handler
+    f.exposed = 'json'
+    return f
 
 class HttpRequest(WebRequest):
     """ Regular GET/POST request
     """
-    def dispatch(self, controller, method):
+    def dispatch(self, method):
         params = dict(self.httprequest.args)
         params.update(self.httprequest.form)
         params.update(self.httprequest.files)
@@ -250,9 +263,9 @@ class HttpRequest(WebRequest):
                 akw[key] = value
             else:
                 akw[key] = type(value)
-        _logger.debug("%s --> %s.%s %r", self.httprequest.method, controller.__class__.__name__, method.__name__, akw)
+        _logger.debug("%s --> %s.%s %r", self.httprequest.method, method.im_class.__name__, method.__name__, akw)
         try:
-            r = method(controller, self, **self.params)
+            r = method(self, **self.params)
         except xmlrpclib.Fault, e:
             r = werkzeug.exceptions.InternalServerError(cgi.escape(simplejson.dumps({
                 'code': 200,
@@ -317,11 +330,8 @@ def httprequest(f):
     merged in the same dictionary), apart from the ``session_id``, ``context``
     and ``debug`` keys (which are stripped out beforehand)
     """
-    @functools.wraps(f)
-    def http_handler(controller, request):
-        return HttpRequest(request).dispatch(controller, f)
-    http_handler.exposed = True
-    return http_handler
+    f.exposed = 'http'
+    return f
 
 #----------------------------------------------------------
 # Controller registration with a metaclass
@@ -538,16 +548,21 @@ class Root(object):
         """
         if l:
             ps = '/' + '/'.join(l)
-            meth = 'index'
+            method_name = 'index'
             while ps:
                 c = controllers_path.get(ps)
                 if c:
-                    m = getattr(c, meth, None)
-                    if m and getattr(m, 'exposed', False):
-                        _logger.debug("Dispatching to %s %s %s", ps, c, meth)
-                        return m
-                ps, _slash, meth = ps.rpartition('/')
-                if not ps and meth:
+                    method = getattr(c, method_name, None)
+                    if method:
+                        exposed = getattr(method, 'exposed', False)
+                        if exposed == 'json':
+                            _logger.debug("Dispatch json to %s %s %s", ps, c, method_name)
+                            return lambda request: JsonRequest(request).dispatch(method)
+                        elif exposed == 'http':
+                            _logger.debug("Dispatch http to %s %s %s", ps, c, method_name)
+                            return lambda request: HttpRequest(request).dispatch(method)
+                ps, _slash, method_name = ps.rpartition('/')
+                if not ps and method_name:
                     ps = '/'
         return None
 

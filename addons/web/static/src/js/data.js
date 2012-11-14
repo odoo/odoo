@@ -66,7 +66,7 @@ instance.web.Query = instance.web.Class.extend({
             offset: this._offset,
             limit: this._limit,
             sort: instance.web.serialize_sort(this._order_by)
-        }).pipe(function (results) {
+        }).then(function (results) {
             self._count = results.length;
             return results.records;
         }, null);
@@ -78,7 +78,7 @@ instance.web.Query = instance.web.Class.extend({
      */
     first: function () {
         var self = this;
-        return this.clone({limit: 1})._execute().pipe(function (records) {
+        return this.clone({limit: 1})._execute().then(function (records) {
             delete self._count;
             if (records.length) { return records[0]; }
             return null;
@@ -120,6 +120,10 @@ instance.web.Query = instance.web.Class.extend({
         if (_.isEmpty(grouping)) { return null; }
 
         var self = this;
+
+        // FIXME: when pyeval is merged
+        var ctx = instance.session.test_eval_contexts(
+                [this._model.context(this._context)]);
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
@@ -128,8 +132,12 @@ instance.web.Query = instance.web.Class.extend({
             offset: this._offset,
             limit: this._limit,
             orderby: instance.web.serialize_sort(this._order_by) || false
-        }).pipe(function (results) {
+        }).then(function (results) {
             return _(results).map(function (result) {
+                // FIX: querygroup initialization
+                result.__context = result.__context || {};
+                result.__context.group_by = result.__context.group_by || [];
+                _.defaults(result.__context, ctx);
                 return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
             });
@@ -350,17 +358,16 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.DataSet =  instance.web.CallbackEnabled.extend({
+instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, {
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
      *
      * @constructs instance.web.DataSet
-     * @extends instance.web.CallbackEnabled
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
     init: function(parent, model, context) {
-        this._super(parent);
+        instance.web.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
         this.index = null;
@@ -435,7 +442,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         return this._model.query(fields)
                 .limit(options.limit || false)
                 .offset(options.offset || 0)
-                .all().then(function (records) {
+                .all().done(function (records) {
             self.ids = _(records).pluck('id');
         });
     },
@@ -448,7 +455,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      */
     read_index: function (fields, options) {
         options = options || {};
-        return this.read_ids([this.ids[this.index]], fields, options).pipe(function (records) {
+        return this.read_ids([this.ids[this.index]], fields, options).then(function (records) {
             if (_.isEmpty(records)) { return $.Deferred().reject().promise(); }
             return records[0];
         });
@@ -463,7 +470,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     default_get: function(fields, options) {
         options = options || {};
         return this._model.call('default_get',
-            [fields], {context: this._model.context(options.context)});
+            [fields], {context: this.get_context(options.context)});
     },
     /**
      * Creates a new record in db
@@ -472,7 +479,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     create: function(data) {
-        return this._model.call('create', [data], {context: this._model.context()});
+        return this._model.call('create', [data], {context: this.get_context()});
     },
     /**
      * Saves the provided data in an existing db record
@@ -485,7 +492,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      */
     write: function (id, data, options) {
         options = options || {};
-        return this._model.call('write', [[id], data], {context: this._model.context(options.context)}).then(this.trigger('dataset_changed', id, data, options));
+        return this._model.call('write', [[id], data], {context: this.get_context(options.context)}).done(this.trigger('dataset_changed', id, data, options));
     },
     /**
      * Deletes an existing record from the database
@@ -493,7 +500,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
-        return this._model.call('unlink', [ids], {context: this._model.context()}).then(this.trigger('dataset_changed', ids));
+        return this._model.call('unlink', [ids], {context: this.get_context()}).done(this.trigger('dataset_changed', ids));
     },
     /**
      * Calls an arbitrary RPC method
@@ -524,7 +531,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     name_get: function(ids) {
-        return this._model.call('name_get', [ids], {context: this._model.context()});
+        return this._model.call('name_get', [ids], {context: this.get_context()});
     },
     /**
      * 
@@ -548,11 +555,10 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param name
      */
     name_create: function(name) {
-        return this._model.call('name_create', [name], {context: this._model.context()});
+        return this._model.call('name_create', [name], {context: this.get_context()});
     },
     exec_workflow: function (id, signal) {
-        return this._model.exec_workflow(id, signal)
-            .pipe(function (result) { return { result: result }; });
+        return this._model.exec_workflow(id, signal);
     },
     get_context: function(request_context) {
         return this._model.context(request_context);
@@ -599,8 +605,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         return instance.session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: this._model.context(options.context),
-        }).pipe(function (results) {
+            context: this.get_context(options.context),
+        }).then(function (results) {
             return results;
         });
     },
@@ -675,9 +681,9 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
             .limit(options.limit || false);
         q = q.order_by.apply(q, this._sort);
 
-        return q.all().then(function (records) {
+        return q.all().done(function (records) {
             // FIXME: not sure about that one, *could* have discarded count
-            q.count().then(function (count) { self._length = count; });
+            q.count().done(function (count) { self._length = count; });
             self.ids = _(records).pluck('id');
         });
     },
@@ -686,7 +692,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        return this._super(ids).then(function(result) {
+        return this._super(ids).done(function(result) {
             self.ids = _(self.ids).difference(ids);
             if (self._length) {
                 self._length -= 1;
@@ -715,7 +721,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.last_default_get = {};
     },
     default_get: function(fields, options) {
-        return this._super(fields, options).then(this.on_default_get);
+        return this._super(fields, options).done(this.on_default_get);
     },
     on_default_get: function(res) {
         this.last_default_get = res;
@@ -767,7 +773,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
         this.trigger("dataset_changed", ids, callback, error_callback);
-        return $.async_when({result: true}).then(callback);
+        return $.async_when({result: true}).done(callback);
     },
     reset_ids: function(ids) {
         this.set_ids(ids);
@@ -829,7 +835,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
             completion.resolve(records);
         };
         if(to_get.length > 0) {
-            var rpc_promise = this._super(to_get, fields, options).then(function(records) {
+            var rpc_promise = this._super(to_get, fields, options).done(function(records) {
                 _.each(records, function(record, index) {
                     var id = to_get[index];
                     var cached = _.detect(self.cache, function(x) {return x.id === id;});
@@ -984,14 +990,14 @@ instance.web.DropMisordered = instance.web.Class.extend({
         var res = $.Deferred();
 
         var self = this, seq = this.lsn++;
-        deferred.then(function () {
+        deferred.done(function () {
             if (seq > self.rsn) {
                 self.rsn = seq;
                 res.resolve.apply(res, arguments);
             } else if (self.failMisordered) {
                 res.reject();
             }
-        }, function () {
+        }).fail(function () {
             res.reject.apply(res, arguments);
         });
 

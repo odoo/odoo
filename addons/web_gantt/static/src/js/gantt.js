@@ -12,15 +12,17 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     template: "GanttView",
     view_type: "gantt",
     init: function() {
+        var self = this;
         this._super.apply(this, arguments);
         this.has_been_loaded = $.Deferred();
         this.chart_id = _.uniqueId();
+        this.on('view_loaded', self, self.load_gantt);
     },
-    on_loaded: function(fields_view_get, fields_get) {
+    load_gantt: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-        return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
+        return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).then(function(fields_get) {
             self.fields = fields_get.fields;
             self.has_been_loaded.resolve();
         });
@@ -44,11 +46,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         }));
         fields = _.uniq(fields.concat(n_group_bys));
         
-        return $.when(this.has_been_loaded).pipe(function() {
+        return $.when(this.has_been_loaded).then(function() {
             return self.dataset.read_slice(fields, {
                 domain: domains,
                 context: contexts
-            }).pipe(function(data) {
+            }).then(function(data) {
                 return self.on_data_loaded(data, n_group_bys);
             });
         });
@@ -60,7 +62,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_data_loaded: function(tasks, group_bys) {
         var self = this;
         var ids = _.pluck(tasks, "id");
-        return this.dataset.name_get(ids).pipe(function(names) {
+        return this.dataset.name_get(ids).then(function(names) {
             var ntasks = _.map(tasks, function(task) {
                 return _.extend({__name: _.detect(names, function(name) { return name[0] == task.id; })[1]}, task); 
             });

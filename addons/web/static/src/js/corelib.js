@@ -243,15 +243,17 @@ instance.web.ParentedMixin = {
 
 /**
  * Backbone's events. Do not ever use it directly, use EventDispatcherMixin instead.
+ * 
+ * This class just handle the dispatching of events, it is not meant to be extended,
+ * nor used directly. All integration with parenting and automatic unregistration of
+ * events is done in EventDispatcherMixin.
+ *
+ * Copyright notice for the following Class:
  *
  * (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
  * Backbone may be freely distributed under the MIT license.
  * For all details and documentation:
  * http://backbonejs.org
- * 
- * This class just handle the dispatching of events, it is not meant to be extended,
- * nor used directly. All integration with parenting and automatic unregistration of
- * events is done in EventDispatcherMixin.
  *
  */
 var Events = instance.web.Class.extend({
@@ -291,6 +293,17 @@ var Events = instance.web.Class.extend({
         return this;
     },
 
+    callbackList: function() {
+        var lst = [];
+        _.each(this._callbacks || {}, function(el, eventName) {
+            var node = el;
+            while ((node = node.next) && node.next) {
+                lst.push([eventName, node.callback, node.context]);
+            }
+        });
+        return lst;
+    },
+    
     trigger : function(events) {
         var event, node, calls, tail, args, all, rest;
         if (!(calls = this._callbacks))
@@ -323,7 +336,6 @@ var Events = instance.web.Class.extend({
         return this;
     }
 });
-// end of Jeremy Ashkenas' code
 
 instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
     __eventDispatcherMixin: true,
@@ -369,9 +381,9 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        if(!this.__edispatcherEvents) {
-            debugger;
-        }
+        _.each(this.__edispatcherEvents.callbackList(), function(cal) {
+            this.off(cal[0], cal[2], cal[1]);
+        }, this);
         this.__edispatcherEvents.off();
         instance.web.ParentedMixin.destroy.call(this);
     }
@@ -382,8 +394,17 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
         instance.web.EventDispatcherMixin.init.call(this);
         this.__getterSetterInternalMap = {};
     },
-    set: function(map, options) {
-        options = options || {};
+    set: function(arg1, arg2, arg3) {
+        var map;
+        var options;
+        if (typeof arg1 === "string") {
+            map = {};
+            map[arg1] = arg2;
+            options = arg3 || {};
+        } else {
+            map = arg1;
+            options = arg2 || {};
+        }
         var self = this;
         var changed = false;
         _.each(map, function(val, key) {
@@ -406,121 +427,94 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
     }
 });
 
-instance.web.CallbackEnabledMixin = _.extend({}, instance.web.PropertiesMixin, {
-    init: function() {
-        instance.web.PropertiesMixin.init.call(this);
-        var self = this;
-        var callback_maker = function(obj, name, method) {
-            var callback = function() {
-                var args = Array.prototype.slice.call(arguments);
-                self.trigger.apply(self, [name].concat(args));
-                var r;
-                for(var i = 0; i < callback.callback_chain.length; i++)  {
-                    var c = callback.callback_chain[i];
-                    if(c.unique) {
-                        callback.callback_chain.splice(i, 1);
-                        i -= 1;
-                    }
-                    var result = c.callback.apply(c.self, c.args.concat(args));
-                    if (c.callback === method) {
-                        // return the result of the original method
-                        r = result;
-                    }
-                    // TODO special value to stop the chain
-                    // instance.web.callback_stop
-                }
-                return r;
-            };
-            callback.callback_chain = [];
-            callback.add = function(f) {
-                if(typeof(f) == 'function') {
-                    f = { callback: f, args: Array.prototype.slice.call(arguments, 1) };
-                }
-                f.self = f.self || null;
-                f.args = f.args || [];
-                f.unique = !!f.unique;
-                if(f.position == 'last') {
-                    callback.callback_chain.push(f);
-                } else {
-                    callback.callback_chain.unshift(f);
-                }
-                return callback;
-            };
-            callback.add_first = function(f) {
-                return callback.add.apply(null,arguments);
-            };
-            callback.add_last = function(f) {
-                return callback.add({
-                    callback: f,
-                    args: Array.prototype.slice.call(arguments, 1),
-                    position: "last"
-                });
-            };
-            callback.remove = function(f) {
-                callback.callback_chain = _.difference(callback.callback_chain, _.filter(callback.callback_chain, function(el) {
-                    return el.callback === f;
-                }));
-                return callback;
-            };
+// Classes
 
-            return callback.add({
-                callback: method,
-                self:obj,
-                args:Array.prototype.slice.call(arguments, 3)
-            });
-        };
-        // Transform on_/do_* methods into callbacks
-        for (var name in this) {
-            if(typeof(this[name]) == "function") {
-                this[name].debug_name = name;
-                if((/^on_|^do_/).test(name)) {
-                    this[name] = callback_maker(this, name, this[name]);
-                }
-            }
-        }
-    },
+/**
+ * Base class for all visual components. Provides a lot of functionalities helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its children are
+ *     destroyed too).
+ * - Insertion in DOM.
+ *
+ * Guide to create implementations of the Widget class:
+ * ==============================================
+ *
+ * Here is a sample child class:
+ *
+ * MyWidget = instance.base.Widget.extend({
+ *     // the name of the QWeb template to use for rendering
+ *     template: "MyQWebTemplate",
+ *
+ *     init: function(parent) {
+ *         this._super(parent);
+ *         // stuff that you want to init before the rendering
+ *     },
+ *     start: function() {
+ *         // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *         this.$el.find(".my_button").click(/* an example of event binding * /);
+ *
+ *         // if you have some asynchronous operations, it's a good idea to return
+ *         // a promise in start()
+ *         var promise = this.rpc(...);
+ *         return promise;
+ *     }
+ * });
+ *
+ * Now this class can simply be used with the following syntax:
+ *
+ * var my_widget = new MyWidget(this);
+ * my_widget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
+ * DOM inside the ".some-div" div and its events were binded.
+ *
+ * And of course, when you don't need that widget anymore, just do:
+ *
+ * my_widget.destroy();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ */
+instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
+    // Backbone-ish API
+    tagName: 'div',
+    id: null,
+    className: null,
+    attributes: {},
+    events: {},
     /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
      *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String|Function} method function or name of the method to invoke
-     * @returns {Function} proxied method
+     * @type string
      */
-    proxy: function (method) {
-        var self = this;
-        return function () {
-            var fn = (typeof method === 'string') ? self[method] : method;
-            return fn.apply(self, arguments);
-        }
-    }
-});
-
-instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
+    template: null,
     /**
      * Constructs the widget and sets its parent if a parent is given.
      *
      * @constructs instance.web.Widget
-     * @extends instance.web.CallbackEnabled
      *
      * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
      * When that widget is destroyed by calling destroy(), the current instance will be
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        instance.web.CallbackEnabledMixin.init.call(this);
+        instance.web.PropertiesMixin.init.call(this);
         this.setParent(parent);
+        // Bind on_/do_* methods to this
+        // We might remove this automatic binding in the future
+        for (var name in this) {
+            if(typeof(this[name]) == "function") {
+                if((/^on_|^do_/).test(name)) {
+                    this[name] = this[name].bind(this);
+                }
+            }
+        }
+        // FIXME: this should not be
+        this.setElement(this._make_descriptive());
+        this.session = instance.session;
     },
     /**
      * Destroys the current widget, also destroys all its children before destroying itself.
@@ -609,94 +603,32 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     start: function() {
         return $.when();
-    }
-});
-
-// Classes
-
-instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEnabledMixin, {
-    init: function() {
-        instance.web.CallbackEnabledMixin.init.call(this);
-    }
-});
-
-/**
- * Base class for all visual components. Provides a lot of functionalities helpful
- * for the management of a part of the DOM.
- *
- * Widget handles:
- * - Rendering with QWeb.
- * - Life-cycle management and parenting (when a parent is destroyed, all its children are
- *     destroyed too).
- * - Insertion in DOM.
- *
- * Guide to create implementations of the Widget class:
- * ==============================================
- *
- * Here is a sample child class:
- *
- * MyWidget = instance.base.Widget.extend({
- *     // the name of the QWeb template to use for rendering
- *     template: "MyQWebTemplate",
- *
- *     init: function(parent) {
- *         this._super(parent);
- *         // stuff that you want to init before the rendering
- *     },
- *     start: function() {
- *         // stuff you want to make after the rendering, `this.$el` holds a correct value
- *         this.$el.find(".my_button").click(/* an example of event binding * /);
- *
- *         // if you have some asynchronous operations, it's a good idea to return
- *         // a promise in start()
- *         var promise = this.rpc(...);
- *         return promise;
- *     }
- * });
- *
- * Now this class can simply be used with the following syntax:
- *
- * var my_widget = new MyWidget(this);
- * my_widget.appendTo($(".some-div"));
- *
- * With these two lines, the MyWidget instance was inited, rendered, it was inserted into the
- * DOM inside the ".some-div" div and its events were binded.
- *
- * And of course, when you don't need that widget anymore, just do:
- *
- * my_widget.destroy();
- *
- * That will kill the widget in a clean way and erase its content from the dom.
- */
-instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
-    // Backbone-ish API
-    tagName: 'div',
-    id: null,
-    className: null,
-    attributes: {},
-    events: {},
+    },
     /**
-     * The name of the QWeb template that will be used for rendering. Must be
-     * redefined in subclasses or the default render() method can not be used.
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
      *
-     * @type string
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String|Function} method function or name of the method to invoke
+     * @returns {Function} proxied method
      */
-    template: null,
-    /**
-     * Constructs the widget and sets its parent if a parent is given.
-     *
-     * @constructs instance.web.Widget
-     * @extends instance.web.CallbackEnabled
-     *
-     * @param {instance.web.Widget} parent Binds the current instance to the given Widget instance.
-     * When that widget is destroyed by calling destroy(), the current instance will be
-     * destroyed too. Can be null.
-     */
-    init: function(parent) {
-        instance.web.WidgetMixin.init.call(this,parent);
-        // FIXME: this should not be
-        this.setElement(this._make_descriptive());
-        this.session = instance.session;
+    proxy: function (method) {
+        var self = this;
+        return function () {
+            var fn = (typeof method === 'string') ? self[method] : method;
+            return fn.apply(self, arguments);
+        }
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -713,7 +645,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         }
         this.replaceElement($el);
     },
-
     /**
      * Re-sets the widget's root element and replaces the old root element
      * (if any) by the new one in the DOM.
@@ -844,12 +775,12 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
         return false;
     },
     rpc: function(url, data, success, error) {
-        var def = $.Deferred().then(success, error);
+        var def = $.Deferred().done(success).fail(error);
         var self = this;
-        instance.session.rpc(url, data).then(function() {
+        instance.session.rpc(url, data).done(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
-        }, function() {
+        }).fail(function() {
             if (!self.isDestroyed())
                 def.reject.apply(def, arguments);
         });
@@ -976,7 +907,7 @@ instance.web.Registry = instance.web.Class.extend({
     }
 });
 
-instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
+instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
@@ -985,13 +916,12 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     },
     /**
      * @constructs instance.web.JsonRPC
-     * @extends instance.web.CallbackEnabled
      *
      * @param {String} [server] JSON-RPC endpoint hostname
      * @param {String} [port] JSON-RPC endpoint port
      */
     init: function() {
-        this._super();
+        instance.web.PropertiesMixin.init.call(this);
         this.server = null;
         this.debug = ($.deparam($.param.querystring()).debug != undefined);
     },
@@ -1322,7 +1252,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         };
         var deferred = $.Deferred();
         this.trigger('request', url, payload);
-        var request = this.rpc_function(url, payload).then(
+        var request = this.rpc_function(url, payload).done(
             function (response, textStatus, jqXHR) {
                 self.trigger('response', response);
                 if (!response.error) {
@@ -1335,7 +1265,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 } else {
                     deferred.reject(response.error, $.Event());
                 }
-            },
+            }
+        ).fail(
             function(jqXHR, textStatus, errorThrown) {
                 self.trigger('response_failed', jqXHR);
                 var error = {
@@ -1422,10 +1353,11 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 $iframe.unbind('load').bind('load', function() {
                     $.ajax(ajax).always(function() {
                         cleanUp();
-                    }).then(
-                        function() { deferred.resolve.apply(deferred, arguments); },
-                        function() { deferred.reject.apply(deferred, arguments); }
-                    );
+                    }).done(function() {
+                        deferred.resolve.apply(deferred, arguments);
+                    }).fail(function() {
+                        deferred.reject.apply(deferred, arguments);
+                    });
                 });
                 // now that the iframe can receive data, we fill and submit the form
                 $form.submit();

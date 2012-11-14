@@ -18,11 +18,10 @@ instance.web.ViewManagerAction.include({
             return this._super.apply(this,arguments); 
         }
     }
-})
+});
 instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     init: function(parent, element_id, dataset, view, options) {
         this._super(parent);
-        this.element_id = element_id;
         this.parent = parent;
         this.dataset = new instance.web.DataSetSearch(this, 'ir.ui.view', null, null),
         this.model = dataset.model;
@@ -71,15 +70,15 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         this.main_view_id = this.parent.fields_view.view_id;
         this.action_manager = new instance.web.ActionManager(this);
         this.action_manager.appendTo(this.view_edit_dialog.$el);
-        $.when(this.action_manager.do_action(action)).then(function() {
+        $.when(this.action_manager.do_action(action)).done(function() {
             var viewmanager = self.action_manager.inner_widget;
             var controller = viewmanager.views[viewmanager.active_view].controller;
-            controller.on_loaded.add_last(function(){
+            controller.on('view_loaded', self, function(){
                 $(controller.groups).bind({
                     'selected': function(e, ids, records) {
                         self.main_view_id = ids[0];
                     }
-                })
+                });
             });
         });
     },
@@ -103,7 +102,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     if (warn) {
                         self.on_valid_create_view(self.create_view_widget);
                     } else {
-                        $.when(self.do_save_view(view_values)).then(function() {
+                        $.when(self.do_save_view(view_values)).done(function() {
                             self.create_view_dialog.close();
                             var controller = self.action_manager.inner_widget.views[self.action_manager.inner_widget.active_view].controller;
                             controller.reload_content();
@@ -136,7 +135,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
         var model_dataset = new instance.web.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
-        field_dataset.call( 'fields_get', []).then(function(fields) {
+        field_dataset.call( 'fields_get', []).done(function(fields) {
             _.each(['name', 'x_name'], function(value) {
                 if (_.include(_.keys(fields), value)) {
                     field_name = value;
@@ -144,7 +143,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                 }
             });
             if (field_name) {
-                model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}).then(function(records) {
+                model_dataset.read_slice(['name','field_id'], {"domain": [['model','=',self.model]]}).done(function(records) {
                     if (records) {view_string = records[0].name;}
                     var arch = _.str.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
                     var vals = {'model': self.model, 'name': values.view_name, 'priority': values.priority, 'type': values.view_type, 'arch': arch};
@@ -183,7 +182,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var self = this;
         if (confirm(_t("Do you really want to remove this view?"))) {
             var controller = this.action_manager.inner_widget.views[this.action_manager.inner_widget.active_view].controller;
-            this.dataset.unlink([this.main_view_id]).then(function() {
+            this.dataset.unlink([this.main_view_id]).done(function() {
                 controller.reload_content();
                 self.main_view_id = self.parent.fields_view.view_id;
             });
@@ -246,12 +245,12 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
     get_arch: function() {
         var self = this;
         var view_arch_list = [];
-        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type','priority']).then(function(arch) {
+        this.dataset.read_ids([parseInt(self.main_view_id)], ['arch', 'type','priority']).done(function(arch) {
             if (arch.length) {
                 var arch_object = self.parse_xml(arch[0].arch, self.main_view_id);
                 self.main_view_type = arch[0].type == 'tree'? 'list': arch[0].type;
                 view_arch_list.push({"view_id": self.main_view_id, "arch": arch[0].arch,"priority":arch[0].priority});
-                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).then(function(result) {
+                self.dataset.read_slice([], {domain: [['inherit_id','=', parseInt(self.main_view_id)]]}).done(function(result) {
                     _.each(result, function(res) {
                         view_arch_list.push({"view_id": res.id, "arch": res.arch,"priority":res.priority});
                         self.inherit_view(arch_object, res);
@@ -456,7 +455,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
-        this.dataset.create(vals).then(function(id) {
+        this.dataset.create(vals).done(function(id) {
             var arch_to_obj = self.parse_xml(arch,id);
             obj.child_id.push(arch_to_obj[0]);
             self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
@@ -539,7 +538,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false; 
             property_to_check.push(value);
         });
-        field_dataset.call( 'fields_get', []).then(function(result) {
+        field_dataset.call( 'fields_get', []).done(function(result) {
             var fields = _.keys(result);
             fields.push(" "),fields.sort();
             self.on_add_node(property_to_check, fields);
@@ -891,7 +890,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var arch_val = self.get_object_by_id(this.one_object.clicked_tr_id,this.one_object['main_object'], []);
         this.edit_node_dialog.$el.append('<table id="rec_table"  style="width:400px" class="oe_form"></table>');
         this.edit_widget = [];
-        self.ready  = $.when(self.on_groups(properties)).then(function () {
+        self.ready  = $.when(self.on_groups(properties)).done(function () {
             _PROPERTIES_ATTRIBUTES['groups']['selection'] = self.groups;
             var values = _.keys( instance.web.form.widgets.map);
             values.push('');
@@ -994,7 +993,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         table_selector.find("td[id^=]").attr("width","100px");
         self.add_node_dialog.$el.find('#new_field').click(function() {
             model_data = new instance.web.DataSetSearch(self,'ir.model', null, null);
-            model_data.read_slice([], {domain: [['model','=', self.model]]}).then(function(result) {
+            model_data.read_slice([], {domain: [['model','=', self.model]]}).done(function(result) {
                 self.render_new_field(result[0]);
             });
         });
@@ -1012,7 +1011,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             }
         };
         var action_manager = new instance.web.ActionManager(self);
-        $.when(action_manager.do_action(action)).then(function() {
+        $.when(action_manager.do_action(action)).done(function() {
             var controller = action_manager.dialog_widget.views['form'].controller;
             controller.on("on_button_cancel", self, function(){
                 action_manager.destroy();

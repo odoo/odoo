@@ -26,8 +26,7 @@ Deferreds
 ---------
 
 Deferreds are a form of `promises`_. OpenERP Web currently uses
-`jQuery's deferred`_, but any `CommonJS Promises/A`_ implementation
-should work.
+`jQuery's deferred`_.
 
 The core idea of deferreds is that potentially asynchronous methods
 will return a :js:class:`Deferred` object instead of an arbitrary
@@ -44,9 +43,8 @@ directly to asynchronous methods is the ability to :ref:`compose them
 Using deferreds
 ~~~~~~~~~~~~~~~
 
-`CommonJS Promises/A`_ deferreds have only one method of importance:
-:js:func:`Deferred.then`. This method is used to attach new callbacks
-to the deferred object.
+Deferreds's most important method is :js:func:`Deferred.then`. It is
+used to attach new callbacks to the deferred object.
 
 * the first parameter attaches a success callback, called when the
   deferred object is successfully resolved and provided with the
@@ -178,9 +176,9 @@ Deferred chaining
 
 A second useful composition is starting an asynchronous operation as
 the result of an other asynchronous operation, and wanting the result
-of both: :js:func:`Deferred.then` returns the deferred on which it was
-called, so handle e.g. OpenERP's search/read sequence with this would
-require something along the lines of:
+of both: with the tools described so far, handling e.g. OpenERP's
+search/read sequence with this would require something along the lines
+of:
 
 .. code-block:: javascript
 
@@ -195,21 +193,14 @@ require something along the lines of:
 While it doesn't look too bad for trivial code, this quickly gets
 unwieldy.
 
-Instead, jQuery provides a tool to handle this kind of chains:
-:js:func:`Deferred.pipe`.
-
-:js:func:`~Deferred.pipe` has the same signature as
-:js:func:`~Deferred.then` and could be used in the same manner
-provided its return value was not used.
-
-It differs from :js:func:`~Deferred.then` in two ways: it returns a
-new promise object, not the one it was called with, and the return
-values of the callbacks is actually important to it: whichever
-callback is called,
+But :js:func:`~Deferred.then` also allows handling this kind of
+chains: it returns a new promise object, not the one it was called
+with, and the return values of the callbacks is actually important to
+it: whichever callback is called,
 
 * If the callback is not set (not provided or left to null), the
   resolution or rejection value(s) is simply forwarded to
-  :js:func:`~Deferred.pipe`'s promise (it's essentially a noop)
+  :js:func:`~Deferred.then`'s promise (it's essentially a noop)
 
 * If the callback is set and does not return an observable object (a
   deferred or a promise), the value it returns (``undefined`` if it
@@ -217,7 +208,7 @@ callback is called,
 
   .. code-block:: javascript
 
-      promise.pipe(function () {
+      promise.then(function () {
           console.log('called');
       });
 
@@ -234,7 +225,7 @@ callback is called,
 
   .. code-block:: javascript
 
-      return Model.search(condition).pipe(function (ids) {
+      return Model.search(condition).then(function (ids) {
           return Model.read(ids, fields);
       });
 
@@ -243,108 +234,11 @@ callback is called,
   will be resolved with ``read``'s resolution values if the chain
   executes correctly.
 
-:js:func:`~Deferred.pipe` is also useful to adapt third-party
+:js:func:`~Deferred.then` is also useful to adapt third-party
 promise-based APIs, in order to filter their resolution value counts
-for instance (to take advantage of :js:func:`when` 's special treatment
-of single-value promises).
+for instance (to take advantage of :js:func:`when` 's special
+treatment of single-value promises).
 
-jQuery.Deferred API
-~~~~~~~~~~~~~~~~~~~
-
-.. js:function:: when(deferreds…)
-
-    :param deferreds: deferred objects to multiplex
-    :returns: a multiplexed deferred
-    :rtype: :js:class:`Deferred`
-
-.. js:class:: Deferred
-
-    .. js:function:: Deferred.then(doneCallback[, failCallback])
-
-        Attaches new callbacks to the resolution or rejection of the
-        deferred object. Callbacks are executed in the order they are
-        attached to the deferred.
-
-        To provide only a failure callback, pass ``null`` as the
-        ``doneCallback``, to provide only a success callback the
-        second argument can just be ignored (and not passed at all).
-
-        :param doneCallback: function called when the deferred is resolved
-        :type doneCallback: Function
-        :param failCallback: function called when the deferred is rejected
-        :type failCallback: Function
-        :returns: the deferred object on which it was called
-        :rtype: :js:class:`Deferred`
-
-    .. js:function:: Deferred.done(doneCallback)
-
-        Attaches a new success callback to the deferred, shortcut for
-        ``deferred.then(doneCallback)``.
-
-        This is a jQuery extension to `CommonJS Promises/A`_ providing
-        little value over calling :js:func:`~Deferred.then` directly,
-        it should be avoided.
-
-        :param doneCallback: function called when the deferred is resolved
-        :type doneCallback: Function
-        :returns: the deferred object on which it was called
-        :rtype: :js:class:`Deferred`
-
-    .. js:function:: Deferred.fail(failCallback)
-
-        Attaches a new failure callback to the deferred, shortcut for
-        ``deferred.then(null, failCallback)``.
-
-        A second jQuery extension to `Promises/A <CommonJS
-        Promises/A>`_. Although it provides more value than
-        :js:func:`~Deferred.done`, it still is not much and should be
-        avoided as well.
-
-        :param failCallback: function called when the deferred is rejected
-        :type failCallback: Function
-        :returns: the deferred object on which it was called
-        :rtype: :js:class:`Deferred`
-
-    .. js:function:: Deferred.promise()
-
-        Returns a read-only view of the deferred object, with all
-        mutators (resolve and reject) methods removed.
-
-    .. js:function:: Deferred.resolve(value…)
-
-        Called to resolve a deferred, any value provided will be
-        passed onto the success handlers of the deferred object.
-
-        Resolving a deferred which has already been resolved or
-        rejected has no effect.
-
-    .. js:function:: Deferred.reject(value…)
-
-        Called to reject (fail) a deferred, any value provided will be
-        passed onto the failure handler of the deferred object.
-
-        Rejecting a deferred which has already been resolved or
-        rejected has no effect.
-
-    .. js:function:: Deferred.pipe(doneFilter[, failFilter])
-
-        Filters the result of a deferred, able to transform a success
-        into failure and a failure into success, or to delay
-        resolution further.
-
-.. [#] or simply calling :js:class:`Deferred` as a function, the
-       result is the same
-
-.. [#] or not-promises, the `CommonJS Promises/B`_ role of
-       :js:func:`when` is to be able to treat values and promises
-       uniformly: :js:func:`when` will pass promises through directly,
-       but non-promise values and objects will be transformed into a
-       resolved promise (resolving themselves with the value itself).
-
-       jQuery's :js:func:`when` keeps this behavior making deferreds
-       easy to build from "static" values, or allowing defensive code
-       where expected promises are wrapped in :js:func:`when` just in
-       case.
 
 .. _promises: http://en.wikipedia.org/wiki/Promise_(programming)
 .. _jQuery's deferred: http://api.jquery.com/category/deferred-object/
