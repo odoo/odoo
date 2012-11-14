@@ -791,7 +791,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PosWidget',
         init: function() { 
             this._super(arguments[0],{});
-            
+
+            instance.web.blockUI(); 
+
             this.pos = new module.PosModel(this.session);
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
@@ -841,11 +843,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
+                instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
-                self.$('.loader img').hide();
 
             }).fail(function(){   // error when loading models data from the backend
-                self.$('.loader img').hide();
+                instance.web.unblockUI();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
                         return instance.session.rpc('/web/action/load', {'action_id': res[0]['res_id']})
