@@ -42,4 +42,22 @@ class res_partner_mail(osv.Model):
         'notification_email_send': lambda *args: 'comment'
     }
 
+    def message_post(self, cr, uid, thread_id, body='', subject=None, type='notification',
+                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        """ Override related to res.partner. In case of email message, set it as
+            private:
+            - add the target partner in the message partner_ids
+            - set thread_id as None, because this will trigger the 'private'
+                aspect of the message (model=False, res_id=False)
+        """
+        if isinstance(thread_id, (list, tuple)):
+            thread_id = thread_id[0]
+        if type == 'email':
+            partner_ids = kwargs.get('partner_ids', [])
+            if thread_id not in partner_ids:
+                partner_ids.append(thread_id)
+            kwargs['partner_ids'] = partner_ids
+            return super(res_partner_mail, self).message_post(cr, uid, False, body=body, subject=subject,
+                type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -56,12 +56,14 @@ openerp.mail = function (session) {
 
         /* Get an image in /web/binary/image?... */
         get_image: function (session, model, field, id, resize) {
-            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '') + '&resize=' + (resize ? encodeURIComponent(resize) : '');
+            var r = resize ? encodeURIComponent(resize) : '';
+            id = id || '';
+            return session.url('/web/binary/image', {model: model, field: field, id: id, resize: r});
         },
 
         /* Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, attachment) {
-            return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+            return session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
         },
 
         /**
@@ -590,7 +592,7 @@ openerp.mail = function (session) {
 
             if (body.match(/\S+/)) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_api', [
+                this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
@@ -728,7 +730,6 @@ openerp.mail = function (session) {
 
     mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
-
         
         start: function () {
             this._super.apply(this, arguments);
@@ -1530,7 +1531,6 @@ openerp.mail = function (session) {
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': false,
-                'show_compose_message': this.view.is_action_enabled('edit'),
                 'show_compact_message': 1,
             }, this.node.params);
 
@@ -1556,9 +1556,10 @@ openerp.mail = function (session) {
                 return;
             }
 
-            this.node.params = _.extend({
-                'message_ids': this.getParent().fields.message_ids ? this.getParent().fields.message_ids.get_value() : undefined,
-            }, this.node.params);
+            this.node.params = _.extend(this.node.params, {
+                'message_ids': this.get_value(),
+                'show_compose_message': this.view.is_action_enabled('edit'),
+            });
             this.node.context = {
                 'default_res_id': this.view.datarecord.id || false,
                 'default_model': this.view.model || false,
@@ -1571,7 +1572,6 @@ openerp.mail = function (session) {
             // create and render Thread widget
             this.root = new mail.Widget(this, _.extend(this.node, {
                 'domain' : (this.domain || []).concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]),
-                
             }));
 
             return this.root.replace(this.$('.oe_mail-placeholder'));

@@ -20,9 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
-from tools.translate import _
-import re
-from openerp.tools.misc import html2plaintext
+from openerp.tools import html2plaintext
 
 class note_stage(osv.osv):
     """ Category of Note """

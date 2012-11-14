@@ -25,6 +25,7 @@ import tools
 from email.header import decode_header
 from openerp import SUPERUSER_ID
 from openerp.osv import osv, orm, fields
+from openerp.tools import html_email_clean
 from openerp.tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -280,7 +281,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
-                'body': message.body,
+                'body': html_email_clean(message.body),
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,
@@ -633,6 +634,8 @@ class mail_message(osv.Model):
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
+        elif not values.get('message_id'):
+            values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, SUPERUSER_ID, newid, context=context)
         return newid
@@ -763,7 +766,7 @@ class mail_message(osv.Model):
                 ], context=context)
             fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
             partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
-        # when writing to a wall
+        # remove me from notified partners, unless the message is written on my own wall
         if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
             partners_to_notify |= set([message.get('author_id')[0]])
         elif message.get('author_id'):
