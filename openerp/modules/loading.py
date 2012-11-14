@@ -124,8 +124,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
                 elif ext == '.xml':
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                elif ext == '.js':
+                    pass # .js files are valid but ignored here.
                 else:
-                    _logger.debug("Ignoring %s due to unknown type", filename)
+                    _logger.warning("Can't load unknown file type %s.", filename)
             finally:
                 fp.close()
 
