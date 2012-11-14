@@ -24,16 +24,18 @@ Re-implement openerp's file import system:
     'category': 'Uncategorized',
     'website': 'http://www.openerp.com',
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['web'],
     'installable': True,
-    'auto_install': False, # set to true and allow uninstall?
+    'auto_install': False,
     'css': [
         'static/lib/select2/select2.css',
         'static/src/css/import.css',
     ],
     'js': [
         'static/lib/select2/select2.js',
+        'static/lib/javascript-state-machine/state-machine.js',
         'static/src/js/import.js',
     ],
     'qweb': ['static/src/xml/import.xml'],
+    'test': ['static/test/states.js'],
 }

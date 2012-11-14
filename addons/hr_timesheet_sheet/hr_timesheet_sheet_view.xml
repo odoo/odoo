@@ -40,6 +40,23 @@
             </field>
         </record>
 
+
+        <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Timesheet Activities</field>
+            <field name="res_model">hr.analytic.timesheet</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="act_hr_timesheet_sheet_sheet_2_hr_attendance">
+            <field name="context">{'search_default_sheet_id': [active_id]}</field>
+            <field name="name">Attendances</field>
+            <field name="res_model">hr.attendance</field>
+            <field name="src_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+
         <record id="hr_timesheet_sheet_form" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
@@ -53,60 +70,45 @@
                     <field name="state" widget="statusbar" statusbar_visible="new,confirm,done"/>
                 </header>
                 <sheet>
-                    <label for="employee_id" class="oe_edit_only"/>
-                    <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)"/></h1>
-                    <label for="date_from" class="oe_edit_only" string="Timesheet Period"/>
-                    <h2>From <field name="date_from"/> to <field name="date_to"/></h2>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button type="action"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet)d"
+                            string="Timesheet Activities" />
+                        <button type="action" groups="base.group_hr_attendance"
+                            name="%(act_hr_timesheet_sheet_sheet_2_hr_attendance)d"
+                            string="Attendances" />
+                    </div>
+                    <div class="oe_title">
+                        <label for="employee_id" class="oe_edit_only"/>
+                        <h1><field name="employee_id" on_change="onchange_employee_id(employee_id)" class="oe_inline"/></h1>
+                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="department_id"/>
+                            <label for="date_from" string="Timesheet Period"/>
+                            <div><field name="date_from" class="oe_inline"/> to <field name="date_to" class="oe_inline"/></div>
+                            <field name="name" invisible="1"/>
+                            <field name="department_id" invisible="1"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
-                        <group>
-                            <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
+                        <group groups="base.group_hr_attendance">
+                            <field name="total_attendance" widget="float_time"/>
                             <field name="total_timesheet" widget="float_time"/>
-                            <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
+                            <field name="total_difference" widget="float_time"/>
                             <field name="user_id" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Daily">
-                            <group>
-                                <div>
-                                    <button name="button_dummy" class="oe_inline" string="Go to" type="object" icon="terp-gtk-jump-to-ltr"/> :
-                                    <field name="date_current" class="oe_inline"/>
-                                </div>
-                                <div align="right">
-                                    <button class="oe_inline" icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
-                                    <button class="oe_inline" name="date_today" string="Today" type="object" icon="terp-go-today"/>
-                                    <button class="oe_inline" icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
-                                </div>
-                            </group>
-                            <group colspan="4" col="3">
-                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
-                                    <tree string="Attendances" editable="bottom">
-                                        <field name="name"/>
-                                        <field name="action"/>
-                                        <field invisible="1" name="employee_id"/>
-                                    </tree>
-                                </field>
-                                <group>
-                                    <div align="right" groups="base.group_hr_manager,base.group_hr_attendance">
-                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" groups="base.group_hr_attendance"/>
-                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" groups="base.group_hr_attendance"/>
-                                    </div>
-                                </group>
-                            </group>
-                            <group col="4">
-                                <field name="state_attendance" groups="base.group_hr_attendance"/>
-                            </group>
-                            <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
-                                <tree editable="top" string="Timesheet Lines">
-                                    <field invisible="1" name="date"/>
-                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
+                        <page string="Summary">
+                            <widget type="weekly_timesheet">
+                            </widget>
+                        </page>
+                        <page string="Details">
+                            <field context="{'user_id':user_id, 'timesheet_date_from': date_from, 'timesheet_date_to': date_to}" name="timesheet_ids" nolabel="1">
+                                <tree editable="top" string="Timesheet Activities">
+                                    <field name="date"/>
+                                    <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id, user_id)" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>
-                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
+                                    <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time" string="Hours" sum="Hours"/>
                                     <field name="to_invoice" widget="selection"/>
                                     <field invisible="1" name="journal_id"/>
                                     <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
@@ -115,9 +117,9 @@
                                     <field invisible="1" name="general_account_id"/>
                                     <field invisible="1" name="user_id" required="1"/>
                                 </tree>
-                                <form string="Timesheet Lines" version="7.0">
+                                <form string="Timesheet Activities" version="7.0">
                                     <field name="date"/>
-                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id)"/>
+                                    <field domain="[('type','=','normal'), ('state', '&lt;&gt;', 'close')]" name="account_id" on_change="on_change_account_id(account_id, user_id)"/>
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                     <field name="to_invoice"/>
@@ -130,13 +132,30 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Summary">
-                            <field colspan="4" name="period_ids" nolabel="1">
+                        <page string="Attendances" groups="base.group_hr_attendance">
+                            <group>
+                                <field context="{'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                    <tree string="Attendances" editable="bottom">
+                                        <field name="name"/>
+                                        <field name="action"/>
+                                        <field invisible="1" name="employee_id"/>
+                                    </tree>
+                                </field>
+                                <group>
+                                    <label for="state_attendance"/>
+                                    <div>
+                                        <field name="state_attendance"/>
+                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" class="oe_link"/>
+                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" class="oe_link"/>
+                                    </div>
+                                </group>
+                            </group>
+                            <field name="period_ids">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
-                                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
-                                    <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
+                                    <field name="total_attendance" widget="float_time" sum="Attendances"/>
+                                    <field name="total_timesheet" widget="float_time" sum="Timesheets"/>
+                                    <field name="total_difference" widget="float_time" sum="Differences"/>
                                 </tree>
                             </field>
                         </page>
@@ -156,8 +175,8 @@
             <field name="arch" type="xml">
                 <search string="Search Timesheet">
                     <field name="date_from"/>
-                    <filter icon="terp-document-new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
-                    <filter icon="terp-camera_test" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
+                    <filter name="new" string="In Draft" domain="[('state','in',('draft', 'new'))]" help="Unvalidated Timesheets"/>
+                    <filter name="to_approve" string="To Approve" domain="[('state','=','confirm')]" help="Confirmed Timesheets"/>
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <group expand="0" string="Group By...">
@@ -169,23 +188,23 @@
         </record>
 
         <record id="act_hr_timesheet_sheet_form" model="ir.actions.act_window">
-            <field name="name">Timesheets</field>
+            <field name="name">Timesheets to Validate</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
             <field name="view_type">form</field>
             <field name="view_id" eval="False"/>
-            <field name="context">{'search_default_my_timesheet':1}</field>
+            <field name="context">{'search_default_to_approve':1}</field>
             <field name="search_view_id" ref="view_hr_timesheet_sheet_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to go to your timesheet. 
+                New timesheet to approve.
               </p><p>
                 You must record timesheets every day and confirm at the end
-                of the week. Once the timesheet is confirmed, it his sent to
-                the manager for validation.
+                of the week. Once the timesheet is confirmed, it should be
+                validated by a manager.
               </p><p>
                 Timesheets can also be invoiced to customers, depending on the
-                configuration of the project.
+                configuration of each project's related contract.
               </p>
             </field>
         </record>
@@ -284,33 +303,20 @@
         </record>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_account"
-        name="Timesheet by Account"
-        res_model="hr_timesheet_sheet.sheet.account"
-        src_model="hr_timesheet_sheet.sheet"/>
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_account"
+            name="Timesheet by Account"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.account"
+            src_model="hr_timesheet_sheet.sheet"/>
 
         <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_by_day"
-        name="Timesheet by Day"
-        res_model="hr_timesheet_sheet.sheet.day"
-        src_model="hr_timesheet_sheet.sheet"/>
-
-        <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_analytic_timesheet"
-        name="Timesheet Lines"
-        res_model="hr.analytic.timesheet"
-        src_model="hr_timesheet_sheet.sheet"/>
-
-
-        <act_window
-        context="{'search_default_sheet_id': [active_id]}"
-        id="act_hr_timesheet_sheet_sheet_2_hr_attendance"
-        name="Attendances"
-        res_model="hr.attendance"
-        src_model="hr_timesheet_sheet.sheet"/>
+            context="{'search_default_sheet_id': [active_id]}"
+            id="act_hr_timesheet_sheet_sheet_by_day"
+            name="Timesheet by Day"
+            groups="base.group_hr_attendance"
+            res_model="hr_timesheet_sheet.sheet.day"
+            src_model="hr_timesheet_sheet.sheet"/>
 
         <record id="hr_timesheet_sheet_tree_simplified" model="ir.ui.view">
             <field name="name">hr.timesheet.sheet.tree</field>
@@ -321,7 +327,7 @@
                     <field name="employee_id"/>
                     <field name="date_from"/>
                     <field name="date_to"/>
-                    <field name="department_id"/>
+                    <field name="department_id" invisible="1"/>
                     <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time"/>
                     <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>

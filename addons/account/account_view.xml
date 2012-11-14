@@ -302,11 +302,11 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
-         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+        <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree string="Unrealized Gains and losses">
+                <tree string="Unrealized Gains and losses" create="false">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="parent_id" invisible="1"/>
@@ -322,7 +322,7 @@
             </field>
         </record>
 
-          <record id="action_account_gain_loss" model="ir.actions.act_window">
+        <record id="action_account_gain_loss" model="ir.actions.act_window">
             <field name="name">Unrealized Gain or Loss</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
@@ -509,8 +509,8 @@
                         <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
-                                    <field name="profit_account_id"/>
-                                    <field name="loss_account_id"/>
+                                    <field name="profit_account_id" domain="[('type','!=','view')]"/>
+                                    <field name="loss_account_id" domain="[('type','!=','view')]"/>
                                     <field name="internal_account_id"/>
                                 </group>
                                 <group string="Miscellaneous">
@@ -633,13 +633,10 @@
                                 <field name="period_id" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
+                            <field name="currency" invisible="1"/>
                         </group><group>
-                            <label for="balance_start"/>
-                            <div>
-                                <field name="balance_start" class="oe_inline"/>
-                                <field name="currency" class="oe_inline"/>
-                            </div>
-                            <field name="balance_end_real"/>
+                            <field name="balance_start" widget="monetary" options='{"currency_field" : "currency"}'/>
+                            <field name="balance_end_real" widget="monetary" options='{"currency_field" : "currency"}'/>
                         </group>
                     </group>
 
@@ -653,7 +650,7 @@
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                 </tree>
@@ -664,7 +661,7 @@
                                         <field name="ref"/>
                                         <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                         <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                        <field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]"/>
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                         <field name="amount"/>
                                         <field name="sequence" readonly="0"/>
@@ -674,15 +671,24 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Journal Entries" name="move_live_ids">
-                            <field name="move_line_ids"/>
-                        </page>
                     </notebook>
                 </sheet>
                 </form>
             </field>
         </record>
 
+        <record id="view_bank_statement_form_journal_items" model="ir.ui.view">
+            <field name="name">account.bank.statement.journal.items.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="button_journal_entries"
+                            string="Journal Items" type="object"
+                            attrs="{'invisible':[('state','!=','confirm')]}"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
@@ -1040,11 +1046,10 @@
     -->
 
         <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="name">account.move.line.reconcile.tree</field>
             <field name="model">account.move.line</field>
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
+                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="ref"/>
@@ -1052,13 +1057,14 @@
                     <field name="partner_id"/>
                     <field name="account_id"/>
                     <field name="reconcile_partial_id"/>
+                    <field name="state" invisible="1"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                </tree>
+                </tree_account_reconciliation>
             </field>
         </record>
 
-         <record id="view_move_line_tree" model="ir.ui.view">
+        <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
@@ -1081,7 +1087,7 @@
                     <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1130,8 +1136,8 @@
                                         <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                     </group>
                                     <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
-                                        <field name="currency_id"/>
-                                        <field name="amount_currency"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="amount_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </group>
                                     <group string="Reconciliation">
                                         <field name="reconcile_id"/>
@@ -1177,8 +1183,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="amount_currency" groups="base.group_multi_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1233,8 +1239,8 @@
                     <field name="move_id" string="Number (Move)"/>
                     <field name="account_id"/>
                     <field name="partner_id"/>
-                    <field name="journal_id" context="{'journal_id':self}"/>
-                    <field name="period_id" context="{'period_id':self}"/>
+                    <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
+                    <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
@@ -1545,14 +1551,10 @@
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_type">form</field>
-            <field name="view_mode">account_reconciliation_list</field>
+            <field name="view_mode">tree_account_reconciliation</field>
             <field name="help" type="html">
                 <p>
-                    Good job!
-                </p><p>
-                    There is nothing to reconcile. All invoices and payments
-                    have been reconciled, your partner balance is clean.
+                    No journal items found.
                 </p>
             </field>
         </record>
@@ -1798,7 +1800,7 @@
                         <field name="name"/>
                         <field name="active"/>
                     </group>
-                    <field name="note" placeholder="Note fo the invoice..."/>
+                    <field name="note" placeholder="Note for the invoice..."/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
                 </form>
@@ -1857,7 +1859,7 @@
             </field>
         </record>
 
-         <record id="view_subscription_search" model="ir.ui.view">
+        <record id="view_subscription_search" model="ir.ui.view">
             <field name="name">account.subscription.search</field>
             <field name="model">account.subscription</field>
             <field name="arch" type="xml">
@@ -1869,7 +1871,7 @@
                     <field name="model_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Model" icon="terp-folder-orange" domain="[]" context="{'group_by':'model_id'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -1987,7 +1989,7 @@
                     <field name="credit" sum="Total credit"/>
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
-                    <field name="state"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -2166,7 +2168,8 @@
                         <field name="visible" />
                         <field name="complete_tax_set" />
                     </group>
-                    <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
+                    <separator string="Default Taxes" colspan="4"/>
+                    <field name="tax_template_ids" colspan="4"  nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group col="4">
                         <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
@@ -2177,7 +2180,6 @@
                         <field name="property_account_income" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_income_opening" domain="[('id', 'child_of', [account_root_id])]"/>
                         <field name="property_account_expense_opening" domain="[('id', 'child_of', [account_root_id])]"/>
-                        <field name="property_reserve_and_surplus_account" />
                     </group>
                 </form>
             </field>
@@ -2422,32 +2424,6 @@
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>
-        <record id="ir_actions_server_action_wizard_multi_chart" model="ir.actions.server">
-            <field name="type">ir.actions.server</field>
-            <field name="condition">True</field>
-            <field name="state">code</field>
-            <field name="model_id" ref="base.model_ir_actions_todo"/>
-            <field eval="5" name="sequence"/>
-            <field name="code">
-# check for unconfigured companies
-account_installer_obj = self.pool.get('account.installer')
-account_installer_obj.check_unconfigured_cmp(cr, uid, context=context)
-action_ids = []
-# fetch the act_window actions related to chart of account configuration
-# we use ir.actions.todo to enable the possibility for other modules to insert their own
-# wizards during the configuration process
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_wizard_multi_chart')
-if ref:
-    action_ids += [ref[1]]
-ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'action_account_configuration_installer')
-if ref:
-    action_ids += [ref[1]]
-todo_ids = pool.get('ir.actions.todo').search(cr, uid, [('action_id', 'in', action_ids)], context=context)
-pool.get('ir.actions.todo').write(cr, uid, todo_ids, {'state':'open'}, context=context)
-action = pool.get('res.config').next(cr, uid, [], context)
-</field>
-           <field name="name">New Company Financial Setting</field>
-        </record>
 
         <record id="account_account_graph" model="ir.ui.view">
             <field name="name">account.account.graph</field>
@@ -2570,7 +2546,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
+                            <field name="currency" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -2632,12 +2608,12 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Cash Control"/>
-                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" />
-                            <field name="total_entry_encoding" />
+                            <field name="balance_start" readonly="1" string="Opening Cash Control" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <group string="Closing Balance">
-                            <field name="balance_end"/>
+                            <field name="balance_end" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                 </sheet>

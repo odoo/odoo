@@ -90,16 +90,17 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Total Employees',
+        'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees",
+        'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
@@ -111,7 +112,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
@@ -157,6 +158,8 @@ class hr_employee(osv.osv):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
     
     _columns = {
+        #we need a related field in order to be able to sort the employee by name
+        'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
@@ -206,6 +209,8 @@ class hr_employee(osv.osv):
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
+    _order='name_related'
+
     def create(self, cr, uid, data, context=None):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         try:
@@ -230,7 +235,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
+            return {'value': {'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):

@@ -209,7 +209,7 @@ class account_followup_print_all(osv.osv_memory):
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
 
-    def do_mail(self ,cr, uid, ids, context=None):
+    def do_mail(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')

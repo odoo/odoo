@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-28 04:39+0000\n"
-"X-Generator: Launchpad (build 16043)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:48+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -36,6 +36,14 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"Cuando en el campo Valoración inventario se tiene seleccionado Tiempo real "
+"(automatizado) , la contrapartida de los asientos contables para todos los "
+"movimientos de inventario entrantes, se mostrarán en esta cuenta contable, a "
+"menos de que exista un conjunto de valoración cuenta específica en la "
+"ubicación de destino. En el caso de que el producto es un servicio, se "
+"deberá de seleccionar la cuenta de gastos. Este es el valor por defecto para "
+"todos los productos en esta categoría. También puede directamente establecer "
+"en cada producto."
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -2016,7 +2024,7 @@ msgstr ""
 #: field:product.template,property_stock_account_input:0
 #: field:stock.change.standard.price,stock_account_input:0
 msgid "Stock Input Account"
-msgstr ""
+msgstr "Cuenta por pagar transitoria o Gasto"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -3735,6 +3743,13 @@ msgid ""
 "specific valuation account set on the source location. When not set on the "
 "product, the one from the product category is used."
 msgstr ""
+"Cuando en el campo Valoración inventario se tiene seleccionado Tiempo real "
+"(automatizado) , la contrapartida de los asientos contables para todos los "
+"movimientos de inventario entrantes, se mostrarán en esta cuenta contable, a "
+"menos de que exista un conjunto de valoración cuenta específica en la "
+"ubicación de destino. En el caso de que el producto es un servicio, se "
+"deberá de seleccionar la cuenta de gastos. Si no se activa en el producto, "
+"el de la categoría de productos se utiliza."
 
 #. module: stock
 #: view:stock.move:0 field:stock.partial.move,move_ids:0
@@ -3846,7 +3861,7 @@ msgstr ""
 #: field:product.template,property_stock_account_output:0
 #: field:stock.change.standard.price,stock_account_output:0
 msgid "Stock Output Account"
-msgstr ""
+msgstr "Cuenta por Cobrar Transitoria"
 
 #. module: stock
 #: field:stock.location,chained_location_type:0

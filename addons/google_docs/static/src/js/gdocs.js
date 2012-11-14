@@ -1,41 +1,40 @@
 openerp.google_docs = function(instance, m) {
-var _t = instance.web._t;
+var _t = instance.web._t,
+    QWeb = instance.web.qweb;
 
-    instance.web.Sidebar = instance.web.Sidebar.extend({
-        on_attachments_loaded: function(attachments) {
+    instance.web.Sidebar.include({
+        redraw: function() {
             var self = this;
-            self._super(attachments);
-            // if attachment contains a google doc url do nothing
-            // else display a button to create a google doc
-            var flag = false;
-            _.each(attachments, function(i) {
-                if (i.url && i.url.match('/docs.google.com/')) { flag = true; }
+            this._super.apply(this, arguments);
+            self.$el.find('.oe_sidebar_add_attachment').after(QWeb.render('AddGoogleDocumentItem', {widget: self}))
+            self.$el.find('.oe_sidebar_add_google_doc').on('click', function (e) {
+                self.on_google_doc();
             });
-            if (! flag) {
-                this.add_items('files', [
-                    { label: _t('Add Google Doc...'), callback: self.on_google_doc },
-                ]);
-            }
         },
         on_google_doc: function() {
             var self = this;
-            var form = self.getParent();
-            form.sidebar_context().then(function (context) {
-                var ds = new instance.web.DataSet(this, 'ir.attachment', context);
-                ds.call('google_doc_get', [form.dataset.model, [form.datarecord.id], context], function(r) {
-                    if (r == 'False') {
-                        var params = {
-                            error: response,
-                            message: _t("The user google credentials are not set yet. Contact your administrator for help.")
+            var view = self.getParent();
+            var ids = ( view.fields_view.type != "form" )? view.groups.get_selection().ids : [ view.datarecord.id ];
+            if( !_.isEmpty(ids) ){
+                view.sidebar_context().done(function (context) {
+                    var ds = new instance.web.DataSet(this, 'ir.attachment', context);
+                    ds.call('google_doc_get', [view.dataset.model, ids, context]).done(function(r) {
+                        if (r == 'False') {
+                            var params = {
+                                error: response,
+                                message: _t("The user google credentials are not set yet. Contact your administrator for help.")
+                            }
+                            $(openerp.web.qweb.render("DialogWarning", params)).dialog({
+                                title: _t("User Google credentials are not yet set."),
+                                modal: true,
+                            });
                         }
-                        $(openerp.web.qweb.render("DialogWarning", params)).dialog({
-                            title: _t("User Google credentials are not yet set."),
-                            modal: true,
-                        });
-                    }
-                    form.reload();
+                    }).done(function(r){
+                        window.open(r.url,"_blank");
+                        view.reload();
+                    });
                 });
-            })
+            }
         }
-    })
-}
+    });
+};

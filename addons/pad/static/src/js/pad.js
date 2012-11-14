@@ -4,19 +4,18 @@ openerp.pad = function(instance) {
         template: 'FieldPad',
         configured: false,
         content: "",
-        set_value: function(val) {
+        render_value: function() {
             var self = this;
-            var _super = self._super;
-            _super.apply(self,[val]);
-
-            if (val === false || val === "") {
-                self.field_manager.dataset.call('pad_generate_url',{context:{
-                        model: self.field_manager.model,
+            var _super = _.bind(this._super, this);
+            if (this.get("value") === false || this.get("value") === "") {
+                self.view.dataset.call('pad_generate_url',{context:{
+                        model: self.view.model,
                         field_name: self.name,
-                        object_id: self.field_manager.datarecord.id
-                    }}).then(function(data) {
+                        object_id: self.view.datarecord.id
+                    }}).done(function(data) {
                     if(data&&data.url){
-                        _super.apply(self,[data.url]);
+                        self.set({value: data.url});
+                        _super(data.url);
                         self.renderElement();
                     }
                 });

@@ -20,12 +20,15 @@
 ##############################################################################
 
 
+import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
 import pooler
 from report.interface import report_rml
 from report.interface import toxml
+from report import report_sxw
+from tools.translate import _
 import tools
 
 one_week = relativedelta(days=7)
@@ -39,6 +42,7 @@ class report_custom(report_rml):
     def create_xml(self, cr, uid, ids, datas, context=None):
         obj_emp = pooler.get_pool(cr.dbname).get('hr.employee')
 
+        emp_ids = datas['active_ids']
         start_date = datetime.strptime(datas['form']['init_date'], '%Y-%m-%d')
         end_date = datetime.strptime(datas['form']['end_date'], '%Y-%m-%d')
         first_monday = start_date - relativedelta(days=start_date.date().weekday())
@@ -47,9 +51,16 @@ class report_custom(report_rml):
         if last_monday < first_monday:
             first_monday, last_monday = last_monday, first_monday
 
+        rpt_obj = pooler.get_pool(cr.dbname).get('hr.employee')
+        rml_obj=report_sxw.rml_parse(cr, uid, rpt_obj._name,context)
+        header_xml = '''
+        <header>
+        <date>%s</date>
+        <company>%s</company>
+        </header>
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
         user_xml = []
-
-        for employee_id in ids:
+        for employee_id in emp_ids:
             emp = obj_emp.read(cr, uid, [employee_id], ['id', 'name'])[0]
             monday, n_monday = first_monday, first_monday + one_week
             stop, week_xml = False, []
@@ -88,7 +99,7 @@ class report_custom(report_rml):
                             ldt = dt
 
                 # Week xml representation
-                week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % n_monday.strftime('%Y-%m-%d')]
+                week_repr = ['<week>', '<weekstart>%s</weekstart>' % monday.strftime('%Y-%m-%d'), '<weekend>%s</weekend>' % (n_monday - relativedelta(days=1)).strftime('%Y-%m-%d')]
                 for idx in range(7):
                     week_repr.append('<%s>' % num2day[idx])
                     if idx in week_wh:
@@ -98,17 +109,17 @@ class report_custom(report_rml):
                 week_repr.append('<worked>%sh%02d</worked>' % to_hour(reduce(lambda x,y:x+y, week_wh.values(), 0)))
                 week_repr.append('</total>')
                 week_repr.append('</week>')
-                if len(week_repr) > 21: # 21 = minimal length of week_repr
-                    week_xml.append('\n'.join(week_repr))
+                week_xml.append('\n'.join(week_repr))
 
                 monday, n_monday = n_monday, n_monday + one_week
             user_xml.append(user_repr % '\n'.join(week_xml))
-
         xml = '''<?xml version="1.0" encoding="UTF-8" ?>
         <report>
         %s
+        <title>%s</title>
+        %s
         </report>
-        ''' % '\n'.join(user_xml)
+        ''' % (header_xml,_('Attendances by Week'),'\n'.join(user_xml))
         xml = tools.ustr(xml).encode('utf8')
         return self.post_process_xml_data(cr, uid, xml, context)
 

@@ -36,20 +36,21 @@
                             <page string="Public Information">
                                 <group>
                                     <group string="Contact Information">
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
                                         <field name="work_email" widget="email"/>
                                         <field name="work_phone"/>
                                         <field name="mobile_phone"/>
+                                        <field name="work_location"/>
                                     </group>
                                     <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
+                                        <field name="job_id" options='{"no_open": True}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
                                         <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
                                         <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
-                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
@@ -57,14 +58,14 @@
                             <page string="Personal Information" groups="base.group_hr_user">
                                 <group>
                                     <group string="Citizenship &amp; Other Info">
-                                        <field name="country_id" options='{"no_open": true}'/>
+                                        <field name="country_id" options='{"no_open": True}'/>
                                         <field name="identification_id" groups="base.group_hr_user"/>
                                         <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
                                         <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
                                     <group string="Contact Information">
-                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": True, "highlight_first_line": True}'/>
                                     </group>
                                     <group string="Status">
                                         <field name="gender"/>
@@ -112,8 +113,6 @@
                 <search string="Employees">
                     <field name="name" string="Employees"/>
                     <field name="department_id" />
-                    <field name="job_id"/>
-                    <field name="parent_id"/>
                     <field name="category_ids"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'parent_id'}"/>
@@ -289,7 +288,7 @@
         </record>
 
         <record id="open_view_categ_form" model="ir.actions.act_window">
-            <field name="name">Categories of Employee</field>
+            <field name="name">Categories of Employees</field>
             <field name="res_model">hr.employee.category</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -331,27 +330,24 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="job_recruitement" string="Launch Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="job_open" string="Stop Recruitment" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_inline"/>
-                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                            <field name="department_id" class="oe_inline"/>
-                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                        </h1>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
-                                <field name="expected_employees" groups="base.group_user"/>
                                 <field name="no_of_recruitment" on_change="on_change_expected_employee(no_of_recruitment,no_of_employee)"/>
+                                <field name="expected_employees" groups="base.group_user"/>
                             </group>
                             <group>
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                            </group>
+                                <field name="department_id"/>                            </group>
                         </group>
                         <div>
                             <label for="description"/>
@@ -362,6 +358,10 @@
                             <field name="requirements"/>
                         </div>
                     </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>

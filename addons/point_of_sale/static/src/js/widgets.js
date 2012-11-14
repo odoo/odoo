@@ -142,7 +142,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         click_handler: function() {
             this.order.selectLine(this.model);
-            this.on_selected();
+            this.trigger('order_line_selected');
         },
         renderElement: function() {
             this._super();
@@ -153,10 +153,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         refresh: function(){
             this.renderElement();
-            this.on_refresh();
+            this.trigger('order_line_refreshed');
         },
-        on_selected: function() {},
-        on_refresh: function(){},
     });
     
     module.OrderWidget = module.PosBaseWidget.extend({
@@ -204,12 +202,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         update_numpad: function() {
-        	var reset = false;
-        	if (this.selected_line !== this.pos.get('selectedOrder').getSelectedLine()) {
-        		reset = true;
-        	}
         	this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
-        	if (reset && this.numpadState)
+        	if (this.numpadState)
         		this.numpadState.reset();
         },
         renderElement: function() {
@@ -230,8 +224,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                         model: orderLine,
                         order: this.pos.get('selectedOrder'),
                 });
-            	line.on_selected.add(_.bind(this.update_numpad, this));
-                line.on_refresh.add(_.bind(this.update_summary, this));
+            	line.on('order_line_selected', self, self.update_numpad);
+                line.on('order_line_refreshed', self, self.update_summary);
                 line.appendTo($content);
             }, this));
             this.update_numpad();
@@ -303,7 +297,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.payment_line = options.payment_line;
             this.payment_line.bind('change', this.changedAmount, this);
         },
-        on_delete: function() {},
         changeAmount: function(event) {
             var newAmount;
             newAmount = event.currentTarget.value;
@@ -317,10 +310,13 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         		this.renderElement();
         },
         renderElement: function() {
+            var self = this;
             this.name =   this.payment_line.get_cashregister().get('journal_id')[1];
             this._super();
             this.$('input').keyup(_.bind(this.changeAmount, this));
-            this.$('.delete-payment-line').click(this.on_delete);
+            this.$('.delete-payment-line').click(function() {
+                self.trigger('delete_payment_line', self);
+            });
         },
     });
 
@@ -810,7 +806,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
       
         start: function() {
             var self = this;
-            return self.pos.ready.then(function() {
+            return self.pos.ready.done(function() {
                 self.build_currency_template();
                 self.renderElement();
                 
@@ -849,7 +845,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
                 self.$('.loader img').hide();
 
-            },function(){   // error when loading models data from the backend
+            }).fail(function(){   // error when loading models data from the backend
                 self.$('.loader img').hide();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
@@ -1056,7 +1052,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
                 return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
-                    var action = result.result;
+                    var action = result;
                     action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
                     //self.destroy();
                     this.do_action(action);

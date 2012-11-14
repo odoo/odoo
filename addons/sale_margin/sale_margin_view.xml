@@ -7,12 +7,9 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_margin_grp']" position="inside">
-                <group>
-                    <label for="margin"/>
-                    <div>
-                        <field name="margin"/>
-                    </div>
+            <xpath expr="//group[@name='sale_total']" position="after">
+                <group name="sale_margin_grp">
+                    <field name="margin" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                 </group>
             </xpath>
         </field>

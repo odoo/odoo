@@ -39,11 +39,10 @@ Notes can be found in the 'Home' menu.
     'website': 'http://openerp.com',
     'summary': 'Sticky notes, Collaborative, Memos',
     'depends': [
-        'base_tools',
         'mail',
     ],
     'data': [
-        'security/res.groups.csv',
+        'security/note_security.xml',
         'security/ir.rule.xml',
         'security/ir.model.access.csv',
         'note_data.xml',

@@ -27,6 +27,7 @@ from operator import itemgetter
 
 import math
 import netsvc
+import tools
 from osv import fields, osv
 from tools.translate import _
 
@@ -89,6 +90,18 @@ class hr_holidays_status(osv.osv):
         'color_name': 'red',
         'active': True,
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if not record.limit:
+                name = name + ('  (%d/%d)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+            res.append((record.id, name))
+        return res
+
 hr_holidays_status()
 
 class hr_holidays(osv.osv):
@@ -112,13 +125,20 @@ class hr_holidays(osv.osv):
                 result[hol.id] = hol.number_of_days_temp
         return result
 
+    def _check_date(self, cr, uid, ids):
+        for holiday in self.browse(cr, uid, ids):
+            holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from), ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id)])
+            if holiday_ids:
+                return False
+        return True
+
     _columns = {
         'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
-            'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
-            \nThe state is \'To Approve\', when holiday request is confirmed by user.\
-            \nThe state is \'Refused\', when holiday request is refused by manager.\
-            \nThe state is \'Approved\', when holiday request is approved by manager.'),
+            'Status', readonly=True, help='The status is set to \'To Submit\', when a holiday request is created.\
+            \nThe status is \'To Approve\', when holiday request is confirmed by user.\
+            \nThe status is \'Refused\', when holiday request is refused by manager.\
+            \nThe status is \'Approved\', when holiday request is approved by manager.'),
         'user_id':fields.related('employee_id', 'user_id', type='many2one', relation='res.users', string='User', store=True),
         'date_from': fields.datetime('Start Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, select=True),
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
@@ -145,12 +165,16 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
     }
+    _constraints = [
+        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from','date_to']),
+    ] 
+    
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
-        ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
-        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
+        ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
+        ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0."),
     ]
-    
+
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
         obj_res_leave = self.pool.get('resource.calendar.leaves')
@@ -182,6 +206,13 @@ class hr_holidays(osv.osv):
                 }
         return result
 
+    def onchange_employee(self, cr, uid, ids, employee_id):
+        result = {'value': {'department_id': False}}
+        if employee_id:
+            employee = self.pool.get('hr.employee').browse(cr, uid, employee_id)
+            result['value'] = {'department_id': employee.department_id.id}
+        return result
+
     # TODO: can be improved using resource calendar method
     def _get_number_of_days(self, date_from, date_to):
         """Returns a float equals to the timedelta between two dates given as string."""
@@ -196,28 +227,61 @@ class hr_holidays(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
             if rec.state not in ['draft', 'cancel', 'confirm']:
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state!')%(rec.state))
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state.')%(rec.state))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
-        result = {}
-        if date_to and date_from:
+        """
+        If there are no date set for date_to, automatically set one 8 hours later than
+        the date_from.
+        Also update the number_of_days.
+        """
+        # date_to has to be greater than date_from
+        if (date_from and date_to) and (date_from > date_to):
+            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+
+        result = {'value': {}}
+
+        # No date_to set so far: automatically compute one 8 hours later
+        if date_from and not date_to:
+            date_to_with_delta = datetime.datetime.strptime(date_from, tools.DEFAULT_SERVER_DATETIME_FORMAT) + datetime.timedelta(hours=8)
+            result['value']['date_to'] = str(date_to_with_delta)
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
             diff_day = self._get_number_of_days(date_from, date_to)
-            result['value'] = {
-                'number_of_days_temp': round(math.floor(diff_day))+1
-            }
-            return result
-        result['value'] = {
-            'number_of_days_temp': 0,
-        }
+            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+        else:
+            result['value']['number_of_days_temp'] = 0
+
         return result
 
-    def onchange_status_id(self, cr, uid, ids, status_id, context=None):
-        double_validation = False
-        if status_id:
-            holiday_status = self.pool.get('hr.holidays.status').browse(cr, uid, status_id, context=context)
-            double_validation = holiday_status.double_validation
-        return {'value': {'double_validation': double_validation}}
+    def onchange_date_to(self, cr, uid, ids, date_to, date_from):
+        """
+        Update the number_of_days.
+        """
+
+        # date_to has to be greater than date_from
+        if (date_from and date_to) and (date_from > date_to):
+            raise osv.except_osv(_('Warning!'),_('The start date must be anterior to the end date.'))
+
+        result = {'value': {}}
+
+        # Compute and update the number of days
+        if (date_to and date_from) and (date_from <= date_to):
+            diff_day = self._get_number_of_days(date_from, date_to)
+            result['value']['number_of_days_temp'] = round(math.floor(diff_day))+1
+        else:
+            result['value']['number_of_days_temp'] = 0
+
+        return result
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        check_fnct = self.pool.get('hr.holidays.status').check_access_rights
+        for  holiday in self.browse(cr, uid, ids, context=context):
+            if holiday.state in ('validate','validate1') and not check_fnct(cr, uid, 'write', raise_exception=False):
+                raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
+        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
@@ -350,46 +414,43 @@ class hr_holidays(osv.osv):
     # -----------------------------
 
     def needaction_domain_get(self, cr, uid, ids, context=None):
-        # to be tested, otherwise convert into employee_id in ...
         emp_obj = self.pool.get('hr.employee')
-        empids = emp_obj.search(cr, uid, [('parent_id.user_id','=',uid)], context=context)
-        dom = [
-            '&', ('state','=','confirm'),('employee_id', 'in', empids)
-        ]
+        empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
+        dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
         # if this user is a hr.manager, he should do second validations
         if self.pool.get('res.users').has_group(cr, uid, 'base.group_hr_manager'):
-            dom = ['|'] + dom + [ ('state','=','validate1') ]
+            dom = ['|'] + dom + [('state', '=', 'validate1')]
         return dom
 
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, ids, 
-                _("The request has been <b>created</b> and is waiting confirmation."), context=context)
+            self.message_post(cr, uid, ids,
+                _("Request <b>created</b>, waiting confirmation."), context=context)
         return True
-    
+
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), context=context)
-    
+                _("Request <b>submitted</b>, waiting for validation by the manager."), context=context)
+
     def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>approved</b>. A second validation is necessary and is now pending."), context=context)
-            
+                _("Request <b>approved</b>, waiting second validation."), context=context)
+
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             if obj.double_validation:
-                self.message_post(cr, uid, [obj.id], 
-                    _("The request has been <b>double validated</b>. The validation process is now over."), context=context)
+                self.message_post(cr, uid, [obj.id],
+                    _("Request <b>validated</b>."), context=context)
             else:
                 self.message_post(cr, uid, [obj.id],
-                    _("The request has been <b>approved</b>. The validation process is now over."), context=context)
-    
+                    _("The request has been <b>approved</b>."), context=context)
+
     def holidays_refuse_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>refused</b>. The validation process is now over."),  context=context)
+                _("Request <b>refused</b>"), context=context)
 
 
 class resource_calendar_leaves(osv.osv):
@@ -440,10 +501,10 @@ class hr_employee(osv.osv):
     def _get_remaining_days(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
                 sum(h.number_of_days) as days,
-                h.employee_id 
+                h.employee_id
             from
                 hr_holidays h
-                join hr_holidays_status s on (s.id=h.holiday_status_id) 
+                join hr_holidays_status s on (s.id=h.holiday_status_id)
             where
                 h.state='validate' and
                 s.limit=False and
@@ -458,9 +519,9 @@ class hr_employee(osv.osv):
                 remaining[employee_id] = 0.0
         return remaining
 
-    def _get_leave_status(self, cr, uid, ids, name, args, context=None):       
+    def _get_leave_status(self, cr, uid, ids, name, args, context=None):
         holidays_obj = self.pool.get('hr.holidays')
-        holidays_id = holidays_obj.search(cr, uid, 
+        holidays_id = holidays_obj.search(cr, uid,
            [('employee_id', 'in', ids), ('date_from','<=',time.strftime('%Y-%m-%d %H:%M:%S')),
            ('date_to','>=',time.strftime('%Y-%m-%d 23:59:59')),('type','=','remove'),('state','not in',('cancel','refuse'))],
            context=context)
@@ -486,7 +547,7 @@ class hr_employee(osv.osv):
             ('validate1', 'Waiting Second Approval'), ('validate', 'Approved'), ('cancel', 'Cancelled')]),
         'current_leave_id': fields.function(_get_leave_status, multi="leave_status", string="Current Leave Type",type='many2one', relation='hr.holidays.status'),
         'leave_date_from': fields.function(_get_leave_status, multi='leave_status', type='date', string='From Date'),
-        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),        
+        'leave_date_to': fields.function(_get_leave_status, multi='leave_status', type='date', string='To Date'),
     }
 
 hr_employee()

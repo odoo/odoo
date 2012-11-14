@@ -346,22 +346,28 @@ class stock_location(osv.osv):
         })
         return product_obj.get_product_available(cr, uid, product_ids, context=context)
 
-    def _product_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_get(self, cr, uid, id, product_ids=False, context=None, states=None):
         """
         @param product_ids:
         @param states:
         @return:
         """
+        if states is None:
+            states = ['done']
         ids = id and [id] or []
         return self._product_get_multi_location(cr, uid, ids, product_ids, context=context, states=states)
 
-    def _product_all_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_all_get(self, cr, uid, id, product_ids=False, context=None, states=None):
+        if states is None:
+            states = ['done']
         # build the list of ids of children of the location given by id
         ids = id and [id] or []
         location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
         return self._product_get_multi_location(cr, uid, location_ids, product_ids, context, states)
 
-    def _product_virtual_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_virtual_get(self, cr, uid, id, product_ids=False, context=None, states=None):
+        if states is None:
+            states = ['done']
         return self._product_all_get(cr, uid, id, product_ids, context, ['confirmed', 'waiting', 'assigned', 'done'])
 
     def _product_reserve(self, cr, uid, ids, product_id, product_qty, context=None, lock=False):
@@ -419,7 +425,7 @@ class stock_location(osv.osv):
                     # so we ROLLBACK to the SAVEPOINT to restore the transaction to its earlier
                     # state, we return False as if the products were not available, and log it:
                     cr.execute("ROLLBACK TO stock_location_product_reserve")
-                    _logger.warn("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
+                    _logger.warning("Failed attempt to reserve %s x product %s, likely due to another transaction already in progress. Next attempt is likely to work. Detailed error available at DEBUG level.", product_qty, product_id)
                     _logger.debug("Trace of the failed product reservation attempt: ", exc_info=True)
                     return False
 
@@ -522,7 +528,7 @@ class stock_tracking(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot remove a lot line.'))
 
-    def action_traceability(self, cr, uid, ids, context={}):
+    def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
@@ -612,7 +618,7 @@ class stock_picking(osv.osv):
 
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
-            seq_obj_name =  'stock.picking.' + vals['type']
+            seq_obj_name =  self._name
             vals['name'] = self.pool.get('ir.sequence').get(cr, user, seq_obj_name)
         new_id = super(stock_picking, self).create(cr, user, vals, context)
         if new_id:
@@ -621,9 +627,9 @@ class stock_picking(osv.osv):
 
     _columns = {
         'name': fields.char('Reference', size=64, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
-        'origin': fields.char('Source', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
+        'origin': fields.char('Source Document', size=64, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Reference of the document", select=True),
         'backorder_id': fields.many2one('stock.picking', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
-        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, readonly=True, help="Shipping type specify, goods coming in or going out."),
+        'type': fields.selection([('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], 'Shipping Type', required=True, select=True, help="Shipping type specify, goods coming in or going out."),
         'note': fields.text('Notes', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'stock_journal_id': fields.many2one('stock.journal','Stock Journal', select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'location_id': fields.many2one('stock.location', 'Location', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="Keep empty if you produce at the location where the finished products are needed." \
@@ -647,8 +653,8 @@ class stock_picking(osv.osv):
             * Cancelled: has been cancelled, can't be confirmed anymore"""
         ),
         'min_date': fields.function(get_min_max_date, fnct_inv=_set_minimum_date, multi="min_max_date",
-                 store=True, type='datetime', string='Scheduled Date', select=1, help="Scheduled date for the shipment to be processed"),
-        'date': fields.datetime('Date', help="Creation date, usually the date of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
+                 store=True, type='datetime', string='Scheduled Time', select=1, help="Scheduled time for the shipment to be processed"),
+        'date': fields.datetime('Time', help="Creation time, usually the time of the order.", select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'date_done': fields.datetime('Date Done', help="Date of Completion", states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
         'max_date': fields.function(get_min_max_date, fnct_inv=_set_maximum_date, multi="min_max_date",
                  store=True, type='datetime', string='Max. Expected Date', select=2),
@@ -1345,14 +1351,14 @@ class stock_picking(osv.osv):
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_confirm', cr)
                 # Then we finish the good picking
                 self.write(cr, uid, [pick.id], {'backorder_id': new_picking})
-                self.action_move(cr, uid, [new_picking])
+                self.action_move(cr, uid, [new_picking], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', new_picking, 'button_done', cr)
                 wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
                 delivered_pack_id = new_picking
                 back_order_name = self.browse(cr, uid, delivered_pack_id, context=context).name
                 self.back_order_send_note(cr, uid, ids, back_order_name, context)
             else:
-                self.action_move(cr, uid, [pick.id])
+                self.action_move(cr, uid, [pick.id], context=context)
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_done', cr)
                 delivered_pack_id = pick.id
                 self.ship_done_send_note(cr, uid, ids, context)
@@ -1444,7 +1450,7 @@ class stock_picking(osv.osv):
                 'internal': _("Products have been <b>moved</b>."),
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=type_dict.get(obj.type, _('Products have been moved.')), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1547,7 +1553,7 @@ class stock_production_lot(osv.osv):
         'product_id': lambda x, y, z, c: c.get('product_id', False),
     }
     _sql_constraints = [
-        ('name_ref_uniq', 'unique (name, ref)', 'The combination of serial number and internal reference must be unique !'),
+        ('name_ref_uniq', 'unique (name, ref)', 'The combination of Serial Number and internal reference must be unique !'),
     ]
     def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
@@ -1761,7 +1767,7 @@ class stock_move(osv.osv):
             location_id = property_out and property_out.id or False
         else:
             location_xml_id = False
-            if picking_type == 'in':
+            if picking_type in ('in', 'internal'):
                 location_xml_id = 'stock_location_stock'
             elif picking_type == 'out':
                 location_xml_id = 'stock_location_customers'
@@ -1792,7 +1798,7 @@ class stock_move(osv.osv):
             location_xml_id = False
             if picking_type == 'in':
                 location_xml_id = 'stock_location_suppliers'
-            elif picking_type == 'out':
+            elif picking_type in ('out', 'internal'):
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
@@ -2005,25 +2011,17 @@ class stock_move(osv.osv):
         @return: Dictionary of values
         """
         mod_obj = self.pool.get('ir.model.data')
-        location_source_id = False
-        location_dest_id = False
+        location_source_id = 'stock_location_stock'
+        location_dest_id = 'stock_location_stock'
         if type == 'in':
             location_source_id = 'stock_location_suppliers'
             location_dest_id = 'stock_location_stock'
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        if location_source_id:
-            try:
-                location_model, location_source_id = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-            except ValueError, e:
-                location_source_id = False
-        if location_dest_id:
-            try:
-                location_model, location_dest_id = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-            except ValueError, e:
-                location_dest_id = False
-        return {'value':{'location_id': location_source_id, 'location_dest_id': location_dest_id}}
+        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
@@ -2125,14 +2123,14 @@ class stock_move(osv.osv):
                 old_ptype = location_obj.picking_type_get(cr, uid, picking.move_lines[0].location_id, picking.move_lines[0].location_dest_id)
                 if old_ptype != picking.type:
                     old_pick_name = seq_obj.get(cr, uid, 'stock.picking.' + old_ptype)
-                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name}, context=context)
+                    self.pool.get('stock.picking').write(cr, uid, [picking.id], {'name': old_pick_name, 'type': old_ptype}, context=context)
             else:
                 pickid = False
             for move, (loc, dummy, delay, dummy, company_id, ptype) in todo:
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
-                    'date_moved': time.strftime('%Y-%m-%d'),
+                    'date': time.strftime('%Y-%m-%d'),
                     'picking_id': pickid,
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,
@@ -2435,14 +2433,17 @@ class stock_move(osv.osv):
             if move.picking_id:
                 picking_ids.append(move.picking_id.id)
             if move.move_dest_id.id and (move.state != 'done'):
-                self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
-                #cr.execute('insert into stock_move_history_ids (parent_id,child_id) values (%s,%s)', (move.id, move.move_dest_id.id))
-                if move.move_dest_id.state in ('waiting', 'confirmed'):
-                    self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
-                    if move.move_dest_id.picking_id:
-                        wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
-                    if move.move_dest_id.auto_validate:
-                        self.action_done(cr, uid, [move.move_dest_id.id], context=context)
+                # Downstream move should only be triggered if this move is the last pending upstream move
+                other_upstream_move_ids = self.search(cr, uid, [('id','!=',move.id),('state','not in',['done','cancel']),
+                                            ('move_dest_id','=',move.move_dest_id.id)], context=context)
+                if not other_upstream_move_ids:
+                    self.write(cr, uid, [move.id], {'move_history_ids': [(4, move.move_dest_id.id)]})
+                    if move.move_dest_id.state in ('waiting', 'confirmed'):
+                        self.force_assign(cr, uid, [move.move_dest_id.id], context=context)
+                        if move.move_dest_id.picking_id:
+                            wf_service.trg_write(uid, 'stock.picking', move.move_dest_id.picking_id.id, cr)
+                        if move.move_dest_id.auto_validate:
+                            self.action_done(cr, uid, [move.move_dest_id.id], context=context)
 
             self._create_product_valuation_moves(cr, uid, move, context=context)
             if move.state not in ('confirmed','done','assigned'):
@@ -2877,7 +2878,7 @@ class stock_inventory(osv.osv):
                 if change:
                     location_id = line.product_id.product_tmpl_id.property_stock_inventory.id
                     value = {
-                        'name': 'INV:' + str(line.inventory_id.id) + ':' + line.inventory_id.name,
+                        'name': _('INV:') + (line.inventory_id.name or ''),
                         'product_id': line.product_id.id,
                         'product_uom': line.product_uom.id,
                         'prodlot_id': lot_id,
@@ -3041,7 +3042,7 @@ class stock_picking_in(osv.osv):
             ('assigned', 'Ready to Receive'),
             ('done', 'Received'),
             ('cancel', 'Cancelled'),],
-            'State', readonly=True, select=True,
+            'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n
@@ -3086,7 +3087,7 @@ class stock_picking_out(osv.osv):
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
             ('cancel', 'Cancelled'),],
-            'State', readonly=True, select=True,
+            'Status', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n

@@ -25,9 +25,9 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }).bind('sortstop', self.do_save_dashboard);
 
         var old_title = this.__parentedParent.get('title');
-        this.__parentedParent.on_record_loaded.add_last(function(){
-            self.__parentedParent.set({ 'title' : old_title});
-        });
+        this.__parentedParent.on('load_record', self, function(){
+            self.__parentedParent.set({ 'title': old_title});
+        })
         // Events
         this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
         this.$el.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
@@ -46,7 +46,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
                 delete(action.attrs.colspan);
                 var action_id = _.str.toNumber(action.attrs.name);
                 if (!_.isNaN(action_id)) {
-                    self.rpc('/web/action/load', {action_id: action_id}, function(result) {
+                    self.rpc('/web/action/load', {action_id: action_id}).done(function(result) {
                         self.on_load_action(result, column_index + '_' + action_index, action.attrs);
                     });
                 }
@@ -81,7 +81,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/undo_custom', {
             view_id: this.view.fields_view.view_id,
             reset: true
-        }, this.do_reload);
+        }).done(this.do_reload);
     },
     on_change_layout: function() {
         var self = this;
@@ -173,7 +173,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
-            action = result.result,
+            action = result,
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
@@ -242,7 +242,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             };
             var list = am.inner_widget.views.list;
             if (list) {
-                list.deferred.then(function() {
+                list.deferred.done(function() {
                     $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
                         new_form_action(id);
                     });
@@ -250,7 +250,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             }
             var kanban = am.inner_widget.views.kanban;
             if (kanban) {
-                kanban.deferred.then(function() {
+                kanban.deferred.done(function() {
                     kanban.controller.open_record = function(id, editable) {
                         new_form_action(id, editable);
                     };
@@ -335,7 +335,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
                 e.preventDefault();
                 self.add_dashboard();
             });
-        return this.load_data().then(this.proxy("render_data"));
+        return this.load_data().done(this.proxy("render_data"));
     },
     load_data:function(){
         var board = new instance.web.Model('board.board');
@@ -347,7 +347,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
         return new instance.web.Model('ir.model.data')
                 .query(['res_id'])
                 .filter([['name','=','menu_reporting_dashboard']])
-                .first().pipe(function (result) {
+                .first().then(function (result) {
             var menu = _(dashboard_menu).chain()
                 .pluck('children')
                 .flatten(true)
@@ -382,7 +382,7 @@ instance.board.AddToDashboard = instance.web.search.Input.extend({
             domain: domain,
             view_mode: view_parent.active_view,
             name: this.$el.find("input").val()
-        }, function(r) {
+        }).done(function(r) {
             if (r === false) {
                 self.do_warn("Could not add filter to dashboard");
             } else {

@@ -155,6 +155,7 @@ class account_account_type(osv.osv):
         return res
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
+        field_value = field_value or 'none'
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
@@ -299,7 +300,6 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            _logger.debug('Filters: %s',(filters))
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -315,7 +315,6 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            _logger.debug('Status: %s',(cr.statusmessage))
 
             for row in cr.dictfetchall():
                 accounts[row['id']] = row
@@ -542,10 +541,18 @@ class account_account(osv.osv):
                 return False
         return True
 
+    def _check_company_account(self, cr, uid, ids, context=None):
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.parent_id:
+                if account.company_id != account.parent_id.company_id:
+                    return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
         (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
+        (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -595,12 +602,12 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
+        default = {} if default is None else default.copy()
+        if done_list is None:
+            done_list = []
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
-        if not default:
-            default = {}
-        default = default.copy()
         default.update(code=_("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
@@ -777,11 +784,11 @@ class account_journal(osv.osv):
         (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
     ]
 
-    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
+        default = {} if default is None else default.copy()
+        if done_list is None:
+            done_list = []
         journal = self.browse(cr, uid, id, context=context)
-        if not default:
-            default = {}
-        default = default.copy()
         default.update(
             code=_("%s (copy)") % (journal['code'] or ''),
             name=_("%s (copy)") % (journal['name'] or ''),
@@ -1008,7 +1015,7 @@ class account_period(osv.osv):
         'date_stop': fields.date('End of Period', required=True, states={'done':[('readonly',True)]}),
         'fiscalyear_id': fields.many2one('account.fiscalyear', 'Fiscal Year', required=True, states={'done':[('readonly',True)]}, select=True),
         'state': fields.selection([('draft','Open'), ('done','Closed')], 'Status', readonly=True,
-                                  help='When monthly periods are created. The state is \'Draft\'. At the end of monthly period it is in \'Done\' state.'),
+                                  help='When monthly periods are created. The status is \'Draft\'. At the end of monthly period it is in \'Done\' status.'),
         'company_id': fields.related('fiscalyear_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
     _defaults = {
@@ -1135,7 +1142,7 @@ class account_journal_period(osv.osv):
         'icon': fields.function(_icon_get, string='Icon', type='char', size=32),
         'active': fields.boolean('Active', required=True, help="If the active field is set to False, it will allow you to hide the journal period without removing it."),
         'state': fields.selection([('draft','Draft'), ('printed','Printed'), ('done','Done')], 'Status', required=True, readonly=True,
-                                  help='When journal period is created. The state is \'Draft\'. If a report is printed it comes to \'Printed\' state. When all transactions are done, it comes in \'Done\' state.'),
+                                  help='When journal period is created. The status is \'Draft\'. If a report is printed it comes to \'Printed\' status. When all transactions are done, it comes in \'Done\' status.'),
         'fiscalyear_id': fields.related('period_id', 'fiscalyear_id', string='Fiscal Year', type='many2one', relation='account.fiscalyear'),
         'company_id': fields.related('journal_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True)
     }
@@ -1178,7 +1185,8 @@ class account_fiscalyear(osv.osv):
         'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
     }
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = {} if default is None else default.copy()
         default.update({
             'period_ids': [],
             'end_journal_period_id': False
@@ -1282,7 +1290,7 @@ class account_move(osv.osv):
         'period_id': fields.many2one('account.period', 'Period', required=True, states={'posted':[('readonly',True)]}),
         'journal_id': fields.many2one('account.journal', 'Journal', required=True, states={'posted':[('readonly',True)]}),
         'state': fields.selection([('draft','Unposted'), ('posted','Posted')], 'Status', required=True, readonly=True,
-            help='All manually created new journal entries are usually in the state \'Unposted\', but you can set the option to skip that state on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' state.'),
+            help='All manually created new journal entries are usually in the status \'Unposted\', but you can set the option to skip that status on the related journal. In that case, they will behave as journal entries automatically created by the system on document validation (invoices, bank statements...) and will be created in \'Posted\' status.'),
         'line_id': fields.one2many('account.move.line', 'move_id', 'Entries', states={'posted':[('readonly',True)]}),
         'to_check': fields.boolean('To Review', help='Check this box if you are unsure of that journal entry and if you want to note it as \'to be reviewed\' by an accounting expert.'),
         'partner_id': fields.related('line_id', 'partner_id', type="many2one", relation="res.partner", string="Partner", store=True),
@@ -1431,15 +1439,18 @@ class account_move(osv.osv):
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
+            c['period_id'] = vals['period_id']
+            c['journal_id'] = vals['journal_id']
+            c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
             self.validate(cr, uid, [result], context)
         else:
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default={}, context=None):
-        if context is None:
-            context = {}
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = {} if default is None else default.copy()
+        context = {} if context is None else context.copy()
         default.update({
             'state':'draft',
             'name':'/',
@@ -2269,7 +2280,10 @@ class account_model(osv.osv):
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s: To Specify Year \n%(month)s: To Specify Month \n%(date)s: Current Date\n\ne.g. My model on %(date)s'),
     }
-    def generate(self, cr, uid, ids, datas={}, context=None):
+
+    def generate(self, cr, uid, ids, data=None, context=None):
+        if data is None:
+            data = {}
         move_ids = []
         entry = {}
         account_move_obj = self.pool.get('account.move')
@@ -2280,8 +2294,8 @@ class account_model(osv.osv):
         if context is None:
             context = {}
 
-        if datas.get('date', False):
-            context.update({'date': datas['date']})
+        if data.get('date', False):
+            context.update({'date': data['date']})
 
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
@@ -2467,10 +2481,10 @@ class account_subscription_line(osv.osv):
         all_moves = []
         obj_model = self.pool.get('account.model')
         for line in self.browse(cr, uid, ids, context=context):
-            datas = {
+            data = {
                 'date': line.date,
             }
-            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], datas, context)
+            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], data, context)
             tocheck[line.subscription_id.id] = True
             self.write(cr, uid, [line.id], {'move_id':move_ids[0]})
             all_moves.extend(move_ids)
@@ -2765,7 +2779,6 @@ class account_chart_template(osv.osv):
         'property_account_income_categ': fields.many2one('account.account.template', 'Income Category Account'),
         'property_account_expense': fields.many2one('account.account.template', 'Expense Account on Product Template'),
         'property_account_income': fields.many2one('account.account.template', 'Income Account on Product Template'),
-        'property_reserve_and_surplus_account': fields.many2one('account.account.template', 'Reserve and Profit/Loss Account', domain=[('type', '=', 'payable')], help='This Account is used for transferring Profit/Loss(If It is Profit: Amount will be added, Loss: Amount will be deducted.), Which is calculated from Profilt & Loss Report'),
         'property_account_income_opening': fields.many2one('account.account.template', 'Opening Entries Income Account'),
         'property_account_expense_opening': fields.many2one('account.account.template', 'Opening Entries Expense Account'),
     }
@@ -3213,7 +3226,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             ('property_account_income_categ','product.category','account.account'),
             ('property_account_expense','product.template','account.account'),
             ('property_account_income','product.template','account.account'),
-            ('property_reserve_and_surplus_account','res.company','account.account')
         ]
         template = self.pool.get('account.chart.template').browse(cr, uid, chart_template_id, context=context)
         for record in todo_list:
@@ -3236,7 +3248,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     property_obj.create(cr, uid, vals, context=context)
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
 
@@ -3254,6 +3266,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
+        if acc_ref is None:
+            acc_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if tax_code_ref is None:
+            tax_code_ref = {}
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
             tmp1, tmp2, tmp3 = self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
@@ -3266,7 +3284,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_code_ref.update(tmp3)
         return acc_ref, taxes_ref, tax_code_ref
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
         '''
         This function generates all the objects from the templates
 
@@ -3284,6 +3302,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
+        if account_ref is None:
+            account_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if tax_code_ref is None:
+            tax_code_ref = {}
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_acc_tax = self.pool.get('account.tax')

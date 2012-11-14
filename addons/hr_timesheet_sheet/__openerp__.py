@@ -24,7 +24,7 @@
     'name': 'Timesheets',
     'version': '1.0',
     'category': 'Human Resources',
-    'sequence': 16,
+    'sequence': 24,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
 Record and validate timesheets and attendances easily
@@ -65,5 +65,8 @@ The validation can be configured in the company:
     'installable': True,
     'auto_install': False,
     'application': True,
+    'js': ['static/src/js/timesheet.js',],
+    'css': ['static/src/css/timesheet.css',],
+    'qweb': ['static/src/xml/timesheet.xml',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

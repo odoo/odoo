@@ -14,7 +14,9 @@
                     </div>
                     <div attrs="{'invisible':[('auth_signup_uninvited','=',False)]}">
                         <label for="auth_signup_template_user_id"/>
-                        <field name="auth_signup_template_user_id" class="oe_inline" domain="['|',('active','=',0),('active','=',1)]"/>
+                        <field name="auth_signup_template_user_id" class="oe_inline"
+                            attrs="{'required': [('auth_signup_uninvited', '=', True)]}"
+                            domain="['|',('active','=',0),('active','=',1)]"/>
                     </div>
                 </xpath>
             </field>

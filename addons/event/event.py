@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from datetime import datetime, timedelta
 from osv import fields, osv
 from tools.translate import _
 from openerp import SUPERUSER_ID
@@ -200,7 +201,7 @@ class event_event(osv.osv):
             ('confirm', 'Confirmed'),
             ('done', 'Done')],
             'Status', readonly=True, required=True,
-            help='If event is created, the state is \'Draft\'.If event is confirmed for the particular dates the state is set to \'Confirmed\'. If the event is over, the state is set to \'Done\'.If event is cancelled the state is set to \'Cancelled\'.'),
+            help='If event is created, the status is \'Draft\'.If event is confirmed for the particular dates the status is set to \'Confirmed\'. If the event is over, the status is set to \'Done\'.If event is cancelled the status is set to \'Cancelled\'.'),
         'email_registration_id' : fields.many2one('email.template','Registration Confirmation Email', help='This field contains the template of the mail that will be automatically sent each time a registration for this event is confirmed.'),
         'email_confirmation_id' : fields.many2one('email.template','Event Confirmation Email', help="If you set an email template, each participant will receive this email announcing the confirmation of the event."),
         'reply_to': fields.char('Reply-To Email', size=64, readonly=False, states={'done': [('readonly', True)]}, help="The email address of the organizer is likely to be put here, with the effect to be in the 'Reply-To' of the mails sent automatically at event or registrations confirmation. You can also put the email address of your mail gateway if you use one."),
@@ -223,6 +224,7 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
+
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
@@ -252,6 +254,7 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
+
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
@@ -265,27 +268,29 @@ class event_event(osv.osv):
             return {'value': dic}
 
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
-        values = {
-            'street' : False,
-            'street2' : False,
-            'city' : False,
-            'zip' : False,
-            'country_id' : False,
-            'state_id' : False,
-        }
-        if isinstance(address_id, (long, int)):
-            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
-            values.update({
-                'street' : address.street,
-                'street2' : address.street2,
-                'city' : address.city,
-                'country_id' : address.country_id and address.country_id.id,
-                'state_id' : address.state_id and address.state_id.id,
-                'zip' : address.zip,
-            })
-
+        values = {}
+        if not address_id:
+            return values
+        address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
+        values.update({
+            'street' : address.street,
+            'street2' : address.street2,
+            'city' : address.city,
+            'country_id' : address.country_id and address.country_id.id or False,
+            'state_id' : address.state_id and address.state_id.id or False,
+            'zip' : address.zip,
+        })
         return {'value' : values}
 
+    def onchange_start_date(self, cr, uid, ids, date_begin=False, date_end=False, context=None):
+        res = {'value':{}}
+        if date_end:
+            return res
+        if date_begin and isinstance(date_begin, str):
+            date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
+            date_end = date_begin + timedelta(hours=1)
+            res['value'] = {'date_end': date_end.strftime("%Y-%m-%d %H:%M:%S")}
+        return res
 
     # ----------------------------------------
     # OpenChatter methods and notifications
@@ -325,7 +330,7 @@ class event_registration(osv.osv):
     _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source Document', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
@@ -333,7 +338,7 @@ class event_registration(osv.osv):
         'date_closed': fields.datetime('Attended Date', readonly=True),
         'date_open': fields.datetime('Registration Date', readonly=True),
         'reply_to': fields.related('event_id','reply_to',string='Reply-to Email', type='char', size=128, readonly=True,),
-        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('email_from', '=', False),('model','=',_name)]),
+        'log_ids': fields.one2many('mail.message', 'res_id', 'Logs', domain=[('model','=',_name)]),
         'event_end_date': fields.related('event_id','date_end', type='datetime', string="Event End Date", readonly=True),
         'event_begin_date': fields.related('event_id', 'date_begin', type='datetime', string="Event Start Date", readonly=True),
         'user_id': fields.many2one('res.users', 'User', states={'done': [('readonly', True)]}),
@@ -347,7 +352,6 @@ class event_registration(osv.osv):
         'phone': fields.char('Phone', size=64),
         'name': fields.char('Name', size=128, select=True),
     }
-
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
@@ -359,8 +363,10 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_('State set to open'), context=context)
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+        for reg in self.browse(cr, uid, ids, context=context or {}):
+            self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
+        self.message_post(cr, uid, ids, body=_('Registration confirmed.'), context=context)
+        return self.write(cr, uid, ids, {'state': 'open'},context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(event_registration, self).create(cr, uid, vals, context)
@@ -391,7 +397,7 @@ class event_registration(osv.osv):
                 self.write(cr, uid, ids, values)
                 self.message_post(cr, uid, ids, body=_('State set to Done'), context=context)
             else:
-                raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
+                raise osv.except_osv(_('Error!'), _("You must wait for the starting day of the event to do this action."))
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
@@ -431,22 +437,6 @@ class event_registration(osv.osv):
             'name':contact_id.name,
             'phone':contact_id.phone,
             }}
-
-    def onchange_event(self, cr, uid, ids, event_id, context=None):
-        """This function returns value of Product Name, Unit Price based on Event.
-        """
-        if context is None:
-            context = {}
-        if not event_id:
-            return {}
-        event_obj = self.pool.get('event.event')
-        data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        return {'value':
-                    {'event_begin_date': data_event.date_begin,
-                     'event_end_date': data_event.date_end,
-                     'company_id': data_event.company_id and data_event.company_id.id or False,
-                    }
-               }
 
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')

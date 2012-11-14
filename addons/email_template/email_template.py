@@ -118,7 +118,8 @@ class email_template(osv.osv):
                                               "of the message"),
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
-        'email_to': fields.char('To', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_recipients': fields.char('To (Partners)', help="Comma-separated ids of recipient partners (placeholders may be used here)"),
         'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -175,7 +176,7 @@ class email_template(osv.osv):
                  'res_model': 'mail.compose.message',
                  'src_model': src_obj,
                  'view_type': 'form',
-                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d}" % (template.id),
+                 'context': "{'default_composition_mode': 'mass_mail', 'default_template_id' : %d, 'default_use_template': True}" % (template.id),
                  'view_mode':'form,tree',
                  'view_id': res_id,
                  'target': 'new',
@@ -286,7 +287,7 @@ class email_template(osv.osv):
         template = self.get_email_template(cr, uid, template_id, res_id, context)
         values = {}
         for field in ['subject', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'reply_to']:
+                      'email_to', 'email_recipients', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
@@ -319,7 +320,7 @@ class email_template(osv.osv):
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
-            attachments.append(report_name, result)
+            attachments.append((report_name, result))
 
         # Add template attachments
         for attach in template.attachment_ids:

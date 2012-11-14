@@ -109,11 +109,11 @@ class product_uom(osv.osv):
 
     _order = "name"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
-            help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
+        'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
+        'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
+            help="Conversion between Units of Measure can only occur if they belong to the same category. The conversion will be made based on the ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
-            help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
+            help='How much bigger or smaller this unit is compared to the reference Unit of Measure for this category:\n'\
                     '1 * (reference unit) = ratio * (this unit)'),
         'factor_inv': fields.function(_factor_inv, digits=(12,12),
             fnct_inv=_factor_inv_write,
@@ -126,7 +126,7 @@ class product_uom(osv.osv):
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
-                                      ('smaller','Smaller than the reference Unit of Measure')],'Unit of Measure Type', required=1),
+                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
     }
 
     _defaults = {
@@ -233,7 +233,7 @@ class product_category(osv.osv):
         'parent_id': fields.many2one('product.category','Parent Category', select=True, ondelete='cascade'),
         'child_id': fields.one2many('product.category', 'parent_id', string='Child Categories'),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of product categories."),
-        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type'),
+        'type': fields.selection([('view','View'), ('normal','Normal')], 'Category Type', help="A category of the view type is a virtual category that can be used as the parent of another category to create a hierarchical structure."),
         'parent_left': fields.integer('Left Parent', select=1),
         'parent_right': fields.integer('Right Parent', select=1),
     }
@@ -276,44 +276,37 @@ class product_template(osv.osv):
 
     _columns = {
         'name': fields.char('Name', size=128, required=True, translate=True, select=True),
-        'product_manager': fields.many2one('res.users','Product Manager',help="Responsible for product."),
+        'product_manager': fields.many2one('res.users','Product Manager'),
         'description': fields.text('Description',translate=True),
         'description_purchase': fields.text('Purchase Description',translate=True),
         'description_sale': fields.text('Sale Description',translate=True),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
-        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
-        'sale_delay': fields.float('Customer Lead Time', help="This is the average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
-        'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'type': fields.selection([('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
+        'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. In the case of multi-level BOM, the manufacturing lead times of the components will be added."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
-        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
+        'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price to compute the customer price. Sometimes called the catalog price."),
+        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Cost price of the product used for standard stock valuation in accounting and used as a base price on purchase orders.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
-            help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
+            help="Standard Price: The cost price is manually updated at the end of a specific period (usually every year). \nAverage Price: The cost price is recomputed at each incoming shipment."),
         'warranty': fields.float('Warranty'),
-        'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
-        'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
+        'sale_ok': fields.boolean('Can be Sold', help="Specify if the product can be selected in a sales order line."),
         'state': fields.selection([('',''),
             ('draft', 'In Development'),
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
-            ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
+            ('obsolete','Obsolete')], 'Status'),
         'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
-            help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default Unit of Measure.'),
+            help='Sepcify a unit of measure here if invoicing is made in another unit of measure than inventory. Keep empty to use the default unit of measure.'),
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
-            help='Coefficient to convert Unit of Measure to UOS\n'
+            help='Coefficient to convert default Unit of Measure to Unit of Sale\n'
             ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
+        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
-        'loc_rack': fields.char('Rack', size=16),
-        'loc_row': fields.char('Row', size=16),
-        'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
@@ -335,7 +328,7 @@ class product_template(osv.osv):
             res = False
         return res
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
         return {}
@@ -351,21 +344,17 @@ class product_template(osv.osv):
 
     _defaults = {
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'product.template', context=c),
-        'list_price': lambda *a: 1,
-        'cost_method': lambda *a: 'standard',
-        'supply_method': lambda *a: 'buy',
-        'standard_price': lambda *a: 0.0,
-        'sale_ok': lambda *a: 1,
-        'sale_delay': lambda *a: 7,
-        'produce_delay': lambda *a: 1,
-        'purchase_ok': lambda *a: 1,
-        'procure_method': lambda *a: 'make_to_stock',
+        'list_price': 1,
+        'cost_method': 'standard',
+        'standard_price': 0.0,
+        'sale_ok': 1,
+        'produce_delay': 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
-        'uos_coeff' : lambda *a: 1.0,
-        'mes_type' : lambda *a: 'fixed',
+        'uos_coeff' : 1.0,
+        'mes_type' : 'fixed',
         'categ_id' : _default_category,
-        'type' : lambda *a: 'consu',
+        'type' : 'consu',
     }
 
     def _check_uom(self, cursor, user, ids, context=None):
@@ -538,10 +527,10 @@ class product_product(osv.osv):
         'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
         'default_code' : fields.char('Internal Reference', size=64, select=True),
-        'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
+        'active': fields.boolean('Active', help="If unchecked, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13 Barcode', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
+        'ean13': fields.char('EAN13 Barcode', size=13, help="International Article Number used for product identification."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
@@ -594,7 +583,7 @@ class product_product(osv.osv):
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]
@@ -668,9 +657,9 @@ class product_product(osv.osv):
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
                 ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
-                if len(ids) < limit:
+                if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
                 ids = list(ids)
             if not ids:
                 ptrn = re.compile('(\[(.*?)\])')
@@ -774,8 +763,7 @@ class product_packaging(osv.osv):
             help="The code of the transport unit."),
         'weight': fields.float('Total Package Weight',
             help='The weight of a full package, pallet or box.'),
-        'weight_ul': fields.float('Empty Package Weight',
-            help='The weight of the empty UL'),
+        'weight_ul': fields.float('Empty Package Weight'),
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),

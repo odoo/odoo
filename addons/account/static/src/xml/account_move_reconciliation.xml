@@ -3,10 +3,17 @@
 <templates id="template" xml:space="preserve">
     
     <t t-name="AccountReconciliation">
+        <t t-if="widget.current_partner === null">
+            <div class="oe_view_nocontent">
+                <p>
+                    Good job!
+                </p><p>
+                    There is nothing to reconcile. All invoices and payments
+                    have been reconciled, your partner balance is clean.
+                </p>
+            </div>
+        </t>
         <div class="oe_account_reconciliation">
-            <t t-if="widget.current_partner === null">
-                There is no pending reconciliation.
-            </t>
             <t t-if="widget.current_partner !== null">
                 <div>
                     <div>

@@ -57,7 +57,7 @@ if __name__<>"package":
     uid = 3
 
 class Expression(unohelper.Base, XJobExecutor ):
-    def __init__(self,sExpression="",sName="", bFromModify=False):
+    def __init__(self, sExpression="", sName="", bFromModify=False):
         LoginTest()
         if not loginstatus and __name__=="package":
             exit(1)
@@ -75,7 +75,7 @@ class Expression(unohelper.Base, XJobExecutor ):
         self.win.doModalDialog("",None)
 
 
-    def btnOk_clicked( self, oActionEvent ):
+    def btnOk_clicked(self, oActionEvent):
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
         text = doc.Text
@@ -105,7 +105,7 @@ class Expression(unohelper.Base, XJobExecutor ):
             else:
                 ErrorDialog("Please fill appropriate data in Name field or in Expression field.")
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 if __name__<>"package" and __name__=="__main__":

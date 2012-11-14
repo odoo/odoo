@@ -58,7 +58,7 @@ class crm_case_channel(osv.osv):
 
 class crm_case_stage(osv.osv):
     """ Model for case stages. This models the main stages of a document
-        management flow. Main CRM objects (leads, opportunities, project 
+        management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
@@ -77,7 +77,7 @@ class crm_case_stage(osv.osv):
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
         'state': fields.selection(AVAILABLE_STATES, 'Related Status', required=True,
             help="The status of your document will automatically change regarding the selected stage. " \
-                "For example, if a stage is related to the state 'Close', when your document reaches this stage, it is automatically closed."),
+                "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'case_default': fields.boolean('Common to All Teams',
                         help="If you check this field, this stage will be proposed by default on each sales team. It will not assign this stage to existing teams."),
         'fold': fields.boolean('Hide in Views when Empty',
@@ -115,7 +115,6 @@ class crm_case_section(osv.osv):
         'code': fields.char('Code', size=8),
         'active': fields.boolean('Active', help="If the active field is set to "\
                         "true, it will allow you to hide the sales team without removing it."),
-        'allow_unlink': fields.boolean('Allow Delete', help="Allows to delete non draft cases"),
         'change_responsible': fields.boolean('Reassign Escalated', help="When escalating to this team override the salesman with the team leader."),
         'user_id': fields.many2one('res.users', 'Team Leader'),
         'member_ids':fields.many2many('res.users', 'sale_member_rel', 'section_id', 'member_id', 'Team Members'),
@@ -126,18 +125,17 @@ class crm_case_section(osv.osv):
         'note': fields.text('Description'),
         'working_hours': fields.float('Working Hours', digits=(16,2 )),
         'stage_ids': fields.many2many('crm.case.stage', 'section_stage_rel', 'section_id', 'stage_id', 'Stages'),
-        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True,
                                     help="The email address associated with this team. New emails received will automatically "
                                          "create new leads assigned to the team."),
     }
-    
+
     def _get_stage_common(self, cr, uid, context):
         ids = self.pool.get('crm.case.stage').search(cr, uid, [('case_default','=',1)], context=context)
         return ids
 
     _defaults = {
         'active': 1,
-        'allow_unlink': 1,
         'stage_ids': _get_stage_common,
         'alias_domain': False, # always hide alias during creation
     }
@@ -165,12 +163,12 @@ class crm_case_section(osv.osv):
                 name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
-    
+
     def create(self, cr, uid, vals, context=None):
         mail_alias = self.pool.get('mail.alias')
         if not vals.get('alias_id'):
             vals.pop('alias_name', None) # prevent errors during copy()
-            alias_id = mail_alias.create_unique_alias(cr, uid, 
+            alias_id = mail_alias.create_unique_alias(cr, uid,
                     {'alias_name': vals['name']},
                     model_name="crm.lead",
                     context=context)
@@ -178,7 +176,7 @@ class crm_case_section(osv.osv):
         res = super(crm_case_section, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'section_id': res, 'type':'lead'}}, context)
         return res
-        
+
     def unlink(self, cr, uid, ids, context=None):
         # Cascade-delete mail aliases as well, as they should not exist without the sales team.
         mail_alias = self.pool.get('mail.alias')
@@ -216,7 +214,6 @@ class crm_case_resource_type(osv.osv):
         'name': fields.char('Campaign Name', size=64, required=True, translate=True),
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
-
 
 def _links_get(self, cr, uid, context=None):
     """Gets links value for reference field"""

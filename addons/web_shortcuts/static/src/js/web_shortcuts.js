@@ -46,7 +46,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     load: function() {
         var self = this;
         this.$el.find('.oe_systray_shortcuts_items').empty();
-        return this.rpc('/web/shortcuts/list', {}, function(shortcuts) {
+        return this.rpc('/web/shortcuts/list', {}).done(function(shortcuts) {
             _.each(shortcuts, function(sc) {
                 self.trigger('display', sc);
             });
@@ -80,9 +80,9 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
             id = $link.data('id');
         self.session.active_id = id;
         // TODO: Use do_action({menu_id: id, type: 'ir.actions.menu'})
-        self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
+        self.rpc('/web/menu/action', {'menu_id': id}).done(function(ir_menu_data) {
             if (ir_menu_data.action.length){
-                instance.webclient.user_menu.on_action({action_id: ir_menu_data.action[0][2].id});
+                instance.webclient.on_menu_action({action_id: ir_menu_data.action[0][2].id});
             }
         });
         this.$el.find('.oe_systray_shortcuts').trigger('mouseout');
@@ -96,7 +96,7 @@ instance.web.UserMenu.include({
     do_update: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.update_promise.then(function() {
+        this.update_promise.done(function() {
             if (self.shortcuts) {
                 self.shortcuts.trigger('load');
             } else {
@@ -108,9 +108,9 @@ instance.web.UserMenu.include({
 });
 
 instance.web.ViewManagerAction.include({
-    on_mode_switch: function (view_type, no_store) {
+    switch_mode: function (view_type, no_store) {
         var self = this;
-        this._super.apply(this, arguments).then(function() {
+        this._super.apply(this, arguments).done(function() {
             self.shortcut_check(self.views[view_type]);
         });
     },

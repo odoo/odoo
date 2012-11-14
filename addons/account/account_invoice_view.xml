@@ -143,13 +143,11 @@
             <field name="arch" type="xml">
                 <form string="Supplier Invoice" version="7.0">
                 <header>
-                    <span groups="base.group_user">
-                        <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' />
+                        <button name="invoice_open" states="draft,proforma2" string="Validate" class="oe_highlight" groups="account.group_account_invoice"/>
+                        <button name="%(action_account_invoice_refund)d" type='action' string='Ask Refund' states='open,paid' groups="account.group_account_invoice"/>
                         <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
-                        <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
+                        <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object" groups="account.group_account_invoice"/>
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
-                    </span>
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Supplier Invoice">
@@ -171,11 +169,12 @@
                               domain="[('supplier', '=', True)]"/>
                             <field name="fiscal_position" widget="selection"/>
                             <field name="origin"/>
-			                <label for="reference_type"/>
-			                <div>
+                            <field name="supplier_invoice_number"/>
+                            <label for="reference_type"/>
+                            <div>
                                 <field name="reference_type" class="oe_inline oe_edit_only"/>
                                 <field name="reference" class="oe_inline"/>
-			                </div>
+                            </div>
                         </group>
                         <group>
                             <field name="date_invoice"/>
@@ -185,11 +184,12 @@
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
                             <field name="currency_id" groups="base.group_multi_currency"/>
+                            <field name="check_total" groups="account.group_supplier_inv_check_total"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line">
+                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -211,17 +211,17 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="amount_untaxed"/>
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
                                     <button name="button_reset_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
-                                <field name="amount_tax" nolabel="1"/>
-                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
 
-                                <field name="residual"/>
+                                <field name="residual" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="reconciled" invisible="1"/>
                             </group>
                             <div style="width: 50%%">
@@ -278,9 +278,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_is_follower" invisible="1"/>
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -292,20 +291,18 @@
             <field name="arch" type="xml">
                 <form string="Invoice" version="7.0">
                 <header>
-                    <span groups="base.group_user">
-                        <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight"/>
-                        <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight"/>
-                        <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}"/>
-                        <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}"/>
-                        <button name="invoice_open" states="draft" string="Validate" class="oe_highlight"/>
-                        <button name="invoice_open" states="proforma2" string="Validate"/>
-                        <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid'/>
-                        <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel" groups="base.group_no_one"/>
-                        <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"/>
-                        <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
-                        <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->
-                    </span>
+                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',True), ('state', '!=', 'open')]}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="action_invoice_sent" type="object" string="Send by Email" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
+                    <button name="invoice_print" string="Print Invoice" type="object" attrs="{'invisible':['|',('sent','=',False), ('state', '!=', 'open')]}" groups="base.group_user"/>
+                    <button name="invoice_open" states="draft" string="Validate" class="oe_highlight" groups="base.group_user"/>
+                    <button name="invoice_open" states="proforma2" string="Validate" groups="base.group_user"/>
+                    <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
+                    <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid' groups="base.group_user"/>
+                    <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel" groups="base.group_no_one"/>
+                    <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object" groups="base.group_user"/>
+                    <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
+                    <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,open,paid" statusbar_colors='{"proforma":"blue","proforma2":"blue"}'/>
                 </header>
                 <sheet string="Invoice">
@@ -323,7 +320,7 @@
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}"
-                                options='{"always_reload": true}'/>
+                                options='{"always_reload": True}'/>
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
@@ -369,16 +366,16 @@
                                 </tree>
                             </field>
                             <group class="oe_subtotal_footer oe_right">
-                                <field name="amount_untaxed"/>
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <div>
                                     <label for="amount_tax"/>
                                     <button name="button_reset_taxes" states="draft,proforma2"
                                         string="(update)" class="oe_link oe_edit_only"
                                         type="object" help="Recompute taxes and total"/>
                                 </div>
-                                <field name="amount_tax" nolabel="1"/>
-                                <field name="amount_total" class="oe_subtotal_footer_separator"/>
-                                <field name="residual" groups="account.group_account_user"/>
+                                <field name="amount_tax" nolabel="1" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_total" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="residual" groups="account.group_account_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="reconciled" invisible="1"/>
                             </group>
                             <group>
@@ -438,9 +435,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_is_follower" invisible="1"/>
-                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                 </div>
                 </form>
             </field>
@@ -451,7 +447,7 @@
             <field name="model">account.invoice</field>
             <field name="arch" type="xml">
                 <search string="Search Invoice">
-                    <field name="number" string="Invoice" filter_domain="['|', ('number','ilike',self),('origin','ilike',self)]"/>
+                    <field name="number" string="Invoice" filter_domain="['|','|', ('number','ilike',self), ('origin','ilike',self), ('supplier_invoice_number', 'ilike', self)]"/>
                     <filter name="draft" icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Invoices"/>
                     <filter name="proforma" icon="terp-gtk-media-pause" string="Proforma" domain="[('state','=','proforma2')]" help="Proforma Invoices" groups="account.group_proforma_invoices"/>
                     <filter name="invoices" icon="terp-dolar" string="Invoices" domain="[('state','not in',['draft','cancel'])]" help="Proforma/Open/Paid Invoices"/>
@@ -460,7 +456,6 @@
                     <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
                     <field name="partner_id"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="journal_id"/>
                     <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

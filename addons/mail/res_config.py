@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import urlparse
+
 from openerp.osv import osv, fields
 
 class project_configuration(osv.TransientModel):
@@ -31,7 +33,14 @@ class project_configuration(osv.TransientModel):
     }
 
     def get_default_alias_domain(self, cr, uid, ids, context=None):
-        return {'alias_domain': self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)}
+        alias_domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "mail.catchall.domain", context=context)
+        if not alias_domain:
+            domain = self.pool.get("ir.config_parameter").get_param(cr, uid, "web.base.url", context=context)
+            try:
+                alias_domain = urlparse.urlsplit(domain).netloc.split(':')[0]
+            except Exception:
+                pass
+        return {'alias_domain': alias_domain}
 
     def set_alias_domain(self, cr, uid, ids, context=None):
         config_parameters = self.pool.get("ir.config_parameter")

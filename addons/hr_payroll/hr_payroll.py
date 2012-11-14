@@ -272,10 +272,10 @@ class hr_payslip(osv.osv):
             ('done', 'Done'),
             ('cancel', 'Rejected'),
         ], 'Status', select=True, readonly=True,
-            help='* When the payslip is created the state is \'Draft\'.\
-            \n* If the payslip is under verification, the state is \'Waiting\'. \
-            \n* If the payslip is confirmed then state is set to \'Done\'.\
-            \n* When user cancel payslip the state is \'Rejected\'.'),
+            help='* When the payslip is created the status is \'Draft\'.\
+            \n* If the payslip is under verification, the status is \'Waiting\'. \
+            \n* If the payslip is confirmed then status is set to \'Done\'.\
+            \n* When user cancel payslip the status is \'Rejected\'.'),
 #        'line_ids': fields.one2many('hr.payslip.line', 'slip_id', 'Payslip Line', required=False, readonly=True, states={'draft': [('readonly', False)]}),
         'line_ids': one2many_mod2('hr.payslip.line', 'slip_id', 'Payslip Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=False, readonly=True, states={'draft': [('readonly', False)]}),
@@ -312,12 +312,7 @@ class hr_payslip(osv.osv):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         default.update({
             'line_ids': [],
-            'move_ids': [],
-            'move_line_ids': [],
             'company_id': company_id,
-            'period_id': False,
-            'basic_before_leaves': 0.0,
-            'basic_amount': 0.0,
             'number': '',
             'payslip_run_id': False,
             'paid': False,
@@ -331,6 +326,7 @@ class hr_payslip(osv.osv):
         return self.write(cr, uid, ids, {'paid': True, 'state': 'done'}, context=context)
 
     def hr_verify_sheet(self, cr, uid, ids, context=None):
+        self.compute_sheet(cr, uid, ids, context)
         return self.write(cr, uid, ids, {'state': 'verify'}, context=context)
 
     def refund_sheet(self, cr, uid, ids, context=None):
@@ -362,6 +358,12 @@ class hr_payslip(osv.osv):
 
     def check_done(self, cr, uid, ids, context=None):
         return True
+
+    def unlink(self, cr, uid, ids, context=None):
+        for payslip in self.browse(cr, uid, ids, context=context):
+            if payslip.state not in  ['draft','cancel']:
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a payslip which is not draft or cancelled!'))
+        return super(hr_payslip, self).unlink(cr, uid, ids, context)
 
     #TODO move this function into hr_contract module, on hr.employee object
     def get_contract(self, cr, uid, employee, date_from, date_to, context=None):

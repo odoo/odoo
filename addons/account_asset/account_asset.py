@@ -75,7 +75,7 @@ class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
     _description = 'Asset'
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -134,10 +134,11 @@ class account_asset_asset(osv.osv):
 
     def compute_depreciation_board(self, cr, uid, ids, context=None):
         depreciation_lin_obj = self.pool.get('account.asset.depreciation.line')
+        currency_obj = self.pool.get('res.currency')
         for asset in self.browse(cr, uid, ids, context=context):
             if asset.value_residual == 0.0:
                 continue
-            posted_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_check', '=', True)])
+            posted_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_check', '=', True)],order='depreciation_date desc')
             old_depreciation_line_ids = depreciation_lin_obj.search(cr, uid, [('asset_id', '=', asset.id), ('move_id', '=', False)])
             if old_depreciation_line_ids:
                 depreciation_lin_obj.unlink(cr, uid, old_depreciation_line_ids, context=context)
@@ -148,7 +149,12 @@ class account_asset_asset(osv.osv):
             else:
                 # depreciation_date = 1st January of purchase year
                 purchase_date = datetime.strptime(asset.purchase_date, '%Y-%m-%d')
-                depreciation_date = datetime(purchase_date.year, 1, 1)
+                #if we already have some previous validated entries, starting date isn't 1st January but last entry + method period
+                if (len(posted_depreciation_line_ids)>0):
+                    last_depreciation_date = datetime.strptime(depreciation_lin_obj.browse(cr,uid,posted_depreciation_line_ids[0],context=context).depreciation_date, '%Y-%m-%d')
+                    depreciation_date = (last_depreciation_date+relativedelta(months=+asset.method_period))
+                else:
+                    depreciation_date = datetime(purchase_date.year, 1, 1)
             day = depreciation_date.day
             month = depreciation_date.month
             year = depreciation_date.year
@@ -158,6 +164,10 @@ class account_asset_asset(osv.osv):
             for x in range(len(posted_depreciation_line_ids), undone_dotation_number):
                 i = x + 1
                 amount = self._compute_board_amount(cr, uid, asset, i, residual_amount, amount_to_depr, undone_dotation_number, posted_depreciation_line_ids, total_days, depreciation_date, context=context)
+                company_currency = asset.company_id.currency_id.id
+                current_currency = asset.currency_id.id
+                # compute amount into company currency
+                amount = currency_obj.compute(cr, uid, current_currency, company_currency, amount, context=context)
                 residual_amount -= amount
                 vals = {
                      'amount': amount,
@@ -176,7 +186,9 @@ class account_asset_asset(osv.osv):
                 year = depreciation_date.year
         return True
 
-    def validate(self, cr, uid, ids, context={}):
+    def validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         return self.write(cr, uid, ids, {
             'state':'open'
         }, context)
@@ -189,7 +201,7 @@ class account_asset_asset(osv.osv):
 
     def _amount_residual(self, cr, uid, ids, name, args, context=None):
         cr.execute("""SELECT
-                l.asset_id as id, round(SUM(abs(l.debit-l.credit))) AS amount
+                l.asset_id as id, SUM(abs(l.debit-l.credit)) AS amount
             FROM
                 account_move_line l
             WHERE
@@ -224,9 +236,9 @@ class account_asset_asset(osv.osv):
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', required=True,
-                                  help="When an asset is created, the state is 'Draft'.\n" \
-                                       "If the asset is confirmed, the state goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
-                                       "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that state."),
+                                  help="When an asset is created, the status is 'Draft'.\n" \
+                                       "If the asset is confirmed, the status goes in 'Running' and the depreciation lines can be posted in the accounting.\n" \
+                                       "You can manually close an asset when the depreciation is over. If the last line of depreciation is posted, the asset automatically goes in that status."),
         'active': fields.boolean('Active'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True, states={'draft':[('readonly',False)]}),
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
@@ -304,7 +316,7 @@ class account_asset_asset(osv.osv):
         default.update({'depreciation_line_ids': [], 'state': 'draft'})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
-    def _compute_entries(self, cr, uid, ids, period_id, context={}):
+    def _compute_entries(self, cr, uid, ids, period_id, context=None):
         result = []
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
@@ -347,8 +359,8 @@ class account_asset_depreciation_line(osv.osv):
         'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
-        'amount': fields.float('Depreciation Amount', required=True),
-        'remaining_value': fields.float('Amount to Depreciate', required=True),
+        'amount': fields.float('Depreciation Amount', digits_compute=dp.get_precision('Account'), required=True),
+        'remaining_value': fields.float('Amount to Depreciate', digits_compute=dp.get_precision('Account'),required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
         'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
@@ -374,7 +386,7 @@ class account_asset_depreciation_line(osv.osv):
             current_currency = line.asset_id.currency_id.id
             context.update({'date': depreciation_date})
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
-            sign = line.asset_id.category_id.journal_id.type = 'purchase' and 1 or -1
+            sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = line.asset_id.name
             reference = line.name
             move_vals = {

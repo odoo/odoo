@@ -28,6 +28,7 @@ import logging
 import re
 from traceback import format_exception
 from sys import exc_info
+from base_iban import base_iban
 _logger = logging.getLogger(__name__)
 
 class account_coda_import(osv.osv_memory):
@@ -398,6 +399,7 @@ class account_coda_import(osv.osv_memory):
                                 st_line['account_id'] = transfer_acc
                                 match = True
                             elif find_partner:
+                                counterparty_number = base_iban._pretty_iban(base_iban._format_iban(counterparty_number))
                                 bank_ids = partner_bank_obj.search(cr,uid,[('acc_number','=', counterparty_number)])
                         if not match and find_partner and bank_ids:
                             if len(bank_ids) > 1:

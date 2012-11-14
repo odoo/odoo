@@ -11,7 +11,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_issue"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_issue_unread" model="ir.values">
             <field name="name">action_project_issue_unread</field>
@@ -29,7 +29,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_issue"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_issue_read" model="ir.values">
             <field name="name">action_project_issue_read</field>
@@ -95,14 +95,12 @@
             <field name="arch" type="xml">
                 <form string="Issue" version="7.0">
                 <header>
-                    <span groups="base.group_user">
-                        <button name="case_close" string="Done" type="object"
-                                states="open"/>
-                         <button name="case_close" string="Done" type="object"
-                                states="draft,pending"/>
-                        <button name="case_cancel" string="Cancel" type="object"
-                                states="draft,open,pending"/>
-                    </span>
+                    <button name="case_close" string="Done" type="object" 
+                            states="open" groups="base.group_user"/>
+                    <button name="case_close" string="Done" type="object"
+                            states="draft,pending" groups="base.group_user"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,pending" groups="base.group_user"/>
                     <field name="stage_id" widget="statusbar" clickable="True"/>
                 </header>
                 <sheet string="Issue">
@@ -127,15 +125,11 @@
                                 <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}" class="oe_inline"/>
                             </div>
                             <field name="categ_ids" widget="many2many_tags"/>
+                            <field name="version_id"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Description">
-                            <group>
-                                <group>
-                                    <field name="version_id" widget="selection"/>
-                                </group>
-                            </group>
                             <field name="description" placeholder="Add a description..."/>
                         </page>
                         <page string="Extra Info" groups="base.group_no_one">
@@ -161,9 +155,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_is_follower" invisible="1"/>
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -199,7 +192,7 @@
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
@@ -381,9 +374,11 @@
                     <field name="issue_count" invisible="1"/>
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
-                    <a t-if="record.use_issues.raw_value"
+                    <a t-if="record.use_issues.raw_value" style="margin-right: 10px"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        <field name="issue_count"/> Issues</a>
+                        <span t-if="record.issue_count.raw_value gt 1"><field name="issue_count"/> Issues</span>
+                        <span t-if="record.issue_count.raw_value lt 2"><field name="issue_count"/> Issue</span>
+                    </a>
                 </xpath>
             </field>
         </record>

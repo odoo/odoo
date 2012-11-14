@@ -1,9 +1,5 @@
 @charset "utf-8"
 
-.oe_kanban_column
-  .note_text_line_through
-    text-decoration: line-through
-
 @mixin rotate($a)
   -webkit-transform: rotate($a) 
   -o-transform: rotate($a) 
@@ -15,8 +11,20 @@
   -ms-transition: $what $duration cubic-bezier(0.5,0,0.5,1)
   transition: $what $duration cubic-bezier(0.5,0,0.5,1)
 
+.oe_kanban_column
+  .note_text_line_through
+    text-decoration: line-through
 
 .openerp
+  .oe_form
+    .oe_form_field.oe_memo
+      margin: 0 -16px 0 -16px
+      padding: 0px
+      width: 100%
+      min-height: 200px
+      .cleditorMain
+        border: none
+        padding: 0px
   .oe_kanban_view.oe_notes
     .oe_kanban_card_fancy.oe_kanban_color_0
       box-shadow: 0px 4px 9px rgba(48,48,48,0.15)
@@ -39,18 +47,18 @@
     .oe_kanban_card_fancy.oe_kanban_color_9
       box-shadow: 0px 4px 9px rgba(102,0,116,0.15)
   .oe_kanban_record
-    .oe_kanban_card_fancy 
+    .oe_kanban_card_fancy
       text-shadow: none
       border-radius: 2px
-      padding: 12px
+      padding: 8px
       margin-left: 3px
       margin-right: 3px
-      padding-bottom: 16px
-      margin-bottom: 16px
+      padding-bottom: 8px
+      margin-bottom: 10px
       @include rotate(-2deg)
-      @include transition($what:all, $duration:300ms)
+      @include transition(all, 300ms)
   .oe_kanban_record:nth-of-type(even)
-    .oe_kanban_card_fancy 
+    .oe_kanban_card_fancy
       @include rotate(1deg)
   .oe_kanban_record:nth-of-type(3n)
     .oe_kanban_card_fancy 
@@ -87,7 +95,7 @@
         position: relative
         z-index: 5
         border-color: rgba(0,0,0,0.4)
-        @include transition($what:all, $duration:150ms)
+        @include transition(all, 150ms)
         -webkit-transform: rotate(0) !important
         -o-transform: rotate(0) !important
         -moz-transform: rotate(0) !important

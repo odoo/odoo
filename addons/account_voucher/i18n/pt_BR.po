@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:26+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:19+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0
@@ -220,17 +220,17 @@ msgstr "Venda"
 #. module: account_voucher
 #: field:account.voucher.line,move_line_id:0
 msgid "Journal Item"
-msgstr "Item Livro"
+msgstr "Item de Diário"
 
 #. module: account_voucher
 #: field:account.voucher,is_multi_currency:0
 msgid "Multi Currency Voucher"
-msgstr "Vale Multi Moeda"
+msgstr "Comprovantes Multi Moedas"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount:0
 msgid "Amount"
-msgstr "Montante"
+msgstr "Valor"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -265,7 +265,7 @@ msgstr "Não concilidado"
 #. module: account_voucher
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr "Inválida Comunicação BBA Estruturado!"
+msgstr "Comunicação estruturada BBA inválida !"
 
 #. module: account_voucher
 #: field:account.voucher,tax_id:0
@@ -292,7 +292,7 @@ msgstr "Conta Analítica"
 #: code:addons/account_voucher/account_voucher.py:931
 #, python-format
 msgid "Warning"
-msgstr "Atenção"
+msgstr "Aviso"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -357,7 +357,7 @@ msgstr "Período"
 #: view:account.voucher:0 field:account.voucher,state:0
 #: view:sale.receipt.report:0
 msgid "State"
-msgstr "Status"
+msgstr "Situação"
 
 #. module: account_voucher
 #: selection:account.voucher.line,type:0
@@ -439,7 +439,7 @@ msgstr "Recibo de Vendas"
 #: code:addons/account_voucher/account_voucher.py:797
 #, python-format
 msgid "Invalid action !"
-msgstr "Ação invalida !"
+msgstr "Ação inválida!"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -508,14 +508,15 @@ msgstr "Parceiro"
 #. module: account_voucher
 #: field:account.voucher,payment_option:0
 msgid "Payment Difference"
-msgstr "Diferença Pagamento"
+msgstr "Diferença do Pagamento"
 
 #. module: account_voucher
 #: constraint:account.bank.statement.line:0
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr "O valor do Recibo deve ser o mesmo valor que o da Linha do Movimento"
+msgstr ""
+"O valor do recibo deve ser o mesmo valor da linha equivalente no extrato"
 
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,audit:0
@@ -593,7 +594,7 @@ msgstr ""
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,user_id:0
 msgid "Salesman"
-msgstr "Vendedor"
+msgstr "Representante"
 
 #. module: account_voucher
 #: view:sale.receipt.report:0 field:sale.receipt.report,delay_to_pay:0
@@ -653,8 +654,8 @@ msgid ""
 "Check this box if you are unsure of that journal entry and if you want to "
 "note it as 'to be reviewed' by an accounting expert."
 msgstr ""
-"Marque esta opção se você não estiver seguro sobre o lançamento e quiser "
-"colocar uma observação \"para ser revisado\" por um responsável contábil."
+"Marque esta opção se você tiver dúvidas sobre o lançamento e quiser colocar "
+"uma observação \"para ser revisado\" por um responsável contábil."
 
 #. module: account_voucher
 #: selection:sale.receipt.report,month:0
@@ -768,12 +769,12 @@ msgstr "Crédito"
 #: code:addons/account_voucher/account_voucher.py:895
 #, python-format
 msgid "Please define a sequence on the journal !"
-msgstr "Favor definir a seqüencia no Livro !"
+msgstr "Favor definir a sequência no diário!"
 
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Open Supplier Journal Entries"
-msgstr "Abrir o diário de Entradas de Fornecedor"
+msgstr "Abrir Entradas do Diário de Fornecedor"
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -960,10 +961,10 @@ msgid ""
 "customer as well as payment delays. The tool search can also be used to "
 "personalise your Invoices reports and so, match this analysis to your needs."
 msgstr ""
-"A partir deste relatório, você pode ter uma visão geral do montante faturado "
+"A partir deste relatório, você pode ter uma visão geral do valor faturado "
 "para o seu cliente, bem como atrasos nos pagamentos. A ferramenta de "
-"pesquisa também podem ser usada para personalizar seus relatórios de faturas "
-"e, portanto, corresponder está análise às suas necessidades."
+"pesquisa também podem ser usadas para personalizar seus relatórios de "
+"faturas e, portanto, corresponder está análise às suas necessidades."
 
 #. module: account_voucher
 #: view:account.voucher:0
@@ -978,7 +979,7 @@ msgstr "Taxa de Câmbio"
 #. module: account_voucher
 #: view:account.voucher:0
 msgid "Payment Method"
-msgstr "Forma de Pagamento"
+msgstr "Método de Pagamento"
 
 #. module: account_voucher
 #: field:account.voucher.line,name:0
@@ -995,7 +996,7 @@ msgstr "Maio"
 #: field:account.voucher,journal_id:0 view:sale.receipt.report:0
 #: field:sale.receipt.report,journal_id:0
 msgid "Journal"
-msgstr "Livro"
+msgstr "Diário"
 
 #. module: account_voucher
 #: model:ir.actions.act_window,name:account_voucher.action_vendor_payment
@@ -1011,7 +1012,7 @@ msgstr "Anotações Internas"
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,line_cr_ids:0
 msgid "Credits"
-msgstr "Creditos"
+msgstr "Créditos"
 
 #. module: account_voucher
 #: field:account.voucher.line,amount_original:0
@@ -1150,7 +1151,7 @@ msgstr "Ano"
 #. module: account_voucher
 #: field:account.voucher.line,amount_unreconciled:0
 msgid "Open Balance"
-msgstr "Saldo Abertura"
+msgstr "Saldo em Aberto"
 
 #. module: account_voucher
 #: view:account.voucher:0 field:account.voucher,amount:0

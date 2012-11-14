@@ -66,7 +66,7 @@ class pos_config(osv.osv):
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
-        'state' : fields.selection(POS_CONFIG_STATE, 'State', required=True, readonly=True),
+        'state' : fields.selection(POS_CONFIG_STATE, 'Status', required=True, readonly=True),
         'sequence_id' : fields.many2one('ir.sequence', 'Order IDs Sequence', readonly=True,
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
@@ -197,7 +197,7 @@ class pos_session(osv.osv):
         'start_at' : fields.datetime('Opening Date', readonly=True), 
         'stop_at' : fields.datetime('Closing Date', readonly=True),
 
-        'state' : fields.selection(POS_SESSION_STATE, 'State',
+        'state' : fields.selection(POS_SESSION_STATE, 'Status',
                 required=True, readonly=True,
                 select=1),
 
@@ -296,49 +296,55 @@ class pos_session(osv.osv):
     ]
 
     def create(self, cr, uid, values, context=None):
-        config_id = values.get('config_id', False) or False
-        if config_id:
-            # journal_id is not required on the pos_config because it does not
-            # exists at the installation. If nothing is configured at the
-            # installation we do the minimal configuration. Impossible to do in
-            # the .xml files as the CoA is not yet installed.
-            jobj = self.pool.get('pos.config')
-            pos_config = jobj.browse(cr, uid, config_id, context=context)
-            if not pos_config.journal_id:
-                jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
-                if jid:
-                    jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
-                else:
-                    raise osv.except_osv( _('error!'),
-                        _("Unable to open the session. You have to assign a sale journal to your point of sale."))
+        context = context or {}
+        config_id = values.get('config_id', False) or context.get('default_config_id', False)
+        if not config_id:
+            raise osv.except_osv( _('Error!'),
+                _("You should assign a Point of Sale to your session."))
 
-            # define some cash journal if no payment method exists
-            if not pos_config.journal_ids:
-                journal_proxy = self.pool.get('account.journal')
-                cashids = journal_proxy.search(cr, uid, [('journal_user', '=', True), ('type','=','cash')], context=context)
+        # journal_id is not required on the pos_config because it does not
+        # exists at the installation. If nothing is configured at the
+        # installation we do the minimal configuration. Impossible to do in
+        # the .xml files as the CoA is not yet installed.
+        jobj = self.pool.get('pos.config')
+        pos_config = jobj.browse(cr, uid, config_id, context=context)
+        context.update({'company_id': pos_config.shop_id.company_id.id})
+        if not pos_config.journal_id:
+            jid = jobj.default_get(cr, uid, ['journal_id'], context=context)['journal_id']
+            if jid:
+                jobj.write(cr, uid, [pos_config.id], {'journal_id': jid}, context=context)
+            else:
+                raise osv.except_osv( _('error!'),
+                    _("Unable to open the session. You have to assign a sale journal to your point of sale."))
+
+        # define some cash journal if no payment method exists
+        if not pos_config.journal_ids:
+            journal_proxy = self.pool.get('account.journal')
+            cashids = journal_proxy.search(cr, uid, [('journal_user', '=', True), ('type','=','cash')], context=context)
+            if not cashids:
+                cashids = journal_proxy.search(cr, uid, [('type', '=', 'cash')], context=context)
                 if not cashids:
-                    cashids = journal_proxy.search(cr, uid, [('type', '=', 'cash')], context=context)
-                    if not cashids:
-                        cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
+                    cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
 
-                jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
+            jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
-            pos_config = jobj.browse(cr, uid, config_id, context=context)
-            bank_statement_ids = []
-            for journal in pos_config.journal_ids:
-                bank_values = {
-                    'journal_id' : journal.id,
-                    'user_id' : uid,
-                }
-                statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
-                bank_statement_ids.append(statement_id)
+        pos_config = jobj.browse(cr, uid, config_id, context=context)
+        bank_statement_ids = []
+        for journal in pos_config.journal_ids:
+            bank_values = {
+                'journal_id' : journal.id,
+                'user_id' : uid,
+                'company_id' : pos_config.shop_id.company_id.id
+            }
+            statement_id = self.pool.get('account.bank.statement').create(cr, uid, bank_values, context=context)
+            bank_statement_ids.append(statement_id)
 
-            values.update({
-                'name' : pos_config.sequence_id._next(),
-                'statement_ids' : [(6, 0, bank_statement_ids)],
-                'config_id': config_id
-            })
+        values.update({
+            'name' : pos_config.sequence_id._next(),
+            'statement_ids' : [(6, 0, bank_statement_ids)],
+            'config_id': config_id
+        })
 
         return super(pos_session, self).create(cr, uid, values, context=context)
 
@@ -347,6 +353,29 @@ class pos_session(osv.osv):
             for statement in obj.statement_ids:
                 statement.unlink(context=context)
         return True
+
+
+    def open_cb(self, cr, uid, ids, context=None):
+        """
+        call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
+        """
+        if context is None:
+            context = dict()
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        this_record = self.browse(cr, uid, ids[0], context=context)
+        this_record._workflow_signal('open')
+
+        context.update(active_id=this_record.id)
+
+        return {
+            'type' : 'ir.actions.client',
+            'name' : _('Start Point Of Sale'),
+            'tag' : 'pos.ui',
+            'context' : context,
+        }
 
     def wkf_action_open(self, cr, uid, ids, context=None):
         # second browse because we need to refetch the data from the DB for cash_register_id
@@ -367,7 +396,7 @@ class pos_session(osv.osv):
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=context):
             for statement in session.statement_ids:
-                if statement != session.cash_register_id and statement.balance_end != statement.balance_end_real:
+                if (statement != session.cash_register_id) and (statement.balance_end != statement.balance_end_real):
                     self.pool.get('account.bank.statement').write(cr, uid, [statement.id], {'balance_end_real': statement.balance_end})
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
@@ -439,10 +468,10 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
-        context.update({'session_id' : ids[0]})
+        context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
-            'name' : 'Start Point Of Sale',
+            'name' : _('Start Point Of Sale'),
             'tag' : 'pos.ui',
             'context' : context,
         }
@@ -461,7 +490,8 @@ class pos_order(osv.osv):
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
-                'lines': order['lines']
+                'lines': order['lines'],
+                'pos_reference':order['name']
             }, context)
 
             for payments in order['statement_ids']:
@@ -469,17 +499,26 @@ class pos_order(osv.osv):
                 self.add_payment(cr, uid, order_id, {
                     'amount': payment['amount'] or 0.0,
                     'payment_date': payment['name'],
+                    'statement_id': payment['statement_id'],
                     'payment_name': payment.get('note', False),
                     'journal': payment['journal_id']
                 }, context=context)
 
             if order['amount_return']:
                 session = self.pool.get('pos.session').browse(cr, uid, order['pos_session_id'], context=context)
+                cash_journal = session.cash_journal_id
+                cash_statement = False
+                if not cash_journal:
+                    cash_journal_ids = filter(lambda st: st.journal_id.type=='cash', session.statement_ids)
+                    if not len(cash_journal_ids):
+                        raise osv.except_osv( _('error!'),
+                            _("No cash statement found for this session. Unable to record returned cash."))
+                    cash_journal = cash_journal_ids[0].journal_id
                 self.add_payment(cr, uid, order_id, {
                     'amount': -order['amount_return'],
                     'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
                     'payment_name': _('return'),
-                    'journal': session.cash_journal_id.id
+                    'journal': cash_journal.id,
                 }, context=context)
             order_ids.append(order_id)
             wf_service = netsvc.LocalService("workflow")
@@ -569,7 +608,7 @@ class pos_order(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
-
+        'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
@@ -679,21 +718,15 @@ class pos_order(osv.osv):
         """Create a new payment for the order"""
         if not context:
             context = {}
-        statement_obj = self.pool.get('account.bank.statement')
         statement_line_obj = self.pool.get('account.bank.statement.line')
-        prod_obj = self.pool.get('product.product')
         property_obj = self.pool.get('ir.property')
-        curr_c = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
-        curr_company = curr_c.id
         order = self.browse(cr, uid, order_id, context=context)
         args = {
             'amount': data['amount'],
+            'date': data.get('payment_date', time.strftime('%Y-%m-%d')),
+            'name': order.name + ': ' + (data.get('payment_name', '') or ''),
         }
-        if 'payment_date' in data:
-            args['date'] = data['payment_date']
-        args['name'] = order.name
-        if data.get('payment_name', False):
-            args['name'] = args['name'] + ': ' + data['payment_name']
+
         account_def = property_obj.get(cr, uid, 'property_account_receivable', 'res.partner', context=context)
         args['account_id'] = (order.partner_id and order.partner_id.property_account_receivable \
                              and order.partner_id.property_account_receivable.id) or (account_def and account_def.id) or False
@@ -708,14 +741,15 @@ class pos_order(osv.osv):
 
         context.pop('pos_session_id', False)
 
-        try:
-            journal_id = long(data['journal'])
-        except Exception:
-            journal_id = False
+        journal_id = data.get('journal', False)
+        statement_id = data.get('statement_id', False)
+        assert journal_id or statement_id, "No statement_id or journal_id passed to the method!"
 
-        statement_id = False
         for statement in order.session_id.statement_ids:
-            if statement.journal_id.id == journal_id:
+            if statement.id == statement_id:
+                journal_id = statement.journal_id.id
+                break
+            elif statement.journal_id.id == journal_id:
                 statement_id = statement.id
                 break
 
@@ -731,10 +765,6 @@ class pos_order(osv.osv):
         })
 
         statement_line_obj.create(cr, uid, args, context=context)
-
-        wf_service = netsvc.LocalService("workflow")
-        wf_service.trg_validate(uid, 'pos.order', order_id, 'paid', cr)
-        wf_service.trg_write(uid, 'pos.order', order_id, cr)
 
         return statement_id
 
@@ -1273,11 +1303,11 @@ class product_product(osv.osv):
     #    return result
 
     _columns = {
-        'income_pdt': fields.boolean('Point of Sale Cash In', help="This is a product you can use to put cash into a statement for the point of sale backend."),
-        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
+        'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
+        'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
+        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):

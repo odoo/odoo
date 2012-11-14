@@ -351,7 +351,7 @@
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
-                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                <field name="product_uom" class="oe_inline" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
@@ -366,7 +366,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name" groups="base.group_no_one"/>
                             <field name="code" string="Reference"/>
                             <field name="type"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
@@ -382,7 +382,7 @@
                                 <tree string="Components" editable="bottom">
                                     <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
                                     <field name="product_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>
                                     <field name="date_start"/>
                                     <field name="date_stop"/>
@@ -409,9 +409,8 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                        <field name="message_is_follower" invisible="1"/>
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                         <field name="message_follower_ids" widget="mail_followers"/>
+                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
                     </div>
                 </form>
             </field>
@@ -443,11 +442,11 @@
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" invisible="1"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
+                    <field name="code"/>
                     <field name="type"/>
                     <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
@@ -463,9 +462,9 @@
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name" string="Component Name"/>
+                    <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
-                    <field name="product_id" string="Component Product"/>
+                    <field name="product_id"/>
                     <field name="bom_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
@@ -508,7 +507,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
               </p><p>
-                Bills of materials components are components and sub-products
+                Bills of materials components are components and by-products
                 used to create master bills of materials.  Use this menu to
                 search in which BoM a specific component is used.
               </p>
@@ -607,7 +606,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" type="bar">
-                    <field name="date_planned_date"/>
+                    <field name="date_planned"/>
                     <field name="hour_total" operator="+"/>
                     <field name="cycle_total" operator="+"/>
                 </graph>
@@ -621,10 +620,10 @@
                 <form string="Manufacturing Orders" version="7.0">
                 <header>
                     <button name="button_confirm" states="draft" string="Confirm Production" class="oe_highlight"/>
-                    <button name="button_produce" states="ready" string="Start Production" class="oe_highlight"/>
-                    <button name="%(act_mrp_product_produce)d" states="in_production" string="Produce" type="action" class="oe_highlight"/>
-                    <button name="force_production" states="confirmed" string="Force Reservation" type="object" class="oe_highlight"/>
+                    <button name="%(act_mrp_product_produce)d" states="confirmed,ready,in_production" string="Produce" type="action" class="oe_highlight"/>
+                    <button name="force_production" states="confirmed" string="Force Reservation" type="object"/>
                     <button name="force_production" states="picking_except" string="Force Reservation" type="object"/>
+                    <button name="button_produce" states="confirmed,ready" string="Mark as Started"/>
                     <button name="button_recreate" states="picking_except" string="Recreate Picking"/>
                     <button name="button_cancel" states="draft,ready,in_production,picking_except" string="Cancel"/>
                     <button name="action_cancel" type="object" states="confirmed" string="Cancel"/>
@@ -669,7 +668,7 @@
                         <page string="Consumed Products">
                             <group>
                                 <group string="Products to Consume">
-                                    <field name="move_lines" nolabel="1">
+                                    <field name="move_lines" nolabel="1" options="{'reload_on_button': true}">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
@@ -693,7 +692,7 @@
                                         </tree>
                                     </field>
                                 </group>
-                                <group string="Consumed Product">
+                                <group string="Consumed Products">
                                     <field name="move_lines2" nolabel="1">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
@@ -752,7 +751,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Work Orders">
+                        <page string="Work Orders" groups="mrp.group_mrp_routings">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>
@@ -798,9 +797,8 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_is_follower" invisible="1"/>
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -954,6 +952,7 @@
             <data>
                 <xpath expr="//field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                    <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
@@ -963,21 +962,21 @@
                </data>
             </field>
         </record>
-        <record id="product.product_normal_form_supply_view" model="ir.ui.view">
+        <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='supply_method']" position="attributes">
                     <attribute name="invisible">False</attribute>
                 </xpath>
                 <group name="procurement_help" position="inside">
-                    <p attrs="{'invisible': [('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
+                    <p attrs="{'invisible': ['|','|',('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
                         When you sell this product, OpenERP will trigger <b>a manufacturing
                         order</b> using the bill of materials assigned to this product.
                         The delivery order will be ready once the production is done.
                     </p>
-</group>
+                </group>
             </field>
         </record>
 
@@ -1039,6 +1038,7 @@
         <record model="ir.actions.act_window" id="product_open_bom">
             <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
             <field name="name">Bill of Materials</field>
+            <field name="domain">[('bom_id','=',False)]</field>
             <field name="res_model">mrp.bom</field>
         </record>
 
@@ -1052,7 +1052,5 @@
                 </xpath>
             </field>
         </record>
-
-
     </data>
 </openerp>

@@ -34,6 +34,7 @@
             </field>
         </record>
 
+        <!-- where and when is this view used?? -->
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
@@ -108,9 +109,8 @@
                     </notebook>
                   </sheet>
                   <div class="oe_chatter">
-                      <field name="message_is_follower" invisible="1"/>
-                      <field name="message_ids" widget="mail_thread"/>
                       <field name="message_follower_ids" widget="mail_followers"/>
+                      <field name="message_ids" widget="mail_thread"/>
                   </div>
                 </form>
             </field>
@@ -200,33 +200,29 @@
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">
                     <button name="%(action_view_account_statement_from_invoice_lines)d"
-                            string="Import Invoices" type="action" icon="gtk-execute"
+                            string="Import Invoices" type="action"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
                 </xpath>
             </field>
         </record>
 
-        <record id="view_bank_statement_tree_voucher" model="ir.ui.view">
+        <record id="view_bank_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
+                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
                 </xpath>
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
+                    <field name="voucher_id" widget="many2onebutton" options="{'label':{'create':'Reconcile','edit':'Edit Reconciliation'}}" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name, 'default_active': False}"/>
+                </xpath>
+                <field name="amount" position="attributes">
+                    <attribute name="on_change">onchange_amount(amount)</attribute>
+                </field>
             </field>
         </record>
 
-        <record id="view_bank_statement_form_voucher" model="ir.ui.view">
-            <field name="name">account.bank.statement.voucher.form.inherit</field>
-            <field name="model">account.bank.statement</field>
-            <field name="inherit_id" ref="account.view_bank_statement_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
-                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
-                </xpath>
-            </field>
-        </record>
         <record id="view_cash_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
@@ -249,16 +245,23 @@
             </field>
         </record>
 
-        <!-- res.company form view -->
-        <record model="ir.ui.view" id="view_company_inherit_currency_xchange_form">
-            <field name="name">res.company.form.inherit</field>
-            <field name="inherit_id" ref="base.view_company_form"/>
-            <field name="model">res.company</field>
+        <!-- res.config form view -->
+        <record model="ir.ui.view" id="view_account_settings_currency_xchange_form">
+            <field name="name">account.config.settings.inherit</field>
+            <field name="inherit_id" ref="account.view_account_config_settings"/>
+            <field name="model">account.config.settings</field>
+            <field name="priority">20</field>
             <field name="arch" type="xml">
-                <field name="currency_id" position="after">
-                      <field name="income_currency_exchange_account_id"/>
-                      <field name="expense_currency_exchange_account_id"/>
-                </field>
+                <xpath expr="//div[@name='group_multi_currency']" position="after">
+                    <group attrs="{'invisible': [('group_multi_currency', '&lt;&gt;', True)]}" col="2">
+                        <group>
+                            <field name="income_currency_exchange_account_id"/>
+                            <field name="expense_currency_exchange_account_id"/>
+                        </group>
+                        <group>
+                        </group>
+                    </group>
+                </xpath>
             </field>
         </record>
 

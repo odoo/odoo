@@ -81,7 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -102,9 +102,9 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.many2many('ir.attachment',
-            'mail_compose_message_ir_attachments_rel',
-            'wizard_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
+            domain=lambda self: [('res_model', '=', self._name)],
+            string='Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
@@ -121,7 +121,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -135,7 +135,12 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        return {'model': model, 'res_id': res_id}
+        doc_name_get = self.pool.get(model).name_get(cr, uid, res_id, context=context)
+        if doc_name_get:
+            record_name = doc_name_get[0][1]
+        else:
+            record_name = False
+        return {'model': model, 'res_id': res_id, 'record_name': record_name}
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -156,21 +161,15 @@ class mail_compose_message(osv.TransientModel):
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
-        # create the reply in the body
-        reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
-            'date': message_data.date if message_data.date else '',
-            'sender_name': message_data.author_id.name,
-            'body': message_data.body,
-            }
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
         # update the result
         result = {
+            'record_name': message_data.record_name,
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
-            'body': reply_body,
             'subject': reply_subject,
             'partner_ids': partner_ids,
             'content_subtype': 'html',
@@ -192,17 +191,6 @@ class mail_compose_message(osv.TransientModel):
             :param values: 'plain' or 'html'
         """
         return {'value': {'content_subtype': value}}
-
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ The basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-            :param value: value format: [[6, 0, [3, 4]]]
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
-        return res
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
@@ -245,9 +233,11 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
+
             # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
-            self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {'res_id': wizard.id}, context=context)
+            # self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
+            #     'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
 
         return {'type': 'ir.actions.act_window_close'}
 

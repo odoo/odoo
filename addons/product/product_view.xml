@@ -10,12 +10,10 @@
                 <search string="Product">
                    <field name="name" string="Product" filter_domain="['|',('name','ilike',self),('default_code','ilike',self)]"/>
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
-                   <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
+                   <filter string="Consumable" name="consumable" icon="terp-accessories-archiver" domain="[('type','=','consu')]" help="Consumable products"/>
                    <separator/>
-                   <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
-                   <field name="categ_id" operator="child_of"/>
+                   <field name="categ_id"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <field name="company_id" groups="base.group_multi_company"/>
@@ -60,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Product" version="7.0">
                     <sheet>
-                        <field name="image_medium" widget="image" class="oe_avatar oe_right"/>
+                        <field name="image_medium" widget="image" class="oe_avatar oe_left"/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Product Name"/>
@@ -73,8 +71,6 @@
                             <div name="options" groups="base.group_user">
                                 <field name="sale_ok"/>
                                 <label for="sale_ok"/>
-                                <field name="purchase_ok"/>
-                                <label for="purchase_ok"/>
                             </div>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
@@ -100,42 +96,19 @@
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                 </group>
-                                <field name="description" placeholder="describe the product's characteristics for internal use..."/>
+                                <field name="description" placeholder="describe the product characteristics for internal use..."/>
                             </page>
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
-                                    <group>
-                                        <field name="procure_method" groups="base.group_user"/>
-                                        <field name="supply_method" groups="base.group_user" invisible="1"/>
+                                    <group name="general">
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
-                                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                                            When you sell this service, nothing special will be trigered
-                                            to deliver the customer, as you set the procurement method as
-                                            'Make to Stock'.
-                                        </p>
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                                            When you sell this product, OpenERP will <b>use the available
-                                            inventory</b> for the delivery order.
-                                            <br/><br/>
-                                            If there are not enough quantities available, the delivery order
-                                            will wait for new products. To fulfill the inventory, you should
-                                            create others rules like orderpoints.
-                                        </p>
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
-                                            When you sell this product, a delivery order will be created.
-                                            OpenERP will consider that the <b>required quantities are always
-                                            available</b> as it's a consumable (as a result of this, the quantity
-                                            on hand may become negative).
-                                        </p>
-                                    </group>
-                                    <group groups="product.group_uom">
+                                    <group name="procurement_uom" groups="product.group_uom" string="Purchase">
                                         <field name="uom_po_id"/>
                                     </group>
                                 </group>
-                                <separator string="Notes for Suppliers"/>
+                                <separator string="Description for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
                             <page string="Inventory" groups="base.group_user">
@@ -144,13 +117,7 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-                                    <group name="store" string="Storage Localisation">
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
-                                    </group>
-                                    <group groups="product.group_stock_packaging" string="Weights">
+                                    <group name="Weights" groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
@@ -160,10 +127,6 @@
                             <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
                                 <group name="sale">
                                     <group string="Sale Conditions">
-                                        <label for="sale_delay"/>
-                                        <div>
-                                            <field name="sale_delay" class="oe_inline"/> days
-                                        </div>
                                         <label for="warranty"/>
                                         <div>
                                             <field name="warranty" class="oe_inline"/> months
@@ -197,15 +160,14 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
-                                <separator string="Notes on Quotations"/>
+                                <separator string="Description for Quotations"/>
                                 <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_is_follower" invisible="1"/>
-                        <field name="message_ids" widget="mail_thread"/>
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -257,7 +219,7 @@
                 Click to define a new product.
               </p><p>
                 You must define a product for everything you buy or sell,
-                wether it's a physical product, a consumable or service.
+                whether it's a physical product, a consumable or service.
               </p>
             </field>
         </record>
@@ -274,7 +236,7 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you sell, wether it's
+                You must define a product for everything you sell, whether it's
                 a physical product, a consumable or a service you offer to
                 customers.
               </p><p>
@@ -322,7 +284,7 @@
               <p class="oe_view_nocontent_create">
                 Click to define a new product.
               </p><p>
-                You must define a product for everything you purchase, wheter
+                You must define a product for everything you purchase, whether
                 it's a physical product, a consumable or services you buy to
                 subcontractants.
               </p><p>
@@ -356,16 +318,10 @@
                             </h1>
                         </div>
                         <group>
-                            <group>
+                            <group name="parent" col="4">
                                 <field name="parent_id"/>
-                            </group>
-                            <group>
                                 <field name="type"/>
                             </group>
-                        </group>
-                        <group name="basic">
-                            <group name="account_property" string="Account Properties"/>
-                            <group name="account_stock_property" string="Account Stock Properties"/>
                         </group>
                     </sheet>
                 </form>
@@ -450,7 +406,6 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor"/>
                 </tree>
             </field>
         </record>
@@ -464,19 +419,22 @@
                         <group>
                             <field name="name"/>
                             <field name="category_id"/>
-                            <field name="active"/>
+                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <label for="factor"/>
+                            <div>
+                                <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                                <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                                <p attrs="{'invisible':[('uom_type','!=','smaller')]}" class="oe_grey">
+                                    e.g: 1 * (reference unit) = ratio * (this unit)
+                                </p>
+                                <p attrs="{'invisible':[('uom_type','!=','bigger')]}" class="oe_grey">
+                                    e.g: 1 * (this unit) = ratio * (reference unit)
+                                </p>
+                            </div>
                         </group>
                         <group>
-                            <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
-                                e.g: 1 * (reference unit) = ratio * (this unit)
-                            </p>
-                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
-                                e.g: 1 * (this unit) = ratio * (reference unit)
-                            </p>
+                            <field name="active"/>
                             <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
@@ -716,12 +674,9 @@
                         <group>
                             <group string="Product Type">
                                 <field name="sale_ok"/>
-                                <field name="purchase_ok"/>
                             </group>
                             <group string="Procurement">
                                 <field name="type"/>
-                                <field name="procure_method"/>
-                                <field name="supply_method"/>
                             </group>
 
                             <group string="Base Prices">
@@ -734,7 +689,7 @@
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
-                            </group>
+                            </group> 
 
                             <group name="status" string="Status">
                                 <field name="categ_id"/>
@@ -757,17 +712,11 @@
                         <page string="Procurement &amp; Locations">
                             <group>
                                 <group name="delay" string="Delays">
-                                    <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
                                     <label for="produce_delay"/>
                                     <div>
                                         <field name="produce_delay" class="oe_inline"/> days
                                     </div>
                                     <field name="warranty"/>
-                                </group>
-                                <group name="store" string="Storage Localisation">
-                                    <field name="loc_rack"/>
-                                    <field name="loc_row"/>
-                                    <field name="loc_case"/>
                                 </group>
                             </group>
 

@@ -59,7 +59,13 @@ if __name__<>"package":
     database="test"
     uid = 1
 
-def genTree(object,aList,insField,host,level=3, ending=[], ending_excl=[], recur=[], root='', actualroot=""):
+def genTree(object, aList, insField, host, level=3, ending=None, ending_excl=None, recur=None, root='', actualroot=""):
+    if ending is None:
+        ending = []
+    if ending_excl is None:
+        ending_excl = []
+    if recur is None:
+        recur = []
     try:
         global url
         sock=RPCSession(url)
@@ -79,7 +85,7 @@ def genTree(object,aList,insField,host,level=3, ending=[], ending_excl=[], recur
         info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
         obj.log_write('Function', LOG_ERROR, info)
 
-def VariableScope(oTcur,insVariable,aObjectList,aComponentAdd,aItemList,sTableName=""):
+def VariableScope(oTcur, insVariable, aObjectList, aComponentAdd, aItemList, sTableName=""):
     if sTableName.find(".") != -1:
 	for i in range(len(aItemList)):
             if aComponentAdd[i]==sTableName:
@@ -96,7 +102,7 @@ def VariableScope(oTcur,insVariable,aObjectList,aComponentAdd,aItemList,sTableNa
 		    if aObjectList[j][:aObjectList[j].find("(")] == sLVal and sLVal!="":
                         insVariable.append(aObjectList[j])
 
-def getList(aObjectList,host,count):
+def getList(aObjectList, host, count):
     desktop=getDesktop()
     doc =desktop.getCurrentComponent()
     docinfo=doc.getDocumentInfo()
@@ -128,7 +134,7 @@ def getList(aObjectList,host,count):
     else:
         aObjectList.append("List of " + docinfo.getUserFieldValue(3))
 
-def getRelation(sRelName, sItem, sObjName, aObjectList, host ):
+def getRelation(sRelName, sItem, sObjName, aObjectList, host):
         global url
         sock=RPCSession(url)
         global passwd
@@ -143,7 +149,7 @@ def getRelation(sRelName, sItem, sObjName, aObjectList, host ):
 		getRelation(res[k]['relation'], sItem[sItem.find(".")+1:], sObjName,aObjectList,host)
 
 
-def getPath(sPath,sMain):
+def getPath(sPath, sMain):
     desktop=getDesktop()
     doc =desktop.getCurrentComponent()
     oParEnum = doc.getTextFields().createEnumeration()
@@ -161,7 +167,7 @@ def getPath(sPath,sMain):
                         getPath(sPath, sMain)
     return sPath
 
-def EnumDocument(aItemList,aComponentAdd):
+def EnumDocument(aItemList, aComponentAdd):
     desktop = getDesktop()
     parent=""
     bFlag = False
@@ -183,7 +189,7 @@ def EnumDocument(aItemList,aComponentAdd):
             aItemList.append( templist )
         aComponentAdd.append( parent )
 
-def getChildTable(oPar,aItemList,aComponentAdd,sTableName=""):
+def getChildTable(oPar, aItemList, aComponentAdd, sTableName=""):
     sNames = oPar.getCellNames()
     bEmptyTableFlag=True
     for val in sNames:
@@ -229,7 +235,7 @@ def getChildTable(oPar,aItemList,aComponentAdd,sTableName=""):
                 aComponentAdd.append(sTableName+"."+oPar.Name)
     return 0
 
-def getRecersiveSection(oCurrentSection,aSectionList):
+def getRecersiveSection(oCurrentSection, aSectionList):
         desktop=getDesktop()
         doc =desktop.getCurrentComponent()
         oParEnum=doc.getText().createEnumeration()

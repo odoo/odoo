@@ -12,14 +12,19 @@
             <field name="state">open</field>
         </record>
 
-        <!-- notify all employees of module installation -->
-        <record model="mail.message" id="module_install_notification">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="type">notification</field>
-            <field name="subject">Events Organisation application installed!</field>
-            <field name="body">From the top Events menu, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</field>
+        <!-- mail: event subtype -->
+        <record id="event.mt_event_registration" model="mail.message.subtype">
+            <field name="name">New Registrations</field>
+            <field name="res_model">event.event</field>
+            <field name="default" eval="False"/>
         </record>
 
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_post">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
+            <value>Module Events has been installed</value>
+        </function>
     </data>
 </openerp>

@@ -304,14 +304,6 @@
             <field name="company_id" ref="base.main_company"/>
         </record>
 
-        <record forcecreate="True" id="property_reserve_and_surplus_account" model="ir.property">
-            <field name="name">property_account_receivable</field>
-            <field name="fields_id" search="[('model','=','res.company'),('name','=','property_reserve_and_surplus_account')]"/>
-            <field eval="'account.account,'+str(rsa)" name="value"/>
-            <field name="company_id" ref="base.main_company"/>
-        </record>
-
-
         <!--
         Account Journal
         -->
