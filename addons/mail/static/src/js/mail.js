@@ -249,7 +249,7 @@ openerp.mail = function (session) {
             this.format_data();
 
             // record options and data
-            this.show_record_name = this.record_name && !this.thread_level && this.model != 'res.partner';
+            this.show_record_name = this.options.show_record_name && this.record_name && !this.thread_level && this.model != 'res.partner';
             this.options.show_read = false;
             this.options.show_unread = false;
             if (this.options.show_read_unread_button) {
@@ -1517,6 +1517,7 @@ openerp.mail = function (session) {
                 'display_indented_thread': -1,
                 'show_reply_button': false,
                 'show_read_unread_button': false,
+                'show_record_name': false,
                 'show_compact_message': 1,
             }, this.node.params);
 
@@ -1605,6 +1606,7 @@ openerp.mail = function (session) {
                 'show_reply_button': true,
                 'show_read_unread_button': true,
                 'show_compose_message': true,
+                'show_record_name': true,
                 'show_compact_message': this.action.params.view_mailbox ? false : 1,
                 'view_inbox': false,
             }, this.action.params);
