@@ -339,7 +339,7 @@ class mail_thread(osv.AbstractModel):
         message_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', in_reply_to)], limit=1, context=context)
         if message_ids:
             message = self.pool.get('mail.message').browse(cr, uid, message_ids[0], context=context)
-            _logger.debug('Routing mail with Message-Id %s: reply to a private message: %s, custom_values: %s, uid: %s',
+            _logger.debug('Routing mail with Message-Id %s: direct reply to a private message: %s, custom_values: %s, uid: %s',
                             message_id, message.id, custom_values, uid)
             return [(False, 0, custom_values, uid)]
 
@@ -450,6 +450,7 @@ class mail_thread(osv.AbstractModel):
                 else:
                     thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
             else:
+                assert thread_id == 0, "Posting a message without model should be with a null res_id, to create a private message."
                 model_pool = self.pool.get('mail.thread')
             model_pool.message_post_user_api(cr, uid, [thread_id], context=context, content_subtype='html', **msg)
         return thread_id
