@@ -133,9 +133,8 @@ def html_email_clean(html):
     html = ustr(html)
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
-    br_tags = re.compile(r'([<]\s*br\s*\/?[>])')
+    br_tags = re.compile(r'([<]\s*[bB][rR]\s*\/?[>])')
     html = _replace_matching_regex(br_tags, html, '__BR_TAG__')
-    # TDE note: seems to have lots of <div><br></div> in emails... needs to be checks, could be cleaned
 
     # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
     root = lxml.html.fromstring(html)
