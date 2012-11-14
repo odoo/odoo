@@ -122,7 +122,6 @@ class res_users(osv.osv):
     }
     _name = "res.users"
     _description = 'Users'
-    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -257,8 +256,9 @@ class res_users(osv.osv):
             - else: the default view is overrided and redirected to the partner
               view
         """
-        if not view_id and view_type == 'form':
-            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        #made a lot of views crash because methods of open chatter are not available on users
+        #if not view_id and view_type == 'form':
+        #    return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
     # User can write on a few of his own fields (but not his groups for example)
@@ -334,10 +334,10 @@ class res_users(osv.osv):
             context={}
         ids = []
         if name:
-            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit)
+            ids = self.search(cr, user, [('login','=',name)]+ args, limit=limit, context=context)
         if not ids:
-            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit)
-        return self.name_get(cr, user, ids)
+            ids = self.search(cr, user, [('name',operator,name)]+ args, limit=limit, context=context)
+        return self.name_get(cr, user, ids, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]

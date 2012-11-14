@@ -69,7 +69,7 @@ class res_currency(osv.osv):
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
         'position' : 'after',
         'rounding': 0.01,
         'accuracy': 4,

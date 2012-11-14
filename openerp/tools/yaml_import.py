@@ -286,8 +286,11 @@ class YamlInterpreter(object):
         model = self.get_model(record.model)
 
         view_id = record.view
-        if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, self.module, record.view)[1]
+        if view_id and (view_id is not True) and isinstance(view_id, basestring):
+            module = self.module
+            if '.' in view_id:
+                module, view_id = view_id.split('.',1)
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
@@ -330,7 +333,7 @@ class YamlInterpreter(object):
     def _create_record(self, model, fields, view_info=False, parent={}, default=True):
         """This function processes the !record tag in yalm files. It simulates the record creation through an xml
             view (either specified on the !record tag or the default one for this object), including the calls to
-            on_change() functions.
+            on_change() functions, and sending only values for fields that aren't set as readonly.
             :param model: model instance
             :param fields: dictonary mapping the field names and their values
             :param view_info: result of fields_view_get() called on the object
@@ -339,6 +342,13 @@ class YamlInterpreter(object):
             :return: dictionary mapping the field names and their values, ready to use when calling the create() function
             :rtype: dict
         """
+        def _get_right_one2many_view(fg, field_name, view_type):
+            one2many_view = fg[field_name]['views'].get(view_type)
+            # if the view is not defined inline, we call fields_view_get()
+            if not one2many_view:
+                one2many_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+            return one2many_view
+
         def process_val(key, val):
             if fg[key]['type']=='many2one':
                 if type(val) in (tuple,list):
@@ -347,10 +357,35 @@ class YamlInterpreter(object):
                 if val is False:
                     val = []
                 if len(val) and type(val[0]) == dict:
+                    #we want to return only the fields that aren't readonly
+                    #For that, we need to first get the right tree view to consider for the field `key´
+                    one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
+                    for rec in val:
+                        #make a copy for the iteration, as we will alterate the size of `rec´ dictionary
+                        rec_copy = rec.copy()
+                        for field_key in rec_copy:
+                            #seek in the view for the field `field_key´ and removing it from `key´ values, as this column is readonly in the tree view
+                            subfield_obj = etree.fromstring(one2many_tree_view['arch'].encode('utf-8')).xpath("//field[@name='%s']"%(field_key))
+                            if subfield_obj and (subfield_obj[0].get('modifiers', '{}').find('"readonly": true') >= 0):
+                                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                                del(rec[field_key])
+
+                    #now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
                     val = map(lambda x: (0,0,x), val)
+
+            #we want to return only the fields that aren't readonly
+            if el.get('modifiers', '{}').find('"readonly": true') >= 0:
+                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                return False
             return val
 
-        view = view_info and etree.fromstring(view_info['arch'].encode('utf-8')) or False
+        if view_info:
+            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            view = arch if len(arch) else False
+        else:
+            view = False
         fields = fields or {}
         if view is not False:
             fg = view_info['fields']
@@ -373,13 +408,14 @@ class YamlInterpreter(object):
                         one2many_form_view = None
                         if (view is not False) and (fg[field_name]['type']=='one2many'):
                             # for one2many fields, we want to eval them using the inline form view defined on the parent
-                            one2many_form_view = view_info['fields'][field_name]['views'].get('form')
-                            # if the form view is not defined inline, we call fields_view_get()
-                            if not one2many_form_view:
-                                one2many_form_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
+                            one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
 
                         field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
-                        record_dict[field_name] = field_value
+
+                        #call process_val to not update record_dict if values were given for readonly fields
+                        val = process_val(field_name, field_value)
+                        if val:
+                            record_dict[field_name] = val
                         #if (field_name in defaults) and defaults[field_name] == field_value:
                         #    print '*** You can remove these lines:', field_name, field_value
 
@@ -405,7 +441,7 @@ class YamlInterpreter(object):
                     ctx['parent'] = parent2(parent)
                     for a in fg:
                         if a not in ctx:
-                            ctx[a]=process_val(a, defaults.get(a, False))
+                            ctx[a] = process_val(a, defaults.get(a, False))
 
                     # Evaluation args
                     args = map(lambda x: eval(x, ctx), match.group(2).split(','))
@@ -425,7 +461,6 @@ class YamlInterpreter(object):
                 continue
             field_value = self._eval_field(model, field_name, expression, default=False)
             record_dict[field_name] = field_value
-
         return record_dict
 
     def process_ref(self, node, column=None):

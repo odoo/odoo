@@ -31,7 +31,7 @@ class base_language_install(osv.osv_memory):
     _columns = {
         'lang': fields.selection(tools.scan_languages(),'Language', required=True),
         'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwritten and replaced by the official ones."),
-        'state':fields.selection([('init','init'),('done','done')], 'state', readonly=True),
+        'state':fields.selection([('init','init'),('done','done')], 'Status', readonly=True),
     }
     _defaults = {
         'state': 'init',

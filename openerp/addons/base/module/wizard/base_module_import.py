@@ -38,7 +38,7 @@ class base_module_import(osv.osv_memory):
     _columns = {
           'module_file': fields.binary('Module .ZIP file', required=True),
           'state':fields.selection([('init','init'),('done','done')],
-                                   'state', readonly=True),
+                                   'Status', readonly=True),
           'module_name': fields.char('Module Name', size=128),
     }
 
