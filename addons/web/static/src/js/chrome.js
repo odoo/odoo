@@ -1218,7 +1218,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                 if (!self.action_id) {
                     return;
                 }
-                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                return self.rpc("/web/action/load", { action_id: self.action_id }).done(function(result) {
                     var action = result;
                     action.flags = _.extend({
                         //views_switcher : false,
