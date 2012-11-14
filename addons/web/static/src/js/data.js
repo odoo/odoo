@@ -358,17 +358,16 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.DataSet =  instance.web.CallbackEnabled.extend({
+instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, {
     /**
      * Collection of OpenERP records, used to share records and the current selection between views.
      *
      * @constructs instance.web.DataSet
-     * @extends instance.web.CallbackEnabled
      *
      * @param {String} model the OpenERP model this dataset will manage
      */
     init: function(parent, model, context) {
-        this._super(parent);
+        instance.web.PropertiesMixin.init.call(this);
         this.model = model;
         this.context = context || {};
         this.index = null;
@@ -722,10 +721,10 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.last_default_get = {};
     },
     default_get: function(fields, options) {
-        return this._super(fields, options).done(this.on_default_get);
-    },
-    on_default_get: function(res) {
-        this.last_default_get = res;
+        var self = this;
+        return this._super(fields, options).done(function(res) {
+            self.last_default_get = res;
+        });
     },
     create: function(data) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,

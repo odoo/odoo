@@ -1846,13 +1846,13 @@ $sheet-padding: 16px
     .oe_form_editable
         .oe_form
             .oe_form_field_integer input
-                width: 6em !important
+                width: 6em
             .oe_form_field_float input
-                width: 7em !important
+                width: 7em
             .oe_form_field_date input
-                width: 7.5em !important
+                width: 7.5em
             .oe_form_field_datetime input
-                width: 11.5em !important
+                width: 11.5em
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1908,6 +1908,8 @@ $sheet-padding: 16px
             line-height: 14px
             float: right
             padding-left: 2px
+        input
+            padding-right: 13px
     &.ui-autocomplete
         li.oe_m2o_dropdown_option a
             font-style: italic
@@ -2050,26 +2052,26 @@ $sheet-padding: 16px
         .oe_m2o_drop_down_button
             top: 5px
         .oe_m2o_cm_button
-            display: none
+            line-height: 19px
+        .oe_input_icon
+            margin-top: 5px
         .oe_form_field
+            min-width: 0
+            max-width: none
             input, textarea
                 height: $row-height
-            input, textarea
                 @include radius(0)
                 border: 1px solid #aaf
                 margin: 0
+            input, textarea, select
+                min-width: 0
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
                     width: 100% !important
             &.oe_form_field_datetime,&.oe_form_field_date
-                > span
-                    width: 100% !important
                 input.oe_datepicker_master
                     width: 100% !important
-            .oe_form_field_float,.oe_form_view_integer,&.oe_form_field_datetime,&.oe_form_field_date
-                min-width: 0 !important
-                max-width: none !important
     .oe_list_group_name
         white-space: nowrap
     // }}}
@@ -2128,6 +2130,8 @@ $sheet-padding: 16px
         td.oe_number
             text-align: right !important
             max-width: 100px
+        td.oe_list_field_date, th.oe_list_header_date
+            min-width: 6em
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
@@ -2177,6 +2181,8 @@ $sheet-padding: 16px
                     width: 17px
                     &:after
                         border-width: 0
+                > td.oe_list_field_boolean input
+                    @include opacity()
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)

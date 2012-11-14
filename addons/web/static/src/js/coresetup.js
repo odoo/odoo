@@ -3,10 +3,13 @@
  *--------------------------------------------------------*/
 var console;
 if (!console) {
-    console = {log: function () {}};
-}
-if (!console.debug) {
-    console.debug = console.log;
+    // Even IE9 only exposes console object if debug window opened
+    console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
 }
 
 openerp.web.coresetup = function(instance) {
@@ -59,7 +62,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.session_id = this.get_cookie('session_id');
         return this.session_reload().then(function(result) {
             var modules = instance._modules.join(',');
-            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.do_load_qweb);
+            var deferred = self.rpc('/web/webclient/qweblist', {mods: modules}).then(self.load_qweb.bind(self));
             if(self.session_is_valid()) {
                 return deferred.then(function() { return self.load_modules(); });
             }
@@ -161,28 +164,26 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     load_modules: function() {
         var self = this;
         return this.rpc('/web/session/modules', {}).then(function(result) {
-            var lang = self.user_context.lang,
-                all_modules = _.uniq(self.module_list.concat(result));
-            var params = { mods: all_modules, lang: lang};
+            var all_modules = _.uniq(self.module_list.concat(result));
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = self.rpc('/web/webclient/translations', params).done(function(trans) {
-                instance.web._t.database.set_bundle(trans);
-            });
-            var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+            var loaded = self.load_translations();
+            var datejs_locale = "/web/static/lib/datejs/globalization/" + self.user_context.lang.replace("_", "-") + ".js";
+
+            var file_list = [ datejs_locale ];
             if(to_load.length) {
                 loaded = $.when(
                     loaded,
-                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.do_load_css),
-                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.do_load_qweb),
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).done(self.load_css.bind(self)),
+                    self.rpc('/web/webclient/qweblist', {mods: to_load}).then(self.load_qweb.bind(self)),
                     self.rpc('/web/webclient/jslist', {mods: to_load}).done(function(files) {
                         file_list = file_list.concat(files);
                     })
                 );
             }
             return loaded.then(function () {
-                return self.do_load_js(file_list);
+                return self.load_js(file_list);
             }).done(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
@@ -196,29 +197,35 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             });
         });
     },
-    do_load_css: function (files) {
+    load_translations: function() {
+        var params = { mods: this.module_list, lang: this.user_context.lang };
+        return this.rpc('/web/webclient/translations', params).done(function(trans) {
+            instance.web._t.database.set_bundle(trans);
+        });
+    },
+    load_css: function (files) {
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': self.get_url(file),
+                'href': self.url(file, null),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
         });
     },
-    do_load_js: function(files) {
+    load_js: function(files) {
         var self = this;
         var d = $.Deferred();
-        if(files.length != 0) {
+        if(files.length !== 0) {
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = self.get_url(file);
+            tag.src = self.url(file, null);
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
                 tag.onload_done = true;
-                self.do_load_js(files).done(function () {
+                self.load_js(files).done(function () {
                     d.resolve();
                 });
             };
@@ -229,7 +236,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         }
         return d;
     },
-    do_load_qweb: function(files) {
+    load_qweb: function(files) {
         var self = this;
         _.each(files, function(file) {
             self.qweb_mutex.exec(function() {

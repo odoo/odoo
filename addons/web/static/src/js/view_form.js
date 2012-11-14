@@ -173,10 +173,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
         }
-        this.$buttons.on('click', '.oe_form_button_create', this.on_button_create);
-        this.$buttons.on('click', '.oe_form_button_edit', this.on_button_edit);
-        this.$buttons.on('click', '.oe_form_button_save', this.on_button_save);
-        this.$buttons.on('click', '.oe_form_button_cancel', this.on_button_cancel);
+        this.$buttons.on('click', '.oe_form_button_create',
+                         this.guard_active(this.on_button_create));
+        this.$buttons.on('click', '.oe_form_button_edit',
+                         this.guard_active(this.on_button_edit));
+        this.$buttons.on('click', '.oe_form_button_save',
+                         this.guard_active(this.on_button_save));
+        this.$buttons.on('click', '.oe_form_button_cancel',
+                         this.guard_active(this.on_button_cancel));
         if (this.options.footer_to_buttons) {
             this.$el.find('footer').appendTo(this.$buttons);
         }
@@ -1187,14 +1191,36 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             });
         }
     },
+    view_arch_to_dom_node: function(arch) {
+        // Historic mess for views arch
+        //
+        // server:
+        //      -> got xml as string
+        //      -> parse to xml and manipulate domains and contexts
+        //      -> convert to json
+        //  client:
+        //      -> got view as json
+        //      -> convert back to xml as string
+        //      -> parse it as xml doc (manipulate button@type for IE)
+        //      -> convert back to string
+        //      -> parse it as dom element with jquery
+        //      -> for each widget, convert node to json
+        //
+        // Wow !!!
+        var xml = instance.web.json_node_to_xml(arch);
+
+        var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
+        $('button', doc).each(function() {
+            $(this).attr('data-button-type', $(this).attr('type'));
+        });
+        xml = instance.web.xml_to_str(doc);
+        return $(xml);
+    },
     render_to: function($target) {
         var self = this;
         this.$target = $target;
 
-        // TODO: I know this will save the world and all the kitten for a moment,
-        //       but one day, we will have to get rid of xml2json
-        var xml = instance.web.json_node_to_xml(this.fvg.arch);
-        this.$form = $('<div class="oe_form">' + xml + '</div>');
+        this.$form = this.view_arch_to_dom_node(this.fvg.arch);
 
         this.process_version();
 
@@ -1863,6 +1889,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
+        node.attrs.type = node.attrs['data-button-type'];
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -2152,17 +2179,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
 
     set_dimensions: function (height, width) {
-        // remove width css property
-        this.$el.css('width', '');
-        // extract style (without width)
-        var old_style = this.$el.attr('style');
-        // jQuery doesn't understand/use !important
-        var style = 'width:' + width + 'px !important;';
-        if (old_style) {
-            style += old_style
-        }
-        this.$el.attr('style', style);
-        this.$el.css('minHeight', height);
+        this.$el.css({
+            width: width,
+            minHeight: height
+        });
     },
     commit_value: function() {
         return $.when();
@@ -2386,7 +2406,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 self.$input.focus();
                 return;
             }
-            self.picker('setDate', self.value ? instance.web.auto_str_to_date(self.value) : new Date());
+            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
             self.$input_picker.show();
             self.picker('show');
             self.$input_picker.hide();
@@ -2639,22 +2659,18 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     }
 });
 
+/**
+    The progressbar field expect a float from 0 to 100.
+*/
 instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
     template: 'FieldProgressBar',
-    start: function() {
-        this._super.apply(this, arguments);
+    render_value: function() {
         this.$el.progressbar({
-            value: this.get('value'),
+            value: this.get('value') || 0,
             disabled: this.get("effective_readonly")
         });
-    },
-    render_value: function() {
-        var show_value = Number(this.get('value'));
-        if (isNaN(show_value)) {
-            show_value = 0;
-        }
-        var formatted_value = instance.web.format_value(show_value, { type : 'float' }, '0');
-        this.$el.progressbar('option', 'value', show_value).find('span').html(formatted_value + '%');
+        var formatted_value = instance.web.format_value(this.get('value') || 0, { type : 'float' });
+        this.$('span').html(formatted_value + '%');
     }
 });
 
@@ -3999,13 +4015,18 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
-        self.$text.focusout(function() {
-            self.$text.trigger("setInputData", "");
-        }).keydown(function(e) {
-            if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
-                self.$text.textext()[0].autocomplete().selectFromDropdown();
-            }
-        });
+        self.$text
+            .focusin(function () {
+                self.trigger('focused');
+            })
+            .focusout(function() {
+                self.$text.trigger("setInputData", "");
+                self.trigger('blurred');
+            }).keydown(function(e) {
+                if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
+                    self.$text.textext()[0].autocomplete().selectFromDropdown();
+                }
+            });
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4794,15 +4815,6 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this.$el.find('button.oe_form_binary_file_save').click(this.on_save_as);
         this.$el.find('.oe_form_binary_file_clear').click(this.on_clear);
     },
-    human_filesize : function(size) {
-        var units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-        var i = 0;
-        while (size >= 1024) {
-            size /= 1024;
-            ++i;
-        }
-        return size.toFixed(2) + ' ' + units[i];
-    },
     on_file_change: function(e) {
         var self = this;
         var file_node = e.target;
@@ -4850,6 +4862,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             link.href = "data:application/octet-stream;base64," + value;
         } else {
             instance.web.blockUI();
+            var c = instance.webclient.crashmanager;
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
@@ -4860,7 +4873,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             });
             ev.stopPropagation();
             return false;
@@ -4919,7 +4932,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.binary_value = true;
         this.internal_set_value(file_base64);
-        var show_value = name + " (" + this.human_filesize(size) + ")";
+        var show_value = name + " (" + instance.web.human_size(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
         this.set_filename(name);
     },
@@ -4943,8 +4956,12 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
-            url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + id + '&field=' + field + '&t=' + (new Date().getTime());
+            url = this.session.url('/web/binary/image', {
+                                        model: this.view.dataset.model,
+                                        id: id,
+                                        field: field,
+                                        t: (new Date().getTime()),
+            });
         } else {
             url = this.placeholder;
         }
@@ -5004,7 +5021,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
     get_file_url: function (attachment) {
-        return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+        return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
     },
     render_value: function () {
         var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
@@ -5030,7 +5047,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
             }
 
             // block UI or not
-            if(this.node.attrs.blockui) {
+            if(this.node.attrs.blockui>0) {
                 instance.web.blockUI();
             }
 
@@ -5064,7 +5081,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
     },
     on_file_loaded: function (event, result) {
         // unblock UI
-        if(this.node.attrs.blockui) {
+        if(this.node.attrs.blockui>0) {
             instance.web.unblockUI();
         }
 

@@ -1,6 +1,6 @@
 
-QWeb Cookbook
-=============
+QWeb
+====
 
 QWeb is the template engine used by the OpenERP Web Client. It is a home made engine create by OpenERP developers. There are a few things to note about it:
 

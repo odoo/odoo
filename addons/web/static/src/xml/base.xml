@@ -152,6 +152,32 @@
                     </tr>
                 </table>
             </form>
+            <form id="db_duplicate" name="duplicate_db_form" style="display: none;">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Duplicate Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_duplicate">Duplicate</button>
+                        </div>
+                    </div>
+                </div>
+                <table align="center" class="db_option_table">
+                    <tr>
+                        <td><label for="super_admin_pwd">Master password:</label></td>
+                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="db_original_name">Original database name:</label></td>
+                        <td><input type="text" name="db_original_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="db_name">New database name:</label></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" /></td>
+                    </tr>
+                </table>
+            </form>
             <form id="db_drop" name="drop_db_form" style="display: none; ">
                 <div class="oe_view_manager oe_view_manager_current">
                     <div class="oe_view_manager_header" style="padding: 8px;">
@@ -279,6 +305,7 @@
     <div class="oe_secondary_menu_section">Database Management</div>
     <ul class="oe_secondary_submenu">
         <li><a href="#db_create">Create</a></li>
+        <li><a href="#db_duplicate">Duplicate</a></li>
         <li><a href="#db_drop">Drop</a></li>
         <li><a href="#db_backup">Backup</a></li>
         <li><a href="#db_restore">Restore</a></li>
@@ -1182,26 +1209,28 @@
 </t>
 <t t-name="FieldBinaryFileUploader.files">
     <div class="oe_attachments">
-        <t t-if="!widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
-            <div class="oe_attachment">
-                <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
-                    <span class="oe_fileuploader_in_process">...Upload in progress...</span>
-                    <t t-raw="file.name || file.filename"/>
-                </span>
-                <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                    <t t-raw="file.name || file.filename"/>
-                </a>
-                <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
-                    <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="{file.id}">[</a>
-                </t>
-            </div>
-        </t>
-        <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
-            <div>
-                <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
-                    <t t-raw="file.name || file.filename"/>
-                </a>
-            </div>
+        <t t-if="widget.get('value')">
+            <t t-if="!widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+                <div class="oe_attachment">
+                    <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
+                        <span class="oe_fileuploader_in_process">...Upload in progress...</span>
+                        <t t-raw="file.name || file.filename"/>
+                    </span>
+                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                        <t t-raw="file.name || file.filename"/>
+                    </a>
+                    <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
+                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="{file.id}">[</a>
+                    </t>
+                </div>
+            </t>
+            <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+                <div>
+                    <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                        <t t-raw="file.name || file.filename"/>
+                    </a>
+                </div>
+            </t>
         </t>
     </div>
 </t>
@@ -1512,16 +1541,18 @@
         <h3><span class="oe_i">M</span> Custom Filters</h3>
         <ul class="oe_searchview_custom_list"/>
         <div class="oe_searchview_custom">
-          <h4>Save current filter</h4>
-          <form>
-            <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
-            <p><input id="oe_searchview_custom_public" type="checkbox"/>
-              <label for="oe_searchview_custom_public">Share with all users</label></p>
-            <button>Save</button>
-          </form>
+            <h4>Save current filter</h4>
+            <form>
+                <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+                <p>
+                    <input id="oe_searchview_custom_public" type="checkbox"/>
+                    <label for="oe_searchview_custom_public">Share with all users</label>
+                    <input id="oe_searchview_custom_default" type="checkbox"/>
+                    <label for="oe_searchview_custom_default">Use by default</label>
+                </p>
+                <button>Save</button>
+            </form>
         </div>
-    </div>
-    <div>
     </div>
 </div>
 

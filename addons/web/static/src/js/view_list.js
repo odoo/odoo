@@ -503,12 +503,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return this.reload_content();
     },
     reload_record: function (record) {
+        var self = this;
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name')
         ).done(function (records) {
+            if (!records[0]) {
+                self.records.remove(record);
+                return;
+            }
             _(records[0]).each(function (value, key) {
                 record.set(key, value, {silent: true});
             });
@@ -1557,9 +1562,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
-var DataGroup =  instance.web.CallbackEnabled.extend({
+var DataGroup =  instance.web.Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
-       this._super(parent, null);
        this.model = new instance.web.Model(model, context, domain);
        this.group_by = group_by;
        this.context = context;
@@ -2152,7 +2156,7 @@ instance.web.list.Boolean = instance.web.list.Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+        return _.str.sprintf('<input type="checkbox" %s readonly="readonly"/>',
                  row_data[this.id].value ? 'checked="checked"' : '');
     }
 });
@@ -2164,20 +2168,24 @@ instance.web.list.Binary = instance.web.list.Column.extend({
      */
     _format: function (row_data, options) {
         var text = _t("Download");
-        var download_url = _.str.sprintf(
-                '/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
-                instance.session.session_id, options.model, this.id, options.id);
-        if (this.filename) {
-            download_url += '&filename_field=' + this.filename;
-            if (row_data[this.filename]) {
-                text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
-                        row_data[this.filename].value, {type: 'char'}));
+        var value = row_data[this.id].value;
+        var download_url;
+        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+            download_url = "data:application/octet-stream;base64," + value;
+        } else {
+            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            if (this.filename) {
+                download_url += '&filename_field=' + this.filename;
             }
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
+        if (this.filename && row_data[this.filename]) {
+            text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+                    row_data[this.filename].value, {type: 'char'}));
+        }
+        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
-            size: row_data[this.id].value
+            size: instance.web.binary_to_binsize(value),
         });
     }
 });
@@ -2217,7 +2225,7 @@ instance.web.list.Many2OneButton = instance.web.list.Column.extend({
 });
 instance.web.list.Many2Many = instance.web.list.Column.extend({
     _format: function (row_data, options) {
-        if (row_data[this.id].value) {
+        if (!_.isEmpty(row_data[this.id].value)) {
             // If value, use __display version for printing
             row_data[this.id] = row_data[this.id + '__display'];
         }

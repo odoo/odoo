@@ -213,8 +213,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if (run_action) {
                     this.null_action();
                     action_loaded = this.do_action(state.action);
-                    instance.webclient.menu.has_been_loaded.done(function() {
-                        instance.webclient.menu.open_action(state.action);
+                    $.when(action_loaded || null).done(function() {
+                        instance.webclient.menu.has_been_loaded.done(function() {
+                            if (self.inner_action && self.inner_action.id) {
+                                instance.webclient.menu.open_action(self.inner_action.id);
+                            }
+                        });
                     });
                 }
             }
@@ -397,6 +401,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }).done(function(res) {
             action = _.clone(action);
             action.context = res.context;
+            var c = instance.webclient.crashmanager;
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
@@ -407,7 +412,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     self.dialog_stop();
                 },
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             })
         });
     },
@@ -504,7 +509,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        r = $.when(view_promise).done(function () {
+        return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -520,7 +525,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
         });
-        return r;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -1098,11 +1102,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
     on_attachments_loaded: function(attachments) {
         var self = this;
         var items = [];
-        var prefix = this.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        var prefix = this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = prefix  + a.id + '&t=' + (new Date().getTime());
+                a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
         });
         self.items['files'] = attachments;
@@ -1277,6 +1281,27 @@ instance.web.View = instance.web.Widget.extend({
     do_hide: function () {
         this.$el.hide();
     },
+    is_active: function () {
+        var manager = this.getParent();
+        return !manager || !manager.active_view
+             || manager.views[manager.active_view].controller === this;
+    }, /**
+     * Wraps fn to only call it if the current view is the active one. If the
+     * current view is not active, doesn't call fn.
+     *
+     * fn can not return anything, as a non-call to fn can't return anything
+     * either
+     *
+     * @param {Function} fn function to wrap in the active guard
+     */
+    guard_active: function (fn) {
+        var self = this;
+        return function () {
+            if (self.is_active()) {
+                fn.apply(self, arguments);
+            }
+        }
+    },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
             this.getParent().do_push_state(state);
@@ -1384,14 +1409,16 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     } else {
         return r + '/>';
     }
-}
+};
 instance.web.xml_to_str = function(node) {
-    if (window.ActiveXObject) {
+    if (window.XMLSerializer) {
+        return (new XMLSerializer()).serializeToString(node);
+    } else if (window.ActiveXObject) {
         return node.xml;
     } else {
-        return (new XMLSerializer()).serializeToString(node);
+        throw new Error("Could not serialize XML");
     }
-}
+};
 instance.web.str_to_xml = function(s) {
     if (window.DOMParser) {
         var dp = new DOMParser();

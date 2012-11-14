@@ -189,7 +189,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     }
 });
 
-instance.web.CrashManager = instance.web.CallbackEnabled.extend({
+instance.web.CrashManager = instance.web.Class.extend({
     rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
@@ -303,7 +303,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).then(
             function(result) {
-                self.db_list = result.db_list;
+                self.db_list = result;
             },
             function (_, ev) {
                 ev.preventDefault();
@@ -333,6 +333,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         self.$el.find("tr td:first-child").addClass("oe_form_group_cell_label");
         self.$el.find("label").addClass("oe_form_label");
         self.$el.find("form[name=create_db_form]").validate({ submitHandler: self.do_create });
+        self.$el.find("form[name=duplicate_db_form]").validate({ submitHandler: self.do_duplicate });
         self.$el.find("form[name=drop_db_form]").validate({ submitHandler: self.do_drop });
         self.$el.find("form[name=backup_db_form]").validate({ submitHandler: self.do_backup });
         self.$el.find("form[name=restore_db_form]").validate({ submitHandler: self.do_restore });
@@ -416,6 +417,18 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 },
             };
             self.do_action(client_action);
+        });
+    },
+    do_duplicate: function(form) {
+        var self = this;
+        var fields = $(form).serializeArray();
+        self.rpc("/web/database/duplicate", {'fields': fields}).then(function(result) {
+            if (result.error) {
+                self.display_error(result);
+                return;
+            }
+            self.do_notify("Duplicating database", "The database has been duplicated.");
+            self.start();
         });
     },
     do_drop: function(form) {
@@ -518,6 +531,9 @@ instance.web.Login =  instance.web.Widget.extend({
         this.selected_db = null;
         this.selected_login = null;
         this.params = action.params || {};
+        if (_.isEmpty(this.params)) {
+            this.params = $.bbq.getState(true);
+        }
 
         if (this.params.login_successful) {
             this.on('login_successful', this, this.params.login_successful);
@@ -548,7 +564,7 @@ instance.web.Login =  instance.web.Widget.extend({
         return d;
     },
     on_db_loaded: function (result) {
-        this.db_list = result.db_list;
+        this.db_list = result;
         this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
         if(this.db_list.length === 0) {
             this.do_action("database_manager");
@@ -911,7 +927,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
-                var avatar_src = _.str.sprintf('%s/web/binary/image?session_id=%s&model=res.users&field=image_small&id=%s', self.session.prefix, self.session.session_id, self.session.uid);
+                var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
             });
         };
@@ -1130,7 +1146,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            if(state.action_id === undefined && state.menu_id) {
+            if(state.action === undefined && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
                         self.menu.menu_click(state.menu_id)
