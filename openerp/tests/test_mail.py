@@ -186,7 +186,7 @@ class TestHtmlTools(unittest2.TestCase):
         ]
         for content, container_tag, expected in cases:
             html = plaintext2html(content, container_tag)
-            self.assertEqual(html, expected, 'text2html is broken')
+            self.assertEqual(html, expected, 'plaintext2html is broken')
 
     def test_append_to_html(self):
         test_samples = [
