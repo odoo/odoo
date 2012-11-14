@@ -124,8 +124,7 @@ bert.tartopoils@miam.miam
 
 
 class TestSanitizer(unittest2.TestCase):
-    """ Test the html sanitizer """
-    # TDE note: could be improved by actually checking the output
+    """ Test the html sanitizer that filters html to remove unwanted attributes """
 
     def test_simple(self):
         x = "yop"
@@ -135,15 +134,19 @@ class TestSanitizer(unittest2.TestCase):
         x = 'lala<p>yop</p>xxx'
         self.assertEqual(x, html_sanitize(x))
 
-    def test_no_exception(self):
-        html_sanitize(HTML_SOURCE)
+    def test_html(self):
+        sanitized_html = html_sanitize(HTML_SOURCE)
+        for tag in ['<font>', '<div>', '<b>', '<i>', '<u>', '<strike>', '<li>', '<blockquote>', '<a href']:
+            self.assertIn(tag, sanitized_html, 'html_sanitize stripped too much of original html')
+        for attr in ['style', 'javascript']:
+            self.assertNotIn(attr, sanitized_html, 'html_sanitize did not remove enough unwanted attributes')
 
     def test_unicode(self):
         html_sanitize("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci")
 
 
 class TestCleaner(unittest2.TestCase):
-    """ Test the email cleaner function that filter the content of incoming emails """
+    """ Test the email cleaner function that filters the content of incoming emails """
 
     def test_html_email_clean(self):
         # Test1: reply through gmail: quote in blockquote, signature --\nAdministrator
@@ -171,7 +174,7 @@ class TestCleaner(unittest2.TestCase):
         self.assertNotIn('quote', new_html, 'html_email_cleaner did not remove correctly plaintext quotes')
 
 
-class TestAppendContentToHtml(unittest2.TestCase):
+class TestHtmlTools(unittest2.TestCase):
     """ Test some of our generic utility functions about html """
 
     def test_plaintext2html(self):
