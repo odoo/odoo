@@ -24,10 +24,9 @@ import random
 
 from osv import osv, fields
 from tools.translate import _
-from tools.misc import email_re
+from tools import email_re
 from openerp import SUPERUSER_ID
 
-from base.res.res_partner import _lang_get
 _logger = logging.getLogger(__name__)
 
 # welcome email sent to portal users

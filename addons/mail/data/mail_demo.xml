@@ -11,44 +11,48 @@
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="body">Your monthly meal vouchers arrived. You can get them at Christine's office.
-This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</field>
+            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at Christine's office.</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_blogpost0_comment0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[Great.]]></field>
+            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_blogpost0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Thanks, but where is Christine's office, if I may ask? (I'm new here)</field>
+            <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <!-- This one is starred for having mailboxes with demo data -->
         <record id="message_blogpost0_comment2" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Building B3, second floor on the right :-)</field>
+            <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
             <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root'), ref('base.user_demo')])]"/>
         </record>
         <record id="message_blogpost0_comment3" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Great news, I need to buy a new fridge, I think I can pay it with the eco-vouchers!</field>
+            <field name="body"><![CDATA[<p>Many thanks. Actually that's good news, next year I'll have to buy a new fridge, I think I will pay it with the eco-vouchers!</p>]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
 
         <!-- Demo user and admin conversation -->
