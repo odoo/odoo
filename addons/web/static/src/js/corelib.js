@@ -1320,7 +1320,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             }
         };
 
-        url.url = this.get_url(url.url);
+        url.url = this.url(url.url, null);
         var ajax = _.extend({
             type: "GET",
             dataType: 'jsonp', 
@@ -1376,8 +1376,17 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             return deferred.done(set_sid);
         }
     },
-    get_url: function (file) {
-        return this.prefix + file;
+
+    url: function(path, params) {
+        var qs = '';
+        if (!_.isNull(params)) {
+            params = _.extend(params || {}, {session_id: this.session_id});
+            if (this.httpsessionid) {
+                params.sid = this.httpsessionid;
+            }
+            qs = '?' + $.param(params);
+        }
+        return this.prefix + path + qs;
     },
 });
 

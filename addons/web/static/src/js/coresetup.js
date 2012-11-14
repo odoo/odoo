@@ -201,7 +201,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': self.get_url(file),
+                'href': self.url(file, null),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -210,11 +210,11 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     load_js: function(files) {
         var self = this;
         var d = $.Deferred();
-        if(files.length != 0) {
+        if(files.length !== 0) {
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = self.get_url(file);
+            tag.src = self.url(file, null);
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;

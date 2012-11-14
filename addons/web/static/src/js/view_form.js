@@ -4956,8 +4956,12 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
-            url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + id + '&field=' + field + '&t=' + (new Date().getTime());
+            url = this.session.url('/web/binary/image', {
+                                        model: this.view.dataset.model,
+                                        id: id,
+                                        field: field,
+                                        t: (new Date().getTime()),
+            });
         } else {
             url = this.placeholder;
         }
@@ -5017,7 +5021,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
     get_file_url: function (attachment) {
-        return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+        return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
     },
     render_value: function () {
         var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));

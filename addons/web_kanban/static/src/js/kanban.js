@@ -995,7 +995,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             id = escape(JSON.stringify(id));
             if (options.preview_image)
                 field = options.preview_image;
-            url = instance.session.prefix + '/web/binary/image?session_id=' + this.session.session_id + '&model=' + model + '&field=' + field + '&id=' + id;
+            url = this.session.url('/web/binary/image', {model: model, field: field, id: id});
             if (cache !== undefined) {
                 // Set the cache duration in seconds.
                 url += '&cache=' + parseInt(cache, 10);

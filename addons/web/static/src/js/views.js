@@ -1102,11 +1102,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
     on_attachments_loaded: function(attachments) {
         var self = this;
         var items = [];
-        var prefix = this.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        var prefix = this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = prefix  + a.id + '&t=' + (new Date().getTime());
+                a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
         });
         self.items['files'] = attachments;
