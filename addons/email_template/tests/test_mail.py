@@ -52,8 +52,8 @@ class test_message_compose(test_mail_mockup.TestMailMockups):
         # Mail data
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
-        _body_html1 = 'Fans of Pigs, unite !\n<pre>Admin</pre>\n'
-        _body_html2 = 'I am angry !\n<pre>Admin</pre>\n'
+        _body_html1 = 'Fans of Pigs, unite !\n<p>Admin</p>\n'
+        _body_html2 = 'I am angry !\n<p>Admin</p>\n'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': base64.b64encode('My first attachment')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': base64.b64encode('My second attachment')}
