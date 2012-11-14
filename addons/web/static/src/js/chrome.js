@@ -531,6 +531,9 @@ instance.web.Login =  instance.web.Widget.extend({
         this.selected_db = null;
         this.selected_login = null;
         this.params = action.params || {};
+        if (_.isEmpty(this.params)) {
+            this.params = $.bbq.getState(true);
+        }
 
         if (this.params.login_successful) {
             this.on('login_successful', this, this.params.login_successful);
