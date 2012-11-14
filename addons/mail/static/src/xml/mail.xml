@@ -206,13 +206,11 @@
                 </div>
                 <!-- message itself -->
                 <div class="oe_msg_content">
-                    <h1 t-if="widget.subject and !widget.thread_level" class="oe_msg_title">
-                        <t t-raw="widget.subject"/>
+                    <h1 t-if="(widget.show_record_name or widget.subject) and !widget.thread_level" class="oe_msg_title">
+                        <a t-if="widget.show_record_name" class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
+                        <t t-if="widget.subject" t-raw="widget.subject"/>
                     </h1>
                     <div class="oe_msg_body">
-                        <t t-if="widget.show_record_name">
-                            <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
-                        </t>
                         <t t-raw="widget.body"/>
                     </div>
                 </div>

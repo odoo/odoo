@@ -70,7 +70,6 @@
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <!-- This one is starred for having mailboxes with demo data -->
         <record id="message_blogpost0_comment2" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
