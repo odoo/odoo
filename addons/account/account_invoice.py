@@ -185,6 +185,7 @@ class account_invoice(osv.osv):
     _columns = {
         'name': fields.char('Description', size=64, select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'origin': fields.char('Source Document', size=64, help="Reference of the document that produced this invoice.", readonly=True, states={'draft':[('readonly',False)]}),
+        'supplier_invoice_number': fields.char('Supplier Invoice Number', size=64, help="The reference of this invoice as provided by the supplier.", readonly=True, states={'draft':[('readonly',False)]}),
         'type': fields.selection([
             ('out_invoice','Customer Invoice'),
             ('in_invoice','Supplier Invoice'),
@@ -206,12 +207,12 @@ class account_invoice(osv.osv):
             ('open','Open'),
             ('paid','Paid'),
             ('cancel','Cancelled'),
-            ],'State', select=True, readonly=True,
-            help=' * The \'Draft\' state is used when a user is encoding a new and unconfirmed Invoice. \
-            \n* The \'Pro-forma\' when invoice is in Pro-forma state,invoice does not have an invoice number. \
-            \n* The \'Open\' state is used when user create invoice,a invoice number is generated.Its in open state till user does not pay invoice. \
-            \n* The \'Paid\' state is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled. \
-            \n* The \'Cancelled\' state is used when user cancel invoice.'),
+            ],'Status', select=True, readonly=True,
+            help=' * The \'Draft\' status is used when a user is encoding a new and unconfirmed Invoice. \
+            \n* The \'Pro-forma\' when invoice is in Pro-forma status,invoice does not have an invoice number. \
+            \n* The \'Open\' status is used when user create invoice,a invoice number is generated.Its in open status till user does not pay invoice. \
+            \n* The \'Paid\' status is set automatically when the invoice is paid. Its related journal entries may or may not be reconciled. \
+            \n* The \'Cancelled\' status is used when user cancel invoice.'),
         'sent': fields.boolean('Sent', readonly=True, help="It indicates that the invoice has been sent."),
         'date_invoice': fields.date('Invoice Date', readonly=True, states={'draft':[('readonly',False)]}, select=True, help="Keep empty to use the current date"),
         'date_due': fields.date('Due Date', readonly=True, states={'draft':[('readonly',False)]}, select=True,
@@ -401,6 +402,7 @@ class account_invoice(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
             })
         return {
             'view_type': 'form',
@@ -864,8 +866,11 @@ class account_invoice(osv.osv):
             self.check_tax_lines(cr, uid, inv, compute_taxes, ait_obj)
 
             # I disabled the check_total feature
-            #if inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0):
-            #    raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe real total does not match the computed total.'))
+            group_check_total_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account', 'group_supplier_inv_check_total')[1]
+            group_check_total = self.pool.get('res.groups').browse(cr, uid, group_check_total_id, context=context)
+            if group_check_total and uid in [x.id for x in group_check_total.users]:
+                if (inv.type in ('in_invoice', 'in_refund') and abs(inv.check_total - inv.amount_total) >= (inv.currency_id.rounding/2.0)):
+                    raise osv.except_osv(_('Bad total !'), _('Please verify the price of the invoice !\nThe encoded total does not match the computed total.'))
 
             if inv.payment_term:
                 total_fixed = total_percent = 0
@@ -979,13 +984,13 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
+            ctx.update(invoice=inv)
             move_id = move_obj.create(cr, uid, move, context=ctx)
             new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
-            ctx.update({'invoice':inv})
             move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
@@ -1359,7 +1364,7 @@ class account_invoice_line(osv.osv):
     _description = "Invoice Line"
     _columns = {
         'name': fields.text('Description', required=True),
-        'origin': fields.char('Source', size=256, help="Reference of the document that produced this invoice."),
+        'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line when displaying the invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
         'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),

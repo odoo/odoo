@@ -82,7 +82,7 @@
         action="base.action_partner_supplier_form" sequence="15"/>
 
       <!--Inventory control-->
-      <menuitem id="menu_procurement_management_inventory" name="Receive Products"
+      <menuitem id="menu_procurement_management_inventory" name="Incoming Products"
             parent="base.menu_purchase_root" sequence="4"/>
       <menuitem action="stock.action_picking_tree4" id="menu_action_picking_tree4" parent="menu_procurement_management_inventory"
             name="Incoming Shipments" sequence="9"/>
@@ -198,7 +198,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send Request for Quotation" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
                     <button name="purchase_confirm" states="draft" string="Confirm Order"/>
                     <button name="purchase_confirm" states="sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
@@ -226,6 +226,7 @@
                             <field name="partner_ref"/>
                             <field domain="[('type','=','purchase')]" name="pricelist_id" groups="product.group_purchase_pricelist" on_change="onchange_pricelist(pricelist_id, context)"/>
                             <field name="currency_id" invisible='1'/>
+                            <field name="journal_id" invisible='1'/>
                         </group>
                         <group>
                             <field name="date_order"/>
@@ -262,12 +263,12 @@
                             </group>
                             <div class="oe_clear"/>
                             <label for="notes"/>
-                            <field name="notes"/>
+                            <field name="notes" class="oe_inline"/>
                         </page>
-                        <page string="Reception &amp; Invoicing">
+                        <page string="Incoming Shipments &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)" groups="stock.group_locations"/>
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
@@ -281,14 +282,12 @@
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
-                            <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -358,7 +357,7 @@
                     <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     <field name="minimum_planned_date" invisible="context.get('quotation_only', False)"/>
                     <field name="origin"/>
-                    <field name="amount_untaxed" sum="Total Untaxed amount"/>
+                    <field name="amount_untaxed" sum="Total Untaxed amount" string="Untaxed"/>
                     <field name="amount_total" sum="Total amount"/>
                     <field name="state"/>
                 </tree>
@@ -451,7 +450,7 @@
             <field name="name">purchase.order.line.tree</field>
             <field name="model">purchase.order.line</field>
             <field name="arch" type="xml">
-                <tree string="Purchase Order Lines">
+                <tree string="Purchase Order Lines" create="false">
                     <field name="order_id"/>
                     <field name="name"/>
                     <field name="partner_id" string="Supplier" />
@@ -471,11 +470,11 @@
             <field name="model">purchase.order.line</field>
             <field name="priority" eval="20"/>
             <field name="arch" type="xml">
-                <form string="Purchase Order Line" version="7.0">
+                <form string="Purchase Order Line" version="7.0" create="false">
                     <sheet>
                         <label for="order_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="order_id" class="oe_inline"/>
+                            <field name="order_id" class="oe_inline" domain="[('invoice_method','=','manual')]" />
                             <label string="," attrs="{'invisible':[('date_order','=',False)]}"/>
                             <field name="date_order" class="oe_inline"/>
                         </h1>

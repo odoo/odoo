@@ -2,44 +2,244 @@
 <openerp>
     <data noupdate="1">
 
+        <!-- Update demo user to avoid mail bombing -->
+        <record id="base.partner_demo" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+
+        <!-- Pushed to all employees -->
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="body">Your monthly meal vouchers arrived. You can get them at Christine's office.
 This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</field>
             <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
         </record>
-
         <record id="message_blogpost0_comment0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
             <field name="body"><![CDATA[Great.]]></field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
         </record>
-
         <record id="message_blogpost0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
             <field name="body">Thanks, but where is Christine's office, if I may ask? (I'm new here)</field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
         </record>
-
+        <!-- This one is starred for having mailboxes with demo data -->
         <record id="message_blogpost0_comment2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body">Building B3, second floor on the right :-)</field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root'), ref('base.user_demo')])]"/>
+        </record>
+        <record id="message_blogpost0_comment3" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
             <field name="body">Great news, I need to buy a new fridge, I think I can pay it with the eco-vouchers!</field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
         </record>
 
-        <record id="message_blogpost0_comment1_2" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body">Building B3, second floor on the right :-)</field>
-            <field name="parent_id" ref="message_blogpost0_comment1"/>
+        <!-- Demo user and admin conversation -->
+        <record id="message_discussion" model="mail.message">
+            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
             <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
+        <record id="message_discussion_answer1" model="mail.message">
+            <field name="body">No specific issues, I think everything is clear.</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_discussion_answer2" model="mail.message">
+            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_discussion_answer3" model="mail.message">
+            <field name="body">Absolutely!</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
+
+        <!-- External mail + reply with attachment conversation -->
+        <record id="message_video2" model="mail.message">
+            <field name="subject">Plan to install OpenERP</field>
+            <field name="model">mail.message</field>
+            <field name="body">
+                &lt;![CDATA[Email0 inquiry]]&gt;
+                &lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;
+                &lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to install OpenERP for my company and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;br/&gt;
+                &lt;div&gt;&lt;font size="2"&gt;Can you please send me services catalogue?&lt;/font&gt;&lt;/div&gt;&lt;br/&gt;
+                Sophie
+            </field>
+            <field name="type">email</field>
+            <field name="author_id" ref="base.res_partner_2"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_video2_attachment1" model="ir.attachment">
+            <field name="model">ir.attachment</field>
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">catalogue 2012.pdf</field>
+            <field name="name">catalogue 2012.pdf</field>
+        </record>
+        <record id="message_video2_message1" model="mail.message">
+            <field name="subject">Re: Plan to install OpenERP</field>
+            <field name="body">
+                Dear Customer,&lt;br/&gt;
+                Thanks for showing interest in our products.&lt;br/&gt;
+                We have attached the catalogue,&lt;br/&gt;
+                We would like to know your interests, so let us know when we can call you for more details.&lt;br/&gt;
+                Regards
+            </field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="parent_id" ref="message_video2"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('message_video2_attachment1')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'),ref('base.partner_root'),ref('base.res_partner_2')])]"/>
+        </record>
+
+        <!-- Employee & other + attachments conversation -->
+        <record id="message_video1_attachment1" model="ir.attachment">
+            <field name="model">ir.attachment</field>
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">migration.doc</field>
+            <field name="name">migration.doc</field>
+        </record>
+        <record id="message_video1_attachment2" model="ir.attachment">
+            <field name="model">ir.attachment</field>
+            <field name="datas">
+                /9j/4AAQSkZJRgABAQEASABIAAD/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkz
+                ODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2Nj
+                Y2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wAARCABkAGQDAREA
+                AhEBAxEB/8QAGgAAAwEBAQEAAAAAAAAAAAAAAAQFAwIBBv/EAD0QAAEDAgMDCAcHAwUAAAAAAAEA
+                AgMEEQUSsiExchMzNDVBUXFzIjJhkbGzwRQVJGKBwtElg6FCUlPh8P/EABoBAQADAQEBAAAAAAAA
+                AAAAAAADBAUBAgb/xAAwEQACAQIDBgYBBAMBAAAAAAAAAQIDBBEyMwUSMUFx8BMhNFGx0cEUgZGh
+                I0LhNf/aAAwDAQACEQMRAD8A+55QFzgA4lpsbDttf6qqoN8D0e5z/sf7l3w5HMQz/kd7k8OQxOJX
+                SOheIgWyFpDXFtwDbYV1U5DETLcVFwySnDQLNuHOO/Zc227LBevDGJ1kxE2DpYiA6+xrgSMzT3dw
+                d7wm4xiZtZiwLS+andZrb+g4XdcZuzdbNb22TcGINbi4YbzU7nZTuY7a6+zs3Af5HtTwxidPbihe
+                MksDWAvuCxxJF/R7O7f4puDE8DcVLiXSwZc7TZrHXDRa43du33puDEoZ/wAjvcvHhyGIZ/yO9yeH
+                IYgx4e27d1yP1BsvLWDwZ0Uyh9VVB2W4y5Mx2XLf+h7lIm1FYHBSsldTcoMkBIaXNsHG/d2+Kb7X
+                mzkvJNoq0ji6khcd5YCfcplwBtddAXQBdAF0AXQBdAF0AXQCWI17qIR5YhIX3vd+WwFvYe9V69wq
+                LimscSalR8TF48DWm5t3mP1FcnmIkZfZYqmSflWkjlG7jbc0W+JUkEnHzB6cMpizKWOItl9Y7QvW
+                5FjFoajYIo2xsFmtAA8F7OHSANqANqAEBnJPFE9jJJGtc82aCdpXUmzjkk8GabVw6Iy4i3NPFGwi
+                WJjnAuHom2z4leazdKm5ik41Km4FNVzS4Uahwj5UZ9wOW4cQNl/YvNtN1YRk+Z6uEqTaXIm108lR
+                SU8kuXOTKDlFhscB9FS2kt2pBL3+ixYycqcm++JYpubd5j9RVipmKyPafnKjzBpapafAM3Uhwxkq
+                oo6hkD3ESP8AVGU2O/t/Qrqi2sTy5pPd5my4eidh1RPNV1LJZM7WhrmjKBluXbPbuClqRUUsCClN
+                ybxGMQLhRvLXFpuNrTY7wvNNYy8z3VbUHgGHlzqGEucXEt2lxuSuTzM7T84oUxLpsHFF8wKSGRkN
+                TUR1RVM8mKVEMkmaNoJa3KBb0rb1mW9adSrOL4I0qtOMacWuLFH9Nq/Kk1BXLz0z6FK19QM0PUTv
+                GTW5Q2GlAsXuaXfInz9X0/FNrVfaerDr9Emz9KXfuXKbm3eY/UVNUzECFKwuEU+V7mEzja02PqBW
+                bdJ8SGu2o+Q5RFz6Gnc5xLnRNJPebLsuLPccqEq3rel4h8HKWOmyGWqipb2lQlgk4SL11XwR/F6n
+                q8EVqHGXfuOYgPwb9p3t1BR08xJWyMlGWRn2BrJHtb6FwDsN32P+FnXVWcbqME/Jl22hF27bXeA3
+                iXTYOKP5gWpDIzOqaiOMP65quF2pY1prVOr+TVr6Ue+Ri/p1X5MmoLSvfTPoZ9r6jv3GaLqJ3jJr
+                cobDSgWL3NLvkT5+r6fim1qvtPVh1+iTZ+lLv3LlNzbvMfqKmqZiBClZzU3njQFatiC4yjdAB930
+                1/8Aib8AkuLJIZUJ1vW9LxD4OUsdNkMtVFOwUJYJWF2FbVlxsAyPb+r1NV4IrUMz79xyvymieQbg
+                lu2/5gvFLMiStkZIf61B/a+Ysq89bDv3L9r6Z98h3Eh+Ng4o/mBbEMjMypqI4w/rmq4XaljWmtU6
+                v5NWvpR75GL+m1fkyagtK99M+hn2vqO/cYoR/QneMmtyhsNKBYvc0u+QhP1fT8U2tV9p6sOv0SbP
+                0pd+5cpubd5j9RU1TMQIUrebm88aArVsQXGU8wOpfPA6ORrAIWta0gb9ltvuVW3ruvjJor2VxKvF
+                4rgc4g9kWJ0z3uDWBzSSdw2OV1zjCk3J4ElWUYVE5PBFCCop6jNyMjH5bXt2KCFSM8rxLji0k2uJ
+                EADm14IBBbFsPG5c2l5W779iPZ+s+/cdYAMBi2D1W6gu2eSPQ9XnGXUSf61B/a+YqF562HfuWrX0
+                z75DmJW+2wW3Zo/mBbEMjMypqI5w+33zU7rZTqWNaa1Tq/k1a+lHvkYv6bV93IyagtK99M+hn2vq
+                Biit9xO3XvJrKhsNKBYvc0u+QhP1fT8U2tV9p6sOv0SbP0pd+5cpubd5j9RU1TMQIUrObm88aArV
+                sQXGUTwGojhkkjeSHSloZs37CsmwqRWMHxZT2VSm6Mp4eWJ1j22UeDfqrd/6b9/wyLaeX+Pya4Hz
+                1Tws/cqmzOEv2PpLz/UnzSvZUPY02bKGhwtvsSR8VLtWtJYUuWGP9/8ADGs60o3saa4PH4ZVZ1DH
+                wt1BXrPJHoXLzjLqThKyR9GGkkxuja7Z28oFmXNSM7yO6+H/AEmsqkZ20t3liv6KGJdNg4o/mBbc
+                MjKFTURxh/XNTwnUsa01qnV/JrV9KPfIxf02r8mTUFpXvpn0M619QMUR/oTvGTWVDYaUCxe5pd8h
+                Cfq+n4ptar7T1Ydfok2fpS79y5T827zH6ipqmYgQpWc1N540BWrYguMpJw3ptN5v7Svn7TXQ2R6G
+                XV/gcx7nR4D6rVv/AE37/hmdtPL/AB+TXA+eqeFn7lU2Zll+x9Jef6k2p6W3/wB2lNraq6flmBa/
+                +jT6P4ZXZ1DHwt1Badllh0NK74y6/kkU/SGefHrCwo+qXUj2R6ap1fwijjZIeHNJa4NaQR2EOut2
+                vOVO3lKPH/qKd7Jwi5R4pfk4wRznVz3OJc4xXJPacyy9ntynJs2HJytqbfsvgyqZhDWz5gTyjXsF
+                u8uH8K/tCtGFHcfFozaFaNO6jF82O0PUTvGTW5LDSgXr3NLvkT5+r6fim1qvtPVh1+iTZ+lLv3Ll
+                PzbvMfqKmnmIBarhmeJGxxhwdIHg5gP9IH0U1GoocSOrBzWCEKTDquCoikdE0hj8xs8dxH1WZQtn
+                TqKbYsYO3t3Slxbx+DfEqWqrHgshDdg3vHt/lXbnCtS3F74lW8tpV1hF9+Zph0FTSPlc+EHOGgAP
+                HZf+VBaUvAT3nxNWvVVTDAUlw6sknDxE0AdheEvaX6ialF8sDNo0JU7qNdvyWPw/sdEdQMNZTch6
+                QAF847DdW7eapKKfItV/8jeHMRhw2sZK1xibYSNf647HA/RZytmqyqY+WOJ5sYu3ozhLi23/AChr
+                Eaeqqz6EAHogbXjvutCtJVKMqa4v7RXuqEqsWlz+znDqWqpJnSPhBuwNADx3qpa0fBbcnxL29/hh
+                T5pJfwjKqoKuecyNhaBmJ2vHaV7vYfqN3dfAofp5fqIVcfJPEbp4qmLDjTGAFxzbQ8drifqprZql
+                CMXyL1w/Fba5k/7srM7rxtyuJIHKbrlU61CdSrvuXljiQ2MZW7qObx3sMP7+y3A1zY/TFiXOda97
+                XcT9Vbk8XiSDKsnAQAgBACAEAIAQAgBACAEAIAQAgBACAEAIAQAgBACAEAIAQAgBACAEAIAQAgBA
+                CAEAIAQAgP/Z
+            </field>
+            <field name="datas_fname">activity graph 2012.jpg</field>
+            <field name="name">activity graph 2012</field>
+        </record>
+        <record id="message_video1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="body">
+                Hi,&lt;br/&gt;
+                The beta OpenERP 7 is scheduled for November 12.&lt;br/&gt;
+                You will find attached the document for migration from version 6 to 7, and the activity graph for the current year. Good reading.&lt;br/&gt;
+                Sincerely
+            </field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('message_video1_attachment1'), ref('message_video1_attachment2')])]"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_video1_message1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="body">
+                Thank you,&lt;br/&gt;
+                Could you prepare and send us also the document for version 7.1 which will come soon?&lt;br/&gt;
+                Sincerely
+            </field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="parent_id" ref="message_video1"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record>
+
+        <!-- Network admin & employee conversation -->
+        <record id="message_video0" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="body">I changed the infrastructure of networks, if there are still changes to be made please do not hesitate to contact me.</field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_video0_message1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="body">Thank you, the networks is perfect now ! Could you add a IP phone for Jhon ?</field>
+            <field name="parent_id" ref="message_video0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_video0_message2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="body">It's right, his internal phone number is 0093</field>
+            <field name="parent_id" ref="message_video0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record>
 
     </data>

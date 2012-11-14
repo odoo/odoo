@@ -106,8 +106,8 @@
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="case_close_with_emp" string="Hire" type="object"
-                        states="draft,open,pending" class="oe_highlight"/>
+                <button name="case_close_with_emp" string="Hire &amp; Create Employee" type="object"
+                        states="draft,open,pending,done" class="oe_highlight"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
@@ -135,7 +135,7 @@
                 <group>
                     <group>
                         <field name="partner_id"
-                                on_change="onchange_partner_id(partner_id, email_from)"/>
+                                on_change="onchange_partner_id(partner_id)"/>
                         <field name="email_from" widget="email"/>
                         <field name="partner_phone"/>
                         <field name="partner_mobile"/>
@@ -183,8 +183,8 @@
                 <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
             <div class="oe_chatter">
-                <field name="message_ids" widget="mail_thread"/>
                 <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
             </div>
           </form>
         </field>
@@ -333,7 +333,7 @@
         <field name="model">hr.job</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="no_of_recruitment" version="7.0" position="after">
+            <field name="expected_employees" version="7.0" position="after">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>

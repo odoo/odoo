@@ -36,7 +36,7 @@ class sale_report(osv.osv):
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
-            ], 'Order State', readonly=True),
+            ], 'Order Status', readonly=True),
     }
     
     def init(self, cr):

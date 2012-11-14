@@ -131,7 +131,24 @@
             <field name="arch" type="xml">
                 <tree string="Sales Orders" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="message_unread" invisible="1"/>
-                    <field name="name"/>
+                    <field name="name" string="Order Number"/>
+                    <field name="date_order"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="amount_total" sum="Total Tax Included"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_quotation_tree" model="ir.ui.view">
+            <field name="name">sale.order.tree</field>
+            <field name="model">sale.order</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Quotation" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>
+                    <field name="name" string="Quotation Number"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
@@ -153,12 +170,13 @@
                         <button name="action_quotation_send" string="Send by Mail" type="object" states="sent" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                         <button name="print_quotation" string="Print" type="object" states="sent" groups="base.group_user"/>
-                        <button name="action_button_confirm" states="draft" string="Confirm" type="object" groups="base.group_user"/>
-                        <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object" groups="base.group_user"/>
+                        <button name="action_button_confirm" states="draft" string="Confirm Sale" type="object" groups="base.group_user"/>
+                        <button name="action_button_confirm" states="sent" string="Confirm Sale" class="oe_highlight" type="object" groups="base.group_user"/>
                         <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
                             attrs="{'invisible': [('invoice_exists', '=', False)]}" groups="base.group_user"/>
                         <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                             type="action" states="manual" class="oe_highlight" groups="base.group_user"/>
+                        <button name="copy_quotation" states="cancel" string="New Copy of Quotation" type="object"/>
                         <button name="cancel" states="draft,sent" string="Cancel" groups="base.group_user"/>
                         <button name="action_cancel" states="manual,progress" string="Cancel" type="object" groups="base.group_user"/>
                         <button name="invoice_cancel" states="invoice_except" string="Cancel" groups="base.group_user"/>
@@ -269,11 +287,8 @@
                                 </div>
                                 <field name="amount_total" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary' options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <group name="sale_margin_grp">
-                            </group>
                             <div class="oe_clear"/>
-                            <label for="note"/><br/>
-                            <field name="note" class="oe_inline"/>
+                            <field name="note" class="oe_inline" placeholder="Terms and conditions..."/>
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
@@ -292,25 +307,11 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="History">
-                            <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'form_view_ref':'account.invoice_form'}">
-                                <tree string="Invoices" colors="blue:state == 'draft';black:state in ('proforma','proforma2','open');gray:state == 'cancel'">
-                                    <field name="date_invoice"/>
-                                    <field name="number"/>
-                                    <field name="partner_id" string="Customer"/>
-                                    <field name="user_id"/>
-                                    <field name="date_due"/>
-                                    <field name="amount_total"/>
-                                    <field name="state"/>
-                                </tree>
-                            </field>
-                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -346,6 +347,7 @@
                     <filter string="My Sale Orders" domain="[('user_id','=',uid)]" help="My Sale Orders" icon="terp-personal" name="my_sale_orders_filter"/>
                     <field name="partner_id"/>
                     <field name="user_id"/>
+                    <field name="project_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
@@ -357,7 +359,7 @@
         </record>
 
         <record id="action_order_form" model="ir.actions.act_window">
-            <field name="name">Sales Orders</field>
+            <field name="name">Sale Orders</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
@@ -404,6 +406,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.order</field>
             <field name="view_type">form</field>
+            <field name="view_id" ref="view_quotation_tree"/>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="context">{'show_address': 1}</field>
             <field name="domain">[('state','in',('draft','sent','cancel'))]</field>

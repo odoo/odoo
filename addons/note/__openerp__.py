@@ -42,7 +42,7 @@ Notes can be found in the 'Home' menu.
         'mail',
     ],
     'data': [
-        'security/res.groups.csv',
+        'security/note_security.xml',
         'security/ir.rule.xml',
         'security/ir.model.access.csv',
         'note_data.xml',

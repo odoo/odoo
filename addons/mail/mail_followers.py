@@ -61,10 +61,10 @@ class mail_notification(osv.Model):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
-                        ondelete='cascade', required=True),
-        'read': fields.boolean('Read'),
+                        ondelete='cascade', required=True, select=1),
+        'read': fields.boolean('Read', select=1),
         'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True),
+                        ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
@@ -84,9 +84,16 @@ class mail_notification(osv.Model):
         return False
 
     def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
-        """ TDE note: add a comment, verify method calls, because js seems obfuscated. """
+        """ Set a message and its child messages as (un)read for uid.
+
+            :param bool read: read / unread
+        """
+        # TDE note: use child_of or front-end send correct values ?
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = self.search(cr, uid, [('partner_id', '=', user_pid), ('message_id', 'in', msg_ids)], context=context)
+        notif_ids = self.search(cr, uid, [
+            ('partner_id', '=', user_pid),
+            ('message_id', 'in', msg_ids)
+            ], context=context)
 
         # all message have notifications: already set them as (un)read
         if len(notif_ids) == len(msg_ids):
@@ -95,7 +102,7 @@ class mail_notification(osv.Model):
         # some messages do not have notifications: find which one, create notification, update read status
         exist_notification = dict.fromkeys(msg_ids, False)
         for notification in self.browse(cr, uid, notif_ids, context=context):
-            exist_notification[notification.message_id] = True
+            exist_notification[notification.message_id.id] = True
         for msg_id in exist_notification.keys():
             self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return self.write(cr, uid, notif_ids, {'read': read}, context=context)
@@ -130,7 +137,8 @@ class mail_notification(osv.Model):
 
     def _notify(self, cr, uid, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
-        context = context or {}
+        if context is None:
+            context = {}
         # mail_noemail (do not send email) or no partner_ids: do not send, return
         if context.get('mail_noemail'):
             return True
@@ -140,9 +148,15 @@ class mail_notification(osv.Model):
         if not notify_partner_ids:
             return True
 
+        # add the context in the email
+        # TDE FIXME: commented, to be improved in a future branch
+        # quote_context = self.pool.get('mail.message').message_quote_context(cr, uid, msg_id, context=context)
+
         mail_mail = self.pool.get('mail.mail')
         # add signature
         body_html = msg.body
+        # if quote_context:
+        #     body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
         if signature:
             body_html = tools.append_content_to_html(body_html, signature)

@@ -135,7 +135,12 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        return {'model': model, 'res_id': res_id}
+        doc_name_get = self.pool.get(model).name_get(cr, uid, res_id, context=context)
+        if doc_name_get:
+            record_name = doc_name_get[0][1]
+        else:
+            record_name = False
+        return {'model': model, 'res_id': res_id, 'record_name': record_name}
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -156,21 +161,15 @@ class mail_compose_message(osv.TransientModel):
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
-        # create the reply in the body
-        reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
-            'date': message_data.date if message_data.date else '',
-            'sender_name': message_data.author_id.name,
-            'body': message_data.body,
-            }
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
         # update the result
         result = {
+            'record_name': message_data.record_name,
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
-            'body': reply_body,
             'subject': reply_subject,
             'partner_ids': partner_ids,
             'content_subtype': 'html',
@@ -192,17 +191,6 @@ class mail_compose_message(osv.TransientModel):
             :param values: 'plain' or 'html'
         """
         return {'value': {'content_subtype': value}}
-
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ The basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-            :param value: value format: [[6, 0, [3, 4]]]
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
-        return res
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
