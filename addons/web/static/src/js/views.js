@@ -1243,7 +1243,7 @@ instance.web.View = instance.web.Widget.extend({
             }
         };
 
-        if (action_data.special) {
+        if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type=="object") {
             var args = [[record_id]], additional_args = [];

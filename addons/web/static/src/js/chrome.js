@@ -636,8 +636,34 @@ instance.web.Login =  instance.web.Widget.extend({
 instance.web.client_actions.add("login", "instance.web.Login");
 
 /**
+ * Redirect to url by replacing window.location
+ * If wait is true, sleep 1s and wait for the server i.e. after a restart.
+ */
+instance.web.redirect = function(url, wait) {
+    // Dont display a dialog if some xmlhttprequest are in progress
+    if (instance.client && instance.client.crashmanager) {
+        instance.client.crashmanager.destroy();
+    }
+
+    var wait_server = function() {
+        instance.session.rpc("/web/webclient/version_info", {}).done(function() {
+            window.location = url;
+        }).fail(function() {
+            setTimeout(wait_server, 250);
+        });
+    };
+
+    if (wait) {
+        setTimeout(wait_server, 1000);
+    } else {
+        window.location = url;
+    }
+}
+
+/**
  * Client action to reload the whole interface.
- * If params has an entry 'menu_id', it opens the given menu entry.
+ * If params.menu_id, it opens the given menu entry.
+ * If params.wait, reload will wait the openerp server to be reachable before reloading
  */
 instance.web.Reload = function(parent, action) {
     var params = action.params || {};
@@ -653,8 +679,8 @@ instance.web.Reload = function(parent, action) {
         hash = "#menu_id=" + menu_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-    window.onerror = function() {};
-    window.location = url;
+
+    instance.web.redirect(url, params.wait);
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
@@ -664,7 +690,7 @@ instance.web.client_actions.add("reload", "instance.web.Reload");
  */
 instance.web.HistoryBack = function(parent) {
     if (!parent.history_back()) {
-        window.location = '/' + (window.location.search || '');
+        instance.web.Home(parent);
     }
 };
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
@@ -672,11 +698,10 @@ instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 /**
  * Client action to go back home.
  */
-instance.web.Home = instance.web.Widget.extend({
-    init: function(parent) {
-        window.location = '/' + (window.location.search || '');
-    }
-});
+instance.web.Home = function(parent, action) {
+    var url = '/' + (window.location.search || '');
+    instance.web.redirect(url, action.params && action.params.wait);
+};
 instance.web.client_actions.add("home", "instance.web.Home");
 
 instance.web.ChangePassword =  instance.web.Widget.extend({
