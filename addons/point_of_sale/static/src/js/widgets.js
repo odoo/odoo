@@ -298,8 +298,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.payment_line.bind('change', this.changedAmount, this);
         },
         changeAmount: function(event) {
-            var newAmount;
-            newAmount = event.currentTarget.value;
+            var newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
             	this.amount = parseFloat(newAmount);
                 this.payment_line.set_amount(this.amount);

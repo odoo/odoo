@@ -899,7 +899,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.updatePaymentSummary();
-            this.$('.paymentline-amout input').last().focus();
         },
         close: function(){
             this._super();
@@ -946,6 +945,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 self.deleteLine(r);
             });
             x.appendTo(this.$('#paymentlines'));
+            this.$('.paymentline-amount input:last').focus();
         },
         renderElement: function() {
             this._super();
@@ -975,6 +975,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.pos_widget.action_bar){
                 this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
             }
+            this.$('.paymentline-amount input:last').focus();
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {
