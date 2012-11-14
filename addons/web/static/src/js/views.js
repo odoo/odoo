@@ -1409,14 +1409,16 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     } else {
         return r + '/>';
     }
-}
+};
 instance.web.xml_to_str = function(node) {
-    if (window.ActiveXObject) {
+    if (window.XMLSerializer) {
+        return (new XMLSerializer()).serializeToString(node);
+    } else if (window.ActiveXObject) {
         return node.xml;
     } else {
-        return (new XMLSerializer()).serializeToString(node);
+        throw new Error("Could not serialize XML");
     }
-}
+};
 instance.web.str_to_xml = function(s) {
     if (window.DOMParser) {
         var dp = new DOMParser();

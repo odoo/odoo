@@ -1191,14 +1191,36 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             });
         }
     },
+    view_arch_to_dom_node: function(arch) {
+        // Historic mess for views arch
+        //
+        // server:
+        //      -> got xml as string
+        //      -> parse to xml and manipulate domains and contexts
+        //      -> convert to json
+        //  client:
+        //      -> got view as json
+        //      -> convert back to xml as string
+        //      -> parse it as xml doc (manipulate button@type for IE)
+        //      -> convert back to string
+        //      -> parse it as dom element with jquery
+        //      -> for each widget, convert node to json
+        //
+        // Wow !!!
+        var xml = instance.web.json_node_to_xml(arch);
+
+        var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
+        $('button', doc).each(function() {
+            $(this).attr('data-button-type', $(this).attr('type'));
+        });
+        xml = instance.web.xml_to_str(doc);
+        return $(xml);
+    },
     render_to: function($target) {
         var self = this;
         this.$target = $target;
 
-        // TODO: I know this will save the world and all the kitten for a moment,
-        //       but one day, we will have to get rid of xml2json
-        var xml = instance.web.json_node_to_xml(this.fvg.arch);
-        this.$form = $('<div class="oe_form">' + xml + '</div>');
+        this.$form = this.view_arch_to_dom_node(this.fvg.arch);
 
         this.process_version();
 
@@ -1867,6 +1889,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
+        node.attrs.type = node.attrs['data-button-type'];
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
