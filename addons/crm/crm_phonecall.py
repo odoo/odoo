@@ -256,14 +256,14 @@ class crm_phonecall(base_state, osv.osv):
             'default_name': phonecall.name,
         }
         return res
-    
+
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Phonecall'
-    
+
     def case_reset_send_note(self, cr, uid, ids, context=None):
         message = _('Phonecall has been <b>reset and set as open</b>.')
         return self.message_post(cr, uid, ids, body=message, context=context)
@@ -286,5 +286,9 @@ class crm_phonecall(base_state, osv.osv):
     def _call_set_partner_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Partner has been <b>created</b>."), context=context)
 
+    def action_button_convert2opportunity(self, cr, uid, ids, context=None):
+        #TODO
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

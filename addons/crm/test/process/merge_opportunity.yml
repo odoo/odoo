@@ -1,22 +1,9 @@
 -
-  I make an opportunity from customer.
--
-  !python {model: crm.partner2opportunity}: |
-    context.update({'active_model': 'res.partner', 'active_ids': [ref("base.res_partner_9")]})
-    res_id = self.create(cr, uid, {'name': "Enquête pour l'achat de services"}, context=context)
-    self.make_opportunity(cr, uid, [res_id], context=context)
--
-  I make another opportunity from a phone call with the same customer.
--
-  !python {model: crm.phonecall2opportunity}: |
-    context.update({'active_model': 'crm.phonecall', 'active_ids': [ref("crm.crm_phonecall_6")]})
-    res_id = self.create(cr, uid, {'name': "À propos du prix de votre autre service", 'partner_id': ref("base.res_partner_9")}, context=context)
-    self.make_opportunity(cr, uid, [res_id], context=context)
--
-  Now I merge these opportunities.
+  I merge two opportunities.
 -
   !python {model: crm.lead}: |
-    opportunity_ids = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
+    opportunity_ids = self.search(cr, uid, [('type', '=', 'opportunity'), ('state', 'not in', ['done', 'cancel']), ('partner_id', '=', ref('base.res_partner_2'))], limit=2)
+    assert len(opportunity_ids) == 2, 'There should be two opportunities (got %s instead)' % len(opportunity_ids)
     context.update({'active_model': 'crm.lead', 'active_ids': opportunity_ids, 'active_id': opportunity_ids[0]})
 -
   !record {model: crm.merge.opportunity, id: opportunity_merge_id }:
@@ -27,8 +14,8 @@
   I check for merged opportunities for customer.
 -
   !python {model: crm.lead}: |
-    merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_9"))])
+    merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_2"))])
     assert merge_id, 'Fail to create Merge opportunity'
     merge_data = self.browse(cr, uid, merge_id)[0]
-    assert merge_data.type == 'opportunity', 'Merged opportunity type not change!'
-    assert merge_data.partner_id.id == ref("base.res_partner_9"), 'Partner missmatch!'
+    assert merge_data.type == 'opportunity', 'Merged opportunity type didn\'t change'
+    assert merge_data.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch'

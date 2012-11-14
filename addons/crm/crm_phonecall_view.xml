@@ -39,7 +39,7 @@
         <field name="key2">client_action_multi</field>
     </record>
 
-<!--  Phonecall Categories Form View  -->
+    <!--  Phonecall Categories Form View  -->
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -60,8 +60,7 @@
     <menuitem action="crm_phonecall_categ_action" name="Categories"
         id="menu_crm_case_phonecall-act" parent="menu_crm_config_phonecall" groups="base.group_no_one"/>
 
-<!--  PhoneCalls Tree View -->
-
+    <!--  Phonecalls Tree View -->
     <record model="ir.ui.view" id="crm_case_phone_tree_view">
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
@@ -74,10 +73,10 @@
                     states="open,pending" icon="gtk-redo"
                      name="action_make_meeting" type="object"/>
                 <button string="Convert to Opportunity"
-                    name="%(phonecall2opportunity_act)d"
+                    name="action_button_convert2opportunity"
                     states="open,pending"
                     icon="gtk-index"
-                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
+                    type="object" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
@@ -96,26 +95,25 @@
         </field>
     </record>
 
-<!-- Phonecalls Form View -->
-
+    <!-- Phonecalls Form View -->
     <record model="ir.ui.view" id="crm_case_phone_form_view">
         <field name="name">CRM - Phone Call Form</field>
         <field name="model">crm.phonecall</field>
         <field name="arch" type="xml">
             <form string="Phone Call" version="7.0">
-            <header>
-                <button name="case_close" string="Call Done" type="object" class="oe_highlight"
-                        states="open,pending"/>
-                <button name="case_reset" string="Reset to Todo" type="object"
-                        states="cancel"/>
-                <button name="case_cancel" string="Cancel" type="object"
-                        states="draft,open,pending"/>
-                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
-            </header>
+                <header>
+                    <button name="case_close" string="Call Done" type="object" class="oe_highlight"
+                            states="open,pending"/>
+                    <button name="case_reset" string="Reset to Todo" type="object"
+                            states="cancel"/>
+                    <button name="case_cancel" string="Cancel" type="object"
+                            states="draft,open,pending"/>
+                    <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
+                </header>
                 <sheet string="Phone Call">
-                    <div class="oe_right"> 
+                    <div class="oe_right">
                         <button string="Convert to Opportunity"
-                            name="%(phonecall2opportunity_act)d"
+                            name="action_button_convert2opportunity"
                             type="action"
                             attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state', 'not in', ('open', 'done'))]}"/>
                         <button string="Schedule Other Call"
@@ -133,7 +131,7 @@
                         </div>
                         <h2><field name="partner_phone"/></h2>
                     </div>
-  
+
                     <group col="4">
                         <field name="date"/>
                         <field name="user_id"/>
@@ -158,7 +156,6 @@
     </record>
 
     <!--Logged Phonecalls Tree View -->
-
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
         <field name="name">CRM - Logged Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
@@ -185,7 +182,7 @@
                      icon="gtk-redo"
                      name="action_make_meeting" type="object"/>
                 <button string="Convert to Opportunity"
-                    name="%(phonecall2opportunity_act)d"
+                    name="action_button_convert2opportunity"
                     states="open,pending"
                     icon="gtk-index"
                     type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
@@ -194,7 +191,6 @@
     </record>
 
     <!-- Phonecalls Calendar View -->
-
     <record model="ir.ui.view" id="crm_case_phone_calendar_view">
         <field name="name">CRM - Phone Calls Calendar</field>
         <field name="model">crm.phonecall</field>

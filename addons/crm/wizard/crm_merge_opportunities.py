@@ -21,17 +21,27 @@ from osv import osv, fields
 from tools.translate import _
 
 class crm_merge_opportunity(osv.osv_memory):
-    """Merge two Opportunities"""
+    """
+    Merge two opportunities together.
+    If we're talking about opportunities, it's just because it makes more sense
+    to merge opps than leads, because the leads are more ephemeral objects.
+    But since opportunities are leads, it's also possible to merge leads
+    together (resulting in a new lead), or leads and opps together (resulting
+    in a new opp).
+    """
 
     _name = 'crm.merge.opportunity'
-    _description = 'Merge two Opportunities'
+    _description = 'Merge two opportunities'
+    _columns = {
+        'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
+    }
 
     def action_merge(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
-        record = self.browse(cr, uid, ids[0], context=context)
-        opportunities = record.opportunity_ids
+        wizard = self.browse(cr, uid, ids[0], context=context)
+        opportunities = wizard.opportunity_ids
         #TOFIX: why need to check lead_ids here
         lead_ids = [opportunities[0].id]
         self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
@@ -39,15 +49,15 @@ class crm_merge_opportunity(osv.osv_memory):
         merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunities], context=context)
         return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
 
-    _columns = {
-        'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
-    }
-
     def default_get(self, cr, uid, fields, context=None):
         """
-        This function gets default values
+        Use active_ids from the context to fetch the leads/opps to merge.
+        In order to get merged, these leads/opps have can't be in 'Done' or
+        'Candel' state.
         """
-        record_ids = context and context.get('active_ids', False) or False
+        if context is None:
+            context = {}
+        record_ids = context.get('active_ids', False)
         res = super(crm_merge_opportunity, self).default_get(cr, uid, fields, context=context)
 
         if record_ids:
@@ -60,7 +70,5 @@ class crm_merge_opportunity(osv.osv_memory):
                 res.update({'opportunity_ids': opp_ids})
 
         return res
-
-crm_merge_opportunity()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

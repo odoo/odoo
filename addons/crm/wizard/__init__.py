@@ -23,8 +23,6 @@ import crm_partner_binding
 import crm_phonecall_to_phonecall
 import crm_opportunity_to_phonecall
 import crm_lead_to_opportunity
-import crm_partner_to_opportunity
-import crm_phonecall_to_opportunity
 import crm_merge_opportunities
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
