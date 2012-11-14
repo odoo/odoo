@@ -80,7 +80,6 @@
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="message_blogpost0_comment3" model="mail.message">
@@ -268,7 +267,7 @@ Virginie</p>]]></field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(hours=2, minutes=4)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=4)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
     </data>
 </openerp>

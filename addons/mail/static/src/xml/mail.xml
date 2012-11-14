@@ -137,9 +137,15 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            Email box
+                            <t t-raw="widget.action.name"/>
                         </span>
                     </h2>
+                    <t t-if="widget.action.params.header_description">
+                        <br/>
+                        <span class="oe_view_subtitle_text">
+                            <t t-raw="widget.action.params.header_description"/>
+                        </span>
+                    </t>
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
