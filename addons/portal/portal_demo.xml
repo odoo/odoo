@@ -3,14 +3,14 @@
     <data noupdate="1">
 
         <!-- Create a partner, that is also a portal user -->
-        <record id="partner_demo_portal" model="res.partner">
+        <record id="demo_user0" model="res.partner">
             <field name="name">Demo Portal User</field>
             <field name="email">demo@portal.example.com</field>
             <field name="supplier" eval="False"/>
             <field name="customer" eval="True"/>
         </record>
         <record id="user_demo_portal" model="res.users">
-            <field name="partner_id" ref="partner_demo_portal"/>
+            <field name="partner_id" ref="demo_user0"/>
             <field name="login">portal</field>
             <field name="password">portal</field>
             <field name="signature">--
@@ -44,7 +44,7 @@ Mr Demo Portal</field>
             <field name="parent_id" ref="message_company_news0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
-            <field name="author_id" ref="partner_demo_portal"/>
+            <field name="author_id" ref="demo_user0"/>
         </record>
 
         <record id="message_company_news0_comment1" model="mail.message">
