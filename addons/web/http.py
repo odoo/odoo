@@ -227,6 +227,10 @@ class JsonRequest(WebRequest):
             _logger.debug("<--\n%s", pprint.pformat(response))
 
         if jsonp:
+            # If we use jsonp, that's mean we are called from another host
+            # Some browser (IE and Safari) do no allow third party cookies
+            # We need then to manage http sessions manually.
+            response['httpsessionid'] = self.httpsession.sid
             mime = 'application/javascript'
             body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
         else:
@@ -364,6 +368,9 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
         STORES[storage_path] = session_store, session_lock
 
     sid = request.cookies.get(session_cookie)
+    if not sid:
+        sid = request.args.get('sid')
+
     with session_lock:
         if sid:
             request.session = session_store.get(sid)

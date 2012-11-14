@@ -1309,8 +1309,17 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         // extracted from payload to set on the url
         var data = {
             session_id: this.session_id,
-            id: payload.id
+            id: payload.id,
+            sid: this.httpsessionid,
         };
+        
+        var set_sid = function (response, textStatus, jqXHR) {
+            // If response give us the http session id, we store it for next requests...
+            if (response.httpsessionid) {
+                self.httpsessionid = response.httpsessionid;
+            }
+        };
+
         url.url = this.get_url(url.url);
         var ajax = _.extend({
             type: "GET",
@@ -1326,7 +1335,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         if(payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
-            return $.ajax(ajax);
+            return $.ajax(ajax).done(set_sid);
         } else {
             // Indirect jsonp request
             var ifid = _.uniqueId('oe_rpc_iframe');
@@ -1364,7 +1373,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
-            return deferred;
+            return deferred.done(set_sid);
         }
     },
     get_url: function (file) {
