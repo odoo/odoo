@@ -105,7 +105,7 @@
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <form string="Module" version="7.0">
+                <form create="0" edit="0" string="Module" version="7.0">
                 <sheet>
                     <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
                     <div class="oe_title">
@@ -172,6 +172,7 @@
                     <field name="author"/>
                     <field name="installed_version"/>
                     <field name="state"/>
+                    <field name="category_id" invisible="1"/>
                 </tree>
             </field>
         </record>

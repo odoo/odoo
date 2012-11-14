@@ -122,7 +122,6 @@ class res_users(osv.osv):
     }
     _name = "res.users"
     _description = 'Users'
-    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -257,8 +256,9 @@ class res_users(osv.osv):
             - else: the default view is overrided and redirected to the partner
               view
         """
-        if not view_id and view_type == 'form':
-            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
+        #made a lot of views crash because methods of open chatter are not available on users
+        #if not view_id and view_type == 'form':
+        #    return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
     # User can write on a few of his own fields (but not his groups for example)
@@ -484,6 +484,13 @@ class res_users(osv.osv):
         return {
             'type': 'ir.actions.client',
             'tag': 'reload',
+        }
+
+    def preference_change_password(self, cr, uid, ids, context=None):
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'change_password',
+            'target': 'new',
         }
 
     def has_group(self, cr, uid, group_ext_id):

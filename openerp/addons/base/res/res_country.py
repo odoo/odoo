@@ -47,7 +47,7 @@ class Country(osv.osv):
             help='The full name of the country.', required=True, translate=True),
         'code': fields.char('Country Code', size=2,
             help='The ISO country code in two chars.\n'
-            'You can use this field for quick search.', required=True),
+            'You can use this field for quick search.'),
         'address_format': fields.text('Address Format', help="""You can state here the usual format to use for the \
 addresses belonging to this country.\n\nYou can use the python-style string patern with all the field of the address \
 (for example, use '%(street)s' to display the field 'street') plus

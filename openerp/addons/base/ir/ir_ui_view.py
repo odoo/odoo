@@ -300,7 +300,7 @@ class view_sc(osv.osv):
 
     _order = 'sequence,name'
     _defaults = {
-        'resource': lambda *a: 'ir.ui.menu',
+        'resource': 'ir.ui.menu',
         'user_id': lambda obj, cr, uid, context: uid,
     }
     _sql_constraints = [

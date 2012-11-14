@@ -155,7 +155,7 @@ class res_partner_bank(osv.osv):
             cursor, user, 'country_id', context=context),
         'state_id': lambda obj, cursor, user, context: obj._default_value(
             cursor, user, 'state_id', context=context),
-        'name': lambda *args: '/'
+        'name': '/'
     }
 
     def fields_get(self, cr, uid, fields=None, context=None):

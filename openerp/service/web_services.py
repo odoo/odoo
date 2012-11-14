@@ -152,13 +152,13 @@ class db(netsvc.ExportService):
 
         self.actions[id] = {'clean': False}
 
-        _logger.info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('Create database `%s`.', db_name)
         self._create_empty_database(db_name)
         _initialize_db(self, id, db_name, demo, lang, user_password)
         return True
 
     def exp_duplicate_database(self, db_original_name, db_name):
-        _logger.info('Duplicate database %s', db_name.lower())
+        _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
         db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:

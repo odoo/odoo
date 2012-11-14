@@ -34,7 +34,6 @@ import openerp.netsvc
 import openerp.osv
 import openerp.tools
 import openerp.service.wsgi_server
-import openerp.service.workers
 
 #.apidoc title: RPC Services
 
@@ -119,6 +118,7 @@ def stop_services():
     openerp.modules.registry.RegistryManager.delete_all()
 
 def start_services_workers():
+    import openerp.service.workers
     openerp.multi_process = True # Nah!
 
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()

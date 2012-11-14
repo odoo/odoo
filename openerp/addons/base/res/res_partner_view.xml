@@ -147,7 +147,7 @@
 
                     <group>
                         <group>
-                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}" invisible="1"/>
+                            <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
                             <div attrs="{'invisible': [('parent_id','=', False)]}" invisible="1" name="div_type">
                                 <field class="oe_inline"
                                     name="type"/>
@@ -162,7 +162,7 @@
                                 <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}' on_change="onchange_state(state_id)"/>
                                     <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                 </div>
                                 <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>

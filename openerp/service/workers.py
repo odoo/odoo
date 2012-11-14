@@ -3,20 +3,17 @@
 # TODO rename class: Multicorn -> Arbiter ?
 #-----------------------------------------------------------
 import errno
-try:
-    import fcntl
-except ImportError:
-    fcntl = None
+import fcntl
+import logging
+import os
 import psutil
 import random
 import resource
 import select
-import socket
-import time
-import logging
-import os
 import signal
+import socket
 import sys
+import time
 
 import werkzeug.serving
 

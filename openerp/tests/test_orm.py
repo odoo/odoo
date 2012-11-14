@@ -1,10 +1,82 @@
-import unittest2
-
-import openerp
+from openerp import exceptions
+from openerp.tools import mute_logger
 import common
 
 UID = common.ADMIN_USER_ID
 DB = common.DB
+
+
+class TestORM(common.TransactionCase):
+    """ test special behaviors of ORM CRUD functions
+    
+        TODO: use real Exceptions types instead of Exception """
+
+    def setUp(self):
+        super(TestORM, self).setUp()
+        cr, uid = self.cr, self.uid
+        self.partner = self.registry('res.partner')
+        self.users = self.registry('res.users')
+        self.p1 = self.partner.name_create(cr, uid, 'W')[0]
+        self.p2 = self.partner.name_create(cr, uid, 'Y')[0]
+        self.ir_rule = self.registry('ir.rule')
+
+        # sample unprivileged user
+        employee_gid = self.ref('base.group_user')
+        self.uid2 = self.users.create(cr, uid, {'name': 'test user', 'login': 'test', 'groups_id': [4,employee_gid]})
+
+    @mute_logger('openerp.osv.orm')
+    def testAccessDeletedRecords(self):
+        """ Verify that accessing deleted records works as expected """
+        cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
+        self.partner.unlink(cr, uid, [p1])
+
+        # read() is expected to skip deleted records because our API is not
+        # transactional for a sequence of search()->read() performed from the
+        # client-side... a concurrent deletion could therefore cause spurious
+        # exceptions even when simply opening a list view!
+        # /!\ Using unprileged user to detect former side effects of ir.rules!
+        self.assertEqual([{'id': p2, 'name': 'Y'}], self.partner.read(cr, uid2, [p1,p2], ['name']), "read() should skip deleted records")
+        self.assertEqual([], self.partner.read(cr, uid2, [p1], ['name']), "read() should skip deleted records")
+
+        # Deleting an already deleted record should be simply ignored
+        self.assertTrue(self.partner.unlink(cr, uid, [p1]), "Re-deleting should be a no-op")
+
+        # Updating an already deleted record should raise, even as admin
+        with self.assertRaises(Exception):
+            self.partner.write(cr, uid, [p1], {'name': 'foo'})
+
+    @mute_logger('openerp.osv.orm')
+    def testAccessFilteredRecords(self):
+        """ Verify that accessing filtered records works as expected for non-admin user """
+        cr, uid, uid2, p1, p2 = self.cr, self.uid, self.uid2, self.p1, self.p2
+        partner_model = self.registry('ir.model').search(cr, uid, [('model','=','res.partner')])[0]
+        self.ir_rule.create(cr, uid, {'name': 'Y is invisible',
+                                      'domain_force': [('id', '!=', p1)],
+                                      'model_id': partner_model})
+        # search as unprivileged user
+        partners = self.partner.search(cr, uid2, [])
+        self.assertFalse(p1 in partners, "W should not be visible...")
+        self.assertTrue(p2 in partners, "... but Y should be visible")
+
+        # read as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.read(cr, uid2, [p1], ['name'])
+        # write as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.write(cr, uid2, [p1], {'name': 'foo'})
+        # unlink as unprivileged user
+        with self.assertRaises(Exception):
+            self.partner.unlink(cr, uid2, [p1])
+
+        # Prepare mixed case 
+        self.partner.unlink(cr, uid, [p2])
+        # read mixed records: some deleted and some filtered
+        with self.assertRaises(Exception):
+            self.partner.read(cr, uid2, [p1,p2], ['name'])
+        # delete mixed records: some deleted and some filtered
+        with self.assertRaises(Exception):
+            self.partner.unlink(cr, uid2, [p1,p2])
+
 
 class TestInherits(common.TransactionCase):
     """ test the behavior of the orm for models that use _inherits;
