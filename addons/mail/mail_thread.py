@@ -758,7 +758,7 @@ class mail_thread(osv.AbstractModel):
                 partner_ids.append((4, parent_message.author_id.id))
 
         message_type = kwargs.pop('type', 'comment')
-        message_subtype = kwargs.pop('type', 'mail.mt_comment')
+        message_subtype = kwargs.pop('subtype', 'mail.mt_comment')
 
         # 2. Post message
         new_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=message_type,
