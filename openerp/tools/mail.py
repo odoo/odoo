@@ -121,17 +121,20 @@ def html_email_clean(html):
             be present in the html string. This method therefore takes as input
             html code coming from a sanitized source, like fields.html.
     """
+    def _replace_matching_regex(regex, source, replace=''):
+        dest = ''
+        idx = 0
+        for item in re.finditer(regex, source):
+            dest += source[idx:item.start()] + replace
+            idx = item.end()
+        dest += source[idx:]
+        return dest
+
     html = ustr(html)
-    modified_html = ''
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
     br_tags = re.compile(r'([<]\s*br\s*\/?[>])')
-    idx = 0
-    for item in re.finditer(br_tags, html):
-        modified_html += html[idx:item.start()] + '__BR_TAG__'
-        idx = item.end()
-    modified_html += html[idx:]
-    html = modified_html
+    html = _replace_matching_regex(br_tags, html, '__BR_TAG__')
     # TDE note: seems to have lots of <div><br></div> in emails... needs to be checks, could be cleaned
 
     # 2. form a tree, handle (currently ?) pure-text by enclosing them in a pre
@@ -145,14 +148,7 @@ def html_email_clean(html):
     for node in root.getiterator():
         if not node.text:
             continue
-        idx = 0
-        text = ''
-        for item in re.finditer(quote_tags, node.text):
-            print item
-            text += node.text[idx:item.start()]
-            idx = item.end()
-        text += node.text[idx:]
-        node.text = text
+        node.text = _replace_matching_regex(quote_tags, node.text)
 
     # 3. remove blockquotes
     quotes = [el for el in root.getiterator(tag='blockquote')]
@@ -182,14 +178,8 @@ def html_email_clean(html):
 
     # 6. Misc cleaning :
     # - ClEditor seems to love using <div><br /><div> -> replace with <br />
-    modified_html = ''
     br_div_tags = re.compile(r'(<div>\s*<br\s*\/>\s*<\/div>)')
-    idx = 0
-    for item in re.finditer(br_div_tags, html):
-        modified_html += html[idx:item.start()] + '<br />'
-        idx = item.end()
-    modified_html += html[idx:]
-    html = modified_html
+    html = _replace_matching_regex(br_div_tags, html, '<br />')
 
     return html
 
