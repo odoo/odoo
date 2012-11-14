@@ -1106,7 +1106,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            if(state.action_id === undefined && state.menu_id) {
+            if(state.action === undefined && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
                         self.menu.menu_click(state.menu_id)
