@@ -133,7 +133,7 @@ class mail_group(osv.Model):
                 'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id},
                 'res_model': 'mail.message',
                 'thread_level': 1,
-                'header_description': vals['description'],
+                'header_description': vals.get('description'),
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
