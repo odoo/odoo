@@ -61,11 +61,7 @@
 
                     <group string="Assign opportunities to" attrs="{'invisible': [('name', '=', '')]}">
                         <field name="section_id"/>
-                        <field name="user_ids" colspan="4">
-                            <tree>
-                                <field name="name"/>
-                            </tree>
-                        </field>
+                        <field name="user_ids" widget="many2many_tags"/>
                     </group>
 
                     <footer>
