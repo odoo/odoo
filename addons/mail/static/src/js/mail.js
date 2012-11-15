@@ -598,16 +598,15 @@ openerp.mail = function (session) {
                         this.parent_thread.context
                     ]).done(function (record) {
                         var thread = self.parent_thread;
-
                         if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                            thread = thread.parent_message.parent_thread;
+                            var hread = thread.parent_message.parent_thread;
                         }
+                        var root = thread == self.options.root_thread;
                         // create object and attach to the thread object
                         thread.message_fetch([['id', 'child_of', [self.id]]], false, [record], function (arg, data) {
-                            data[0].no_sorted = true;
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
-                            thread.insert_message( message, self.$el );
+                            thread.insert_message( message, root ? undefined : self.$el, root );
                             if (thread.parent_message) {
                                 self.$el.remove();
                                 self.parent_thread.compose_message = null;
@@ -1272,7 +1271,7 @@ openerp.mail = function (session) {
          * The sort is define by the thread_level (O for newer on top).
          * @param : {object} ThreadMessage object
          */
-        insert_message: function (message, dom_insert_after) {
+        insert_message: function (message, dom_insert_after, prepend) {
             var self=this;
             if (this.options.show_compact_message > this.thread_level) {
                 this.instantiate_compose_message();
@@ -1284,6 +1283,8 @@ openerp.mail = function (session) {
 
             if (dom_insert_after) {
                 message.insertAfter(dom_insert_after);
+            }if (prepend) {
+                message.prependTo(self.$el);
             } else {
                 message.appendTo(self.$el);
             }
