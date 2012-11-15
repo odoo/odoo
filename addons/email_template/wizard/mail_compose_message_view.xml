@@ -14,12 +14,11 @@
                     </xpath>
                     <xpath expr="//footer" position="inside">
                         <group class="oe_right" col="1">
-                            <div>Use template
+                            <div attrs="{'invisible':[('use_template','=',False)]}">Use template
                                 <field name="template_id" attrs="{'invisible':[('use_template','=',False)]}"
                                     nolabel="1"
                                     on_change="onchange_template_id(use_template, template_id, composition_mode, model, res_id, context)"/>
                             </div>
-                            or
                             <button icon="/email_template/static/src/img/email_template_save.png"
                                 type="object" name="save_as_template" string="Save as new template" class="oe_link"
                                 help="Save as a new template"
