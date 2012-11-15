@@ -25,6 +25,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     dialog_stop: function () {
         if (this.dialog) {
             this.dialog.destroy();
+            this.dialog = null;
         }
     },
     /**
@@ -310,15 +311,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            if (this.dialog_widget && ! this.dialog_widget.isDestroyed())
+            if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
-            if (this.dialog === null || this.dialog.isDestroyed()) {
-                this.dialog = new instance.web.Dialog(this, {
-                    dialogClass: executor.klass,
-                });
-                this.dialog.on("closing", null, options.on_close);
-                this.dialog.init_dialog();
             }
+            this.dialog_stop();
+            this.dialog = new instance.web.Dialog(this, {
+                dialogClass: executor.klass,
+            });
+            this.dialog.on("closing", null, options.on_close);
+            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
