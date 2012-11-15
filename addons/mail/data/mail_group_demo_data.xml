@@ -78,7 +78,7 @@
         <!-- Pushed to all employees -->
         <record id="msg_empl_1" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="res_id" ref="mail.group_leasing"/>
             <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at the HR's office.</p>]]></field>
             <field name="type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
@@ -86,7 +86,7 @@
         </record>
         <record id="msg_empl_1_1" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
+            <field name="res_id" ref="group_leasing"/>
             <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
             <field name="parent_id" ref="msg_empl_1"/>
             <field name="type">comment</field>
@@ -95,7 +95,7 @@
         </record>
         <record id="msg_empl_1_2" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
+            <field name="res_id" ref="group_leasing"/>
             <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
             <field name="parent_id" ref="msg_empl_1"/>
             <field name="type">comment</field>
@@ -104,13 +104,93 @@
         </record>
         <record id="msg_empl_1_3" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
+            <field name="res_id" ref="group_leasing"/>
             <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
             <field name="parent_id" ref="msg_empl_1"/>
             <field name="type">comment</field>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
+
+        <record id="msg_group_1_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_board"/>
+            <field name="body"><![CDATA[
+<p>
+    Dear Board Members,
+</p>
+<p>
+    The main events of the month of october are:
+</p>
+<p>
+  <b>Sales:</b>
+</p>
+<ul>
+    <li>La prise de commande est de respectivement à 442K€ pour la Belgique (66% du budget) et 104K$ pour les US (75% du budget). Malgré, ces chiffres en dessous des prévisions initiales, La croissance sur le mois d’octobre a été de 51% par rapport à l’année dernière.</li>
+    <li>Le mois de septembre ayant été supérieur à nos prévisions, le résultat cumulé depuis le début de l’année toute entité confondue n’est que 20K€ en dessous de nos prévisions établies au board de début septembre.</li>
+    <li>La prévision de fin d’année toute entité confondue se monte à 6749K€ soit 76% de croissance et 87% du budget.</li>
+    <li>Le recrutement de nouveaux partenaires a été très actif surtout en Belgique avec 30 nouveaux partenaires recrutés de mois ci.</li>
+</ul>
+<p>
+    <b>Finance :</b>
+</p>
+<ul>
+    <li>Le compte de résultat a été  pénalisé ce mois ci par des revenus en dessous et des coûts supérieurs au budget.  Le dépassement des coûts s’explique principalement par le recalcul des provisions pour pécule de vacances 50K€.</li>
+    <li>Du fait du paiement des subsides, le niveau de cash a augmenté de 300K€ se portant à 963 K€ sans inclure le straight loan de 350 K€.</li>
+    <li>La balance âgée est restée au même niveau que le mois dernier avec une très légère dégradation du DSO. Nous avions dédié une personne au recouvrement des factures. Cette personne s’occupe notamment des relances téléphoniques à 30 jours et nous devrions avoir une amélioration du DSO en Novembre. Le montant des factures à très haut risque dans la balance âgée est d’environ 100K€.</li>
+</ul>
+<p>
+    <b>Partenaire et clients:</b>
+</p>
+<ul>
+    <li>Le nombre de partenaire est de 429 partenaires</li>
+    <li>Le nombre d’installation est remonté à 37K installations contre 33K au mois de septembre mais nous n’avons pas encore atteint les niveaux les plus haut de l’année (44K en mars et mai)</li>
+    <li>Nous avons passé la barre des 10000 clients en production avec 10271 clients à fin Octobre.  Le taux de client payant est à 6,6% avec  471 clients sous la formule on-premise et 191 sur la formule ne ligne.</li>
+</ul>
+<p>
+    <b>Lancement de la nouvelle version :</b>
+</p>
+<p>
+    Nous sommes dans la phase active du lancement de la nouvelle release
+</p>
+<ul>
+    <li>Une release note sera publiée cette semaine</li>
+    <li>L’ensemble de l’équipe commerciale sera formée sur la nouvelle version ce vendredi</li>
+    <li>Nous faisons l'annonce officielle sur le lancement de la V7 auprès de nos partenaires le 21 novembre afin de leur présenter : les nouvelles fonctionnalités, la stratégie de distribution, le nouveau pricing, le plan de lancement et communication.</li>
+</ul>
+<br/>
+<p>
+Nicolas, can you setup a conf call for our meeting of friday ?
+</p>
+<p>
+    Regards.
+</p>
+]]></field>
+            <field name="type">comment</field>
+            <field name="parent_id" ref="msg_group_1_2"/>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <record id="msg_whole_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="body"><![CDATA[
+<p>
+    Great news.
+    <br/>
+    Our company has received the Deloitte Fast 50 award.  We are the fastest
+    growing company of the country, with a growth of 1549% over the past 5
+    years. You can get more information <a href="http://www.openerp.com/node/1244/2012/10">on our blog</a>.
+</p>
+]]></field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
 
     </data>
 </openerp>
