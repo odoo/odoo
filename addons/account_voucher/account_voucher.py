@@ -383,8 +383,9 @@ class account_voucher(osv.osv):
             total_tax = 0.0
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount', 0.0)
+                for line in voucher.line_ids:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
                 for line in voucher.line_ids:
@@ -415,31 +416,31 @@ class account_voucher(osv.osv):
 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
+        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
+
+            if tax_id:
+                tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
+                if partner_id:
+                    partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    tax = tax_pool.browse(cr, uid, taxes, context=context)
+
+                if not tax[0].price_include:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line_amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount')
+
             voucher_total += line_amount
-
-        total = voucher_total
-        total_tax = 0.0
-        if tax_id:
-            tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
-            if partner_id:
-                partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-                tax = tax_pool.browse(cr, uid, taxes, context=context)
-
-            if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount')
-                total += total_tax
+        total = voucher_total + total_tax
 
         res.update({
-            'amount':total or voucher_total,
-            'tax_amount':total_tax
+            'amount': total or voucher_total,
+            'tax_amount': total_tax
         })
         return {
-            'value':res
+            'value': res
         }
 
     def onchange_term_id(self, cr, uid, ids, term_id, amount):

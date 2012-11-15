@@ -346,8 +346,13 @@ class audittrail_objects_proxy(object_proxy):
                         x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
                         assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
                         x2m_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, x2m_model_id)
-                        #recursive call on x2m fields that need to be checked too
-                        data.update(self.get_data(cr, SUPERUSER_ID, pool, resource[field], x2m_model, method))
+                        field_resource_ids = list(set(resource[field]))
+                        if model.model == x2m_model.model:
+                            # we need to remove current resource_id from the many2many to prevent an infinit loop
+                            if resource_id in field_resource_ids:
+                                field_resource_ids.remove(resource_id)
+                        data.update(self.get_data(cr, SUPERUSER_ID, pool, field_resource_ids, x2m_model, method))
+    
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
@@ -408,6 +413,10 @@ class audittrail_objects_proxy(object_proxy):
                     x2m_new_values_ids = new_values.get(key, {'value': {}})['value'].get(field_name, [])
                     # We use list(set(...)) to remove duplicates.
                     res_ids = list(set(x2m_old_values_ids + x2m_new_values_ids))
+                    if model.model == x2m_model.model:
+                        # we need to remove current resource_id from the many2many to prevent an infinit loop
+                        if resource_id in res_ids:
+                            res_ids.remove(resource_id)
                     for res_id in res_ids:
                         lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
             # if the value value is different than the old value: record the change
