@@ -54,7 +54,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     },
     add: function (sc) {
         var self = this;
-        this.dataset.create(sc, function (out) {
+        this.dataset.create(sc).then(function(out){
             self.trigger('display', {
                 name : sc.name,
                 id : out.result,
