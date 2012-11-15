@@ -43,7 +43,6 @@ import pooler
 from tools.translate import _
 from service import security
 import logging
-import pdb
 
 magic_md5 = '$1$'
 _logger = logging.getLogger(__name__)
@@ -184,8 +183,7 @@ class users(osv.osv):
         cr = None
         try:
             cr = pooler.get_db(db).cursor()
-            test = self._login(cr, db, login, password)
-            return test
+            return self._login(cr, db, login, password)
         except Exception:
             _logger.exception('Cannot authenticate.')
             return Exception('Access denied.')
@@ -202,23 +200,6 @@ class users(osv.osv):
         else:
             # Return early if no one has a login name like that.
             return False
-
-        cr.execute('SELECT id FROM ir_module_module WHERE name = \'auth_openid\' and state = \'installed\'')
-        if cr.rowcount:
-            cr.execute( 'SELECT password, id FROM res_users WHERE login=%s AND openid_key = %s AND active',
-            (login.encode('utf-8'),password.encode('utf-8')))
-            if cr.rowcount:
-                # Check if the encrypted password matches against the one in the db.
-                cr.execute("""UPDATE res_users
-                                SET login_date=now() AT TIME ZONE 'UTC'
-                                WHERE id=%s AND openid_key=%s AND active
-                                RETURNING id""", 
-                           (int(id), password.encode('utf-8')))
-                res = cr.fetchone()
-                cr.commit()
-            
-                if res:
-                    return res[0]
 
         stored_pw = self.maybe_encrypt(cr, stored_pw, id)
 
@@ -252,6 +233,7 @@ class users(osv.osv):
         if not passwd:
             # empty passwords disallowed for obvious security reasons
             raise security.ExceptionNoTb('AccessDenied')
+
         # Get a chance to hash all passwords in db before using the uid_cache.
         obj = pooler.get_pool(db).get('res.users')
         if not hasattr(obj, "_salt_cache"):
