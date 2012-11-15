@@ -30,13 +30,13 @@ from tools.translate import _
 class followup(osv.osv):
     _name = 'account_followup.followup'
     _description = 'Account Follow-up'
-    #_rec_name = 'company_id'
+    _rec_name = 'name'
     _columns = {
-        'name': fields.char('Name', size=64, required=True), 
-        
-        'description': fields.text('Description'),
+        #'name': fields.char('Name', size=64, required=True),         
+        #'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
         'company_id': fields.many2one('res.company', 'Company', required=True),   
+        'name': fields.related('company_id', 'name', string = "Name"),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
@@ -297,8 +297,8 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, ids, context):
             res[partner.id] = 0.0
             for aml in partner.accountmoveline_ids:
-                if ((not aml.date_maturity) and (aml.date <= fields.date.context_today(cr, uid, context))) or (aml.date_maturity <= fields.date.context_today(cr, uid, context)):
-                     res[partner.id] = res[partner.id] + aml.debit - aml.credit  #or by using function field
+                #if ((not aml.date_maturity) and (aml.date <= fields.date.context_today(cr, uid, context))) or (aml.date_maturity <= fields.date.context_today(cr, uid, context)):
+                res[partner.id] = res[partner.id] + aml.debit - aml.credit  #or by using function field
         return res
     
 
@@ -333,7 +333,6 @@ class res_partner(osv.osv):
         # If not defined by latest level, it will the default template if it can find it
         mtp = self.pool.get('email.template')
         for partner in self.browse(cr, uid, partner_ids, context):
-            
             if partner.latest_followup_level_id_without_lit and partner.latest_followup_level_id_without_lit.send_email and partner.latest_followup_level_id_without_lit.email_template_id.id != False :                
                 mtp.send_mail(cr, uid, partner.latest_followup_level_id_without_lit.email_template_id.id, partner.id, context=context)
             else :
@@ -370,12 +369,28 @@ class res_partner(osv.osv):
                 partnerlist.append(aml.partner_id.id)
         return partnerlist
     
-    def _get_other_aml_storeids(self, cr, uid, ids, context=None):
-        partnerlist = []
-        for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context):
-            if aml.partner_id not in partnerlist: 
-                partnerlist.append(aml.partner_id.id)
-        return partnerlist
+    
+    def _search_amount(self, cr, uid, obj, name, args, context):
+        ids = set()
+        for cond in args:
+            amount = cond[2]
+            if isinstance(cond[2],(list,tuple)):
+                if cond[1] in ['in','not in']:
+                    amount = tuple(cond[2])
+                else:
+                    continue
+            else:
+                if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
+                    continue
+
+            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]),(amount,))
+            res_ids = set(id[0] for id in cr.fetchall())
+            ids = ids and (ids & res_ids) or res_ids
+        if ids:
+            return [('id', 'in', tuple(ids))]
+        return [('id', '=', '0')]
+
+
 
     _inherit = "res.partner"
     _columns = {
@@ -406,7 +421,9 @@ class res_partner(osv.osv):
                                                  string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
                                                  store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}),
         'payment_amount_overdue':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", 
-                                                 help="Amount Overdue: The amount the customer should already have paid"),
+                                                 help="Amount Overdue: The amount the customer should already have paid",
+                                                 store={'account.move.line': (_get_aml_storeids, ['debit', 'credit'], 10)}, 
+                                                 ),
     }
     
 res_partner()

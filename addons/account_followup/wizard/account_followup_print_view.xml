@@ -8,16 +8,20 @@
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
                 <group col="4">
-                    <field name="followup_id"/>
-                    <field name="date"/>
+                    <field name="followup_id" groups="base.group_multi_company"/>
+                    <field name="date" groups="base.group_no_one"/>
                 </group>
+                <p class = "oe_grey">
+                	And again some explanation why this is the greatest wizard of Oz ever. 
+                </p>
                 <footer>
-                    <button name="do_process" string="Process" type="object" class="oe_highlight"/>
+                	
+                    <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
                 </footer>
             </form>
-            </field>
+           </field>
         </record>
 
         <record id="action_account_followup_print" model="ir.actions.act_window">
@@ -30,7 +34,7 @@
 
         <menuitem action="action_account_followup_print"
                   id="account_followup_print_menu"
-                  parent="account.menu_finance_periodical_processing_billing"
+                  parent="menu_finance_followup"
                   sequence="10"/>
 
         <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
@@ -63,25 +67,22 @@
             </field>
            </record>
 
-           <!--<record id="view_account_followup_print_all" model="ir.ui.view">
-            <field name="name">account.followup.print.all.form</field>
-            <field name="model">account.followup.print.all</field>
+           <record id="view_account_followup_sending_results" model="ir.ui.view">
+            <field name="name">account.followup.sending.results.form</field>
+            <field name="model">account.followup.sending.results</field>
             <field name="arch" type="xml">
-            <form string="Send Follow-Ups" version="7.0">
+            <form string="Results of the sending committee" version="7.0">
                 <header>
-                    <button name="do_mail" string="Send Mails" type="object" class="oe_highlight"/>
-                    <button name="do_print" string="Print Follow Ups" type="object" class="oe_highlight"/>
-
-                    <button name="do_process" string="Process" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    <field name="description"/>
                 </header>
-                <field name="partner_ids" context="{'search_default_balance_positive': 1}" domain="[('company_id','=',context.get('company_id',False))]"/>                              
+                <footer>
+                	<button name="do_report" string="Download report here" type="object" class="oe_highlight"/>
+                </footer>
             </form>
             </field>
         </record>
 
-           <record id="view_account_followup_print_all_msg" model="ir.ui.view">
+           <!--<record id="view_account_followup_print_all_msg" model="ir.ui.view">
             <field name="name">account.followup.print.all.msg.form</field>
             <field name="model">account.followup.print.all</field>
             <field name="arch" type="xml">

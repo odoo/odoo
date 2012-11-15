@@ -8,8 +8,10 @@
                 <tree string="Follow-up Steps" >
                     <field name="name"/>
                     <field name="delay"/>
+                    <field name="send_email"/>
+                    <field name="send_letter"/>
+                    <field name="manual_action"/>
                     <!--<field name="start"/>-->
-
                 </tree>
             </field>
         </record>
@@ -20,45 +22,45 @@
             <field name="arch" type="xml">
                 <form string="Follow-up Steps" version="7.0">
                                          
-                       	<field name="name"/>
-                       	<group>
-                       	<label for="delay"/>
+                       	<h1><field name="name"/></h1>        
+                       	<group>               
                        	<div class="oe_inline">
-                        <field name="delay" style="width: 25%%"/>
+                        After <field name="delay" style="width: 15%%" nolabel="1"/> days, do the following actions: 
+                                 	</div>
+                        </group> 
+                        <group>
+                         <field name="send_letter"/>
+                        <field name="manual_action"/>
+                        <field name="send_email"/>
                         <!--<field name="start" style="width: 25%%"/>--> 
-                       	</div> 
                        	</group>
                        	<div class="oe_grey">
                        		<label string="When the wizard for processing the follow-ups is run, for every partner the most overdue invoice (without litigation) is checked.  If the amount of days overdue is greater or equal than the amount of days specified above
                        			and the actions of the previous follow-up level were done, then the actions checked below will be executed.  "/>
                        	</div>
-                    <separator string="Processing actions"/>
-                    <group>
-                      <group>
-                       <field name="send_letter"/>
-                       <field name="manual_action"/>
-                       <field name="manual_action_note" attrs="{'invisible': [('manual_action', '=', False)]}"/>
+                    
+                      <group string="Manual Action" attrs="{'invisible': [('manual_action', '=', False)]}">
+                       
+                       <field name="manual_action_note" attrs="{'invisible': [('manual_action', '=', False)]}" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
                        <field name="manual_action_responsible_id" attrs="{'invisible': [('manual_action', '=', False)]}"/>
                       </group>
-                      <group>
-                       <field name="send_email"/>
-                      </group>
-                    </group>
-                    <separator string="Message"/>
-                    <group col="4">
-                    <field name="description"  attrs="{'invisible': [('send_letter', '=', False)]}" colspan="2"/>
-                   <group> 
-                    <field name="email_template_id" attrs="{'invisible': [('send_email', '=', False)]}" on_change="on_change_template(email_template_id)"/>
-                    <field name="email_body" attrs="{'invisible': [('send_email', '=', False)]}" colspan="2"/>
-                   </group> 
-                    </group>
-                    <separator string="Legend"/>
-                    <group attrs="{'invisible': [('send_letter', '=', False)]}">
-                        <label string="%%(partner_name)s: Partner Name"/>
+                     
+      
+                    <group col="2">
+                    <group string="Send Letter" attrs="{'invisible': [('send_letter', '=', False)]}" colspan="2">
+                     <field name="description" nolabel="1" />
+                      
+                    	<label string="%%(partner_name)s: Partner Name"/>
                         <label string="%%(date)s: Current Date"/>
                         <label string="%%(user_signature)s: User Name"/>
                         <label string="%%(company_name)s: User's Company Name"/>
-                    </group>
+                       
+                   </group>
+                   <group string="Email" attrs="{'invisible': [('send_email', '=', False)]}" > 
+                    <field name="email_template_id" attrs="{'invisible': [('send_email', '=', False)]}" nolabel="1" on_change="on_change_template(email_template_id)"/>
+                    <field name="email_body" attrs="{'invisible': [('send_email', '=', False)]}" colspan="2" nolabel="1"/>
+                   </group>
+                   </group>
                 </form>
             </field>
         </record>
@@ -66,15 +68,17 @@
         <record id="view_account_followup_followup_form" model="ir.ui.view">
             <field name="name">account_followup.followup.form</field>
             <field name="model">account_followup.followup</field>
+           <!-- <field name="group_ids" groups="base.group_multi_company"/>--> 
             <field name="arch" type="xml">
-                <form string="Follow-up" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                    </group>
-                    <group>
-                    <field name="followup_line"/>
-                    </group>
+                <form string="Follow-up" version="7.0">                    
+                        <!-- <field name="name"/> -->
+                        
+                    
+                    
+                    <h1><field name="company_id" widget="selection" class="oe_inline"/> Follow-up </h1><!--groups="base.group_multi_company"-->
+                    <p class="oe_grey">Here we define the different follow-up levels for the company. 
+                    	 Every level defines actions that need to be taken after a certain amount of days after the due date of an invoice</p>
+                    <field name="followup_line"/>                    
                 </form>
             </field>
         </record>
@@ -84,8 +88,8 @@
             <field name="model">account_followup.followup</field>
             <field name="arch" type="xml">
                 <tree string="Follow-up">
-                    <field name="name"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
+                    <!--<field name="name"/>-->
+                    <field name="company_id" /> <!--groups="base.group_multi_company"-->
                 </tree>
             </field>
         </record>
@@ -95,8 +99,9 @@
             <field name="model">account_followup.followup</field>
             <field name="arch" type="xml">
                 <search string="Search Follow-up">
-                    <field name="name" string="Follow-up"/>
+                    <!-- <field name="name" string="Follow-up"/> -->
                     <field name="company_id" groups="base.group_multi_company"/>
+                    
                 </search>
             </field>
         </record>
@@ -118,7 +123,12 @@
               </p>
             </field>
         </record>
-        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
+        <menuitem id="menu_finance_followup" parent="account.menu_finance" name="Follow-up"/>
+        <menuitem id="account.periodical_processing_reconciliation" parent="menu_finance_followup" name="Reconciliation"/>
+ 
+        <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="menu_finance_followup"/>
+        
+        
 
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Follow-up Report"/>
 

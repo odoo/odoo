@@ -77,19 +77,53 @@
  				<field name="latest_followup_date"/>-->
  				<field name="payment_next_action_date"/>
  				<field name="payment_next_action"/>
+ 				
+ 				<!--Fields needed by inherited search view-->
+ 				<field name="user_id" invisible="1"/>
+ 				<field name="parent_id" invisible="1"/>
  				<!--<field name="payment_note"/>
  				<field name="phone"/>-->
  				<field name="payment_amount_overdue"/>
  				<field name="payment_responsible_id"/>
  				<!--<field name="email"/>-->
- 				<field name="next_followup_level_id"/>
- 				<!-- <field name="latest_followup_date"/>-->
+ 				<field name="latest_followup_level_id"/>
+ 				<field name="latest_followup_date"/>
  				</tree>
  			</field>
  		</record>
 
- 		
+
+
  		<record id="customer_followup_search_view" model="ir.ui.view">
+ 			<field name="name">Search</field>
+ 			<field name="model">res.partner</field>
+ 			<field name="type">search</field>
+ 			<field name="inherit_id" ref="base.view_res_partner_filter"/>
+ 			<field name="arch" type="xml">
+ 				<search string="Search Partner" position="inside"> 					
+ 			
+ 					<field name="payment_next_action"/>
+ 					<!--<filter string="Actions to be taken with overdue amount" domain="['&amp;', ('payment_amount_outstanding', '>', 0.0), ('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+ 					<separator/>-->
+ 					<group string="Follow-up">
+ 					<filter string="Partners with Credits" domain="[('payment_amount_overdue', '>', 0.0)]" name="credits"/>
+ 					<separator/>
+ 					<filter string="Follow-ups to do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]" name="todo"/>
+ 					<separator/>
+ 					<!--<filter string="Future follow-ups" domain="['&', ('payment_next_action', '!=', ''), ('payment_next_action_date', '>', time.strftime('%%Y-%%m-%%d'))]"/>--> 					
+ 					<separator/>
+ 					<filter string="No Responsible" domain="[('payment_responsible_id', '=', False)]"/>
+ 					<filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]"/>
+ 					</group>
+ 					<group expand="1" string="Group by">
+ 					<filter string="Responsible" context="{'group_by':'payment_responsible_id'}"/>
+ 					</group>
+ 				</search>
+ 			</field>
+ 		</record>
+ 		
+ 		
+ 		<record id="customer_followup_search_view2" model="ir.ui.view">
  			<field name="name">Search</field>
  			<field name="model">res.partner</field>
  			<field name="type">search</field>
@@ -104,10 +138,9 @@
  					<separator/>-->
  					<filter string="Overdue amount" domain="[('payment_amount_overdue', '>', 0.0)]"/>
  					<separator/>
- 					<filter string="Action to be taken now" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
+ 					<filter string="Follow-ups to do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
  					<separator/>
- 					<filter string="Action to be taken" domain="[('payment_next_action', '!=', '')]"/>
- 					<filter string="Follow-up sent" domain="[('latest_followup_level_id', '!=', False)]"/>
+ 					<!--filter string="Future follow-ups" domain="['&', ('payment_next_action', '!=', ''), ('payment_next_action_date', '>', time.strftime('%%Y-%%m-%%d'))]"/>--> 					
  					<separator/>
  					<filter string="Without responsible" domain="[('payment_responsible_id', '=', False)]"/>
  					<filter string="I am responsible" domain="[('payment_responsible_id','=', uid)]"/>
@@ -124,10 +157,10 @@
  			<field name="res_model">res.partner</field>
  			<field name="view_type">form</field>
  			<field name="view_mode">tree,form</field>
- 			<field name="domain">[]</field>  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
+ 			<!--<field name="domain">[('payment_amount_overdue', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
+ 			<field name="context">{'search_default_todo': True, 'search_default_credits': True} </field>
  			<field name="search_view_id" ref="customer_followup_search_view"/>
  		</record>
-
 
 
  		
@@ -139,65 +172,86 @@
             <field name="name">res.partner.followup.form.inherit</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="model">res.partner</field>
-            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/><!-- or user? --> 
-            <field name="arch" type="xml" eval="[(4, ref('account.group_account_manager'))]">
+            <field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/><!-- or user? --> 
+            <field name="arch" type="xml" >
             		<div name="buttons" position="inside">
-            			<button name="do_button_print" type="object" string="Print Overdue Payments Report" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
-            			<button name="do_button_mail" type="object" string="Send Overdue Email" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
+            			<button name="do_button_print" type="object" string="Print Overdue Payments Report" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" eval="[(4, ref('account.group_account_user'))]"/>
+            			<button name="do_button_mail" type="object" string="Send Overdue Email" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" eval="[(4, ref('account.group_account_user'))]"/>
             		</div>
             		<page string="Accounting" position="before" version="7.0">
-            		<page string="Payments Follow-up" position="inside">
-            			<group>
-            			<group>
-            			<field name="payment_amount_overdue"/>
-            			</group>
-            			<group>
-            				<label for="payment_next_action"/>
-                                <div>
+            		<page string="Payments Follow-up" position="inside" groups="account.group_account_user">
+            			<div class = "oe_inline">
+            			<p attrs="{'invisible':[('latest_followup_date','=', False)]}" class="oe_inline">The <field name="latest_followup_date" />, the latest level that was executed, was <field name="latest_followup_level_id" class="oe_inline"/>.
+            			  
+            			He still owns us a total amount of <field name="payment_amount_overdue"/> 
+            		</p>
+            		<p attrs="{'invisible':[('payment_next_action', '=', False)]}">This is the action required now:</p> 
+            		</div>
+            			<p class="oe_inline">
+            				
                                     <field name="payment_next_action_date" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('payment_next_action_date', '=', False), ('payment_next_action', '=', False)]}"/>
                                     <field name="payment_next_action" class="oe_inline" nolabel="1" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
-                                </div>
-            			</group>
-            			<group>
-            			<field name="latest_followup_level_id"/>
-            			<field name="latest_followup_date"/>
- 						<field name="next_followup_level_id"/>
- 						<!-- test field
- 						<field name="latest_fol"/>
- 						<field name="latest_num"/>-->
-            			</group>
-            			<group>
-            			<!--<field name="payment_next_action_date" help="This is when further follow-up is needed.  The date will have been set to the current date when processing the follow-ups asks for a phone call"/>-->
-            			<field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
- 					 	<button name="action_done" type="object" string="Follow-up Action Done" help="This button will clear the action and the action date. "/>
- 					 	</group>
- 					 	<group>
-            				<field name="payment_note"/>            				
-            			</group>
- 					 	</group>			 	            			
+                                    <field name="payment_responsible_id" help="The user who takes responsibility to follow it up. " class="oe_inline"/>
+                                    <button name="action_done" type="object" string="Follow-up Action Done" help="This button will clear the action and the action date. "/>                                    
+                                		  
+            			</p>
+            			<p class="oe_grey"> <!--maybe only when accountmovelines empty-->
+            				By clicking on BLUBS, you can put an invoice as litigation.  This means you are still in discussion about it   
+            			</p>            		
+ 					 				 	            			
  						<group>
- 					 <field name="accountmoveline_ids" nolabel="1" >
- 						<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
+ 					 <field name="accountmoveline_ids" nolabel="1" context="{'default_partner_id': active_id}" mode="kanban">
+ 						<!--<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
  							<field name="date" readonly="True"/>
-                    		<field name="move_id" readonly="True"/>
- 							<field name="result" readonly="True"/>
+                    		<field name="move_id" readonly="True"/> 							
  							<field name="blocked" string="Litigation"/>
  							<field name="date_maturity" readonly="True"/>
  							<field name="reconcile_partial_id" readonly="True"/>
- 						</tree>
+ 							<field name="result" readonly="True"/>
+ 						</tree>-->
+ 						<kanban default_group_by="followup_line_id">
+ 							<field name="followup_line_id"/>
+ 							<field name="result"/>
+ 							<field name="date_maturity"/>
+ 							<field name="blocked"/>
+ 							 <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Account move line d</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <h4><field name="ref"/></h4><field name="followup_line_id"/>
+                                    
+                                    <div class="oe_kanban_footer_left">
+                                   
+                                        <span t-if="record.date_maturity.raw_value">
+                                            <span class="oe_e">N</span>
+                                            <field name="date_maturity"/>
+                                            <field name="followup_date"/>
+                                        </span>
+                                    </div>                                    
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+						</kanban>
  					</field>
+ 					<field name="payment_note"/> 	
  					</group>
             		</page>
             		</page>
-            	
-            		   
-            	
             </field>
         </record>
-       
-   
- 			
- 			
+        
+        
+        
+        
+        
  		<!--	<record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
  			<field name="sequence" eval="2"/>
  			<field name="view_mode">form</field>
@@ -213,7 +267,7 @@
  		</record>
  		
          <!-- Menus about followup of customers -->
-        <menuitem id="account_followup_s" action="action_customer_followup"  parent="account.menu_finance_periodical_processing_billing" name="Customer Follow-up"/>
+        <menuitem id="account_followup_s" action="action_customer_followup" parent="menu_finance_followup" name="Customer Follow-up"/>
 
   	    </data>
 </openerp>

@@ -293,7 +293,7 @@ class account_account(osv.osv):
         null_result = dict((fn, 0.0) for fn in field_names)
         if children_and_consolidated:
             aml_query = self.pool.get('account.move.line')._query_get(cr, uid, context=context)
-
+            
             wheres = [""]
             if query.strip():
                 wheres.append(query.strip())
@@ -1277,7 +1277,7 @@ class account_move(osv.osv):
                 if cond[1] in ['=like', 'like', 'not like', 'ilike', 'not ilike', 'in', 'not in', 'child_of']:
                     continue
 
-            cr.execute("select move_id from account_move_line group by move_id having sum(debit) %s %%s" % (cond[1]),(amount,))
+            cr.execute("select partner_id from account_move_line group by partner_id having sum(balance) %s %%s" % (cond[1]),(amount,))
             res_ids = set(id[0] for id in cr.fetchall())
             ids = ids and (ids & res_ids) or res_ids
         if ids:

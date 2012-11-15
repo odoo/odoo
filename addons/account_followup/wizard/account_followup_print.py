@@ -74,6 +74,35 @@ class account_followup_stat_by_partner(osv.osv):
             )""") #Blocked is to take into account litigation
 account_followup_stat_by_partner()
 
+
+class account_followup_sending_results(osv.osv_memory):
+    
+   
+    def do_report(self, cr, uid, ids, context=None):
+        res = {}
+        #print "context:", self.report_data
+        return context['report_data']
+    
+    
+    def _get_description(self, cr, uid, context=None):
+        res = ""
+        if context!=None:
+            res = context['description']
+            self.report_data = context['report_data']
+        return res
+    
+    _name = 'account.followup.sending.results'
+    _description = 'Results from the sending of the different letters and emails'
+    _columns  = {
+            'description':fields.text("Description", required=False), 
+                 }
+    _defaults = {
+            'description':_get_description
+                 }
+    
+account_followup_sending_results()   
+
+
 class account_followup_print(osv.osv_memory):
     _name = 'account.followup.print'
     _description = 'Print Follow-up & Send Mail to Customers'
@@ -87,7 +116,7 @@ class account_followup_print(osv.osv_memory):
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
-        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.'),
+        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.'),       
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -126,14 +155,27 @@ class account_followup_print(osv.osv_memory):
     def process_partners(self, cr, uid, partner_ids, data, context=None):
         partner_obj = self.pool.get('res.partner')
         partner_ids_to_print = []
+        self.resulttext = "Report"
+        nbmanuals = 0
+        manuals = {}
+        nbmails = 0
+        nbprints = 0
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
             if partner.max_followup_id.manual_action:
                 partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)
+                nbmanuals = nbmanuals + 1
+                key = partner.partner_id.payment_responsible_id.name or "Empty"                
+                manuals[key]= "Y"                
             if partner.max_followup_id.send_email:
                 partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
+                nbmails = nbmails + 1
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
+                nbprints = nbprints+ 1
             partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent"), context=context)
+        self.resulttext = self.resulttext + str(nbmanuals) + "Changed \n" + str(nbmails) + "  Emailed \n " + str(nbprints) + "Printed \n"
+        for item in manuals:
+            self.resulttext = self.resulttext + item + ":" + manuals[item] +  "\n"
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         return action or {}
 
@@ -159,7 +201,52 @@ class account_followup_print(osv.osv_memory):
         data['followup_id'] = data['followup_id'][0]
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
         res = self.process_partners(cr, uid, partner_list, data, context=context)
-        return res
+        mod_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context.update({'description': self.resulttext, 'report_data': res})
+#        res['name'] = _('Incredibly interesting report')
+#        res['view_type'] = 'form'
+#        res['context'] = context
+#        res['view_mode'] = 'tree,form'
+#        res['res_model'] = 'account.followup.sending.results'
+#        res['views'] = [(resource_id,'form')]
+#        res['type'] = 'ir.actions.act_window'
+#        res['target'] = 'new'
+        return {
+            'name': _('Incredibly interesting report'),
+            'view_type': 'form',
+            'context': context,
+            'view_mode': 'tree,form',
+            'res_model': 'account.followup.sending.results',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            }
+    
+    
+    #This can go away afterwards
+    def do_second_button(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        if context is None:
+            context = {}
+        data = self.browse(cr, uid, ids, context=context)[0]
+        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
+        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
+        context.update({'description': "Let's write a very interesting report here"})
+        return {
+            'name': _('Incredibly interesting report'),
+            'view_type': 'form',
+            'context': context,
+            'view_mode': 'tree,form',
+            'res_model': 'account.followup.sending.results',
+            'views': [(resource_id,'form')],
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            }
 
     def _get_summary(self, cr, uid, context=None):
        if context is None:
