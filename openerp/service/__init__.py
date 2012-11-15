@@ -83,8 +83,9 @@ def start_services():
     netrpc_server.init_servers()
 
     # Start the main cron thread.
-    if openerp.conf.max_cron_threads:
-        openerp.cron.start_master_thread()
+    # TODO GEVENT if event use greenlet in cron
+    #if openerp.conf.max_cron_threads:
+    #    openerp.cron.start_master_thread()
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
