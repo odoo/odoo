@@ -55,7 +55,7 @@ class res_partner_mail(osv.Model):
         if type == 'email':
             partner_ids = kwargs.get('partner_ids', [])
             if thread_id not in partner_ids:
-                partner_ids.append(thread_id)
+                partner_ids.append((4, thread_id))
             kwargs['partner_ids'] = partner_ids
             thread_id = False
         return super(res_partner_mail, self).message_post(cr, uid, thread_id, body=body, subject=subject,
