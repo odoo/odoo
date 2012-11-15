@@ -1,12 +1,78 @@
 <?xml version="1.0"?>
 <openerp>
-    <data noupdate="1">
+    <data noupdate="0">
 
-        <!-- Update demo user and Agrolait to avoid mail bombing -->
+        <!-- Update 'Demo user' and partners email preferences to avoid mail bombing -->
         <record id="base.partner_demo" model="res.partner">
             <field name="notification_email_send">none</field>
         </record>
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
         <record id="base.res_partner_2" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_3" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_4" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_5" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_6" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_7" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_8" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_9" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_10" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_11" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_13" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_14" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_15" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_16" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_17" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_18" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_19" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_20" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_21" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_22" model="res.partner">
+            <field name="notification_email_send">none</field>
+        </record>
+        <record id="base.res_partner_23" model="res.partner">
             <field name="notification_email_send">none</field>
         </record>
 
@@ -87,72 +153,19 @@
             <field name="date" eval="(DateTime.today() - timedelta(days=23)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
-        <!-- Pushed to all employees -->
-        <record id="message_blogpost0" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="mail.group_all_employees"/>
-            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at Christine's office.</p>]]></field>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-        <record id="message_blogpost0_comment0" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
-            <field name="parent_id" ref="message_blogpost0"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=57)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-        <record id="message_blogpost0_comment1" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
-            <field name="parent_id" ref="message_blogpost0"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-        <record id="message_blogpost0_comment2" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
-            <field name="parent_id" ref="message_blogpost0"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-        <record id="message_blogpost0_comment3" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[<p>Many thanks. Actually that's good news, next year I'll have to buy a new fridge, I think I will pay it with the eco-vouchers!</p>]]></field>
-            <field name="parent_id" ref="message_blogpost0"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=9)).strftime('%Y-%m-%d %H:%M')"/>
-        </record>
-
-        <!-- Discussion: email and attachment -->
-        <record id="msg_discussion2_0" model="mail.message">
-            <field name="model">mail.thread</field>
+        <!-- Thread: 1 incoming email -->
+        <record id="msg_discus4" model="mail.message">
             <field name="subject">Plan to install servers</field>
             <field name="body"><![CDATA[<p>Hello,<br/>
-                I am interested in your company's product and I plan to install 2 servers for my company.<br/>
-                Can you please send me services catalogue?<br/>
-                Virginie</p>
+                I am interested in your company's product and I plan to install 2 servers for my company.<br />
+                Can you please send me services catalog?<br />
+                Best regards,</p>
             ]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="email_from">virginie@agrolait.fr</field>
-            <field name="author_id" ref="base.res_partner_2"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=14)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
         <!-- for presentation the sales write this commented message with an attachment-->
@@ -178,15 +191,17 @@
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
         </record-->
 
-        <!-- Employee & other + attachments conversation -->
-        <record id="msg_discussion3_attachment1" model="ir.attachment">
+        <!-- Admin and Demo with attachments -->
+        <record id="msg_discus3_attach1" model="ir.attachment">
             <field name="model">ir.attachment</field>
             <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
-            <field name="datas_fname">migration.doc</field>
-            <field name="name">migration.doc</field>
+            <field name="datas_fname">catalog.doc</field>
+            <field name="name">catalog.doc</field>
         </record>
-        <record id="msg_discussion3_attachment2" model="ir.attachment">
+        <record id="msg_discus3_attach2" model="ir.attachment">
             <field name="model">ir.attachment</field>
+            <field name="datas_fname">activity_graph_2012.jpg</field>
+            <field name="name">activity_graph_2012</field>
             <field name="datas">
                 /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEP
                 ERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4e
@@ -252,105 +267,283 @@
                 O1WR63FN74OlZFz8JXMmTfQLGZAPDeJjOFmZyeKi5hnC3upfvguj2XpIuNcinL/TXLn9/vLUpDNw
                 kxzLdwM111ZhJXPm0ixn3/rQxvK6Vd4vn//Z
             </field>
-            <field name="datas_fname">activity graph 2012.jpg</field>
-            <field name="name">activity graph 2012</field>
         </record>
-        <record id="msg_discussion3" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="body"><![CDATA[
-                Hi,<br/>
-                The next version of catalogue price list is scheduled for this next month.<br/>
-                You will find attached the catalogue and the activity graph for the current year. Good reading.<br/>
-                Sincerely
-            ]]></field>
+        <record id="msg_discus3" model="mail.message">
+            <field name="body"><![CDATA[<p>Hi Demo,<br/>The next version of products and price list catalog is scheduled for this next month.<br/>
+You will find attached the catalog, as well as the activity graph for the current year.<br />Have a nice reading!<br />
+Sincerely,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discussion3_attachment1'), ref('msg_discussion3_attachment2')])]"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(hours=4)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus3_attach1'), ref('msg_discus3_attach2')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_discussion3_message1" model="mail.message">
-            <field name="model">mail.group</field>
-            <field name="body"><![CDATA[
-                Thank you,<br/>
-                Could you add the price list of us services into this document ?<br/>
-                Sincerely
-            ]]></field>
+        <record id="msg_discuss3_1" model="mail.message">
+            <field name="body"><![CDATA[<p>Thank you!<br/>Could you add the price list of us services into this document ?<br/>Sincerely,</p>]]></field>
+            <field name="parent_id" ref="msg_discus3"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="parent_id" ref="msg_discussion3"/>
+            <field name="parent_id" ref="msg_discus3"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=7)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
-        <!-- Network admin & employee conversation -->
-        <record id="msg_discussion4" model="mail.message">
-            <field name="model">res.partner</field>
-            <field name="res_id" ref="base.partner_demo"/>
-            <field name="body">I changed the infrastructure of networks, if there are still changes to be made please do not hesitate to contact me.</field>
+        <!-- Thread: Demo (network admin) and Admin -->
+        <record id="msg_discus2" model="mail.message">
+            <field name="body"><![CDATA[<p>Hello,<br />As requested, I changed the infrastructure of networks. If there are still changes to be made, please feel free to contact me.</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date">2012-11-12 9:49:32</field>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_discussion4_message1" model="mail.message">
-            <field name="model">res.partner</field>
-            <field name="body">Thank you, the networks is perfect now ! Could you add a IP phone for Jhon ?</field>
-            <field name="parent_id" ref="msg_discussion4"/>
+        <record id="msg_discus2_1" model="mail.message">
+            <field name="body"><![CDATA[<p>Thank you very much!<br />
+The network seems perfect now. Could you just add a IP phone for Jon, please ?</p>]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date">2012-11-12 10:09:32</field>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(hours=2, minutes=40)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="msg_discussion4_message2" model="mail.message">
-            <field name="model">res.partner</field>
-            <field name="body">It's right, his internal phone number is 0093</field>
-            <field name="parent_id" ref="msg_discussion4"/>
+        <record id="msg_discus2_2" model="mail.message">
+            <field name="body"><![CDATA[Oh, right! His phone number is 0093.]]></field>
+            <field name="parent_id" ref="msg_discus2"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
-            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
-            <field name="date" eval="(DateTime.today() - timedelta(minutes=4)).strftime('%Y-%m-%d %H:%M')"/>
+            <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
-        <!-- Demo user and admin conversation -->
-        <record id="message_discussion" model="mail.message">
-            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
+        <!-- Thread: Epic Technologies and Admin as salesman discuss about a meeting -->
+        <record id="msg_discuss1" model="mail.message">
+            <field name="subject">Information meeting</field>
+            <field name="body"><![CDATA[<p>Hello Administrator!<br />In Epic Technologies, we are very interested by some of the services you offer. Could we meet each other as soon as possible to discuss about your offers ?</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=25)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discuss1_1" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>Hello<br />Of course, I am glad you are interested in our products. I propose to have a meeting tomorrow at 2 PM. Does it seem suitable for you ?<br />Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_discuss1"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=20)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="message_discussion_answer1" model="mail.message">
-            <field name="body">No specific issues, I think everything is clear.</field>
-            <field name="parent_id" ref="message_discussion"/>
+        <record id="msg_discuss1_2" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>It is not possible for me to come at 2 PM. However it is ok at 3 PM.</p>]]></field>
+            <field name="parent_id" ref="msg_discuss1"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
+            <field name="author_id" ref="base.res_partner_5"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=15)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
-        <record id="message_discussion_answer2" model="mail.message">
-            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
-        </record>
-        <record id="message_discussion_answer3" model="mail.message">
-            <field name="body">Absolutely!</field>
-            <field name="parent_id" ref="message_discussion"/>
+        <record id="msg_discuss1_3" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>Fine then. See you tomorrow at 3 PM!<br />Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_discuss1"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_5')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discuss1_4" model="mail.message">
+            <field name="subject">RE: Information meeting</field>
+            <field name="body"><![CDATA[<p>Ok! See you tomorrow.</p>]]></field>
+            <field name="parent_id" ref="msg_discuss1"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_5"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=5)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Short thread: Admin ask, Agrolait answer -->
+        <record id="msg_discuss0" model="mail.message">
+            <field name="subject">Feedback on our service</field>
+            <field name="body"><![CDATA[<p>Hi Agrolait!<br />I come to you about our <i>On Site Assistance Service</i> that you received last week. Are you satisfied with it ? At our company, we strongly believe that nothing is more important than our customer's satisfaction. Please feel free to speak!<br />Best regards,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.res_partner_2')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=10)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_discuss0_1" model="mail.message">
+            <field name="subject">RE: Feedback on our service</field>
+            <field name="body"><![CDATA[<p>Hello<br />Glad to hearing from you! I have to say that here at Agrolait we are very happy with the service you offered to us. Be sure that we will contact your company again to fulfill our future needs!</p>]]></field>
+            <field name="parent_id" ref="msg_discuss0"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.res_partner_2"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Avatar update for Demo and Admin - end of file to avoid hurting your eyes -->
+        <record id="base.partner_demo" model="res.partner">
+            <field name="image">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
+gk//2Q==</field>
+        </record>
+        <record id="base.user_root" model="res.users">
+            <field name="image">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
+kALR5oiAU7jnCuj0RFIHQbIiKAf/2Q==</field>
         </record>
     </data>
 </openerp>

@@ -3,30 +3,124 @@
     <!-- <data noupdate="1"> -->
     <data>
 
+        <!-- Discussion groups, done in 2 steps to remove creator from followers -->
         <record model="mail.group" id="group_best_sales_practices">
             <field name="name">Best Sales Practices</field>
             <field name="description">Discussion about best sales practices and deals.</field>
         </record>
-
+        <record model="mail.group" id="group_best_sales_practices">
+            <field name="message_follower_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
         <record model="mail.group" id="group_board">
             <field name="name">Board meetings</field>
             <field name="description">Board meetings and agenda</field>
         </record>
-
+        <record model="mail.group" id="group_board">
+            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
+        </record>
         <record model="mail.group" id="group_rd">
             <field name="name">RD</field>
             <field name="description">Research and development discussion group</field>
         </record>
-
+        <record model="mail.group" id="group_rd">
+            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
+        </record>
         <record model="mail.group" id="group_leasing">
             <field name="name">Leasing</field>
             <field name="description">Leasing, cars and fuel cards</field>
         </record>
-
         <record model="mail.group" id="group_support">
             <field name="name">Support</field>
             <field name="description">Support team</field>
         </record>
+
+        <!-- Best sales practices messages -->
+        <record id="msg_group_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>BEST SALE PRACTICE</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>BEST SALE PRACTICE</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>BEST SALE PRACTICE</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_4" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>BEST SALE PRACTICE</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo'), ref('base.user_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Pushed to all employees -->
+        <record id="msg_empl_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at the HR's office.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=57)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_4" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body"><![CDATA[<p>Many thanks. Actually that's good news, next year I'll have to buy a new fridge, I think I will pay it with the eco-vouchers!</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=9)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
     </data>
 </openerp>
 
