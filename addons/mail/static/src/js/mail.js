@@ -599,7 +599,7 @@ openerp.mail = function (session) {
                     ]).done(function (record) {
                         var thread = self.parent_thread;
                         if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                            var hread = thread.parent_message.parent_thread;
+                            var thread = thread.parent_message.parent_thread;
                         }
                         var root = thread == self.options.root_thread;
                         // create object and attach to the thread object

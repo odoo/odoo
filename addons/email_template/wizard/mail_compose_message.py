@@ -154,7 +154,6 @@ class mail_compose_message(osv.TransientModel):
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            # record.write({'template_id': template_id, 'use_template': True})
             record.write(record.onchange_template_id(True, template_id, record.composition_mode, record.model, record.res_id)['value'])
             return _reopen(self, record.id, record.model)
 
