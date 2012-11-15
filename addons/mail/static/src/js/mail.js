@@ -594,7 +594,7 @@ openerp.mail = function (session) {
                 //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
-                        mail.ChatterUtils.get_text2html(body), 
+                        body, 
                         false, 
                         this.context.default_parent_id, 
                         attachments,
