@@ -636,18 +636,20 @@ instance.web.Login =  instance.web.Widget.extend({
 instance.web.client_actions.add("login", "instance.web.Login");
 
 
+/**
+ * Redirect to url by replacing window.location
+ * If wait is true, sleep 1s and wait for the server i.e. after a restart.
+ */
 instance.web.redirect = function(url, wait) {
-    // hide errors
+    // Dont display a dialog if some xmlhttprequest are in progress
     if (instance.client && instance.client.crashmanager) {
         instance.client.crashmanager.destroy();
     }
 
     var wait_server = function() {
-        instance.session.rpc("/web/webclient/version_info", {})
-        .done(function() {
+        instance.session.rpc("/web/webclient/version_info", {}).done(function() {
             window.location = url;
-        })
-        .fail(function() { 
+        }).fail(function() {
             setTimeout(wait_server, 250);
         });
     };
@@ -661,8 +663,8 @@ instance.web.redirect = function(url, wait) {
 
 /**
  * Client action to reload the whole interface.
- * If params has an entry 'menu_id', it opens the given menu entry.
- * If params has an entry 'wait', reload will wait the openerp server to be reachable before reloading
+ * If params.menu_id, it opens the given menu entry.
+ * If params.wait, reload will wait the openerp server to be reachable before reloading
  */
 instance.web.Reload = function(parent, action) {
     var params = action.params || {};
