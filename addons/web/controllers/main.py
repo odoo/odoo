@@ -263,6 +263,10 @@ def concat_js(file_list):
     content = rjsmin(content)
     return content, checksum 
 
+def fs2web(path):
+    """convert FS path into web path"""
+    return '/'.join(path.split(os.path.sep))
+
 def manifest_glob(req, addons, key):
     if addons is None:
         addons = module_boot(req)
@@ -278,7 +282,7 @@ def manifest_glob(req, addons, key):
         globlist = manifest.get(key, [])
         for pattern in globlist:
             for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                r.append((path, path[len(addons_path):]))
+                r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(req, mods, extension):
@@ -638,8 +642,7 @@ class WebClient(openerpweb.Controller):
                 data = fp.read().decode('utf-8')
 
             path = file_map[f]
-            # convert FS path into web path
-            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
+            web_dir = os.path.dirname(path)
 
             data = re.sub(
                 rx_import,
