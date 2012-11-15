@@ -747,7 +747,7 @@ class mail_thread(osv.AbstractModel):
 
         # 1. Pre-processing: body, partner_ids, type and subtype
         if content_subtype == 'plaintext':
-            body = tools.text2html(body)
+            body = tools.plaintext2html(body)
 
         partner_ids = kwargs.pop('partner_ids', [])
         if parent_id:

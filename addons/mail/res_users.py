@@ -91,8 +91,10 @@ class res_users(osv.Model):
         return user_id
 
     def _create_welcome_message(self, cr, uid, user, context=None):
-        company_name = user.company_id.name if user.company_id else _('the company')
-        body = _('%s has joined %s.') % (user.name, company_name)
+        if not self.has_group(cr, uid, 'base.group_user'):
+            return False
+        company_name = user.company_id.name if user.company_id else ''
+        body = _('%s has joined the %s network.') % (user.name, company_name)
         # TODO change SUPERUSER_ID into user.id but catch errors
         return self.pool.get('res.partner').message_post(cr, SUPERUSER_ID, [user.partner_id.id],
             body=body, context=context)

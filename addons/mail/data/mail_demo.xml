@@ -87,39 +87,6 @@
             <field name="date" eval="(DateTime.today() - timedelta(days=23)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
 
-        <!-- Demo user and admin conversation -->
-        <record id="message_discussion" model="mail.message">
-            <field name="model">mail.thread</field>
-            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root'), ref('base.partner_demo')])]"/>
-        </record>
-        <record id="message_discussion_answer1" model="mail.message">
-            <field name="model">mail.thread</field>
-            <field name="body">No specific issues, I think everything is clear.</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-        </record>
-        <record id="message_discussion_answer2" model="mail.message">
-            <field name="model">mail.thread</field>
-            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_demo"/>
-        </record>
-        <record id="message_discussion_answer3" model="mail.message">
-            <field name="body">Absolutely!</field>
-            <field name="parent_id" ref="message_discussion"/>
-            <field name="type">comment</field>
-            <field name="subtype_id" ref="mt_comment"/>
-            <field name="author_id" ref="base.partner_root"/>
-        </record>
-
         <!-- Pushed to all employees -->
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
@@ -351,6 +318,39 @@
             <field name="author_id" ref="base.partner_demo"/>
             <field name="notified_partner_ids" eval="[(6, 0, [ref('base.partner_demo'), ref('base.partner_root')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(minutes=4)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Demo user and admin conversation -->
+        <record id="message_discussion" model="mail.message">
+            <field name="body">Hello Demo User! I was wondering whether you had some issues with our secret task about putting cats everywhere in OpenERP.</field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
+        <record id="message_discussion_answer1" model="mail.message">
+            <field name="body">No specific issues, I think everything is clear.</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_discussion_answer2" model="mail.message">
+            <field name="body">Ow, just to be sure... we were talking about lolcats, right ?</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_root')])]"/>
+        </record>
+        <record id="message_discussion_answer3" model="mail.message">
+            <field name="body">Absolutely!</field>
+            <field name="parent_id" ref="message_discussion"/>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
         </record>
     </data>
 </openerp>
