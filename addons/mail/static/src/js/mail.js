@@ -24,7 +24,7 @@ openerp.mail = function (session) {
                  */
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_content_subtype', , 'default_subject',
+                    'default_res_id', 'default_content_subtype', 'default_subject',
                     'default_body', 'active_id', 'lang', 'bin_raw', 'tz',
                     'active_model', 'edi_web_url_view', 'active_ids', 
                     'default_attachment_ids']
@@ -521,8 +521,6 @@ openerp.mail = function (session) {
         on_compose_fullmail: function (default_composition_mode) {
             if (default_composition_mode == 'reply') {
                 var context = {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
@@ -532,7 +530,6 @@ openerp.mail = function (session) {
                 var context = {
                     'default_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
-                    'default_content_subtype': 'html',
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
@@ -1709,7 +1706,6 @@ openerp.mail = function (session) {
                     views: [[false, 'form']],
                     target: 'new',
                     context: {
-                        'default_content_subtype': 'html',
                     },
                 };
                 session.client.action_manager.do_action(action);
@@ -1743,7 +1739,7 @@ openerp.mail = function (session) {
                 view_type: 'form',
                 views: [[false, 'form']],
                 target: 'new',
-                context: { 'default_content_subtype': 'html' },
+                context: {},
             };
             session.client.action_manager.do_action(action);
         },

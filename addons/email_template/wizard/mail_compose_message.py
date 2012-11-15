@@ -25,6 +25,21 @@ from osv import osv
 from osv import fields
 
 
+def _reopen(self, res_id, model):
+    return {'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': res_id,
+            'res_model': self._name,
+            'target': 'new',
+            # save original model in context, because selecting the list of available
+            # templates requires a model in context
+            'context': {
+                'default_model': model,
+            },
+    }
+
+
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
@@ -42,10 +57,8 @@ class mail_compose_message(osv.TransientModel):
         else:
             model = context.get('default_model', context.get('active_model'))
 
-        if model:
-            record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
-            return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
-        return []
+        record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
+        return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
@@ -109,7 +122,7 @@ class mail_compose_message(osv.TransientModel):
             onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
             onchange_res['attachment_ids'] = [(4, attachment_id) for attachment_id in onchange_res.pop('attachment_ids', [])]
             record.write(onchange_res)
-        return True
+            return _reopen(self, record.id, record.model)
 
     def onchange_use_template(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
         """ onchange_use_template (values: True or False).  If use_template is
@@ -141,8 +154,8 @@ class mail_compose_message(osv.TransientModel):
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            record.write({'template_id': template_id, 'use_template': True})
-        return True
+            record.write(record.onchange_template_id(True, template_id, record.composition_mode, record.model, record.res_id)['value'])
+            return _reopen(self, record.id, record.model)
 
     #------------------------------------------------------
     # Wizard validation and send
