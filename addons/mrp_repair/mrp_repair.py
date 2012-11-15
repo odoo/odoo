@@ -690,7 +690,7 @@ class mrp_repair_line(osv.osv, ProductChangeMixin):
         'repair_id': fields.many2one('mrp.repair', 'Repair Order Reference',ondelete='cascade', select=True),
         'type': fields.selection([('add','Add'),('remove','Remove')],'Type', required=True),
         'to_invoice': fields.boolean('To Invoice'),
-        'product_id': fields.many2one('product.product', 'Product', domain=[('sale_ok','=',True)], required=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True),
         'invoiced': fields.boolean('Invoiced',readonly=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal',digits_compute= dp.get_precision('Account')),

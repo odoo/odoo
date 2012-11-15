@@ -90,6 +90,18 @@ class hr_holidays_status(osv.osv):
         'color_name': 'red',
         'active': True,
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if not record.limit:
+                name = name + ('  (%d/%d)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+            res.append((record.id, name))
+        return res
+
 hr_holidays_status()
 
 class hr_holidays(osv.osv):
@@ -112,6 +124,13 @@ class hr_holidays(osv.osv):
             else:
                 result[hol.id] = hol.number_of_days_temp
         return result
+
+    def _check_date(self, cr, uid, ids):
+        for holiday in self.browse(cr, uid, ids):
+            holiday_ids = self.search(cr, uid, [('date_from', '<=', holiday.date_to), ('date_to', '>=', holiday.date_from), ('employee_id', '=', holiday.employee_id.id), ('id', '<>', holiday.id)])
+            if holiday_ids:
+                return False
+        return True
 
     _columns = {
         'name': fields.char('Description', size=64),
@@ -146,6 +165,10 @@ class hr_holidays(osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'holiday_type': 'employee'
     }
+    _constraints = [
+        (_check_date, 'You can not have 2 leaves that overlaps on same day!', ['date_from','date_to']),
+    ] 
+    
     _sql_constraints = [
         ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be anterior to the end date."),
@@ -252,6 +275,13 @@ class hr_holidays(osv.osv):
             result['value']['number_of_days_temp'] = 0
 
         return result
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        check_fnct = self.pool.get('hr.holidays.status').check_access_rights
+        for  holiday in self.browse(cr, uid, ids, context=context):
+            if holiday.state in ('validate','validate1') and not check_fnct(cr, uid, 'write', raise_exception=False):
+                raise osv.except_osv(_('Warning!'),_('You cannot modify a leave request that has been approved. Contact a human resource manager.'))
+        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {

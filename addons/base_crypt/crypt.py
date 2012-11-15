@@ -200,7 +200,7 @@ class users(osv.osv):
         else:
             # Return early if no one has a login name like that.
             return False
-
+        print "<--------------------------- HELLO ------------------------------>"
         stored_pw = self.maybe_encrypt(cr, stored_pw, id)
 
         if not stored_pw:

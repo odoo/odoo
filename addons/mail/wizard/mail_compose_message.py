@@ -135,7 +135,12 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        return {'model': model, 'res_id': res_id}
+        doc_name_get = self.pool.get(model).name_get(cr, uid, res_id, context=context)
+        if doc_name_get:
+            record_name = doc_name_get[0][1]
+        else:
+            record_name = False
+        return {'model': model, 'res_id': res_id, 'record_name': record_name}
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -161,6 +166,7 @@ class mail_compose_message(osv.TransientModel):
 
         # update the result
         result = {
+            'record_name': message_data.record_name,
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,

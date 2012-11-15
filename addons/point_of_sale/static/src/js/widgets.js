@@ -315,7 +315,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
             this.$('input').keyup(_.bind(this.changeAmount, this));
             this.$('.delete-payment-line').click(function() {
-                self.trigger('delete_payment_line');
+                self.trigger('delete_payment_line', self);
             });
         },
     });
@@ -806,7 +806,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
       
         start: function() {
             var self = this;
-            return self.pos.ready.then(function() {
+            return self.pos.ready.done(function() {
                 self.build_currency_template();
                 self.renderElement();
                 
@@ -845,7 +845,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
                 self.$('.loader img').hide();
 
-            },function(){   // error when loading models data from the backend
+            }).fail(function(){   // error when loading models data from the backend
                 self.$('.loader img').hide();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
@@ -1051,7 +1051,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
-                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(action) {
+                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                    var action = result;
                     action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
                     //self.destroy();
                     this.do_action(action);

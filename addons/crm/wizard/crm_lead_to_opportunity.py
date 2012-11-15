@@ -175,12 +175,19 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
         return res
 
     def _convert_opportunity(self, cr, uid, ids, vals, context=None):
+        """
+        When "massively" (more than one at a time) converting leads to
+        opportunities, check the salesteam_id and salesmen_ids and update
+        the values before calling super.
+        """
+        if context is None:
+            context = {}
         data = self.browse(cr, uid, ids, context=context)[0]
         salesteam_id = data.section_id and data.section_id.id or False
-        salesman = []
+        salesmen_ids = []
         if data.user_ids:
-            salesman = [x.id for x in data.user_ids]
-        vals.update({'user_ids': salesman, 'section_id': salesteam_id})
+            salesmen_ids = [x.id for x in data.user_ids]
+        vals.update({'user_ids': salesmen_ids, 'section_id': salesteam_id})
         return super(crm_lead2opportunity_mass_convert, self)._convert_opportunity(cr, uid, ids, vals, context=context)
 
     def mass_convert(self, cr, uid, ids, context=None):
