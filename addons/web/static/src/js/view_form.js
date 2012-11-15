@@ -5017,6 +5017,19 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
+    set_value: function(value_) {
+        var self = this;
+        if (value_ && typeof value_[0] != 'object') {
+            this.ds_file.call('read', [value_, ['name', 'datas_fname']]).done(function(data) {
+                _.each(data, function (val) {
+                    val.no_unlink = true;
+                });
+                self.set_value(data);
+            });
+        } else {
+            this._super(value_);
+        }
+    },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
@@ -5111,7 +5124,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 if(file_id != this.get('value')[i].id){
                     files.push(this.get('value')[i]);
                 }
-                else {
+                else if(!this.get('value')[i].no_unlink) {
                     this.ds_file.unlink([file_id]);
                 }
             }
