@@ -437,9 +437,8 @@ class test_mail(test_mail_mockup.TestMailMockups):
 
         # Mail data
         _subject = 'Pigs'
-        _body_text = 'Pigs rules'
-        _msg_reply = 'Re: Pigs'
-        _msg_body = '<pre>Pigs rules</pre>'
+        _body = 'Pigs <b>rule</b>'
+        _reply_subject = 'Re: Pigs'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
@@ -462,9 +461,9 @@ class test_mail(test_mail_mockup.TestMailMockups):
 
         # 1. Comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'subject': _subject, 'body': _body, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id,
-                'default_content_subtype': 'plaintext'})
+             'default_content_subtype': 'plaintext'})
         compose = mail_compose.browse(cr, uid, compose_id)
         # Test: mail.compose.message: composition_mode, model, res_id
         self.assertEqual(compose.composition_mode,  'comment', 'mail.compose.message incorrect composition_mode')
@@ -476,8 +475,8 @@ class test_mail(test_mail_mockup.TestMailMockups):
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre
-        self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
-        self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
+        self.assertEqual(message.subject,  _subject, 'mail.message incorrect subject')
+        self.assertEqual(message.body, _body, 'mail.message incorrect body')
         # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
         msg_pids = [partner.id for partner in message.notified_partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
@@ -495,13 +494,12 @@ class test_mail(test_mail_mockup.TestMailMockups):
             {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
             {'default_composition_mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'default_parent_id': message.id})
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: model, res_id, parent_id, content_subtype
+        # Test: model, res_id, parent_id
         self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
         self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
         # Test: mail.message: subject as Re:.., body in html, parent_id
-        self.assertEqual(compose.subject, _msg_reply, 'mail.message incorrect subject')
+        self.assertEqual(compose.subject, _reply_subject, 'mail.message incorrect subject')
         # self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
         self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
@@ -520,8 +518,6 @@ class test_mail(test_mail_mockup.TestMailMockups):
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: content_subtype is html
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
 
         # 2. Post the comment, get created message for each group
         mail_compose.send_mail(cr, uid, [compose_id],

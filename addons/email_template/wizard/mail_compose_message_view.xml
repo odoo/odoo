@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='content_subtype']" position="after">
+                    <xpath expr="//field[@name='model']" position="after">
                         <field name="use_template" invisible="1"
                             on_change="onchange_use_template(use_template, template_id, composition_mode, model, res_id, context)"/>
                     </xpath>
@@ -21,8 +21,7 @@
                             </div>
                             <button icon="/email_template/static/src/img/email_template_save.png"
                                 type="object" name="save_as_template" string="Save as new template" class="oe_link"
-                                help="Save as a new template"
-                                attrs="{'invisible':[('content_subtype','!=','html')]}"/>
+                                help="Save as a new template"/>
                         </group>
                     </xpath>
                 </data>

@@ -115,10 +115,9 @@ class test_message_compose(test_mail_mockup.TestMailMockups):
         compose.refresh()
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
-        # Test: mail.compose.message: subject, body, content_subtype, partner_ids
+        # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
         self.assertEqual(compose.body, _body_html1, 'mail.compose.message body incorrect')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
         # Test: mail.compose.message: attachments
         # Test: mail.message: attachments
@@ -156,10 +155,9 @@ class test_message_compose(test_mail_mockup.TestMailMockups):
         compose.refresh()
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
-        # Test: mail.compose.message: subject, body, content_subtype, partner_ids
+        # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, '${object.name}', 'mail.compose.message subject incorrect')
         self.assertEqual(compose.body, '${object.description}', 'mail.compose.message body incorrect')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
         # 3. Post the comment, get created message
