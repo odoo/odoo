@@ -545,7 +545,8 @@ def content_disposition(filename, req):
 #----------------------------------------------------------
 
 html_template = """<!DOCTYPE html>
-<html style="height: 100%%">
+<!--[if lte IE 9]> <html style='height: 100%%' class='ie'> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html style='height: 100%%' class=''> <!--<![endif]-->
     <head>
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
