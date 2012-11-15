@@ -14,7 +14,7 @@ class WebSuite(QUnitSuite):
                 password=tools.config['admin_passwd'] or 'admin'),
             ''
         ])
-        super(WebSuite, self).__init__(url, 20000)
+        super(WebSuite, self).__init__(url, 50000)
     def run(self, result):
         if sql_db._Pool is not None:
             sql_db._Pool.close_all(sql_db.dsn(tools.config['db_name']))

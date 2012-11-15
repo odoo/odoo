@@ -297,9 +297,11 @@ test architecture was not warned about asynchronous operations.
 
 .. note::
 
-    Asynchronous test cases also have a 10 seconds timeout: if the
-    test does not finish within 10 seconds, it will be considered
-    failed. This pretty much always means the test will not resolve.
+    Asynchronous test cases also have a 2 seconds timeout: if the test
+    does not finish within 2 seconds, it will be considered
+    failed. This pretty much always means the test will not
+    resolve. This timeout *only* applies to the test itself, not to
+    the setup and teardown processes.
 
 .. note::
 

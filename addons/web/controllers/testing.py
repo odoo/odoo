@@ -54,7 +54,7 @@ TESTING = Template(u"""<!DOCTYPE html>
         var oe_db_info = ${db_info};
         // List of modules, each module is preceded by its dependencies
         var oe_all_dependencies = ${dependencies};
-        QUnit.config.testTimeout = 10000;
+        QUnit.config.testTimeout = 5 * 60 * 1000;
     </script>
 </head>
 <body id="oe" class="openerp">

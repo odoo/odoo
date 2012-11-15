@@ -286,6 +286,7 @@ openerp.testing = {};
 
             // Always execute tests asynchronously
             stop();
+            var timeout;
             var teardown = function () {
                 return opts.teardown(instance, $fixture, mock)
             };
@@ -302,8 +303,25 @@ openerp.testing = {};
                                 + "number of assertions they expect");
                     }
                 }
-                return $.when(result).pipe(teardown, teardown);
+                var d = $.Deferred();
+                $.when(result).then(function () {
+                    d.resolve.apply(d, arguments)
+                }, function () {
+                    d.reject.apply(d, arguments);
+                });
+                if (async || (result && result.then)) {
+                    // async test can be either implicit async (rpc) or
+                    // promise-returning
+                    timeout = setTimeout(function () {
+                        QUnit.config.semaphore = 1;
+                        d.reject({message: "Test timed out"});
+                    }, 2000);
+                }
+                return d.pipe(teardown, teardown);
             }).always(function () {
+                if (timeout) {
+                    clearTimeout(timeout);
+                }
                 start();
             }).fail(function (error) {
                 if (options.fail_on_rejection === false) {
@@ -320,6 +338,7 @@ openerp.testing = {};
                     }
                 }
 
+                ok(false, "failed!")
                 ok(false, message);
             });
         });
