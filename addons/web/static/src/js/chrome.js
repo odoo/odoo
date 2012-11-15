@@ -48,7 +48,7 @@ instance.web.Notification =  instance.web.Widget.extend({
  */
 instance.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").addClass("openerp");
+    result.dialog("widget").openerpClass();
     return result;
 };
 
@@ -983,6 +983,7 @@ instance.web.Client = instance.web.Widget.extend({
         return instance.session.session_bind(this.origin).then(function() {
             var $e = $(QWeb.render(self._template, {}));
             self.replaceElement($e);
+            $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });

@@ -460,6 +460,16 @@ $.fn.getAttributes = function() {
     }
     return o;
 }
+$.fn.openerpClass = function(additionalClass) {
+    // This plugin should be applied on top level elements
+    additionalClass = additionalClass || '';
+    if (!!$.browser.msie) {
+        additionalClass += ' openerp_ie';
+    }
+    return this.each(function() {
+        $(this).addClass('openerp ' + additionalClass);
+    });
+};
 
 /** Jquery extentions */
 $.Mutex = (function() {
