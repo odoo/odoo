@@ -56,11 +56,12 @@ class product_product(osv.osv):
                     sum(l.price_unit * l.quantity)/sum(l.quantity) as avg_unit_price,
                     sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/l.quantity)) as total,
-                    sum(l.quantity * product.list_price) as sale_expected,
-                    sum(l.quantity * product.standard_price) as normal_cost
+                    sum(l.quantity * pt.list_price) as sale_expected,
+                    sum(l.quantity * pt.standard_price) as normal_cost
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
-                left join product_template product on (product.id=l.product_id)
+                left join product_product product on (product.id=l.product_id)
+                left join product_template pt on (pt.id=product.product_tmpl_id)
                 where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')

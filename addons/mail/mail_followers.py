@@ -84,11 +84,13 @@ class mail_notification(osv.Model):
         return False
 
     def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
-        """ Set a message and its child messages as (un)read for uid.
+        """ Set messages as (un)read. Technically, the notifications related
+            to uid are set to (un)read. If for some msg_ids there are missing
+            notifications (i.e. due to load more or thread parent fetching),
+            they are created.
 
-            :param bool read: read / unread
+            :param bool read: (un)read notification
         """
-        # TDE note: use child_of or front-end send correct values ?
         user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_ids = self.search(cr, uid, [
             ('partner_id', '=', user_pid),
@@ -100,10 +102,9 @@ class mail_notification(osv.Model):
             return self.write(cr, uid, notif_ids, {'read': read}, context=context)
 
         # some messages do not have notifications: find which one, create notification, update read status
-        exist_notification = dict.fromkeys(msg_ids, False)
-        for notification in self.browse(cr, uid, notif_ids, context=context):
-            exist_notification[notification.message_id.id] = True
-        for msg_id in exist_notification.keys():
+        notified_msg_ids = [notification.message_id.id for notification in self.browse(cr, uid, notif_ids, context=context)]
+        to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
+        for msg_id in to_create_msg_ids:
             self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
         return self.write(cr, uid, notif_ids, {'read': read}, context=context)
 
@@ -156,10 +157,10 @@ class mail_notification(osv.Model):
         # add signature
         body_html = msg.body
         # if quote_context:
-        #     body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
-        signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
+            # body_html = tools.append_content_to_html(body_html, quote_context, plaintext=False)
+        signature = msg.author_id and msg.author_id.user_ids and msg.author_id.user_ids[0].signature or ''
         if signature:
-            body_html = tools.append_content_to_html(body_html, signature)
+            body_html = tools.append_content_to_html(body_html, signature, plaintext=True, container_tag='div')
 
         mail_values = {
             'mail_message_id': msg.id,

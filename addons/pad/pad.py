@@ -6,7 +6,7 @@ import string
 import urllib2
 import logging
 from tools.translate import _
-from openerp.tools.misc import html2plaintext
+from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
 
 _logger = logging.getLogger(__name__)
