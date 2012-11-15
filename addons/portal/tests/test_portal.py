@@ -19,12 +19,11 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail
-from openerp.tools import append_content_to_html
+from openerp.addons.mail.tests import test_mail_mockup
 from osv.orm import except_orm
 
 
-class test_portal(test_mail.TestMailMockups):
+class test_portal(test_mail_mockup.TestMailMockups):
 
     def setUp(self):
         super(test_portal, self).setUp()
