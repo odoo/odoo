@@ -1231,6 +1231,7 @@ openerp.mail = function (session) {
                     'default_parent_id': self.id,
                 }});
             } else {
+                data.record_name= (data.record_name != '' && data.record_name) || (self.parent_message && self.parent_message.record_name);
                 var message = new mail.ThreadMessage(self, data, {'context':{
                     'default_model': data.model,
                     'default_res_id': data.res_id,
@@ -1447,6 +1448,7 @@ openerp.mail = function (session) {
                 'show_record_name' : false,
                 'show_compose_message' : false,
                 'show_compact_message' : false,
+                'compose_placeholder': false,
                 'view_inbox': false,
                 'message_ids': undefined,
             }, this.action.params);
@@ -1511,7 +1513,6 @@ openerp.mail = function (session) {
         init: function (parent, node) {
             this._super.apply(this, arguments);
             this.node = _.clone(node);
-
             this.node.params = _.extend({
                 'display_indented_thread': -1,
                 'show_reply_button': false,
@@ -1519,6 +1520,10 @@ openerp.mail = function (session) {
                 'show_record_name': false,
                 'show_compact_message': 1,
             }, this.node.params);
+
+            if (this.node.attrs.placeholder) {
+                this.node.params.compose_placeholder = this.node.attrs.placeholder;
+            }
 
             this.domain = this.node.params && this.node.params.domain || [];
         },

@@ -39,8 +39,9 @@
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
-            <textarea t-if="!widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to the followers of this docmuent..."/>
-            <textarea t-if="widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to my followers..."/>
+            <textarea t-if="widget.options.compose_placeholder" class="field_text oe_compact" t-att-placeholder="widget.options.compose_placeholder"/>
+            <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write an internal note..."/>
+            <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share to my followers..."/>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
@@ -109,7 +110,13 @@
     <t t-name="mail.thread.list_recipients">
         <div class="oe_mail_list_recipients">
             To:
-            <span t-if="!widget.is_private" class="oe_all_follower">Followers <t t-raw="' of ' + (widget.parent_thread.parent_message.record_name ? '&quot;' + widget.parent_thread.parent_message.record_name + '&quot;' : 'this document')"/></span>
+            <t t-if="!widget.is_private">
+                <span class="oe_all_follower">
+                    Followers of
+                    <t t-if="widget.parent_thread.parent_message.record_name" t-raw="'&quot;' + widget.parent_thread.parent_message.record_name + '&quot;'"/>
+                    <t t-if="!widget.parent_thread.parent_message.record_name">this document</t>
+                </span>
+            </t>
             <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
             <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
