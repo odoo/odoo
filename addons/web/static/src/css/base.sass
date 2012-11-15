@@ -2394,6 +2394,107 @@ div.ui-widget-overlay
     @include radius(3px)
 // }}}
 
+// Internet Explorer 9+ specifics {{{
+.openerp_ie
+    input[type='checkbox']
+        border: none
+        background: none
+        box-shadow: none
+    .oe_logo
+        img
+            border: none
+    .oe_header_row
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+    .oe_view_manager_buttons
+        button.oe_write_full
+            padding-top: 0
+            padding-bottom: 0
+        button.oe_highlight
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_edit
+            padding-top: 0
+            padding-bottom: 0
+        button .oe_form_button_create
+            padding-top: 0
+            padding-bottom: 0
+    .oe_kanban_image
+        border: none
+    .oe_msg_icon
+        border: none
+    .oe_form
+        header
+            ul
+                height: 29px
+    .oe_attach
+        filter: none
+    .oe_link
+        filter: none
+
+    .oe_kanban_show_more
+        clear: both
+        text-align: center
+    &.oe_kanban_grouped .oe_kanban_show_more .oe_button
+        width: 100%
+        padding: 3px 12px
+
+    .oe_form_buttons button
+        padding-top: 0
+        padding-bottom: 0
+    .oe_sidebar button
+        padding-top: 0
+        padding-bottom: 0
+
+    .oe_form_field.oe_tags
+        float: left
+    ul.oe_form_status
+        li
+            background-color/*\**/: #e8e8e8\9
+            background: -ms-linear-gradient(top, #fcfcfc, #dedede) /* For IE 10 */
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#dedede') /* For IE 9 */
+            .label
+                padding-bottom: 10px
+            .arrow
+                span
+                    background-color/*\**/: #e8e8e8\9
+                    background: -ms-linear-gradient(top, #fcfcfc, #dedede) /* For IE 10 */
+                    -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#dedede') /* For IE 9 */
+        li.oe_active
+            background-color: #729fcf
+            background: -ms-linear-gradient(top, #729fcf, #3465a4) /* For IE 10 */
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#729fcf', endColorstr='#3465a4') /* For IE 9 */
+            .label
+                padding-bottom: 10px
+
+    ul.oe_form_status_clickable
+        li
+            background-color: #e8e8e8
+            background: -ms-linear-gradient(top, #fcfcfc, #dedede) /* For IE 10 */
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#dedede') /* For IE 9 */
+            .label
+                padding-bottom: 10px
+            .arrow
+                span
+                    background-color/*\**/: #e8e8e8\9
+                    background: -ms-linear-gradient(top, #fcfcfc, #dedede) /* For IE 10 */
+                    -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fcfcfc', endColorstr='#dedede') /* For IE 9 */
+        li.oe_active
+            background-color: #729fcf
+            background: -ms-linear-gradient(top, #729fcf, #3465a4) /* For IE 10 */
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#729fcf', endColorstr='#3465a4') /* For IE 9 */
+            .label
+                padding-bottom: 0
+
+    // mail addon // TODO: move this in mail addon
+    .oe_mail
+        .oe_msg
+            .oe_msg_icons
+                span
+                    -ms-filter: "progid:DXImageTransform.Microsoft.shadow(color=#aaaaaa,strength=2)"
+// }}}
+
 // @media print {{{
 @media print
     .openerp
