@@ -114,7 +114,7 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
-        'content_subtype': lambda self, cr, uid, ctx={}: 'plain',
+        'content_subtype': lambda self, cr, uid, ctx={}: 'html',
         'body_text': lambda self, cr, uid, ctx={}: False,
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
@@ -135,7 +135,7 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        doc_name_get = self.pool.get(model).name_get(cr, uid, res_id, context=context)
+        doc_name_get = self.pool.get(model).name_get(cr, uid, [res_id], context=context)
         if doc_name_get:
             record_name = doc_name_get[0][1]
         else:

@@ -113,7 +113,8 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
-    def message_post_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False, attachment_ids=None, context=None):
+    def message_post_user_api(self, cr, uid, thread_id, body='', subject=False, parent_id=False,
+                                attachment_ids=None, context=None, content_subtype='plaintext', **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
             This is done because when giving the context of Chatter on the
             various mailboxes, we do not have access to the current partner_id.
@@ -124,8 +125,8 @@ class res_users(osv.Model):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id[0]
         partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
-        return self.pool.get('res.partner').message_post_api(cr, uid, partner_id, body=body, subject=subject,
-            parent_id=parent_id, attachment_ids=attachment_ids, context=context)
+        return self.pool.get('res.partner').message_post_user_api(cr, uid, partner_id, body=body, subject=subject,
+            parent_id=parent_id, attachment_ids=attachment_ids, context=context, content_subtype=content_subtype, **kwargs)
 
     def message_post(self, cr, uid, thread_id, context=None, **kwargs):
         """ Redirect the posting of message on res.users to the related partner.
@@ -140,10 +141,6 @@ class res_users(osv.Model):
         partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
-    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
-        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
-            update_vals=update_vals, context=context)
 
 class res_users_mail_group(osv.Model):
     """ Update of res.users class

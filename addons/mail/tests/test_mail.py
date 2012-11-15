@@ -463,7 +463,8 @@ class test_mail(test_mail_mockup.TestMailMockups):
         # 1. Comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
-            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id,
+                'default_content_subtype': 'plaintext'})
         compose = mail_compose.browse(cr, uid, compose_id)
         # Test: mail.compose.message: composition_mode, model, res_id
         self.assertEqual(compose.composition_mode,  'comment', 'mail.compose.message incorrect composition_mode')
