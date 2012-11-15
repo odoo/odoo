@@ -4952,7 +4952,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
-            var id = escape(JSON.stringify(this.view.datarecord.id || null));
+            var id = JSON.stringify(this.view.datarecord.id || null);
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
