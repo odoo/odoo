@@ -190,7 +190,14 @@ instance.web.Dialog = instance.web.Widget.extend({
 });
 
 instance.web.CrashManager = instance.web.Class.extend({
+    init: function() {
+        this.active = true;
+    },
+
     rpc_error: function(error) {
+        if (!this.active) {
+            return;
+        }
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
@@ -205,6 +212,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
     },
     show_warning: function(error) {
+        if (!this.active) {
+            return;
+        }
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
@@ -213,7 +223,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         });
     },
     show_error: function(error) {
-        var self = this;
+        if (!this.active) {
+            return;
+        }
         var buttons = {};
         buttons[_t("Ok")] = function() {
             $(this).dialog("close");
@@ -642,7 +654,7 @@ instance.web.client_actions.add("login", "instance.web.Login");
 instance.web.redirect = function(url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
     if (instance.client && instance.client.crashmanager) {
-        instance.client.crashmanager.destroy();
+        instance.client.crashmanager.active = false;
     }
 
     var wait_server = function() {
@@ -658,7 +670,7 @@ instance.web.redirect = function(url, wait) {
     } else {
         window.location = url;
     }
-}
+};
 
 /**
  * Client action to reload the whole interface.

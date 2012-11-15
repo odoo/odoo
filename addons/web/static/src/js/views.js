@@ -1239,6 +1239,7 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }, null);
             } else {
+                self.do_action({"type":"ir.actions.act_window_close"});
                 return result_handler();
             }
         };
