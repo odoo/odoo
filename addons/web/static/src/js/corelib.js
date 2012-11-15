@@ -1276,7 +1276,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
                 };
                 deferred.reject(error, $.Event());
             });
-        // Allow deferred user to disable on_rpc_error in fail
+        // Allow deferred user to disable rpc_error call in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
@@ -1309,9 +1309,18 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         // extracted from payload to set on the url
         var data = {
             session_id: this.session_id,
-            id: payload.id
+            id: payload.id,
+            sid: this.httpsessionid,
         };
-        url.url = this.get_url(url.url);
+        
+        var set_sid = function (response, textStatus, jqXHR) {
+            // If response give us the http session id, we store it for next requests...
+            if (response.httpsessionid) {
+                self.httpsessionid = response.httpsessionid;
+            }
+        };
+
+        url.url = this.url(url.url, null);
         var ajax = _.extend({
             type: "GET",
             dataType: 'jsonp', 
@@ -1326,7 +1335,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         if(payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
-            return $.ajax(ajax);
+            return $.ajax(ajax).done(set_sid);
         } else {
             // Indirect jsonp request
             var ifid = _.uniqueId('oe_rpc_iframe');
@@ -1364,11 +1373,20 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
-            return deferred;
+            return deferred.done(set_sid);
         }
     },
-    get_url: function (file) {
-        return this.prefix + file;
+
+    url: function(path, params) {
+        var qs = '';
+        if (!_.isNull(params)) {
+            params = _.extend(params || {}, {session_id: this.session_id});
+            if (this.httpsessionid) {
+                params.sid = this.httpsessionid;
+            }
+            qs = '?' + $.param(params);
+        }
+        return this.prefix + path + qs;
     },
 });
 

@@ -721,10 +721,10 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.last_default_get = {};
     },
     default_get: function(fields, options) {
-        return this._super(fields, options).done(this.on_default_get);
-    },
-    on_default_get: function(res) {
-        this.last_default_get = res;
+        var self = this;
+        return this._super(fields, options).done(function(res) {
+            self.last_default_get = res;
+        });
     },
     create: function(data) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,

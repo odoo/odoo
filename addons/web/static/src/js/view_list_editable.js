@@ -157,13 +157,7 @@ openerp.web.list_editable = function (instance) {
          * @returns {$.Deferred}
          */
         ensure_saved: function () {
-            var self = this;
-            return this.saving_mutex.exec(function() {
-                if (!self.editor.is_editing()) {
-                    return $.when();
-                }
-                return self.save_edition();
-            });
+            return this.save_edition();
         },
         /**
          * Builds a record with the provided id (``false`` for a creation),
@@ -273,29 +267,34 @@ openerp.web.list_editable = function (instance) {
          */
         save_edition: function () {
             var self = this;
-            return this.with_event('save', {
-                editor: this.editor,
-                form: this.editor.form,
-                cancel: false
-            }, function () {
-                return this.editor.save().then(function (attrs) {
-                    var created = false;
-                    var record = self.records.get(attrs.id);
-                    if (!record) {
-                        // new record
-                        created = true;
-                        record = self.records.find(function (r) {
-                            return !r.get('id');
-                        }).set('id', attrs.id);
-                    }
-                    // onwrite callback could be altering & reloading the
-                    // record which has *just* been saved, so first perform all
-                    // onwrites then do a final reload of the record
-                    return self.handle_onwrite(record)
-                        .then(function () {
-                            return self.reload_record(record); })
-                        .then(function () {
-                            return { created: created, record: record }; });
+            return self.saving_mutex.exec(function() {
+                if (!self.editor.is_editing()) {
+                    return $.when();
+                }
+                return self.with_event('save', {
+                    editor: self.editor,
+                    form: self.editor.form,
+                    cancel: false
+                }, function () {
+                    return self.editor.save().then(function (attrs) {
+                        var created = false;
+                        var record = self.records.get(attrs.id);
+                        if (!record) {
+                            // new record
+                            created = true;
+                            record = self.records.find(function (r) {
+                                return !r.get('id');
+                            }).set('id', attrs.id);
+                        }
+                        // onwrite callback could be altering & reloading the
+                        // record which has *just* been saved, so first perform all
+                        // onwrites then do a final reload of the record
+                        return self.handle_onwrite(record)
+                            .then(function () {
+                                return self.reload_record(record); })
+                            .then(function () {
+                                return { created: created, record: record }; });
+                    });
                 });
             });
         },

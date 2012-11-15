@@ -2173,9 +2173,7 @@ instance.web.list.Binary = instance.web.list.Column.extend({
         if (value && value.substr(0, 10).indexOf(' ') == -1) {
             download_url = "data:application/octet-stream;base64," + value;
         } else {
-            download_url = _.str.sprintf(
-                '/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
-                instance.session.session_id, options.model, this.id, options.id);
+            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
             if (this.filename) {
                 download_url += '&filename_field=' + this.filename;
             }

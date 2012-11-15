@@ -2406,6 +2406,9 @@
   float: right;
   padding-left: 2px;
 }
+.openerp .oe_form_field_many2one input {
+  padding-right: 13px;
+}
 .openerp.ui-autocomplete li.oe_m2o_dropdown_option a {
   font-style: italic;
   padding-left: 2em;
@@ -2637,6 +2640,8 @@
   border-radius: 0;
   border: 1px solid #aaaaff;
   margin: 0;
+}
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field select {
   min-width: 0;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
@@ -2710,6 +2715,9 @@
 .openerp .oe_list_content td.oe_number {
   text-align: right !important;
   max-width: 100px;
+}
+.openerp .oe_list_content td.oe_list_field_date, .openerp .oe_list_content th.oe_list_header_date {
+  min-width: 6em;
 }
 .openerp .oe_list_content > thead {
   border-bottom: 2px solid #cacaca;

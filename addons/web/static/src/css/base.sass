@@ -1908,6 +1908,8 @@ $sheet-padding: 16px
             line-height: 14px
             float: right
             padding-left: 2px
+        input
+            padding-right: 13px
     &.ui-autocomplete
         li.oe_m2o_dropdown_option a
             font-style: italic
@@ -2061,6 +2063,7 @@ $sheet-padding: 16px
                 @include radius(0)
                 border: 1px solid #aaf
                 margin: 0
+            input, textarea, select
                 min-width: 0
             &.oe_form_field_float,&.oe_form_view_integer
                 input
@@ -2127,6 +2130,8 @@ $sheet-padding: 16px
         td.oe_number
             text-align: right !important
             max-width: 100px
+        td.oe_list_field_date, th.oe_list_header_date
+            min-width: 6em
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee

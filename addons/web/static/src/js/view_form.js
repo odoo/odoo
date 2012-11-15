@@ -1191,14 +1191,36 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             });
         }
     },
+    view_arch_to_dom_node: function(arch) {
+        // Historic mess for views arch
+        //
+        // server:
+        //      -> got xml as string
+        //      -> parse to xml and manipulate domains and contexts
+        //      -> convert to json
+        //  client:
+        //      -> got view as json
+        //      -> convert back to xml as string
+        //      -> parse it as xml doc (manipulate button@type for IE)
+        //      -> convert back to string
+        //      -> parse it as dom element with jquery
+        //      -> for each widget, convert node to json
+        //
+        // Wow !!!
+        var xml = instance.web.json_node_to_xml(arch);
+
+        var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
+        $('button', doc).each(function() {
+            $(this).attr('data-button-type', $(this).attr('type'));
+        });
+        xml = instance.web.xml_to_str(doc);
+        return $(xml);
+    },
     render_to: function($target) {
         var self = this;
         this.$target = $target;
 
-        // TODO: I know this will save the world and all the kitten for a moment,
-        //       but one day, we will have to get rid of xml2json
-        var xml = instance.web.json_node_to_xml(this.fvg.arch);
-        this.$form = $('<div class="oe_form">' + xml + '</div>');
+        this.$form = this.view_arch_to_dom_node(this.fvg.arch);
 
         this.process_version();
 
@@ -1867,6 +1889,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
     init: function(field_manager, node) {
+        node.attrs.type = node.attrs['data-button-type'];
         this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
@@ -2383,7 +2406,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
                 self.$input.focus();
                 return;
             }
-            self.picker('setDate', self.value ? instance.web.auto_str_to_date(self.value) : new Date());
+            self.picker('setDate', self.get('value') ? instance.web.auto_str_to_date(self.get('value')) : new Date());
             self.$input_picker.show();
             self.picker('show');
             self.$input_picker.hide();
@@ -3099,7 +3122,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 0
         });
-        this.$input.autocomplete("widget").addClass("openerp");
+        this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) { // ENTER
@@ -3992,13 +4015,18 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
             self._drop_shown = true;
         });
         self.tags = self.$text.textext()[0].tags();
-        self.$text.focusout(function() {
-            self.$text.trigger("setInputData", "");
-        }).keydown(function(e) {
-            if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
-                self.$text.textext()[0].autocomplete().selectFromDropdown();
-            }
-        });
+        self.$text
+            .focusin(function () {
+                self.trigger('focused');
+            })
+            .focusout(function() {
+                self.$text.trigger("setInputData", "");
+                self.trigger('blurred');
+            }).keydown(function(e) {
+                if (e.which === $.ui.keyCode.TAB && self._drop_shown) {
+                    self.$text.textext()[0].autocomplete().selectFromDropdown();
+                }
+            });
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4834,6 +4862,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
             link.href = "data:application/octet-stream;base64," + value;
         } else {
             instance.web.blockUI();
+            var c = instance.webclient.crashmanager;
             this.session.get_file({
                 url: '/web/binary/saveas_ajax',
                 data: {data: JSON.stringify({
@@ -4844,7 +4873,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
                     context: this.view.dataset.get_context()
                 })},
                 complete: instance.web.unblockUI,
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             });
             ev.stopPropagation();
             return false;
@@ -4927,8 +4956,12 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
-            url = '/web/binary/image?session_id=' + this.session.session_id + '&model=' +
-                this.view.dataset.model +'&id=' + id + '&field=' + field + '&t=' + (new Date().getTime());
+            url = this.session.url('/web/binary/image', {
+                                        model: this.view.dataset.model,
+                                        id: id,
+                                        field: field,
+                                        t: (new Date().getTime()),
+            });
         } else {
             url = this.placeholder;
         }
@@ -4984,21 +5017,85 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
+    set_value: function(value_) {
+        var value_ = value_ || [];
+        var self = this;
+        var ids = [];
+        _.each(value_, function(command) {
+            if (isNaN(command) && command.id == undefined) {
+                switch (command[0]) {
+                    case commands.CREATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.REPLACE_WITH:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.UPDATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.LINK_TO:
+                        ids = ids.concat(command[1]);
+                        return;
+                    case commands.DELETE:
+                        ids = _.filter(ids, function (id) { return id != command[1];});
+                        return;
+                    case commands.DELETE_ALL:
+                        ids = [];
+                        return;
+                }
+            } else {
+                ids.push(command);
+            }
+        });
+        this._super( ids );
+    },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
     get_file_url: function (attachment) {
-        return instance.origin + '/web/binary/saveas?session_id=' + this.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+        return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
+    },
+    read_name_values : function () {
+        var self = this;
+        // select the list of id for a get_name
+        var values = [];
+        _.each(this.get('value'), function (val) {
+            if (typeof val != 'object') {
+                values.push(val);
+            }
+        });
+        // send request for get_name
+        if (values.length) {
+            return this.ds_file.call('read', [values, ['id', 'name', 'datas_fname']]).done(function (datas) {
+                _.each(datas, function (data) {
+                    data.no_unlink = true;
+                    data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
+                    
+                    _.each(self.get('value'), function (val, key) {
+                        if(val == data.id) {
+                            self.get('value')[key] = data;
+                        }
+                    });
+                });
+            });
+        } else {
+            return $.when(this.get('value'));
+        }
     },
     render_value: function () {
-        var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
-        render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
-        this.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+        var self = this;
+        this.read_name_values().then(function (datas) {
 
-        // reinit input type file
-        var $input = this.$('input.oe_form_binary_file');
-        $input.after($input.clone(true)).remove();
-        this.$(".oe_fileupload").show();
+            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self}));
+            render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
+            self.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+
+            // reinit input type file
+            var $input = self.$('input.oe_form_binary_file');
+            $input.after($input.clone(true)).remove();
+            self.$(".oe_fileupload").show();
+
+        });
     },
     on_file_change: function (event) {
         event.stopPropagation();
@@ -5078,7 +5175,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 if(file_id != this.get('value')[i].id){
                     files.push(this.get('value')[i]);
                 }
-                else {
+                else if(!this.get('value')[i].no_unlink) {
                     this.ds_file.unlink([file_id]);
                 }
             }

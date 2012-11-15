@@ -3,10 +3,13 @@
  *--------------------------------------------------------*/
 var console;
 if (!console) {
-    console = {log: function () {}};
-}
-if (!console.debug) {
-    console.debug = console.log;
+    // Even IE9 only exposes console object if debug window opened
+    console = {};
+    ('log error debug info warn assert clear dir dirxml trace group'
+        + ' groupCollapsed groupEnd time timeEnd profile profileEnd count'
+        + ' exception').split(/\s+/).forEach(function(property) {
+            console[property] = _.identity;
+    });
 }
 
 openerp.web.coresetup = function(instance) {
@@ -198,7 +201,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         var self = this;
         _.each(files, function (file) {
             $('head').append($('<link>', {
-                'href': self.get_url(file),
+                'href': self.url(file, null),
                 'rel': 'stylesheet',
                 'type': 'text/css'
             }));
@@ -207,11 +210,11 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     load_js: function(files) {
         var self = this;
         var d = $.Deferred();
-        if(files.length != 0) {
+        if(files.length !== 0) {
             var file = files.shift();
             var tag = document.createElement('script');
             tag.type = 'text/javascript';
-            tag.src = self.get_url(file);
+            tag.src = self.url(file, null);
             tag.onload = tag.onreadystatechange = function() {
                 if ( (tag.readyState && tag.readyState != "loaded" && tag.readyState != "complete") || tag.onload_done )
                     return;
@@ -457,6 +460,16 @@ $.fn.getAttributes = function() {
     }
     return o;
 }
+$.fn.openerpClass = function(additionalClass) {
+    // This plugin should be applied on top level elements
+    additionalClass = additionalClass || '';
+    if (!!$.browser.msie) {
+        additionalClass += ' openerp_ie';
+    }
+    return this.each(function() {
+        $(this).addClass('openerp ' + additionalClass);
+    });
+};
 
 /** Jquery extentions */
 $.Mutex = (function() {
