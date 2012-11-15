@@ -55,11 +55,7 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     add: function (sc) {
         var self = this;
         this.dataset.create(sc).then(function(out){
-            self.trigger('display', {
-                name : sc.name,
-                id : out,
-                res_id : sc.res_id
-            });
+            self.trigger('load');
         });
     },
     display: function(sc) {
@@ -108,24 +104,24 @@ instance.web.UserMenu.include({
 });
 
 instance.web.ViewManagerAction.include({
-    switch_mode: function () {
+    switch_mode: function (view_type, no_store) {
         var self = this;
         this._super.apply(this, arguments).done(function() {
-            self.shortcut_check();
+            self.shortcut_check(self.views[view_type]);
         });
     },
-    shortcut_check : function() {
+    shortcut_check : function(view) {
         var self = this;
         var shortcuts_menu = instance.webclient.user_menu.shortcuts;
         var grandparent = this.getParent() && this.getParent().getParent();
         // display shortcuts if on the first view for the action
         var $shortcut_toggle = this.$el.find('.oe_shortcuts_toggle');
-        /*if (!this.action.name ||
+        if (!this.action.name ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {
             $shortcut_toggle.hide();
             return;
-        }*/
+        }
         $shortcut_toggle.toggleClass('oe_shortcuts_remove', shortcuts_menu.has(self.session.active_id));
         $shortcut_toggle.unbind("click").click(function() {
             if ($shortcut_toggle.hasClass("oe_shortcuts_remove")) {
