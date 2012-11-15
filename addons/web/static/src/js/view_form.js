@@ -5038,10 +5038,8 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                         return;
                     case commands.DELETE:
                         ids = _.filter(ids, function (id) { return id != command[1];});
-                        self.ds_file.unlink(command[1]);
                         return;
                     case commands.DELETE_ALL:
-                        self.ds_file.unlink(ids);
                         ids = [];
                         return;
                 }
