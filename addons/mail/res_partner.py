@@ -57,7 +57,8 @@ class res_partner_mail(osv.Model):
             if thread_id not in partner_ids:
                 partner_ids.append(thread_id)
             kwargs['partner_ids'] = partner_ids
-            return super(res_partner_mail, self).message_post(cr, uid, False, body=body, subject=subject,
+            thread_id = False
+        return super(res_partner_mail, self).message_post(cr, uid, thread_id, body=body, subject=subject,
                 type=type, subtype=subtype, parent_id=parent_id, attachments=attachments, context=context, **kwargs)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
