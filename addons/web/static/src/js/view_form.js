@@ -5017,21 +5017,85 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
+    set_value: function(value_) {
+        var value_ = value_ || [];
+        var self = this;
+        var ids = [];
+        _.each(value_, function(command) {
+            if (isNaN(command) && command.id == undefined) {
+                switch (command[0]) {
+                    case commands.CREATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.REPLACE_WITH:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.UPDATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.LINK_TO:
+                        ids = ids.concat(command[1]);
+                        return;
+                    case commands.DELETE:
+                        ids = _.filter(ids, function (id) { return id != command[1];});
+                        return;
+                    case commands.DELETE_ALL:
+                        ids = [];
+                        return;
+                }
+            } else {
+                ids.push(command);
+            }
+        });
+        this._super( ids );
+    },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
     },
+    read_name_values : function () {
+        var self = this;
+        // select the list of id for a get_name
+        var values = [];
+        _.each(this.get('value'), function (val) {
+            if (typeof val != 'object') {
+                values.push(val);
+            }
+        });
+        // send request for get_name
+        if (values.length) {
+            return this.ds_file.call('read', [values, ['id', 'name', 'datas_fname']]).done(function (datas) {
+                _.each(datas, function (data) {
+                    data.no_unlink = true;
+                    data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
+                    
+                    _.each(self.get('value'), function (val, key) {
+                        if(val == data.id) {
+                            self.get('value')[key] = data;
+                        }
+                    });
+                });
+            });
+        } else {
+            return $.when(this.get('value'));
+        }
+    },
     render_value: function () {
-        var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
-        render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
-        this.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+        var self = this;
+        this.read_name_values().then(function (datas) {
 
-        // reinit input type file
-        var $input = this.$('input.oe_form_binary_file');
-        $input.after($input.clone(true)).remove();
-        this.$(".oe_fileupload").show();
+            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self}));
+            render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
+            self.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+
+            // reinit input type file
+            var $input = self.$('input.oe_form_binary_file');
+            $input.after($input.clone(true)).remove();
+            self.$(".oe_fileupload").show();
+
+        });
     },
     on_file_change: function (event) {
         event.stopPropagation();
@@ -5111,7 +5175,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 if(file_id != this.get('value')[i].id){
                     files.push(this.get('value')[i]);
                 }
-                else {
+                else if(!this.get('value')[i].no_unlink) {
                     this.ds_file.unlink([file_id]);
                 }
             }
