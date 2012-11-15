@@ -157,8 +157,7 @@
         <record id="msg_discus4" model="mail.message">
             <field name="subject">Plan to install servers</field>
             <field name="body"><![CDATA[<p>Hello,<br/>
-                I am interested in your company's product and I plan to install 2 servers for my company.<br />
-                Can you please send me services catalog?<br />
+                I'd like to install two backup servers in my company. Do you have a simple solution to manage backups of Linux computers?<br />
                 Best regards,</p>
             ]]></field>
             <field name="type">email</field>
@@ -269,7 +268,7 @@
             </field>
         </record>
         <record id="msg_discus3" model="mail.message">
-            <field name="body"><![CDATA[<p>Hi Demo,<br/>The next version of products and price list catalog is scheduled for this next month.<br/>
+            <field name="body"><![CDATA[<p>Hi,<br/>The next version of products and price list catalog is scheduled for this next month.<br/>
 You will find attached the catalog, as well as the activity graph for the current year.<br />Have a nice reading!<br />
 Sincerely,</p>]]></field>
             <field name="type">comment</field>
@@ -280,7 +279,7 @@ Sincerely,</p>]]></field>
             <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discuss3_1" model="mail.message">
-            <field name="body"><![CDATA[<p>Thank you!<br/>Could you add the price list of us services into this document ?<br/>Sincerely,</p>]]></field>
+            <field name="body"><![CDATA[<p>Thank you!<br/>Could you send me the updated pricelist as negociated beginning of this year?<br/>Sincerely,</p>]]></field>
             <field name="parent_id" ref="msg_discus3"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -300,8 +299,8 @@ Sincerely,</p>]]></field>
             <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_1" model="mail.message">
-            <field name="body"><![CDATA[<p>Thank you very much!<br />
-The network seems perfect now. Could you just add a IP phone for Jon, please ?</p>]]></field>
+            <field name="body"><![CDATA[<p>Thank you.<br />
+The network seems perfect now, we did not faced any issue since five days. Could you just add an IP phone for Jon, please ?</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -322,7 +321,7 @@ The network seems perfect now. Could you just add a IP phone for Jon, please ?</
         <!-- Thread: Epic Technologies and Admin as salesman discuss about a meeting -->
         <record id="msg_discuss1" model="mail.message">
             <field name="subject">Information meeting</field>
-            <field name="body"><![CDATA[<p>Hello Administrator!<br />In Epic Technologies, we are very interested by some of the services you offer. Could we meet each other as soon as possible to discuss about your offers ?</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in big data software.</p>I saw you have interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need?</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_5"/>
@@ -373,7 +372,7 @@ The network seems perfect now. Could you just add a IP phone for Jon, please ?</
         <!-- Short thread: Admin ask, Agrolait answer -->
         <record id="msg_discuss0" model="mail.message">
             <field name="subject">Feedback on our service</field>
-            <field name="body"><![CDATA[<p>Hi Agrolait!<br />I come to you about our <i>On Site Assistance Service</i> that you received last week. Are you satisfied with it ? At our company, we strongly believe that nothing is more important than our customer's satisfaction. Please feel free to speak!<br />Best regards,</p>]]></field>
+            <field name="body"><![CDATA[<p>Hi,<br />I come to you about our <i>On Site Assistance Service</i> that we delivered to you last week. Do you have any feedback about our service? I noticed you requested new IP phones, is it for new employees or did you had any issue with the ones we sent you?<br />Best regards,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
@@ -382,7 +381,7 @@ The network seems perfect now. Could you just add a IP phone for Jon, please ?</
         </record>
         <record id="msg_discuss0_1" model="mail.message">
             <field name="subject">RE: Feedback on our service</field>
-            <field name="body"><![CDATA[<p>Hello<br />Glad to hearing from you! I have to say that here at Agrolait we are very happy with the service you offered to us. Be sure that we will contact your company again to fulfill our future needs!</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello<br />Glad to hearing from you! Everything is perfect, I ordered two phones for two new employees.</p>]]></field>
             <field name="parent_id" ref="msg_discuss0"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
