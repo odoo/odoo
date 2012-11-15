@@ -56,12 +56,14 @@ openerp.mail = function (session) {
 
         /* Get an image in /web/binary/image?... */
         get_image: function (session, model, field, id, resize) {
-            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '') + '&resize=' + (resize ? encodeURIComponent(resize) : '');
+            var r = resize ? encodeURIComponent(resize) : '';
+            id = id || '';
+            return session.url('/web/binary/image', {model: model, field: field, id: id, resize: r});
         },
 
         /* Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, attachment) {
-            return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+            return session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
         },
 
         /**
@@ -590,7 +592,7 @@ openerp.mail = function (session) {
 
             if (body.match(/\S+/)) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_api', [
+                this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
@@ -728,7 +730,6 @@ openerp.mail = function (session) {
 
     mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
-
         
         start: function () {
             this._super.apply(this, arguments);
