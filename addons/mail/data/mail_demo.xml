@@ -156,9 +156,18 @@
         <!-- Thread: 1 incoming email -->
         <record id="msg_discus4" model="mail.message">
             <field name="subject">Plan to install servers</field>
-            <field name="body"><![CDATA[<p>Hello,<br/>
-                I'd like to install two backup servers in my company. Do you have a simple solution to manage backups of Linux computers?<br />
-                Best regards,</p>
+            <field name="body"><![CDATA[<p>Hello,</p>
+      <p>We need to deploy new backup servers, with the following requirements:</p>
+      <ul>
+        <li>Daily incremental backups, with an history of 15 days,</li>
+        <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
+        <li>We need two redundant servers,</li>
+        <li>A total capacity of 200Gb.</li>
+      </ul>
+                <p>
+                Do you have a simple solution with servers running on Redhat Linux?
+                </p>
+                <p>Best regards,</p>
             ]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -268,8 +277,8 @@
             </field>
         </record>
         <record id="msg_discus3" model="mail.message">
-            <field name="body"><![CDATA[<p>Hi,<br/>The next version of products and price list catalog is scheduled for this next month.<br/>
-You will find attached the catalog, as well as the activity graph for the current year.<br />Have a nice reading!<br />
+            <field name="body"><![CDATA[<p>Hi,<br/>The next version of products and price list catalog is scheduled for next month.<br/>
+You will find in attachment the catalog, as well as a comparative benchmark of the different solutions existing on the market.<br />Have a nice reading!<br />
 Sincerely,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -291,7 +300,7 @@ Sincerely,</p>]]></field>
 
         <!-- Thread: Demo (network admin) and Admin -->
         <record id="msg_discus2" model="mail.message">
-            <field name="body"><![CDATA[<p>Hello,<br />As requested, I changed the infrastructure of networks. If there are still changes to be made, please feel free to contact me.</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello,</p><p>I have a friend working at Epic Technologies. He told me they plan to upgrade their backup servers within the next 3 months.</p><p>I think that someone should contact them and check if there is an opportunity.</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
@@ -299,8 +308,8 @@ Sincerely,</p>]]></field>
             <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_1" model="mail.message">
-            <field name="body"><![CDATA[<p>Thank you.<br />
-The network seems perfect now, we did not faced any issue since five days. Could you just add an IP phone for Jon, please ?</p>]]></field>
+            <field name="body"><![CDATA[<p>
+Ok, I'll contact them today. Thanks for the info.</p>]]></field>
             <field name="parent_id" ref="msg_discus2"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -309,7 +318,7 @@ The network seems perfect now, we did not faced any issue since five days. Could
             <field name="date" eval="(DateTime.today() - timedelta(hours=2, minutes=40)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus2_2" model="mail.message">
-            <field name="body"><![CDATA[Oh, right! His phone number is 0093.]]></field>
+            <field name="body"><![CDATA[Contact Chris: +1 (650) 307-6736.]]></field>
             <field name="parent_id" ref="msg_discus2"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -321,7 +330,14 @@ The network seems perfect now, we did not faced any issue since five days. Could
         <!-- Thread: Epic Technologies and Admin as salesman discuss about a meeting -->
         <record id="msg_discuss1" model="mail.message">
             <field name="subject">Information meeting</field>
-            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in big data software.</p>I saw you have interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need?</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in big data software.</p>I saw you have interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need:</p>
+            <ul>
+                <li>25 backup servers, running on Redhat Linux</li>
+                <li>minimum 200Gb of storage per server</li>
+                <li>setup a VPN between all our servers in New York and Chicago</li>
+            </ul>
+            <p>Thanks,</p>
+            ]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_5"/>
