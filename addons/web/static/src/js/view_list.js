@@ -22,6 +22,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'reorderable': true,
         'action_buttons': true,
     },
+    view_type: 'tree',
     /**
      * Core class for list-type displays.
      *
@@ -83,7 +84,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         });
 
         this.no_leaf = false;
-        this.on('view_load', self, self.load_list);
+        this.grouped = false;
+        this.on('view_loaded', self, self.load_list);
     },
     set_default_options: function (options) {
         this._super(options);
@@ -145,7 +147,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     start: function() {
         this.$el.addClass('oe_list');
-        return this.reload_view(null, null, true);
+        return this._super();
     },
     /**
      * Returns the style for the provided record in the current view (from the
@@ -219,7 +221,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      * @param {Object} data.fields_view.arch current list view descriptor
      * @param {Boolean} grouped Is the list view grouped
      */
-    load_list: function(data, grouped) {
+    load_list: function(data) {
         var self = this;
         this.fields_view = data;
         this.name = "" + this.fields_view.arch.attrs.string;
@@ -245,15 +247,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 }).value();
         }
 
-        this.setup_columns(this.fields_view.fields, grouped);
+        this.setup_columns(this.fields_view.fields, this.grouped);
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-
-        // add css classes that reflect the (absence of) access rights
-        this.$el.toggleClass('oe_list_cannot_create', !this.is_action_enabled('create'))
-                .toggleClass('oe_list_cannot_edit', !this.is_action_enabled('edit'))
-                .toggleClass('oe_list_cannot_delete', !this.is_action_enabled('delete'));
 
         // Head hook
         // Selecting records
@@ -290,7 +287,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             }
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
-                    .prop('disabled', grouped);
+                    .prop('disabled', this.grouped);
         }
 
         // Pager
@@ -359,7 +356,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
-        this.trigger('list_view_loaded', data, grouped);
+        this.trigger('list_view_loaded', data, this.grouped);
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
@@ -377,7 +374,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         var total = dataset.size();
         var limit = this.limit() || total;
-        this.$pager.toggle(total !== 0);
+        if (total == 0)
+            this.$pager.hide();
+        else
+            this.$pager.css("display", "");
         this.$pager.toggleClass('oe_list_pager_single_page', (total <= limit));
         var spager = '-';
         if (total) {
@@ -464,25 +464,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
     /**
      * Reloads the list view based on the current settings (dataset & al)
      *
+     * @deprecated
      * @param {Boolean} [grouped] Should the list be displayed grouped
      * @param {Object} [context] context to send the server while loading the view
      */
     reload_view: function (grouped, context, initial) {
-        var self = this;
-        var callback = function (field_view_get) {
-            self.load_list(field_view_get, grouped);
-        };
-        if (this.embedded_view) {
-            return $.Deferred().then(callback).resolve(this.embedded_view);
-        } else {
-            return this.rpc('/web/view/load', {
-                model: this.model,
-                view_id: this.view_id,
-                view_type: "tree",
-                context: this.dataset.get_context(context),
-                toolbar: !!this.options.$sidebar
-            }).then(callback);
-        }
+        return this.load_view(context);
     },
     /**
      * re-renders the content of the list view
@@ -516,12 +503,17 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         return this.reload_content();
     },
     reload_record: function (record) {
+        var self = this;
         return this.dataset.read_ids(
             [record.get('id')],
             _.pluck(_(this.columns).filter(function (r) {
                     return r.tag === 'field';
                 }), 'name')
-        ).then(function (records) {
+        ).done(function (records) {
+            if (!records[0]) {
+                self.records.remove(record);
+                return;
+            }
             _(records[0]).each(function (value, key) {
                 record.set(key, value, {silent: true});
             });
@@ -564,8 +556,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             group_by = null;
         }
         this.no_leaf = !!context['group_by_no_leaf'];
+        this.grouped = !!group_by;
 
-        this.reload_view(!!group_by, context).then(
+        return this.load_view(context).then(
             this.proxy('reload_content'));
     },
     /**
@@ -578,7 +571,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             return;
         }
         var self = this;
-        return $.when(this.dataset.unlink(ids)).then(function () {
+        return $.when(this.dataset.unlink(ids)).done(function () {
             _(ids).each(function (id) {
                 self.records.remove(self.records.get(id));
             });
@@ -982,13 +975,13 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             // set) a human-readable version. m2o does not have this issue
             // because the non-human-readable is just a number, where the
             // human-readable version is a pair
-            if (value && (ref_match = /([\w\.]+),(\d+)/.exec(value))) {
+            if (value && (ref_match = /^([\w\.]+),(\d+)$/.exec(value))) {
                 // reference values are in the shape "$model,$id" (as a
                 // string), we need to split and name_get this pair in order
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new instance.web.DataSet(this.view, model).name_get([id]).then(function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id]).done(function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -1004,7 +997,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // and let the various registered events handle refreshing the
                 // row
                 new instance.web.DataSet(this.view, column.relation)
-                        .name_get([value]).then(function (names) {
+                        .name_get([value]).done(function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
@@ -1012,7 +1005,8 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         } else if (column.type === 'many2many') {
             value = record.get(column.id);
             // non-resolved (string) m2m values are arrays
-            if (value instanceof Array && !_.isEmpty(value)) {
+            if (value instanceof Array && !_.isEmpty(value)
+                    && !record.get(column.id + '__display')) {
                 var ids;
                 // they come in two shapes:
                 if (value[0] instanceof Array) {
@@ -1027,9 +1021,14 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     ids = value;
                 }
                 new instance.web.Model(column.relation)
-                    .call('name_get', [ids]).then(function (names) {
-                        record.set(column.id, _(names).pluck(1).join(', '));
-                    })
+                    .call('name_get', [ids]).done(function (names) {
+                        // FIXME: nth horrible hack in this poor listview
+                        record.set(column.id + '__display',
+                                   _(names).pluck(1).join(', '));
+                        record.set(column.id, ids);
+                    });
+                // temp empty value
+                record.set(column.id, false);
             }
         }
         return column.format(record.toForm().data, {
@@ -1112,7 +1111,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
         if (!this.$current) { return; }
         this.$current.remove();
-        this.$current = null;
     },
     get_records: function () {
         return this.records.map(function (record) {
@@ -1319,9 +1317,11 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                         process_modifiers: false
                     });
                 } catch (e) {
-                    group_label = row_data[group_column.id].value;
+                    group_label = _.str.escapeHTML(row_data[group_column.id].value);
                 }
-                $group_column.text(_.str.sprintf("%s (%d)",
+                // group_label is html-clean (through format or explicit
+                // escaping if format failed), can inject straight into HTML
+                $group_column.html(_.str.sprintf("%s (%d)",
                     group_label, group.length));
 
                 if (group.length && group.openable) {
@@ -1396,43 +1396,45 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         var fields = _.pluck(_.select(this.columns, function(x) {return x.tag == "field"}), 'name');
         var options = { offset: page * limit, limit: limit, context: {bin_size: true} };
         //TODO xmo: investigate why we need to put the setTimeout
-        $.async_when().then(function() {dataset.read_slice(fields, options).then(function (records) {
-            // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
-            if (self.records.length) {
-                self.records.reset(null, {silent: true});
-            }
-            if (!self.datagroup.openable) {
-                view.configure_pager(dataset);
-            } else {
-                if (dataset.size() == records.length) {
-                    // only one page
-                    self.$row.find('td.oe_list_group_pagination').empty();
-                } else {
-                    var pages = Math.ceil(dataset.size() / limit);
-                    self.$row
-                        .find('.oe_list_pager_state')
-                            .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
-                                page: page + 1,
-                                page_count: pages
-                            }))
-                        .end()
-                        .find('button[data-pager-action=previous]')
-                            .css('visibility',
-                                 page === 0 ? 'hidden' : '')
-                        .end()
-                        .find('button[data-pager-action=next]')
-                            .css('visibility',
-                                 page === pages - 1 ? 'hidden' : '');
+        $.async_when().done(function() {
+            dataset.read_slice(fields, options).done(function (records) {
+                // FIXME: ignominious hacks, parents (aka form view) should not send two ListView#reload_content concurrently
+                if (self.records.length) {
+                    self.records.reset(null, {silent: true});
                 }
-            }
+                if (!self.datagroup.openable) {
+                    view.configure_pager(dataset);
+                } else {
+                    if (dataset.size() == records.length) {
+                        // only one page
+                        self.$row.find('td.oe_list_group_pagination').empty();
+                    } else {
+                        var pages = Math.ceil(dataset.size() / limit);
+                        self.$row
+                            .find('.oe_list_pager_state')
+                                .text(_.str.sprintf(_t("%(page)d/%(page_count)d"), {
+                                    page: page + 1,
+                                    page_count: pages
+                                }))
+                            .end()
+                            .find('button[data-pager-action=previous]')
+                                .css('visibility',
+                                     page === 0 ? 'hidden' : '')
+                            .end()
+                            .find('button[data-pager-action=next]')
+                                .css('visibility',
+                                     page === pages - 1 ? 'hidden' : '');
+                    }
+                }
 
-            self.records.add(records, {silent: true});
-            list.render();
-            d.resolve(list);
-            if (_.isEmpty(records)) {
-                view.no_result();
-            }
-        });});
+                self.records.add(records, {silent: true});
+                list.render();
+                d.resolve(list);
+                if (_.isEmpty(records)) {
+                    view.no_result();
+                }
+            });
+        });
         return d.promise();
     },
     setup_resequence_rows: function (list, dataset) {
@@ -1488,7 +1490,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     //        Accounting > Taxes > Taxes, child tax accounts)
                     //        when synchronous (without setTimeout)
                     (function (dataset, id, seq) {
-                        $.async_when().then(function () {
+                        $.async_when().done(function () {
                             var attrs = {};
                             attrs[seqname] = seq;
                             dataset.write(id, attrs);
@@ -1513,7 +1515,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
                     self.render_groups(groups));
                 if (post_render) { post_render(); }
             }, function (dataset) {
-                self.render_dataset(dataset).then(function (list) {
+                self.render_dataset(dataset).done(function (list) {
                     self.children[null] = list;
                     self.elements =
                         [list.$current.replaceAll($el)[0]];
@@ -1560,9 +1562,8 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
     }
 });
 
-var DataGroup =  instance.web.CallbackEnabled.extend({
+var DataGroup =  instance.web.Class.extend({
    init: function(parent, model, domain, context, group_by, level) {
-       this._super(parent, null);
        this.model = new instance.web.Model(model, context, domain);
        this.group_by = group_by;
        this.context = context;
@@ -1573,7 +1574,7 @@ var DataGroup =  instance.web.CallbackEnabled.extend({
    list: function (fields, ifGroups, ifRecords) {
        var self = this;
        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
-       $.when(query).then(function (querygroups) {
+       $.when(query).done(function (querygroups) {
            // leaf node
            if (!querygroups) {
                var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
@@ -2023,6 +2024,8 @@ instance.web.list.columns = new instance.web.Registry({
     'field.progressbar': 'instance.web.list.ProgressBar',
     'field.handle': 'instance.web.list.Handle',
     'button': 'instance.web.list.Button',
+    'field.many2onebutton': 'instance.web.list.Many2OneButton',
+    'field.many2many': 'instance.web.list.Many2Many'
 });
 instance.web.list.columns.for_ = function (id, field, node) {
     var description = _.extend({tag: node.tag}, field, node.attrs);
@@ -2153,7 +2156,7 @@ instance.web.list.Boolean = instance.web.list.Column.extend({
      * @private
      */
     _format: function (row_data, options) {
-        return _.str.sprintf('<input type="checkbox" %s disabled="disabled"/>',
+        return _.str.sprintf('<input type="checkbox" %s readonly="readonly"/>',
                  row_data[this.id].value ? 'checked="checked"' : '');
     }
 });
@@ -2165,20 +2168,24 @@ instance.web.list.Binary = instance.web.list.Column.extend({
      */
     _format: function (row_data, options) {
         var text = _t("Download");
-        var download_url = _.str.sprintf(
-                '/web/binary/saveas?session_id=%s&model=%s&field=%s&id=%d',
-                instance.session.session_id, options.model, this.id, options.id);
-        if (this.filename) {
-            download_url += '&filename_field=' + this.filename;
-            if (row_data[this.filename]) {
-                text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
-                        row_data[this.filename].value, {type: 'char'}));
+        var value = row_data[this.id].value;
+        var download_url;
+        if (value && value.substr(0, 10).indexOf(' ') == -1) {
+            download_url = "data:application/octet-stream;base64," + value;
+        } else {
+            download_url = this.session.url('/web/binary/saveas', {model: options.model, field: this.id, id: options.id});
+            if (this.filename) {
+                download_url += '&filename_field=' + this.filename;
             }
         }
-        return _.template('<a href="<%-href%>"><%-text%></a> (%<-size%>)', {
+        if (this.filename && row_data[this.filename]) {
+            text = _.str.sprintf(_t("Download \"%s\""), instance.web.format_value(
+                    row_data[this.filename].value, {type: 'char'}));
+        }
+        return _.template('<a href="<%-href%>"><%-text%></a> (<%-size%>)', {
             text: text,
             href: download_url,
-            size: row_data[this.id].value
+            size: instance.web.binary_to_binsize(value),
         });
     }
 });
@@ -2208,6 +2215,21 @@ instance.web.list.Handle = instance.web.list.Column.extend({
      */
     _format: function (row_data, options) {
         return '<div class="oe_list_handle">';
+    }
+});
+instance.web.list.Many2OneButton = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        this.has_value = !!row_data[this.id].value;
+        return QWeb.render('Many2OneButton.cell', {'widget': this});
+    },
+});
+instance.web.list.Many2Many = instance.web.list.Column.extend({
+    _format: function (row_data, options) {
+        if (!_.isEmpty(row_data[this.id].value)) {
+            // If value, use __display version for printing
+            row_data[this.id] = row_data[this.id + '__display'];
+        }
+        return this._super(row_data, options);
     }
 });
 };

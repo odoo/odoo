@@ -1,6 +1,7 @@
 {
     'name': 'Web',
     'category': 'Hidden',
+    'version': '7.0.1.0',
     'description':
         """
 OpenERP Web core module.
@@ -17,7 +18,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/datejs/parser.js",
         "static/lib/datejs/sugarpak.js",
         "static/lib/datejs/extras.js",
-        "static/lib/jquery/jquery-1.7.2.js",
+        "static/lib/jquery/jquery-1.8.2.js",
         "static/lib/jquery.MD5/jquery.md5.js",
         "static/lib/jquery.form/jquery.form.js",
         "static/lib/jquery.validate/jquery.validate.js",
@@ -25,7 +26,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/spinjs/spin.js",
         "static/lib/jquery.autosize/jquery.autosize.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
-        "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
+        "static/lib/jquery.ui/js/jquery-ui-1.9.1.custom.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
         "static/lib/jquery.ui.notify/js/jquery.notify.js",
         "static/lib/jquery.deferred-queue/jquery.deferred-queue.js",
@@ -38,7 +39,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
         "static/lib/cleditor/jquery.cleditor.js",
-        "static/lib/py.js/lib/py.js",        
+        "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
         "static/src/js/testing.js",
         "static/src/js/corelib.js",
@@ -56,7 +57,7 @@ This module provides the core of the OpenERP Web Client.
         "static/src/js/view_tree.js",
     ],
     'css' : [
-        "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.8.16.custom.css",
+        "static/lib/jquery.ui.bootstrap/css/custom-theme/jquery-ui-1.9.0.custom.css",
         "static/lib/jquery.ui.timepicker/css/jquery-ui-timepicker-addon.css",
         "static/lib/jquery.ui.notify/css/ui.notify.css",
         "static/lib/jquery.tipsy/tipsy.css",
@@ -79,6 +80,9 @@ This module provides the core of the OpenERP Web Client.
         "static/test/evals.js",
         "static/test/search.js",
         "static/test/Widget.js",
+        "static/test/list.js"
         "static/test/list-editable.js"
     ],
+    'bootstrap': True,
+    'twitter': False,
 }

@@ -21,10 +21,10 @@ openerp.testing.section('misordered resolution managemeng', {
             fail1 = false, fail2 = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred();
-        dm.add(d1).then(function () { done1 = true; },
-                        function () { fail1 = true; });
-        dm.add(d2).then(function () { done2 = true; },
-                        function () { fail2 = true; });
+        dm.add(d1).done(function () { done1 = true; })
+                  .fail(function () { fail1 = true; });
+        dm.add(d2).done(function () { done2 = true; })
+                  .fail(function () { fail2 = true; });
 
         d2.resolve();
         d1.resolve();
@@ -42,10 +42,10 @@ openerp.testing.section('misordered resolution managemeng', {
             fail1 = false, fail2 = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred();
-        dm.add(d1).then(function () { done1 = true; },
-                        function () { fail1 = true; });
-        dm.add(d2).then(function () { done2 = true; },
-                        function () { fail2 = true; });
+        dm.add(d1).done(function () { done1 = true; })
+                  .fail(function () { fail1 = true; });
+        dm.add(d2).done(function () { done2 = true; })
+                  .fail(function () { fail2 = true; });
 
         d2.resolve();
         d1.resolve();
@@ -77,10 +77,10 @@ openerp.testing.section('misordered resolution managemeng', {
             fail1 = false, fail2 = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred();
-        dm.add(d1).then(function () { done1 = true; },
-                        function () { fail1 = true; });
-        dm.add(d2).then(function () { done2 = true; },
-                        function () { fail2 = true; });
+        dm.add(d1).done(function () { done1 = true; })
+                  .fail(function () { fail1 = true; });
+        dm.add(d2).done(function () { done2 = true; })
+                  .fail(function () { fail2 = true; });
 
         setTimeout(function () { d1.resolve(); }, 200);
         setTimeout(function () { d2.resolve(); }, 100);
@@ -103,10 +103,10 @@ openerp.testing.section('misordered resolution managemeng', {
             fail1 = false, fail2 = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred();
-        dm.add(d1).then(function () { done1 = true; },
-                        function () { fail1 = true; });
-        dm.add(d2).then(function () { done2 = true; },
-                        function () { fail2 = true; });
+        dm.add(d1).done(function () { done1 = true; })
+                  .fail(function () { fail1 = true; });
+        dm.add(d2).done(function () { done2 = true; })
+                  .fail(function () { fail2 = true; });
 
         setTimeout(function () { d1.resolve(); }, 200);
         setTimeout(function () { d2.resolve(); }, 100);

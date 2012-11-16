@@ -9,12 +9,14 @@ OpenERP Web Calendar view.
     'version': '2.0',
     'depends': ['web'],
     'js': [
-        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_debug.js',
-        'static/lib/dhtmlxScheduler/sources/ext/ext_minical.js',
+        'static/lib/dhtmlxScheduler/sources/dhtmlxscheduler.js',
+        'static/lib/dhtmlxScheduler/sources/ext/dhtmlxscheduler_minical.js',
         'static/src/js/calendar.js'
     ],
     'css': [
-        'static/lib/dhtmlxScheduler/codebase/ext/dhtmlxscheduler_ext.css',
+        #'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler.css',
+        #'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_dhx_terrace.css',
+        'static/lib/dhtmlxScheduler/codebase/dhtmlxscheduler_glossy.css',
         'static/src/css/web_calendar.css'
     ],
     'qweb' : [

@@ -83,6 +83,42 @@ instance.web.strip_raw_chars = function (value) {
 var normalize_format = function (format) {
     return Date.normalizeFormat(instance.web.strip_raw_chars(format));
 };
+
+/**
+ * Check with a scary heuristic if the value is a bin_size or not.
+ * If not, compute an approximate size out of the base64 encoded string.
+ *
+ * @param {String} value original format
+ */
+instance.web.binary_to_binsize = function (value) {
+    if (!value) {
+        return instance.web.human_size(0);
+    }
+    if (value.substr(0, 10).indexOf(' ') == -1) {
+        // Computing approximate size out of base64 encoded string
+        // http://en.wikipedia.org/wiki/Base64#MIME
+        return instance.web.human_size(value.length / 1.37);
+    } else {
+        // already bin_size
+        return value;
+    }
+};
+
+/**
+ * Returns a human readable size
+ *
+ * @param {Number} numner of bytes
+ */
+instance.web.human_size = function(size) {
+    var units = _t("Bytes,Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb").split(',');
+    var i = 0;
+    while (size >= 1024) {
+        size /= 1024;
+        ++i;
+    }
+    return size.toFixed(2) + ' ' + units[i];
+};
+
 /**
  * Formats a single atomic value based on a field descriptor
  *

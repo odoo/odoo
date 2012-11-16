@@ -95,12 +95,12 @@ openerp.testing.section('editor', {
         });
         var counter = 0;
         return e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 ok(e.is_editing(), "should be editing");
                 equal(counter, 3, "should have configured all fields");
                 return e.save();
@@ -120,12 +120,12 @@ openerp.testing.section('editor', {
         });
         var counter = 0;
         return e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 return e.cancel();
             })
             .done(function (record) {
@@ -151,12 +151,12 @@ openerp.testing.section('editor', {
         var counter = 0;
         var warnings = 0;
         return e.appendTo($fix)
-            .pipe(function () {
+            .then(function () {
                 return e.edit({}, function () {
                     ++counter;
                 });
             })
-            .pipe(function (form) {
+            .then(function (form) {
                 return e.save();
             })
             .done(function () { ok(false, "cancel should not succeed"); })
@@ -219,16 +219,16 @@ openerp.testing.section('list.edition', {
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
 
         return l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
-            .pipe(function () {
+            .then(l.proxy('reload_content'))
+            .then(function () {
                 return l.start_edition();
             })
-            .pipe(function () {
+            .then(function () {
                 ok(got_defaults, "should have fetched default values for form");
 
                 return l.save_edition();
             })
-            .pipe(function (result) {
+            .then(function (result) {
                 ok(result.created, "should yield newly created record");
                 equal(result.record.get('a'), "qux",
                       "should have used default values");
@@ -277,13 +277,13 @@ openerp.testing.section('list.edition.events', {
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
         return l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
-            .pipe(function () {
+            .then(l.proxy('reload_content'))
+            .then(function () {
                 ok(l.options.editable, "should be editable");
                 equal(o.counter, 0, "should have seen no event yet");
                 return l.start_edition(l.records.get(1));
             })
-            .pipe(function () {
+            .then(function () {
                 ok(l.editor.is_editing(), "should be editing");
                 equal(o.counter, 2, "should have seen two edition events");
             });
@@ -300,16 +300,81 @@ openerp.testing.section('list.edition.events', {
             edit_after = true;
         });
         return l.appendTo($fix)
-            .pipe(l.proxy('reload_content'))
-            .pipe(function () {
+            .then(l.proxy('reload_content'))
+            .then(function () {
                 ok(l.options.editable, "should be editable");
                 return l.start_edition();
             })
             // cancelling an event rejects the deferred
-            .pipe($.Deferred().reject(), function () {
+            .then($.Deferred().reject(), function () {
                 ok(!l.editor.is_editing(), "should not be editing");
                 ok(!edit_after, "should not have fired the edit:after event");
                 return $.when();
             });
+    });
+});
+
+openerp.testing.section('list.edition.onwrite', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('record-to-read', {asserts: 4}, function (instance, $fix, mock) {
+        mock('/web/view/load', function () {
+            return {
+                type: 'tree',
+                fields: {
+                    a: {type: 'char', string: "A"}
+                },
+                arch: {
+                    tag: 'tree',
+                    attrs: { on_write: 'on_write', colors: 'red:a == "foo"' },
+                    children: [
+                        {tag: 'field', attrs: {name: 'a'}}
+                    ]
+                }
+            };
+        });
+        mock('demo:read', function (params) {
+            if (_.isEmpty(params.args[0])) {
+                return [];
+            } else if (_.isEqual(params.args[0], [1])) {
+                return [
+                    {id: 1, a: 'some value'}
+                ];
+            } else if (_.isEqual(params.args[0], [42])) {
+                return [ {id: 42, a: 'foo'} ];
+            }
+            throw new Error(JSON.stringify(params));
+        });
+        mock('demo:default_get', function () { return {}; });
+        mock('demo:create', function () { return 1; });
+        mock('demo:on_write', function () { return [42]; });
+
+        var ds = new instance.web.DataSetStatic(null, 'demo', null, []);
+        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        return l.appendTo($fix)
+        .then(l.proxy('reload_content'))
+        .then(function () {
+            return l.start_edition();
+        })
+        .then(function () {
+            $fix.find('.oe_form_field input').val("some value").change();
+        })
+        .then(function () {
+            return l.save_edition();
+        })
+        .then(function () {
+            strictEqual(ds.ids.length, 2,
+                'should have id of created + on_write');
+            strictEqual(l.records.length, 2,
+                'should have record of created + on_write');
+            strictEqual(
+                $fix.find('tbody tr:eq(1)').css('color'), 'rgb(255, 0, 0)',
+                'shoud have color applied');
+            strictEqual(
+                $fix.find('tbody tr:eq(2)').css('color'), 'rgb(0, 0, 0)',
+                'should have default color applied');
+        });
     });
 });

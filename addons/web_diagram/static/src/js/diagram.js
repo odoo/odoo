@@ -22,10 +22,11 @@ instance.web.DiagramView = instance.web.View.extend({
         this.context = {};
         this.ids = this.dataset.ids;
         this.on('view_loaded', self, self.load_diagram);
+        this.on('pager_action_executed', self, self.pager_action_trigger);
     },
     start: function() {
         var self = this;
-        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).then(function(r) {
+        return this.rpc("/web_diagram/diagram/load", {"model": this.model, "view_id": this.view_id}).done(function(r) {
             self.load_diagram(r);
         });
     },
@@ -59,12 +60,7 @@ instance.web.DiagramView = instance.web.View.extend({
             self.$el.find('.oe_diagram_header').append(html_label);
         })
 
-        this.$el.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
-            var action = $(this).data('pager-action');
-            self.execute_pager_action(action);
-        });
-
-        this.do_update_pager();
+        this.init_pager();
 
         // New Node,Edge
         this.$el.find('#new_node.oe_diagram_button_new').click(function(){self.add_node();});
@@ -109,7 +105,7 @@ instance.web.DiagramView = instance.web.View.extend({
         });
 
         this.rpc(
-            '/web_diagram/diagram/get_diagram_info',params).then(function(result) {
+            '/web_diagram/diagram/get_diagram_info',params).done(function(result) {
                 self.draw_diagram(result);
             }
         );
@@ -117,11 +113,26 @@ instance.web.DiagramView = instance.web.View.extend({
 
     on_diagram_loaded: function(record) {
         var id_record = record['id'];
-        if(id_record) {
+        if (id_record) {
             this.id = id_record;
             this.get_diagram_info();
+            this.do_push_state({id: id_record});
+        } else {
+            this.do_push_state({});
         }
     },
+
+    do_load_state: function(state, warm) {
+        if (state && state.id) {
+            if (!this.dataset.get_id_index(state.id)) {
+                this.dataset.ids.push(state.id);
+            }
+            this.dataset.select_id(state.id);
+            if (warm) {
+                this.do_show();
+            }
+        }
+     },
 
     // Set-up the drawing elements of the diagram
     draw_diagram: function(result) {
@@ -245,7 +256,7 @@ instance.web.DiagramView = instance.web.View.extend({
             );
 
         pop.on('write_completed', self, function() {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
             });
         
         var form_fields = [self.parent_field];
@@ -279,7 +290,7 @@ instance.web.DiagramView = instance.web.View.extend({
             self.context || self.dataset.context
         );
         pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
 
         var form_controller = pop.view_form;
@@ -309,7 +320,7 @@ instance.web.DiagramView = instance.web.View.extend({
             }
         );
         pop.on('write_completed', self, function() {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
     },
 
@@ -331,7 +342,7 @@ instance.web.DiagramView = instance.web.View.extend({
             this.context || this.dataset.context
         );
         pop.on("elements_selected", self, function(element_ids) {
-            self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
+            self.dataset.read_index(_.keys(self.fields_view.fields)).then(self.on_diagram_loaded);
         });
         // We want to destroy the dummy edge after a creation cancel. This destroys it even if we save the changes.
         // This is not a problem since the diagram is completely redrawn on saved changes.
@@ -351,36 +362,65 @@ instance.web.DiagramView = instance.web.View.extend({
             form_controller.fields[self.connectors.attrs.destination].dirty = true;
        });
     },
-
-    execute_pager_action: function(action) {
-        switch (action) {
-            case 'first':
-                this.dataset.index = 0;
-                break;
-            case 'previous':
-                this.dataset.previous();
-                break;
-            case 'next':
-                this.dataset.next();
-                break;
-            case 'last':
-                this.dataset.index = this.dataset.ids.length - 1;
-                break;
+    
+    do_hide: function () {
+        if (this.$pager) {
+            this.$pager.hide();
         }
+        this._super();
+    },
+    
+    init_pager: function() {
+        var self = this;
+        if (this.$pager)
+            this.$pager.remove();
+        
+        this.$pager = $(QWeb.render("DiagramView.pager", {'widget':self})).hide();
+        if (this.options.$pager) {
+            this.$pager.appendTo(this.options.$pager);
+        } else {
+            this.$el.find('.oe_diagram_pager').replaceWith(this.$pager);
+        }
+        this.$pager.on('click','a[data-pager-action]',function() {
+            var action = $(this).data('pager-action');
+            self.execute_pager_action(action);
+        });
+        this.do_update_pager();
+    },
+    
+    pager_action_trigger: function(){
         var loaded = this.dataset.read_index(_.keys(this.fields_view.fields))
-                .pipe(this.on_diagram_loaded);
+                .then(this.on_diagram_loaded);
         this.do_update_pager();
         return loaded;
     },
+    
+    execute_pager_action: function(action) {
+	    switch (action) {
+	        case 'first':
+	            this.dataset.index = 0;
+	            break;
+	        case 'previous':
+	            this.dataset.previous();
+	            break;
+	        case 'next':
+	            this.dataset.next();
+	            break;
+	        case 'last':
+	            this.dataset.index = this.dataset.ids.length - 1;
+	            break;
+	    }
+	    this.trigger('pager_action_executed');
+
+    },
 
     do_update_pager: function(hide_index) {
-        var $pager = this.$el.find('div.oe_diagram_pager');
-        var index = hide_index ? '-' : this.dataset.index + 1;
-        if(!this.dataset.count) {
-            this.dataset.count = this.dataset.ids.length;
+        this.$pager.toggle(this.dataset.ids.length > 1);
+        if (hide_index) {
+            $(".oe_diagram_pager_state", this.$pager).html("");
+        } else {
+            $(".oe_diagram_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
         }
-        $pager.find('span.oe_pager_index').html(index);
-        $pager.find('span.oe_pager_count').html(this.dataset.count);
     },
 
     do_show: function() {

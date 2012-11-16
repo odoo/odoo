@@ -45,7 +45,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
             context: this.dataset.get_context()
-        }).then(this.on_loaded);
+        }).done(this.on_loaded);
     },
     /**
      * Returns the list of fields needed to correctly read objects.
@@ -62,12 +62,6 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             fields.push(this.children_field);
         }
         return fields;
-    },
-    store_record:function(records){
-        var self = this;
-        _(records).each(function (record) {
-            self.records[record.id] = record;
-        });
     },
     on_loaded: function (fields_view) {
         var self = this;
@@ -92,20 +86,18 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
-        this.dataset.read_slice(this.fields_list()).then(function(records) {
-            self.store_record(records);
+        this.dataset.read_slice(this.fields_list()).done(function(records) {
             if (!has_toolbar) {
                 // WARNING: will do a second read on the same ids, but only on
                 //          first load so not very important
-                self.render_data({'null':records})
-                self.getdata(_.pluck(records,"id"));
+                self.getdata(null, _(records).pluck('id'));
                 return;
             }
 
             var $select = self.$el.find('select')
                 .change(function () {
                     var $option = $(this).find(':selected');
-                    self.getdata($option.val());
+                    self.getdata($option.val(), $option.data('children'));
                 });
             _(records).each(function (record) {
                 self.records[record.id] = record;
@@ -120,12 +112,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 $select.change();
             }
         });
-        this.$el.find("#tree_view_expand").click(function(){
-                self.expand_all();
-        });
-        this.$el.find("#tree_view_collapse").click(function(){
-            self.collpase_all();
-        });
+
         // TODO store open nodes in url ?...
         this.do_push_state({});
 
@@ -140,22 +127,6 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                     expr = pair[1];
                 return [color, py.parse(py.tokenize(expr)), expr];
             }).value();
-    },
-    expand_all: function(){
-        var self = this;
-        var tr = this.$el.find(".oe-treeview-table tbody tr[id^='treerow_']");
-        _.each(tr,function(rec){
-            self.showcontent($(rec).attr('data-id'),true);
-        });
-    },
-    collpase_all: function(){
-        var self = this;
-        var root_tr = this.$el.find(".oe-treeview-table tbody tr[data-level='"+1+"']");
-        _.each(root_tr,function(rec){
-            if($(rec).hasClass('oe_open')){
-                self.showcontent($(rec).attr('data-id'),false);
-            }
-        });
     },
     /**
      * Returns the color for the provided record in the current view (from the
@@ -193,44 +164,50 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         });
 
         this.$el.delegate('.treeview-tr', 'click', function () {
-            var $this = $(this),
+            var is_loaded = 0,
+                $this = $(this),
                 record_id = $this.data('id'),
-                bool = $this.parent().hasClass('oe_open');
-                self.showcontent(record_id, !bool);
+                record = self.records[record_id],
+                children_ids = record[self.children_field];
+
+            _(children_ids).each(function(childid) {
+                if (self.$el.find('#treerow_' + childid).length) {
+                    if (self.$el.find('#treerow_' + childid).is(':hidden')) {
+                        is_loaded = -1;
+                    } else {
+                        is_loaded++;
+                    }
+                }
+            });
+            if (is_loaded === 0) {
+                if (!$this.parent().hasClass('oe_open')) {
+                    self.getdata(record_id, children_ids);
+                }
+            } else {
+                self.showcontent(record_id, is_loaded < 0);
+            }
         });
     },
     // get child data of selected value
-    getdata: function (id) {
+    getdata: function (id, children_ids) {
         var self = this;
-        var parent_child ={};
-        id = _.isArray(id)?id:parseInt(id); 
-        var ir_model_data = new instance.web.Model(this.model,self.dataset.get_context() || {},[['id','child_of',id]]).query();
-        ir_model_data._execute().then(function(records){
-              self.store_record(records);
-             _.each(records,function(rec){
-                 if(rec[self.children_field].length === 0)return;
-                 parent_child[rec.id] = [];
-                 _.each(rec[self.children_field],function(key){
-                     parent_child[rec.id].push(self.records[key]);
-                 });
-             })
-             self.render_data(parent_child);
-        });
-    },
-    render_data: function(groupby){
-        var self = this;
-        _.each(_.keys(groupby),function(key){
-            var $curr_node = self.$el.find('#treerow_' + key);
-            var record = groupby[key];
+
+        self.dataset.read_ids(children_ids, this.fields_list()).done(function(records) {
+            _(records).each(function (record) {
+                self.records[record.id] = record;
+            });
+
+            var $curr_node = self.$el.find('#treerow_' + id);
             var children_rows = QWeb.render('TreeView.rows', {
-                'records': record,
+                'records': records,
                 'children_field': self.children_field,
                 'fields_view': self.fields_view.arch.children,
                 'fields': self.fields,
-                'level': ($curr_node.data('level') || 0) + 1,
+                'level': $curr_node.data('level') || 0,
                 'render': instance.web.format_value,
                 'color_for': self.color_for
             });
+
             if ($curr_node.length) {
                 $curr_node.addClass('oe_open');
                 $curr_node.after(children_rows);
@@ -238,9 +215,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 self.$el.find('tbody').html(children_rows);
             }
         });
-        self.collpase_all();
     },
-
 
     // Get details in listview
     activate: function(id) {
@@ -254,7 +229,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             model: this.dataset.model,
             context: new instance.web.CompoundContext(
                 this.dataset.get_context(), local_context)
-        }).pipe(function (actions) {
+        }).then(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];
             var c = new instance.web.CompoundContext(local_context);
@@ -263,7 +238,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             }
             return self.rpc('/web/session/eval_domain_and_context', {
                 contexts: [c], domains: []
-            }).pipe(function (res) {
+            }).then(function (res) {
                 action.context = res.context;
                 return self.do_action(action);
             }, null);
@@ -284,5 +259,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         }, this);
     },
 
+    do_show: function () {
+        this.$el.show();
+    },
+
+    do_hide: function () {
+        this.$el.hide();
+        this.hidden = true;
+    }
 });
 };
