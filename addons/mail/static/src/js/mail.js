@@ -1636,7 +1636,7 @@ openerp.mail = function (session) {
             //         }
             //     });
             //     var r = menu.data;
-            //     menu.menu_loaded(r);
+            window.setTimeout(function(){menu.do_reload();}, 0);
             // });
         },
 
