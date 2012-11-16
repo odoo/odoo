@@ -24,15 +24,6 @@ openerp.testing.section('testing.stack', function (test) {
             strictEqual(val, 42, "should return the handler value")
         });
     });
-    test('direct, value, error', {asserts: 1}, function () {
-        var s = openerp.testing.Stack();
-        return s.execute(function () {
-            throw new Error("foo");
-        }).then(reject, function (f) {
-            strictEqual(f.message, "foo", "should reject with exception");
-            return $.when();
-        });
-    });
     test('direct, deferred, failure', {asserts: 1}, function () {
         var s = openerp.testing.Stack();
         return s.execute(function () {

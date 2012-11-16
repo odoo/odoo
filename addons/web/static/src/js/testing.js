@@ -115,13 +115,7 @@ openerp.testing = {};
                         setup();
                     }, failure);
                 } else {
-                    var actual_call;
-                    try {
-                        actual_call = $.when(fn.apply(null, args))
-                    } catch (e) {
-                        actual_call = $.Deferred().reject(e);
-                    }
-                    actual_call.then(success, failure);
+                    $.when(fn.apply(null, args)).then(success, failure);
                 }
             };
             var teardown = function () {
