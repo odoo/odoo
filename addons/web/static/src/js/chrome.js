@@ -669,22 +669,21 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
         var self = this;
         var $button = self.$el.find('.oe_form_button');
         var footer_panel = this.getParent().$buttons.find('footer');
-        $button.eq(0).prependTo(footer_panel);
-        $button.eq(1).appendTo(footer_panel);
-        self.$el.validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }).done(function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
+        $button.eq(1).appendTo(footer_panel).click(function(){
+           self.getParent().close();
+        })
+        $button.eq(0).prependTo(footer_panel).click(function(){
+          self.rpc("/web/session/change_password",{
+               'fields': $("form[name=change_password_form]").serializeArray()
+          }).done(function(result) {
+               if (result.error) {
+                  self.display_error(result);
+                  return;
+               } else {
+                   instance.webclient.on_logout();
+               }
+          });
+       })
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
