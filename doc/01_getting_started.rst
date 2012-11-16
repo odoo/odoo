@@ -67,6 +67,8 @@ Testing your installation can be done on http://localhost:8069/ . You should see
 Command line options
 ====================
 
+.. program:: openerp-server
+
 Using the command ::
 
   ./openerp-server --help
