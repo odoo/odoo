@@ -952,7 +952,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_settings: function() {
         var self = this;
         if (!this.getParent().has_uncommitted_changes()) {
-            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }).done(function(result) {
                 result.res_id = instance.session.uid;
                 self.getParent().action_manager.do_action(result);
             });

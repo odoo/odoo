@@ -774,10 +774,10 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
         }
         return false;
     },
-    rpc: function(url, data, success, error) {
-        var def = $.Deferred().done(success).fail(error);
+    rpc: function(url, data, options) {
+        var def = $.Deferred();
         var self = this;
-        instance.session.rpc(url, data).done(function() {
+        instance.session.rpc(url, data, options).done(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }).fail(function() {
@@ -1231,12 +1231,14 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
      *
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
+     * @param {Object} options additional options for rpc call
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params) {
+    rpc: function(url, params, options) {
         var self = this;
+        options = options || {};
         // url can be an $.ajax option object
         if (_.isString(url)) {
             url = { url: url };
@@ -1251,10 +1253,12 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             id: _.uniqueId('r')
         };
         var deferred = $.Deferred();
-        this.trigger('request', url, payload);
+        if (! options.shadow)
+            this.trigger('request', url, payload);
         var request = this.rpc_function(url, payload).done(
             function (response, textStatus, jqXHR) {
-                self.trigger('response', response);
+                if (! options.shadow)
+                    self.trigger('response', response);
                 if (!response.error) {
                     if (url.url === '/web/session/eval_domain_and_context') {
                         self.test_eval(params, response.result);
@@ -1268,7 +1272,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             }
         ).fail(
             function(jqXHR, textStatus, errorThrown) {
-                self.trigger('response_failed', jqXHR);
+                if (! options.shadow)
+                    self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,

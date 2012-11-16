@@ -22,9 +22,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.name = instance._session_id;
         this.qweb_mutex = new $.Mutex();
     },
-    rpc: function(url, params) {
+    rpc: function(url, params, options) {
         params.session_id = this.session_id;
-        return this._super(url, params);
+        return this._super(url, params, options);
     },
     /**
      * Setup a sessionm
