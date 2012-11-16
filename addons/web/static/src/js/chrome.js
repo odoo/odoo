@@ -189,7 +189,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     }
 });
 
-instance.web.CrashManager = instance.web.CallbackEnabled.extend({
+instance.web.CrashManager = instance.web.Class.extend({
     rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
@@ -303,7 +303,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         $('.oe_secondary_menus_container,.oe_user_menu_placeholder').empty();
         var fetch_db = this.rpc("/web/database/get_list", {}).then(
             function(result) {
-                self.db_list = result.db_list;
+                self.db_list = result;
             },
             function (_, ev) {
                 ev.preventDefault();
@@ -548,7 +548,7 @@ instance.web.Login =  instance.web.Widget.extend({
         return d;
     },
     on_db_loaded: function (result) {
-        this.db_list = result.db_list;
+        this.db_list = result;
         this.$("[name=db]").replaceWith(QWeb.render('Login.dblist', { db_list: this.db_list, selected_db: this.selected_db}));
         if(this.db_list.length === 0) {
             this.do_action("database_manager");
@@ -667,6 +667,10 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
+        var $button = self.$el.find('.oe_form_button');
+        var footer_panel = this.getParent().$buttons.find('footer');
+        $button.eq(0).prependTo(footer_panel);
+        $button.eq(1).appendTo(footer_panel);
         self.$el.validate({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
