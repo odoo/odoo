@@ -599,8 +599,95 @@ directly on the ``window`` object:
 Running through Python
 ----------------------
 
-.. todo:: make that work and document it
+The web client includes the means to run these tests on the
+command-line (or in a CI system), but while actually running it is
+pretty simple the setup of the pre-requisite parts has some
+complexities.
+
+1. Install unittest2_ and QUnitSuite_ in your Python environment. Both
+   can trivially be installed via `pip <http://pip-installer.org>`_ or
+   `easy_install
+   <http://packages.python.org/distribute/easy_install.html>`_.
+
+   The former is the unit-testing framework used by OpenERP, the
+   latter is an adapter module to run qunit_ test suites and convert
+   their result into something unittest2_ can understand and report.
+
+2. Install PhantomJS_. It is a headless
+   browser which allows automating running and testing web
+   pages. QUnitSuite_ uses it to actually run the qunit_ test suite.
+
+   The PhantomJS_ website provides pre-built binaries for some
+   platforms, and your OS's package management probably provides it as
+   well.
+
+   If you're building PhantomJS_ from source, I recommend preparing
+   for some knitting time as it's not exactly fast (it needs to
+   compile both `Qt <http://qt-project.org/>`_ and `Webkit
+   <http://www.webkit.org/>`_, both being pretty big projects).
+
+   .. note::
+
+       Because PhantomJS_ is webkit-based, it will not be able to test
+       if Firefox, Opera or Internet Explorer can correctly run the
+       test suite (and it is only an approximation for Safari and
+       Chrome). It is therefore recommended to *also* run the test
+       suites in actual browsers once in a while.
+
+   .. note::
+
+       The version of PhantomJS_ this was build through is 1.7,
+       previous versions *should* work but are not actually supported
+       (and tend to just segfault when something goes wrong in
+       PhantomJS_ itself so they're a pain to debug).
+
+3. Set up :ref:`OpenERP Command <openerpcommand:openerp-command>`,
+   which will be used to actually run the tests: running the qunit_
+   test suite requires a running server, so at this point OpenERP
+   Server isn't able to do it on its own during the building/testing
+   process.
+
+4. Install a new database with all relevant modules (all modules with
+   a web component at least), then restart the server
+
+   .. note::
+
+       For some tests, a source database needs to be duplicated. This
+       operation requires that there be no connection to the database
+       being duplicated, but OpenERP doesn't currently break
+       existing/outstanding connections, so restarting the server is
+       the simplest way to ensure everything is in the right state.
+
+5. Launch ``oe run-tests -d $DATABASE -mweb`` with the correct
+   addons-path specified (and replacing ``$DATABASE`` by the source
+   database you created above)
+
+   .. note::
+
+       If you leave out ``-mweb``, the runner will attempt to run all
+       the tests in all the modules, which may or may not work.
+
+If everything went correctly, you should now see a list of tests with
+(hopefully) ``ok`` next to their names, closing with a report of the
+number of tests run and the time it took:
+
+.. literalinclude:: test-report.txt
+    :language: text
+
+Congratulation, you have just performed a successful "offline" run of
+the OpenERP Web test suite.
+
+.. note::
+
+    Note that this runs all the Python tests for the ``web`` module,
+    but all the web tests for all of OpenERP. This can be surprising.
 
 .. _qunit: http://qunitjs.com/
 
 .. _qunit assertions: http://api.qunitjs.com/category/assert/
+
+.. _unittest2: http://pypi.python.org/pypi/unittest2
+
+.. _QUnitSuite: http://pypi.python.org/pypi/QUnitSuite/
+
+.. _PhantomJS: http://phantomjs.org/
