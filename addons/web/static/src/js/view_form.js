@@ -227,17 +227,36 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     widgetAccesskey:function(){
         var self = this;
-        self.$buttons.find("[accesskey]").html(function(i, html){
-           return html.replace(/^[^a-zA-Z]*([a-zA-Z])/g, '<p>$1</p>');
+        $(document).bind('keydown',function(e){
+        var list = $(document).find('.oe_form_buttons span button,.oe_form_buttons span a,.oe_application .oe_form_button, oe_list_content.oe_form_field_one2many_list_row_add a');
+        list = _.reject(list,function(r){ return $(r).hasClass('oe_form_invisible')})
+        var accesskey = _.map(list,function(r){ return $(r).attr('accesskey') });
+        _.each(list,function(el,i){
+              if (!$(el).attr("accesskey")) {
+                 var text = $(el).text().trim().substr(0,1);
+                 if (_.contains(accesskey.slice(0, i),text)){
+                     var index = $(el).text().trim().indexOf(text);
+                     var str = $(el).text().trim().substr(index + 1, index + 1);
+                     $(el).attr('accesskey',str);
+                     accesskey[i] = str;
+                  }else {
+                        $(el).attr('accesskey',text);
+                        accesskey[i] = text ;
+                    }
+                }
+         })
+        if (e.keyCode === e.which) {
+            _.each(list,function(rl,i){
+                 $(rl).html(function(i, html){
+                    return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
+                })
+            })
+       }}).keyup(function(){
+           var accesskey_list = $(document).find('.oe_form_buttons span button,.oe_form_buttons span a,.oe_application .oe_form_button, oe_list_content.oe_form_field_one2many_list_row_add a');
+           accesskey_list.each(function(){
+             $(this).find('span.access').removeClass('access');
+           })
         });
-        $(document).keydown(function(e){
-             self.$buttons.find("[accesskey] >p").removeClass("accessactive");
-            if (e.keyCode === $.ui.keyCode.ALT || e.keyCode === $.ui.keyCode.SHIFT && e.altKey) {
-                self.$buttons.find("[accesskey] >p").addClass("accessactive");
-            }
-        }).keyup(function(){
-                self.$buttons.find("[accesskey] > p").removeClass("accessactive");
-        })
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
