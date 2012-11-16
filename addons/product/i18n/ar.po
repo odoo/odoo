@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-08 12:29+0000\n"
-"PO-Revision-Date: 2012-09-16 13:03+0000\n"
-"Last-Translator: almodhesh <Unknown>\n"
+"PO-Revision-Date: 2012-11-15 18:59+0000\n"
+"Last-Translator: waleed bazaza <waleed_bazaza@yahoo.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-11-16 04:57+0000\n"
+"X-Generator: Launchpad (build 16272)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -57,9 +57,17 @@ msgid ""
 "Otherwise, this includes goods stored in any Stock Location typed as "
 "'internal'."
 msgstr ""
+"توقعات الكمية (الكمية و ذلك في متناول اليد - الصادر + الوارد)\n"
+" في سياق مع موقع واحد للمخزن، وهذا يشمل البضائع المخزنة في هذا الموقع، أو أي "
+"من أبنائه.\n"
+" في سياق واحد مع مستودع، وهذا يشمل السلع المخزنة في الموقع من أسهم هذه "
+"المستودعات، أو أي من أبنائه.\n"
+" في سياق واحد مع متجر، وهذا يشمل السلع المخزنة في الموقع الأسهم من مستودع "
+"هذا المحل، أو أي من أبنائه.\n"
+" خلاف ذلك، وهذا يشمل السلع المخزنة في أي موقع مخزن على ان تصنف 'داخلياً'"
 
 #. module: product
-#: model:product.category,name:product.cat1
+#: model:product.category,name:product.product_category_1
 msgid "Sellable"
 msgstr "قابل للبيع"
 
@@ -148,6 +156,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"كمية الحد الأدنى لتشغيل هذه القاعدة، التي أعرب عنها في وحدة قياس المورد إن "
+"وجدت أو في وحدة قياس الافتراضي للمنتج خلاف ذلك."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -170,7 +180,7 @@ msgstr ""
 #. module: product
 #: model:product.uom,name:product.product_uom_dozen
 msgid "Dozen"
-msgstr ""
+msgstr "دستة"
 
 #. module: product
 #: selection:product.template,cost_method:0
@@ -266,7 +276,7 @@ msgstr "  على سبيل المثال: 1 * (هذه الوحدة) = النسبة
 #: code:addons/product/product.py:418
 #, python-format
 msgid "Products: "
-msgstr ""
+msgstr "المنتجات: "
 
 #. module: product
 #: field:product.category,parent_id:0
@@ -481,7 +491,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "إنهاء تاريخ اصدارة لائحة الأسعار لتكون صالحة."
 
 #. module: product
-#: model:product.category,name:product.cat0
+#: model:product.category,name:product.product_category_0
 msgid "All products"
 msgstr "كل المنتجات"
 
@@ -559,7 +569,7 @@ msgstr "صندوق 20×20×40"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Price Computation"
-msgstr ""
+msgstr "حساب السعر"
 
 #. module: product
 #: model:res.groups,name:product.group_uos
@@ -627,7 +637,7 @@ msgstr "إجمالي عدد المنتجات التي يمكن طرحها بال
 #: constraint:product.packaging:0
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "خطأ: كود إين غير صالح"
 
 #. module: product
 #: field:product.pricelist.item,min_quantity:0
@@ -790,7 +800,7 @@ msgstr ""
 "الافتراضية للقياس المنتج طريقة أخرى"
 
 #. module: product
-#: model:product.category,name:product.product_category_accessories
+#: model:product.category,name:product.product_category_5
 msgid "Accessories"
 msgstr "البرامج الملحقة"
 
@@ -847,12 +857,12 @@ msgstr "نوع"
 #: model:ir.ui.menu,name:product.menu_product_pricelist_action2
 #: model:ir.ui.menu,name:product.menu_product_pricelist_main
 msgid "Pricelists"
-msgstr ""
+msgstr "قوائم الاسعار"
 
 #. module: product
 #: field:product.product,partner_ref:0
 msgid "Customer ref"
-msgstr ""
+msgstr "مرجع الزبون"
 
 #. module: product
 #: view:product.product:0
@@ -979,7 +989,7 @@ msgstr "مجموع وزن الحزمة"
 #. module: product
 #: field:product.template,seller_info_id:0
 msgid "unknown"
-msgstr ""
+msgstr "مجهول"
 
 #. module: product
 #: help:product.packaging,code:0
@@ -1058,7 +1068,7 @@ msgstr "الرمز"
 #. module: product
 #: view:product.supplierinfo:0
 msgid "Seq"
-msgstr ""
+msgstr "مسلسل"
 
 #. module: product
 #: view:product.price_list:0
@@ -1267,7 +1277,7 @@ msgstr "الحقل المرتبط بشكل المنتج"
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "وحدة القياس"
 
 #. module: product
 #: field:product.template,procure_method:0
@@ -1277,7 +1287,7 @@ msgstr "طريقة الشراء"
 #. module: product
 #: report:product.pricelist:0
 msgid "Printing Date"
-msgstr ""
+msgstr "تاريخ الطباعة"
 
 #. module: product
 #: field:product.template,uos_id:0
@@ -1298,7 +1308,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "المورد الرئيسي الذي لديه أولوية قصوى في قائمة الموردين."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
+#: model:product.category,name:product.product_category_6
 #: view:product.product:0
 msgid "Services"
 msgstr "الخدمات"
@@ -1327,7 +1337,7 @@ msgstr "المنتجات"
 #. module: product
 #: help:product.packaging,rows:0
 msgid "The number of layers on a pallet or box"
-msgstr ""
+msgstr "عدد الطبقات على الطبلية أو الصندوق"
 
 #. module: product
 #: help:product.pricelist.item,base:0
@@ -1338,7 +1348,7 @@ msgstr ""
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Pallet Dimension"
-msgstr ""
+msgstr "أبعاد الطبلية"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1371,7 +1381,7 @@ msgstr "خطأ !"
 #: model:ir.ui.menu,name:product.next_id_16
 #: view:product.uom:0
 msgid "Units of Measure"
-msgstr ""
+msgstr "وحدات القياس"
 
 #. module: product
 #: field:product.supplierinfo,min_qty:0
@@ -1379,7 +1389,7 @@ msgid "Minimal Quantity"
 msgstr "أقل كمية"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
+#: model:product.category,name:product.product_category_9
 msgid "PC"
 msgstr "حاسوب"
 
@@ -1420,7 +1430,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr ""
+msgstr "صالح للاستهلاك"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -1691,12 +1701,12 @@ msgstr ""
 #. module: product
 #: selection:product.ul,type:0
 msgid "Pallet"
-msgstr ""
+msgstr "طبلية"
 
 #. module: product
 #: field:product.packaging,ul_qty:0
 msgid "Package by layer"
-msgstr ""
+msgstr "حزمة من الطبقات"
 
 #. module: product
 #: field:product.template,warranty:0
@@ -1758,7 +1768,7 @@ msgstr "تنوعات"
 #: model:ir.actions.act_window,name:product.product_category_action
 #: model:ir.ui.menu,name:product.menu_products_category
 msgid "Products by Category"
-msgstr ""
+msgstr "المنتجات حسب الأصناف"
 
 #. module: product
 #: field:product.template,uos_coeff:0
@@ -1897,7 +1907,7 @@ msgstr "منتجات أخرى"
 #. module: product
 #: field:product.product,color:0
 msgid "Color Index"
-msgstr ""
+msgstr "الألوان"
 
 #. module: product
 #: view:product.product:0
@@ -1923,7 +1933,7 @@ msgstr "قائمة أسعار الموردين"
 #: code:addons/product/product.py:175
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "تحذير"
 
 #. module: product
 #: field:product.pricelist.item,base:0
@@ -1965,7 +1975,7 @@ msgstr "* ( 1 + "
 #. module: product
 #: help:product.packaging,weight:0
 msgid "The weight of a full package, pallet or box."
-msgstr ""
+msgstr "وزن الحزمة الكاملة أو الطبلية أو الصندوق."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd2_product_template
@@ -2090,7 +2100,7 @@ msgstr "المورد للمنتج"
 #. module: product
 #: field:product.product,product_image:0
 msgid "Image"
-msgstr ""
+msgstr "صورة"
 
 #. module: product
 #: field:product.uom,uom_type:0
@@ -2292,7 +2302,7 @@ msgstr ""
 #. module: product
 #: view:product.template:0
 msgid "Product Description"
-msgstr ""
+msgstr "وصف المنتج"
 
 #. module: product
 #: view:product.pricelist.item:0
@@ -2318,7 +2328,7 @@ msgstr "المنتج البديل"
 #. module: product
 #: model:product.category,name:product.product_category_shelves0
 msgid "Shelves"
-msgstr ""
+msgstr "الأدرج"
 
 #. module: product
 #: code:addons/product/pricelist.py:375
@@ -2343,7 +2353,7 @@ msgstr "طريقة حساب التكاليف"
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Palletization"
-msgstr ""
+msgstr "تكديس الطبليات"
 
 #. module: product
 #: help:product.template,volume:0
@@ -2400,7 +2410,7 @@ msgid "Category Type"
 msgstr "نوع التصنيف"
 
 #. module: product
-#: model:product.category,name:product.cat2
+#: model:product.category,name:product.product_category_2
 msgid "Private"
 msgstr "خاص"
 

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-28 20:30+0000\n"
-"Last-Translator: Carlos Ch. <Unknown>\n"
+"PO-Revision-Date: 2012-11-09 10:25+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:50+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-10 05:24+0000\n"
+"X-Generator: Launchpad (build 16251)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -534,6 +534,10 @@ msgid ""
 "for reporting purposes, via the Campaign Analysis or Campaign Follow-up "
 "views."
 msgstr ""
+"Los elementos de trabajo generados serán enlazados a la empresa relacionada "
+"con el registro. Si el registro es la empresa en si, deje este campo en "
+"blanco. Esto es útil para la elaboración de informes, vía las vistas de "
+"análisis de campañas o seguimiento de campañas."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -606,6 +610,12 @@ msgid ""
 "records which have the same value for the unique field as other records that "
 "already entered the campaign."
 msgstr ""
+"Determina un criterio adicional para añadir al filtro cuando seleccione "
+"nuevos registros para inyectar en la campaña. \"Sin duplicados\" previene "
+"seleccionar registros que ya han sido incorporados a la campaña previamente. "
+"Si la campaña tiene marcado \"Campo único\", \"Sin duplicados\" previene "
+"también seleccionar registros con el mismo valor para el campo único que "
+"otros ya introducidos en la campaña."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign,mode:0
@@ -670,7 +680,7 @@ msgstr "Junio"
 #. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_email_template
 msgid "Email Templates"
-msgstr ""
+msgstr "Plantillas de correo electrónico"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -850,6 +860,8 @@ msgstr "La operación no está soportada"
 #: model:email.template,body_text:marketing_campaign.email_template_3
 msgid "Hello, We are happy to announce that you become our Gold Partner."
 msgstr ""
+"Hola, estamos muy contentos de anunciarle que se ha convertido en asociado "
+"Gold."
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -970,6 +982,15 @@ msgid ""
 "campaign previously. Only easily comparable fields like textfields, "
 "integers, selections or single relationships may be used."
 msgstr ""
+"Si está establecido, este campo ayuda a segmentar ese trabajo en el modo sin "
+"duplicados para evitar seleccionar registros similares dos veces. Los "
+"registros similares son registros que tienen el mismo valor para su campo "
+"único. Por ejemplo escogiendo el campo 'E-mail' para las iniciativas de CRM, "
+"evita enviarle la misma campaña a la misma dirección de correo más de una "
+"vez. Si no se establece, los segmentos \"sin duplicados\" sólo prevendrán "
+"seleccionar el mismo registro otra vez si ya esta incorporado a la campaña. "
+"Sólo se pueden usar campos fácilmente comparables como textos, enteros, "
+"selecciones o relaciones simples."
 
 #. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
@@ -1023,6 +1044,8 @@ msgstr ""
 #: view:marketing.campaign.segment:0
 msgid "Sync mode: only records updated after last sync"
 msgstr ""
+"Modo de sincronización: sólo los registros actualizados desde la última "
+"sincronización"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,country_id:0
@@ -1136,6 +1159,7 @@ msgstr "Coste"
 #: model:email.template,body_text:marketing_campaign.email_template_1
 msgid "Hello, We are very happy to send Welcome message."
 msgstr ""
+"Hola, estamos muy contentos de poderle enviar este mensaje de bienvenida."
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0

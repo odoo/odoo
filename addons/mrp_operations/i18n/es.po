@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"PO-Revision-Date: 2012-11-08 15:58+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:52+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-09 05:05+0000\n"
+"X-Generator: Launchpad (build 16250)\n"
 
 #. module: mrp_operations
 #: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
@@ -142,6 +142,16 @@ msgid ""
 "* When the user cancels the work order it will be set in 'Canceled' state.\n"
 "* When order is completely processed that time it is set in 'Finished' state."
 msgstr ""
+"* Cuando se crea una orden, se establece en estado 'Borrador'.\n"
+"* Cuando el usuario establece la orden de trabajo en modo inicio, el estado "
+"se establece como 'En proceso'.\n"
+"* Cuando la orden de trabajo está en modo de ejecucción, durante ese momento "
+"si el usuario quiere parar o hacer cambios en la orden, puede establecerla "
+"en estado 'Pendiente'.\n"
+"* Cuando el usuario cancela la orden de trabajo, se establece el estado "
+"'Cancelado'.\n"
+"* Cuando se procesa completamente una orden, entonces el estado es "
+"'Finalizado'."
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_productionstart0
@@ -194,6 +204,7 @@ msgstr "Moviemiento de stock"
 msgid ""
 "In order to Finish the operation, it must be in the Start or Resume state!"
 msgstr ""
+"¡Para finalizar la operación, debe estar en el estado Inicio o Reanudar!"
 
 #. module: mrp_operations
 #: field:mrp.workorder,nbr:0
@@ -204,7 +215,7 @@ msgstr "Nº de líneas"
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Finish Order"
-msgstr ""
+msgstr "Finalizar orden"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -335,6 +346,7 @@ msgstr "Órdenes de trabajo durante último mes"
 #: help:mrp.production.workcenter.line,delay:0
 msgid "The elapsed time between operation start and stop in this Work Center"
 msgstr ""
+"El tiempo transcurrido entre el inicio y el final de este centro de trabajo"
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_canceloperation0
@@ -419,12 +431,14 @@ msgstr "En proceso"
 msgid ""
 "In order to Pause the operation, it must be in the Start or Resume state!"
 msgstr ""
+"¡Para poder pausar la operación, debe estar en modo de inicio o de "
+"reanudación!"
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:474
 #, python-format
 msgid "In order to Resume the operation, it must be in the Pause state!"
-msgstr ""
+msgstr "¡Para poder reanudar la operación, debe estar en modo de pausa!"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -472,6 +486,8 @@ msgid ""
 "Operation has already started !Youcan either Pause/Finish/Cancel the "
 "operation"
 msgstr ""
+"¡La operación ya se ha iniciado! No se puede pausar/finalizar/cancelar la "
+"operación."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -486,7 +502,7 @@ msgstr "Iniciada"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production started late"
-msgstr ""
+msgstr "Producción iniciada con retraso"
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -549,7 +565,7 @@ msgstr "Enero"
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Resume Work Order"
-msgstr ""
+msgstr "Reanudar orden de trabajo"
 
 #. module: mrp_operations
 #: model:process.node,note:mrp_operations.process_node_doneoperation0
@@ -801,7 +817,7 @@ msgstr "Nº línea órdenes"
 #: view:mrp.production:0
 #: view:mrp.production.workcenter.line:0
 msgid "Start Working"
-msgstr ""
+msgstr "Empezar a trabajar"
 
 #. module: mrp_operations
 #: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0

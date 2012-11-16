@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-23 11:48+0000\n"
-"PO-Revision-Date: 2012-11-05 19:28+0000\n"
+"PO-Revision-Date: 2012-11-11 09:50+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-06 05:20+0000\n"
-"X-Generator: Launchpad (build 16232)\n"
+"X-Launchpad-Export-Date: 2012-11-12 04:52+0000\n"
+"X-Generator: Launchpad (build 16251)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -695,7 +695,7 @@ msgstr "Ortak Paydaş Hesabı Raporu"
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
 msgid "Opening Entries Period"
-msgstr "Giriş Dönemi Açılışı"
+msgstr "Açılış Girişleri Dönemi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
@@ -1290,7 +1290,7 @@ msgid ""
 "Controls' on the related journal !"
 msgstr ""
 "Bu genel hesabı kullanamazsınız, ilgili günlükteki 'Giriş Denetimleri' "
-"sekmesini denetletin."
+"sekmesini denetleyin."
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1395,7 +1395,7 @@ msgstr "Vergiler"
 #: code:addons/account/wizard/account_report_common.py:145
 #, python-format
 msgid "Select a starting and an ending period"
-msgstr "Başlangıç ve bitiş dönemi seçin"
+msgstr "Başlangıç ve bitiş dönemini seçin"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
@@ -1451,7 +1451,7 @@ msgstr "Rapor Seçenekleri"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Günlük Öğeleri incelemesi"
+msgstr "Günlük Öğeleri İncelemesi"
 
 #. module: account
 #: report:account.aged_trial_balance:0
@@ -1862,7 +1862,7 @@ msgstr "Banka Hesapözeti Ara"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr "İşlenmemiş günlük maddeleri"
+msgstr "İşlenmemiş Günlük Öğeleri"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2021,8 +2021,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"'Etkin' seçeneği işaretli değilse bu, günlük dönemini silmeden gizlemenize "
-"izin verir."
+"'Etkin' alanı Yanlış olarak ayarlıysa, bu, günlük dönemini silmeden "
+"gizlemenize izin verir."
 
 #. module: account
 #: view:res.partner:0
@@ -2037,7 +2037,7 @@ msgstr "Borç & Alacak"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr "Account Common Journal Report"
+msgstr "Genel Günlük Raporu Hesabı"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -2170,7 +2170,7 @@ msgstr "Çözümsel hesap"
 #: code:addons/account/account_bank_statement.py:339
 #, python-format
 msgid "Please verify that an account is defined in the journal."
-msgstr "Please verify that an account is defined in the journal."
+msgstr "Lütfen bu günlükte bir hesabın tanımlandığını doğrulayın."
 
 #. module: account
 #: selection:account.entries.report,move_line_state:0
@@ -2182,7 +2182,7 @@ msgstr "Valid"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr "Account Print Journal"
+msgstr "Günlük Yazdırma Hesabı"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -2228,8 +2228,8 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
-"Check this box if you want to use a different sequence for each created "
-"journal. Otherwise, all will use the same sequence."
+"Oluşturulan her günlük için farklı bir sıra kullanmak istiyorsanız bu kutuyu "
+"işaretleyin."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -2245,8 +2245,8 @@ msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
 msgstr ""
-"If set to True then do not accept the entry if the entry date is not into "
-"the period dates"
+"Kapalı'ya ayarlıysa, giriş tarihi dönem tarihleri arasında değilse giriş "
+"kabul edilmez"
 
 #. module: account
 #: code:addons/account/account_invoice.py:73
@@ -2780,7 +2780,7 @@ msgstr "borç merkezileştirmesi"
 #: view:account.invoice.confirm:0
 #: model:ir.actions.act_window,name:account.action_account_invoice_confirm
 msgid "Confirm Draft Invoices"
-msgstr "Confirm Draft Invoices"
+msgstr "Taslak Faturaları Onayla"
 
 #. module: account
 #: field:account.entries.report,day:0
@@ -2944,7 +2944,7 @@ msgstr "Bank reconciliation"
 #. module: account
 #: report:account.invoice:0
 msgid "Disc.(%)"
-msgstr "Disc.(%)"
+msgstr "İnd.(%)"
 
 #. module: account
 #: report:account.general.ledger:0
@@ -3080,7 +3080,7 @@ msgstr "Bu sihirbaz yinelenen muhasebe girişleri oluşturu"
 #: code:addons/account/account.py:1329
 #, python-format
 msgid "No sequence defined on the journal !"
-msgstr "No sequence defined on the journal !"
+msgstr "Bu günlükte tanımlı bir sıra yok!"
 
 #. module: account
 #: code:addons/account/account.py:2285
@@ -3123,7 +3123,7 @@ msgstr "Müşteriler"
 #: report:account.analytic.account.journal:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "Period to"
-msgstr "Period to"
+msgstr "Bu döneme kadar"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -3294,7 +3294,7 @@ msgstr ""
 #. module: account
 #: help:account.journal,user_id:0
 msgid "The user responsible for this journal"
-msgstr "The user responsible for this journal"
+msgstr "Bu günlükten sorumlu kullanıcı"
 
 #. module: account
 #: view:account.period:0
@@ -3454,7 +3454,7 @@ msgstr "Paydaş Hesabı Defteri"
 #. module: account
 #: help:account.journal.column,sequence:0
 msgid "Gives the sequence order to journal column."
-msgstr "Gives the sequence order to journal column."
+msgstr "Günlük sütüunu diziliş sırasını verir."
 
 #. module: account
 #: help:account.account,currency_id:0
@@ -3528,7 +3528,7 @@ msgstr "Mali yıl için yol sonu günlüğü tanımlanmamış"
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Keep empty to use the expense account"
-msgstr "Masraf hesabını kullanmak için boş bırak"
+msgstr "Gider hesabını kullanmak için boş bırak"
 
 #. module: account
 #: field:account.aged.trial.balance,journal_ids:0
@@ -3630,7 +3630,7 @@ msgstr "Görünüm ayrıntıları"
 #. module: account
 #: report:account.overdue:0
 msgid "VAT:"
-msgstr "VAT:"
+msgstr "KDV :"
 
 #. module: account
 #: help:account.analytic.line,amount_currency:0
@@ -3669,7 +3669,7 @@ msgstr "Kapanış bilançosu hesaplanan bilanço ile aynı olmalı!"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr "Search Account Journal"
+msgstr "Günlük hesabı Ara"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -3809,7 +3809,7 @@ msgstr ""
 #. module: account
 #: report:account.invoice:0
 msgid "VAT :"
-msgstr "VAT :"
+msgstr "KDV :"
 
 #. module: account
 #: report:account.account.balance:0
@@ -4016,7 +4016,7 @@ msgstr "Qty"
 #. module: account
 #: field:account.invoice.report,address_contact_id:0
 msgid "Contact Address Name"
-msgstr "Contact Address Name"
+msgstr "İletişim Adresi Adı"
 
 #. module: account
 #: field:account.move.line,blocked:0
@@ -4691,7 +4691,7 @@ msgstr "Görünebilir mi?"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
 msgid "Account Journal Select"
-msgstr "Account Journal Select"
+msgstr "Günlük Hesabı Seç"
 
 #. module: account
 #: view:account.tax.template:0
@@ -4810,7 +4810,7 @@ msgstr "Alacak tutarı için varsayılan hesap olarak davranır"
 #: view:validate.account.move:0
 #: view:validate.account.move.lines:0
 msgid "Post Journal Entries"
-msgstr "Post Journal Entries"
+msgstr "Günlük Girişlerini İşle"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -5143,7 +5143,7 @@ msgstr "Error"
 #: field:account.analytic.inverted.balance,date2:0
 #: field:account.analytic.journal.report,date2:0
 msgid "End of period"
-msgstr "Dönem Bitişi"
+msgstr "Dönem Sonu"
 
 #. module: account
 #: view:res.partner:0
@@ -5172,7 +5172,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
+msgstr "Fatura Numarası her Firmada eşsiz olmalı!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -5223,7 +5223,7 @@ msgstr "Bu aydaki Satış günlükleri"
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
 #: model:ir.model,name:account.model_account_vat_declaration
 msgid "Account Vat Declaration"
-msgstr "Account Vat Declaration"
+msgstr "KDV Hesabı Bildirimi"
 
 #. module: account
 #: report:account.invoice:0
@@ -5271,7 +5271,7 @@ msgstr "Alt Vergi Hesapları"
 #: code:addons/account/account.py:1097
 #, python-format
 msgid "Start period should be smaller then End period"
-msgstr "Start period should be smaller then End period"
+msgstr "Dönem Başı dönem Sonundan küçük olmalı"
 
 #. module: account
 #: help:account.tax,price_include:0
@@ -5458,7 +5458,7 @@ msgstr "Genel Günlükler"
 #. module: account
 #: field:account.journal,allow_date:0
 msgid "Check Date in Period"
-msgstr "Dönemdeki Tarihi Denetleyin"
+msgstr "Dönemdeki Tarihi Denetle"
 
 #. module: account
 #: model:ir.ui.menu,name:account.final_accounting_reports
@@ -5583,7 +5583,7 @@ msgstr "Transaction"
 #: help:account.tax.template,ref_tax_code_id:0
 #: help:account.tax.template,tax_code_id:0
 msgid "Use this code for the VAT declaration."
-msgstr "Bu bölümü KDV beyanı için kullanınız."
+msgstr "Bu kodu KDV beyanı için kullanın."
 
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
@@ -5944,7 +5944,7 @@ msgstr "Account Automatic Reconcile"
 #: view:account.move:0
 #: view:account.move.line:0
 msgid "Journal Item"
-msgstr "Journal Item"
+msgstr "Günlük Öğesi"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_journal
@@ -6207,7 +6207,7 @@ msgstr "Fatura Vergi Hesabı"
 #: model:ir.actions.act_window,name:account.action_account_general_journal
 #: model:ir.model,name:account.model_account_general_journal
 msgid "Account General Journal"
-msgstr "Account General Journal"
+msgstr "Genel Günlük Hesabı"
 
 #. module: account
 #: field:account.payment.term.line,days:0
@@ -6270,7 +6270,7 @@ msgstr "Dış Bilanço"
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr "Günlük-Dönem Adı"
+msgstr "Günlük-Dönemi Adı"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -6286,7 +6286,7 @@ msgstr "not implemented"
 #. module: account
 #: help:account.journal,company_id:0
 msgid "Company related to this journal"
-msgstr "Company related to this journal"
+msgstr "Bu günlükle ilişkili firma"
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_state.py:44
@@ -6632,7 +6632,7 @@ msgstr "Hesap Çözümsel Öğeleri Görünümü"
 #: field:account.invoice,internal_number:0
 #: field:report.invoice.created,number:0
 msgid "Invoice Number"
-msgstr "Invoice Number"
+msgstr "Fatura Numarası"
 
 #. module: account
 #: help:account.tax,include_base_amount:0
@@ -6696,9 +6696,10 @@ msgid ""
 "year. Note that you can run this wizard many times for the same fiscal year: "
 "it will simply replace the old opening entries with the new ones."
 msgstr ""
-"This wizard will generate the end of year journal entries of selected fiscal "
-"year. Note that you can run this wizard many times for the same fiscal year: "
-"it will simply replace the old opening entries with the new ones."
+"Bu sihirbaz, seçili mali yıla ait yıl sonu günlük girişlerini "
+"oluşturacaktır. Bu sihirbazı aynı mali yıl için birçok kez "
+"çalıştırabileceğinizi aklınızda tutun: basitçe eski açılış girişlerini "
+"yenileriyle değiştirecektir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_bank_and_cash
@@ -6981,7 +6982,7 @@ msgstr "Entry \"%s\" is not valid !"
 #. module: account
 #: report:account.invoice:0
 msgid "Fax :"
-msgstr "Fax :"
+msgstr "Faks:"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -7023,8 +7024,8 @@ msgid ""
 "Check this box if you want to allow the cancellation the entries related to "
 "this journal or of the invoice related to this journal"
 msgstr ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
+"Bu günlükle ilişkili girişlerin ya da bu günlükle ilişkili faturaların iptal "
+"edilmesine izin vermek istiyorsanız bu kutuyu işaretleyin"
 
 #. module: account
 #: view:account.fiscalyear.close:0
@@ -7153,7 +7154,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Günlük Girdileri"
+msgstr "Günlük Girişleri"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -7233,7 +7234,7 @@ msgstr ""
 #. module: account
 #: view:account.journal.select:0
 msgid "Journal Select"
-msgstr "Günlük Seçimi"
+msgstr "Günlük Seç"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7517,8 +7518,8 @@ msgid ""
 "This date will be used as the invoice date for Refund Invoice and Period "
 "will be chosen accordingly!"
 msgstr ""
-"This date will be used as the invoice date for Refund Invoice and Period "
-"will be chosen accordingly!"
+"Bu tarih, İade Faturasında ve buna uygun seçilen dönem için fatura tarihi "
+"olarak kullanılacaktır!"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
@@ -7670,9 +7671,9 @@ msgid ""
 "new counterpart but will share the same counterpart. This is used in fiscal "
 "year closing."
 msgstr ""
-"Check this box to determine that each entry of this journal won't create a "
-"new counterpart but will share the same counterpart. This is used in fiscal "
-"year closing."
+"Bu günlüğe ait her girişin yeni bir karşıt oluşturmayacağını ancak aynı "
+"karşıtı paylaşacağını belirtmek için bu kutuyu işaretleyin. Bu, mali yıl "
+"kapanışlarında kullanılır."
 
 #. module: account
 #: field:account.bank.statement,closing_date:0
@@ -7713,7 +7714,7 @@ msgstr ""
 #: code:addons/account/account.py:1095
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
-msgstr "You should have chosen periods that belongs to the same company"
+msgstr "Aynı firmaya ait dönemleri seçmelisiniz"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_review_payment_terms_installer
@@ -7766,7 +7767,7 @@ msgstr "Kasa Kapanışı"
 #: view:account.journal:0
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "Günlük Hesabı"
+msgstr "Hesap Günlüğü"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -7886,7 +7887,7 @@ msgstr "Opsiyonel Bilgi"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account"
-msgstr "The journal must have default credit and debit account"
+msgstr "Günlüğün varsayılan alacak ve borç hesabı olamlıdır"
 
 #. module: account
 #: report:account.general.journal:0
@@ -7905,8 +7906,8 @@ msgid ""
 "This field is used for payable and receivable journal entries. You can put "
 "the limit date for the payment of this line."
 msgstr ""
-"This field is used for payable and receivable journal entries. You can put "
-"the limit date for the payment of this line."
+"Bu alan borç ve alacak günlük girişleri için kullanılır. Bu öğeye ait "
+"ödemeye sınırlama tarihi koyabilirsiniz."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
@@ -8181,7 +8182,7 @@ msgstr "Hesap Tipine Göre Satışlar"
 #. module: account
 #: help:account.invoice,move_id:0
 msgid "Link to the automatically generated Journal Items."
-msgstr "Otomatikman oluşturulan günlük öğelerine bağlantı"
+msgstr "Otomatikman oluşturulan günlük öğelerine bağlantı."
 
 #. module: account
 #: selection:account.installer,period:0
@@ -8390,8 +8391,7 @@ msgid ""
 "Select Fiscal Year which you want to remove entries for its End of year "
 "entries journal"
 msgstr ""
-"Select Fiscal Year which you want to remove entries for its End of year "
-"entries journal"
+"Yıl sonu giriş günlüğüne ait girişleri kaldırmak istediğiniz Mali Yılı seçin"
 
 #. module: account
 #: field:account.tax.template,type_tax_use:0
@@ -8671,7 +8671,7 @@ msgstr "Generic Reporting"
 #. module: account
 #: field:account.move.line.reconcile.writeoff,journal_id:0
 msgid "Write-Off Journal"
-msgstr "Write-Off Journal"
+msgstr "Gider Kaydetme Günlüğü"
 
 #. module: account
 #: help:res.partner,property_payment_term:0
@@ -8847,7 +8847,7 @@ msgstr "Automatic import of the bank sta"
 #: model:ir.actions.act_window,name:account.action_account_journal_view
 #: model:ir.ui.menu,name:account.menu_action_account_journal_view
 msgid "Journal Views"
-msgstr "Journal Views"
+msgstr "Günlük Görünümleri"
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_bank_reconcile
@@ -9133,7 +9133,7 @@ msgstr "Çözümsel Maliyetler"
 #: report:account.general.journal:0
 #: field:account.journal,name:0
 msgid "Journal Name"
-msgstr "Journal Name"
+msgstr "Günlük Adı"
 
 #. module: account
 #: view:account.move.line:0
@@ -9328,7 +9328,7 @@ msgstr "unknown"
 #: code:addons/account/account.py:3130
 #, python-format
 msgid "Opening Entries Journal"
-msgstr "Açılış Günlük Girişleri"
+msgstr "Açılış Girişleri Günlüğü"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_customerinvoice0
@@ -9372,7 +9372,7 @@ msgstr "Türe göre bu ayki Satışlar"
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "Cost Ledger for period"
-msgstr "Cost Ledger for period"
+msgstr "Döneme ait maliyet defteri"
 
 #. module: account
 #: help:account.tax,child_depend:0
@@ -9439,7 +9439,7 @@ msgstr "KI"
 #: report:account.analytic.account.journal:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 msgid "Period from"
-msgstr "Period from"
+msgstr "Bu dönemden"
 
 #. module: account
 #: code:addons/account/account.py:3127
@@ -9462,7 +9462,7 @@ msgstr "Registered payment"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close states of Fiscal year and periods"
-msgstr "Close states of Fiscal year and periods"
+msgstr "Mali yıl ve dönemlerin durumlarını Kapat"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -9527,16 +9527,16 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
-"Gives the view used when writing or browsing entries in this journal. The "
-"view tells OpenERP which fields should be visible, required or readonly and "
-"in which order. You can create your own view for a faster encoding in each "
-"journal."
+"Bu günlükteki girişleri yazmak ya da taramak için kullanılan görünümü verir. "
+"Görünüm OpenERP'ye hangi alanların görünür, gerekli ya da salt okunur ve "
+"hangi sırada olduğunu söyler. Her günlükte daha hızlı kodlama için kendi "
+"görünümünüzü oluşturabilirsiniz."
 
 #. module: account
 #: field:account.period,date_stop:0
 #: model:ir.ui.menu,name:account.menu_account_end_year_treatments
 msgid "End of Period"
-msgstr "Dönem Bitişi"
+msgstr "Dönem Sonu"
 
 #. module: account
 #: field:account.account,financial_report_ids:0
@@ -9574,7 +9574,7 @@ msgstr "Mali Raporlar"
 #: field:accounting.report,period_from:0
 #: field:accounting.report,period_from_cmp:0
 msgid "Start Period"
-msgstr "Start Period"
+msgstr "Dönem Başı"
 
 #. module: account
 #: field:account.aged.trial.balance,direction_selection:0
@@ -9841,8 +9841,8 @@ msgid ""
 "You have to define the bank account\n"
 "in the journal definition for reconciliation."
 msgstr ""
-"You have to define the bank account\n"
-"in the journal definition for reconciliation."
+"Uzlaştırma için günlük tanımında\n"
+"banka hesabını tanımlamalısınız."
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -9950,7 +9950,7 @@ msgstr ""
 #: field:accounting.report,period_to:0
 #: field:accounting.report,period_to_cmp:0
 msgid "End Period"
-msgstr "End Period"
+msgstr "Dönem Sonu"
 
 #. module: account
 #: code:addons/account/installer.py:94
@@ -10187,9 +10187,8 @@ msgid ""
 "created. If you leave that field empty, it will use the same journal as the "
 "current invoice."
 msgstr ""
-"You can select here the journal to use for the refund invoice that will be "
-"created. If you leave that field empty, it will use the same journal as the "
-"current invoice."
+"Burada, oluşturulacak fatura iadesinde kullanılacak günlüğü seçebilirsiniz. "
+"O alanı boş bırakırsanız, geçerli fatura olarak aynı günlüğü kullanacaktır."
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -10374,7 +10373,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_period
 msgid "Account period"
-msgstr "Hesap Dönemi"
+msgstr "Hesap dönemi"
 
 #. module: account
 #: view:account.subscription:0
@@ -10425,7 +10424,7 @@ msgstr "Bu Ay"
 #: view:account.analytic.journal.report:0
 #: model:ir.actions.act_window,name:account.action_account_partner_ledger
 msgid "Select Period"
-msgstr "Dönem Seçin"
+msgstr "Dönem Seç"
 
 #. module: account
 #: view:account.entries.report:0
@@ -10628,7 +10627,7 @@ msgstr ""
 #. module: account
 #: view:account.fiscalyear:0
 msgid "Create Monthly Periods"
-msgstr "Aylık Dönemleri Oluştur"
+msgstr ""
 
 #. module: account
 #: field:account.tax.code.template,sign:0
@@ -11030,7 +11029,7 @@ msgstr "Seçilen ürünle ilgili gelir ve gider hesabı."
 #. module: account
 #: field:account.subscription,period_total:0
 msgid "Number of Periods"
-msgstr "Dönem sayısı"
+msgstr "Dönem Sayısı"
 
 #. module: account
 #: code:addons/account/account.py:1359

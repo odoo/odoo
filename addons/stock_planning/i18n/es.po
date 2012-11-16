@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-11-06 11:52+0000\n"
+"PO-Revision-Date: 2012-11-09 10:37+0000\n"
 "Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-07 05:07+0000\n"
-"X-Generator: Launchpad (build 16232)\n"
+"X-Launchpad-Export-Date: 2012-11-10 05:24+0000\n"
+"X-Generator: Launchpad (build 16251)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -698,7 +698,7 @@ msgstr "Suministro interno"
 #: code:addons/stock_planning/stock_planning.py:724
 #, python-format
 msgid "%s Pick List %s (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Albarán %s (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -739,6 +739,9 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Este asistente le ayuda a crear líneas de  planificación MPS para un periodo "
+"y almacén seleccionados, para que no tenga que crearlas una a una. El "
+"asistente no duplica líneas si ya existen para esta selección."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
@@ -830,6 +833,11 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Esta previsión de cantidad de ventas es una indicación para el planificador "
+"de stock para realizar abastecimientos manualmente o para complementar el "
+"abastecimiento automático. Puede usar abastecimiento manual con esta "
+"previsión cuando algunos periodos son excepcionales para las reglas de stock "
+"mínimo habituales."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -1012,6 +1020,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Almacén usado como origen en el movimiento de suministro creado por 'Obtener "
+"de otro almacén'."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1032,7 +1042,7 @@ msgstr ""
 #: code:addons/stock_planning/stock_planning.py:661
 #, python-format
 msgid "%s Procurement (%s,  %s) %s %s \n"
-msgstr ""
+msgstr "%s Abastecimiento (%s,  %s) %s %s \n"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyze_company:0
@@ -1260,3 +1270,6 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Este asistente le ayuda a crear líneas de previsión de una vez. Después de "
+"crearlas, sólo debe rellenar las cantidades de previsión. El asistente no "
+"duplica la línea cuando ya existe otra para la misma selección."
