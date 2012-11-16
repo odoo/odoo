@@ -504,8 +504,6 @@ class test_mail(test_mail_mockup.TestMailMockups):
         self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
             self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test, 'mail.message attachment name / data incorrect')
 
         # ----------------------------------------

@@ -24,11 +24,10 @@
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
                                 context="{'force_email':True}" required="1"/>
                         </div>
-                        <field name="subject" placeholder="Subject..."
-                            attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                        <field name="subject" placeholder="Subject..."/>
                     </group>
                     <field name="body"/>
-                    <field name="attachment_ids" widget="one2many_binary" blockui="0"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
                     <footer>
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or

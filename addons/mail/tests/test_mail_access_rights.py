@@ -21,6 +21,7 @@
 
 from openerp.addons.mail.tests import test_mail_mockup
 from osv.orm import except_orm
+from openerp.tools import mute_logger
 
 
 class test_mail_access_rights(test_mail_mockup.TestMailMockups):
@@ -51,6 +52,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.user_raoul = self.res_users.browse(cr, uid, self.user_raoul_id)
         self.partner_raoul_id = self.user_raoul.partner_id.id
 
+    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_00_mail_message_search_access_rights(self):
         """ Test mail_message search override about access rights. """
         cr, uid, group_pigs_id = self.cr, self.uid, self.group_pigs_id
@@ -84,6 +86,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
         self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
 
+    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_05_mail_message_read_access_rights(self):
         """ Test basic mail_message read access rights. """
         cr, uid = self.cr, self.uid
@@ -131,6 +134,7 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
 
+    @mute_logger('openerp.addons.base.ir.ir_model','openerp.osv.orm')
     def test_10_mail_flow_access_rights(self):
         """ Test a Chatter-looks alike flow. """
         cr, uid = self.cr, self.uid
@@ -178,14 +182,14 @@ class test_mail_access_rights(test_mail_mockup.TestMailMockups):
 
         # Do: Bert create a mail.compose.message record, because he uses the wizard
         compose_id = mail_compose.create(cr, user_bert_id,
-            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
             # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
         mail_compose.send_mail(cr, user_bert_id, [compose_id])
 
         self.user_demo_id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
         compose_id = mail_compose.create(cr, self.user_demo_id,
-            {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': []},
+            {'subject': 'Subject', 'body': 'Body text', 'partner_ids': []},
             # {'subject': 'Subject', 'body_text': 'Body text', 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_jobs_id})
         mail_compose.send_mail(cr, self.user_demo_id, [compose_id])
