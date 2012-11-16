@@ -48,6 +48,7 @@ by default, you simply need to configure a Paypal account in the Accounting/Invo
     'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',
+        'portal_sale_data.xml',
         'res_config_view.xml',
         'security/ir.model.access.csv',
     ],

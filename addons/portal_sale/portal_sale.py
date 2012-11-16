@@ -24,6 +24,7 @@ from openerp.osv import osv, fields
 class sale_order(osv.Model):
     _inherit = 'sale.order'
 
+    # make the real method inheritable
     _payment_block_proxy = lambda self,*a,**kw: self._portal_payment_block(*a, **kw)
 
     _columns = {
@@ -39,10 +40,23 @@ class sale_order(osv.Model):
                     this.pricelist_id.currency_id, this.amount_total, context=context)
         return result
 
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        '''  Override to use a modified template that includes a portal signup link '''
+        action_dict = super(sale_order, self).action_quotation_send(cr, uid, ids, context=context) 
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_sale', 'email_template_edi_sale')[1]
+            # assume context is still a dict, as prepared by super
+            ctx = action_dict['context']
+            ctx['default_template_id'] = template_id
+            ctx['default_use_template'] = True
+        except Exception:
+            pass
+        return action_dict
 
 class account_invoice(osv.Model):
     _inherit = 'account.invoice'
 
+    # make the real method inheritable
     _payment_block_proxy = lambda self,*a,**kw: self._portal_payment_block(*a, **kw)
 
     _columns = {
@@ -57,3 +71,16 @@ class account_invoice(osv.Model):
                 result[this.id] = payment_acquirer.render_payment_block(cr, uid, this, this.number,
                     this.currency_id, this.residual, context=context)
         return result
+
+    def action_invoice_sent(self, cr, uid, ids, context=None):
+        '''  Override to use a modified template that includes a portal signup link '''
+        action_dict = super(account_invoice, self).action_invoice_sent(cr, uid, ids, context=context) 
+        try:
+            template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_sale', 'email_template_edi_invoice')[1]
+            # assume context is still a dict, as prepared by super
+            ctx = action_dict['context']
+            ctx['default_template_id'] = template_id
+            ctx['default_use_template'] = True
+        except Exception:
+            pass
+        return action_dict
