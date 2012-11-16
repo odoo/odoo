@@ -28,6 +28,8 @@ class crm_contact_us(osv.TransientModel):
     _description = 'Contact form for the portal'
     _inherit = 'crm.lead'
     _columns = {
+        'subject' : fields.char('Subject', required=True),
+        'body' : fields.text('Content', required=True),
         'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
     }
 
@@ -95,7 +97,10 @@ class crm_contact_us(osv.TransientModel):
         it is quite complicated to set proper rights for this object.
         Therefore, user SUPERUSER_ID will perform the creation.
         """
-        values['contact_name'] = values['name']
+        print values
+        values['name'] = values['subject']
+        values['contact_name'] = values['partner_name']
+        values['description'] = values['body']
         crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
 
         """
@@ -114,7 +119,7 @@ class crm_contact_us(osv.TransientModel):
             'res_model': self._name,
             'res_id': ids[0],
             'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_crm', 'wizard_contact_form_view_thanks')[1],
-            'target': 'inline',
+            'target': 'new',
         }
 
     def _needaction_domain_get(self, cr, uid, context=None):

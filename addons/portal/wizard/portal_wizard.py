@@ -39,6 +39,7 @@ You have been given access to %(portal)s.
 Your login account data is:
 Database: %(db)s
 Username: %(login)s
+Password: %(password)s
 
 In order to complete the signin process, click on the following url:
 %(url)s
@@ -210,6 +211,7 @@ class wizard_user(osv.osv_memory):
             'name': user.name,
             'login': user.login,
             'url': user.signup_url,
+            'password': user.password,
         }
         mail_mail = self.pool.get('mail.mail')
         mail_values = {
@@ -219,6 +221,7 @@ class wizard_user(osv.osv_memory):
             'body_html': '<pre>%s</pre>' % (_(WELCOME_EMAIL_BODY) % data),
             'state': 'outgoing',
         }
-        return mail_mail.create(cr, uid, mail_values, context=this_context)
+        mail_id = mail_mail.create(cr, uid, mail_values, context=this_context)
+        return mail_mail.send(cr, uid, [mail_id], context=this_context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

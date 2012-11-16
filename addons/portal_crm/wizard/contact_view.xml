@@ -2,31 +2,25 @@
 <openerp>
     <data>
 
-        <!-- wizard form view -->
-        <record id="wizard_contact_form_view" model="ir.ui.view">
+        <record id="contact_form_view" model="ir.ui.view">
             <field name="name">Wizard form view</field>
             <field name="model">portal_crm.crm_contact_us</field>
             <field name="arch" type="xml">
                 <form string="Contact wizard view" version="7.0">
-                    <div class="oe_portal_crm_contact">
+                    <sheet>
                         <h1>Contact us</h1>
-                        <table>
-                          <tr>
-                            <td width="70%%">
-                                <div class="oe_portal_crm_contact_form">
-                                    <group>
-                                        <field name="name"/>
-                                        <field name="partner_name"/>
-                                        <field name="email_from"/>
-                                        <field name="phone"/>
-                                        <field name="description"/>
+                        <group class="oe_portal_crm_contact">
+                            <group col="6">
+                                <group class="oe_portal_crm_contact_form" colspan="4">                                        
+                                        <field name="partner_name" invisible="1"/>
+                                        <field name="email_from" invisible="1"/>
+                                        <field name="phone" nolabel="1" placeholder="Your phone number..."/>
+                                        <field name="subject" nolabel="1" placeholder="Subject..." colspan="6"/>
+                                        <field name="body" nolabel="1" placeholder="Content..." colspan="6"/>
                                         <button string="Submit" name="submit" type="object"/>
-                                    </group>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="oe_portal_crm_office">
-                                    <field name="company_ids" widget="many2many_kanban">
+                                </group>
+                                <group class="oe_portal_crm_office">
+                                    <field name="company_ids" nolabel="1" widget="many2many_kanban">
                                         <kanban>
                                             <field name="name"/>
                                             <field name="email"/>
@@ -59,18 +53,13 @@
                                             </templates>
                                         </kanban>
                                     </field>
-                                </div>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td colspan="2">
-                                <div class="oe_portal_crm_team">
-
-                                </div>
-                            </td>
-                          </tr>
-                        </table>
-                    </div>
+                                </group>
+                            </group>                            
+                        </group>
+                        <!-- <group>
+                            <div class="oe_portal_crm_team"></div>
+                        </group> -->
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -88,15 +77,14 @@
                         otherwise the orm will try to select all the model's
                         records and this will result in a permission denied error
                     -->
-                    <field name="name" invisible="1"/>
+                    <field name="partner_name" invisible="1"/>
                     <label string="Thank you for your interest, we'll respond to your request shortly."/>
                 </form>
             </field>
         </record>
 
-        <!-- wizard action -->
-        <record id="action_wizard_contact_us" model="ir.actions.act_window">
-            <field name="name">Contact</field>
+        <record id="action_contact_us" model="ir.actions.act_window">
+            <field name="name">Contact Us</field>
             <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
@@ -104,7 +92,7 @@
 
         <!-- attach it to the portal menu -->
         <menuitem name="Contact" id="portal_company_contact"
-            parent="portal.portal_company" action="action_wizard_contact_us" sequence="30"/>
+            parent="portal.portal_company" action="action_contact_us" sequence="40"/>
 
     </data>
 </openerp>
