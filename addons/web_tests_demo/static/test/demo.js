@@ -58,7 +58,7 @@ openerp.testing.section('basic section', function (test) {
             ];
         });
         return new instance.web.Model('people.famous')
-            .call('name_search', {name: 'bob'}).pipe(function (result) {
+            .call('name_search', {name: 'bob'}).then(function (result) {
                 strictEqual(result.length, 3, "shoud return 3 people");
                 strictEqual(result[0][1], "Microsoft Bob",
                     "the most famous bob should be Microsoft Bob");
@@ -78,7 +78,7 @@ openerp.testing.section('basic section', function (test) {
         // widget needs that or it blows up
         instance.webclient = {toggle_bars: openerp.testing.noop};
         var dbm = new instance.web.DatabaseManager({});
-        return dbm.appendTo($s).pipe(function () {
+        return dbm.appendTo($s).then(function () {
             ok(fetched_dbs, "should have fetched databases");
             ok(fetched_langs, "should have fetched languages");
             deepEqual(dbm.db_list, ['foo', 'bar', 'baz']);
@@ -88,9 +88,9 @@ openerp.testing.section('basic section', function (test) {
     test('actual RPC', {rpc: 'rpc', asserts: 4}, function (instance) {
         var Model = new instance.web.Model('web_tests_demo.model');
         return Model.call('create', [{name: "Bob"}])
-            .pipe(function (id) {
+            .then(function (id) {
                 return Model.call('read', [[id]]);
-            }).pipe(function (records) {
+            }).then(function (records) {
                 strictEqual(records.length, 1);
                 var record = records[0];
                 strictEqual(record.name, "Bob");

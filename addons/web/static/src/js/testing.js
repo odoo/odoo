@@ -74,7 +74,7 @@ openerp.testing = {};
                 ).promise();
             }
             try {
-                return $.when(fn.apply(null, params)).pipe(function (result) {
+                return $.when(fn.apply(null, params)).then(function (result) {
                     // Wrap for RPC layer unwrapper thingy
                     return {result: result};
                 });
@@ -121,7 +121,7 @@ openerp.testing = {};
                     } catch (e) {
                         actual_call = $.Deferred().reject(e);
                     }
-                    actual_call.pipe(success, failure);
+                    actual_call.then(success, failure);
                 }
             };
             var teardown = function () {
@@ -320,7 +320,7 @@ openerp.testing = {};
                             {name: 'db_original_name', value: db.source},
                             {name: 'db_name', value: dbname}
                         ]
-                    }).pipe(function (result) {
+                    }).then(function (result) {
                         if (result.error) {
                             return $.Deferred().reject(result.error).promise();
                         }
@@ -333,7 +333,7 @@ openerp.testing = {};
                                 {name: 'drop_pwd', value: db.supadmin},
                                 {name: 'drop_db', value: dbname}
                             ]
-                        }).pipe(function (result) {
+                        }).then(function (result) {
                         if (result.error) {
                             return $.Deferred().reject(result.error).promise();
                         }

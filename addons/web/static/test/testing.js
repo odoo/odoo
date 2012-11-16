@@ -28,7 +28,7 @@ openerp.testing.section('testing.stack', function (test) {
         var s = openerp.testing.Stack();
         return s.execute(function () {
             throw new Error("foo");
-        }).pipe(reject, function (f) {
+        }).then(reject, function (f) {
             strictEqual(f.message, "foo", "should reject with exception");
             return $.when();
         });
@@ -39,7 +39,7 @@ openerp.testing.section('testing.stack', function (test) {
             return $.Deferred(function (d) {
                 d.reject("failed");
             });
-        }).pipe(reject, function (f) {
+        }).then(reject, function (f) {
             strictEqual(f, "failed", "should propagate failure");
             return $.when();
         });
@@ -194,7 +194,7 @@ openerp.testing.section('testing.stack', function (test) {
         }).execute(function () {
             code = true;
             return 42;
-        }).pipe(reject, function (m) {
+        }).then(reject, function (m) {
             ok(setup, "should have executed first setup function");
             ok(teardown, "should have executed first teardown function");
             ok(!teardown2, "should not have executed second teardown function");
@@ -215,7 +215,7 @@ openerp.testing.section('testing.stack', function (test) {
             return $.Deferred().reject('Fail 3');
         }).execute(function () {
             return 42;
-        }).pipe(reject, function (m) {
+        }).then(reject, function (m) {
             strictEqual(teardowns, 3,
                 "should have tried executing all teardowns");
             strictEqual(m, "Fail 3", "should return first failure message");
@@ -231,7 +231,7 @@ openerp.testing.section('testing.stack', function (test) {
             return $.Deferred().reject('Fail 2');
         }).execute(function () {
             return $.Deferred().reject("code");
-        }).pipe(reject, function (m) {
+        }).then(reject, function (m) {
             strictEqual(teardowns, 2,
                 "should have tried executing all teardowns");
             strictEqual(m, "code", "should return first failure message");
