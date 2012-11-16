@@ -28,8 +28,8 @@ class crm_contact_us(osv.TransientModel):
     _description = 'Contact form for the portal'
     _inherit = 'crm.lead'
     _columns = {
-        'subject' : fields.char('Subject', required=True),
-        'body' : fields.text('Content', required=True),
+        'subject' : fields.char('Subject'),
+        'body' : fields.text('Content'),
         'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
     }
 
