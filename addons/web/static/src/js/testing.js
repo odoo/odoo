@@ -392,7 +392,6 @@ openerp.testing = {};
                     }
                 }
 
-                ok(false, "failed!")
                 ok(false, message);
             });
         });

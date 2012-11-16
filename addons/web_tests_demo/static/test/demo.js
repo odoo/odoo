@@ -85,15 +85,6 @@ openerp.testing.section('basic section', function (test) {
         });
     });
 
-    test('timeouting', {asserts: 1}, function () {
-        var d = $.Deferred();
-        setTimeout(function () {
-            ok(true, "yeah");
-            d.resolve('ok')
-        }, 10000);
-        return d.promise();
-    });
-
     test('actual RPC', {rpc: 'rpc', asserts: 4}, function (instance) {
         var Model = new instance.web.Model('web_tests_demo.model');
         return Model.call('create', [{name: "Bob"}])
