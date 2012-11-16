@@ -44,7 +44,9 @@ $(document).ready(function () {
             return {result: false};
         };
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1, 2, 3]);
-        var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
+        var l = new instance.web.ListView({
+            do_action: openerp.testing.noop
+        }, ds, false, {editable: 'top'});
         l.appendTo($fix)
         .then(l.proxy('reload_content'))
         .then(function () {
