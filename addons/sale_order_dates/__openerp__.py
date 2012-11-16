@@ -24,32 +24,25 @@
     'name': 'Dates on Sales Order',
     'version': '1.0',
     'category': 'Sales Management',
-    'complexity': "easy",
     'description': """
 Add additional date information to the sales order.
 ===================================================
 
 You can add the following additional dates to a sale order:
+-----------------------------------------------------------
     * Requested Date
     * Commitment Date
     * Effective Date
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ["images/sale_order_dates.jpeg"],
-    'depends': ["sale"],
-    'init_xml': [
-    ],
-
-    'update_xml': [
-        'sale_order_dates_view.xml',
-    ],
-    'demo_xml': [
-    ],
+    'images': ['images/sale_order_dates.jpeg'],
+    'depends': ['sale_stock'],
+    'data': ['sale_order_dates_view.xml'],
+    'demo': [],
     'test': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00867497685972962845',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

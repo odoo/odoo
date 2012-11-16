@@ -64,7 +64,9 @@ class crm_make_sale(osv.osv_memory):
         """
         if context is None:
             context = {}
-
+        # update context: if come from phonecall, default state values can make the quote crash lp:1017353
+        context.pop('default_state', False)        
+        
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
@@ -85,17 +87,16 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
+                    raise osv.except_osv(_('Insufficient Data!'), _('No addresse(s) defined for this customer.'))
 
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
-                    'categ_id': case.categ_id and case.categ_id.id or False,
+                    'categ_ids': [(6, 0, [categ_id.id for categ_id in case.categ_ids])],
                     'shop_id': make.shop_id.id,
                     'partner_id': partner.id,
                     'pricelist_id': pricelist,
                     'partner_invoice_id': partner_addr['invoice'],
-                    'partner_order_id': partner_addr['contact'],
                     'partner_shipping_id': partner_addr['delivery'],
                     'date_order': fields.date.context_today(self,cr,uid,context=context),
                     'fiscal_position': fpos,
@@ -106,10 +107,8 @@ class crm_make_sale(osv.osv_memory):
                 sale_order = sale_obj.browse(cr, uid, new_id, context=context)
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
-                message = _("Opportunity  '%s' is converted to Quotation.") % (case.name)
-                self.log(cr, uid, case.id, message)
-                case_obj.message_append(cr, uid, [case], _("Converted to Sales Quotation(%s).") % (sale_order.name), context=context)
-
+                message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
+                case.message_post(body=message)
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:
@@ -122,6 +121,7 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
                     'res_id': new_ids and new_ids[0]
                 }
             else:
@@ -132,6 +132,7 @@ class crm_make_sale(osv.osv_memory):
                     'res_model': 'sale.order',
                     'view_id': False,
                     'type': 'ir.actions.act_window',
+                    'name' : _('Quotation'),
                     'res_id': new_ids
                 }
             return value
@@ -144,12 +145,12 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer','=',True)]),
-        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'),
+        'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sale order.'),
     }
     _defaults = {
-         'shop_id': _get_shop_id,
-         'close': False,
-         'partner_id': _selectPartner,
+        'shop_id': _get_shop_id,
+        'close': False,
+        'partner_id': _selectPartner,
     }
 
 crm_make_sale()

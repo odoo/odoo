@@ -43,7 +43,7 @@ class crm_helpdesk_report(osv.osv):
         'user_id':fields.many2one('res.users', 'User', readonly=True),
         'section_id':fields.many2one('crm.case.section', 'Section', readonly=True),
         'nbr': fields.integer('# of Cases', readonly=True),
-        'state': fields.selection(AVAILABLE_STATES, 'State', size=16, readonly=True),
+        'state': fields.selection(AVAILABLE_STATES, 'Status', size=16, readonly=True),
         'month':fields.selection([('01', 'January'), ('02', 'February'), \
                                   ('03', 'March'), ('04', 'April'),\
                                   ('05', 'May'), ('06', 'June'), \
@@ -97,7 +97,7 @@ class crm_helpdesk_report(osv.osv):
                     c.planned_cost,
                     count(*) as nbr,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='crm.helpdesk' AND res_id=c.id AND email_from IS NOT NULL) AS email,
+                    (SELECT count(id) FROM mail_message WHERE model='crm.helpdesk' AND res_id=c.id AND type = 'email') AS email,
                     abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected
                 from
                     crm_helpdesk c

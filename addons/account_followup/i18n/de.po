@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-16 05:05+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Followup"
-msgstr "Suche Zahlungserinnerung"
+msgstr "Suche Mahnung"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -31,7 +31,7 @@ msgstr "Gruppierung..."
 #: view:res.company:0
 #: field:res.company,follow_up_msg:0
 msgid "Follow-up Message"
-msgstr "Zahlungserinnerung Benachrichtigung"
+msgstr "Mitteilung zur Zahlungserinnerung"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -72,14 +72,17 @@ msgstr ""
 "\n"
 "Geehrte(r) %(partner_name)s,\n"
 "\n"
-"Wir bedauern, dass Ihr Konto trotz Übersendung einer Mahnung überfällig ist\n"
+"Wir bedauern, dass Ihr Konto trotz Übersendung einer Erinnerung weiterhin "
+"unbeglichen ist.\n"
 "\n"
-"Wenn Sie die unmittelbare Bezahlung verabsäumen, müssen wir Ihr Konto still "
-"legen, d.h. dass wir Sie zukünftig nicht mehr beliefern können.\n"
-"Bitte fürhen Sie die Zahlung innerhalb der nächsten 8 Tage durch.\n"
+"Wenn Sie die Bezahlung weiterhin versäumen, sehen wir uns gezwungen Ihr "
+"Konto still zu legen. D.h. dass wir Sie zukünftig nicht mehr beliefern "
+"werden. Darüber hinaus entsteht auf unserer Seite Aufwand, den wir ggf. an "
+"Sie weitergeben müssen.\n"
+"Bitte führen Sie die Zahlung innerhalb der nächsten 8 Tage durch.\n"
 "\n"
-"Wenn es mit der Rechnung ein uns unbekanntes Problem gibt, wenden Sie sich "
-"bitte unmittelbar an unsere Buchhaltung.\n"
+"Wenn es mit der Rechnung ein uns nicht nachvollziehbares Problem gibt, "
+"wenden Sie sich bitte vertrauensvoll an unsere Buchhaltung.\n"
 "\n"
 "Details der überfälligen Zahlungen finden Sie weiter unten.\n"
 "\n"
@@ -101,13 +104,15 @@ msgstr "Rechnungsdatum"
 #. module: account_followup
 #: field:account.followup.print.all,email_subject:0
 msgid "Email Subject"
-msgstr "EMail Betreff"
+msgstr "EMail-Betreff"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_followup_stat
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr "Zahlungserinnerungen an Partner für unbezahlte Rechnungen"
+msgstr ""
+"Mahnung an Partner nach bereits erfolgter Erinnerung, wegen unbeglichener "
+"Rechnungen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -118,7 +123,7 @@ msgstr "Legende"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr "Mahnungen mit Buchungen im laufenden Jahr"
+msgstr "Mahnungen aus Perioden des laufenden Jahres"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -133,7 +138,7 @@ msgstr "Betrag"
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "Falscher Buchungsbetrag in Soll oder Haben"
+msgstr "Falscher Soll- oder Habenbetrag in der Buchung!"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -144,7 +149,7 @@ msgstr "Nettotage"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-Ups"
-msgstr "Erinnerungen"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -162,13 +167,13 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
+"Das Datum Ihrer Buchung fällt nicht in die festgelegte Periode. Sie müssen "
+"das Datum anpassen, oder diese Einschränkung vom Bericht entfernen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr "%(heading)s: Buchungsposition Kopf"
+msgstr "%(heading)s: Titelzeile der Buchungen"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -201,7 +206,7 @@ msgstr "Partner"
 #: code:addons/account_followup/wizard/account_followup_print.py:142
 #, python-format
 msgid "Invoices Reminder"
-msgstr "Erinnerung für zu zahlende Rechnungen"
+msgstr "Erinnerung an zu zahlende Rechnungen"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
@@ -211,7 +216,7 @@ msgstr "Zahlungserinnerung"
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
 msgid "End of Month"
-msgstr "Ende Monat"
+msgstr "Monatsende"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -221,7 +226,7 @@ msgstr "Kein Verzug"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(user_signature)s: User name"
-msgstr "%(user_signature)s: Name Benutzer"
+msgstr "%(user_signature)s: Benutzername"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -248,13 +253,14 @@ msgstr "Ref."
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr ""
-"Zeigt die Reihenfolge bei der Anzeige einer Liste von Zahlungserinnerungen"
+"Gibt die Reihenfolge bei der Anzeige einer Liste von Zahlungserinnerungen "
+"vor."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,email_body:0
 msgid "Email body"
-msgstr "Email Haupttext"
+msgstr "EMail Haupttext"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -280,7 +286,7 @@ msgstr "Sende EMail in Sprache d. Partners"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Partner Selection"
-msgstr "Partner Auswahl"
+msgstr "Partnerauswahl"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line1
@@ -301,18 +307,21 @@ msgstr ""
 "\n"
 "Guten Tag  %( partner_name)s,\n"
 "\n"
-"unter der Annahme eines Fehlers unsererseits,  bleiben die folgenden nicht "
-"bezahlten Rechnungsbeträge offen zur Zahlung. Bitte ergreifen Sie die "
-"erforderlichen Massnahmen, um das neue Mahnwesen in den nächsten 8 Tagen zu "
-"aktivieren. Sollte die Zahlung zeitlich nach diesem Emailversand erfolgen "
-"können Sie bitte diese Benachrichtigung ignorieren.\n"
+"in unseren Unterlagen stehen die folgenden Rechnungen zur Zahlung aus. Bitte "
+"überprüfen Sie dies auf Ihrer Seite und ergreifen Sie die erforderlichen "
+"Massnahmen innerhalb der nächsten 8 Tage. Sollte die Zahlung zeitlich nach "
+"dieser Mitteilung erfolgen, können Sie bitte diese Benachrichtigung "
+"ignorieren. \n"
+"Sollte uns unerwartet ein Fehler unterlaufen sein, so bitten wir dies zu "
+"entschuldigen, und hoffen, dass Sie uns helfen diese Angelegenheit zu "
+"bereinigen.\n"
 "\n"
 "Freundliche Grüsse\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
 msgid "Printed Message"
-msgstr "gedruckte Nachricht"
+msgstr "gedruckte Mitteilung"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -321,7 +330,7 @@ msgstr "gedruckte Nachricht"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send followups"
-msgstr "Sende Zahlungserinnerung"
+msgstr "Versende Mahnungen"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -342,7 +351,7 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
-"Alle E-mails wurden erfolgreiche an folgende Partner versendet:.\n"
+"Alle E-mails wurden erfolgreich an folgende Partner versendet:\n"
 "\n"
 "%s"
 
@@ -352,8 +361,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
-"Ihre Beschreibung ist ungültig. verwenden Sie %% wenn Sie ein Prozentzeichen "
-"eingeben wollen"
+"Ihre Beschreibung ist ungültig, verwenden Sie %% wenn Sie ein Prozentzeichen "
+"eingeben wollen."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -362,9 +371,10 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
+"Das ausgewählte Konto Ihrer Buchung erfordert die Angabe einer "
+"Alternativwährung. Sie müssen die Verwendung einer Alternativwährung in den "
+"Einstellungen des Kontos ausschalten oder aber eine mehrwährungsfähige "
+"Ansicht im Beicht verwenden."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -374,12 +384,12 @@ msgstr "Versende EMails"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Followup Statistics by Partner"
-msgstr "Statistik Zahlungserinnerungen"
+msgstr "Statistik über Zahlungserinnerungen"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr "Nachricht"
+msgstr "Mitteilung"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -398,7 +408,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"E-Mail ist erfolgreich an folgende Partners versendet worden. !\n"
+"E-Mail ist erfolgreich an folgende Partners versendet worden:\n"
 "\n"
 "%s"
 
@@ -413,7 +423,7 @@ msgstr ""
 #. module: account_followup
 #: field:account.followup.print,date:0
 msgid "Follow-up Sending Date"
-msgstr "Datum der Erinnerung"
+msgstr "Datum für Versand der Mahnung(en)"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:56
@@ -424,57 +434,59 @@ msgstr "Wähle Partner"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Email Settings"
-msgstr "E-Mail-Einstellungen"
+msgstr "EMail-Einstellungen"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "Print Follow Ups"
-msgstr "Drucke Erinnerungen"
+msgstr "Drucke Mahnungen"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
-msgstr "Spätestes Datum Zahlungserinnerung"
+msgstr "Letzte Mahnung"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Followup Statistics"
-msgstr "Erinnerungen Statistik"
+msgstr "Mahnungsstatistik"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr "%(user_signature)s: Name Benutzer"
+msgstr "%(user_signature)s: Benutzername"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Journal Zeilen"
+msgstr "Buchungen"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr "You can not create journal items on an account of type view."
+msgstr "Sie können keine Buchungen in einem Ansichtskonto vornehmen."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send email confirmation"
-msgstr "Sende EMail Bestätigung"
+msgstr "Versende Bestätigung per EMail"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr "Gesamt:"
+msgstr "Summe:"
 
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+msgstr ""
+"Fehler! Sie können Unternehmen nicht rekursiv (auf sich selbst bezogen) "
+"anlegen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr "%(company_name)s: Name der Firma"
+msgstr "%(company_name)s: Unternehmensname d. Benutzers"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
@@ -485,32 +497,32 @@ msgstr "Unternehmen"
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,summary:0
 msgid "Summary"
-msgstr "Übersicht"
+msgstr "Zusammenfassung"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
-msgstr "Haben"
+msgstr "Punkte"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Maturity Date"
-msgstr "Datum Fällig"
+msgstr "Fällingkeitsdatum"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr "%(partner_name)s: Partner Name"
+msgstr "%(partner_name)s: Partnername"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-Up lines"
-msgstr "Zahlungserinnerung Positionen"
+msgstr "Mahnungspositionen"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr "%(company_currency)s: eigene Währung"
+msgstr "%(company_currency)s: Unternehmenswährung"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -522,13 +534,13 @@ msgstr "Saldo"
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
 msgid "Type of Term"
-msgstr "Zahlungsbedingungen"
+msgstr "Zahlungsziel"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Followup & Send Mail to Customers"
-msgstr "Drucke Erinnerung & Sende EMail zu Kunden"
+msgstr "Drucke Mahnung & Sende EMail an Kunden"
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -539,7 +551,7 @@ msgstr "Letzte Buchung"
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Followup Report"
-msgstr "Bericht Zahlungserinnerungen"
+msgstr "Bericht über Mahnungen"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -555,7 +567,7 @@ msgstr "Periode"
 #: code:addons/account_followup/wizard/account_followup_print.py:307
 #, python-format
 msgid "Followup Summary"
-msgstr "Mahnverfolgung Zusammenfassung"
+msgstr "Zusammenfassung der Mahnungen"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -566,22 +578,22 @@ msgstr "Abbrechen"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr "In Verzug"
+msgstr "Rechtsstreit"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
 msgid "Max Follow Up Level"
-msgstr "Max. Mahnstufe"
+msgstr "Höchste Mahnstufe"
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr "Überarbeiten Mahnungen"
+msgstr "Mahnungen sichten"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr "Company must be the same for its related account and period."
+msgstr "Das Unternehmen muss für Konto und Periode das gleiche sein."
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -592,13 +604,13 @@ msgid ""
 "and you can manage the multi language of messages."
 msgstr ""
 "Definieren Sie die Mahnstufen und die dazugehörigen Nachrichten und Fristen. "
-"Verwenden Sie die Variablen lt. Legende, dann können Sie die Mahnungen "
-"mehrsprachig verwalten."
+"Verwenden Sie die Variablen gemäß der Legende, und verwalten Sie die "
+"Mahnungen mehrsprachig."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr "Zahlbare Beträge"
+msgstr "Ausstehende Beträge"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
@@ -609,13 +621,14 @@ msgid ""
 "%s"
 msgstr ""
 "E-Mail wurde wegen fehlender E-Mail-Adresse an folgende Partner NICHT "
-"versandt!\n"
+"versandt:\n"
+"\n"
 "%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(followup_amount)s: Total Amount Due"
-msgstr "%(followup_amount)s: Gesamtbetrag Verbindkichk."
+msgstr "%(followup_amount)s: Fälliger Gesamtbetrag"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -626,12 +639,12 @@ msgstr "%(date)s: aktuelles Datum"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr "Beinhaltet Buchungen im Verfahren"
+msgstr "Beinhaltet Buchungen aus lfd. Rechtsstreitigkeiten"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Followup Level"
-msgstr "Stufe Zahlungserinnerung"
+msgstr "Mahnstufe"
 
 #. module: account_followup
 #: field:account_followup.followup,description:0
@@ -647,12 +660,12 @@ msgstr "Nur eine Mahnung je Unternehmen"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "This Fiscal year"
-msgstr "Dieses Fiskaljahr"
+msgstr "Dieses Geschäftsjahr"
 
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
-msgstr "Partner Buchungen"
+msgstr "Partnereinträge"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -660,8 +673,9 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
-"Wechseln Sie nicht diese Text Message, wenn EMails in einer Fremdsprache,  "
-"an Partner gesendet werden sollen"
+"Ändern Sie den Mitteilungstext nicht, wenn EMails in einer Fremdsprache an "
+"Partner gesendet werden sollen oder Sie diesen  Text aus den "
+"Unternehmenseinstellungen heraus konfigurieren."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -673,12 +687,12 @@ msgstr "Forderungen"
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 #: model:ir.ui.menu,name:account_followup.menu_action_followup_stat_follow
 msgid "Follow-ups Sent"
-msgstr "Versendete Erinnerungen"
+msgstr "Versendete Mahnungen"
 
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "Der Name der Firma darf nur einmal vorkommen!"
+msgstr "Der Unternehmensname muss eindeutig sein!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -715,7 +729,7 @@ msgstr "Dokument: Kundenkonto"
 #. module: account_followup
 #: view:account.move.line:0
 msgid "Total credit"
-msgstr "Gesamt Haben"
+msgstr "Gesamtforderung"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line3
@@ -744,8 +758,8 @@ msgstr ""
 "Sollte innerhalb der nächsten 8 Tage keine Zahlung erfolgen, werden wir die "
 "erforderlichen rechtlichen Schritte einleiten.\n"
 "\n"
-"Wir hoffen nach wie vor, dass diese Aktivität nicht nötig sein wird. Details "
-"der fälligen Postionen finden Sie unten.\n"
+"Wir hoffen nach wie vor, dass diese sich als unnötig erweist. Details der "
+"fälligen Forderungen finden Sie unten.\n"
 "\n"
 "Für alle Rückfragen in dieser Angelegenheit, zögern Sie nicht unsere "
 "Finanzabteilung zu kontaktieren.\n"
@@ -755,7 +769,7 @@ msgstr ""
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr "You can not create journal items on closed account."
+msgstr "Sie können auf ein abgeschlossenes Konto nicht mehr buchen."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -780,22 +794,22 @@ msgstr "Kunden Referenz:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr "Test Druck"
+msgstr "Testdruck"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(partner_name)s: Partner name"
-msgstr "%(partner_name)s: Partner name"
+msgstr "%(partner_name)s: Partnername"
 
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Followup Date"
-msgstr "Letzte Aktualisierung"
+msgstr "Letzte Mahnung"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-Up Criteria"
-msgstr "Zahlungserinnerung Kriterien"
+msgstr "Mahngründe"
 
 #~ msgid "All payable entries"
 #~ msgstr "Alle offenen Posten"

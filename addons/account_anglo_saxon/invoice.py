@@ -40,7 +40,7 @@ class account_invoice_line(osv.osv):
 
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if inv.type == 'out_invoice':
                         # debit account dacc will be the output account
                         # first check the product, if empty check the category
@@ -87,7 +87,7 @@ class account_invoice_line(osv.osv):
                             })
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if i_line.product_id.type != 'service':
                         # get the price difference account at the product
                         acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
@@ -136,9 +136,9 @@ class account_invoice_line(osv.osv):
                         res += diff_res
         return res
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
         fiscal_pool = self.pool.get('account.fiscal.position')
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context, company_id)
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, currency_id, context, company_id)
         if not product:
             return res
         if type in ('in_invoice','in_refund'):

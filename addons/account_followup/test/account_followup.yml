@@ -1,23 +1,23 @@
 -
-  In order to test account followup module in OpenERP, I change the state of invoice to "open".
+  In order to test account follow-up module in OpenERP, I change the state of invoice to "open".
 -
   !record {model: account.invoice, id: account.demo_invoice_0}:
     check_total: 14.0
 -
   !workflow {model: account.invoice, action: invoice_open, ref: account.demo_invoice_0}
 -
-  I create a followup.
+  I create a follow-up.
 -
   !record {model: account.followup.print, id: account_followup_print_0}:
     {}
 -
-  I select the followup to send it to the partner.
+  I select the follow-up to send it to the partner.
 -
   !python {model: account.followup.print}: |
     self.do_continue(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),
       })
 -
-  I select partners whom I want to send followups.
+  I select partners whom I want to send follow-ups.
 -
   !record {model: account.followup.print.all, id: account_followup_print_all_0}:
     email_body: 'Date : %(date)s\n\nDear %(partner_name)s,\n\nPlease find in attachment
@@ -25,10 +25,10 @@
       %(company_currency)s\n\nThanks,\n--\n%(user_signature)s\n%(company_name)s'
     email_subject: Invoices Reminder
     partner_ids:
-      - base.res_partner_desertic_hispafuentes
+      - base.res_partner_12
     partner_lang: 1
 -
-  I send a followup mail to partner.
+  I send a follow-up mail to partner.
 -
   !python {model: account.followup.print.all}: |
     import time

@@ -77,7 +77,7 @@ def _get_parents(cr, uid, ids):
     return ids_to_check
 
 
-def test_prof(cr, uid, seg_id, pid, answers_ids = []):
+def test_prof(cr, uid, seg_id, pid, answers_ids=None):
 
     """ return True if the partner pid fetch the segmentation rule seg_id
         @param cr: the current row, from the database cursor,
@@ -116,7 +116,7 @@ def _recompute_categ(self, cr, uid, pid, answers_ids):
     ok =  []
     cr.execute('''
         select r.category_id
-        from res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
+        from res_partner_res_partner_category_rel r left join crm_segmentation s on (r.category_id = s.categ_id)
         where r.partner_id = %s and (s.exclusif = false or s.exclusif is null)
         ''', (pid,))
     for x in cr.fetchall():
@@ -147,7 +147,7 @@ class question(osv.osv):
 
     _columns={
         'name': fields.char("Question",size=128, required=True),
-        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible answers",),
+        'answers_ids': fields.one2many("crm_profiling.answer","question_id","Avalaible Answers",),
         }
 
 question()
@@ -234,7 +234,7 @@ class crm_segmentation(osv.osv):
         }
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive profiles.', ['parent_id'])
     ]
 
     def process_continue(self, cr, uid, ids, start=False):
@@ -244,12 +244,13 @@ class crm_segmentation(osv.osv):
             @param uid: the current user’s ID for security checks,
             @param ids: List of crm segmentation’s IDs """
 
+        partner_obj = self.pool.get('res.partner')
         categs = self.read(cr,uid,ids,['categ_id','exclusif','partner_id', \
                             'sales_purchase_active', 'profiling_active'])
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel where \
+                    cr.execute('delete from res_partner_res_partner_category_rel where \
                             category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
@@ -280,8 +281,10 @@ class crm_segmentation(osv.osv):
                 for pid in to_remove_list:
                     partners.remove(pid)
 
-            for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner_id))
+            for partner in partner_obj.browse(cr, uid, partners):
+                category_ids = [categ_id.id for categ_id in partner.category_id]
+                if categ['categ_id'][0] not in category_ids:
+                    cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) values (%s,%s)', (categ['categ_id'][0],partner.id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
         return True

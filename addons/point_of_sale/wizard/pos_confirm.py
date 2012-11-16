@@ -34,7 +34,7 @@ class pos_confirm(osv.osv_memory):
         for order in order_obj.browse(cr, uid, ids, context=context):
             todo = True
             for line in order.statement_ids:
-                if line.statement_id.state <> 'confirm':
+                if line.statement_id.state != 'confirm':
                     todo = False
                     break
             if todo:

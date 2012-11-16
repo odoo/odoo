@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: account_followup
 #: view:account_followup.followup:0
@@ -43,6 +43,7 @@ msgstr "Follow-Up"
 msgid ""
 "Check if you want to print followups without changing followups level."
 msgstr ""
+"Verifica se vuoi stampate followups senza cambiare il livello di followup."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -91,6 +92,7 @@ msgstr "Oggetto Email"
 msgid ""
 "Follow up on the reminders sent over to your partners for unpaid invoices."
 msgstr ""
+"Follow up sui solleciti inviati ai tuoi partner per fattura non pagate"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -101,7 +103,7 @@ msgstr "Legenda"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Followup con periodo entro l'anno corrente"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -111,7 +113,7 @@ msgstr "Ok"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Importo"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -145,6 +147,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"La data della registrazione contabile non è presente nel periodo definito! "
+"Occorre cambiare la data o rimuovere questo vincolo dal sezionale."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -298,7 +302,7 @@ msgstr "Invia i follow up"
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
-msgstr "Partner a cui ricordare"
+msgstr "Partner da sollecitare"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -314,6 +318,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Tutte le e-mail sono state inviate con successo ai partner:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -321,6 +328,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"La descrizione non è valida, utilizza la legenda a destra oppure %% se vuoi "
+"usare il carattere percentuale."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -329,6 +338,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Il conto selezionato del sezionale di appartenenza necessita di una valuta "
+"secondaria. Occorre rimuovere la valuta secondaria dal conto oppure "
+"selezionare una vista multivaluta nel sezionale."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -343,7 +355,7 @@ msgstr "Statistiche follow up per partner"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Messaggio"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -360,12 +372,19 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"E-mail correttamente inviate ai seguenti Partners. !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
 msgid ""
 "This field allow you to select a forecast date to plan your follow-ups"
 msgstr ""
+"Questo campo ti permette di selezionare una data prevista per pianificare i "
+"tuoi follow-ups"
 
 #. module: account_followup
 #: field:account.followup.print,date:0
@@ -406,12 +425,12 @@ msgstr "%(user_signature)s: Nome utente"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr "Voci Giornale"
+msgstr "Voci Sezionale"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Non è possibile effettuare registrazioni su un conto di tipo vista."
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -421,7 +440,7 @@ msgstr "Conferma email inviata"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Totale:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -501,7 +520,7 @@ msgstr "Report follow up"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Passi di follow-ups"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -533,12 +552,12 @@ msgstr "Massimo livello follow up"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Verifica follow-ups fatturazione"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "L'azienda deve essere la stessa per il conto ed il relativo periodo"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -548,6 +567,10 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Definisci livelli di follow-up ed i relativi messaggi e ritardi. Per ogni "
+"passo, specifica il messaggio ed i giorni di ritardo. Usa la legenda per "
+"adattare al meglio i contesti delle email. Gestisci da qui anche messaggi in "
+"altre lingue."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
@@ -562,6 +585,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-Mail non inviate ai seguenti Partner, E-mail non disponibile !\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -577,7 +603,7 @@ msgstr "%(date)s: Data corrente"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Incluse le registrazioni marcate come contenzioso"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -593,7 +619,7 @@ msgstr "Descrizione"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Solo un followup per azienda."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -611,6 +637,8 @@ msgid ""
 "Do not change message text, if you want to send email in partner language, "
 "or configure from company"
 msgstr ""
+"Non modificare il testo del messaggio se vuoi inviare le email nel "
+"linguaggio del Partner, oppure configuralo dall'azienda."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
@@ -627,7 +655,7 @@ msgstr "Follow up inviati"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Il nome azienda deve essere univoco!"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -659,7 +687,7 @@ msgstr "Giorni di dilazione"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Documento: Rendiconto cliente"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -690,6 +718,7 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
 msgstr ""
+"Non è possibile creare registrazioni contabili su di un conto chiuso."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -714,7 +743,7 @@ msgstr "Rif. Cliente:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Stampa di prova"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

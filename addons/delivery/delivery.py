@@ -22,6 +22,7 @@
 import time
 from osv import fields,osv
 from tools.translate import _
+import decimal_precision as dp
 
 class delivery_carrier(osv.osv):
     _name = "delivery.carrier"
@@ -68,7 +69,7 @@ class delivery_carrier(osv.osv):
         'price' : fields.function(get_price, string='Price'),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the delivery carrier without removing it."),
         'normal_price': fields.float('Normal Price', help="Keep empty if the pricing depends on the advanced pricing per destination"),
-        'free_if_more_than': fields.boolean('Free If More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
+        'free_if_more_than': fields.boolean('Free If Order Total Amount Is More Than', help="If the order is more expensive than a certain amount, the customer can benefit from a free shipping"),
         'amount': fields.float('Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency"),
         'use_detailed_pricelist': fields.boolean('Advanced Pricing per Destination', help="Check this box if you want to manage delivery prices that depends on the destination, the weight, the total of the order, etc."),
         'pricelist_ids': fields.one2many('delivery.grid', 'carrier_id', 'Advanced Pricing'),
@@ -80,7 +81,7 @@ class delivery_carrier(osv.osv):
     }
 
     def grid_get(self, cr, uid, ids, contact_id, context=None):
-        contact = self.pool.get('res.partner.address').browse(cr, uid, contact_id, context=context)
+        contact = self.pool.get('res.partner').browse(cr, uid, contact_id, context=context)
         for carrier in self.browse(cr, uid, ids, context=context):
             for grid in carrier.grids_id:
                 get_id = lambda x: x.id
@@ -106,7 +107,7 @@ class delivery_carrier(osv.osv):
             # if using advanced pricing per destination: do not change
             if record.use_detailed_pricelist:
                 continue
-			
+
             # not using advanced pricing per destination: override grid
             grid_id = grid_pool.search(cr, uid, [('carrier_id', '=', record.id)], context=context)
 
@@ -217,7 +218,7 @@ class delivery_grid(osv.osv):
                 ok = True
                 break
         if not ok:
-            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the choosed delivery grid.'))
+            raise osv.except_osv(_('No price available!'), _('No line matched this product or order in the chosen delivery grid.'))
 
         return price
 
@@ -237,8 +238,8 @@ class delivery_grid_line(osv.osv):
         'max_value': fields.float('Maximum Value', required=True),
         'price_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Price Type', required=True),
         'variable_factor': fields.selection([('weight','Weight'),('volume','Volume'),('wv','Weight * Volume'), ('price','Price')], 'Variable Factor', required=True),
-        'list_price': fields.float('Sale Price', required=True),
-        'standard_price': fields.float('Cost Price', required=True),
+        'list_price': fields.float('Sale Price', digits_compute= dp.get_precision('Product Price'), required=True),
+        'standard_price': fields.float('Cost Price', digits_compute= dp.get_precision('Product Price'), required=True),
     }
     _defaults = {
         'type': lambda *args: 'weight',
@@ -249,24 +250,5 @@ class delivery_grid_line(osv.osv):
     _order = 'list_price'
 
 delivery_grid_line()
-
-class define_delivery_steps(osv.osv_memory):
-    _name = 'delivery.define.delivery.steps.wizard'
-
-    _columns = {
-        'picking_policy' : fields.selection([('direct', 'Deliver each product when available'), ('one', 'Deliver all products at once')], 'Picking Policy'),
-    }
-    _defaults = {
-        'picking_policy': lambda s,c,u,ctx: s.pool.get('sale.order').default_get(c,u,['picking_policy'],context=ctx)['picking_policy']
-    }
-
-    def apply_cb(self, cr, uid, ids, context=None):
-        ir_values_obj = self.pool.get('ir.values')
-        wizard = self.browse(cr, uid, ids, context=context)[0]
-        ir_values_obj.set(cr, uid, 'default', False, 'picking_policy', ['sale.order'], wizard.picking_policy)
-        return {'type' : 'ir.actions.act_window_close'}
-
-define_delivery_steps()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="contrib_register_employees" model="hr.contribution.register">
+            <field name="name">Employees</field>
+            <field name="partner_id" eval="False"/>
+        </record>
 
         <record id="BASIC" model="hr.salary.rule.category">
             <field name="name">Basic</field>
@@ -60,6 +64,7 @@
             <field name="condition_select">none</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
+            <field name="register_id" ref="contrib_register_employees"/>
         </record>
 
 

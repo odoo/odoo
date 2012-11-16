@@ -2,10 +2,10 @@
   I create the procurement order and run that procurement.
 -
   !python {model: make.procurement}: |
-    context.update({'active_model':'product.product', 'active_ids': [ref('product.product_product_hdd3')], 'active_id': ref('product.product_product_hdd3')})
+    context.update({'active_model':'product.product', 'active_ids': [ref('product.product_product_13')], 'active_id': ref('product.product_product_13')})
 -
   !record {model: make.procurement, id: procurement_product_hdd3}:
-    product_id: product.product_product_hdd3
+    product_id: product.product_product_13
     qty: 15
     uom_id: product.product_uom_unit
     warehouse_id: stock.stock_warehouse_shop0
@@ -42,7 +42,7 @@
     context.update({"active_model": "purchase.requisition","active_ids": [ref("requisition1")],"active_id": ref("requisition1")})
 - 
   !record {model: purchase.requisition.partner, id: requisition_partner_0}:
-    partner_id: base.res_partner_desertic_hispafuentes
+    partner_id: base.res_partner_12
 - 
   !python {model: purchase.requisition.partner}: |
     self.create_order(cr, uid, [ref("requisition_partner_0")], context=context)
@@ -56,7 +56,7 @@
     rfq = self.browse(cr, uid, purchase_ids[0], context=context)
     requisition = rfq.requisition_id
     supplier = rfq.partner_id
-    assert supplier.id == ref('base.res_partner_desertic_hispafuentes'), "RFQ Partner is not correspond."
+    assert supplier.id == ref('base.res_partner_12'), "RFQ Partner is not correspond."
     assert len(rfq.order_line) == len(requisition.line_ids), "Lines are not correspond."
     for rfq_line in rfq.order_line:
         for line in requisition.line_ids:

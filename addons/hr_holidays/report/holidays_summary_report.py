@@ -31,6 +31,7 @@ import time
 from report import report_sxw
 from tools import ustr
 from tools.translate import _
+from tools import to_xml
 
 def lengthmonth(year, month):
     if month == 2 and ((year % 4 == 0) and ((year % 100 != 0) or (year % 400 == 0))):
@@ -106,6 +107,10 @@ class report_custom(report_rml):
         eom = som+datetime.timedelta(59)
         day_diff=eom-som
 
+        name = ''
+        if len(data['form'].get('emp', ())) == 1:
+            name = obj_emp.read(cr, uid, data['form']['emp'][0], ['name'])['name']
+
         if data['form']['holiday_type']!='both':
             type=data['form']['holiday_type']
             if data['form']['holiday_type']=='Confirmed':
@@ -113,11 +118,12 @@ class report_custom(report_rml):
             else:
                 holiday_type=('validate')
         else:
-            type="Confirmed and Validated"
+            type="Confirmed and Approved"
             holiday_type=('confirm','validate')
         date_xml.append('<from>%s</from>\n'% (str(rml_obj.formatLang(som.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<to>%s</to>\n' %(str(rml_obj.formatLang(eom.strftime("%Y-%m-%d"),date=True))))
         date_xml.append('<type>%s</type>'%(type))
+        date_xml.append('<name>%s</name>'%(name))
 
 #        date_xml=[]
         for l in range(0,len(legend)):
@@ -235,7 +241,7 @@ class report_custom(report_rml):
         <date>%s</date>
         <company>%s</company>
         </header>
-        '''  % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name)
+        ''' % (str(rml_obj.formatLang(time.strftime("%Y-%m-%d"),date=True))+' ' + str(time.strftime("%H:%M")),to_xml(pooler.get_pool(cr.dbname).get('res.users').browse(cr,uid,uid).company_id.name))
 
         # Computing the xml
         xml='''<?xml version="1.0" encoding="UTF-8" ?>

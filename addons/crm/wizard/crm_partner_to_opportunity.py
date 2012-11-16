@@ -32,7 +32,7 @@ class crm_partner2opportunity(osv.osv_memory):
         'name' : fields.char('Opportunity Name', size=64, required=True),
         'planned_revenue': fields.float('Expected Revenue', digits=(16,2)),
         'probability': fields.float('Success Probability', digits=(16,2)),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
     }
 
     def action_cancel(self, cr, uid, ids, context=None):

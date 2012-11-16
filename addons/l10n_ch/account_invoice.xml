@@ -4,13 +4,12 @@
         <record model="ir.ui.view" id="invoice_supplier_form6">
             <field name="name">account.invoice.supplier.form.inherit</field>
             <field name="model">account.invoice</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
                     <field name="partner_id"
                         on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id)"
-                        select="1"/>
+                        />
                 </field>
             </field>
         </record>
@@ -18,7 +17,6 @@
         <record model="ir.ui.view" id="invoice_supplier_form8">
             <field name="name">account.invoice.supplier.form.inherit</field>
             <field name="model">account.invoice</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.invoice_supplier_form"/>
             <field name="priority" eval="18"/>
             <field name="arch" type="xml">
@@ -32,7 +30,6 @@
         <record model="ir.ui.view" id="invoice_form">
             <field name="name">account.invoice.form.inherit</field>
             <field name="model">account.invoice</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_bank_id" position="replace">

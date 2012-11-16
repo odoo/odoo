@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:31+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:11+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -48,6 +48,9 @@ msgid ""
 "analytic account. This feature allows to record at the same time the "
 "attendance and the timesheet."
 msgstr ""
+"Hver enkelt medarbeider kan føre og spore egne time forbrukt pr. prosjekt. "
+"Et prosjekt er en analytisk konto og tid brukt på prosjektet kostnadsføres "
+"på denne."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -62,18 +65,18 @@ msgstr "Analytisk Journal"
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Stop Working"
-msgstr ""
+msgstr "Stopp å jobbe."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_employee
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_employee
 msgid "Employee Timesheet"
-msgstr ""
+msgstr "Ansatttimeliste"
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Work done stats"
-msgstr ""
+msgstr "Arbeid gjort statistikk."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -103,7 +106,7 @@ msgstr "Fre"
 #. module: hr_timesheet
 #: field:hr.employee,uom_id:0
 msgid "UoM"
-msgstr ""
+msgstr "Enhet"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -113,16 +116,20 @@ msgid ""
 "project generates costs on the analytic account. This feature allows to "
 "record at the same time the attendance and the timesheet."
 msgstr ""
+"Ansatte kan koden sin tid brukt på de ulike prosjektene de er tildelt på. Et "
+"prosjekt er et analytisk konto og tid brukt på et prosjekt genererer "
+"kostnader på det analytiske konto. Denne funksjonen gjør det mulig å spille "
+"inn på samme tid om fremmøtet og timeliste."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,analytic_amount:0
 msgid "Minimum Analytic Amount"
-msgstr ""
+msgstr "Minimum analytisk beløp"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "Monthly Employee Timesheet"
-msgstr ""
+msgstr "Månedlig ansattimeliste"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
@@ -133,18 +140,18 @@ msgstr "Arbeid utført i forrige periode"
 #: field:hr.sign.in.project,state:0
 #: field:hr.sign.out.project,state:0
 msgid "Current state"
-msgstr ""
+msgstr "Nåværende tilstand."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,name:0
 #: field:hr.sign.out.project,name:0
 msgid "Employees name"
-msgstr ""
+msgstr "Ansattnavn"
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,account_id:0
 msgid "Project / Analytic Account"
-msgstr ""
+msgstr "Prosjekt / analytisk konto"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_users
@@ -187,12 +194,12 @@ msgstr "Advarsel"
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,partner_id:0
 msgid "Partner"
-msgstr ""
+msgstr "Partner"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 #: view:hr.sign.out.project:0
-msgid "Sign In/Out By Project"
+msgid "Sign In/Out by Project"
 msgstr ""
 
 #. module: hr_timesheet
@@ -212,7 +219,7 @@ msgstr "Søn"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
-msgstr ""
+msgstr "Analytisk konto"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -225,12 +232,12 @@ msgstr "Skriv ut"
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_line_evry1_all_form
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_working_hours
 msgid "Timesheet Lines"
-msgstr ""
+msgstr "Timeliste linjer."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
 msgid "Monthly Employees Timesheet"
-msgstr ""
+msgstr "Månedlig ansatte Timerliste."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -255,17 +262,17 @@ msgstr "Kategorier"
 #. module: hr_timesheet
 #: constraint:hr.analytic.timesheet:0
 msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr ""
+msgstr "Du kan ikke endre en oppføring i en Bekreftet / Ferdig timeliste!."
 
 #. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
-msgstr ""
+msgstr "Angir ansattes betegnelse som et produkt med type \"service\"."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Total cost"
-msgstr ""
+msgstr "Totalkostnad"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -306,23 +313,23 @@ msgstr "Arbeidsbeskrivelse"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
-msgstr ""
+msgstr "Faktura Analyse."
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
-msgstr ""
+msgstr "Ansattimeliste"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_in
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_sign_out
 msgid "Sign in / Sign out by project"
-msgstr ""
+msgstr "Logg inn / Logg ut av prosjektet."
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_define_analytic_structure
 msgid "Define your Analytic Structure"
-msgstr ""
+msgstr "Definer Dine Analytiske Strukturer."
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
@@ -336,11 +343,13 @@ msgid ""
 "Analytic journal is not defined for employee %s \n"
 "Define an employee for the selected user and assign an analytic journal!"
 msgstr ""
+"Analytisk journal er ikke definert for ansattes% s\n"
+"Definer en ansatt for den valgte brukeren og tilordne et analytisk journal!"
 
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(Keep empty for current time)"
-msgstr ""
+msgstr "(Hold tom for gjeldende tid)"
 
 #. module: hr_timesheet
 #: view:hr.employee:0
@@ -354,11 +363,14 @@ msgid ""
 "analyse costs and revenues. In OpenERP, analytic accounts are also used to "
 "track customer contracts."
 msgstr ""
+"Du bør lage en analytisk kontostruktur avhengig av dine behov for å "
+"analysere kostnader og inntekter. I OpenERP er analytiske kontoer også "
+"brukes til å spore kundekontrakter."
 
 #. module: hr_timesheet
 #: field:hr.analytic.timesheet,line_id:0
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analytisk linje"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -400,12 +412,12 @@ msgstr "November"
 #. module: hr_timesheet
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursiv Hierarki av ansatte."
 
 #. module: hr_timesheet
 #: field:hr.sign.out.project,date:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Sluttdato"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -428,7 +440,7 @@ msgstr "Januar"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Key dates"
-msgstr ""
+msgstr "Viktige datoer."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -440,12 +452,13 @@ msgstr "Tor"
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Analysis stats"
-msgstr ""
+msgstr "Analyser statistikk."
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_analytical_timesheet_employee
 msgid "Print Employee Timesheet & Print My Timesheet"
 msgstr ""
+"Skriv ut Ansattes Timeregistrering og skrive ut Min Timeregistrering."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,emp_id:0
@@ -460,8 +473,8 @@ msgstr "Generell informasjon"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_my
-msgid "My Timesheet"
-msgstr "Min timeliste"
+msgid "My Current Timesheet"
+msgstr ""
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -486,7 +499,7 @@ msgstr "Avbryt"
 #: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
-msgstr ""
+msgstr "Ansattes Timeregistrering."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -505,6 +518,8 @@ msgid ""
 "Through this menu you can register and follow your workings hours by project "
 "every day."
 msgstr ""
+"Gjennom denne menyen kan du registrere og følge hjemkomsten timer etter "
+"prosjekt hver dag."
 
 #. module: hr_timesheet
 #: field:hr.sign.in.project,server_date:0
@@ -515,7 +530,7 @@ msgstr "Dagens dato"
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
 msgid "This wizard will print monthly timesheet"
-msgstr ""
+msgstr "Denne veiviseren vil skrive ut månedlig timeliste."
 
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
@@ -545,12 +560,12 @@ msgstr "Totaltid"
 #. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "(local time on the server side)"
-msgstr ""
+msgstr "(lokal tid på serversiden)"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_in_project
 msgid "Sign In By Project"
-msgstr ""
+msgstr "Logg inn av prosjekt."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:40
@@ -564,7 +579,7 @@ msgstr "Februar"
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_hr_sign_out_project
 msgid "Sign Out By Project"
-msgstr ""
+msgstr "Logg ut av prosjekt."
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.users:0
@@ -596,6 +611,8 @@ msgid ""
 "No analytic account defined on the project.\n"
 "Please set one or we can not automatically fill the timesheet."
 msgstr ""
+"Ingen analytisk konto definert på prosjektet.\n"
+"Vennligst sett ett eller så kan vi ikke automatisk fylle timeliste."
 
 #. module: hr_timesheet
 #: view:account.analytic.account:0
@@ -628,15 +645,18 @@ msgstr "År"
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
-msgstr ""
+msgstr "Regnskap"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
 msgid "Change Work"
-msgstr ""
+msgstr "Endre jobb."
 
 #~ msgid "Analytic Account"
 #~ msgstr "Analytisk konto"
+
+#~ msgid "My Timesheet"
+#~ msgstr "Min timeliste"
 
 #~ msgid "Anlytic account"
 #~ msgstr "Analytisk konto"
@@ -646,3 +666,6 @@ msgstr ""
 
 #~ msgid "Analytic line"
 #~ msgstr "Analytisk linje"
+
+#~ msgid "Sign In/Out By Project"
+#~ msgstr "Registrer inn/ut på prosjekt"

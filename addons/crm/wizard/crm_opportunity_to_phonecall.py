@@ -55,9 +55,9 @@ class crm_opportunity2phonecall(osv.osv_memory):
             if 'note' in fields:
                 res.update({'note': opp.description})
             if 'contact_name' in fields:
-                res.update({'contact_name': opp.partner_address_id and opp.partner_address_id.name or False})
+                res.update({'contact_name': opp.partner_id and opp.partner_id.name or False})
             if 'phone' in fields:
-                res.update({'phone': opp.phone or (opp.partner_address_id and opp.partner_address_id.phone or False)})
+                res.update({'phone': opp.phone or (opp.partner_id and opp.partner_id.phone or False)})
         return res
 
     def action_schedule(self, cr, uid, ids, context=None):

@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:34+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -64,7 +64,7 @@ msgstr "Состояние"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Purchase Requisition in negociation"
-msgstr ""
+msgstr "Запрос закупки в переговорах"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -75,7 +75,7 @@ msgstr "Поставщик"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "New"
-msgstr ""
+msgstr "Создать"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -109,7 +109,7 @@ msgstr "Позиция запроса на закупку"
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Purchase Orders with requisition"
-msgstr ""
+msgstr "Заказы закупки с запросом"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_product_product
@@ -140,7 +140,7 @@ msgstr ""
 #: code:addons/purchase_requisition/purchase_requisition.py:136
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Предупреждение"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -182,12 +182,12 @@ msgstr "Установить в \"Черновик\""
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Current Purchase Requisition"
-msgstr ""
+msgstr "Текущий запрос закупки"
 
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
 msgid "User"
-msgstr ""
+msgstr "Пользователь"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -221,7 +221,7 @@ msgstr "Количество"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Нераспределенный запрос"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
@@ -236,6 +236,8 @@ msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
+"У вас уже есть один %s заказ закупки для этого партнёра, вы должны отменить "
+"этот заказ закупки для создания нового запроса цен."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -282,10 +284,10 @@ msgid ""
 "orders.On confirmation of a purchase order it does not cancel the remaining "
 "orders"
 msgstr ""
-"Запрос на закупку (исключительный): при подтверждении заказа на закупку, "
+"Запрос на закупку (исключительный): при подтверждении заказа закупки, "
 "дополнительные заказы отменяются.\n"
-"Запрос на закупку (несколько): позволяет иметь несколько заказов на закупку. "
-"При подтверждении заказа на закупку, дополнительные заказы не отменяются."
+"Запрос на закупку (несколько): позволяет иметь несколько заказов закупки. "
+"При подтверждении заказа закупки, дополнительные заказы не отменяются."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -296,7 +298,7 @@ msgstr "Отменить заказ на закупку"
 #: model:ir.model,name:purchase_requisition.model_purchase_order
 #: view:purchase.requisition:0
 msgid "Purchase Order"
-msgstr "Заказ на закупку"
+msgstr "Заказ закупки"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
@@ -312,7 +314,7 @@ msgstr "Тип запроса"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "New Purchase Requisition"
-msgstr ""
+msgstr "Новый запрос на закупку"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -347,7 +349,7 @@ msgstr "Партнер запроса на закупку"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Start"
-msgstr ""
+msgstr "Старт"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -362,7 +364,7 @@ msgstr "Закупка по запросам"
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
 msgid "Purchase orders"
-msgstr "Заказы на закупку"
+msgstr "Заказы закупки"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -404,12 +406,12 @@ msgstr "Запрос на закупку (исключительный)"
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менеджер"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
+msgstr "Ошибка: Неверный штрих-код"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -425,7 +427,7 @@ msgstr "_Отмена"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Confirm Purchase Order"
-msgstr "Подтвердить заказ на закупку"
+msgstr "Подтвердить заказ закупки"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -450,7 +452,7 @@ msgstr "Не назначенный"
 #. module: purchase_requisition
 #: field:purchase.requisition,purchase_ids:0
 msgid "Purchase Orders"
-msgstr "Заказы на закупку"
+msgstr "Заказы закупки"
 
 #~ msgid "Draft"
 #~ msgstr "Черновик"

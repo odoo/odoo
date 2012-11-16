@@ -21,8 +21,11 @@
 
 import point_of_sale
 import account_bank_statement
+import res_users
 import wizard
 import report
+
+import controllers
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

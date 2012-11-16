@@ -23,7 +23,7 @@ import logging
 import netsvc
 import openerp
 
-_logger = logging.getLogger('edi.service')
+_logger = logging.getLogger(__name__)
 
 class edi(netsvc.ExportService):
 
@@ -40,7 +40,7 @@ class edi(netsvc.ExportService):
             res = getattr(edi_document, method_name)(cr, *method_args)
             cr.commit()
         except Exception:
-            _logger.exception('Failed to execute EDI method %s with args %r', method_name, method_args)
+            _logger.exception('Failed to execute EDI method %s with args %r.', method_name, method_args)
             raise
         finally:
             cr.close()
@@ -63,7 +63,7 @@ class edi(netsvc.ExportService):
             # No security check for these methods
             pass
         else:
-            raise KeyError("Method not found: %s" % method)
+            raise KeyError("Method not found: %s." % method)
         fn = getattr(self, 'exp_'+method)
         return fn(*params)
 

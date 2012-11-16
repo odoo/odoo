@@ -20,6 +20,7 @@
 ##############################################################################
 
 import time
+from lxml import etree
 from osv import fields, osv
 from tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import decimal_precision as dp
@@ -37,14 +38,13 @@ class stock_partial_picking_line(osv.TransientModel):
             res[tracklot.id] = tracking
         return res
 
-
     _name = "stock.partial.picking.line"
     _rec_name = 'product_id'
     _columns = {
         'product_id' : fields.many2one('product.product', string="Product", required=True, ondelete='CASCADE'),
-        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product UoM'), required=True),
+        'quantity' : fields.float("Quantity", digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Unit of Measure', required=True, ondelete='CASCADE'),
-        'prodlot_id' : fields.many2one('stock.production.lot', 'Production Lot', ondelete='CASCADE'),
+        'prodlot_id' : fields.many2one('stock.production.lot', 'Serial Number', ondelete='CASCADE'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete='CASCADE', domain = [('usage','<>','view')]),
         'location_dest_id': fields.many2one('stock.location', 'Dest. Location', required=True, ondelete='CASCADE',domain = [('usage','<>','view')]),
         'move_id' : fields.many2one('stock.move', "Move", ondelete='CASCADE'),
@@ -55,8 +55,17 @@ class stock_partial_picking_line(osv.TransientModel):
         'tracking': fields.function(_tracking, string='Tracking', type='boolean'), 
     }
 
+    def onchange_product_id(self, cr, uid, ids, product_id, context=None):
+        uom_id = False
+        if product_id:
+            product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            uom_id = product.uom_id.id
+        return {'value': {'product_uom': uom_id}}
+
+
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
+    _rec_name = 'picking_id'
     _description = "Partial Picking Processing Wizard"
 
     def _hide_tracking(self, cursor, user, ids, name, arg, context=None):
@@ -69,17 +78,40 @@ class stock_partial_picking(osv.osv_memory):
         'date': fields.datetime('Date', required=True),
         'move_ids' : fields.one2many('stock.partial.picking.line', 'wizard_id', 'Product Moves'),
         'picking_id': fields.many2one('stock.picking', 'Picking', required=True, ondelete='CASCADE'),
-        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column prodlot has to be shown on the move_ids field or not'),
+        'hide_tracking': fields.function(_hide_tracking, string='Tracking', type='boolean', help='This field is for internal purpose. It is used to decide if the column production lot has to be shown on the moves or not.'),
      }
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        #override of fields_view_get in order to change the label of the process button and the separator accordingly to the shipping type
+        if context is None:
+            context={}
+        res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+        type = context.get('default_type', False)
+        if type:
+            doc = etree.XML(res['arch'])
+            for node in doc.xpath("//button[@name='do_partial']"):
+                if type == 'in':
+                    node.set('string', _('_Receive'))
+                elif type == 'out':
+                    node.set('string', _('_Deliver'))
+            for node in doc.xpath("//separator[@name='product_separator']"):
+                if type == 'in':
+                    node.set('string', _('Receive Products'))
+                elif type == 'out':
+                    node.set('string', _('Deliver Products'))
+            res['arch'] = etree.tostring(doc)
+        return res
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None: context = {}
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
-        if not picking_ids or (not context.get('active_model') == 'stock.picking') \
-            or len(picking_ids) != 1:
+        active_model = context.get('active_model')
+
+        if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
             return res
+        assert active_model in ('stock.picking', 'stock.picking.in', 'stock.picking.out'), 'Bad context propagation'
         picking_id, = picking_ids
         if 'picking_id' in fields:
             res.update(picking_id=picking_id)
@@ -111,7 +143,7 @@ class stock_partial_picking(osv.osv_memory):
     def _partial_move_for(self, cr, uid, move):
         partial_move = {
             'product_id' : move.product_id.id,
-            'quantity' : move.state in ('assigned','new') and move.product_qty or 0,
+            'quantity' : move.state in ('assigned','draft','confirmed') and move.product_qty or 0,
             'product_uom' : move.product_uom.id,
             'prodlot_id' : move.prodlot_id.id,
             'move_id' : move.id,
@@ -123,7 +155,7 @@ class stock_partial_picking(osv.osv_memory):
         return partial_move
 
     def do_partial(self, cr, uid, ids, context=None):
-        assert len(ids) == 1, 'Partial picking processing may only be done one at a time'
+        assert len(ids) == 1, 'Partial picking processing may only be done one at a time.'
         stock_picking = self.pool.get('stock.picking')
         stock_move = self.pool.get('stock.move')
         uom_obj = self.pool.get('product.uom')
@@ -138,14 +170,14 @@ class stock_partial_picking(osv.osv_memory):
 
             #Quantiny must be Positive
             if wizard_line.quantity < 0:
-                raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+                raise osv.except_osv(_('Warning!'), _('Please provide proper Quantity.'))
 
             #Compute the quantity for respective wizard_line in the line uom (this jsut do the rounding if necessary)
             qty_in_line_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, line_uom.id)
 
             if line_uom.factor and line_uom.factor <> 0:
                 if qty_in_line_uom <> wizard_line.quantity:
-                    raise osv.except_osv(_('Warning'), _('The uom rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
+                    raise osv.except_osv(_('Warning!'), _('The unit of measure rounding does not allow you to ship "%s %s", only roundings of "%s %s" is accepted by the Unit of Measure.') % (wizard_line.quantity, line_uom.name, line_uom.rounding, line_uom.name))
             if move_id:
                 #Check rounding Quantity.ex.
                 #picking: 1kg, uom kg rounding = 0.01 (rounding to 10g), 
@@ -156,7 +188,7 @@ class stock_partial_picking(osv.osv_memory):
                 qty_in_initial_uom = uom_obj._compute_qty(cr, uid, line_uom.id, wizard_line.quantity, initial_uom.id)
                 without_rounding_qty = (wizard_line.quantity / line_uom.factor) * initial_uom.factor
                 if qty_in_initial_uom <> without_rounding_qty:
-                    raise osv.except_osv(_('Warning'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
+                    raise osv.except_osv(_('Warning!'), _('The rounding of the initial uom does not allow you to ship "%s %s", as it would let a quantity of "%s %s" to ship and only roundings of "%s %s" is accepted by the uom.') % (wizard_line.quantity, line_uom.name, wizard_line.move_id.product_qty - without_rounding_qty, initial_uom.name, initial_uom.rounding, initial_uom.name))
             else:
                 seq_obj_name =  'stock.picking.' + picking_type
                 move_id = stock_move.create(cr,uid,{'name' : self.pool.get('ir.sequence').get(cr, uid, seq_obj_name),

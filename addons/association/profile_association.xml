@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <menuitem
-            name="Association"
+
+        <!-- Top menu item -->
+        <menuitem name="Association"
             id="base.menu_association"
-            icon="terp-calendar"
-            sequence="9"
-            web_icon="images/association.png"
-            web_icon_hover="images/association-hover.png"/>
-        <menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30" groups="base.group_extended"/>
+            groups="base.group_user"
+            sequence="70"/>
+        <menuitem name="Configuration" id="base.menu_event_config" parent="base.menu_association" sequence="30"/>
         <menuitem name="Association" id="base.menu_report_association" parent="base.menu_reporting" sequence="23"/>
+
     </data>
 </openerp>

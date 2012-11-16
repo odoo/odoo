@@ -86,8 +86,6 @@ class purchase_line_invoice(osv.osv_memory):
                     'reference' : partner.ref,
                     'account_id': a,
                     'partner_id': partner.id,
-                    'address_invoice_id': orders[0].partner_address_id.id,
-                    'address_contact_id': orders[0].partner_address_id.id,
                     'invoice_line': [(6,0,lines_ids)],
                     'currency_id' : orders[0].pricelist_id.currency_id.id,
                     'comment': multiple_order_invoice_notes(orders),
@@ -108,9 +106,8 @@ class purchase_line_invoice(osv.osv_memory):
                         if not a:
                             a = line.product_id.categ_id.property_account_expense_categ.id
                         if not a:
-                            raise osv.except_osv(_('Error !'),
-                                    _('There is no expense account defined ' \
-                                            'for this product: "%s" (id:%d)') % \
+                            raise osv.except_osv(_('Error!'),
+                                    _('Define expense account for this product: "%s" (id:%d).') % \
                                             (line.product_id.name, line.product_id.id,))
                     else:
                         a = property_obj.get(cr, uid,
@@ -127,7 +124,6 @@ class purchase_line_invoice(osv.osv_memory):
                         'uos_id': line.product_uom.id,
                         'product_id': line.product_id.id or False,
                         'invoice_line_tax_id': [(6, 0, [x.id for x in line.taxes_id])],
-                        'note': line.notes,
                         'account_analytic_id': line.account_analytic_id and line.account_analytic_id.id or False,
                     })
                     purchase_line_obj.write(cr, uid, [line.id], {'invoiced': True, 'invoice_lines': [(4, inv_id)]})

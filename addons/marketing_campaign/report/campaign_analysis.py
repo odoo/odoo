@@ -60,15 +60,15 @@ class campaign_analysis(osv.osv):
         'segment_id': fields.many2one('marketing.campaign.segment', 'Segment',
                                                                 readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'country_id': fields.related('partner_id','address', 'country_id',
+        'country_id': fields.related('partner_id', 'country_id',
                     type='many2one', relation='res.country',string='Country'),
         'total_cost' : fields.function(_total_cost, string='Cost',
-                                    type="float", digits_compute=dp.get_precision('Purchase Price')),
-        'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Sale Price')),
+                                    type="float", digits_compute=dp.get_precision('Account')),
+        'revenue': fields.float('Revenue', readonly=True, digits_compute=dp.get_precision('Account')),
         'count' : fields.integer('# of Actions', readonly=True),
         'state': fields.selection([('todo', 'To Do'),
                                    ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
+                                   ('cancelled', 'Cancelled')], 'Status', readonly=True),
     }
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'campaign_analysis')

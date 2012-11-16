@@ -10,6 +10,12 @@
         <field name="name">Manager</field>
         <field name="category_id" ref="base.module_category_manufacturing"/>
         <field name="implied_ids" eval="[(4, ref('group_mrp_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
+    </record>
+
+    <record id="group_mrp_routings" model="res.groups">
+        <field name="name">Manage Routings</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <!-- restrict access to menu -->

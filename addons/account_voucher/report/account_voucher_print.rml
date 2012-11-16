@@ -159,7 +159,7 @@
     <blockTable colWidths="52.0,123.0,50.0,198.0,42.0,59.0" style="Table4">
       <tr>
         <td>
-          <para style="terp_tblheader_Details">State:</para>
+          <para style="terp_tblheader_Details">Status:</para>
         </td>
         <td>
           <para style="P4">PRO-FORMA [[ ((voucher.state == 'proforma') or removeParentNode('para')) and '' ]]</para>
@@ -219,7 +219,7 @@
             <para style="terp_default_9_30cm">[[ p['pname'] ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ p['amount'] ]] [[ voucher.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9">[[ formatLang(p['amount'], currency_obj=voucher.currency_id) ]]</para>
           </td>
         </tr>
         <tr>
@@ -323,7 +323,7 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ voucher.amount ]] [[ voucher.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(voucher.amount, currency_obj=voucher.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>

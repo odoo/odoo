@@ -32,6 +32,7 @@ class timesheet_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
+        'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
         'product_id' : fields.many2one('product.product', 'Product'),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
@@ -51,8 +52,8 @@ class timesheet_report(osv.osv):
             ('new', 'New'),
             ('draft','Draft'),
             ('confirm','Confirmed'),
-            ('done','Done')], 'State', readonly=True),
-        'quantity': fields.float('#Quantity',readonly=True),
+            ('done','Done')], 'Status', readonly=True),
+        'quantity': fields.float('Time',readonly=True),
         'cost': fields.float('#Cost',readonly=True),
         }
 
@@ -62,13 +63,13 @@ class timesheet_report(osv.osv):
             create or replace view timesheet_report as (
                     select
                         min(aal.id) as id,
-                        htss.date_current,
                         htss.name,
+                        aal.date as date,
                         htss.date_from,
                         htss.date_to,
-                        to_char(htss.date_current,'YYYY') as year,
-                        to_char(htss.date_current,'MM') as month,
-                        to_char(htss.date_current, 'YYYY-MM-DD') as day,
+                        to_char(htss.date_from, 'YYYY-MM-DD') as day,
+                        to_char(htss.date_from, 'YYYY') as year,
+                        to_char(htss.date_from, 'MM') as month,
                         count(*) as nbr,
                         aal.unit_amount as quantity,
                         aal.amount as cost,
@@ -77,18 +78,15 @@ class timesheet_report(osv.osv):
                         (SELECT   sum(day.total_difference)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_diff,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_diff,
                         (SELECT sum(day.total_timesheet)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_timesheet,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_timesheet,
                         (SELECT sum(day.total_attendance)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_attendance,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_attendance,
                         aal.to_invoice,
                         aal.general_account_id,
                         htss.user_id,
@@ -99,15 +97,12 @@ class timesheet_report(osv.osv):
                     left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
                     group by
-                        to_char(htss.date_current,'YYYY'),
-                        to_char(htss.date_current,'MM'),
-                        to_char(htss.date_current, 'YYYY-MM-DD'),
                         aal.account_id,
+                        aal.date,
                         htss.date_from,
                         htss.date_to,
                         aal.unit_amount,
                         aal.amount,
-                        htss.date_current,
                         aal.to_invoice,
                         aal.product_id,
                         aal.general_account_id,

@@ -17,7 +17,7 @@
         
         <record id="seq_type_picking_internal" model="ir.sequence.type">
             <field name="name">Picking INT</field>
-            <field name="code">stock.picking.internal</field>
+            <field name="code">stock.picking</field>
         </record>
 
         <!--
@@ -42,7 +42,7 @@
         
         <record id="seq_picking_internal" model="ir.sequence">
             <field name="name">Picking INT</field>
-            <field name="code">stock.picking.internal</field>
+            <field name="code">stock.picking</field>
             <field name="prefix">INT/</field>
             <field name="padding">5</field>
             <field name="company_id" eval="False"/>
@@ -52,11 +52,11 @@
     Sequences from tracking numbers
     -->
         <record id="sequence_type_serial" model="ir.sequence.type">
-            <field name="name">Production Lots</field>
+            <field name="name">Serial Numbers</field>
             <field name="code">stock.lot.serial</field>
         </record>
         <record id="sequence_production_lots" model="ir.sequence">
-            <field name="name">Production Lots</field>
+            <field name="name">Serial Numbers</field>
             <field name="code">stock.lot.serial</field>
             <field name="prefix"></field>
             <field name="padding">7</field>

@@ -3,7 +3,7 @@
     <data>
 
          <record id="purchase.trans_confirmed_router" model="workflow.transition">
-            <field name="condition">amount_untaxed &gt;= 1000</field>
+            <field name="condition">amount_untaxed &gt;= 5000</field>
             <field name="signal">purchase_approve</field>
             <field name="group_id" ref="purchase.group_purchase_manager"/>
         </record>
@@ -11,7 +11,7 @@
         <record id="trans_waiting_confirmed" model="workflow.transition">
             <field name="act_from" ref="purchase.act_confirmed"/>
             <field name="act_to" ref="purchase.act_router"/>
-            <field name="condition">amount_untaxed &lt; 1000</field>
+            <field name="condition">amount_untaxed &lt; 5000</field>
         </record>
 
     </data>

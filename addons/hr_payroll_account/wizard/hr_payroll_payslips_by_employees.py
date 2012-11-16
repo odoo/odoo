@@ -31,8 +31,9 @@ class hr_payslip_employees(osv.osv_memory):
             context = {}
         if context and context.get('active_id', False):
             run_data = run_pool.read(cr, uid, context['active_id'], ['journal_id'])
-        journal_id =  run_data.get('journal_id', False)[0]
-        context.update({'journal_id': journal_id})
+        journal_id =  run_data.get('journal_id', False)
+        journal_id = journal_id and journal_id[0] or False
+        if journal_id: context.update({'journal_id': journal_id})
         return super(hr_payslip_employees, self).compute_sheet(cr, uid, ids, context=context)
 
 hr_payslip_employees()

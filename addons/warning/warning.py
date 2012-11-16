@@ -57,7 +57,7 @@ class sale_order(osv.osv):
     _inherit = 'sale.order'
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
-            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'partner_order_id':False, 'payment_term' : False}}
+            return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
         warning = {}
         title = False
         message = False
@@ -117,8 +117,6 @@ class account_invoice(osv.osv):
             date_invoice=False, payment_term=False, partner_bank_id=False, company_id=False):
         if not partner_id:
             return {'value': {
-            'address_contact_id': False ,
-            'address_invoice_id': False,
             'account_id': False,
             'payment_term': False,
             }
@@ -154,7 +152,7 @@ class stock_picking(osv.osv):
     def onchange_partner_in(self, cr, uid, context, partner_id=None):
         if not partner_id:
             return {}
-        partner = self.pool.get('res.partner.address').browse(cr, uid, [partner_id])[0].partner_id
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         warning = {}
         title = False
         message = False
@@ -175,6 +173,60 @@ class stock_picking(osv.osv):
         return {'value': result.get('value',{}), 'warning':warning}
 
 stock_picking()
+
+# FIXME:(class stock_picking_in and stock_picking_out) this is a temporary workaround because of a framework bug (ref: lp:996816). 
+# It should be removed as soon as the bug is fixed
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+
+    def onchange_partner_in(self, cr, uid, context, partner_id=None):
+        if not partner_id:
+            return {}
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        warning = {}
+        title = False
+        message = False
+        if partner.picking_warn != 'no-message':
+            if partner.picking_warn == 'block':
+                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.picking_warn_msg)
+            title = _("Warning for %s") % partner.name
+            message = partner.picking_warn_msg
+            warning = {
+                'title': title,
+                'message': message
+            }
+        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, context, partner_id)
+        if result.get('warning',False):
+            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+
+        return {'value': result.get('value',{}), 'warning':warning}
+
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+
+    def onchange_partner_in(self, cr, uid, context, partner_id=None):
+        if not partner_id:
+            return {}
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+        warning = {}
+        title = False
+        message = False
+        if partner.picking_warn != 'no-message':
+            if partner.picking_warn == 'block':
+                raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.picking_warn_msg)
+            title = _("Warning for %s") % partner.name
+            message = partner.picking_warn_msg
+            warning = {
+                'title': title,
+                'message': message
+            }
+        result =  super(stock_picking_out, self).onchange_partner_in(cr, uid, context, partner_id)
+        if result.get('warning',False):
+            warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
+            warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
+
+        return {'value': result.get('value',{}), 'warning':warning}
 
 class product_product(osv.osv):
     _inherit = 'product.product'
@@ -230,8 +282,8 @@ sale_order_line()
 
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
-    def product_id_change(self,cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order=False, fiscal_position=False, date_planned=False,
+    def onchange_product_id(self,cr, uid, ids, pricelist, product, qty, uom,
+            partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, notes=False, context=None):
         warning = {}
         if not product:
@@ -249,8 +301,8 @@ class purchase_order_line(osv.osv):
             warning['title'] = title
             warning['message'] = message
 
-        result =  super(purchase_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty, uom,
-            partner_id, date_order, fiscal_position)
+        result =  super(purchase_order_line, self).onchange_product_id(cr, uid, ids, pricelist, product, qty, uom,
+            partner_id, date_order, fiscal_position_id)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+result['warning']['title'] or result['warning']['title']

@@ -1,50 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="view_account_statement_from_invoice" model="ir.ui.view">
-            <field name="name">account.statement.from.invoice.form</field>
-            <field name="model">account.statement.from.invoice</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Import Invoices in Statement">
-                    <group colspan="4" >
-                        <field name="date"/>
-                        <newline/>
-                        <field name="journal_ids"  domain="[('type','in',['sale','purchase','cash'])]"/>
-                    </group>
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Go" name="search_invoices" type="object"/>
-                   </group>
-               </form>
-            </field>
-        </record>
-
-        <record id="action_view_account_statement_from_invoice" model="ir.actions.act_window">
-            <field name="name">Import Invoices in Statement</field>
-            <field name="res_model">account.statement.from.invoice</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_account_statement_from_invoice"/>
-            <field name="target">new</field>
-        </record>
-
         <record id="view_account_statement_from_invoice_lines" model="ir.ui.view">
             <field name="name">account.statement.from.invoice.lines.form</field>
             <field name="model">account.statement.from.invoice.lines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import Entries">
-                    <group colspan="4" expand="1">
-                        <separator string="Payable and Receivables" colspan="4"/>
-                        <field height="300" width="700" name="line_ids" colspan="4" nolabel="1" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
-                    </group>
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="gtk-execute" string="Ok" name="populate_statement" type="object"/>
-                   </group>
+                <form string="Import Entries" version="7.0">
+                    <separator string="Payable and Receivables"/>
+                    <field height="300" width="700" name="line_ids" domain="[('account_id.type','in',['receivable','payable']),('reconcile_id','=',False), ('reconcile_partial_id','=',False), ('state', '=', 'valid')]"/>
+                    <footer>
+                        <button string="Ok" name="populate_statement" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
