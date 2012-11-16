@@ -14,6 +14,8 @@ Contents:
     presentation
     async
 
+    testing
+
     widget
     qweb
     rpc
@@ -23,9 +25,6 @@ Contents:
     list_view
 
     changelog-7.0
-
-
-    testing
 
 Indices and tables
 ==================

@@ -70,7 +70,7 @@ module. OpenERP tests live in a :js:func:`~openerp.testing.section`,
 which is itself part of a module. The first argument to a section is
 the name of the section, the second one is the section body.
 
-:js:func:`~openerp.testing.test`, provided by the
+:js:func:`test <openerp.testing.case>`, provided by the
 :js:func:`~openerp.testing.section` to the callback, is used to
 register a given test case which will be run whenever the test runner
 actually does its job. OpenERP Web test case use standard `QUnit
@@ -196,7 +196,7 @@ strongly discouraged during tests. But DOM access is still needed to
 e.g. fully initialize :js:class:`widgets <~openerp.web.Widget>` before
 testing them.
 
-Thus, test cases get a DOM scratchpad as its second positional
+Thus, a test case gets a DOM scratchpad as its second positional
 parameter, in a jQuery instance. That scratchpad is fully cleaned up
 before each test, and as long as it doesn't do anything outside the
 scratchpad your code can do whatever it wants::
