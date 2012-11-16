@@ -258,10 +258,16 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
 
+concat_js_cache = {}
+
 def concat_js(file_list):
     content, checksum = concat_files(file_list, intersperse=';')
-    content = rjsmin(content)
-    return content, checksum 
+    if checksum in concat_js_cache:
+        content = concat_js_cache[checksum]
+    else:
+        content = rjsmin(content)
+        concat_js_cache[checksum] = content
+    return content, checksum
 
 def fs2web(path):
     """convert FS path into web path"""
