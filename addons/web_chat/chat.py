@@ -24,6 +24,7 @@ import openerp.modules.registry
 from osv import osv, fields
 import gevent
 import gevent.event
+import select
 
 class Watcher:
     watchers = {}
@@ -58,7 +59,6 @@ class Watcher:
                             conn.poll()
                             while conn.notifies:
                                 notify = conn.notifies.pop()
-                                print "Got NOTIFY:", notify.pid, notify.channel, notify.payload
                             self.posted.set()
                             self.posted.clear()
                     finally:
@@ -97,21 +97,18 @@ class chat_message(osv.osv):
             res = self.read(cr, uid, res, ["id", "message"], context=context)
             lst = [x["message"] for x in res]
             if len(lst) > 0:
-                plast = last
                 last = res[-1]["id"]
-                if plast is not None:
-                    return {"res": lst, "last": last}
+                return {"res": lst, "last": last}
             num += 1
             if num == 2:
                 return {"res": [], "last": last}
-            import pudb
-            pudb.set_trace()
-            Watcher.get_watcher(cr.name).stop(30)
-        print "waking up"
+            cr.commit()
+            Watcher.get_watcher(cr.dbname).stop(30)
+            cr.commit()
 
     def post(self, cr, uid, message, context=None):
-        self.create({"message": message}, context=context)
+        self.create(cr, uid, {"message": message}, context=context)
         cr.commit()
-        session.execute("notify received_message, '"+ message + "'")
+        cr.execute("notify received_message")
         cr.commit()
         return False

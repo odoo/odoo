@@ -21,24 +21,21 @@ openerp.web_chat = function(instance) {
                 var mes = self.$(".oe_chat_input").val();
                 self.$(".oe_chat_input").val("");
                 var model = new instance.web.Model("chat.message");
-                model.call("post", [mes], {context: new instance.web.CompoundContext()}).then(function() {
-                    console.log("pushed message");
-                });
+                model.call("post", [mes], {context: new instance.web.CompoundContext()});
             }).focus();
         },
         poll: function() {
             var self = this;
             var model = new instance.web.Model("chat.message");
-            model.call("poll", [this.last], {context: new instance.web.CompoundContext()}).then(function(result) {
-                console.log("got it", result);
+            model.call("poll", [this.last], {context: new instance.web.CompoundContext()}, {shadow: true}).then(function(result) {
                 self.last = result.last;
                 _.each(result.res, function(mes) {
                     $("<div>").text(mes).appendTo(self.$(".oe_chat_content"));
                 });
-                //self.poll();
+                self.poll();
             }, function(unused, e) {
                 e.preventDefault();
-                //setTimeout(_.bind(self.poll, self), 5000);
+                setTimeout(_.bind(self.poll, self), 5000);
             });
         }
     });
