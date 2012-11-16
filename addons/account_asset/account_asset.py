@@ -377,16 +377,15 @@ class account_asset_depreciation_line(osv.osv):
         move_line_obj = self.pool.get('account.move.line')
         currency_obj = self.pool.get('res.currency')
         created_move_ids = []
+        asset_ids = []
         for line in self.browse(cr, uid, ids, context=context):
-            if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
-                can_close = True
             depreciation_date = time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
             context.update({'date': depreciation_date})
             amount = currency_obj.compute(cr, uid, current_currency, company_currency, line.amount, context=context)
-            sign = line.asset_id.category_id.journal_id.type = 'purchase' and 1 or -1
+            sign = (line.asset_id.category_id.journal_id.type == 'purchase' and 1) or -1
             asset_name = line.asset_id.name
             reference = line.name
             move_vals = {
@@ -409,8 +408,8 @@ class account_asset_depreciation_line(osv.osv):
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency <> current_currency and  current_currency or False,
-                'amount_currency': company_currency <> current_currency and - sign * line.amount or 0.0,
+                'currency_id': company_currency != current_currency and  current_currency or False,
+                'amount_currency': company_currency != current_currency and - sign * line.amount or 0.0,
                 'date': depreciation_date,
             })
             move_line_obj.create(cr, uid, {
@@ -423,16 +422,19 @@ class account_asset_depreciation_line(osv.osv):
                 'period_id': period_ids and period_ids[0] or False,
                 'journal_id': journal_id,
                 'partner_id': partner_id,
-                'currency_id': company_currency <> current_currency and  current_currency or False,
-                'amount_currency': company_currency <> current_currency and sign * line.amount or 0.0,
+                'currency_id': company_currency != current_currency and  current_currency or False,
+                'amount_currency': company_currency != current_currency and sign * line.amount or 0.0,
                 'analytic_account_id': line.asset_id.category_id.account_analytic_id.id,
                 'date': depreciation_date,
                 'asset_id': line.asset_id.id
             })
             self.write(cr, uid, line.id, {'move_id': move_id}, context=context)
             created_move_ids.append(move_id)
-            if can_close:
-                asset_obj.write(cr, uid, [line.asset_id.id], {'state': 'close'}, context=context)
+            asset_ids.append(line.asset_id.id)
+        # we re-evaluate the assets to determine whether we can close them
+        for asset in asset_obj.browse(cr, uid, list(set(asset_ids)), context=context):
+            if currency_obj.is_zero(cr, uid, asset.currency_id, asset.value_residual):
+                asset.write({'state': 'close'})
         return created_move_ids
 
 account_asset_depreciation_line()

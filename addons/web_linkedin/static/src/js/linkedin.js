@@ -20,7 +20,7 @@ openerp.web_linkedin = function(instance) {
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
-                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true';
+                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_contactinfo';
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
                 $(tag).load(function() {
@@ -107,7 +107,7 @@ openerp.web_linkedin = function(instance) {
                 }
                 to_change.website = entity.websiteUrl;
                 to_change.phone = false;
-                _.each(entity.locations.values || [], function(el) {
+                _.each((entity.locations || {}).values || [], function(el) {
                     to_change.phone = el.contactInfo.phone1;
                 });
                 var children_def = $.Deferred();

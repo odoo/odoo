@@ -25,6 +25,21 @@ from osv import osv
 from osv import fields
 
 
+def _reopen(self, res_id, model):
+    return {'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_id': res_id,
+            'res_model': self._name,
+            'target': 'new',
+            # save original model in context, because selecting the list of available
+            # templates requires a model in context
+            'context': {
+                'default_model': model,
+            },
+    }
+
+
 class mail_compose_message(osv.TransientModel):
     _inherit = 'mail.compose.message'
 
@@ -42,18 +57,17 @@ class mail_compose_message(osv.TransientModel):
         else:
             model = context.get('default_model', context.get('active_model'))
 
-        if model:
-            record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
-            return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
-        return []
+        record_ids = email_template_obj.search(cr, uid, [('model', '=', model)], context=context)
+        return email_template_obj.name_get(cr, uid, record_ids, context) + [(False, '')]
 
     def default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         result['template_id'] = context.get('default_template_id', context.get('mail.compose.template_id', False))
+
         # pre-render the template if any
-        if result.get('use_template'):
+        if result.get('use_template') and result.get('template_id'):
             onchange_res = self.onchange_use_template(cr, uid, [], result.get('use_template'), result.get('template_id'),
                 result.get('composition_mode'), result.get('model'), result.get('res_id'), context=context)
             result.update(onchange_res['value'])
@@ -63,6 +77,10 @@ class mail_compose_message(osv.TransientModel):
         'use_template': fields.boolean('Use Template'),
         # incredible hack of the day: size=-1 means we want an int db column instead of an str one
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
+    }
+
+    _defaults = {
+        'use_template': True,
     }
 
     def onchange_template_id(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
@@ -104,7 +122,7 @@ class mail_compose_message(osv.TransientModel):
             onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
             onchange_res['attachment_ids'] = [(4, attachment_id) for attachment_id in onchange_res.pop('attachment_ids', [])]
             record.write(onchange_res)
-        return True
+            return _reopen(self, record.id, record.model)
 
     def onchange_use_template(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
         """ onchange_use_template (values: True or False).  If use_template is
@@ -136,8 +154,8 @@ class mail_compose_message(osv.TransientModel):
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
             template_id = email_template.create(cr, uid, values, context=context)
-            record.write({'template_id': template_id, 'use_template': True})
-        return True
+            record.write(record.onchange_template_id(True, template_id, record.composition_mode, record.model, record.res_id)['value'])
+            return _reopen(self, record.id, record.model)
 
     #------------------------------------------------------
     # Wizard validation and send
@@ -148,15 +166,23 @@ class mail_compose_message(osv.TransientModel):
             mail.compose.message, transform email_cc and email_to into partner_ids """
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
         # filter template values
-        fields = ['body', 'body_html', 'subject', 'email_to', 'email_cc', 'attachments']
+        fields = ['body', 'body_html', 'subject', 'email_to', 'email_recipients', 'email_cc', 'attachments']
         values = dict((field, template_values[field]) for field in fields if template_values.get(field))
         values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
         values['partner_ids'] = []
+
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
             partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
             values['partner_ids'].append(partner_id)
+        email_recipients = values.pop('email_recipients', '')
+        if email_recipients:
+            for partner_id in email_recipients.split(','):
+                values['partner_ids'].append(int(partner_id))
+
+        values['partner_ids'] = list(set(values['partner_ids']))
+
         return values
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
