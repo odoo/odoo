@@ -62,16 +62,31 @@ class pos_order(osv.osv):
             statement_ids = order.pop('statement_ids')
             order_id = self.create(cr, uid, order, context)
             list.append(order_id)
-            for value in statement_ids:
-            # call add_payment; refer to wizard/pos_payment for data structure
-            # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
-                data = {
-                        'journal': value[2]['journal_id'],
-                        'amount': value[2]['amount'],
-                        'payment_name': order['name'],
-                        'payment_date': value[2]['name'],
-                    }
-                order_obj.add_payment(cr, uid, order_id, data, context=context)
+            for payments in statement_ids:
+                # call add_payment; refer to wizard/pos_payment for data structure
+                # add_payment launches the 'paid' signal to advance the workflow to the 'paid' state
+                payment = payments[2]
+                order_obj.add_payment(cr, uid, order_id, {
+                    'amount': payment['amount'],
+                    'payment_name': order['name'],
+                    'payment_date': payment['name'],
+                    'journal': payment['journal_id'],
+                }, context=context)
+            if order['amount_return']:
+                # search for open cash register of 'cash' journal
+                statement_obj = self.pool.get('account.bank.statement')
+                cash_registers_domain = [('state','=','open'),('user_id','=',uid),('journal_id.type','=','cash')]
+                cash_register_ids = statement_obj.search(cr, uid, cash_registers_domain, context=context)
+                if not len(cash_register_ids):
+                    raise osv.except_osv( _('Error!'),
+                            _("No cash statement found for this session. Unable to record returned cash."))
+                cash_register = statement_obj.browse(cr, uid, cash_register_ids[0], context=context)
+                self.add_payment(cr, uid, order_id, {
+                    'amount': -order['amount_return'],
+                    'payment_date': time.strftime('%Y-%m-%d %H:%M:%S'),
+                    'payment_name': _('return'),
+                    'journal': cash_register.journal_id.id,
+                }, context=context)
         return list
 
     def unlink(self, cr, uid, ids, context=None):
