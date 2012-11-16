@@ -1,6 +1,6 @@
 openerp.web.list = function (instance) {
 var _t = instance.web._t,
-   _lt = instance.web._lt;
+    _lt = instance.web._lt;
 var QWeb = instance.web.qweb;
 instance.web.views.add('list', 'instance.web.ListView');
 instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListView# */ {

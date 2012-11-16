@@ -322,7 +322,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.db_list = null;
             });
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).done(function(result) {
-            self.lang_list = result.lang_list;
+            self.lang_list = result;
         });
         return $.when(fetch_db, fetch_langs).done(self.do_render);
     },

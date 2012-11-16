@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from . import test_dataset, test_menu, test_serving_base, test_view
+from . import test_dataset, test_menu, test_serving_base, test_view, test_js
 
 fast_suite = []
 checks = [

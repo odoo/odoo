@@ -787,6 +787,17 @@ class Database(openerpweb.Controller):
             params['db_name'])
 
     @openerpweb.jsonrequest
+    def duplicate(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        duplicate_attrs = (
+            params['super_admin_pwd'],
+            params['db_original_name'],
+            params['db_name'],
+        )
+
+        return req.session.proxy("db").duplicate_database(*duplicate_attrs)
+
+    @openerpweb.jsonrequest
     def drop(self, req, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
@@ -892,10 +903,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
         try:
-            return {
-                'lang_list': (req.session.proxy("db").list_lang() or []),
-                'error': ""
-            }
+            return req.session.proxy("db").list_lang() or []
         except Exception, e:
             return {"error": e, "title": "Languages"}
 

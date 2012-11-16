@@ -1,16 +1,13 @@
-$(document).ready(function () {
-    var $fix = $('#qunit-fixture');
-
-    var instance;
-    var baseSetup = function () {
-        instance = openerp.testing.instanceFor('list_editable');
-
-        openerp.testing.loadTemplate(instance);
-
-        openerp.testing.mockifyRPC(instance);
-    };
-
-
+openerp.testing.section('editor', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+    setup: function (instance, $s, mock) {
+        mock('test.model:create', function () {
+            return 42;
+        });
+    }
+}, function (test) {
     /**
      *
      * @param {String} name
@@ -30,7 +27,7 @@ $(document).ready(function () {
     }
 
     /**
-     * @param {Array} fields
+     * @param {Array} [fields]
      * @return {Object}
      */
     function makeFormView(fields) {
@@ -67,46 +64,37 @@ $(document).ready(function () {
         };
     }
 
-    module('editor', {
-        setup: baseSetup
-    });
-    asyncTest('base-state', 2, function () {
+    test('base-state', {asserts: 2}, function (instance, $fix) {
         var e = new instance.web.list.Editor({
             dataset: {ids: []},
             edition_view: function () {
                 return makeFormView();
             }
         });
-        e.appendTo($fix)
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
+        return e.appendTo($fix)
             .done(function () {
                 ok(!e.is_editing(), "should not be editing");
                 ok(e.form instanceof instance.web.FormView,
                    "should use default form type");
             });
     });
-    asyncTest('toggle-edition-save', 4, function () {
-        instance.session.responses['/web/dataset/call_kw:create'] = function () {
-            return { result: 42 };
-        };
-        instance.session.responses['/web/dataset/call_kw:read'] = function () {
-            return { result: [{
-                id: 42,
-                a: false,
-                b: false,
-                c: false
-            }]};
-        };
+    test('toggle-edition-save', {
+        asserts: 4,
+        setup: function (instance, $s, mock) {
+            mock('test.model:read', function () {
+                return [{id: 42, a: false, b: false, c: false}];
+            });
+        }
+    }, function (instance, $fix) {
         var e = new instance.web.list.Editor({
-            dataset: new instance.web.DataSetSearch(),
+            dataset: new instance.web.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
         var counter = 0;
-        e.appendTo($fix)
+        return e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
                     ++counter;
@@ -117,26 +105,21 @@ $(document).ready(function () {
                 equal(counter, 3, "should have configured all fields");
                 return e.save();
             })
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 equal(record.id, 42, "should have newly created id");
             })
     });
-    asyncTest('toggle-edition-cancel', 2, function () {
-        instance.session.responses['/web/dataset/call_kw:create'] = function () {
-            return { result: 42 };
-        };
+    test('toggle-edition-cancel', { asserts: 2 }, function (instance, $fix) {
         var e = new instance.web.list.Editor({
-            dataset: new instance.web.DataSetSearch(),
+            dataset: new instance.web.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([ field('a'), field('b'), field('c') ]);
             }
         });
         var counter = 0;
-        e.appendTo($fix)
+        return e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
                     ++counter;
@@ -145,22 +128,20 @@ $(document).ready(function () {
             .then(function (form) {
                 return e.cancel();
             })
-            .always(start)
-            .fail(function (error) { ok(false, error && error.message); })
             .done(function (record) {
                 ok(!e.is_editing(), "should have stopped editing");
                 ok(!record.id, "should have no id");
             })
     });
-    asyncTest('toggle-save-required', 2, function () {
-        instance.session.responses['/web/dataset/call_kw:create'] = function () {
-            return { result: 42 };
-        };
+    test('toggle-save-required', {
+        asserts: 2,
+        fail_on_rejection: false
+    }, function (instance, $fix) {
         var e = new instance.web.list.Editor({
             do_warn: function () {
                 warnings++;
             },
-            dataset: new instance.web.DataSetSearch(),
+            dataset: new instance.web.DataSetSearch(null, 'test.model'),
             prepends_on_create: function () { return false; },
             edition_view: function () {
                 return makeFormView([
@@ -169,7 +150,7 @@ $(document).ready(function () {
         });
         var counter = 0;
         var warnings = 0;
-        e.appendTo($fix)
+        return e.appendTo($fix)
             .then(function () {
                 return e.edit({}, function () {
                     ++counter;
@@ -178,78 +159,73 @@ $(document).ready(function () {
             .then(function (form) {
                 return e.save();
             })
-            .always(start)
             .done(function () { ok(false, "cancel should not succeed"); })
             .fail(function () {
                 equal(warnings, 1, "should have been warned");
                 ok(e.is_editing(), "should have kept editing");
-            })
+            });
     });
-
-    module('list-edition', {
-        setup: function () {
-            baseSetup();
-
-            var records = {};
-            _.extend(instance.session.responses, {
-                '/web/view/load': function () {
-                    return {result: {
-                        type: 'tree',
-                        fields: {
-                            a: {type: 'char', string: "A"},
-                            b: {type: 'char', string: "B"},
-                            c: {type: 'char', string: "C"}
-                        },
-                        arch: {
-                            tag: 'tree',
-                            attrs: {},
-                            children: [
-                                {tag: 'field', attrs: {name: 'a'}},
-                                {tag: 'field', attrs: {name: 'b'}},
-                                {tag: 'field', attrs: {name: 'c'}}
-                            ]
-                        }
-                    }};
+});
+openerp.testing.section('list.edition', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+    setup: function (instance, $s, mock) {
+        var records = {};
+        mock('demo:create', function (args) {
+            records[42] = _.extend({}, args[0]);
+            return 42;
+        });
+        mock('demo:read', function (args) {
+            var id = args[0][0];
+            if (id in records) {
+                return [records[id]];
+            }
+            return [];
+        });
+        mock('/web/view/load', function () {
+            return {
+                type: 'tree',
+                fields: {
+                    a: {type: 'char', string: "A"},
+                    b: {type: 'char', string: "B"},
+                    c: {type: 'char', string: "C"}
                 },
-                '/web/dataset/call_kw:create': function (params) {
-                    records[42] = _.extend({}, params.params.args[0]);
-                    return {result: 42};
-                },
-                '/web/dataset/call_kw:read': function (params) {
-                    var id = params.params.args[0][0];
-                    if (id in records) {
-                        return {result: [records[id]]};
-                    }
-                    return {result: []};
+                arch: {
+                    tag: 'tree',
+                    attrs: {},
+                    children: [
+                        {tag: 'field', attrs: {name: 'a'}},
+                        {tag: 'field', attrs: {name: 'b'}},
+                        {tag: 'field', attrs: {name: 'c'}}
+                    ]
                 }
-            })
-        }
-    });
-    asyncTest('newrecord', 6, function () {
+            };
+        });
+    }
+}, function (test) {
+    test('newrecord', {asserts: 6}, function (instance, $fix, mock) {
         var got_defaults = false;
-        instance.session.responses['/web/dataset/call_kw:default_get'] = function (params) {
-            var fields = params.params.args[0];
+        mock('demo:default_get', function (args) {
+            var fields = args[0];
             deepEqual(
                 fields, ['a', 'b', 'c'],
                 "should ask defaults for all fields");
             got_defaults = true;
-            return {result: {
-                a: "qux",
-                b: "quux"
-            }};
-        };
+            return { a: "qux", b: "quux" };
+        });
 
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
 
-        l.appendTo($fix)
+        return l.appendTo($fix)
             .then(l.proxy('reload_content'))
             .then(function () {
                 return l.start_edition();
             })
-            .always(start)
             .then(function () {
                 ok(got_defaults, "should have fetched default values for form");
+
                 return l.save_edition();
             })
             .then(function (result) {
@@ -260,45 +236,39 @@ $(document).ready(function () {
                       "should have used default values");
                 ok(!result.record.get('c'),
                     "should have no value if there was no default");
-            })
-            .fail(function (e) { ok(false, e && e.message || e); });
-    });
-
-    module('list-edition-events', {
-        setup: function () {
-            baseSetup();
-            _.extend(instance.session.responses, {
-                '/web/view/load': function () {
-                    return {result: {
-                        type: 'tree',
-                        fields: {
-                            a: {type: 'char', string: "A"},
-                            b: {type: 'char', string: "B"},
-                            c: {type: 'char', string: "C"}
-                        },
-                        arch: {
-                            tag: 'tree',
-                            attrs: {},
-                            children: [
-                                {tag: 'field', attrs: {name: 'a'}},
-                                {tag: 'field', attrs: {name: 'b'}},
-                                {tag: 'field', attrs: {name: 'c'}}
-                            ]
-                        }
-                    }};
-                },
-                '/web/dataset/call_kw:read': function (params) {
-                    return {result: [{
-                        id: 1,
-                        a: 'foo',
-                        b: 'bar',
-                        c: 'baz'
-                    }]};
-                }
             });
-        }
     });
-    asyncTest('edition events', 4, function () {
+});
+openerp.testing.section('list.edition.events', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+    setup: function (instance, $s, mock) {
+        mock('demo:read', function () {
+            return [{ id: 1, a: 'foo', b: 'bar', c: 'baz' }];
+        });
+        mock('/web/view/load', function () {
+            return {
+                type: 'tree',
+                fields: {
+                    a: {type: 'char', string: "A"},
+                    b: {type: 'char', string: "B"},
+                    c: {type: 'char', string: "C"}
+                },
+                arch: {
+                    tag: 'tree',
+                    attrs: {},
+                    children: [
+                        {tag: 'field', attrs: {name: 'a'}},
+                        {tag: 'field', attrs: {name: 'b'}},
+                        {tag: 'field', attrs: {name: 'c'}}
+                    ]
+                }
+            };
+        });
+    }
+}, function (test) {
+    test('edition events', {asserts: 4}, function (instance, $fix) {
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
         var o = {
             counter: 0,
@@ -306,9 +276,8 @@ $(document).ready(function () {
         };
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
         l.on('edit:before edit:after', o, o.onEvent);
-        l.appendTo($fix)
+        return l.appendTo($fix)
             .then(l.proxy('reload_content'))
-            .always(start)
             .then(function () {
                 ok(l.options.editable, "should be editable");
                 equal(o.counter, 0, "should have seen no event yet");
@@ -317,11 +286,10 @@ $(document).ready(function () {
             .then(function () {
                 ok(l.editor.is_editing(), "should be editing");
                 equal(o.counter, 2, "should have seen two edition events");
-            })
-            .fail(function (e) { ok(false, e && e.message); });
+            });
     });
 
-    asyncTest('edition events: cancelling', 3, function () {
+    test('edition events: cancelling', {asserts: 3}, function (instance, $fix) {
         var edit_after = false;
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1]);
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
@@ -331,9 +299,8 @@ $(document).ready(function () {
         l.on('edit:after', {}, function () {
             edit_after = true;
         });
-        l.appendTo($fix)
+        return l.appendTo($fix)
             .then(l.proxy('reload_content'))
-            .always(start)
             .then(function () {
                 ok(l.options.editable, "should be editable");
                 return l.start_edition();
@@ -343,19 +310,18 @@ $(document).ready(function () {
                 ok(!l.editor.is_editing(), "should not be editing");
                 ok(!edit_after, "should not have fired the edit:after event");
                 return $.when();
-            })
-            .fail(function (e) { ok(false, e && e.message || e); });
+            });
     });
+});
 
-    module('list-edition-onwrite', {
-        setup: function () {
-            baseSetup();
-        }
-    });
-
-    asyncTest('record-to-read', 4, function () {
-        instance.session.responses['/web/view/load'] = function () {
-            return {result: {
+openerp.testing.section('list.edition.onwrite', {
+    dependencies: ['web.list_editable'],
+    rpc: 'mock',
+    templates: true,
+}, function (test) {
+    test('record-to-read', {asserts: 4}, function (instance, $fix, mock) {
+        mock('/web/view/load', function () {
+            return {
                 type: 'tree',
                 fields: {
                     a: {type: 'char', string: "A"}
@@ -367,35 +333,27 @@ $(document).ready(function () {
                         {tag: 'field', attrs: {name: 'a'}}
                     ]
                 }
-            }};
-        };
-        instance.session.responses['/web/dataset/call_kw:read'] = function (req) {
-            if (_.isEmpty(req.params.args[0])) {
-                return {result: []};
-            } else if (_.isEqual(req.params.args[0], [1])) {
-                return {result: [
+            };
+        });
+        mock('demo:read', function (params) {
+            if (_.isEmpty(params.args[0])) {
+                return [];
+            } else if (_.isEqual(params.args[0], [1])) {
+                return [
                     {id: 1, a: 'some value'}
-                ]};
-            } else if (_.isEqual(req.params.args[0], [42])) {
-                return {result: [
-                    {id: 42, a: 'foo'}
-                ]};
+                ];
+            } else if (_.isEqual(params.args[0], [42])) {
+                return [ {id: 42, a: 'foo'} ];
             }
-            throw new Error(JSON.stringify(req.params));
-        };
-        instance.session.responses['/web/dataset/call_kw:default_get'] = function () {
-            return {result: {}};
-        };
-        instance.session.responses['/web/dataset/call_kw:create'] = function () {
-            return {result: 1};
-        };
-        instance.session.responses['/web/dataset/call_kw:on_write'] = function () {
-            return {result: [42]};
-        };
+            throw new Error(JSON.stringify(params));
+        });
+        mock('demo:default_get', function () { return {}; });
+        mock('demo:create', function () { return 1; });
+        mock('demo:on_write', function () { return [42]; });
 
         var ds = new instance.web.DataSetStatic(null, 'demo', null, []);
         var l = new instance.web.ListView({}, ds, false, {editable: 'top'});
-        l.appendTo($fix)
+        return l.appendTo($fix)
         .then(l.proxy('reload_content'))
         .then(function () {
             return l.start_edition();
@@ -406,7 +364,6 @@ $(document).ready(function () {
         .then(function () {
             return l.save_edition();
         })
-        .always(function () { start(); })
         .then(function () {
             strictEqual(ds.ids.length, 2,
                 'should have id of created + on_write');
@@ -418,8 +375,6 @@ $(document).ready(function () {
             strictEqual(
                 $fix.find('tbody tr:eq(2)').css('color'), 'rgb(0, 0, 0)',
                 'should have default color applied');
-        }, function (e) {
-            ok(false, e && e.message || e);
         });
     });
 });
