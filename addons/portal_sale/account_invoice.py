@@ -46,25 +46,24 @@ class mail_mail(osv.osv):
                 group_obj = self.pool.get('res.groups')
 
                 document = inv_obj.browse(cr, uid, mail.res_id, context=context)
-
-                # partners = partner_obj.read(cr, uid, partner_ids, ['user_ids'], context=context)
-                # for partner in partners:
-                #     users = user_obj.read(cr, uid, partner['user_ids'], ['groups_id'], context=context)
-                #     for user in users:                    
-                #         for group in group_obj.browse(cr, uid, user['groups_id'], context=context):
-                #             if group.is_portal == True:
-                #                 print 'Hello'
-                                # inv_obj.message_subscribe(cr, uid, [mail.res_id], partner_ids, context=context)
-                                # mail_values = {
-                                #     'email_from': 'vta@openerp.com',
-                                #     'email_to': 'falcobolger@gmail.com',
-                                #     'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                                #     'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                                #     'auto_delete': True,
-                                # }
-                                # mail_id = self.create(cr, uid, mail_values, context=context)
-                                # print mail_values
-                                # self.send(cr, uid, [mail_id], recipient_ids=[partner['id']], context=context)
+                group_ids = []                
+                for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
+                    for user_id in partner.user_ids:
+                        group_ids += user_id.groups_id
+                    if group_ids:
+                        for group_id in group_ids:
+                            if group_id.is_portal == True:
+                                inv_obj.message_subscribe(cr, uid, [mail.res_id], partner_ids, context=context)
+                                mail_values = {
+                                    'email_from': 'vta@openerp.com',
+                                    'email_to': 'falcobolger@gmail.com',
+                                    'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                                    'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
+                                    'auto_delete': True,
+                                }
+                                mail_id = self.create(cr, uid, mail_values, context=context)
+                                self.send(cr, uid, [mail_id], recipient_ids=[partner['id']], context=context)
+                        group_ids = []
                                 
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 

@@ -22,14 +22,12 @@
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 
-class crm_contact_us(osv.TransientModel):
+class contact(osv.TransientModel):
     """ Create new leads through the "contact us" form """
-    _name = 'portal_crm.crm_contact_us'
+    _name = 'contact'
     _description = 'Contact form for the portal'
     _inherit = 'crm.lead'
     _columns = {
-        'subject' : fields.char('Subject'),
-        'body' : fields.text('Content'),
         'company_ids' : fields.many2many('res.company', string='Companies', readonly=True),
     }
 
@@ -85,7 +83,7 @@ class crm_contact_us(osv.TransientModel):
         Since they are potentially sensitive, we don't want any user to be able
         to read datas generated through this module.  Therefore we'll write
         these information directly in the crm.lead table and leave blank
-        entries in the portal_crm.crm_contact_us table.
+        entries in the contact table.
         This is why the create() method is overwritten.
         """
         crm_lead = self.pool.get('crm.lead')
@@ -98,17 +96,15 @@ class crm_contact_us(osv.TransientModel):
         Therefore, user SUPERUSER_ID will perform the creation.
         """
         print values
-        values['name'] = values['subject']
         values['contact_name'] = values['partner_name']
-        values['description'] = values['body']
         crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
 
         """
-        Create an empty record in the portal_crm.crm_contact_us table.
+        Create an empty record in the contact table.
         Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
         """
         empty_values = dict((k, False) if k != 'name' else (k, '') for k, v in values.iteritems())
-        return super(crm_contact_us, self).create(cr, uid, empty_values)
+        return super(contact, self).create(cr, uid, empty_values)
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """

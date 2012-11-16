@@ -6,7 +6,7 @@
 -
   As a portal user, I fill in the contact form and submit it.
 -
-  !record {model: portal_crm.crm_contact_us, id: contact_us_01}:
+  !record {model: contact, id: contact_us_01}:
     name: 'Need information about your contact form module'
     partner_name: 'Mr. John Doe'
     email_from: 'mister@john.doe'
@@ -15,7 +15,7 @@
 -
   For security reasons, the wizard values is empty.
 -
-  !python {model: portal_crm.crm_contact_us}: |
+  !python {model: contact}: |
     obj = self.browse(cr, uid, ref("contact_us_01"))
     assert not(obj.name or obj.partner_name or obj.email_from or obj.phone or obj.description), 'All the wizard\'s values are not empty'
 -

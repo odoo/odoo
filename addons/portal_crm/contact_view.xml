@@ -3,10 +3,10 @@
     <data>
 
         <record id="contact_form_view" model="ir.ui.view">
-            <field name="name">Wizard form view</field>
-            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="name">Contact form</field>
+            <field name="model">contact</field>
             <field name="arch" type="xml">
-                <form string="Contact wizard view" version="7.0">
+                <form string="Contact form" version="7.0">
                     <sheet>
                         <h1>Contact us</h1>
                         <group class="oe_portal_crm_contact">
@@ -15,8 +15,9 @@
                                         <field name="partner_name" invisible="1"/>
                                         <field name="email_from" invisible="1"/>
                                         <field name="phone" nolabel="1" placeholder="Your phone number..."/>
-                                        <field name="subject" nolabel="1" placeholder="Subject..." colspan="6" required="1"/>
-                                        <field name="body" nolabel="1" placeholder="Content..." colspan="6" required="1"/>
+                                        <field name="name" nolabel="1" placeholder="Subject..." colspan="6"/>
+                                        <field name="description" nolabel="1" placeholder="Content..." colspan="6"/>
+                                        <!-- <field name="description" nolabel="1" placeholder="Content..." colspan="6" attrs="{'required': [(context.get('user_id'), 'in', 'portal.group_portal.users')]}"/> -->
                                         <button string="Submit" name="submit" type="object"/>
                                 </group>
                                 <group class="oe_portal_crm_office">
@@ -56,9 +57,6 @@
                                 </group>
                             </group>                            
                         </group>
-                        <!-- <group>
-                            <div class="oe_portal_crm_team"></div>
-                        </group> -->
                     </sheet>
                 </form>
             </field>
@@ -67,7 +65,7 @@
         <!-- wizard thanks message (shows after submitting the form) -->
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
-            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="model">contact</field>
             <!-- give it a low priority to ensure this won't be the default view -->
             <field name="priority">99</field>
             <field name="arch" type="xml">
@@ -85,7 +83,7 @@
 
         <record id="action_contact_us" model="ir.actions.act_window">
             <field name="name">Contact Us</field>
-            <field name="res_model">portal_crm.crm_contact_us</field>
+            <field name="res_model">contact</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
