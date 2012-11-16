@@ -69,6 +69,7 @@ This module provides the core of the OpenERP Web Client.
         "static/src/xml/*.xml",
     ],
     'test': [
+        "static/test/testing.js",
         "static/test/class.js",
         "static/test/registry.js",
         "static/test/form.js",

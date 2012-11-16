@@ -85,6 +85,90 @@ openerp.testing = {};
         };
     };
 
+    var StackProto = {
+        execute: function (fn) {
+            var args = [].slice.call(arguments, 1);
+            // Warning: here be dragons
+            var i = 0, setups = this.setups, teardowns = this.teardowns;
+            var d = $.Deferred();
+
+            var succeeded, failed;
+            var success = function () {
+                succeeded = _.toArray(arguments);
+                return teardown();
+            };
+            var failure = function () {
+                // save first failure
+                if (!failed) {
+                    failed = _.toArray(arguments);
+                }
+                // chain onto next teardown
+                return teardown();
+            };
+
+            var setup = function () {
+                // if setup to execute
+                if (i < setups.length) {
+                    var f = setups[i] || testing.noop;
+                    $.when(f.apply(null, args)).then(function () {
+                        ++i;
+                        setup();
+                    }, failure);
+                } else {
+                    var actual_call;
+                    try {
+                        actual_call = $.when(fn.apply(null, args))
+                    } catch (e) {
+                        actual_call = $.Deferred().reject(e);
+                    }
+                    actual_call.pipe(success, failure);
+                }
+            };
+            var teardown = function () {
+                // if teardown to execute
+                if (i > 0) {
+                    var f = teardowns[--i] || testing.noop;
+                    $.when(f.apply(null, args)).then(teardown, failure);
+                } else {
+                    if (failed) {
+                        d.reject.apply(d, failed);
+                    } else if (succeeded) {
+                        d.resolve.apply(d, succeeded);
+                    } else {
+                        throw new Error("Didn't succeed or fail?");
+                    }
+                }
+            };
+            setup();
+
+            return d;
+        },
+        push: function (setup, teardown) {
+            return _.extend(Object.create(StackProto), {
+                setups: this.setups.concat([setup]),
+                teardowns: this.teardowns.concat([teardown])
+            });
+        },
+        unshift: function (setup, teardown) {
+            return _.extend(Object.create(StackProto), {
+                setups: [setup].concat(this.setups),
+                teardowns: [teardown].concat(this.teardowns)
+            });
+        }
+    };
+    /**
+     *
+     * @param {Function} [setup]
+     * @param {Function} [teardown]
+     * @return {*}
+     */
+    testing.Stack = function (setup, teardown) {
+        return _.extend(Object.create(StackProto), {
+            setups: setup ? [setup] : [],
+            teardowns: teardown ? [teardown] : []
+        });
+    };
+
     var db = window['oe_db_info'];
     testing.section = function (name, options, body) {
         if (_.isFunction(options)) {
@@ -104,10 +188,6 @@ openerp.testing = {};
             callback = options;
             options = {};
         }
-        _.defaults(options, {
-            setup: testing.noop,
-            teardown: testing.noop
-        });
 
         var module = testing.current_module;
         var module_index = _.indexOf(testing.dependencies, module);
@@ -120,27 +200,15 @@ openerp.testing = {};
         // Serialize options for this precise test case
         // WARNING: typo is from jquery, do not fix!
         var env = QUnit.config.currentModuleTestEnviroment;
-        var opts = _.defaults({
-            // section setup
-            //     case setup
-            //         test
-            //     case teardown
-            // section teardown
-            setup: function () {
-                var args = [].slice.call(arguments);
-                return $.when(env._oe.setup.apply(null, args))
-                    .pipe(function () {
-                        return options.setup.apply(null, args);
-                    });
-            },
-            teardown: function () {
-                var args = [].slice.call(arguments);
-                return $.when(options.teardown.apply(null, args))
-                    .pipe(function () {
-                        return env._oe.teardown.apply(null, args);
-                    });
-            }
-        }, options, env._oe);
+        // section setup
+        //     case setup
+        //         test
+        //     case teardown
+        // section teardown
+        var case_stack = testing.Stack()
+            .push(env._oe.setup, env._oe.teardown)
+            .push(options.setup, options.teardown);
+        var opts = _.defaults({}, options, env._oe);
         // FIXME: if this test is ignored, will still query
         if (opts.rpc === 'rpc' && !db) {
             QUnit.config.autostart = false;
@@ -177,9 +245,6 @@ openerp.testing = {};
         }
 
         QUnit.test(name, function () {
-            // module testing environment
-            var self = this;
-
             var instance;
             if (!opts.dependencies) {
                 instance = openerp.init(module_deps);
@@ -240,10 +305,11 @@ openerp.testing = {};
                 break;
             case 'rpc':
                 async = true;
-                (function (setup, teardown) {
+                (function () {
                 // Bunch of random base36 characters
                 var dbname = 'test_' + Math.random().toString(36).slice(2);
-                opts.setup = function (instance, $s) {
+                // Add db setup/teardown at the start of the stack
+                case_stack = case_stack.unshift(function (instance) {
                     // FIXME hack: don't want the session to go through shitty loading process of everything
                     instance.session.session_init = testing.noop;
                     instance.session.load_modules = testing.noop;
@@ -260,38 +326,27 @@ openerp.testing = {};
                         }
                         return instance.session.session_authenticate(
                             dbname, 'admin', db.password, true);
-                    }).pipe(function () {
-                        return setup(instance, $s);
                     });
-                };
-                opts.teardown = function (instance, $s) {
-                    return $.when(teardown(instance, $s)).pipe(function () {
-                        return instance.session.session_logout()
-                    }).pipe(function () {
-                        return instance.session.rpc('/web/database/drop', {
+                }, function (instance) {
+                    return instance.session.rpc('/web/database/drop', {
                             fields: [
                                 {name: 'drop_pwd', value: db.supadmin},
                                 {name: 'drop_db', value: dbname}
                             ]
-                        });
-                    }).pipe(function (result) {
+                        }).pipe(function (result) {
                         if (result.error) {
                             return $.Deferred().reject(result.error).promise();
                         }
                         return result;
                     });
-                };
-                })(opts.setup, opts.teardown);
+                });
+                })();
             }
 
             // Always execute tests asynchronously
             stop();
             var timeout;
-            var teardown = function () {
-                return opts.teardown(instance, $fixture, mock)
-            };
-            $.when(opts.setup(instance, $fixture, mock))
-            .pipe(function () {
+            case_stack.execute(function () {
                 var result = callback(instance, $fixture, mock);
                 if (!(result && _.isFunction(result.then))) {
                     if (async) {
@@ -303,25 +358,24 @@ openerp.testing = {};
                                 + "number of assertions they expect");
                     }
                 }
-                var d = $.Deferred();
-                $.when(result).then(function () {
-                    d.resolve.apply(d, arguments)
-                }, function () {
-                    d.reject.apply(d, arguments);
+
+                return $.Deferred(function (d) {
+                    $.when(result).then(function () {
+                        d.resolve.apply(d, arguments)
+                    }, function () {
+                        d.reject.apply(d, arguments);
+                    });
+                    if (async || (result && result.then)) {
+                        // async test can be either implicit async (rpc) or
+                        // promise-returning
+                        timeout = setTimeout(function () {
+                            QUnit.config.semaphore = 1;
+                            d.reject({message: "Test timed out"});
+                        }, 2000);
+                    }
                 });
-                if (async || (result && result.then)) {
-                    // async test can be either implicit async (rpc) or
-                    // promise-returning
-                    timeout = setTimeout(function () {
-                        QUnit.config.semaphore = 1;
-                        d.reject({message: "Test timed out"});
-                    }, 2000);
-                }
-                return d.pipe(teardown, teardown);
-            }).always(function () {
-                if (timeout) {
-                    clearTimeout(timeout);
-                }
+            }, instance, $fixture, mock).always(function () {
+                if (timeout) { clearTimeout(timeout); }
                 start();
             }).fail(function (error) {
                 if (options.fail_on_rejection === false) {
