@@ -55,7 +55,8 @@
                     </group>
                     <footer>
                         <button name="go_step_2" string="Share" type="object" class="oe_highlight"/>
-                        <button string="Close" class="oe_link" special="cancel" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </footer>
                 </form>
             </field>
@@ -83,7 +84,7 @@
                         <group string="Use this link">
                             <field name="embed_url"/>
                         </group>
-                        <group string="Or insert the following code where you want to embed your documents">
+                        <group string="insert the following code where you want to embed your documents">
                             <field name="embed_code"/>
                         </group>
                         <group string="Embedded code options">
@@ -95,6 +96,7 @@
                     <footer>
                         <field name="user_type" invisible="1"/>
                         <field name="access_mode" invisible="1"/>
+                        <button string="Close" class="oe_highlight" special="cancel" />
                     </footer>
 
                 </form>
