@@ -347,7 +347,7 @@ openerp.testing = {};
             stop();
             var timeout;
             case_stack.execute(function () {
-                var result = callback(instance, $fixture, mock);
+                var result = callback.apply(null, arguments);
                 if (!(result && _.isFunction(result.then))) {
                     if (async) {
                         ok(false, "asynchronous test cases must return a promise");
