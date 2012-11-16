@@ -42,14 +42,34 @@ This will create the following structure inside your ``source`` directory, and f
 
 Some dependencies are necessary to use OpenERP. Depending on your environment, you might have to install the following packages::
 
-  sudo apt-get install graphviz ghostscript postgresql-client
- 
-  sudo apt-get install python-dateutil python-feedparser python-gdata
-    python-ldap python-libxslt1 python-lxml python-mako, python-openid
-    python-psycopg2 python-pybabel python-pychart python-pydot
-    python-pyparsing python-reportlab python-simplejson python-tz
-    python-vatnumber python-vobject python-webdav python-werkzeug python-xlwt
-    python-yaml python-imaging python-matplotlib 
+  sudo apt-get install \
+            graphviz \
+            ghostscript \
+            postgresql-client \
+            python-dateutil \
+            python-feedparser \
+            python-gdata \
+            python-ldap \
+            python-libxslt1 \
+            python-lxml \
+            python-mako \
+            python-openid \
+            python-psycopg2 \
+            python-pybabel \
+            python-pychart \
+            python-pydot \
+            python-pyparsing \
+            python-reportlab \
+            python-simplejson \
+            python-tz \
+            python-vatnumber \
+            python-vobject \
+            python-webdav \
+            python-werkzeug \
+            python-xlwt \
+            python-yaml \
+            python-imaging \
+            python-matplotlib
 
 Next step is to initialize the database. This will create a new openerp role::
 
