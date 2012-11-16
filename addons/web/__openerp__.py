@@ -81,7 +81,8 @@ This module provides the core of the OpenERP Web Client.
         "static/test/search.js",
         "static/test/Widget.js",
         "static/test/list.js",
-        "static/test/list-editable.js"
+        "static/test/list-editable.js",
+        "static/test/mutex.js"
     ],
     'bootstrap': True,
     'twitter': False,

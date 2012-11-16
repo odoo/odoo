@@ -622,6 +622,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         return self._process_save(save_obj).then(function() {
                             save_obj.ret = _.toArray(arguments);
                             return iterate();
+                        }, function() {
+                            save_obj.error = true;
                         });
                     }
                     return $.when();
@@ -805,6 +807,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
         return this._process_operations().then(function() {
+            if (save_obj.error)
+                return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
         });
     },
