@@ -29,7 +29,7 @@
                             attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                     </group>
                     <field name="body"/>
-                    <field name="attachment_ids" widget="one2many_binary" blockui="0"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
                     <footer>
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or
