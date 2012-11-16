@@ -231,7 +231,7 @@
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
             <field name="partner_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
-            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus3_attach1'), ref('msg_discus3_attach2')])]"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_discus4_attach1'), ref('msg_discus4_attach2')])]"/>
             <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discuss4_1" model="mail.message">
