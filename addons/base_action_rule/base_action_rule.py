@@ -300,7 +300,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
         if hasattr(obj, 'state') and action.act_state:
             write['state'] = action.act_state
-        
+
         model_obj.write(cr, uid, [obj.id], write, context)
         if hasattr(obj, 'state') and hasattr(obj, 'message_post') and action.act_state:
             model_obj.message_post(cr, uid, [obj], _(action.act_state), context=context)

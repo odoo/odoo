@@ -268,7 +268,7 @@
                         <page string="Incoming Shipments &amp; Invoices">
                             <group>
                                 <group>
-                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)"/>
+                                    <field name="dest_address_id" string="Customer Address" on_change="onchange_dest_address_id(dest_address_id)" groups="stock.group_locations"/>
                                     <field name="minimum_planned_date"/>
                                     <field name="location_id" groups="stock.group_locations"/>
                                     <field name="shipped" groups="base.group_no_one"/>
@@ -282,8 +282,6 @@
                                     <field name="date_approve" groups="base.group_no_one"/>
                                 </group>
                             </group>
-                            <separator string="Invoices"/>
-                            <field name="invoice_ids" context="{'type':'in_invoice', 'journal_type':'purchase'}"/>
                         </page>
                     </notebook>
                 </sheet>

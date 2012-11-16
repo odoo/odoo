@@ -122,7 +122,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -159,7 +159,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
             </field>
@@ -466,7 +466,7 @@
         </record>
 
         <record id="open_view_holiday_status" model="ir.actions.act_window">
-            <field name="name">Leave Type</field>
+            <field name="name">Leave Types</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.status</field>
             <field name="view_type">form</field>

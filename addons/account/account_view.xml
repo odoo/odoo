@@ -302,11 +302,11 @@
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
 
-         <record id="view_account_gain_loss_tree" model="ir.ui.view">
+        <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree string="Unrealized Gains and losses">
+                <tree string="Unrealized Gains and losses" create="false">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="parent_id" invisible="1"/>
@@ -322,7 +322,7 @@
             </field>
         </record>
 
-          <record id="action_account_gain_loss" model="ir.actions.act_window">
+        <record id="action_account_gain_loss" model="ir.actions.act_window">
             <field name="name">Unrealized Gain or Loss</field>
             <field name="res_model">account.account</field>
             <field name="view_type">form</field>
@@ -650,7 +650,7 @@
                                     <field name="ref"/>
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                     <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                    <field domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',parent.journal_id), ('company_id', '=', parent.company_id)]"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                     <field name="amount"/>
                                 </tree>
@@ -661,7 +661,7 @@
                                         <field name="ref"/>
                                         <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                                         <field name="type" on_change="onchange_type(partner_id, type)"/>
-                                        <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]" name="account_id"/>
+                                        <field name="account_id" domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view'), ('company_id', '=', parent.company_id)]"/>
                                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
                                         <field name="amount"/>
                                         <field name="sequence" readonly="0"/>
@@ -671,15 +671,24 @@
                                 </form>
                             </field>
                         </page>
-                        <page string="Journal Entries" name="move_live_ids">
-                            <field name="move_line_ids"/>
-                        </page>
                     </notebook>
                 </sheet>
                 </form>
             </field>
         </record>
 
+        <record id="view_bank_statement_form_journal_items" model="ir.ui.view">
+            <field name="name">account.bank.statement.journal.items.form.inherit</field>
+            <field name="model">account.bank.statement</field>
+            <field name="inherit_id" ref="view_bank_statement_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="button_journal_entries"
+                            string="Journal Items" type="object"
+                            attrs="{'invisible':[('state','!=','confirm')]}"/>
+                </xpath>
+            </field>
+        </record>
 
         <record id="action_bank_statement_tree" model="ir.actions.act_window">
             <field name="name">Bank Statements</field>
@@ -1055,7 +1064,7 @@
             </field>
         </record>
 
-         <record id="view_move_line_tree" model="ir.ui.view">
+        <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
@@ -1791,7 +1800,7 @@
                         <field name="name"/>
                         <field name="active"/>
                     </group>
-                    <field name="note" placeholder="Note fo the invoice..."/>
+                    <field name="note" placeholder="Note for the invoice..."/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
                 </form>
@@ -1850,7 +1859,7 @@
             </field>
         </record>
 
-         <record id="view_subscription_search" model="ir.ui.view">
+        <record id="view_subscription_search" model="ir.ui.view">
             <field name="name">account.subscription.search</field>
             <field name="model">account.subscription</field>
             <field name="arch" type="xml">
@@ -2159,7 +2168,8 @@
                         <field name="visible" />
                         <field name="complete_tax_set" />
                     </group>
-                    <field name="tax_template_ids" colspan="4" readonly="1" nolabel="1"/>
+                    <separator string="Default Taxes" colspan="4"/>
+                    <field name="tax_template_ids" colspan="4"  nolabel="1"/>
                     <separator string="Properties" colspan="4"/>
                     <group col="4">
                         <field name="property_account_receivable" domain="[('id', 'child_of', [account_root_id])]"/>
