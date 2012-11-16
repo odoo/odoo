@@ -1241,7 +1241,6 @@ openerp.mail = function (session) {
             // check if the message is already create
             for (var i in self.messages) {
                 if (message.id && self.messages[i] && self.messages[i].id == message.id) {
-                    console.log('Reload message', message.id);
                     self.messages[i].destroy();
                 }
             }
@@ -1286,7 +1285,6 @@ openerp.mail = function (session) {
          */
         switch_new_message: function (records, dom_insert_after) {
             var self=this;
-            console.log(records);
             _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.parent_id, 
