@@ -300,7 +300,7 @@ class account_analytic_account(osv.osv):
             res[account.id] = 0.0
             line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
-                res[account.id] += line.invoice_id.amount_untaxed
+                res[account.id] = line.invoice_id.amount_untaxed
         return res
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
