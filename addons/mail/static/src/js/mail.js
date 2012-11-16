@@ -1012,7 +1012,7 @@ openerp.mail = function (session) {
             // object compose message
             this.compose_message = false;
 
-            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model);
+            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model || 'mail.thread');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
         },
         
@@ -1286,6 +1286,7 @@ openerp.mail = function (session) {
          */
         switch_new_message: function (records, dom_insert_after) {
             var self=this;
+            console.log(records);
             _(records).each(function (record) {
                 var thread = self.browse_thread({
                     'id': record.parent_id, 
