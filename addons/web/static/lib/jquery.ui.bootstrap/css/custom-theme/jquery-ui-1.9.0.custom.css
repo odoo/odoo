@@ -23,6 +23,7 @@
 .ui-helper-zfix { width: 100%; height: 100%; top: 0; left: 0; position: absolute; opacity: 0; filter:Alpha(Opacity=0); }
 
 
+
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-disabled { cursor: default !important; }
@@ -59,7 +60,7 @@
 ----------------------------------*/
 .ui-widget {   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size:13px; }
 .ui-widget .ui-widget { font-size: 1em; }
-/*.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; }*/
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; font-size: 1em; }
 .ui-widget-content { border: 1px solid #aaaaaa; background: #ffffff url(images/ui-bg_glass_75_ffffff_1x400.png) 50% 50% repeat-x; color: #404040; }
 .ui-widget-content a { color: #404040; }
 .ui-widget-header {
@@ -399,7 +400,6 @@
 .ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br { -moz-border-radius-bottomright: 4px; -webkit-border-bottom-right-radius: 4px; -khtml-border-bottom-right-radius: 4px; border-bottom-right-radius: 4px; }
 
 
-
 /* Overlays */
 .ui-widget-overlay { background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); }
 .ui-widget-shadow { margin: -8px 0 0 -8px; padding: 8px; background: #aaaaaa url(images/ui-bg_flat_0_aaaaaa_40x100.png) 50% 50% repeat-x; opacity: .30;filter:Alpha(Opacity=30); -moz-border-radius: 8px; -khtml-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px; }/*
@@ -432,9 +432,9 @@
  */
 .ui-selectable-helper { position: absolute; z-index: 100; border:1px dotted black; }
 /*
- * jQuery UI Accordion 1.8.16
+ * jQuery UI Accordion 1.9.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
@@ -445,7 +445,7 @@
 .ui-accordion .ui-accordion-header { cursor: pointer; position: relative; margin-top: 1px; zoom: 1; font-weight:bold; }
 .ui-accordion .ui-accordion-li-fix { display: inline; }
 .ui-accordion .ui-accordion-header-active { border-bottom: 0 !important; }
-.ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em .7em; }
+.ui-accordion .ui-accordion-header a { display: block; font-size: 1em; padding: .5em .5em .5em 1.7em; }
 .ui-accordion-icons .ui-accordion-header a { padding-left: 2.2em; }
 .ui-accordion .ui-accordion-header .ui-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
 .ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; margin-top: -2px; position: relative; top: 1px; margin-bottom: 2px; overflow: auto; display: none; zoom: 1; }
@@ -465,46 +465,55 @@
 * html .ui-autocomplete { width:1px; } /* without this, the menu expands to 100% in IE6 */
 
 /*
- * jQuery UI Menu 1.8.16
+ * jQuery UI Menu 1.9.0
  *
- * Copyright 2010, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2012-10-11, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
  * http://docs.jquery.com/UI/Menu#theming
  */
-.ui-menu {
-	list-style:none;
-	padding: 2px;
-	margin: 0;
-	display:block;
-	float: left;
-}
-.ui-menu .ui-menu {
-	margin-top: -3px;
-}
-.ui-menu .ui-menu-item {
-	margin:0;
-	padding: 0;
-	zoom: 1;
-	float: left;
-	clear: left;
-	width: 100%;
-}
-.ui-menu .ui-menu-item a {
-	text-decoration:none;
-	display:block;
-	padding:.2em .4em;
-	line-height:1.5;
-	zoom:1;
-}
-.ui-menu .ui-menu-item a.ui-state-hover,
-.ui-menu .ui-menu-item a.ui-state-active {
-	font-weight: normal;
-  background:#0064CD;
-  color:#fff
+
+.ui-menu { list-style:none; padding: 2px; margin: 0; display:block; float:left; outline: none; }
+.ui-menu .ui-menu { margin-top: -3px; position: absolute; }
+.ui-menu .ui-menu-item { margin: 0; padding: 0; zoom: 1;float: left;clear: left; width: 100%; }
+.ui-menu .ui-menu-divider { margin: 5px -2px 5px -2px; height: 0; font-size: 0; line-height: 0; border-width: 1px 0 0 0; }
+.ui-menu .ui-menu-item a { text-decoration: none; display: block; padding: 2px .4em; line-height: 1.5; zoom: 1; font-weight: normal; }
+.ui-menu .ui-menu-item a.ui-state-focus,
+.ui-menu .ui-menu-item a.ui-state-active { 
+  font-weight: normal; 
+  margin: 0; 
+  color: #ffffff;
+  background: #0064cd;
+  background-color: #0064cd;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+  background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+  background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+  background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+  background-image: linear-gradient(top, #049cdb, #0064cd);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-color: #0064cd #0064cd #003f81;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 
+.ui-menu .ui-state-disabled { font-weight: normal; margin: .4em 0 .2em; line-height: 1.5; }
+.ui-menu .ui-state-disabled a { cursor: default; }
+
+/* icon support */
+.ui-menu-icons { position: relative; }
+.ui-menu-icons .ui-menu-item a { position: relative; padding-left: 2em; }
+
+/* left-aligned */
+.ui-menu .ui-icon { position: absolute; top: .2em; left: .2em; }
+
+/* right-aligned */
+.ui-menu .ui-menu-icon { position: static; float: right; }
+
+.ui-menu { width: 200px; margin-bottom: 2em; }
 
 /*
  * jQuery UI Button 1.8.16
@@ -651,7 +660,31 @@ button.ui-button-icons-only { width: 3.7em; }
 /* workarounds */
 button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra padding in Firefox */
 
+/*
+ * jQuery UI spinner 1.9.0
+ *
+ * Copyright 2012-10-11, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://docs.jquery.com/UI/Menu#theming
+ */
 
+.ui-spinner { position:relative; display: inline-block; overflow: hidden; padding: 0; vertical-align: middle; }
+.ui-spinner-input { border: none; background: none; padding: 0; margin: .2em 0; vertical-align: middle; margin-left: .4em; margin-right: 22px; }
+.ui-spinner{}
+.ui-spinner-button { width: 16px; height: 50%; font-size: .5em; padding: 0; margin: 0; z-index: 100; text-align: center; position: absolute; cursor: default; display: block; overflow: hidden; right: 0; }
+.ui-spinner a.ui-spinner-button { border-top: none; border-bottom: none; border-right: none; } /* more specificity required here to overide default borders */
+.ui-spinner .ui-icon { position: absolute; margin-top: -8px; top: 50%; left: 0; } /* vertical centre icon */
+.ui-spinner-up { top: 0; }
+.ui-spinner-down { bottom: 0; }
+
+/* TR overrides */
+span.ui-spinner { background: none; }
+.ui-spinner .ui-icon-triangle-1-s {
+    /* need to fix icons sprite */
+    background-position:-65px -16px;
+}
 
 /*
  * jQuery UI Dialog 1.8.16
@@ -805,14 +838,16 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 .ui-slider-vertical .ui-slider-handle { left: -.3em; margin-left: 0; margin-bottom: -.6em; }
 .ui-slider-vertical .ui-slider-range { left: 0; width: 100%; }
 .ui-slider-vertical .ui-slider-range-min { bottom: 0; }
-.ui-slider-vertical .ui-slider-range-max { top: 0; }/*
- * jQuery UI Tabs 1.8.16
+.ui-slider-vertical .ui-slider-range-max { top: 0; }
+
+/*
+ * jQuery UI Tabs 1.9.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2012, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * http://docs.jquery.com/UI/Tabs#theming
+ * http://jqueryui.com/tabs/
  */
  .ui-tabs .ui-tabs-nav{ background:none; border-color: #ddd;
   border-style: solid;
@@ -824,14 +859,11 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   background:whiteSmoke;
   border-bottom:1px solid #ddd;
   padding-bottom:0px;
-   color:#4c4c4c;
+   color:#00438A;
 }
-
 
 .ui-tabs .ui-tabs-nav { margin: 0; padding: .2em .2em 0; border-bottom:1px solid #DDD; }
-.ui-tabs .ui-tabs-nav li {  text-decoration: none; list-style: none; float: left; position: relative; top: 1px; padding: 0px 0px 1px 0px; white-space: nowrap; background:none; border:0px; 
-
-}
+.ui-tabs .ui-tabs-nav li {  text-decoration: none; list-style: none; float: left; position: relative; top: 1px; padding: 0px 0px 1px 0px; white-space: nowrap; background:none; border:0px; }
 
 .ui-tabs-nav .ui-state-default{
   -webkit-box-shadow: 0px 0px 0px #ffffff; /* Saf3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
@@ -853,25 +885,24 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 
  }
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected { margin-bottom: 0; padding-bottom: 0px; outline:none;}
 
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a {
+.ui-tabs .ui-tabs-nav li.ui-tabs-active { margin-bottom: 0; padding-bottom: 0px; outline:none;}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-state-processing a {
 
   background-color: #ffffff;
   border: 1px solid #ddd;
   border-bottom-color: #ffffff;
   cursor: default;
-  color:#4c4c4c;
+  color:gray;
   outline:none;
 }
 
-
-.ui-tabs .ui-tabs-nav li.ui-tabs-selected:hover{
+.ui-tabs .ui-tabs-nav li.ui-tabs-active:hover{
   background:#ffffff;
   outline:none;
 }
-
-.ui-tabs .ui-tabs-nav li a, .ui-tabs.ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-selected a { cursor: pointer; color:#0069D6; background:none; font-weight:normal; margin-bottom:-1px;} 
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a, .ui-tabs .ui-tabs-nav li.ui-state-disabled a, .ui-tabs .ui-tabs-nav li.ui-tabs-loading a { cursor: text; }
+.ui-tabs .ui-tabs-nav li a, .ui-tabs-collapsible .ui-tabs-nav li.ui-tabs-active a { cursor: pointer; color:#0069D6; background:none; font-weight:normal; margin-bottom:-1px;}
 /* first selector in group seems obsolete, but required to overcome bug in Opera applying cursor: text overall if defined elsewhere... */
 .ui-tabs .ui-tabs-panel { display: block; border-width: 0; padding: 1em 1.4em; background: none; }
 .ui-tabs-panel .ui-button{text-decoration:none;}
@@ -883,16 +914,39 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   filter:none;
 }
 
-
-
 /*
- * jQuery UI Datepicker 1.8.16
+ * jQuery UI Tooltip 1.9.0
  *
- * Copyright 2011, AUTHORS.txt (http://jqueryui.com/about)
+ * Copyright 2012-10-11, AUTHORS.txt (http://jqueryui.com/about)
  * Dual licensed under the MIT or GPL Version 2 licenses.
  * http://jquery.org/license
  *
- * http://docs.jquery.com/UI/Datepicker#theming
+ * http://jqueryui.com/tooltip/
+ */
+.ui-tooltip {
+    padding:8px;
+    position:absolute;
+    z-index:9999;
+    -o-box-shadow: 0 0 5px #ddd;
+    -moz-box-shadow: 0 0 5px #ddd;
+    -webkit-box-shadow: 0 0 5px #ddd;
+    /*box-shadow: 0 2px 5px #ddd;*/
+    box-shadow: inset 0 1px 0 #ffffff;
+}
+/* Fades and background-images don't work well together in IE6, drop the image */
+* html .ui-tooltip {
+    background-image: none;
+}
+body .ui-tooltip { border-width:2px; }
+
+/*
+ * jQuery UI Datepicker 1.9.0
+ *
+ * Copyright 2012-10-11, AUTHORS.txt (http://jqueryui.com/about)
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ * http://jquery.org/license
+ *
+ * http://jqueryui.com/datepicker/
  */
 .ui-datepicker { width: 17em; padding: .2em .2em 0; display: none; }
 .ui-datepicker .ui-datepicker-header { position:relative; padding:.2em 0; border:0px; font-weight: bold; width: 100%; padding: 4px 0; background-color: #f5f5f5; color: #808080; }
@@ -982,7 +1036,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 }
 
 .ui-datepicker td:hover{
-  color:white;
+    color: #ffffff;
 }
 
 .ui-datepicker td .ui-state-default {
@@ -1001,20 +1055,33 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
   margin-bottom:0px;
   font-size:normal;
   text-shadow: 0px;
-  color:white;  
+  color: #ffffff;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
   border-radius: 4px;
 }
 
-.ui-datepicker td .ui-state-default:hover{
-  background:#0064cd;
-  color:white;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
+.ui-datepicker td .ui-state-hover {
+    color: #ffffff;
+    background: #0064cd;
+    background-color: #0064cd;
+    background-repeat: repeat-x;
+    background-image: -khtml-gradient(linear, left top, left bottom, from(#049cdb), to(#0064cd));
+    background-image: -moz-linear-gradient(top, #049cdb, #0064cd);
+    background-image: -ms-linear-gradient(top, #049cdb, #0064cd);
+    background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #049cdb), color-stop(100%, #0064cd));
+    background-image: -webkit-linear-gradient(top, #049cdb, #0064cd);
+    background-image: -o-linear-gradient(top, #049cdb, #0064cd);
+    background-image: linear-gradient(top, #049cdb, #0064cd);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+    border-color: #0064cd #0064cd #003f81;
+    border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
 }
-
 
 /*
  * jQuery UI Progressbar 1.8.16
@@ -1048,7 +1115,7 @@ button.ui-button::-moz-focus-inner { border: 0; padding: 0; } /* reset extra pad
 
 
 /*** Input field styling from Bootstrap **/
- input, textarea {
+/* input, textarea {
   -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
   -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
   -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
@@ -1065,7 +1132,7 @@ input:focus, textarea:focus {
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
 }
-/*input[type=file]:focus, input[type=checkbox]:focus, select:focus {
+input[type=file]:focus, input[type=checkbox]:focus, select:focus {
   -webkit-box-shadow: none;
   -moz-box-shadow: none;
   box-shadow: none;
@@ -1073,8 +1140,9 @@ input:focus, textarea:focus {
 }*/
 
 /*input[type="text"],
-input[type="password"],
-textarea,*/
+input[type="password"],*/
+.ui-autocomplete-input,
+/*textarea,*/
 .uneditable-input {
   display: inline-block;
   padding: 4px;

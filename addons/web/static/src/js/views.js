@@ -25,6 +25,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     dialog_stop: function () {
         if (this.dialog) {
             this.dialog.destroy();
+            this.dialog = null;
         }
     },
     /**
@@ -200,7 +201,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_loaded;
         if (state.action) {
             if (_.isString(state.action) && instance.web.client_actions.contains(state.action)) {
-                var action_client = {type: "ir.actions.client", tag: state.action, params: state};
+                var action_client = {
+                    type: "ir.actions.client",
+                    tag: state.action,
+                    params: state,
+                    _push_me: state._push_me,
+                };
                 this.null_action();
                 action_loaded = this.do_action(action_client);
             } else {
@@ -208,8 +214,12 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if (run_action) {
                     this.null_action();
                     action_loaded = this.do_action(state.action);
-                    instance.webclient.menu.has_been_loaded.then(function() {
-                        instance.webclient.menu.open_action(state.action);
+                    $.when(action_loaded || null).done(function() {
+                        instance.webclient.menu.has_been_loaded.done(function() {
+                            if (self.inner_action && self.inner_action.id) {
+                                instance.webclient.menu.open_action(self.inner_action.id);
+                            }
+                        });
                     });
                 }
             }
@@ -226,14 +236,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
         } else if (state.sa) {
             // load session action
             this.null_action();
-            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).pipe(function(action) {
+            action_loaded = this.rpc('/web/session/get_session_action',  {key: state.sa}).then(function(action) {
                 if (action) {
                     return self.do_action(action);
                 }
             });
         }
 
-        $.when(action_loaded || null).then(function() {
+        $.when(action_loaded || null).done(function() {
             if (self.inner_widget && self.inner_widget.do_load_state) {
                 self.inner_widget.do_load_state(state, warm);
             }
@@ -251,7 +261,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             return this.do_action(action_client, options);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
-            return self.rpc("/web/action/load", { action_id: action }).pipe(function(result) {
+            return self.rpc("/web/action/load", { action_id: action }).then(function(result) {
                 return self.do_action(result, options);
             });
         }
@@ -301,15 +311,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            if (this.dialog_widget && ! this.dialog_widget.isDestroyed())
+            if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
-            if (this.dialog === null || this.dialog.isDestroyed()) {
-                this.dialog = new instance.web.Dialog(this, {
-                    dialogClass: executor.klass,
-                });
-                this.dialog.on("closing", null, options.on_close);
-                this.dialog.init_dialog();
             }
+            this.dialog_stop();
+            this.dialog = new instance.web.Dialog(this, {
+                dialogClass: executor.klass,
+            });
+            this.dialog.on("closing", null, options.on_close);
+            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
@@ -379,7 +389,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.rpc('/web/action/run', {
             action_id: action.id,
             context: action.context || {}
-        }).then(function (action) {
+        }).done(function (action) {
             self.do_action(action, options)
         });
     },
@@ -389,9 +399,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         self.rpc("/web/session/eval_domain_and_context", {
             contexts: [action.context],
             domains: []
-        }).then(function(res) {
+        }).done(function(res) {
             action = _.clone(action);
             action.context = res.context;
+            var c = instance.webclient.crashmanager;
             self.session.get_file({
                 url: '/web/report',
                 data: {action: JSON.stringify(action)},
@@ -402,7 +413,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     }
                     self.dialog_stop();
                 },
-                error: instance.webclient.crashmanager.on_rpc_error
+                error: c.rpc_error.bind(c)
             })
         });
     },
@@ -487,7 +498,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         } else if (this.searchview
                 && self.flags.auto_search
                 && view.controller.searchable !== false) {
-            this.searchview.ready.then(this.searchview.do_search);
+            this.searchview.ready.done(this.searchview.do_search);
         }
 
         if (this.searchview) {
@@ -499,7 +510,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        r = $.when(view_promise).then(function () {
+        return $.when(view_promise).done(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -515,7 +526,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             });
             self.trigger('switch_mode', view_type, no_store, view_options);
         });
-        return r;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -551,11 +561,11 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
-        return $.when(view_promise).then(function() {
+        return $.when(view_promise).done(function() {
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
-                self.searchview.ready.then(self.searchview.do_search);
+                self.searchview.ready.done(self.searchview.do_search);
             }
             self.trigger("controller_inited",view_type,controller);
         });
@@ -582,7 +592,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 var view_to_select = views[index];
                 var state = self.url_states[view_to_select];
                 self.do_push_state(state || {});
-                $.when(self.switch_mode(view_to_select)).then(function() {
+                $.when(self.switch_mode(view_to_select)).done(function() {
                     self.$el.show();
                 });
             },
@@ -661,7 +671,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             domains: [this.action.domain || []].concat(domains || []),
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
-        }).then(function (results) {
+        }).done(function (results) {
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -786,7 +796,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'perm_read':
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
-                    this.dataset.call('perm_read', [ids]).then(function(result) {
+                    this.dataset.call('perm_read', [ids]).done(function(result) {
                         var dialog = new instance.web.Dialog(this, {
                             title: _.str.sprintf(_t("View Log (%s)"), self.dataset.model),
                             width: 400
@@ -812,7 +822,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 });
                 break;
             case 'fields':
-                this.dataset.call('fields_get', [false, {}]).then(function (fields) {
+                this.dataset.call('fields_get', [false, {}]).done(function (fields) {
                     var $root = $('<dl>');
                     _(fields).each(function (attributes, name) {
                         $root.append($('<dt>').append($('<h4>').text(name)));
@@ -899,7 +909,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
     switch_mode: function (view_type, no_store, options) {
         var self = this;
 
-        return $.when(this._super.apply(this, arguments)).then(function () {
+        return $.when(this._super.apply(this, arguments)).done(function () {
             var controller = self.views[self.active_view].controller;
             self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
@@ -938,13 +948,13 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             defs = [];
         if (state.view_type && state.view_type !== this.active_view) {
             defs.push(
-                this.views[this.active_view].deferred.pipe(function() {
+                this.views[this.active_view].deferred.then(function() {
                     return self.switch_mode(state.view_type, true);
                 })
             );
         } 
 
-        $.when(defs).then(function() {
+        $.when(defs).done(function() {
             self.views[self.active_view].controller.do_load_state(state, warm);
         });
     },
@@ -1051,7 +1061,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        self.getParent().sidebar_context().then(function (context) {
+        self.getParent().sidebar_context().done(function (context) {
             var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
@@ -1065,7 +1075,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
                 context: additional_context
-            }).then(function(result) {
+            }).done(function(result) {
                 result.context = _.extend(result.context || {},
                     additional_context);
                 result.flags = result.flags || {};
@@ -1087,17 +1097,17 @@ instance.web.Sidebar = instance.web.Widget.extend({
         } else {
             var dom = [ ['res_model', '=', dataset.model], ['res_id', '=', model_id], ['type', 'in', ['binary', 'url']] ];
             var ds = new instance.web.DataSetSearch(this, 'ir.attachment', dataset.get_context(), dom);
-            ds.read_slice(['name', 'url', 'type'], {}).then(this.on_attachments_loaded);
+            ds.read_slice(['name', 'url', 'type'], {}).done(this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
         var self = this;
         var items = [];
-        var prefix = this.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=name&id=';
+        var prefix = this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
             a.label = a.name;
             if(a.type === "binary") {
-                a.url = prefix  + a.id + '&t=' + (new Date().getTime());
+                a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
         });
         self.items['files'] = attachments;
@@ -1122,7 +1132,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         var $e = $(e.currentTarget);
         if (confirm(_t("Do you really want to delete this attachment ?"))) {
-            (new instance.web.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).then(function() {
+            (new instance.web.DataSet(this, 'ir.attachment')).unlink([parseInt($e.attr('data-id'), 10)]).done(function() {
                 self.do_attachement_update(self.dataset, self.model_id);
             });
         }
@@ -1150,7 +1160,7 @@ instance.web.View = instance.web.Widget.extend({
         var view_loaded;
         if (this.embedded_view) {
             view_loaded = $.Deferred();
-            $.async_when().then(function() {
+            $.async_when().done(function() {
                 view_loaded.resolve(self.embedded_view);
             });
         } else {
@@ -1164,7 +1174,7 @@ instance.web.View = instance.web.Widget.extend({
                 context: this.dataset.get_context(context)
             });
         }
-        return view_loaded.pipe(function(r) {
+        return view_loaded.then(function(r) {
             self.trigger('view_loaded', r);
             // add css classes that reflect the (absence of) access rights
             self.$el.addClass('oe_view')
@@ -1220,7 +1230,7 @@ instance.web.View = instance.web.Widget.extend({
                 return self.rpc('/web/session/eval_domain_and_context', {
                     contexts: [ncontext],
                     domains: []
-                }).pipe(function (results) {
+                }).then(function (results) {
                     action.context = results.context;
                     /* niv: previously we were overriding once more with action_data.context,
                      * I assumed this was not a correct behavior and removed it
@@ -1230,11 +1240,12 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }, null);
             } else {
+                self.do_action({"type":"ir.actions.act_window_close"});
                 return result_handler();
             }
         };
 
-        if (action_data.special) {
+        if (action_data.special === 'cancel') {
             return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type=="object") {
             var args = [[record_id]], additional_args = [];
@@ -1249,11 +1260,11 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).then(handler);
+            return dataset.call_button(action_data.name, args).done(handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).then(handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).done(handler);
         } else  {
-            return dataset.exec_workflow(record_id, action_data.name).then(handler);
+            return dataset.exec_workflow(record_id, action_data.name).done(handler);
         }
     },
     /**
@@ -1271,6 +1282,27 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_hide: function () {
         this.$el.hide();
+    },
+    is_active: function () {
+        var manager = this.getParent();
+        return !manager || !manager.active_view
+             || manager.views[manager.active_view].controller === this;
+    }, /**
+     * Wraps fn to only call it if the current view is the active one. If the
+     * current view is not active, doesn't call fn.
+     *
+     * fn can not return anything, as a non-call to fn can't return anything
+     * either
+     *
+     * @param {Function} fn function to wrap in the active guard
+     */
+    guard_active: function (fn) {
+        var self = this;
+        return function () {
+            if (self.is_active()) {
+                fn.apply(self, arguments);
+            }
+        }
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -1379,14 +1411,16 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
     } else {
         return r + '/>';
     }
-}
+};
 instance.web.xml_to_str = function(node) {
-    if (window.ActiveXObject) {
+    if (window.XMLSerializer) {
+        return (new XMLSerializer()).serializeToString(node);
+    } else if (window.ActiveXObject) {
         return node.xml;
     } else {
-        return (new XMLSerializer()).serializeToString(node);
+        throw new Error("Could not serialize XML");
     }
-}
+};
 instance.web.str_to_xml = function(s) {
     if (window.DOMParser) {
         var dp = new DOMParser();

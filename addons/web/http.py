@@ -11,6 +11,7 @@ import logging
 import mimetypes
 import os
 import pprint
+import random
 import sys
 import tempfile
 import threading
@@ -21,6 +22,7 @@ import urlparse
 import uuid
 import xmlrpclib
 
+import babel.core
 import simplejson
 import werkzeug.contrib.sessions
 import werkzeug.datastructures
@@ -91,9 +93,25 @@ class WebRequest(object):
         self.session_id = self.params.pop("session_id", None) or uuid.uuid4().hex
         self.session = self.httpsession.get(self.session_id)
         if not self.session:
-            self.httpsession[self.session_id] = self.session = session.OpenERPSession()
+            self.session = session.OpenERPSession()
+            self.httpsession[self.session_id] = self.session
         self.context = self.params.pop('context', None)
-        self.debug = self.params.pop('debug', False) != False
+        self.debug = self.params.pop('debug', False) is not False
+        # Determine self.lang
+        lang = self.params.get('lang', None)
+        if lang is None:
+            lang = self.session.eval_context(self.context).get('lang')
+        if lang is None:
+            lang = self.httprequest.cookies.get('lang')
+        if lang is None:
+            lang = self.httprequest.accept_languages.best
+        if lang is None:
+            lang = 'en_US'
+        # tranform 2 letters lang like 'en' into 5 letters like 'en_US'
+        lang = babel.core.LOCALE_ALIASES.get(lang, lang)
+        # we use _ as seprator where RFC2616 uses '-'
+        self.lang = lang.replace('-', '_')
+
 
 class JsonRequest(WebRequest):
     """ JSON-RPC2 over HTTP.
@@ -210,6 +228,10 @@ class JsonRequest(WebRequest):
             _logger.debug("<--\n%s", pprint.pformat(response))
 
         if jsonp:
+            # If we use jsonp, that's mean we are called from another host
+            # Some browser (IE and Safari) do no allow third party cookies
+            # We need then to manage http sessions manually.
+            response['httpsessionid'] = self.httpsession.sid
             mime = 'application/javascript'
             body = "%s(%s);" % (jsonp, simplejson.dumps(response, cls=nonliterals.NonLiteralEncoder),)
         else:
@@ -336,23 +358,13 @@ class Controller(object):
 #----------------------------------------------------------
 # Session context manager
 #----------------------------------------------------------
-STORES = {}
-
 @contextlib.contextmanager
-def session_context(request, storage_path, session_cookie='httpsessionid'):
-    session_store, session_lock = STORES.get(storage_path, (None, None))
-    if not session_store:
-        session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
-        session_lock = threading.Lock()
-        STORES[storage_path] = session_store, session_lock
-
-    sid = request.cookies.get(session_cookie)
+def session_context(request, session_store, session_lock, sid):
     with session_lock:
         if sid:
             request.session = session_store.get(sid)
         else:
             request.session = session_store.new()
-
     try:
         yield request.session
     finally:
@@ -404,6 +416,18 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
 
             session_store.save(request.session)
 
+def session_gc(session_store):
+    if random.random() < 0.001:
+        # we keep session one week
+        last_week = time.time() - 60*60*24*7
+        for fname in os.listdir(session_store.path):
+            path = os.path.join(session_store.path, fname)
+            try:
+                if os.path.getmtime(path) < last_week:
+                    os.unlink(path)
+            except OSError:
+                pass
+
 #----------------------------------------------------------
 # WSGI Application
 #----------------------------------------------------------
@@ -438,22 +462,23 @@ class Root(object):
     """Root WSGI application for the OpenERP Web Client.
     """
     def __init__(self):
-        self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
         static_dirs = self._load_addons()
         app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
         self.dispatch = DisableCacheMiddleware(app)
 
+        # Setup http sessions
         try:
             username = getpass.getuser()
         except Exception:
             username = "unknown"
-        self.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-
-        if not os.path.exists(self.session_storage):
-            os.mkdir(self.session_storage, 0700)
-        _logger.debug('HTTP sessions stored in: %s', self.session_storage)
+        path = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
+        if not os.path.exists(path):
+            os.mkdir(path, 0700)
+        self.session_store = werkzeug.contrib.sessions.FilesystemSessionStore(path)
+        self.session_lock = threading.Lock()
+        _logger.debug('HTTP sessions stored in: %s', path)
 
     def __call__(self, environ, start_response):
         """ Handle a WSGI request
@@ -476,8 +501,14 @@ class Root(object):
         if not handler:
             response = werkzeug.exceptions.NotFound()
         else:
-            with session_context(request, self.session_storage, self.httpsession_cookie) as session:
-                result = handler( request)
+            sid = request.cookies.get('sid')
+            if not sid:
+                sid = request.args.get('sid')
+
+            session_gc(self.session_store)
+
+            with session_context(request, self.session_store, self.session_lock, sid) as session:
+                result = handler(request)
 
                 if isinstance(result, basestring):
                     headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
@@ -486,7 +517,7 @@ class Root(object):
                     response = result
 
                 if hasattr(response, 'set_cookie'):
-                    response.set_cookie(self.httpsession_cookie, session.sid)
+                    response.set_cookie('sid', session.sid)
 
         return response(environ, start_response)
 
