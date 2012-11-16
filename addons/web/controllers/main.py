@@ -258,10 +258,20 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
 
+concat_js_cache = {}
+
 def concat_js(file_list):
     content, checksum = concat_files(file_list, intersperse=';')
-    content = rjsmin(content)
-    return content, checksum 
+    if checksum in concat_js_cache:
+        content = concat_js_cache[checksum]
+    else:
+        content = rjsmin(content)
+        concat_js_cache[checksum] = content
+    return content, checksum
+
+def fs2web(path):
+    """convert FS path into web path"""
+    return '/'.join(path.split(os.path.sep))
 
 def manifest_glob(req, addons, key):
     if addons is None:
@@ -278,7 +288,7 @@ def manifest_glob(req, addons, key):
         globlist = manifest.get(key, [])
         for pattern in globlist:
             for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
-                r.append((path, path[len(addons_path):]))
+                r.append((path, fs2web(path[len(addons_path):])))
     return r
 
 def manifest_list(req, mods, extension):
@@ -637,8 +647,7 @@ class WebClient(openerpweb.Controller):
                 data = fp.read().decode('utf-8')
 
             path = file_map[f]
-            # convert FS path into web path
-            web_dir = '/'.join(os.path.dirname(path).split(os.path.sep))
+            web_dir = os.path.dirname(path)
 
             data = re.sub(
                 rx_import,
@@ -782,6 +791,17 @@ class Database(openerpweb.Controller):
             params['db_name'])
 
     @openerpweb.jsonrequest
+    def duplicate(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        duplicate_attrs = (
+            params['super_admin_pwd'],
+            params['db_original_name'],
+            params['db_name'],
+        )
+
+        return req.session.proxy("db").duplicate_database(*duplicate_attrs)
+
+    @openerpweb.jsonrequest
     def drop(self, req, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
@@ -887,10 +907,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
         try:
-            return {
-                'lang_list': (req.session.proxy("db").list_lang() or []),
-                'error': ""
-            }
+            return req.session.proxy("db").list_lang() or []
         except Exception, e:
             return {"error": e, "title": "Languages"}
 

@@ -20,20 +20,6 @@
   font-style: normal;
 }
 
-@media print {
-  .oe_topbar, .oe_leftbar, .oe_loading {
-    display: none !important;
-  }
-}
-.openerp.openerp_webclient_container {
-  height: 100%;
-}
-
-.text-tag .text-button {
-  height: auto !important;
-  min-height: 16px;
-}
-
 .openerp {
   padding: 0;
   margin: 0;
@@ -45,6 +31,9 @@
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
    */
+}
+.openerp.openerp_webclient_container {
+  height: 100%;
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -196,6 +185,10 @@
 }
 .openerp .oe_bounce_container {
   display: inline-block;
+}
+.openerp .text-tag .text-button {
+  height: auto !important;
+  min-height: 16px;
 }
 .openerp .ui-tabs {
   position: static;
@@ -1146,6 +1139,7 @@
   height: 40px;
   width: 157px;
   margin: 14px 0;
+  border: 0;
 }
 .openerp .oe_footer {
   position: fixed;
@@ -2371,6 +2365,77 @@
 .openerp .oe_form .oe_form_field_image:hover .oe_form_field_image_controls {
   display: block;
 }
+.openerp .oe_fileupload {
+  display: inline-block;
+  clear: both;
+  width: 100%;
+}
+.openerp .oe_fileupload .oe_add {
+  float: left;
+  position: relative;
+  width: 100%;
+  left: 2px;
+  top: 7px;
+}
+.openerp .oe_fileupload .oe_add button {
+  display: inline;
+  height: 24px;
+  font-size: 12px;
+  line-height: 12px;
+  vertical-align: middle;
+}
+.openerp .oe_fileupload .oe_add button.oe_attach {
+  width: 24px;
+  overflow: hidden;
+  width: 24px;
+  overflow: hidden;
+  background: transparent;
+  color: #7c7bad;
+  box-shadow: none;
+  border: none;
+  text-shadow: none;
+}
+.openerp .oe_fileupload .oe_add button.oe_attach .oe_e {
+  position: relative;
+  top: -1px;
+  left: -9px;
+}
+.openerp .oe_fileupload .oe_add input.oe_form_binary_file {
+  display: inline-block;
+  margin-left: -5px;
+  height: 28px;
+  width: 52px;
+  margin-top: -26px;
+}
+.openerp .oe_fileupload .oe_add .oe_attach_label {
+  color: #7c7bad;
+  margin-left: -3px;
+}
+.openerp .oe_fileupload .oe_attachments {
+  margin-bottom: 4px;
+  margin-right: 0px;
+  font-size: 12px;
+  border-radius: 2px;
+  border: solid 1px rgba(124, 123, 173, 0.14);
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment {
+  padding: 2px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e {
+  font-size: 23px;
+  margin-top: -5px;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e:hover {
+  text-decoration: none;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(odd) {
+  background: white;
+}
+.openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(even) {
+  background: #f4f5fa;
+}
 .openerp .oe_form_field_many2one td:first-child {
   position: relative;
 }
@@ -2903,78 +2968,6 @@
   color: #333333;
 }
 
-.openerp .oe_fileupload {
-  display: inline-block;
-  clear: both;
-  width: 100%;
-}
-.openerp .oe_fileupload .oe_add {
-  float: left;
-  position: relative;
-  width: 100%;
-  left: 2px;
-  top: 7px;
-}
-.openerp .oe_fileupload .oe_add button {
-  display: inline;
-  height: 24px;
-  font-size: 12px;
-  line-height: 12px;
-  vertical-align: middle;
-}
-.openerp .oe_fileupload .oe_add button.oe_attach {
-  width: 24px;
-  overflow: hidden;
-  width: 24px;
-  overflow: hidden;
-  background: transparent;
-  color: #7c7bad;
-  box-shadow: none;
-  border: none;
-  text-shadow: none;
-}
-.openerp .oe_fileupload .oe_add button.oe_attach .oe_e {
-  position: relative;
-  top: -1px;
-  left: -9px;
-}
-.openerp .oe_fileupload .oe_add input.oe_form_binary_file {
-  display: inline-block;
-  margin-left: -5px;
-  height: 28px;
-  width: 52px;
-  margin-top: -26px;
-}
-.openerp .oe_fileupload .oe_add .oe_attach_label {
-  color: #7c7bad;
-  margin-left: -3px;
-}
-.openerp .oe_fileupload .oe_attachments {
-  margin-bottom: 4px;
-  margin-right: 0px;
-  font-size: 12px;
-  border-radius: 2px;
-  border: solid 1px rgba(124, 123, 173, 0.14);
-}
-.openerp .oe_fileupload .oe_attachments .oe_attachment {
-  padding: 2px;
-  padding-left: 4px;
-  padding-right: 4px;
-}
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e {
-  font-size: 23px;
-  margin-top: -5px;
-}
-.openerp .oe_fileupload .oe_attachments .oe_attachment .oe_e:hover {
-  text-decoration: none;
-}
-.openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(odd) {
-  background: white;
-}
-.openerp .oe_fileupload .oe_attachments .oe_attachment:nth-child(even) {
-  background: #f4f5fa;
-}
-
 .kitten-mode-activated {
   background-image: url(http://placekitten.com/g/1365/769);
   background-size: cover;
@@ -3033,8 +3026,8 @@ div.ui-widget-overlay {
   .openerp {
     text-shadow: none;
   }
-  .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default {
-    display: none;
+  .openerp .oe_header_row, .openerp ul.oe_header, .openerp div.oe_mail_thread_action, .openerp .oe_mail_recthread_actions, .openerp .oe_button_box, .openerp .oe_form button, .openerp button.oe_invite, .openerp .oe_form header, .openerp .openerp .oe_notebook > li.ui-state-default, .openerp .oe_topbar, .openerp .oe_leftbar, .openerp .oe_loading {
+    display: none !important;
   }
   .openerp .oe_list_content button, .openerp .oe_list_content input[type=checkbox] {
     visibility: hidden;

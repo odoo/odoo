@@ -278,9 +278,10 @@ instance.web.Model = instance.web.Class.extend({
      * @param {String} method name of the method to call
      * @param {Array} [args] positional arguments
      * @param {Object} [kwargs] keyword arguments
+     * @param {Object} [options] additional options for the rpc() method
      * @returns {jQuery.Deferred<>} call result
      */
-    call: function (method, args, kwargs) {
+    call: function (method, args, kwargs, options) {
         args = args || [];
         kwargs = kwargs || {};
         if (!_.isArray(args)) {
@@ -294,7 +295,7 @@ instance.web.Model = instance.web.Class.extend({
             method: method,
             args: args,
             kwargs: kwargs
-        });
+        }, options);
     },
     /**
      * Fetches a Query instance bound to this model, for searching

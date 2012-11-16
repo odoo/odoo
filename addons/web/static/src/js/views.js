@@ -310,15 +310,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var widget = executor.widget();
         if (executor.action.target === 'new') {
-            if (this.dialog_widget && ! this.dialog_widget.isDestroyed())
+            if (this.dialog_widget && !this.dialog_widget.isDestroyed()) {
                 this.dialog_widget.destroy();
-            if (this.dialog === null || this.dialog.isDestroyed()) {
-                this.dialog = new instance.web.Dialog(this, {
-                    dialogClass: executor.klass,
-                });
-                this.dialog.on("closing", null, options.on_close);
-                this.dialog.init_dialog();
             }
+            this.dialog_stop();
+            this.dialog = new instance.web.Dialog(this, {
+                dialogClass: executor.klass,
+            });
+            this.dialog.on("closing", null, options.on_close);
+            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
@@ -789,8 +789,8 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     name: "JS Tests",
                     target: 'new',
                     type : 'ir.actions.act_url',
-                    url: '/web/static/test/test.html'
-                })
+                    url: '/web/tests?mod=*'
+                });
                 break;
             case 'perm_read':
                 var ids = current_view.get_selected_ids();
@@ -1239,6 +1239,7 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }, null);
             } else {
+                self.do_action({"type":"ir.actions.act_window_close"});
                 return result_handler();
             }
         };

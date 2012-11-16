@@ -27,7 +27,8 @@
                 var $tip = this.tip();
                 
                 $tip.find('.tipsy-inner')[this.options.html ? 'html' : 'text'](title);
-                $tip[0].className = 'tipsy openerp oe_tooltip '; // reset classname in case of dynamic gravity
+                $tip[0].className = 'tipsy '; // reset classname in case of dynamic gravity
+                $tip.openerpClass('oe_tooltip');
                 $tip.remove().css({top: 0, left: 0, visibility: 'hidden', display: 'block'}).prependTo(document.body);
                 
                 var pos = $.extend({}, this.$element.offset(), {

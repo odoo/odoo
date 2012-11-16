@@ -992,7 +992,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         } else if (this.record[field] && ! this.record[field].value) {
             url = "/web/static/src/img/placeholder.png";
         } else {
-            id = escape(JSON.stringify(id));
+            id = JSON.stringify(id);
             if (options.preview_image)
                 field = options.preview_image;
             url = this.session.url('/web/binary/image', {model: model, field: field, id: id});

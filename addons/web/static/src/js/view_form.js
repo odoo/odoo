@@ -622,6 +622,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         return self._process_save(save_obj).then(function() {
                             save_obj.ret = _.toArray(arguments);
                             return iterate();
+                        }, function() {
+                            save_obj.error = true;
                         });
                     }
                     return $.when();
@@ -805,6 +807,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
         return this._process_operations().then(function() {
+            if (save_obj.error)
+                return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
         });
     },
@@ -3122,7 +3126,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             minLength: 0,
             delay: 0
         });
-        this.$input.autocomplete("widget").addClass("openerp");
+        this.$input.autocomplete("widget").openerpClass();
         // used to correct a bug when selecting an element by pushing 'enter' in an editable list
         this.$input.keyup(function(e) {
             if (e.which === 13) { // ENTER
@@ -3833,26 +3837,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this._super.apply(this, arguments);
     },
     do_delete: function (ids) {
-        var self = this;
-        var next = $.when();
-        var _super = this._super;
-        // handle deletion of an item which does not exist
-        // TODO: better handle that in the editable list?
-        var false_id_index = _(ids).indexOf(false);
-        if (false_id_index !== -1) {
-            ids.splice(false_id_index, 1);
-            next = this.cancel_edition(true);
+        var confirm = window.confirm;
+        window.confirm = function () { return true; };
+        try {
+            return this._super(ids);
+        } finally {
+            window.confirm = confirm;
         }
-        return next.then(function () {
-            // wheeee
-            var confirm = window.confirm;
-            window.confirm = function () { return true; };
-            try {
-                return _super.call(self, ids);
-            } finally {
-                window.confirm = confirm;
-            }
-        });
     }
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
@@ -4952,7 +4943,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         if (this.get('value') && ! /^\d+(\.\d*)? \w+$/.test(this.get('value'))) {
             url = 'data:image/png;base64,' + this.get('value');
         } else if (this.get('value')) {
-            var id = escape(JSON.stringify(this.view.datarecord.id || null));
+            var id = JSON.stringify(this.view.datarecord.id || null);
             var field = this.name;
             if (this.options.preview_image)
                 field = this.options.preview_image;
@@ -5000,14 +4991,14 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.node = node;
-        if(this.field.type != "one2many" || this.field.relation != 'ir.attachment') {
-            throw "The type of the field '"+this.field.string+"' must be a one2many field with a relation to 'ir.attachment' model.";
+        if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
+            throw "The type of the field '"+this.field.string+"' must be a many2many field with a relation to 'ir.attachment' model.";
         }
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
@@ -5017,21 +5008,85 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
         this._super(this);
         this.$el.on('change', 'input.oe_form_binary_file', this.on_file_change );
     },
+    set_value: function(value_) {
+        var value_ = value_ || [];
+        var self = this;
+        var ids = [];
+        _.each(value_, function(command) {
+            if (isNaN(command) && command.id == undefined) {
+                switch (command[0]) {
+                    case commands.CREATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.REPLACE_WITH:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.UPDATE:
+                        ids = ids.concat(command[2]);
+                        return;
+                    case commands.LINK_TO:
+                        ids = ids.concat(command[1]);
+                        return;
+                    case commands.DELETE:
+                        ids = _.filter(ids, function (id) { return id != command[1];});
+                        return;
+                    case commands.DELETE_ALL:
+                        ids = [];
+                        return;
+                }
+            } else {
+                ids.push(command);
+            }
+        });
+        this._super( ids );
+    },
     get_value: function() {
         return _.map(this.get('value'), function (value) { return commands.link_to( value.id ); });
     },
     get_file_url: function (attachment) {
         return this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
     },
+    read_name_values : function () {
+        var self = this;
+        // select the list of id for a get_name
+        var values = [];
+        _.each(this.get('value'), function (val) {
+            if (typeof val != 'object') {
+                values.push(val);
+            }
+        });
+        // send request for get_name
+        if (values.length) {
+            return this.ds_file.call('read', [values, ['id', 'name', 'datas_fname']]).done(function (datas) {
+                _.each(datas, function (data) {
+                    data.no_unlink = true;
+                    data.url = self.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: data.id});
+                    
+                    _.each(self.get('value'), function (val, key) {
+                        if(val == data.id) {
+                            self.get('value')[key] = data;
+                        }
+                    });
+                });
+            });
+        } else {
+            return $.when(this.get('value'));
+        }
+    },
     render_value: function () {
-        var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': this}));
-        render.on('click', '.oe_delete', _.bind(this.on_file_delete, this));
-        this.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+        var self = this;
+        this.read_name_values().then(function (datas) {
 
-        // reinit input type file
-        var $input = this.$('input.oe_form_binary_file');
-        $input.after($input.clone(true)).remove();
-        this.$(".oe_fileupload").show();
+            var render = $(instance.web.qweb.render('FieldBinaryFileUploader.files', {'widget': self}));
+            render.on('click', '.oe_delete', _.bind(self.on_file_delete, self));
+            self.$('.oe_placeholder_files, .oe_attachments').replaceWith( render );
+
+            // reinit input type file
+            var $input = self.$('input.oe_form_binary_file');
+            $input.after($input.clone(true)).remove();
+            self.$(".oe_fileupload").show();
+
+        });
     },
     on_file_change: function (event) {
         event.stopPropagation();
@@ -5111,7 +5166,7 @@ instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractFiel
                 if(file_id != this.get('value')[i].id){
                     files.push(this.get('value')[i]);
                 }
-                else {
+                else if(!this.get('value')[i].no_unlink) {
                     this.ds_file.unlink([file_id]);
                 }
             }
@@ -5273,7 +5328,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
-    'one2many_binary': 'instance.web.form.FieldOne2ManyBinaryMultiFiles',
+    'many2many_binary': 'instance.web.form.FieldMany2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
 });

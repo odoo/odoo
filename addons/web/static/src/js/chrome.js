@@ -48,7 +48,7 @@ instance.web.Notification =  instance.web.Widget.extend({
  */
 instance.web.dialog = function(element) {
     var result = element.dialog.apply(element, _.rest(_.toArray(arguments)));
-    result.dialog("widget").addClass("openerp");
+    result.dialog("widget").openerpClass();
     return result;
 };
 
@@ -190,7 +190,14 @@ instance.web.Dialog = instance.web.Widget.extend({
 });
 
 instance.web.CrashManager = instance.web.Class.extend({
+    init: function() {
+        this.active = true;
+    },
+
     rpc_error: function(error) {
+        if (!this.active) {
+            return;
+        }
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
@@ -205,6 +212,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         }
     },
     show_warning: function(error) {
+        if (!this.active) {
+            return;
+        }
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
@@ -213,7 +223,9 @@ instance.web.CrashManager = instance.web.Class.extend({
         });
     },
     show_error: function(error) {
-        var self = this;
+        if (!this.active) {
+            return;
+        }
         var buttons = {};
         buttons[_t("Ok")] = function() {
             $(this).dialog("close");
@@ -310,7 +322,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
                 self.db_list = null;
             });
         var fetch_langs = this.rpc("/web/session/get_lang_list", {}).done(function(result) {
-            self.lang_list = result.lang_list;
+            self.lang_list = result;
         });
         return $.when(fetch_db, fetch_langs).done(self.do_render);
     },
@@ -643,7 +655,7 @@ instance.web.client_actions.add("login", "instance.web.Login");
 instance.web.redirect = function(url, wait) {
     // Dont display a dialog if some xmlhttprequest are in progress
     if (instance.client && instance.client.crashmanager) {
-        instance.client.crashmanager.destroy();
+        instance.client.crashmanager.active = false;
     }
 
     var wait_server = function() {
@@ -659,7 +671,7 @@ instance.web.redirect = function(url, wait) {
     } else {
         window.location = url;
     }
-}
+};
 
 /**
  * Client action to reload the whole interface.
@@ -941,7 +953,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_menu_settings: function() {
         var self = this;
         if (!this.getParent().has_uncommitted_changes()) {
-            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }).done(function(result) {
                 result.res_id = instance.session.uid;
                 self.getParent().action_manager.do_action(result);
             });
@@ -972,6 +984,7 @@ instance.web.Client = instance.web.Widget.extend({
         return instance.session.session_bind(this.origin).then(function() {
             var $e = $(QWeb.render(self._template, {}));
             self.replaceElement($e);
+            $e.openerpClass();
             self.bind_events();
             return self.show_common();
         });
@@ -1148,10 +1161,10 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         var state = event.getState(true);
         if (!_.isEqual(this._current_state, state)) {
-            if(state.action === undefined && state.menu_id) {
+            if(!state.action && state.menu_id) {
                 self.menu.has_been_loaded.done(function() {
                     self.menu.do_reload().done(function() {
-                        self.menu.menu_click(state.menu_id)
+                        self.menu.menu_click(state.menu_id);
                     });
                 });
             } else {
