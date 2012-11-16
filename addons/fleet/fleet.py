@@ -720,7 +720,7 @@ class fleet_vehicle_log_contract(osv.Model):
                 'start_date': datetime.datetime.strftime(str_to_datetime(element.expiration_date) + datetime.timedelta(days=1), tools.DEFAULT_SERVER_DATE_FORMAT),
                 'expiration_date': datetime.datetime.strftime(enddate + diffdate, tools.DEFAULT_SERVER_DATE_FORMAT),
             }
-            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, [element.id], default, context=context)
+            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, element.id, default, context=context)
         mod, modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
         return {
             'name':_("Renew Contract"),
