@@ -83,7 +83,8 @@ def start_services():
     netrpc_server.init_servers()
 
     if openerp.conf.max_cron_threads:
-        openerp.cron.start_master_thread()
+        #openerp.cron.start_master_thread()
+        pass
 
     # Start the top-level servers threads (normally HTTP, HTTPS, and NETRPC).
     openerp.netsvc.Server.startAll()
