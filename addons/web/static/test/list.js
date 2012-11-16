@@ -1,5 +1,5 @@
 openerp.testing.section('list.buttons', {
-    dependencies: ['web.list'],
+    dependencies: ['web.list', 'web.form'],
     rpc: 'mock',
     templates: true
 }, function (test) {
@@ -20,17 +20,16 @@ openerp.testing.section('list.buttons', {
                 }
             };
         });
-        mock('demo:read', function (params) {
-            var args = params.args[0];
-            if (_.isEqual(args, [1, 2, 3])) {
+        mock('demo:read', function (args, kwargs) {
+            if (_.isEqual(args[0], [1, 2, 3])) {
                 return [
                     {id: 1, a: 'foo'}, {id: 2, a: 'bar'}, {id: 3, a: 'baz'}
                 ];
-            } else if (_.isEqual(args, [2])) {
+            } else if (_.isEqual(args[0], [2])) {
                 // button action virtually removed record
                 return [];
             }
-            throw new Error(JSON.stringify(params));
+            throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock('/web/dataset/call_button', function () { return false; });
         var ds = new instance.web.DataSetStatic(null, 'demo', null, [1, 2, 3]);

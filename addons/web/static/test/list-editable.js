@@ -335,17 +335,17 @@ openerp.testing.section('list.edition.onwrite', {
                 }
             };
         });
-        mock('demo:read', function (params) {
-            if (_.isEmpty(params.args[0])) {
+        mock('demo:read', function (args, kwargs) {
+            if (_.isEmpty(args[0])) {
                 return [];
-            } else if (_.isEqual(params.args[0], [1])) {
+            } else if (_.isEqual(args[0], [1])) {
                 return [
                     {id: 1, a: 'some value'}
                 ];
-            } else if (_.isEqual(params.args[0], [42])) {
+            } else if (_.isEqual(args[0], [42])) {
                 return [ {id: 42, a: 'foo'} ];
             }
-            throw new Error(JSON.stringify(params));
+            throw new Error(JSON.stringify(_.toArray(arguments)));
         });
         mock('demo:default_get', function () { return {}; });
         mock('demo:create', function () { return 1; });
