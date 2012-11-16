@@ -3837,26 +3837,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this._super.apply(this, arguments);
     },
     do_delete: function (ids) {
-        var self = this;
-        var next = $.when();
-        var _super = this._super;
-        // handle deletion of an item which does not exist
-        // TODO: better handle that in the editable list?
-        var false_id_index = _(ids).indexOf(false);
-        if (false_id_index !== -1) {
-            ids.splice(false_id_index, 1);
-            next = this.cancel_edition(true);
+        var confirm = window.confirm;
+        window.confirm = function () { return true; };
+        try {
+            return this._super(ids);
+        } finally {
+            window.confirm = confirm;
         }
-        return next.then(function () {
-            // wheeee
-            var confirm = window.confirm;
-            window.confirm = function () { return true; };
-            try {
-                return _super.call(self, ids);
-            } finally {
-                window.confirm = confirm;
-            }
-        });
     }
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
