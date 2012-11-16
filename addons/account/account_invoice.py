@@ -402,6 +402,7 @@ class account_invoice(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
             })
         return {
             'view_type': 'form',
@@ -431,7 +432,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot delete an invoice which is open or paid. You should refund it instead.'))
+                raise osv.except_osv(_('Invalid Action!'), _('You can not delete an invoice which is not cancelled. You should refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 

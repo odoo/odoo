@@ -267,6 +267,7 @@ class account_voucher(osv.osv):
     _order = "date desc, id desc"
 #    _rec_name = 'number'
     _columns = {
+        'active': fields.boolean('Active', help="By default, reconciliation vouchers made on draft bank statements are set as inactive, which allow to hide the customer/supplier payment while the bank statement isn't confirmed."),
         'type':fields.selection([
             ('sale','Sale'),
             ('purchase','Purchase'),
@@ -328,6 +329,7 @@ class account_voucher(osv.osv):
         'is_multi_currency': fields.boolean('Multi Currency Voucher', help='Fields with internal purpose only that depicts if the voucher is a multi currency one or not'),
     }
     _defaults = {
+        'active': True,
         'period_id': _get_period,
         'partner_id': _get_partner,
         'journal_id':_get_journal,
@@ -381,8 +383,9 @@ class account_voucher(osv.osv):
             total_tax = 0.0
 
             if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_amount, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount', 0.0)
+                for line in voucher.line_ids:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line.amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount', 0.0)
                 total += total_tax
             else:
                 for line in voucher.line_ids:
@@ -413,31 +416,31 @@ class account_voucher(osv.osv):
 
         line_ids = resolve_o2m_operations(cr, uid, line_pool, line_ids, ["amount"], context)
 
+        total_tax = 0.0
         for line in line_ids:
             line_amount = 0.0
             line_amount = line.get('amount',0.0)
+
+            if tax_id:
+                tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
+                if partner_id:
+                    partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
+                    taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
+                    tax = tax_pool.browse(cr, uid, taxes, context=context)
+
+                if not tax[0].price_include:
+                    for tax_line in tax_pool.compute_all(cr, uid, tax, line_amount, 1).get('taxes', []):
+                        total_tax += tax_line.get('amount')
+
             voucher_total += line_amount
-
-        total = voucher_total
-        total_tax = 0.0
-        if tax_id:
-            tax = [tax_pool.browse(cr, uid, tax_id, context=context)]
-            if partner_id:
-                partner = partner_pool.browse(cr, uid, partner_id, context=context) or False
-                taxes = position_pool.map_tax(cr, uid, partner and partner.property_account_position or False, tax)
-                tax = tax_pool.browse(cr, uid, taxes, context=context)
-
-            if not tax[0].price_include:
-                for tax_line in tax_pool.compute_all(cr, uid, tax, voucher_total, 1).get('taxes', []):
-                    total_tax += tax_line.get('amount')
-                total += total_tax
+        total = voucher_total + total_tax
 
         res.update({
-            'amount':total or voucher_total,
-            'tax_amount':total_tax
+            'amount': total or voucher_total,
+            'tax_amount': total_tax
         })
         return {
-            'value':res
+            'value': res
         }
 
     def onchange_term_id(self, cr, uid, ids, term_id, amount):
@@ -1507,6 +1510,15 @@ account_voucher_line()
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
 
+    def button_confirm_bank(self, cr, uid, ids, context=None):
+        voucher_obj = self.pool.get('account.voucher')
+        voucher_ids = []
+        for statement in self.browse(cr, uid, ids, context=context):
+            voucher_ids += [line.voucher_id.id for line in statement.line_ids if line.voucher_id]
+        if voucher_ids:
+            voucher_obj.write(cr, uid, voucher_ids, {'active': True}, context=context)
+        return super(account_bank_statement, self).button_confirm_bank(cr, uid, ids, context=context)
+
     def button_cancel(self, cr, uid, ids, context=None):
         voucher_obj = self.pool.get('account.voucher')
         for st in self.browse(cr, uid, ids, context=context):
@@ -1542,6 +1554,16 @@ account_bank_statement()
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
 
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        res = super(account_bank_statement_line, self).onchange_partner_id(cr, uid, ids, partner_id, context=context)
+        if 'value' not in res:
+            res['value'] = {}
+        res['value'].update({'voucher_id' : False})
+        return res
+
+    def onchange_amount(self, cr, uid, ids, amount, context=None):
+        return {'value' :  {'voucher_id' : False}}
+
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
             return {}
@@ -1568,7 +1590,7 @@ class account_bank_statement_line(osv.osv):
     _columns = {
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
-        'voucher_id': fields.many2one('account.voucher', 'Payment'),
+        'voucher_id': fields.many2one('account.voucher', 'Reconciliation'),
     }
 
     def unlink(self, cr, uid, ids, context=None):

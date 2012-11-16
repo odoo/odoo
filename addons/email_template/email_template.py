@@ -28,8 +28,6 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
-from tools.html_sanitize import html_sanitize
-from tools import append_content_to_html
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 
@@ -118,7 +116,8 @@ class email_template(osv.osv):
                                               "of the message"),
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
-        'email_to': fields.char('To', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_to': fields.char('To (Emails)', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_recipients': fields.char('To (Partners)', help="Comma-separated ids of recipient partners (placeholders may be used here)"),
         'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
@@ -286,16 +285,16 @@ class email_template(osv.osv):
         template = self.get_email_template(cr, uid, template_id, res_id, context)
         values = {}
         for field in ['subject', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'reply_to']:
+                      'email_to', 'email_recipients', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body_html'] = append_content_to_html(values['body_html'], signature)
+            values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
 
         if values['body_html']:
-            values['body'] = html_sanitize(values['body_html'])
+            values['body'] = tools.html_sanitize(values['body_html'])
 
         values.update(mail_server_id=template.mail_server_id.id or False,
                       auto_delete=template.auto_delete,

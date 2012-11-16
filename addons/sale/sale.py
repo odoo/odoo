@@ -281,6 +281,7 @@ class sale_order(osv.osv):
         }
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
+        context = context or {}
         if not pricelist_id:
             return {}
         value = {
@@ -617,6 +618,7 @@ class sale_order(osv.osv):
         }
 
     def action_wait(self, cr, uid, ids, context=None):
+        context = context or {}
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
@@ -645,6 +647,7 @@ class sale_order(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
             'mark_so_as_sent': True
         })
         return {
@@ -938,7 +941,7 @@ class sale_order_line(osv.osv):
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
 
         if not flag:
-            result['name'] = product_obj.name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
+            result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
             if product_obj.description_sale:
                 result['name'] += '\n'+product_obj.description_sale
         domain = {}
