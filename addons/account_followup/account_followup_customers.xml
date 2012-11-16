@@ -4,67 +4,9 @@
  		<!-- followup of customers views
  		-->
  		
- 		<!-- Was specific view, not used anymore -->
+ 	
 
- 		<record id="customer_followup_formgone" model="ir.ui.view">
- 			<field name="name">eee</field>
- 			<field name="model">res.partner</field>
- 			<field name="type">form</field>
- 			<field name="priority" eval="20"/>
- 			<field name="arch" type="xml">
- 				<form string="Customer FollowUp form" version="7.0">
- 					<group>
- 						<field name="name"/>
- 						<field name="phone" />
- 						<!--<field name="sales" readonly="True"/>-->
- 					</group>
- 					<separator string="Detail of accounts" />
- 					<group>
- 					<field name="accountmoveline_ids" nolabel="1" > <!--domain="[('reconcile_id', '=', False)]" not necessary-->
- 						<tree string="Account Move line" editable="bottom">
- 							<field name="date" readonly="True"/>
-                    		<!--<field name="move_id" readonly="True"/>-->
-                    		<field name="ref" readonly="True"/>
- 							<field name="debit" readonly="True"/>
- 							<field name="credit" readonly="True"/>
- 							<field name="followup_date" readonly="True"/>
- 							<field name="followup_line_id" readonly="True"/>
- 							<field name="blocked" string="Litigation"/>
- 							<field name="payment_commitment"/>
- 							<field name="payment_date"/>
- 							<!--<field name="reconcile_id" invisible="True"/>-->
- 							<field name="reconcile_partial_id" readonly="True"/>
- 							<field name="invoice"/>
- 						</tree>
- 					</field>
- 					</group>
- 				<newline/>
- 				   <group>
- 					<separator string="Actions to be taken"/>
- 					<newline/>
- 					<group>
- 					 <field name="payment_next_action" help="Describes agreement with the client"/>
- 					 
- 					 <button name="action_done" type="object" string="Follow-up Action Done" class="oe_highlight" help="This button will clear the action and the action date. "/>
- 					 </group>
- 					 <group>
- 					 <field name="payment_responsible_id" help="The user who takes responsibility to follow it up. "/>
- 					 <field name="payment_next_action_date"/>
- 					 </group>
- 					</group>
- 					 <separator string="Payment Followup Remarks"/>
- 					 <newline/> 					
- 					 <group>
- 						<field name="payment_note"/>
- 						<!--<field name="payment_followup_level_id"/>--> 
- 						<field name="latest_followup_level_id"/> 						
- 						<field name="latest_followup_date"/>
- 						<field name="next_followup_level_id"/>
- 					</group>
- 				</form>
- 			</field>
- 		</record>
-
+ 	
  		<record id="customer_followup_tree" model="ir.ui.view">
  			<field name="name">ddd</field>
  			<field name="model">res.partner</field>
@@ -98,7 +40,7 @@
  			<field name="name">Search</field>
  			<field name="model">res.partner</field>
  			<field name="type">search</field>
- 			<field name="inherit_id" ref="base.view_res_partner_filter"/>
+ 			<field name="inherits_id" ref="base.view_res_partner_filter"/>
  			<field name="arch" type="xml">
  				<search string="Search Partner" position="inside"> 					
  			
@@ -115,7 +57,7 @@
  					<filter string="No Responsible" domain="[('payment_responsible_id', '=', False)]"/>
  					<filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]"/>
  					</group>
- 					<group expand="1" string="Group by">
+ 					<group expand="1" string="Group By...">
  					<filter string="Responsible" context="{'group_by':'payment_responsible_id'}"/>
  					</group>
  				</search>
@@ -172,33 +114,41 @@
             <field name="name">res.partner.followup.form.inherit</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="model">res.partner</field>
-            <field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/><!-- or user? --> 
+            <!--<field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/>--><!-- or user? --> 
             <field name="arch" type="xml" >
             		<div name="buttons" position="inside">
-            			<button name="do_button_print" type="object" string="Print Overdue Payments Report" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" eval="[(4, ref('account.group_account_user'))]"/>
-            			<button name="do_button_mail" type="object" string="Send Overdue Email" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" eval="[(4, ref('account.group_account_user'))]"/>
+            			<button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" />
+            			<button name="do_button_mail" type="object" string="Send Overdue Email" groups="account.group_account_user" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
             		</div>
             		<page string="Accounting" position="before" version="7.0">
             		<page string="Payments Follow-up" position="inside" groups="account.group_account_user">
             			<div class = "oe_inline">
             			<p attrs="{'invisible':[('latest_followup_date','=', False)]}" class="oe_inline">The <field name="latest_followup_date" />, the latest level that was executed, was <field name="latest_followup_level_id" class="oe_inline"/>.
-            			  
-            			He still owns us a total amount of <field name="payment_amount_overdue"/> 
+            			</p>
+            			<p class="oe_inline" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}">The partner owns us <field name="payment_amount_overdue" class="oe_inline"/> 
             		</p>
-            		<p attrs="{'invisible':[('payment_next_action', '=', False)]}">This is the action required now:</p> 
+            		<!--<p attrs="{'invisible':[('payment_next_action', '=', False)]}">This is the action required now:</p>-->
             		</div>
             			<p class="oe_inline">
-            				
+            						<label for="payment_next_action" string="Next Follow-up Action"/>
                                     <field name="payment_next_action_date" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('payment_next_action_date', '=', False), ('payment_next_action', '=', False)]}"/>
-                                    <field name="payment_next_action" class="oe_inline" nolabel="1" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
-                                    <field name="payment_responsible_id" help="The user who takes responsibility to follow it up. " class="oe_inline"/>
-                                    <button name="action_done" type="object" string="Follow-up Action Done" help="This button will clear the action and the action date. "/>                                    
-                                		  
+                                    <field name="payment_next_action" class="oe_inline" nolabel="1" string="Next Follow-up action" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
+                                     <span attrs="{'invisible':[('payment_responsible_id', '=', False)]}"> to be done by: </span> <field name="payment_responsible_id" placeholder="The user responsible for taking this action e.g. sales" class="oe_inline"/>
+                                 
+                                    <span attrs="{'invisible':['|', ('payment_next_action_date', '!=', False), '|', ('payment_responsible_id', '!=', False), ('payment_next_action', '!=', False)]}">No action defined right now.  </span>
+                                   <br/>
+                                     <button name="action_done" type="object" string="&#8627; Mark as Done" 
+                                     	help="This button will clear the action, the action date and the responsible. " class="oe_link"
+                                     	attrs="{'invisible':['&amp;',('payment_next_action_date','=', False), '&amp;', ('payment_responsible_id','=', False), ('payment_next_action', '=', False)]}" />
             			</p>
+<!--attrs="{'invisible':['&amp;',('payment_next_action_date','=', False), '&amp;', ('payment_responsible_id','=', False), ('payment_next_action', '=', False)]}"-->            			
+            			<group>
+ 					 		<field name="payment_note" string="The customer promised:"/> 
+ 					 	</group>
             			<p class="oe_grey"> <!--maybe only when accountmovelines empty-->
-            				By clicking on BLUBS, you can put an invoice as litigation.  This means you are still in discussion about it   
+            				By clicking on the light bulb, you can put an invoice as litigation.  This means you are still in discussion about it and it 
+            				won't be taken into account for going to the next follow-up level.        
             			</p>            		
- 					 				 	            			
  						<group>
  					 <field name="accountmoveline_ids" nolabel="1" context="{'default_partner_id': active_id}" mode="kanban">
  						<!--<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
@@ -209,39 +159,34 @@
  							<field name="reconcile_partial_id" readonly="True"/>
  							<field name="result" readonly="True"/>
  						</tree>-->
- 						<kanban default_group_by="followup_line_id">
+ 						<kanban default_group_by="followup_line_id" create="false">
  							<field name="followup_line_id"/>
  							<field name="result"/>
  							<field name="date_maturity"/>
  							<field name="blocked"/>
+ 							<field name="partner_id"/>
+ 							<field name="ref"/>
+ 							<field name="invoice"/>
  							 <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_project oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">í</span>
-                                    <ul class="oe_dropdown_menu">
-                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Account move line d</a></li></t>
-                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-                                    </ul>
-                                </div>
-                                <div class="oe_kanban_content">
-                                    <h4><field name="ref"/></h4><field name="followup_line_id"/>
-                                    
-                                    <div class="oe_kanban_footer_left">
-                                   
-                                        <span t-if="record.date_maturity.raw_value">
-                                            <span class="oe_e">N</span>
-                                            <field name="date_maturity"/>
-                                            <field name="followup_date"/>
-                                        </span>
-                                    </div>                                    
-                                </div>
-                            </div>
+                                            
+                        <!--<a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>-->
+                        <div class="oe_module_vignette oe_semantic_html_override">                                 
+                        <h4><a type="open"><field name="ref"/></a></h4>
+                        <a type="open"><field name="invoice"/></a>
+                        <i><div t-if="record.result.raw_value">
+                            <field name="result"/></div></i>
+                        <div><a t-if="record.date_maturity.raw_value" title="Date">
+                            <field name="date_maturity"/>
+                        </a></div>
+                        <a t-if="record.blocked.raw_value === true" type="object" string="Lit." name="set_kanban_state_litigation" class="oe_kanban_status oe_kanban_status_red"> </a>
+                        <a t-if="record.blocked.raw_value === false" type="object" string="Lit." name="set_kanban_state_litigation" class="oe_kanban_status oe_kanban_status_green"> </a>
+                        </div>
                         </t>
                     </templates>
 						</kanban>
  					</field>
- 					<field name="payment_note"/> 	
+ 						
  					</group>
             		</page>
             		</page>
@@ -252,12 +197,15 @@
         
         
         
- 		<!--	<record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
+ 			<record id="action_view_customer_followup_form" model="ir.actions.act_window.view">
  			<field name="sequence" eval="2"/>
  			<field name="view_mode">form</field>
- 			<field name="view_id" ref="customer_followup_form"/>
+ 			<field name="view_id" ref="view_partner_inherit_followup_form"/>
+ 			<field name="context">{'Followupfirst':True} </field>
  			<field name="act_window_id" ref="action_customer_followup"/>
- </record>-->
+ 			
+ 			
+ 			</record>
 
  		<record id="action_view_customer_followup_tree" model="ir.actions.act_window.view">
  			<field name="sequence" eval="1"/>
@@ -267,7 +215,7 @@
  		</record>
  		
          <!-- Menus about followup of customers -->
-        <menuitem id="account_followup_s" action="action_customer_followup" parent="menu_finance_followup" name="Customer Follow-up"/>
+        <menuitem id="account_followup_s" action="action_customer_followup" parent="menu_finance_followup" name="Customers Requiring Action" sequence="3"/>
 
   	    </data>
 </openerp>

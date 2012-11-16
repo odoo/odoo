@@ -23,7 +23,8 @@ from osv import fields, osv
 from datetime import date
 import time
 import datetime
-
+from lxml import etree
+from copy import deepcopy
 
 from tools.translate import _
 
@@ -77,6 +78,7 @@ class followup_line(osv.osv):
     _defaults = {
         'send_email': True,
         'send_letter': False,
+        'manual_action':False, 
         'description': """
         Dear %(partner_name)s,
 
@@ -122,6 +124,11 @@ followup_line()
 class account_move_line(osv.osv):
     
     
+    def set_kanban_state_litigation(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context):
+            self.write(cr, uid, [l.id], {'blocked': not l.blocked})
+        return False
+    
     def _get_result(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for aml in self.browse(cr, uid, ids, context): 
@@ -155,11 +162,29 @@ email_template()
 class res_partner(osv.osv):
 
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
+        res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, 
+                                                       toolbar=toolbar, submenu=submenu)
+        
+        if context: 
+            for l in context:
+                print l, context[l]
+        if view_type == 'form' and context and 'search_default_todo' in context.keys():
+            doc = etree.XML(res['arch'], parser=None, base_url=None)
+            first_node = doc.xpath("//page[@string='Payments Follow-up']")
+            first_node[0].set("position", "left")
+            first_node[0].getparent().append(first_node[0])
+            root = first_node[0].getparent()
+            root[0]= root[-1]
+            res['arch'] = etree.tostring(doc)
+        return res
+        
+
     def _get_latest_followup_date(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context): 
             amls = partner.accountmoveline_ids      
-            res[partner.id] = max([x.followup_date for x in amls]) if len(amls) else False
+            res[partner.id] = max([x.followup_date for x in amls]) if len(amls) else False            
         return res
     
     
@@ -167,6 +192,8 @@ class res_partner(osv.osv):
         res = {}
         for partner in self.browse(cr, uid, ids, context):
             amls = partner.accountmoveline_ids
+    
+            
             level_id = 0
             level_days = False
             latest_level = False            
@@ -188,16 +215,14 @@ class res_partner(osv.osv):
             latest_date = False
             latest_level = False
             latest_level_without_lit = False
-            latest_days_without_lit = False
+
             for aml in amls:
-               
                 if latest_date == False:
                     latest_date = aml.followup_date
                     latest_level = aml.followup_line_id.id
                     latest_days = aml.followup_line_id.delay
                     if not aml.blocked: 
                         latest_level_without_lit = latest_level 
-                        latest_days_without_lit = latest_days
                 if latest_date and latest_level:
                     if aml.followup_date > latest_date:
                         latest_date = aml.followup_date
@@ -206,7 +231,6 @@ class res_partner(osv.osv):
                         latest_level = aml.followup_line_id.id
                         if not aml.blocked: 
                             latest_level_without_lit = latest_level 
-                            latest_days_without_lit = latest_days
             res[partner.id] = {'latest_followup_date': latest_date, 
                                'latest_followup_level_id': latest_level, 
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
@@ -369,6 +393,14 @@ class res_partner(osv.osv):
                 partnerlist.append(aml.partner_id.id)
         return partnerlist
     
+    def _get_aml_storeids2(self, cr, uid, ids, context=None):
+        partnerlist = []
+        for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context):
+            if aml.partner_id not in partnerlist: 
+                partnerlist.append(aml.partner_id.id)
+        return partnerlist
+    
+    
     
     def _search_amount(self, cr, uid, obj, name, args, context):
         ids = set()
@@ -421,9 +453,10 @@ class res_partner(osv.osv):
                                                  string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
                                                  store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}),
         'payment_amount_overdue':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", 
-                                                 help="Amount Overdue: The amount the customer should already have paid",
-                                                 store={'account.move.line': (_get_aml_storeids, ['debit', 'credit'], 10)}, 
+                                                 help="Amount Overdue: The amount the customer owns us", 
+                                                 store={'account.move.line': (_get_aml_storeids2, ['followup_line_id', 'followup_date', 'debit', 'credit', 'invoice'], 10)}, 
                                                  ),
+        
     }
     
 res_partner()

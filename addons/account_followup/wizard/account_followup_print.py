@@ -208,14 +208,6 @@ class account_followup_print(osv.osv_memory):
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'description': self.resulttext, 'report_data': res})
-#        res['name'] = _('Incredibly interesting report')
-#        res['view_type'] = 'form'
-#        res['context'] = context
-#        res['view_mode'] = 'tree,form'
-#        res['res_model'] = 'account.followup.sending.results'
-#        res['views'] = [(resource_id,'form')]
-#        res['type'] = 'ir.actions.act_window'
-#        res['target'] = 'new'
         return {
             'name': _('Incredibly interesting report'),
             'view_type': 'form',
@@ -228,25 +220,7 @@ class account_followup_print(osv.osv_memory):
             }
     
     
-    #This can go away afterwards
-    def do_second_button(self, cr, uid, ids, context=None):
-        mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
-        model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        context.update({'description': "Let's write a very interesting report here"})
-        return {
-            'name': _('Incredibly interesting report'),
-            'view_type': 'form',
-            'context': context,
-            'view_mode': 'tree,form',
-            'res_model': 'account.followup.sending.results',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            }
+ 
 
     def _get_summary(self, cr, uid, context=None):
        if context is None:

@@ -5,14 +5,14 @@
         <record id="demo_followup1" model="account_followup.followup">
             <field name="name">Default Follow-up</field>
             <field name="company_id" ref="base.main_company"/>
-            <field name="description">First letter after 15 net days, 30 net days and 45 days end of month levels.</field>
         </record>
 
         <record id="demo_followup_line1" model="account_followup.followup.line">
-            <field name="name">Level 0 : 15 days</field>
+            <field name="name">Send first reminder email</field>
             <field name="sequence">0</field>
             <field name="delay">15</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="send-email">True</field>
             <field name="description">
 Dear %(partner_name)s,
 
@@ -26,11 +26,13 @@ Best Regards,
         </record>
 
         <record id="demo_followup_line2" model="account_followup.followup.line">
-            <field name="name">Level 1 : 30 days</field>
+            <field name="name">Send reminder letter and email</field>
             <field name="sequence">1</field>
             <field name="delay">30</field>
             <field name="followup_id" ref="demo_followup1"/>
             <field name="email_template_id" ref="email_template_account_followup_level1"/>
+            <field name="send_email">True</field>
+            <field name="send_letter">True</field>
             <field name="description">
 Dear %(partner_name)s,
 
@@ -46,12 +48,38 @@ Details of due payments is printed below.
 Best Regards,
 </field>
         </record>
-
+        
+        
         <record id="demo_followup_line3" model="account_followup.followup.line">
-            <field name="name">Level 2 : 45 days</field>
-            <field name="sequence">2</field>
-            <field name="delay">45</field>
+        	<field name="name">Call the customer on the phone</field>
+            <field name="sequence">3</field>
+            <field name="delay">40</field>
             <field name="followup_id" ref="demo_followup1"/>
+            <field name="email_template_id" ref="email_template_account_followup_level2"/>
+            <field eval="False" name="send_email"/>
+            <field name="manual_action">True</field>
+            <field name="manual_action_note">Call the customer on the phone! </field>       	
+            <field name="description">
+Dear %(partner_name)s,
+
+Despite several reminders, your account is still not settled.
+
+Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.
+
+I trust that this action will prove unnecessary and details of due payments is printed below.
+
+In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.
+
+Best Regards,
+</field>
+        </record>
+
+        <record id="demo_followup_line4" model="account_followup.followup.line">
+            <field name="name">More agressive reminder email</field>
+            <field name="sequence">4</field>
+            <field name="delay">50</field>
+            <field name="followup_id" ref="demo_followup1"/>
+            <field name="send_email">True</field>            
             <field name="email_template_id" ref="email_template_account_followup_level2"/>
             <field name="description">
 Dear %(partner_name)s,
@@ -67,6 +95,30 @@ In case of any queries concerning this matter, do not hesitate to contact our ac
 Best Regards,
 </field>
         </record>
+        <record id="demo_followup_line5" model="account_followup.followup.line">
+            <field name="name">More agressive reminder letter</field>
+            <field name="sequence">5</field>
+            <field name="delay">60</field>
+            <field name="followup_id" ref="demo_followup1"/>
+            <field eval="False" name="send_email"/>
+            <field name="send_letter">True</field>
+            <field name="email_template_id" ref="email_template_account_followup_level2"/>
+            <field name="description">
+Dear %(partner_name)s,
+
+Despite several reminders, your account is still not settled.
+
+Unless full payment is made in next 8 days, then legal action for the recovery of the debt will be taken without further notice.
+
+I trust that this action will prove unnecessary and details of due payments is printed below.
+
+In case of any queries concerning this matter, do not hesitate to contact our accounting department at (+32).10.68.94.39.
+
+Best Regards,
+</field>
+        </record>
+       
+         
 
     </data>
 </openerp>

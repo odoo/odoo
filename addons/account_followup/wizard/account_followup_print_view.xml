@@ -12,10 +12,12 @@
                     <field name="date" groups="base.group_no_one"/>
                 </group>
                 <p class = "oe_grey">
-                	And again some explanation why this is the greatest wizard of Oz ever. 
+                	This wizard will check the customers with overdue invoices and will execute the actions needed to 
+                	send to the customer according to the Follow-up Levels defined.  By clicking on the button, the emails will be sent 
+                	a report will be generated for the letters.  In the next screen you will see which actions were executed and be able to 
+                	print the letters if there are any.  Also the manual actions will be set when needed.  
                 </p>
-                <footer>
-                	
+                <footer>                	
                     <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
@@ -35,7 +37,8 @@
         <menuitem action="action_account_followup_print"
                   id="account_followup_print_menu"
                   parent="menu_finance_followup"
-                  sequence="10"/>
+                  name = "Send Letters and Emails"
+                  sequence="2"/>
 
         <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.search</field>
