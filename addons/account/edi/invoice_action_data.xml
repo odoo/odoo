@@ -21,7 +21,7 @@
     <data noupdate="1">
         <!--Email template -->
         <record id="email_template_edi_invoice" model="email.template">
-            <field name="name">Invoice - Send by mail</field>
+            <field name="name">Invoice - Send by Email</field>
             <field name="email_from">${object.user_id.email or object.company_id.email or 'noreply@localhost'}</field>
             <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })</field>
             <field name="email_recipients">${object.partner_id.id}</field>
