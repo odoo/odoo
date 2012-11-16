@@ -95,14 +95,6 @@ class mail_compose_message(osv.TransientModel):
             # transform attachments into attachment_ids
             values['attachment_ids'] = []
             ir_attach_obj = self.pool.get('ir.attachment')
-
-            # filter context values
-            context_attach = dict({
-                    'tz': context.get('tz'),
-                    'lang': context.get('lang'),
-                    'bin_raw': context.get('bin_raw'),
-                })
-
             for attach_fname, attach_datas in values.pop('attachments', []):
                 data_attach = {
                     'name': attach_fname,
@@ -110,8 +102,9 @@ class mail_compose_message(osv.TransientModel):
                     'datas_fname': attach_fname,
                     'res_model': model,
                     'res_id': res_id,
+                    'type': 'binary', # overwrite the context default_value
                 }
-                values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context_attach))
+                values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
             values = self.default_get(cr, uid, ['body', 'body_html', 'subject', 'partner_ids', 'attachment_ids'], context=context)
 
