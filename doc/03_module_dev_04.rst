@@ -207,9 +207,9 @@ They indicate at the user that he has to open a new window in a new 'tab'.
 
 Administration > Custom > Low Level > Base > Action > Window Actions
 
-.. figure::  images/module_base_action_window.png
-   :scale: 85
-   :align: center
+.. .. figure::  images/module_base_action_window.png
+..    :scale: 85
+..    :align: center
 
 Examples of actions
 +++++++++++++++++++
