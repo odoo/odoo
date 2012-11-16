@@ -3,16 +3,15 @@ Module structure
 
 A module can contain the following elements:
 
- - **Business object** : declared as Python classes extending the OpenObject c
-   lass osv.Model, the persistence of these resource is completly managed 
-   by OpenObject,
+ - **Business object** : declared as Python classes extending the class
+   osv.Model, the persistence of these resource is completly managed by
+   OpenERP's ORM.
  - **Data** : XML/CSV files with meta-data (views and workflows declaration), 
    configuration data (modules parametrization) and demo data (optional but 
    recommended for testing),
- - **Wizards** : stateful interactive forms used to assist users, often available 
-   as contextual actions on resources,
- - **Reports** : RML (XML format). MAKO or OpenOffice report templates, to be 
-   merged with any kind of business data, and generate HTML, ODT or PDF reports.
+ - **Reports** : RML (XML format). HTML/MAKO or OpenOffice report templates, to
+   be merged with any kind of business data, and generate HTML, ODT or PDF
+   reports.
 
 .. figure:: _static/03_module_gen_view.png
    :width: 75%
@@ -23,120 +22,91 @@ A module can contain the following elements:
 
 Each module is contained in its own directory within either the server/bin/addons 
 directory or another directory of addons, configured in server installation.
-To create a new module, the following steps are required:
+To create a new module for example the 'OpenAcademy' module, the following
+steps are required:
 
- - create a ``my_module`` subdirectory in the source/addons directory
- - create the module description file ``__init__.py``
- - create the module declaration file ``__openerp__.py``
+ - create a ``openacademy`` subdirectory in the source/addons directory
+ - create the module import file ``__init__.py``
+ - create the module manifield file ``__openerp__.py``
  - create **Python** files containing **objects**
  - create **.xml files** holding module data such as views, menu entries 
    or demo data
- - optionally create **reports**, **wizards** or **workflows**
+ - optionally create **reports** or **workflows**
 
-Description file __init__.py
-++++++++++++++++++++++++++++
+Python import file __init__.py
+++++++++++++++++++++++++++++++
 
-The ``__init__.py`` file is the Python module descriptor, because an OpenERP 
-module is also a regular Python module. Like any Python module, it is executed 
-at program start. It needs to import the Python files that need to be loaded.
+The ``__init__.py`` file is the Python import file, because an OpenERP module
+is also a regular Python module. The file should import all the other python
+file or submodules.
 
-It contains the importation instruction applied to all Python files of the 
-module, without the .py extension. For example, if a module contains a single 
-python file named ``mymodule.py``, the file should look like:
+For example, if a module contains a single python file named ``openacademy.py``,
+the file should look like:
 
-    import module
+    import openacademy
 
-Declaration file __openerp__.py
+Manifest file __openerp__.py
 +++++++++++++++++++++++++++++++
 
 In the created module directory, you must add a **__openerp__.py** file.
-This file, which must be in Python format, is responsible to
+This file, which must be a Python dict literal, is responsible to
 
    1. determine the *XML files that will be parsed* during the initialization
       of the server, and also to
    2. determine the *dependencies* of the created module.
+   3. declare additional meta data
 
 This file must contain a Python dictionary with the following values:
 
 ::
 
-  name             The (Plain English) name of the module.
+  name             The name of the module in English.
   version          The version of the module.
+  summary          Short description or keywords
   description      The module description (text).
+  category         The categrory of the module
   author           The author of the module.
-  website          The website of the module.
-  license          The license of the module (default:GPL-2).
-  depends          List of modules on which this module depends. The base 
-                   module must almost always be in the dependencies because 
-                   some necessary data for the views, reports, ... are in 
-                   the base module.
-  init_xml         List of .xml files to load when the server is launched 
-                   with the "--init=module" argument. Filepaths must be 
-                   relative to the directory where the module is. OpenERP 
-                   XML file format is detailed in this section.
-  update_xml       List of .xml files to load when the server is launched with 
-                   the "--update=module" launched. Filepaths must be relative 
-                   to the directory where the module is. Files in **update_xml** 
-                   concern: views, reports and wizards.
+  website          URL of the website of the module.
+  license          The license of the module (default: AGPL-3).
+  depends          List of modules on which this module depends beside base.
+  data             List of .xml files to load when the module is installed or updated.
+  demo             List of additional .xml files to load when the module is
+                   installed or updated and demo flag is active.
   installable      True or False. Determines whether the module is installable 
                    or not.
   auto_install     True or False (default: False). If set to ``True``, the
                    module is a link module. It will be installed as soon
                    as all its dependencies are installed.
 
-For the ``my_module`` module, here is an example of ``__openerp__.py``
+For the ``openacademy`` module, here is an example of ``__openerp__.py``
 declaration file:
 
 .. code-block:: python
 
     {
-        'name' : "My Module",
+        'name' : "OpenAcademy",
         'version' : "1.0",
-        'author' : "OpenERP",
+        'author' : "OpenERP SA",
         'category' : "Tools",
-        'depends' : ['base',],
-        'init_xml' : [],
-        'demo_xml' : [
-            'module_demo.xml'
-        ],
-        'update_xml' : [
-            'module_view.xml',
-            'data/module_data.xml',
+        'depends' : ['mail'],
+        'data' : [
+            'openacademy_view.xml',
+            'openacademy_data.xml',
             'report/module_report.xml',
             'wizard/module_wizard.xml',
         ],
+        'demo' : [
+            'openacademy_demo.xml'
+        ],
         'installable': True,
-        'auto_install': False,
     }
-
-The files that must be placed in init_xml are the ones that relate to the
-workflow definition, data to load at the installation of the software and
-the data for the demonstrations.
-
-
-XML Files
-+++++++++
-
-XML files located in the module directory are used to modify the structure of
-the database. They are used for many purposes, among which we can cite :
-
-    * initialization and demonstration data declaration,
-    * views declaration,
-    * reports declaration,
-    * wizards declaration,
-    * workflows declaration.
-
-General structure of OpenERP XML files is more detailed in the 
-:ref:`xml-serialization` section. Look here if you are interested in learning 
-more about *initialization* and *demonstration data declaration* XML files. The 
-following section are only related to XML specific to *actions, menu entries, 
-reports, wizards* and *workflows* declaration.
-
 
 Objects
 +++++++
 
-All OpenERP resources are objects: menus, actions, reports, invoices, partners, ... OpenERP is based on an object relational mapping of a database to control the information. Object names are hierarchical, as in the following examples:
+All OpenERP resources are objects: invoices, partners. Metadata are also object
+too: menus, actions, reports...  Object names are hierarchical, as in the
+following examples:
 
     * account.transfer : a money transfer
     * account.invoice : an invoice
@@ -144,14 +114,15 @@ All OpenERP resources are objects: menus, actions, reports, invoices, partners, 
 
 Generally, the first word is the name of the module: account, stock, sale.
 
-Other advantages of an ORM;
+Those object are declared in python be subclassing osv.Model
 
-    * simpler relations : invoice.partner.address[0].city
-    * objects have properties and methods: invoice.pay(3400 EUR),
-    * inheritance, high level constraints, ...
+The ORM of OpenERP is constructed over PostgreSQL. It is thus possible to
+query the object used by OpenERP using the object interface (ORM) or by
+directly using SQL statements.
 
-It is easier to manipulate one object (example, a partner) than several tables (partner address, categories, events, ...)
-
+But it is dangerous to write or read directly in the PostgreSQL database, as
+you will shortcut important steps like constraints checking or workflow
+modification.
 
 .. figure::  images/pom_3_0_3.png
    :scale: 50
@@ -160,23 +131,23 @@ It is easier to manipulate one object (example, a partner) than several tables (
    *The Physical Objects Model of [OpenERP version 3.0.3]*
 
 
-PostgreSQL and ORM
-------------------
+XML Files
++++++++++
 
-The ORM of OpenERP is constructed over PostgreSQL. It is thus possible to
-query the object used by OpenERP using the object interface or by directly
-using SQL statements.
+XML files located in the module directory are used to initialize or update the
+the database when the module is installed or updated. They are used for many
+purposes, among which we can cite :
 
-But it is dangerous to write or read directly in the PostgreSQL database, as
-you will shortcut important steps like constraints checking or workflow
-modification.
+    * initialization and demonstration data declaration,
+    * views declaration,
+    * reports declaration,
+    * workflows declaration.
 
-.. note::
-
-    The Physical Database Model of OpenERP
-
-Pre-Installed Data
-------------------
+General structure of OpenERP XML files is more detailed in the 
+:ref:`xml-serialization` section. Look here if you are interested in learning 
+more about *initialization* and *demonstration data declaration* XML files. The 
+following section are only related to XML specific to *actions, menu entries, 
+reports, wizards* and *workflows* declaration.
 
 Data can be inserted or updated into the PostgreSQL tables corresponding to the
 OpenERP objects using XML files. The general structure of an OpenERP XML file
@@ -188,12 +159,8 @@ is as follows:
    <openerp>
      <data>
        <record model="model.name_1" id="id_name_1">
-         <field name="field1">
-           "field1 content"
-         </field>
-         <field name="field2">
-           "field2 content"
-         </field>
+         <field name="field1"> "field1 content" </field>
+         <field name="field2"> "field2 content" </field>
          (...)
        </record>
        <record model="model.name_2" id="id_name_2">
@@ -203,7 +170,52 @@ is as follows:
      </data>
    </openerp>
 
-Fields content are strings that must be encoded as *UTF-8* in XML files.
+Record Tag
+//////////
+
+**Description**
+
+The addition of new data is made with the record tag. This one takes a
+mandatory attribute : model. Model is the object name where the insertion has
+to be done. The tag record can also take an optional attribute: id. If this
+attribute is given, a variable of this name can be used later on, in the same
+file, to make reference to the newly created resource ID.
+
+A record tag may contain field tags. They indicate the record's fields value.
+If a field is not specified the default value will be used.
+
+The Record Field tag
+////////////////////
+
+The attributes for the field tag are the following:
+
+name : mandatory
+  the field name
+
+eval : optional
+  python expression that indicating the value to add
+  
+ref
+  reference to an id defined in this file
+
+model
+  model to be looked up in the search
+
+search
+  a query
+
+
+**Example**
+
+.. code-block:: xml
+
+    <record model="ir.actions.report.xml" id="l0">
+         <field name="model">account.invoice</field>
+         <field name="name">Invoices List</field>
+         <field name="report_name">account.invoice.list</field>
+         <field name="report_xsl">account/report/invoice.xsl</field>
+         <field name="report_xml">account/report/invoice.xml</field>
+    </record>
 
 Let's review an example taken from the OpenERP source (base_demo.xml in the base module):
 
@@ -250,47 +262,6 @@ The field **company_id** is a many-to-one relation from the user object to the c
 
 This is a classical example of the use of **search** in demo data: here we do not really care about which partner we want to use for the test, so we give an empty list. Notice the **model** attribute is currently mandatory.
 
-Record Tag
-//////////
-
-**Description**
-
-The addition of new data is made with the record tag. This one takes a mandatory attribute : model. Model is the object name where the insertion has to be done. The tag record can also take an optional attribute: id. If this attribute is given, a variable of this name can be used later on, in the same file, to make reference to the newly created resource ID.
-
-A record tag may contain field tags. They indicate the record's fields value. If a field is not specified the default value will be used.
-
-**Example**
-
-.. code-block:: xml
-
-    <record model="ir.actions.report.xml" id="l0">
-         <field name="model">account.invoice</field>
-         <field name="name">Invoices List</field>
-         <field name="report_name">account.invoice.list</field>
-         <field name="report_xsl">account/report/invoice.xsl</field>
-         <field name="report_xml">account/report/invoice.xml</field>
-    </record>
-
-Field tag
-/////////
-
-The attributes for the field tag are the following:
-
-name : mandatory
-  the field name
-
-eval : optional
-  python expression that indicating the value to add
-  
-ref
-  reference to an id defined in this file
-
-model
-  model to be looked up in the search
-
-search
-  a query
-
 Function tag
 ////////////
 
@@ -311,69 +282,9 @@ eval
 
     <function model="ir.ui.menu" name="search" eval="[[('name','=','Operations')]]"/>
 
-Getitem tag
-///////////
-
-Takes a subset of the evaluation of the last child node of the tag.
-
-type : mandatory
-  int or list
-
-index : mandatory
-  int or string (a key of a dictionary)
-
-**Example**
-
-Evaluates to the first element of the list of ids returned by the function node
-
-.. code-block:: xml
-
-    <getitem index="0" type="list">
-        <function model="ir.ui.menu" name="search" eval="[[('name','=','Operations')]]"/>
-    </getitem>
-
-i18n
-""""
-
-Improving Translations
-//////////////////////
-
-.. describe:: Translating in launchpad
-
-Translations are managed by
-the `Launchpad Web interface <https://translations.launchpad.net/openobject>`_. Here, you'll
-find the list of translatable projects.
-
-Please read the `FAQ <https://answers.launchpad.net/rosetta/+faqs>`_ before asking questions.
-
-.. describe:: Translating your own module
-
-.. versionchanged:: 5.0
-
-Contrary to the 4.2.x version, the translations are now done by module. So,
-instead of an unique ``i18n`` folder for the whole application, each module has
-its own ``i18n`` folder. In addition, OpenERP can now deal with ``.po`` [#f_po]_
-files as import/export format. The translation files of the installed languages
-are automatically loaded when installing or updating a module. OpenERP can also
-generate a .tgz archive containing well organised ``.po`` files for each selected
-module.
-
-.. [#f_po] http://www.gnu.org/software/autoconf/manual/gettext/PO-Files.html#PO-Files
-
-Process
-"""""""
-
-Defining the process
-////////////////////
-
-Through the interface and module recorder.
-Then, put the generated XML in your own module.
 
 Views
-"""""
-
-Technical Specifications - Architecture - Views
-///////////////////////////////////////////////
++++++
 
 Views are a way to represent the objects on the client side. They indicate to the client how to lay out the data coming from the objects on the screen.
 
@@ -454,21 +365,23 @@ The squared nodes represent other Workflows;
     * the shipping
 
 
+i18n
+----
 
-Appendix
-+++++++++
+.. versionchanged:: 5.0
 
-Configure addons locations
---------------------------
+Each module has its own ``i18n`` folder. In addition, OpenERP can now deal with
+``.po`` [#f_po]_ files as import/export format. The translation files of the
+installed languages are automatically loaded when installing or updating a
+module.
 
-By default, the only directory of addons known by the server is server/bin/addons. 
-It is possible to add new addons by
+Translations are managed by the `Launchpad Web interface
+<https://translations.launchpad.net/openobject>`_. Here, you'll find the list
+of translatable projects.
 
- - copying them in server/bin/addons, or creating a symbolic link to each 
-   of them in this directory, or
- - specifying another directory containing addons to the server. The later 
-   can be accomplished either by running the server with the ``--addons-path=`` 
-   option, or by configuring this option in the openerp_serverrc file, 
-   automatically generated under Linux in your home directory by the 
-   server when executed with the ``--save`` option. You can provide several 
-   addons to the ``addons_path`` = option, separating them using commas.
+Please read the `FAQ <https://answers.launchpad.net/rosetta/+faqs>`_ before asking questions.
+
+
+.. [#f_po] http://www.gnu.org/software/autoconf/manual/gettext/PO-Files.html#PO-Files
+
+
