@@ -79,7 +79,7 @@ class mail_thread(osv.AbstractModel):
         # search for unread messages, directly in SQL to improve performances
         cr.execute("""  SELECT m.res_id FROM mail_message m
                         RIGHT JOIN mail_notification n
-                        ON (n.message_id = m.id AND n.partner_id = %s AND n.read = False)
+                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
         msg_ids = [result[0] for result in cr.fetchall()]
