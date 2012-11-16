@@ -24,7 +24,7 @@ class res_users(osv.Model):
         ('uniq_users_oauth_provider_oauth_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
     ]
 
-    def auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
+    def _auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
         params = urllib.urlencode({'access_token': access_token})
         if urlparse.urlparse(endpoint)[4]:
             url = endpoint + '&' + params
@@ -34,6 +34,17 @@ class res_users(osv.Model):
         response = f.read()
         return simplejson.loads(response)
 
+    def _auth_oauth_validate(self, cr, uid, provider, access_token, context=None):
+        """ return the validation data corresponding to the access token """
+        p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
+        validation = self._auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
+        if validation.get("error"):
+            raise Exception(validation['error'])
+        if p.data_endpoint:
+            data = self._auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            validation.update(data)
+        return validation
+
     def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
         # if validation.audience != OUR_CLIENT_ID:
@@ -41,19 +52,12 @@ class res_users(osv.Model):
         # else:
         #   continue with the process
         access_token = params.get('access_token')
-        p = self.pool.get('auth.oauth.provider').browse(cr, uid, provider, context=context)
-
-        validation = self.auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
-        if validation.get("error"):
-            raise Exception(validation['error'])
-        if p.data_endpoint:
-            data = self.auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
-            validation.update(data)
+        validation = self._auth_oauth_validate(cr, uid, provider, access_token)
         # required
         oauth_uid = validation['user_id']
         if not oauth_uid:
             raise openerp.exceptions.AccessDenied()
-        email = validation.get('email', 'provider_%d_user_%d' % (p.id, oauth_uid))
+        email = validation.get('email', 'provider_%d_user_%d' % (provider, oauth_uid))
         # optional
         name = validation.get('name', email)
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
