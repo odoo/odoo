@@ -184,6 +184,7 @@ class stock_picking(osv.osv):
                         'invoiced': True,
                         'invoice_lines': [(6, 0, [invoice_line_id])],
                     })
+                    invoice_obj.button_compute(cursor, user, [invoice_created.id], context=context)
         return result
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm
