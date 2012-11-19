@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import exceptions
 from osv import osv, fields
 from tools.translate import _
 
@@ -41,13 +42,47 @@ class ir_filters(osv.osv):
     def get_filters(self, cr, uid, model):
         """Obtain the list of filters available for the user on the given model.
 
-        :return: list of :meth:`~osv.read`-like dicts containing the ``name``,
-            ``domain``, ``user_id`` (m2o tuple) and ``context`` of the matching ``ir.filters``.
+        :return: list of :meth:`~osv.read`-like dicts containing the
+            ``name``, ``is_default``, ``domain``, ``user_id`` (m2o tuple) and
+            ``context`` of the matching ``ir.filters``.
         """
         # available filters: private filters (user_id=uid) and public filters (uid=NULL) 
-        act_ids = self.search(cr, uid, [('model_id','=',model),('user_id','in',[uid, False])])
-        my_acts = self.read(cr, uid, act_ids, ['name', 'domain', 'context', 'user_id'])
-        return my_acts
+        filter_ids = self.search(cr, uid,
+            [('model_id','=',model),('user_id','in',[uid, False])])
+        my_filters = self.read(cr, uid, filter_ids,
+            ['name', 'is_default', 'domain', 'context', 'user_id'])
+        return my_filters
+
+    def _check_global_default(self, cr, uid, vals, matching_filters, context=None):
+        """ _check_global_default(cursor, UID, dict, list(dict), dict) -> None
+
+        Checks if there is a global default for the model_id requested.
+
+        If there is, and the default is different than the record being written
+        (-> we're not updating the current global default), raise an error
+        to avoid users unknowingly overwriting existing global defaults (they
+        have to explicitly remove the current default before setting a new one)
+
+        This method should only be called if ``vals`` is trying to set
+        ``is_default``
+
+        :raises openerp.exceptions.Warning: if there is an existing default and
+                                            we're not updating it
+        """
+        existing_default = self.search(cr, uid, [
+            ('model_id', '=', vals['model_id']),
+            ('user_id', '=', False),
+            ('is_default', '=', True)], context=context)
+
+        if not existing_default: return
+        if matching_filters and \
+           (matching_filters[0]['id'] == existing_default[0]):
+            return
+
+        raise exceptions.Warning(
+            _("There is already a shared filter set as default for %(model)s, delete or change it before setting a new default") % {
+                'model': vals['model_id']
+            })
 
     def create_or_replace(self, cr, uid, vals, context=None):
         lower_name = vals['name'].lower()
@@ -57,11 +92,25 @@ class ir_filters(osv.osv):
                                 # f.user_id is False and vals.user_id is False or missing,
                                 # or f.user_id.id == vals.user_id
                                 if (f['user_id'] and f['user_id'][0]) == vals.get('user_id', False)]
+
+        if vals.get('is_default'):
+            if vals.get('user_id'):
+                act_ids = self.search(cr, uid, [
+                        ('model_id', '=', vals['model_id']),
+                        ('user_id', '=', vals['user_id']),
+                        ('is_default', '=', True),
+                    ], context=context)
+                self.write(cr, uid, act_ids, {'is_default': False}, context=context)
+            else:
+                self._check_global_default(
+                    cr, uid, vals, matching_filters, context=None)
+
         # When a filter exists for the same (name, model, user) triple, we simply
         # replace its definition.
         if matching_filters:
             self.write(cr, uid, matching_filters[0]['id'], vals, context)
             return matching_filters[0]['id']
+
         return self.create(cr, uid, vals, context)
 
     _sql_constraints = [
@@ -87,11 +136,13 @@ class ir_filters(osv.osv):
         'domain': fields.text('Domain', required=True),
         'context': fields.text('Context', required=True),
         'model_id': fields.selection(_list_all_models, 'Model', required=True),
+        'is_default': fields.boolean('Default filter')
     }
     _defaults = {
         'domain': '[]',
         'context':'{}',
         'user_id': lambda self,cr,uid,context=None: uid,
+        'is_default': False
     }
 
 ir_filters()

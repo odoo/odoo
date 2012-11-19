@@ -264,10 +264,15 @@ class res_partner(osv.osv, format_address):
         return False
 
     def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
-        if is_company:
-            image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
-        else:
-            image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        img_path = openerp.modules.get_module_resource('base', 'static/src/img',
+                                                       ('company_image.png' if is_company else 'avatar.png'))
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        # colorize user avatars
+        if not is_company:
+            image = tools.image_colorize(image)
+
         return tools.image_resize_image_big(image.encode('base64'))
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
