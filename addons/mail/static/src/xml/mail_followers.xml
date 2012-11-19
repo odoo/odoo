@@ -12,11 +12,11 @@
                 <span class="oe_unfollow">Unfollow</span>
                 <span class="oe_following">Following</span>
             </button>
+            <t t-if="widget.comment">
+            <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
+            </t>
             <div class="oe_subtype_list"></div>
         </div>
-        <t t-if="widget.comment">
-            <h5 class="oe_comment"><t t-raw="widget.comment"/></h5>
-        </t>
         <div class='oe_follower_title_box'>
             <h4 class='oe_follower_title'>Followers</h4>
             <a href='#' class="oe_invite">Invite others</a>
