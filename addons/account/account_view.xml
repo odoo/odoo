@@ -1069,6 +1069,8 @@
             <field eval="24" name="priority"/>
             <field name="arch" type="xml">
                 <tree_account_move_line_quickadd colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1" />
                     <field name="date"/>
                     <field name="move_id" required="0"/>
                     <field name="ref"/>
