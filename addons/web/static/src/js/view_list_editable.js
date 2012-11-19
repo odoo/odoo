@@ -77,6 +77,15 @@ openerp.web.list_editable = function (instance) {
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
         },
+        do_delete: function (ids) {
+            var _super = this._super.bind(this);
+            var next = this.editor.is_editing()
+                    ? this.cancel_edition(true)
+                    : $.when();
+            return next.then(function () {
+                return _super(ids);
+            });
+        },
         editable: function () {
             return this.fields_view.arch.attrs.editable
                 || this._context_editable
@@ -116,13 +125,6 @@ openerp.web.list_editable = function (instance) {
                     .on('click', '.oe_list_discard', function (e) {
                         e.preventDefault();
                         self.cancel_edition();
-                    });
-                this.$el
-                    .off('click', 'tbody td:not(.oe_list_field_cell)')
-                    .on('click', 'tbody td:not(.oe_list_field_cell)', function () {
-                        if (!self.editor.is_editing()) {
-                            self.start_edition();
-                        }
                     });
                 this.editor.destroy();
                 // Editor is not restartable due to formview not being
@@ -164,13 +166,23 @@ openerp.web.list_editable = function (instance) {
          * @returns {$.Deferred}
          */
         ensure_saved: function () {
-            var self = this;
-            return this.saving_mutex.exec(function() {
-                if (!self.editor.is_editing()) {
-                    return $.when();
-                }
-                return self.save_edition();
-            });
+            return this.save_edition();
+        },
+        /**
+         * Builds a record with the provided id (``false`` for a creation),
+         * setting all columns with ``false`` value so code which relies on
+         * having an actual value behaves correctly
+         *
+         * @param {*} id
+         * @return {instance.web.list.Record}
+         */
+        make_empty_record: function (id) {
+            var attrs = {id: id};
+            _(this.columns).chain()
+                .filter(function (x) { return x.tag === 'field'})
+                .pluck('name')
+                .each(function (field) { attrs[field] = false; });
+            return new instance.web.list.Record(attrs);
         },
         /**
          * Set up the edition of a record of the list view "inline"
@@ -186,12 +198,7 @@ openerp.web.list_editable = function (instance) {
             if (record) {
                 item = record.attributes;
             } else {
-                var attrs = {id: false};
-                _(this.columns).chain()
-                    .filter(function (x) { return x.tag === 'field'})
-                    .pluck('name')
-                    .each(function (field) { attrs[field] = false; });
-                record = new instance.web.list.Record(attrs);
+                record = this.make_empty_record(false);
                 this.records.add(record, {
                     at: this.prepends_on_create() ? 0 : null});
             }
@@ -269,29 +276,34 @@ openerp.web.list_editable = function (instance) {
          */
         save_edition: function () {
             var self = this;
-            return this.with_event('save', {
-                editor: this.editor,
-                form: this.editor.form,
-                cancel: false
-            }, function () {
-                return this.editor.save().then(function (attrs) {
-                    var created = false;
-                    var record = self.records.get(attrs.id);
-                    if (!record) {
-                        // new record
-                        created = true;
-                        record = self.records.find(function (r) {
-                            return !r.get('id');
-                        }).set('id', attrs.id);
-                    }
-                    // onwrite callback could be altering & reloading the
-                    // record which has *just* been saved, so first perform all
-                    // onwrites then do a final reload of the record
-                    return self.handle_onwrite(record)
-                        .then(function () {
-                            return self.reload_record(record); })
-                        .then(function () {
-                            return { created: created, record: record }; });
+            return self.saving_mutex.exec(function() {
+                if (!self.editor.is_editing()) {
+                    return $.when();
+                }
+                return self.with_event('save', {
+                    editor: self.editor,
+                    form: self.editor.form,
+                    cancel: false
+                }, function () {
+                    return self.editor.save().then(function (attrs) {
+                        var created = false;
+                        var record = self.records.get(attrs.id);
+                        if (!record) {
+                            // new record
+                            created = true;
+                            record = self.records.find(function (r) {
+                                return !r.get('id');
+                            }).set('id', attrs.id);
+                        }
+                        // onwrite callback could be altering & reloading the
+                        // record which has *just* been saved, so first perform all
+                        // onwrites then do a final reload of the record
+                        return self.handle_onwrite(record)
+                            .then(function () {
+                                return self.reload_record(record); })
+                            .then(function () {
+                                return { created: created, record: record }; });
+                    });
                 });
             });
         },
@@ -391,7 +403,7 @@ openerp.web.list_editable = function (instance) {
             if (!record) {
                 // insert after the source record
                 var index = this.records.indexOf(source_record) + 1;
-                record = new instance.web.list.Record({id: id});
+                record = this.make_empty_record(id);
                 this.records.add(record, {at: index});
                 this.dataset.ids.splice(index, 0, id);
             }

@@ -1,6 +1,7 @@
 {
     'name': 'Web',
     'category': 'Hidden',
+    'version': '7.0.1.0',
     'description':
         """
 OpenERP Web core module.
@@ -40,6 +41,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/cleditor/jquery.cleditor.js",
         "static/lib/py.js/lib/py.js",
         "static/src/js/boot.js",
+        "static/src/js/testing.js",
         "static/src/js/corelib.js",
         "static/src/js/coresetup.js",
         "static/src/js/dates.js",
@@ -67,5 +69,21 @@ This module provides the core of the OpenERP Web Client.
     'qweb' : [
         "static/src/xml/*.xml",
     ],
+    'test': [
+        "static/test/testing.js",
+        "static/test/class.js",
+        "static/test/registry.js",
+        "static/test/form.js",
+        "static/test/list-utils.js",
+        "static/test/formats.js",
+        "static/test/rpc.js",
+        "static/test/evals.js",
+        "static/test/search.js",
+        "static/test/Widget.js",
+        "static/test/list.js",
+        "static/test/list-editable.js",
+        "static/test/mutex.js"
+    ],
     'bootstrap': True,
+    'twitter': False,
 }
