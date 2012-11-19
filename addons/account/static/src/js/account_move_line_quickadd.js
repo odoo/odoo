@@ -99,17 +99,27 @@ openerp.account.quickadd = function (instance) {
             var compoundContext = self.last_context;
             return self.old_search(compoundDomain, compoundContext, self.last_group_by);
         },
-        /*_next: function (next_record, options) {
-            next_record = next_record || 'succ';
+        start_edition: function (record, options) {
+            this.$el.parent().find('.oe_account_select_journal').attr('disabled', 'disabled');
+            this.$el.parent().find('.oe_account_select_period').attr('disabled', 'disabled');
+            return this._super.apply(this, arguments);
+        },
+        cancel_edition: function (force) {
+            this.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
+            this.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
+            return this._super.apply(this, arguments);
+        },
+        save_edition: function () {
+            var tmp = this._super.apply(this, arguments);
             var self = this;
-            return this.save_edition().then(function (saveInfo) {
-                if (saveInfo.created || self.records.at(self.records.length-1).get("id") === saveInfo.record.get("id")) {
-                    return self.start_edition();
+            tmp.then(function (saveInfo){
+                console.log(saveInfo);
+                if (saveInfo) {
+                    self.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
+                    self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
                 }
-                var record = self.records[next_record](
-                        saveInfo.record, {wraparound: true});
-                return self.start_edition(record, options);
             });
-        },*/
+            return tmp;
+        }
     });
 };
