@@ -27,6 +27,9 @@ Re-implement openerp's file import system:
     'depends': ['web'],
     'installable': True,
     'auto_install': False,
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'css': [
         'static/lib/select2/select2.css',
         'static/src/css/import.css',
