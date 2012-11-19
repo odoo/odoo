@@ -99,8 +99,9 @@
  			<field name="res_model">res.partner</field>
  			<field name="view_type">form</field>
  			<field name="view_mode">tree,form</field>
+ 			<field name="context">{} </field>
  			<!--<field name="domain">[('payment_amount_overdue', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
- 			<field name="context">{'search_default_todo': True, 'search_default_credits': True} </field>
+ 			<field name="context">{'Followupfirst':True, 'search_default_todo': True, 'search_default_credits': True} </field>
  			<field name="search_view_id" ref="customer_followup_search_view"/>
  		</record>
 
@@ -146,20 +147,21 @@
  					 		<field name="payment_note" string="The customer promised:"/> 
  					 	</group>
             			<p class="oe_grey"> <!--maybe only when accountmovelines empty-->
-            				By clicking on the light bulb, you can put an invoice as litigation.  This means you are still in discussion about it and it 
+            				Here is the history of the transactions of this customer. By clicking on the light bulb, you can put an invoice as litigation.  This means you are still in discussion about it and it 
             				won't be taken into account for going to the next follow-up level.        
             			</p>            		
  						<group>
- 					 <field name="accountmoveline_ids" nolabel="1" context="{'default_partner_id': active_id}" mode="kanban">
- 						<!--<tree string="Account Move line" editable="bottom" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
+ 					 <field name="accountmoveline_ids" nolabel="1" > <!--ontext="{'default_partner_id': active_id}" mode="kanban"-->
+ 						<tree string="Account Move line" editable="bottom" create="false" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/> 							
  							<field name="blocked" string="Litigation"/>
  							<field name="date_maturity" readonly="True"/>
  							<field name="reconcile_partial_id" readonly="True"/>
  							<field name="result" readonly="True"/>
- 						</tree>-->
- 						<kanban default_group_by="followup_line_id" create="false">
+ 							<field name="followup_line_id" invisible='1'/>
+ 						</tree>
+ 					<!--	<kanban default_group_by="followup_line_id" create="false">
  							<field name="followup_line_id"/>
  							<field name="result"/>
  							<field name="date_maturity"/>
@@ -168,10 +170,10 @@
  							<field name="ref"/>
  							<field name="invoice"/>
  							 <templates>
-                        <t t-name="kanban-box">
+                        <t t-name="kanban-box">-->
                                             
                         <!--<a t-if="! read_only_mode" type="delete" style="position: absolute; right: 0; padding: 4px; diplay: inline-block">X</a>-->
-                        <div class="oe_module_vignette oe_semantic_html_override">                                 
+                        <!--<div class="oe_module_vignette oe_semantic_html_override">                                 
                         <h4><a type="open"><field name="ref"/></a></h4>
                         <a type="open"><field name="invoice"/></a>
                         <i><div t-if="record.result.raw_value">
@@ -180,11 +182,12 @@
                             <field name="date_maturity"/>
                         </a></div>
                         <a t-if="record.blocked.raw_value === true" type="object" string="Lit." name="set_kanban_state_litigation" class="oe_kanban_status oe_kanban_status_red"> </a>
-                        <a t-if="record.blocked.raw_value === false" type="object" string="Lit." name="set_kanban_state_litigation" class="oe_kanban_status oe_kanban_status_green"> </a>
+                        
+                        <a t-if="record.blocked.raw_value === false" type="object" string="Lit." name="set_kanban_state_litigation"  class="oe_kanban_status oe_kanban_status_green"></a>
                         </div>
                         </t>
                     </templates>
-						</kanban>
+						</kanban>-->
  					</field>
  						
  					</group>
@@ -201,10 +204,7 @@
  			<field name="sequence" eval="2"/>
  			<field name="view_mode">form</field>
  			<field name="view_id" ref="view_partner_inherit_followup_form"/>
- 			<field name="context">{'Followupfirst':True} </field>
  			<field name="act_window_id" ref="action_customer_followup"/>
- 			
- 			
  			</record>
 
  		<record id="action_view_customer_followup_tree" model="ir.actions.act_window.view">

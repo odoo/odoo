@@ -166,16 +166,12 @@ class res_partner(osv.osv):
         res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, 
                                                        toolbar=toolbar, submenu=submenu)
         
-        if context: 
-            for l in context:
-                print l, context[l]
-        if view_type == 'form' and context and 'search_default_todo' in context.keys():
+        if view_type == 'form' and context and 'Followupfirst' in context.keys() and context['Followupfirst'] == True:
             doc = etree.XML(res['arch'], parser=None, base_url=None)
-            first_node = doc.xpath("//page[@string='Payments Follow-up']")
-            first_node[0].set("position", "left")
-            first_node[0].getparent().append(first_node[0])
-            root = first_node[0].getparent()
-            root[0]= root[-1]
+            first_node = doc.xpath("//page[@string='Payments Follow-up']")            
+            #first_node[0].getparent().append(first_node[0])            
+            root = first_node[0].getparent()            
+            root.insert(0, first_node[0])
             res['arch'] = etree.tostring(doc)
         return res
         
@@ -454,7 +450,7 @@ class res_partner(osv.osv):
                                                  store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}),
         'payment_amount_overdue':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", 
                                                  help="Amount Overdue: The amount the customer owns us", 
-                                                 store={'account.move.line': (_get_aml_storeids2, ['followup_line_id', 'followup_date', 'debit', 'credit', 'invoice'], 10)}, 
+                                                 store=True, #{'account.move.line': (_get_aml_storeids2, ['followup_line_id', 'followup_date', 'debit', 'credit', 'invoice'], 10)},
                                                  ),
         
     }

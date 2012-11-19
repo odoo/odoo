@@ -87,14 +87,14 @@
                     
                     <h1><field name="company_id" widget="selection" class="oe_inline"/> Follow-up </h1><!--groups="base.group_multi_company"-->
                     <p class="oe_grey">
-                    	To remind our customers to pay their invoices when they are overdue, 
-                    	we define different levels of severity for paying the invoices.     	 
-                    	 Every level defines actions that need to be taken after a certain amount of days after the due date of an invoice     
+                    	To remind our customers of paying their invoices, 
+                    	we define different actions depending on how severely overdue the customer is.  These actions are bundled
+                    	into folow-up levels that are triggered when the due date of the most overdue invoice has passed a 
+                    	certain amount of days.         	                     	      
                     	</p>
                     		
                     	<p class ="oe_grey">
-                    	
-                    	When the wizard for processing the follow-ups is run, for every partner the most overdue invoice (without litigation) is checked.  
+                    	When the wizard for procesing the follow-ups is run, for every partner the most overdue invoice (without litigation) is checked.  
                     	If the amount of days overdue is greater or equal than the amount of days specified
                        		and the actions of the previous follow-up level were done, then the actions checked 
                        		for the new follow-up level will be executed.                       	
@@ -203,16 +203,6 @@
 
       <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
 
-      <!--COMPANY VIEW NOT NECESSARY ANYMORE  <record model="ir.ui.view" id="view_company_inherit_followup_form">
-            <field name="name">res.company.followup.form.inherit</field>
-            <field name="inherit_id" ref="account.view_company_inherit_form"/>
-            <field name="model">res.company</field>
-            <field name="arch" type="xml">
-                <field name="overdue_msg" nolabel="1" colspan="4" position="after">
-                    <separator string="Follow-up Message" colspan="4"/>
-                    <field name="follow_up_msg" nolabel="1" colspan="4"/>
-                </field>
-            </field>
-     </record> -->
+    
     </data>
 </openerp>
