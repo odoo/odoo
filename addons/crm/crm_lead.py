@@ -276,6 +276,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         'color': 0,
     }
 
+    _sql_constraints = [
+        ('check_probability', 'check(probability <= 100)', 'Probability can not be more than 100% !')
+    ]
+
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
         section_id = self.browse(cr, uid, obj_id, context=context).section_id
