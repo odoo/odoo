@@ -146,7 +146,11 @@
                         <group>
                             <field name="name" required="1" attrs="{'readonly':[('state','!=','draft'),('state','!=','confirm')]}"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
-                            <field name="number_of_days_temp"/>
+                            <label for="number_of_days_temp"/>
+                            <div>
+                                <field name="number_of_days_temp" string="Allocation" class="oe_inline"/>
+                                <span> days</span>
+                            </div>
                         </group>
                         <group>
                             <field name="holiday_type" on_change="onchange_type(holiday_type)"/>
@@ -176,7 +180,7 @@
                     <field name="department_id" invisible="1"/>
                     <field name="holiday_status_id"/>
                     <field name="name"/>
-                    <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
+                    <field name="number_of_days" string="Allocation" sum="Remaining Days"/>
                     <field name="manager_id" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <!--field name="type"/-->
@@ -261,8 +265,8 @@
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="edit_holiday_new"/>
-            <field name="context">{}</field>
-            <field name="domain">[('type','=','remove'),('employee_id.user_id','=', uid)]</field>
+            <field name="context">{'default_type': 'remove', 'search_default_my_leaves':1}</field>
+            <field name="domain">[('type','=','remove')]</field>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -329,8 +333,8 @@
             <field name="name">My Allocation Requests</field>
             <field name="res_model">hr.holidays</field>
             <field name="view_type">form</field>
-            <field name="context">{'default_type':'add'}</field>
-            <field name="domain">[('type','=','add'),('employee_id.user_id','=', uid)]</field>
+            <field name="context">{'default_type':'add', 'search_default_my_leaves':1}</field>
+            <field name="domain">[('type','=','add')]</field>
             <field name="view_id" ref="allocation_leave_new"/>
             <field name="search_view_id" ref="view_hr_holidays_filter"/>
         </record>
@@ -476,7 +480,7 @@
         </record>
 
         <menuitem sequence="3" id="hr.menu_open_view_attendance_reason_config" parent="hr.menu_hr_configuration" name="Leaves"/>
-        <menuitem name="Leave Type" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10"/>
+        <menuitem name="Leaves Types" action="open_view_holiday_status" id="menu_open_view_holiday_status" parent="hr.menu_hr_configuration" sequence="10"/>
 
         <!-- Holiday on resource leave -->
         <record id="resource_calendar_leave_form_inherit" model="ir.ui.view">
@@ -542,6 +546,7 @@
                         <label for="remaining_leaves"/>
                         <div>
                             <field name="remaining_leaves" class="oe_inline"/>
+                            <span> days</span>
                         </div>
                     </group>
                 </xpath>
