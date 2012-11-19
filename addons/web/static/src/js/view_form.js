@@ -227,15 +227,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
-        var self = this;
-        $(document).bind('keydown',function(e){
-            var list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_application .oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a');
-            list = _.reject(list,function(r){ return $(r).hasClass('oe_form_invisible')})
-            var accesskey = _.map(list,function(r){ return $(r).attr('accesskey') });
-            _.each(list,function(el,i){
+       var list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a');
+       list = _.reject(list,function(r){ return $(r).hasClass('oe_form_invisible')})
+       var accesskey = _.map(list,function(r){ return $(r).attr('accesskey')});
+       _.each(list,function(el,i){
               if (!$(el).attr("accesskey")) {
                  var text = $(el).text().trim().substr(0,1);
-                 if (_.contains(accesskey.slice(0, i),text)){
+                 if (_.contains(accesskey.slice(0, i),text)|| !(/^[a-z0-9\_]+$/i.test(text))){
                      var index = $(el).text().trim().indexOf(text);
                      var str = $(el).text().trim().substr(index + 1, index + 1);
                      $(el).attr('accesskey',str);
@@ -245,18 +243,17 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         accesskey[i] = text ;
                     }
                 }
-          })
-          if (e.keyCode === e.which) {
+          });
+         $(document).keydown(function(e){
+           if (e.keyCode === 18 || e.keycode === 16 && e.altkey) {
+                _.each(list,function(rl,i){
+                    $(rl).html(function(i, html){
+                        return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
+                })})
+          }}).keyup(function(){
             _.each(list,function(rl,i){
-                 $(rl).html(function(i, html){
-                    return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
-                })
+                $(rl).find('.access').removeClass('access');
             })
-         }}).keyup(function(){
-           var accesskey_list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_application .oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a');
-           accesskey_list.each(function(){
-             $(this).find('.access').removeClass('access');
-           })
         });
     },
     widgetFocused: function() {
