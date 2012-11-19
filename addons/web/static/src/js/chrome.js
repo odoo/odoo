@@ -720,20 +720,24 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
-        self.$el.validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }).done(function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
+        this.getParent().dialog_title = "Change Password";
+        var $button = self.$el.find('.oe_form_button');
+        $button.appendTo(this.getParent().$buttons);
+        $button.eq(2).click(function(){
+           self.getParent().close();
+        })
+        $button.eq(0).click(function(){
+          self.rpc("/web/session/change_password",{
+               'fields': $("form[name=change_password_form]").serializeArray()
+          }).done(function(result) {
+               if (result.error) {
+                  self.display_error(result);
+                  return;
+               } else {
+                   instance.webclient.on_logout();
+               }
+          });
+       })
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
