@@ -981,7 +981,7 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            var $e = $(QWeb.render(self._template, {}));
+            var $e = $(QWeb.render(self._template, {widget: self}));
             self.replaceElement($e);
             $e.openerpClass();
             self.bind_events();
