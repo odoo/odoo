@@ -349,7 +349,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             $.when(load_view)
                 .then(function(r) {
                     self.search_view_loaded(r)
-                }).fail(function () {
+                }, function () {
                     self.ready.reject.apply(null, arguments);
                 });
         }
@@ -459,7 +459,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
     complete_global_search:  function (req, resp) {
         $.when.apply(null, _(this.inputs).chain()
             .invoke('complete', req.term)
-            .value()).done(function () {
+            .value()).then(function () {
                 resp(_(_(arguments).compact()).flatten(true));
         });
     },
@@ -527,7 +527,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
             childView.on('blurred', self, self.proxy('childBlurred'));
         });
 
-        $.when.apply(null, started).done(function () {
+        $.when.apply(null, started).then(function () {
             var input_to_focus;
             // options.at: facet inserted at given index, focus next input
             // otherwise just focus last input
@@ -608,7 +608,7 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         // add Filters to this.inputs, need view.controls filled
         (new instance.web.search.Filters(this));
         // add custom filters to this.inputs
-        (new instance.web.search.CustomFilters(this));
+        this.custom_filters = new instance.web.search.CustomFilters(this);
         // add Advanced to this.inputs
         (new instance.web.search.Advanced(this));
     },
@@ -635,15 +635,40 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         
         // load defaults
         var defaults_fetched = $.when.apply(null, _(this.inputs).invoke(
-            'facet_for_defaults', this.defaults)).done(function () {
-                self.query.reset(_(arguments).compact(), {preventSearch: true});
-            });
-        
+                'facet_for_defaults', this.defaults))
+            .then(this.proxy('setup_default_query'));
+
         return $.when(drawer_started, defaults_fetched)
             .done(function () { 
                 self.trigger("search_view_loaded", data);
                 self.ready.resolve();
             });
+    },
+    setup_default_query: function () {
+        // Hacky implementation of CustomFilters#facet_for_defaults ensure
+        // CustomFilters will be ready (and CustomFilters#filters will be
+        // correctly filled) by the time this method executes.
+        var custom_filters = this.custom_filters.filters;
+        if (!_(custom_filters).isEmpty()) {
+            // Check for any is_default custom filter
+            var personal_filter = _(custom_filters).find(function (filter) {
+                return filter.user_id && filter.is_default;
+            });
+            if (personal_filter) {
+                this.custom_filters.enable_filter(personal_filter, true);
+                return;
+            }
+
+            var global_filter = _(custom_filters).find(function (filter) {
+                return !filter.user_id && filter.is_default;
+            });
+            if (global_filter) {
+                this.custom_filters.enable_filter(global_filter, true);
+                return;
+            }
+        }
+        // No custom filter, or no is_default custom filter, apply view defaults
+        this.query.reset(_(arguments).compact(), {preventSearch: true});
     },
     /**
      * Extract search data from the view's facets.
@@ -1460,10 +1485,15 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
 instance.web.search.CustomFilters = instance.web.search.Input.extend({
     template: 'SearchView.CustomFilters',
     _in_drawer: true,
+    init: function () {
+        this.is_ready = $.Deferred();
+        this._super.apply(this, arguments);
+    },
     start: function () {
         var self = this;
         this.model = new instance.web.Model('ir.filters');
         this.filters = {};
+        this.$filters = {};
         this.view.query
             .on('remove', function (facet) {
                 if (!facet.get('is_custom_filter')) {
@@ -1479,24 +1509,78 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         // FIXME: local eval of domain and context to get rid of special endpoint
         return this.rpc('/web/searchview/get_filters', {
             model: this.view.model
-        }).then(this.proxy('set_filters'));
+        })
+            .then(this.proxy('set_filters'))
+            .then(function () {
+                self.is_ready.resolve(null);
+            }, function () {
+                self.is_ready.reject();
+            });
+    },
+    /**
+     * Special implementation delaying defaults until CustomFilters is loaded
+     */
+    facet_for_defaults: function () {
+        return this.is_ready;
+    },
+    /**
+     * Generates a mapping key (in the filters and $filter mappings) for the
+     * filter descriptor object provided (as returned by ``get_filters``).
+     *
+     * The mapping key is guaranteed to be unique for a given (user_id, name)
+     * pair.
+     *
+     * @param {Object} filter
+     * @param {String} filter.name
+     * @param {Number|Pair<Number, String>} [filter.user_id]
+     * @return {String} mapping key corresponding to the filter
+     */
+    key_for: function (filter) {
+        var user_id = filter.user_id;
+        var uid = (user_id instanceof Array) ? user_id[0] : user_id;
+        return _.str.sprintf('(%s)%s', uid, filter.name);
+    },
+    /**
+     * Generates a :js:class:`~instance.web.search.Facet` descriptor from a
+     * filter descriptor
+     *
+     * @param {Object} filter
+     * @param {String} filter.name
+     * @param {Object} [filter.context]
+     * @param {Array} [filter.domain]
+     * @return {Object}
+     */
+    facet_for: function (filter) {
+        return {
+            category: _t("Custom Filter"),
+            icon: 'M',
+            field: {
+                get_context: function () { return filter.context; },
+                get_groupby: function () { return [filter.context]; },
+                get_domain: function () { return filter.domain; }
+            },
+            is_custom_filter: true,
+            values: [{label: filter.name, value: null}]
+        };
     },
     clear_selection: function () {
         this.$('li.oe_selected').removeClass('oe_selected');
     },
     append_filter: function (filter) {
         var self = this;
-        var key = _.str.sprintf('(%s)%s', filter.user_id, filter.name);
+        var key = this.key_for(filter);
 
         var $filter;
-        if (key in this.filters) {
-            $filter = this.filters[key];
+        if (key in this.$filters) {
+            $filter = this.$filters[key];
         } else {
             var id = filter.id;
-            $filter = this.filters[key] = $('<li></li>')
+            this.filters[key] = filter;
+            $filter = this.$filters[key] = $('<li></li>')
                 .appendTo(this.$('.oe_searchview_custom_list'))
                 .addClass(filter.user_id ? 'oe_searchview_custom_private'
                                          : 'oe_searchview_custom_public')
+                .toggleClass('oe_searchview_custom_default', filter.is_default)
                 .text(filter.name);
 
             $('<a class="oe_searchview_custom_delete">x</a>')
@@ -1504,25 +1588,21 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                     e.stopPropagation();
                     self.model.call('unlink', [id]).done(function () {
                         $filter.remove();
+                        delete self.$filters[key];
+                        delete self.filters[key];
                     });
                 })
                 .appendTo($filter);
         }
 
         $filter.unbind('click').click(function () {
-            self.view.query.reset([{
-                category: _t("Custom Filter"),
-                icon: 'M',
-                field: {
-                    get_context: function () { return filter.context; },
-                    get_groupby: function () { return [filter.context]; },
-                    get_domain: function () { return filter.domain; }
-                },
-                is_custom_filter: true,
-                values: [{label: filter.name, value: null}]
-            }]);
-            $filter.addClass('oe_selected');
+            self.enable_filter(filter);
         });
+    },
+    enable_filter: function (filter, preventSearch) {
+        this.view.query.reset([this.facet_for(filter)], {
+            preventSearch: preventSearch || false});
+        this.$filters[this.key_for(filter)].addClass('oe_selected');
     },
     set_filters: function (filters) {
         _(filters).map(_.bind(this.append_filter, this));
@@ -1530,7 +1610,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
     save_current: function () {
         var self = this;
         var $name = this.$('input:first');
-        var private_filter = !this.$('input:last').prop('checked');
+        var private_filter = !this.$('#oe_searchview_custom_public').prop('checked');
+        var set_as_default = this.$('#oe_searchview_custom_default').prop('checked');
 
         var search = this.view.build_search_data();
         this.rpc('/web/session/eval_domain_and_context', {
@@ -1546,7 +1627,8 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
                 user_id: private_filter ? instance.session.uid : false,
                 model_id: self.view.model,
                 context: results.context,
-                domain: results.domain
+                domain: results.domain,
+                is_default: set_as_default
             };
             // FIXME: current context?
             return self.model.call('create_or_replace', [filter]).done(function (id) {

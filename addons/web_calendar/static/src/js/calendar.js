@@ -2,6 +2,22 @@
  * OpenERP web_calendar
  *---------------------------------------------------------*/
 
+(function() {
+    // Monkey patch dhtml scheduler in order to fix a bug.
+    // It manually implements some kind of dbl click event
+    // bubbling but fails to do it properly.
+    if (this.scheduler) {
+        var old_scheduler_dblclick = scheduler._on_dbl_click;
+        scheduler._on_dbl_click = function(e, src) {
+            if (src && !src.className) {
+                return;
+            } else {
+                old_scheduler_dblclick.apply(this, arguments);
+            }
+        };
+    }
+}());
+
 openerp.web_calendar = function(instance) {
 var _t = instance.web._t,
    _lt = instance.web._lt;
@@ -219,7 +235,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
             this.ranged_search();
-            this.$el.find(".dhx_cal_navline div").removeAttr('style');
         }
         this.ready.resolve();
     },

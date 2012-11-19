@@ -140,18 +140,6 @@ $sheet-padding: 16px
 
 // }}}
 
-@media print
-    .oe_topbar, .oe_leftbar, .oe_loading
-        display: none !important
-
-.openerp.openerp_webclient_container
-    height: 100%
-
-// jQueryUI css bug fixing
-.text-tag .text-button
-    height: auto !important
-    min-height: 16px
-
 .openerp
     // Global style {{{
     padding: 0
@@ -161,6 +149,8 @@ $sheet-padding: 16px
     font-size: 13px
     background: white
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
+    &.openerp_webclient_container
+        height: 100%
     // }}}
     //Placeholder style{{{
     \:-moz-placeholder
@@ -253,6 +243,11 @@ $sheet-padding: 16px
         color: $link-color
     .oe_bounce_container
         display: inline-block
+
+    // Bug lp:1051746
+    .text-tag .text-button
+        height: auto !important
+        min-height: 16px
 
     // bug noted in jquery ui CSS doesn't seem to occur in IE9,
     // so remove position:relative
@@ -928,6 +923,7 @@ $sheet-padding: 16px
             height: 40px
             width: 157px
             margin: 14px 0
+            border: 0
     .oe_footer
         position: fixed
         bottom: 0
@@ -1837,13 +1833,13 @@ $sheet-padding: 16px
     .oe_form_editable
         .oe_form
             .oe_form_field_integer input
-                width: 6em !important
+                width: 6em
             .oe_form_field_float input
-                width: 7em !important
+                width: 7em
             .oe_form_field_date input
-                width: 7.5em !important
+                width: 7.5em
             .oe_form_field_datetime input
-                width: 11.5em !important
+                width: 11.5em
     // }}}
     // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
@@ -1886,6 +1882,64 @@ $sheet-padding: 16px
                 @include box-sizing(border)
             &:hover .oe_form_field_image_controls
                 display: block
+    .oe_fileupload
+        display: inline-block
+        clear: both
+        width: 100%
+        .oe_add
+            float: left
+            position: relative
+            width: 100%
+            left: +2px
+            top: +7px
+            button
+                display: inline
+                height: 24px
+                font-size: 12px
+                line-height: 12px
+                vertical-align: middle
+            button.oe_attach
+                width: 24px
+                overflow: hidden
+                width: 24px
+                overflow: hidden
+                background: transparent 
+                color: #7C7BAD
+                box-shadow: none
+                border: none
+                text-shadow: none
+                .oe_e
+                    position: relative
+                    top: -1px
+                    left: -9px
+            input.oe_form_binary_file
+                display: inline-block
+                margin-left: -5px
+                height: 28px
+                width: 52px
+                margin-top: -26px
+            .oe_attach_label
+                color: #7C7BAD
+                margin-left: -3px
+        .oe_attachments
+            margin-bottom: 4px
+            margin-right: 0px
+            font-size: 12px
+            border-radius: 2px
+            border: solid 1px rgba(124,123,173,0.14)
+            .oe_attachment
+                padding: 2px
+                padding-left: 4px
+                padding-right: 4px
+                .oe_e
+                    font-size: 23px
+                    margin-top: -5px
+                .oe_e:hover
+                    text-decoration: none
+            .oe_attachment:nth-child(odd)
+                background: white
+            .oe_attachment:nth-child(even)
+                background: #F4F5FA
     // }}}
     // FormView.many2one {{{
     .oe_form_field_many2one
@@ -1899,6 +1953,8 @@ $sheet-padding: 16px
             line-height: 14px
             float: right
             padding-left: 2px
+        input
+            padding-right: 13px
     &.ui-autocomplete
         li.oe_m2o_dropdown_option a
             font-style: italic
@@ -2041,26 +2097,26 @@ $sheet-padding: 16px
         .oe_m2o_drop_down_button
             top: 5px
         .oe_m2o_cm_button
-            display: none
+            line-height: 19px
+        .oe_input_icon
+            margin-top: 5px
         .oe_form_field
+            min-width: 0
+            max-width: none
             input, textarea
                 height: $row-height
-            input, textarea
                 @include radius(0)
                 border: 1px solid #aaf
                 margin: 0
+            input, textarea, select
+                min-width: 0
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
                     width: 100% !important
             &.oe_form_field_datetime,&.oe_form_field_date
-                > span
-                    width: 100% !important
                 input.oe_datepicker_master
                     width: 100% !important
-            .oe_form_field_float,.oe_form_view_integer,&.oe_form_field_datetime,&.oe_form_field_date
-                min-width: 0 !important
-                max-width: none !important
     .oe_list_group_name
         white-space: nowrap
     // }}}
@@ -2119,6 +2175,8 @@ $sheet-padding: 16px
         td.oe_number
             text-align: right !important
             max-width: 100px
+        td.oe_list_field_date, th.oe_list_header_date
+            min-width: 6em
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
@@ -2168,6 +2226,8 @@ $sheet-padding: 16px
                     width: 17px
                     &:after
                         border-width: 0
+                > td.oe_list_field_boolean input
+                    @include opacity()
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
@@ -2282,67 +2342,6 @@ $sheet-padding: 16px
         float: right
         color: #333
     // }}}
-
-.openerp
-    .oe_fileupload
-        display: inline-block
-        clear: both
-        width: 100%
-        .oe_add
-            float: left
-            position: relative
-            width: 100%
-            left: +2px
-            top: +7px
-            button
-                display: inline
-                height: 24px
-                font-size: 12px
-                line-height: 12px
-                vertical-align: middle
-            button.oe_attach
-                width: 24px
-                overflow: hidden
-                width: 24px
-                overflow: hidden
-                background: transparent 
-                color: #7C7BAD
-                box-shadow: none
-                border: none
-                text-shadow: none
-                .oe_e
-                    position: relative
-                    top: -1px
-                    left: -9px
-            input.oe_form_binary_file
-                display: inline-block
-                margin-left: -5px
-                height: 28px
-                width: 52px
-                margin-top: -26px
-            .oe_attach_label
-                color: #7C7BAD
-                margin-left: -3px
-        .oe_attachments
-            margin-bottom: 4px
-            margin-right: 0px
-            font-size: 12px
-            border-radius: 2px
-            border: solid 1px rgba(124,123,173,0.14)
-            .oe_attachment
-                padding: 2px
-                padding-left: 4px
-                padding-right: 4px
-                .oe_e
-                    font-size: 23px
-                    margin-top: -5px
-                .oe_e:hover
-                    text-decoration: none
-            .oe_attachment:nth-child(odd)
-                background: white
-            .oe_attachment:nth-child(even)
-                background: #F4F5FA
-
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
@@ -2352,11 +2351,13 @@ $sheet-padding: 16px
         opacity: 0.70
 // }}}
 
+// jQueryUI top level {{{
 // The jQuery-ui overlay and Autocomplete are outside the .openerp div, please don't add indentation !!!
 div.ui-widget-overlay
     background: black
     @include opacity(0.3)
-
+// TODO: I think only the overlay is problematic, the other top level widgets should use $.fn.openerpClass()
+//       eg: $el.autocomplete().openerpClass();
 .ui-widget
     font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
     color: #4c4c4c
@@ -2383,11 +2384,14 @@ div.ui-widget-overlay
 
 .ui-corner-all
     @include radius(3px)
+// }}}
 
+// @media print {{{
 @media print
     .openerp
-        .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default
-            display: none
+        .oe_header_row, ul.oe_header, div.oe_mail_thread_action, .oe_mail_recthread_actions, .oe_button_box, .oe_form button, button.oe_invite, .oe_form header, .openerp .oe_notebook > li.ui-state-default, .oe_topbar, .oe_leftbar, .oe_loading
+            // We use !important here because jQuery adds @style = display: block on elements when using $.fn.show()
+            display: none !important
         .oe_list_content
             button, input[type=checkbox]
                 visibility: hidden
@@ -2413,5 +2417,7 @@ div.ui-widget-overlay
             background: none
         .openerp div.oe_mail_wall
             overflow: hidden !important
+// }}}
+
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:
