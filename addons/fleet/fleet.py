@@ -59,7 +59,7 @@ class fleet_vehicle_cost(osv.Model):
             if (record.date):
                 res[record.id] = str(time.strptime(record.date, tools.DEFAULT_SERVER_DATE_FORMAT).tm_year)
             else:
-                res[record.id] = 'Unknown'
+                res[record.id] = _('Unknown')
         return res
 
     def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
@@ -720,7 +720,7 @@ class fleet_vehicle_log_contract(osv.Model):
                 'start_date': datetime.datetime.strftime(str_to_datetime(element.expiration_date) + datetime.timedelta(days=1), tools.DEFAULT_SERVER_DATE_FORMAT),
                 'expiration_date': datetime.datetime.strftime(enddate + diffdate, tools.DEFAULT_SERVER_DATE_FORMAT),
             }
-            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, [element.id], default, context=context)
+            newid = super(fleet_vehicle_log_contract, self).copy(cr, uid, element.id, default, context=context)
         mod, modid = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'fleet_vehicle_log_contract_form')
         return {
             'name':_("Renew Contract"),
