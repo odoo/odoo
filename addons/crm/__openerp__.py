@@ -99,13 +99,12 @@ Dashboard for CRM will include:
         'board_crm_view.xml',
 
         'res_config_view.xml',
-
+    ],
+    'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
         'crm_action_rule_demo.xml',
-    ],
-    'demo': [
     ],
     'test': [
         'test/process/communication_with_customer.yml',
