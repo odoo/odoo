@@ -904,6 +904,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
             this.choose_receipt_popup.appendTo($('.point-of-sale'));
 
+            this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
+            this.error_negative_price_popup.appendTo($('.point-of-sale'));
+
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
@@ -963,6 +966,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error': this.error_popup,
                     'error-product': this.error_product_popup,
                     'error-session': this.error_session_popup,
+                    'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
                 },
                 default_client_screen: 'welcome',

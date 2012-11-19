@@ -430,6 +430,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template:'ErrorSessionPopupWidget',
     });
 
+    module.ErrorNegativePricePopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorNegativePricePopupWidget',
+    });
+
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
 
@@ -684,8 +688,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 console.log("CANCEL_END");
                 return (new $.Deferred()).resolve();
             }
-
-            this.queue.schedule(this.start);
+            
+            if(this.pos.get('selectedOrder').getDueLeft() <= 0){
+                this.pos_widget.screen_selector.show_popup('error-negative-price');
+            }else{
+                this.queue.schedule(this.start);
+            }
 
             this.add_action_button({
                     label: 'back',
