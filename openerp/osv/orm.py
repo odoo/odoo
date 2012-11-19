@@ -1354,16 +1354,16 @@ class BaseModel(object):
                 cr.execute('RELEASE SAVEPOINT model_load_save')
             except psycopg2.Warning, e:
                 _logger.exception('Failed to import record %s', record)
-                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 messages.append(dict(info, type='warning', message=str(e)))
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
             except psycopg2.Error, e:
                 _logger.exception('Failed to import record %s', record)
-                # Failed to write, log to messages, rollback savepoint (to
-                # avoid broken transaction) and keep going
-                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 messages.append(dict(
                     info, type='error',
                     **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+                # Failed to write, log to messages, rollback savepoint (to
+                # avoid broken transaction) and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -3601,18 +3601,17 @@ class BaseModel(object):
 
             fields_pre2 = map(convert_field, fields_pre)
             order_by = self._parent_order or self._order
-            select_fields = ','.join(fields_pre2 + [self._table + '.id'])
+            select_fields = ','.join(fields_pre2 + ['%s.id' % self._table])
             query = 'SELECT %s FROM %s WHERE %s.id IN %%s' % (select_fields, ','.join(tables), self._table)
             if rule_clause:
                 query += " AND " + (' OR '.join(rule_clause))
             query += " ORDER BY " + order_by
             for sub_ids in cr.split_for_in_conditions(ids):
-                if rule_clause:
-                    cr.execute(query, [tuple(sub_ids)] + rule_params)
-                    self._check_record_rules_result_count(cr, user, sub_ids, 'read', context=context)
-                else:
-                    cr.execute(query, (tuple(sub_ids),))
-                res.extend(cr.dictfetchall())
+                cr.execute(query, [tuple(sub_ids)] + rule_params)
+                results = cr.dictfetchall()
+                result_ids = [x['id'] for x in results]
+                self._check_record_rules_result_count(cr, user, sub_ids, result_ids, 'read', context=context)
+                res.extend(results)
         else:
             res = map(lambda x: {'id': x}, ids)
 
@@ -3796,25 +3795,35 @@ class BaseModel(object):
                 # mention the first one only to keep the error message readable
                 raise except_orm('ConcurrencyException', _('A document was modified since you last viewed it (%s:%d)') % (self._description, res[0]))
 
-    def _check_record_rules_result_count(self, cr, uid, ids, operation, context=None):
-        """Verify that number of returned rows after applying record rules matches
+    def _check_record_rules_result_count(self, cr, uid, ids, result_ids, operation, context=None):
+        """Verify the returned rows after applying record rules matches
            the length of `ids`, and raise an appropriate exception if it does not.
         """
-        if cr.rowcount != len(ids):
+        ids, result_ids = set(ids), set(result_ids)
+        missing_ids = ids - result_ids
+        if missing_ids:
             # Attempt to distinguish record rule restriction vs deleted records,
-            # to provide a more specific error message
-            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
-            if cr.rowcount != len(ids):
-                if operation == 'unlink':
-                    # no need to warn about deleting an already deleted record!
+            # to provide a more specific error message - check if the missinf
+            cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
+            if cr.rowcount:
+                # the missing ids are (at least partially) hidden by access rules
+                if uid == SUPERUSER_ID:
+                    return
+                _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
+                raise except_orm(_('Access Denied'),
+                                 _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                                    (self._description, operation))
+            else:
+                # If we get here, the missing_ids are not in the database
+                if operation in ('read','unlink'):
+                    # No need to warn about deleting an already deleted record.
+                    # And no error when reading a record that was deleted, to prevent spurious
+                    # errors for non-transactional search/read sequences coming from clients 
                     return
                 _logger.warning('Failed operation on deleted record(s): %s, uid: %s, model: %s', operation, uid, self._name)
                 raise except_orm(_('Missing document(s)'),
                                  _('One of the documents you are trying to access has been deleted, please try again after refreshing.'))
-            _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
-            raise except_orm(_('Access Denied'),
-                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                (self._description, operation))
+
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True): # no context on purpose.
         """Verifies that the operation given by ``operation`` is allowed for the user
@@ -3853,7 +3862,8 @@ class BaseModel(object):
                     cr.execute('SELECT ' + self._table + '.id FROM ' + ','.join(tables) +
                                ' WHERE ' + self._table + '.id IN %s' + where_clause,
                                [sub_ids] + where_params)
-                    self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
+                    returned_ids = [x['id'] for x in cr.dictfetchall()]
+                    self._check_record_rules_result_count(cr, uid, sub_ids, returned_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
         """Call given workflow trigger as a result of a CRUD operation"""
@@ -5208,14 +5218,17 @@ def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
                  r'not-null constraint\n',
                  str(e))
-    if not m or m.group('field') not in fields:
+    field_name = m.group('field')
+    if not m or field_name not in fields:
         return {'message': unicode(e)}
-    field = fields[m.group('field')]
+    message = _(u"Missing required value for the field '%s'.") % field_name
+    field = fields.get(field_name)
+    if field:
+        message = _(u"%s This might be '%s' in the current model, or a field "
+                    u"of the same name in an o2m.") % (message, field['string'])
     return {
-        'message': _(u"Missing required value for the field '%(field)s'") % {
-            'field': field['string']
-        },
-        'field': m.group('field'),
+        'message': message,
+        'field': field_name,
     }
 
 PGERROR_TO_OE = collections.defaultdict(

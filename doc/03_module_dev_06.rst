@@ -1,5 +1,6 @@
 .. _module_versioning:
 
+=================
 Module versioning
 =================
 
@@ -40,7 +41,7 @@ functionalities can be brought together in a better module.
 .. _`dependency hell`: http://en.wikipedia.org/wiki/Dependency_hell
 
 Example
--------
+=======
 
 Whenever a new module is developed or must evolve, the above versioning policy
 should be respected.
