@@ -85,23 +85,6 @@ openerp.account.quickadd = function (instance) {
                 ["journal_id", "=", self.current_journal], 
                 ["period_id", "=", self.current_period] 
                 ]);
-            //1
-            /*var ncontext = {
-                "journal_id": self.current_journal,
-                "period_id" :self.current_period,
-            };
-            var new instance.web.CompoundDomain(self.last_domain = new instance.web.CompoundContext(this.last_context, ncontext);
-
-            _.extend(this.dataset.context, ncontext);
-            */
-            //2
-            /*
-            var compoundContext = new instance.web.CompoundContext(self.last_context,{
-                "journal_id": self.current_journal,
-                "period_id" :self.current_period,
-            });
-            */
-            //3
             self.last_context["journal_id"] = self.current_journal;
             self.last_context["period_id"] = self.current_period;
             var compoundContext = self.last_context;
