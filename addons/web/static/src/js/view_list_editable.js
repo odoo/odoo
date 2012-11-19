@@ -84,9 +84,6 @@ openerp.web.list_editable = function (instance) {
                     ? this.cancel_edition(true)
                     : $.when();
             return next.then(function () {
-                if (_.isEmpty(nonfalse)) {
-                    return $.when();
-                }
                 return _super(nonfalse);
             });
         },
