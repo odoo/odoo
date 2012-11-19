@@ -542,8 +542,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         """
         if context is None: context = {}
 
-        #TOCHECK: where pass lead_ids in context?
-        lead_ids = context and context.get('lead_ids', []) or []
+        lead_ids = context.get('lead_ids', [])
 
         if len(ids) <= 1:
             raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
