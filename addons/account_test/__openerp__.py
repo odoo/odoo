@@ -23,7 +23,7 @@
     'name' : 'Accounting Consistency Tests',
     'version' : '1.0',
     'author' : 'OpenERP',
-    'category' : 'Test accounting',
+    'category' : 'Accounting & Finance',
     'website': 'http://www.openerp.com',
     'description': """
 Asserts on accounting.
