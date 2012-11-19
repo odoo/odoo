@@ -720,12 +720,13 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
+        this.getParent().dialog_title = "Change Password";
         var $button = self.$el.find('.oe_form_button');
-        var footer_panel = this.getParent().$buttons.find('footer');
-        $button.eq(1).appendTo(footer_panel).click(function(){
+        $button.appendTo(this.getParent().$buttons);
+        $button.eq(2).click(function(){
            self.getParent().close();
         })
-        $button.eq(0).prependTo(footer_panel).click(function(){
+        $button.eq(0).click(function(){
           self.rpc("/web/session/change_password",{
                'fields': $("form[name=change_password_form]").serializeArray()
           }).done(function(result) {
