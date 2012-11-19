@@ -19,11 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail
-from osv.orm import except_orm
+from openerp.addons.mail.tests import test_mail_mockup
+from openerp.osv.orm import except_orm
+from openerp.tools.misc import mute_logger
 
 
-class test_mail_access_rights(test_mail.TestMailMockups):
+class test_mail_access_rights(test_mail_mockup.TestMailMockups):
 
     def setUp(self):
         super(test_mail_access_rights, self).setUp()
@@ -84,6 +85,7 @@ class test_mail_access_rights(test_mail.TestMailMockups):
         msg_ids = self.mail_message.search(cr, uid, [('subject', 'like', '_Test')])
         self.assertEqual(set([msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8]), set(msg_ids), 'mail_message search failed')
 
+    @mute_logger('openerp.osv.orm')
     def test_05_mail_message_read_access_rights(self):
         """ Test basic mail_message read access rights. """
         cr, uid = self.cr, self.uid
@@ -131,6 +133,8 @@ class test_mail_access_rights(test_mail.TestMailMockups):
         self.assertRaises(except_orm, self.mail_message.read,
             cr, user_bert_id, message_id)
 
+    @mute_logger('openerp.addons.base.ir.ir_model')
+    @mute_logger('openerp.osv.orm')
     def test_10_mail_flow_access_rights(self):
         """ Test a Chatter-looks alike flow. """
         cr, uid = self.cr, self.uid

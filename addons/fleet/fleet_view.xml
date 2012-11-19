@@ -227,7 +227,6 @@
         <record model='ir.ui.view' id='fleet_vehicle_tree'>
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
-            <field name="sequence">1</field>
             <field name="arch" type="xml">
                 <tree string="Vehicle" version="7.0" colors="orange:contract_renewal_due_soon and not contract_renewal_overdue;red:contract_renewal_overdue">
                     <field name="license_plate" />
@@ -256,7 +255,7 @@
                     <field name="location"/>
                     <field name="state" />
                     <field name="state" />
-                    <filter name="alert_true" domain="['|',('contract_renewal_due_soon','>',0),('contract_renewal_overdue','>',0)]" string="Has Alert(s)"/>
+                    <filter name="alert_true" domain="['|',('contract_renewal_due_soon','=',True),('contract_renewal_overdue','=',True)]" string="Has Alert(s)"/>
                </search>
             </field>
         </record>
@@ -522,7 +521,7 @@
             <field name="name">fleet.vehicle.odometer.tree</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
-                <tree string="Odometer Logs" version="7.0" editable="bottom">
+                <tree string="Odometer Logs" version="7.0" editable="top">
                     <field name="date" />
                     <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                     <field name="value" />
@@ -563,7 +562,7 @@
             <field name="name">Vehicles Odometer</field>
             <field name="res_model">fleet.vehicle.odometer</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,graph</field>
             <field name="context">{"search_default_groupby_vehicle" : True}</field>
             <field name="help" type="html">
               <p>
