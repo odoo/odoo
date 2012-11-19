@@ -33,6 +33,14 @@ openerp.account.quickadd = function (instance) {
                     self.current_period = parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
+            this.on('edit:after', this, function () {
+                self.$el.parent().find('.oe_account_select_journal').attr('disabled', 'disabled');
+                self.$el.parent().find('.oe_account_select_period').attr('disabled', 'disabled');
+            });
+            this.on('save:after cancel:after', this, function () {
+                self.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
+                self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
+            });
             return tmp;
         },
         do_search: function(domain, context, group_by) {
@@ -99,27 +107,5 @@ openerp.account.quickadd = function (instance) {
             var compoundContext = self.last_context;
             return self.old_search(compoundDomain, compoundContext, self.last_group_by);
         },
-        start_edition: function (record, options) {
-            this.$el.parent().find('.oe_account_select_journal').attr('disabled', 'disabled');
-            this.$el.parent().find('.oe_account_select_period').attr('disabled', 'disabled');
-            return this._super.apply(this, arguments);
-        },
-        cancel_edition: function (force) {
-            this.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
-            this.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
-            return this._super.apply(this, arguments);
-        },
-        save_edition: function () {
-            var tmp = this._super.apply(this, arguments);
-            var self = this;
-            tmp.then(function (saveInfo){
-                console.log(saveInfo);
-                if (saveInfo) {
-                    self.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
-                    self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
-                }
-            });
-            return tmp;
-        }
     });
 };
