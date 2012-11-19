@@ -28,11 +28,7 @@
     'description': """
 Asserts on accounting.
 ======================
-With this module you can manually check consistencies and inconsistencies of accounting module.
-
-How to perform Consistency Tests:
----------------------------------
-Reporting/Accounting/Accounting Tests
+With this module you can manually check consistencies and inconsistencies of accounting module from menu Reporting/Accounting/Accounting Tests.
 """,
     'depends' : ['account'],
     'data' : [
