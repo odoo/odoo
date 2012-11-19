@@ -315,7 +315,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this._super();
             this.$('input').keyup(_.bind(this.changeAmount, this));
             this.$('.delete-payment-line').click(function() {
-                self.trigger('delete_payment_line');
+                self.trigger('delete_payment_line', self);
             });
         },
     });
@@ -474,7 +474,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
 
         get_image_url: function(category){
-            return '/web/binary/image?session_id='+instance.session.session_id+'&model=pos.category&field=image&id='+category.id;
+            return instance.session.url('/web/binary/image', {model: 'pos.category', field: 'image', id: category.id});
         },
 
         renderElement: function(){
@@ -1051,7 +1051,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.pos.barcode_reader.disconnect();
             return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_client_pos_menu']], ['res_id']).pipe(
                     _.bind(function(res) {
-                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(action) {
+                return this.rpc('/web/action/load', {'action_id': res[0]['res_id']}).pipe(_.bind(function(result) {
+                    var action = result;
                     action.context = _.extend(action.context || {}, {'cancel_action': {type: 'ir.actions.client', tag: 'reload'}});
                     //self.destroy();
                     this.do_action(action);

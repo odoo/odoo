@@ -14,6 +14,7 @@ openerp.pad = function(instance) {
                         object_id: self.view.datarecord.id
                     }}).done(function(data) {
                     if(data&&data.url){
+                        self.set({value: data.url});
                         _super(data.url);
                         self.renderElement();
                     }
