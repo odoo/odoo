@@ -12,23 +12,39 @@
 </t>
 <t t-name="Resolution">
     <div class="resolution">
-        <table>
-            <tr>
-                <td colspan="2"><label>Resolution:</label></td>
-            </tr>
-            <tr>
-                <td><a awidth="150" aheight="60" imgw="100" imgh="30">150 x 60</a></td>
-                <td><a awidth="250" aheight="90" imgw="200" imgh="60">250 x 90</a></td>
-            </tr>
-            <tr>
-                <td><a awidth="290" aheight="90" imgw="225" imgh="60">290 x 90</a></td>
-                <td><a awidth="320" aheight="100" imgw="257" imgh="70">320 x 100</a></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td style="float:right;"><a awidth="220" aheight="70" imgw="157" imgh="40">Original</a></td>
-            </tr>
-        </table>
+        <div class="res">
+            <div class="simtext">
+                Looking for the OpenERP logo? <br></br>
+                <span>Thank you for using and promoting the OpenERP brand.Select<br></br>
+                    the logo that fits your need.
+                </span>
+            </div>
+            <div class="freeto">
+                <a id="freeto"><img alt="Test" src="/web/static/src/img/logo.png" width="45px" height="170px"></img></a>
+                <div><span>Free to Use</span><br/>
+                <span id="free"><a id="low" href="#">Low Res |</a><a id="high" href="#">High Res |</a><a id="vec" href="#">Vectorial</a></span></div>
+            </div>
+            <div class="readyto">
+                <a id="readyto"><img alt="Test" src="/web/static/src/img/openerp_partner_ready.png"></img></a>
+                <div><span>Official Ready Partners Only</span><br/>
+                <span id="ready"><a id="low" href="#">Low Res |</a><a id="high" href="#">High Res</a></span></div>
+            </div>
+            <div class="silverto">
+                <a id="silverto"><img alt="Test" src="/web/static/src/img/openerp_partner_silver.png"></img></a>
+                <div><span>Official Silver Partners Only</span><br/>
+                <span id="silver"><a id="low" href="#">Low Res |</a><a id="high" href="#">High Res</a></span></div>
+            </div>
+            <div class="goldto">
+                <a id="goldto"><img alt="Test" src="/web/static/src/img/openerp_partner_gold.png"></img></a>
+                <div><span>Official Golden Partners Only</span><br/>
+                <span id="gold"><a id="low" href="#">Low Res |</a><a id="high" href="#">High Res</a></span></div>
+            </div>
+            <div class="community" style="border-bottom: 0px;">
+                <a id="community"><img alt="Test" src="/web/static/src/img/openerp_community.png"></img></a>
+                <div><span>Community Members Only</span><br/>
+                <span id="community"><a id="low" href="#">Low Res |</a><a id="high" href="#">High Res</a></span></div>
+            </div>
+        </div>
     </div>
 </t>
 <t t-name="Notification">
@@ -406,7 +422,7 @@
         <t t-esc="menu.name"/>
         <t t-if="menu.needaction_enabled and menu.needaction_counter">
             <div class="oe_tag oe_tag_dark oe_menu_counter">
-                <t t-esc="menu.needaction_counter"/>
+                <t t-if="menu.needaction_counter > 99"> &#8734; </t><t t-if="menu.needaction_counter lt= 99"> <t t-esc="menu.needaction_counter"/> </t>
             </div>
         </t>
     </a>

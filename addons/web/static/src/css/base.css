@@ -3028,12 +3028,57 @@ div.ui-widget-overlay {
   border-radius: 3px;
 }
 
-.resolution table {
-  width: 100%;
-  line-height: 20px;
+.resolution {
+  width: 350px;
+  background-color: white;
+  margin-bottom: 15px;
+  margin-left: 5px;
+  position: relative;
+  z-index: 10;
 }
-.resolution table td {
-  valign: middle;
+.resolution .res {
+  display: table;
+  width: 100%;
+}
+
+div.res {
+  border: 1px solid;
+}
+
+.resolution .res > div:not(.simtext) {
+  border-bottom: 1px solid;
+  height: 70px;
+  clear: both;
+}
+
+.res .simtext {
+  border-bottom: 0px;
+  padding: 5px;
+  height: auto;
+}
+
+.simtext span {
+  font-size: 8px;
+  color: grey;
+}
+
+.resolution .res div div {
+  display: inline;
+  position: absolute;
+  padding-top: 30px;
+  padding-left: 10px;
+}
+
+.res img {
+  width: 150px;
+  height: 40px;
+  padding-top: 20px;
+  padding-left: 5px;
+}
+.res span a {
+  font-size: 10px;
+  padding-right: 5px;
+>>>>>>> MERGE-SOURCE
 }
 
 @media print {

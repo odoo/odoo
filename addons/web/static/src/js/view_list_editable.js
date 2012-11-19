@@ -77,6 +77,15 @@ openerp.web.list_editable = function (instance) {
         do_edit: function (index, id, dataset) {
             _.extend(this.dataset, dataset);
         },
+        do_delete: function (ids) {
+            var _super = this._super.bind(this);
+            var next = this.editor.is_editing()
+                    ? this.cancel_edition(true)
+                    : $.when();
+            return next.then(function () {
+                return _super(ids);
+            });
+        },
         editable: function () {
             return this.fields_view.arch.attrs.editable
                 || this._context_editable

@@ -660,6 +660,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         return self._process_save(save_obj).then(function() {
                             save_obj.ret = _.toArray(arguments);
                             return iterate();
+
+                        }, function() {
+                            save_obj.error = true;
                         });
                     }
                     return $.when();
@@ -843,6 +846,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var save_obj = {prepend_on_create: prepend_on_create, ret: null};
         this.save_list.push(save_obj);
         return this._process_operations().then(function() {
+            if (save_obj.error)
+                return $.Deferred().reject();
             return $.when.apply($, save_obj.ret);
         });
     },
@@ -3871,26 +3876,13 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         this._super.apply(this, arguments);
     },
     do_delete: function (ids) {
-        var self = this;
-        var next = $.when();
-        var _super = this._super;
-        // handle deletion of an item which does not exist
-        // TODO: better handle that in the editable list?
-        var false_id_index = _(ids).indexOf(false);
-        if (false_id_index !== -1) {
-            ids.splice(false_id_index, 1);
-            next = this.cancel_edition(true);
+        var confirm = window.confirm;
+        window.confirm = function () { return true; };
+        try {
+            return this._super(ids);
+        } finally {
+            window.confirm = confirm;
         }
-        return next.then(function () {
-            // wheeee
-            var confirm = window.confirm;
-            window.confirm = function () { return true; };
-            try {
-                return _super.call(self, ids);
-            } finally {
-                window.confirm = confirm;
-            }
-        });
     }
 });
 instance.web.form.One2ManyGroups = instance.web.ListView.Groups.extend({
@@ -5038,14 +5030,14 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
  * Options on attribute ; "blockui" {Boolean} block the UI or not
  * during the file is uploading
  */
-instance.web.form.FieldOne2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractField.extend({
     template: "FieldBinaryFileUploader",
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.field_manager = field_manager;
         this.node = node;
-        if(this.field.type != "one2many" || this.field.relation != 'ir.attachment') {
-            throw "The type of the field '"+this.field.string+"' must be a one2many field with a relation to 'ir.attachment' model.";
+        if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
+            throw "The type of the field '"+this.field.string+"' must be a many2many field with a relation to 'ir.attachment' model.";
         }
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');
@@ -5375,7 +5367,7 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
-    'one2many_binary': 'instance.web.form.FieldOne2ManyBinaryMultiFiles',
+    'many2many_binary': 'instance.web.form.FieldMany2ManyBinaryMultiFiles',
     'statusbar': 'instance.web.form.FieldStatus',
     'monetary': 'instance.web.form.FieldMonetary',
 });

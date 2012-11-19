@@ -25,7 +25,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
     dialog_stop: function () {
         if (this.dialog) {
             this.dialog.destroy();
-            this.dialog = null;
         }
     },
     /**
@@ -790,8 +789,8 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     name: "JS Tests",
                     target: 'new',
                     type : 'ir.actions.act_url',
-                    url: '/web/static/test/test.html'
-                })
+                    url: '/web/tests?mod=*'
+                });
                 break;
             case 'perm_read':
                 var ids = current_view.get_selected_ids();

@@ -258,10 +258,16 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
 
+concat_js_cache = {}
+
 def concat_js(file_list):
     content, checksum = concat_files(file_list, intersperse=';')
-    content = rjsmin(content)
-    return content, checksum 
+    if checksum in concat_js_cache:
+        content = concat_js_cache[checksum]
+    else:
+        content = rjsmin(content)
+        concat_js_cache[checksum] = content
+    return content, checksum
 
 def fs2web(path):
     """convert FS path into web path"""
@@ -787,6 +793,17 @@ class Database(openerpweb.Controller):
             params['db_name'])
 
     @openerpweb.jsonrequest
+    def duplicate(self, req, fields):
+        params = dict(map(operator.itemgetter('name', 'value'), fields))
+        duplicate_attrs = (
+            params['super_admin_pwd'],
+            params['db_original_name'],
+            params['db_name'],
+        )
+
+        return req.session.proxy("db").duplicate_database(*duplicate_attrs)
+
+    @openerpweb.jsonrequest
     def drop(self, req, fields):
         password, db = operator.itemgetter(
             'drop_pwd', 'drop_db')(
@@ -892,10 +909,7 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def get_lang_list(self, req):
         try:
-            return {
-                'lang_list': (req.session.proxy("db").list_lang() or []),
-                'error': ""
-            }
+            return req.session.proxy("db").list_lang() or []
         except Exception, e:
             return {"error": e, "title": "Languages"}
 
