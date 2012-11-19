@@ -7,27 +7,13 @@
             <div class="oe_form_dropdown_section">
                 <h4>Period :</h4> 
                 <select class="oe_account_select_period">
-                    <t t-foreach="widget.periods" t-as="period">
-                        <option t-if=" period[0] === widget.current_period" t-att-value="period[0]" selected="selected">
-                            <t t-esc="period[1]"/>
-                        </option>
-                        <option t-if=" period[0] !== widget.current_period" t-att-value="period[0]">
-                            <t t-esc="period[1]"/>
-                        </option>
-                    </t>
+                    
                 </select>
             </div>
             <div class="oe_form_dropdown_section">
                 <h4>Journal :</h4> 
                 <select class="oe_account_select_journal" >
-                    <t t-foreach="widget.journals" t-as="journal">
-                        <option t-if=" journal[0] === widget.current_journal" t-att-value="journal[0]" selected="selected">
-                            <t t-esc="journal[1]"/>
-                        </option>
-                        <option t-if="journal[0] !== widget.current_journal" t-att-value="journal[0]">
-                            <t t-esc="journal[1]"/>
-                        </option>
-                    </t>
+                    
                 </select>
             </div>
         </div>

@@ -20,17 +20,16 @@ openerp.account.quickadd = function (instance) {
             this.default_period = null;
             this.default_journal = null;
         },
-        load_list: function() {
-            var self = this;
+        start:function(){
             var tmp = this._super.apply(this, arguments);
-
-            this.$el.prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
+            var self = this;
+            this.$el.parent().prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
             
-            this.$(".oe_account_select_journal").change(function() {
+            this.$el.parent().find('.oe_account_select_journal').change(function() {
                     self.current_journal = parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
-            this.$(".oe_account_select_period").change(function() {
+            this.$el.parent().find('.oe_account_select_period').change(function() {
                     self.current_period = parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
@@ -53,6 +52,20 @@ openerp.account.quickadd = function (instance) {
             })).then(function () {
                 self.current_journal = self.current_journal === null ? self.default_journal : self.current_journal;
                 self.current_period = self.current_period === null ? self.default_period :self.current_period;
+                var o;
+                //self.$('.oe_account_select_journal',self.$el.parent())[0].children().remove().end();
+                self.$el.parent().find('.oe_account_select_journal').children().remove().end();
+                for (var i = 0;i < self.journals.length;i++){
+                    o = new Option(self.journals[i][1], self.journals[i][0]);
+                    self.$el.parent().find('.oe_account_select_journal').append(o);
+                }
+                self.$el.parent().find('.oe_account_select_period').children().remove().end();
+                for (var i = 0;i < self.periods.length;i++){
+                    o = new Option(self.periods[i][1], self.periods[i][0]);
+                    self.$el.parent().find('.oe_account_select_period').append(o);
+                }    
+                self.$el.parent().find('.oe_account_select_journal').val(self.current_journal).attr('selected',true);
+                self.$el.parent().find('.oe_account_select_period').val(self.current_period).attr('selected',true);
                 return self.search_by_journal_period();
             });
         },
@@ -84,7 +97,6 @@ openerp.account.quickadd = function (instance) {
             self.last_context["journal_id"] = self.current_journal;
             self.last_context["period_id"] = self.current_period;
             var compoundContext = self.last_context;
-            debugger;
             return self.old_search(compoundDomain, compoundContext, self.last_group_by);
         },
         /*_next: function (next_record, options) {
