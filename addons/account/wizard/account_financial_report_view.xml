@@ -14,15 +14,19 @@
                 </xpath>
                 <xpath expr="//notebook/page[@string='Filters']" position="after">
                     <page string="Comparison" attrs="{'invisible': [('enable_filter','=',False)]}">
-                        <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
-                        <field name="fiscalyear_id_cmp"/><newline/>
-                        <field name="filter_cmp"/>
-                        <separator string="Dates" colspan="4"/>
-                        <field name="date_from_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}" colspan="4"/>
-                        <field name="date_to_cmp" attrs="{'readonly':[('filter_cmp', '!=', 'filter_date')], 'required':[('filter_cmp', '=', 'filter_date')]}"  colspan="4"/>
-                        <separator string="Periods" colspan="4"/>
-                        <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
-                        <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'readonly':[('filter_cmp','!=','filter_period')], 'required':[('filter_cmp', '=', 'filter_period')]}" colspan="4"/>
+                        <group>
+                            <field name="label_filter" attrs="{'required': [('enable_filter', '=', True)]}"/>
+                            <field name="fiscalyear_id_cmp"/><newline/>
+                            <field name="filter_cmp"/>
+                        </group>
+                        <group string="Dates" attrs="{'invisible':[('filter_cmp', '!=', 'filter_date')]}">
+                            <field name="date_from_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                            <field name="date_to_cmp" attrs="{'required':[('filter_cmp', '=', 'filter_date')]}"/>
+                        </group>
+                        <group string="Periods" attrs="{'invisible':[('filter_cmp', '!=', 'filter_period')]}">
+                            <field name="period_from_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                            <field name="period_to_cmp" domain="[('fiscalyear_id', '=', fiscalyear_id_cmp)]" attrs="{'required':[('filter_cmp', '=', 'filter_period')]}"/>
+                        </group>
                    </page>
                 </xpath>
                 <xpath expr="//notebook/page[@string='Journals']" position="replace">

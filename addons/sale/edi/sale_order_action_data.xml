@@ -25,7 +25,7 @@
             <field name="name">Automated Sale Order Notification Mail</field>
             <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_to">${object.partner_invoice_id.email}</field>
+            <field name="email_recipients">${object.partner_invoice_id.id}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[

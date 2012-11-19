@@ -36,5 +36,5 @@ class mail_mail(osv.Model):
         if partner:
             context = dict(context or {}, signup_valid=True)
             partner = self.pool.get('res.partner').browse(cr, uid, partner.id, context)
-            body = tools.append_content_to_html(body, "Log in our portal at: %s" % partner.signup_url)
+            body = tools.append_content_to_html(body, ("<div><p>Log in our portal at: %s</p></div>" % partner.signup_url), plaintext=False)
         return body
