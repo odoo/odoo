@@ -545,7 +545,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         lead_ids = context.get('lead_ids', [])
 
         if len(ids) <= 1:
-            raise osv.except_osv(_('Warning!'),_('Please select more than one opportunity from the list view.'))
+            raise osv.except_osv(_('Warning!'),_('Please select more than one element (lead or opportunity) from the list view.'))
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
@@ -740,25 +740,44 @@ class crm_lead(base_stage, format_address, osv.osv):
             self.schedule_phonecall_send_note(cr, uid, [lead.id], new_id, action, context=context)
         return phonecall_dict
 
-
     def redirect_opportunity_view(self, cr, uid, opportunity_id, context=None):
         models_data = self.pool.get('ir.model.data')
 
-        # Get Opportunity views
+        # Get opportunity views
         form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_oppor')
         tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_oppor')
         return {
-                'name': _('Opportunity'),
-                'view_type': 'form',
-                'view_mode': 'tree, form',
-                'res_model': 'crm.lead',
-                'domain': [('type', '=', 'opportunity')],
-                'res_id': int(opportunity_id),
-                'view_id': False,
-                'views': [(form_view and form_view[1] or False, 'form'),
-                          (tree_view and tree_view[1] or False, 'tree'),
-                          (False, 'calendar'), (False, 'graph')],
-                'type': 'ir.actions.act_window',
+            'name': _('Opportunity'),
+            'view_type': 'form',
+            'view_mode': 'tree, form',
+            'res_model': 'crm.lead',
+            'domain': [('type', '=', 'opportunity')],
+            'res_id': int(opportunity_id),
+            'view_id': False,
+            'views': [(form_view and form_view[1] or False, 'form'),
+                      (tree_view and tree_view[1] or False, 'tree'),
+                      (False, 'calendar'), (False, 'graph')],
+            'type': 'ir.actions.act_window',
+        }
+
+    def redirect_lead_view(self, cr, uid, lead_id, context=None):
+        models_data = self.pool.get('ir.model.data')
+
+        # Get lead views
+        form_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_form_view_leads')
+        tree_view = models_data.get_object_reference(cr, uid, 'crm', 'crm_case_tree_view_leads')
+        return {
+            'name': _('Lead'),
+            'view_type': 'form',
+            'view_mode': 'tree, form',
+            'res_model': 'crm.lead',
+            'domain': [('type', '=', 'lead')],
+            'res_id': int(lead_id),
+            'view_id': False,
+            'views': [(form_view and form_view[1] or False, 'form'),
+                      (tree_view and tree_view[1] or False, 'tree'),
+                      (False, 'calendar'), (False, 'graph')],
+            'type': 'ir.actions.act_window',
         }
 
     def action_makeMeeting(self, cr, uid, ids, context=None):

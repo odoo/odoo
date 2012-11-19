@@ -37,16 +37,22 @@ class crm_merge_opportunity(osv.osv_memory):
     }
 
     def action_merge(self, cr, uid, ids, context=None):
+        """
+        Different cases of merge:
+        - merge 2 leads together = 1 new lead
+        - merge 2 opps together = 1 new opp
+        - merge 1 lead and 1 opp together = 1 new opp
+        """
         if context is None:
             context = {}
+
         lead = self.pool.get('crm.lead')
         wizard = self.browse(cr, uid, ids[0], context=context)
-        opportunities = wizard.opportunity_ids
-        #TOFIX: why need to check lead_ids here
-        lead_ids = [opportunities[0].id]
-        self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
-        context['lead_ids'] = lead_ids
-        merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunities], context=context)
+        opportunity2merge_ids = wizard.opportunity_ids
+        #TODO: why is this passed through the context, and not as an argument ?  It looks dirty...
+        context['lead_ids'] = [opportunity2merge_ids[0].id]
+
+        merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], context=context)
         return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
 
     def default_get(self, cr, uid, fields, context=None):
