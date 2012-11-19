@@ -833,7 +833,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
