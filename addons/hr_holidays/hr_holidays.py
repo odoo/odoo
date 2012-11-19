@@ -90,6 +90,18 @@ class hr_holidays_status(osv.osv):
         'color_name': 'red',
         'active': True,
     }
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        res = []
+        for record in self.browse(cr, uid, ids, context=context):
+            name = record.name
+            if not record.limit:
+                name = name + ('  (%d/%d)' % (record.leaves_taken or 0.0, record.max_leaves or 0.0))
+            res.append((record.id, name))
+        return res
+
 hr_holidays_status()
 
 class hr_holidays(osv.osv):

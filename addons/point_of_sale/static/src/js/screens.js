@@ -941,8 +941,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
-                });
-            x.on('delete_payment_line', self, self.deleteLine);
+            });
+            x.on('delete_payment_line', self, function(r) {
+                self.deleteLine(r);
+            });
             x.appendTo(this.$('#paymentlines'));
         },
         renderElement: function() {

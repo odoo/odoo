@@ -40,7 +40,7 @@ class account_invoice_line(osv.osv):
 
         if inv.type in ('out_invoice','out_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if inv.type == 'out_invoice':
                         # debit account dacc will be the output account
                         # first check the product, if empty check the category
@@ -87,7 +87,7 @@ class account_invoice_line(osv.osv):
                             })
         elif inv.type in ('in_invoice','in_refund'):
             for i_line in inv.invoice_line:
-                if i_line.product_id:
+                if i_line.product_id and i_line.product_id.valuation == 'real_time':
                     if i_line.product_id.type != 'service':
                         # get the price difference account at the product
                         acc = i_line.product_id.property_account_creditor_price_difference and i_line.product_id.property_account_creditor_price_difference.id
