@@ -89,7 +89,7 @@
         </record>
         <record id="msg_discus6" model="mail.message">
             <field name="subject">RedHat server updated spec</field>
-            <field name="body"><![CDATA[<p>Hello Demo</p>
+            <field name="body"><![CDATA[<p>Hello Demo,</p>
             <p>We have a lot of inquiries about our now solution using RedHat servers. However I do not have the updated specification ready at hand.</p>
             <p>Could you please send me the last version of the file asap?</p>
             <p>Thanks,</p>]]></field>
@@ -322,7 +322,7 @@
         <!-- Short thread: Admin ask, Agrolait answer [DEMO: mark thread as done] -->
         <record id="msg_discus1" model="mail.message">
             <field name="subject">Feedback about our On Site Assistance</field>
-            <field name="body"><![CDATA[<p>Hi Virginie,<br />I writing to you about our <i>On Site Assistance Service</i> that we delivered to Agrolait last week. Do you have any feedback or remark about our service? I noticed you requested new IP phones. Will it be used for new employees, or did you have any issue with the ones we provided?<br />Best regards,</p>]]></field>
+            <field name="body"><![CDATA[<p>Hi Virginie,</p><p>I writing to you about our <i>On Site Assistance Service</i> that we delivered to Agrolait last week. Do you have any feedback or remark about our service? I noticed you requested new IP phones. Will it be used for new employees, or did you have any issue with the ones we provided?<br />Best regards,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.partner_root"/>
@@ -331,7 +331,7 @@
         </record>
         <record id="msg_discus1_1" model="mail.message">
             <field name="subject">RE: Feedback about our On Site Assistance</field>
-            <field name="body"><![CDATA[<p>Hello Administrator,<br />Glad to hearing from you! Everything is perfect, thanks for asking. Concerning the order of 2 IP phones, I ordered them for new employees. We are satisfied with the products of <i>YourCompany</i>, and we plan to fit out each new employee with one of your phone this year.<br />Regards,</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello Administrator,</p><p>Glad to hearing from you! Everything is perfect, thanks for asking. Concerning the order of 2 IP phones, I ordered them for new employees. We are satisfied with the products of <i>YourCompany</i>, and we plan to fit out each new employee with one of your phone this year.<br />Regards,</p>]]></field>
             <field name="parent_id" ref="msg_discus1"/>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -343,7 +343,7 @@
         <!-- Header only: message from res_partner_1 [DEMO: mark as done] -->
         <record id="msg_discus0" model="mail.message">
             <field name="subject">FWD: Meeting with Demo </field>
-            <field name="body"><![CDATA[<p>Hello Administrator,<br />A small email to inform you that we will have a meeting with Mr Demo next Tuesday. Everything is under control!<br />Regards,</p>]]></field>
+            <field name="body"><![CDATA[<p>Hello Administrator,</p><p>A small email to inform you that we will have a meeting with Mr Demo next Tuesday. Everything is under control!<br />Regards,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="author_id" ref="base.res_partner_1"/>
