@@ -25,8 +25,15 @@
     'author' : 'OpenERP',
     'category' : 'Test accounting',
     'website': 'http://www.openerp.com',
-    'description': """Asserts on accounting
-                      =====================""",
+    'description': """
+Asserts on accounting.
+======================
+With this module you can manually check consistencies and inconsistencies of accounting module.
+
+How to perform Consistency Tests:
+---------------------------------
+Reporting/Accounting/Accounting Tests
+""",
     'depends' : ['account'],
     'data' : [
         'security/ir.model.access.csv',
