@@ -23,12 +23,26 @@ from osv import osv,fields
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-
     _columns = {
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'categ_ids': fields.many2many('crm.case.categ', 'sale_order_category_rel', 'order_id', 'category_id', 'Categories', \
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
+
+    def create(self, cr, uid, vals, context=None):
+        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        section_id = self.browse(cr, uid, order, context=context).section_id
+        if section_id:
+            followers = [follow.id for follow in section_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [order], followers, context=context)
+        return order
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            if section_id:
+                vals['message_follower_ids'] = [(4, follower.id) for follower in section_id.message_follower_ids]
+        return super(sale_order, self).write(cr, uid, ids, vals, context=context)
 
 sale_order()
 

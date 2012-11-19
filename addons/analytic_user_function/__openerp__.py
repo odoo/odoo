@@ -41,11 +41,9 @@ compatible with older configurations.
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_user_function.jpeg'],
     'depends': ['hr_timesheet_sheet'],
-    'init_xml': [],
-    'update_xml': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],
-    'demo_xml': [],
+    'data': ['analytic_user_function_view.xml', 'security/ir.model.access.csv'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0082277138269',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

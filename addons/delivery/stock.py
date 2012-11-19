@@ -202,5 +202,30 @@ class stock_picking_out(osv.osv):
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
         }
+stock_picking_out()
+
+class stock_picking_in(osv.osv):
+    _inherit = 'stock.picking.in'
+
+    def _cal_weight(self, cr, uid, ids, name, args, context=None):
+        return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
+
+    def _get_picking_line(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
+
+    _columns = {
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                }),
+        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                store={
+                'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                }),
+        }
+stock_picking_in()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

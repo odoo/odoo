@@ -262,6 +262,7 @@ account_analytic_plan_instance()
 class account_analytic_plan_instance_line(osv.osv):
     _name = "account.analytic.plan.instance.line"
     _description = "Analytic Instance Line"
+    _rec_name = "analytic_account_id"
     _columns = {
         'plan_id': fields.many2one('account.analytic.plan.instance', 'Plan Id'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type','<>','view')]),

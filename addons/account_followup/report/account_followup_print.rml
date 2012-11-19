@@ -129,15 +129,10 @@
     <blockTable colWidths="298.0,234.0" style="Tableau2">
       <tr>
         <td>
-          <para style="terp_default_9">[[ repeatIn(adr_get(o,'invoice'),'a' )]]</para>
         </td>
         <td>
           <para style="terp_default_9">[[ o.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ a['street'] or '']]</para>
-          <para style="terp_default_9">[[ a['street2'] or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[ a['zip'] or '' ]] [[ a['city'] or '' ]]</para>
-          <para style="terp_default_9">[[( a['state_id'] and a['state_id'][1]) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">[[( a['country_id'] and a['country_id'][1]) or '']]</para>
+          <para style="terp_default_9">[[ display_address(o.partner_id) or '']]</para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>

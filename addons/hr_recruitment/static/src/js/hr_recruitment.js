@@ -10,16 +10,16 @@ openerp.hr_recruitment = function(openerp) {
             var categ_ids = [];
 
             // Collect categories ids
-            self.$element.find('span[data-categ_id]').each(function() {
+            self.$el.find('span[data-categ_id]').each(function() {
                 categ_ids.push($(this).data('categ_id'));
             });
 
             // Find their matching names
             var dataset = new openerp.web.DataSetSearch(self, 'hr.applicant_category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
-            dataset.read_slice(['id', 'name']).then(function(result) {
+            dataset.read_slice(['id', 'name']).done(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
-                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name);
+                    self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
                 });
             });
         },

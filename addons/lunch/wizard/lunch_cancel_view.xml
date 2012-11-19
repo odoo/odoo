@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    	<record model="ir.ui.view" id="cancel_order_lines_view">
+            <field name="name">cancel order lines</field>
+            <field name="model">lunch.cancel</field>
+            <field name="arch" type="xml">
+                <form string="cancel order lines" version="7.0">
+                    <separator string="Are you sure you want to cancel these meals?"/>
+                	<p class="oe_grey">
+						Cancel a meal means that we didn't receive it from the supplier.
+                        <br/>
+                        A cancelled meal should not be paid by employees.
+					</p>
+					<footer>
+						<button name="cancel" string="Cancel Orders" type="object" class="oe_highlight"/>
+						or
+						<button string="Cancel" class="oe_link" special="cancel" />
+					</footer>
+				</form>
+			</field>
+		</record>
+
+        <act_window id="cancel_order_lines"
+            multi="True"
+            key2="client_action_multi" name="Cancel meals"
+            res_model="lunch.cancel" src_model="lunch.order.line"
+            view_mode="form" target="new" view_type="form" view_id="cancel_order_lines_view"/>
+
+    </data>
+</openerp>

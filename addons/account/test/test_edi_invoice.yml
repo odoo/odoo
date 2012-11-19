@@ -24,7 +24,7 @@
         uos_id: 1
         quantity: 5.0
         price_unit: 100.0
-        name: 'Medium PC'
+        name: 'PC on Demand'
         account_id: account.a_pay
     tax_line:
       - name: sale tax
@@ -104,9 +104,9 @@
                 "__model": "account.invoice.line",
                 "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-1RP3so",
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
-                "name": "Basic PC",
+                "name": "PC Assemble SC234",
                 "price_unit": 10.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_3", "[PC1] Basic PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_3", "[PCSC234] PC Assemble SC234"],
                 "quantity": 1.0
         },
         {
@@ -114,9 +114,9 @@
                 "__model": "account.invoice.line",
                 "__id": "account:b22acf7a-ddcd-11e0-a4db-701a04e25543.account_invoice_line-u2XV5",
                 "uos_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_uom_unit", "Unit"],
-                "name": "Medium PC",
+                "name": "PC on Demand",
                 "price_unit": 100.0,
-                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_5", "[PC3] Medium PC"],
+                "product_id": ["product:b22acf7a-ddcd-11e0-a4db-701a04e25543.product_product_5", "[PC-DEM] PC on Demand"],
                 "quantity": 5.0
         }]
     }
@@ -137,12 +137,12 @@
     assert invoice_new.type == 'in_invoice', "Invoice type was not set properly"
     assert len(invoice_new.invoice_line) == 2, "invoice lines are not same"
     for inv_line in invoice_new.invoice_line:
-        if inv_line.name == 'Basic PC':
+        if inv_line.name == 'PC Assemble SC234':
             assert inv_line.uos_id.name == "Unit" , "uom is not same"
             assert inv_line.price_unit == 10 , "price unit is not same"
             assert inv_line.quantity == 1 , "product qty is not same"
             assert inv_line.price_subtotal == 10, "price sub total is not same"
-        elif inv_line.name == 'Medium PC':
+        elif inv_line.name == 'PC on Demand':
             assert inv_line.uos_id.name == "Unit" , "uom is not same"
             assert inv_line.price_unit == 100 , "price unit is not same"
             assert inv_line.quantity == 5 , "product qty is not same"

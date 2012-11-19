@@ -64,7 +64,7 @@ if __name__<>"package":
 
 
 class Fields(unohelper.Base, XJobExecutor ):
-    def __init__(self,sVariable="",sFields="",sDisplayName="",bFromModify=False):
+    def __init__(self, sVariable="", sFields="", sDisplayName="", bFromModify=False):
         LoginTest()
         if not loginstatus and __name__=="package":
             exit(1)
@@ -177,7 +177,7 @@ class Fields(unohelper.Base, XJobExecutor ):
             ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 E.g. http://localhost:8069 \nOR \nField-4 E.g. account.invoice")
             self.win.endExecute()
 
-    def lstbox_selected(self,oItemEvent):
+    def lstbox_selected(self, oItemEvent):
         try:
 
             desktop=getDesktop()
@@ -200,7 +200,7 @@ class Fields(unohelper.Base, XJobExecutor ):
         if self.bModify:
             self.win.setEditText("txtUName",self.sGDisplayName)
 
-    def getRes(self,sock ,sObject,sVar):
+    def getRes(self, sock, sObject, sVar):
         desktop=getDesktop()
         doc =desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
@@ -219,7 +219,7 @@ class Fields(unohelper.Base, XJobExecutor ):
             else:
                 return sObject
 
-    def cmbVariable_selected(self,oItemEvent):
+    def cmbVariable_selected(self, oItemEvent):
         if self.count > 0 :
             try:
                 desktop=getDesktop()
@@ -246,7 +246,7 @@ class Fields(unohelper.Base, XJobExecutor ):
                 info = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
                 self.logobj.log_write('Fields', LOG_ERROR, info)
 
-    def btnOk_clicked( self, oActionEvent ):
+    def btnOk_clicked(self, oActionEvent):
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
         cursor = doc.getCurrentController().getViewCursor()
@@ -281,7 +281,7 @@ class Fields(unohelper.Base, XJobExecutor ):
                 else:
                     ErrorDialog("Please fill appropriate data in Name field \nor select particular value from the list of fields.")
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 if __name__<>"package" and __name__=="__main__":

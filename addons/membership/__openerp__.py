@@ -29,6 +29,7 @@ This module allows you to manage all operations for managing memberships.
 =========================================================================
 
 It supports different kind of members:
+--------------------------------------
     * Free member
     * Associated member (e.g.: a group subscribes to a membership for all subsidiaries)
     * Paid members
@@ -39,19 +40,17 @@ invoice and send propositions for membership renewal.
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'product', 'account', 'process'],
-    'init_xml': ['membership_data.xml'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'wizard/membership_invoice_view.xml',
         'membership_view.xml',
         'report/report_membership_view.xml',
-        'process/membership_process.xml'
+        'process/membership_process.xml',
     ],
-    'demo_xml': ['membership_demo.xml'],
+    'demo': ['membership_demo.xml'],
     'test': ['test/test_membership.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0042907796381',
     'images': ['images/members.jpeg','images/membership_list.jpeg', 'images/membership_products.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

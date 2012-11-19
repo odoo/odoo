@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-07 05:17+0000\n"
-"X-Generator: Launchpad (build 15745)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -23,6 +23,10 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Seleziona un partner che userà il conto analitico specificato nel conto "
+"analitico default (es. creando una nuova fattura cliente o ordine di vendita "
+"verrà assegnato al partner ed in automatico questo valore come conto "
+"analitico)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -116,6 +120,8 @@ msgstr "Data finale"
 msgid ""
 "select a user which will use analytical account specified in analytic default"
 msgstr ""
+"Seleziona un utente che userà il conto analitico specificato nel conto "
+"analitico di default"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -127,12 +133,12 @@ msgstr "Valori predefiniti Conti analitici"
 #. module: account_analytic_default
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Il riferimento deve essere unico per ogni azienda!"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Analytical defaults whose end date is greater than today or None"
-msgstr ""
+msgstr "Defaults analitici dove la data finale è maggiore di oggi o nulla"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -179,11 +185,13 @@ msgstr "Data di inizio"
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
 msgstr ""
+"Fornisce l'ordine di sequenza quando si visualizza una lista di "
+"distribuzioni analitiche"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Linea d'ordine di vendita"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML non valido per Visualizzazione Architettura!"

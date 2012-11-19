@@ -42,6 +42,7 @@ from tools import config
 from xmlrpclib import Transport, ProtocolError
 import StringIO
 import base64
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -361,7 +362,7 @@ class DAVClient(object):
         to break if "base_crypt" is used.
         """
         ruob = obj.pool.get('res.users')
-        res = ruob.read(cr, 1, [uid,], ['login', 'password'])
+        res = ruob.read(cr, SUPERUSER_ID, [uid,], ['login', 'password'])
         assert res, "uid %s not found" % uid
         self.user = res[0]['login']
         self.passwd = res[0]['password']
@@ -682,7 +683,7 @@ class DAVClient(object):
             assert d2 == d, "Data does not match"
         return ctype, rrange, d
 
-    def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False, ):
+    def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False):
         """ HTTP PUT
             @param noclobber will prevent overwritting a resource (If-None-Match)
             @param mime will set the content-type
@@ -704,5 +705,4 @@ class DAVClient(object):
         etag = m.getheader('ETag')
         return etag or True
 
-#eof
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

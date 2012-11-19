@@ -7,7 +7,7 @@
     currency_id: base.EUR
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 450.0
         quantity: 1.0
         product_id: product.product_product_3
@@ -45,7 +45,6 @@
         'account_id': ref('account.cash'),
         'amount': 450.0,
         'company_id': ref('base.main_company'),
-        'currency_id': ref('base.EUR'),
         'journal_id': ref('account.bank_journal'),
         'partner_id': ref('base.res_partner_19'),
         'period_id': ref('account.period_8'),
@@ -53,6 +52,10 @@
     }
     if not res['value']['line_cr_ids']:
       res['value']['line_cr_ids'] = [{'type': 'cr', 'account_id': ref('account.a_recv'),}]
+    #clients aren't sending value of readonly fields in the view, and there is a good reason for that, so here the
+    #create should only use values of fields that are not readonly. That's why i'm removing some of these values
+    del(res['value']['line_cr_ids'][0]['date_original'])
+    del(res['value']['line_cr_ids'][0]['date_due'])
     res['value']['line_cr_ids'][0]['amount'] = 450.0
     vals['line_cr_ids'] = [(0,0,i) for i in res['value']['line_cr_ids']]
     id = self.create(cr, uid, vals)

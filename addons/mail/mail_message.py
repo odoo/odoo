@@ -19,26 +19,22 @@
 #
 ##############################################################################
 
-import ast
-import base64
-import dateutil.parser
-import email
 import logging
-import re
-import time
-import datetime
-from email.header import decode_header
-from email.message import Message
-
-from openerp import SUPERUSER_ID
-from osv import osv
-from osv import fields
-import pytz
-from tools import DEFAULT_SERVER_DATETIME_FORMAT
-from tools.translate import _
 import tools
 
+from email.header import decode_header
+from openerp import SUPERUSER_ID
+from openerp.osv import osv, orm, fields
+from openerp.tools import html_email_clean
+from openerp.tools.translate import _
+
 _logger = logging.getLogger(__name__)
+
+try:
+    from mako.template import Template as MakoTemplate
+except ImportError:
+    _logger.warning("payment_acquirer: mako templates not available, payment acquirer will not work!")
+
 
 """ Some tools for parsing / creating email fields """
 def decode(text):
@@ -47,50 +43,64 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
-def mail_tools_to_email(text):
-    """Return a list of the email addresses found in ``text``"""
-    if not text: return []
-    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
-# TODO: remove that after cleaning
-def to_email(text):
-    return mail_tools_to_email(text)
+class mail_message(osv.Model):
+    """ Messages model: system notification (replacing res.log notifications),
+        comments (OpenChatter discussion) and incoming emails. """
+    _name = 'mail.message'
+    _description = 'Message'
+    _inherit = ['ir.needaction_mixin']
+    _order = 'id desc'
+    _rec_name = 'record_name'
 
-class mail_message_common(osv.TransientModel):
-    """ Common abstract class for holding the main attributes of a 
-        message object. It could be reused as parent model for any
-        database model or wizard screen that needs to hold a kind of
-        message.
-        All internal logic should be in another model while this
-        model holds the basics of a message. For example, a wizard for writing
-        emails should inherit from this class and not from mail.message."""
+    _message_read_limit = 30
+    _message_read_fields = ['id', 'parent_id', 'model', 'res_id', 'body', 'subject', 'date', 'to_read', 'email_from',
+        'type', 'vote_user_ids', 'attachment_ids', 'author_id', 'partner_ids', 'record_name', 'favorite_user_ids']
+    _message_record_name_length = 18
+    _message_read_more_limit = 1024
 
-    def get_body(self, cr, uid, ids, name, arg, context=None):
-        """ get correct body version: body_html for html messages, and
-            body_text for plain text messages
-        """
-        result = dict.fromkeys(ids, '')
-        for message in self.browse(cr, uid, ids, context=context):
-            if message.content_subtype == 'html':
-                result[message.id] = message.body_html
-            else:
-                result[message.id] = message.body_text
-        return result
-    
-    def search_body(self, cr, uid, obj, name, args, context=None):
-        # will receive:
-        #   - obj: mail.message object
-        #   - name: 'body'
-        #   - args: [('body', 'ilike', 'blah')]
-        return ['|', '&', ('content_subtype', '=', 'html'), ('body_html', args[0][1], args[0][2]), ('body_text', args[0][1], args[0][2])]
-    
-    def get_record_name(self, cr, uid, ids, name, arg, context=None):
-        result = dict.fromkeys(ids, '')
-        for message in self.browse(cr, uid, ids, context=context):
-            if not message.model or not message.res_id:
+    def _shorten_name(self, name):
+        if len(name) <= (self._message_record_name_length + 3):
+            return name
+        return name[:self._message_record_name_length] + '...'
+
+    def _get_record_name(self, cr, uid, ids, name, arg, context=None):
+        """ Return the related document name, using name_get. It is done using
+            SUPERUSER_ID, to be sure to have the record name correctly stored. """
+        # TDE note: regroup by model/ids, to have less queries to perform
+        result = dict.fromkeys(ids, False)
+        for message in self.read(cr, uid, ids, ['model', 'res_id'], context=context):
+            if not message.get('model') or not message.get('res_id'):
                 continue
-            result[message.id] = self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1]
+            result[message['id']] = self._shorten_name(self.pool.get(message['model']).name_get(cr, SUPERUSER_ID, [message['res_id']], context=context)[0][1])
         return result
+
+    def _get_to_read(self, cr, uid, ids, name, arg, context=None):
+        """ Compute if the message is unread by the current user. """
+        res = dict((id, False) for id in ids)
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        notif_obj = self.pool.get('mail.notification')
+        notif_ids = notif_obj.search(cr, uid, [
+            ('partner_id', 'in', [partner_id]),
+            ('message_id', 'in', ids),
+            ('read', '=', False),
+        ], context=context)
+        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+            res[notif.message_id.id] = True
+        return res
+
+    def _search_to_read(self, cr, uid, obj, name, domain, context=None):
+        """ Search for messages to read by the current user. Condition is
+            inversed because we search unread message on a read column. """
+        if domain[0][2]:
+            read_cond = "(read = False OR read IS NULL)"
+        else:
+            read_cond = "read = True"
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        cr.execute("SELECT message_id FROM mail_notification "\
+                        "WHERE partner_id = %%s AND %s" % read_cond,
+                    (partner_id,))
+        return [('id', 'in', [r[0] for r in cr.fetchall()])]
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -98,582 +108,693 @@ class mail_message_common(osv.TransientModel):
             ids = [ids]
         res = []
         for message in self.browse(cr, uid, ids, context=context):
-            name = ''
-            if message.subject:
-                name = '%s: ' % (message.subject)
-            if message.body_text:
-                name = '%s%s ' % (name, message.body_text[0:20])
-            if message.date:
-                name = '%s(%s)' % (name, message.date)
-            res.append((message.id, name))
+            name = '%s: %s' % (message.subject or '', message.body or '')
+            res.append((message.id, self._shorten_name(name.lstrip(' :'))))
         return res
 
-    _name = 'mail.message.common'
-    _rec_name = 'subject'
-    _columns = {
-        'subject': fields.char('Subject', size=512),
-        'model': fields.char('Related Document Model', size=128, select=1),
-        'res_id': fields.integer('Related Document ID', select=1),
-        'record_name': fields.function(get_record_name, type='string',
-            string='Message Record Name',
-            help="Name get of the related document."),
-        'date': fields.datetime('Date'),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
-        'email_to': fields.char('To', size=256, help='Message recipients'),
-        'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
-        'email_bcc': fields.char('Bcc', size=256, help='Blind carbon copy message recipients'),
-        'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
-        'headers': fields.text('Message Headers', readonly=1,
-            help="Full message headers, e.g. SMTP session headers (usually available on inbound messages only)"),
-        'message_id': fields.char('Message-Id', size=256, help='Message unique identifier', select=1, readonly=1),
-        'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'content_subtype': fields.char('Message content subtype', size=32,
-            oldname="subtype", readonly=1,
-            help="Type of message, usually 'html' or 'plain', used to select "\
-                  "plain-text or rich-text contents accordingly"),
-        'body_text': fields.text('Text Contents', help="Plain-text version of the message"),
-        'body_html': fields.html('Rich-text Contents', help="Rich-text/HTML version of the message"),
-        'body': fields.function(get_body, fnct_search = search_body, type='text',
-            string='Message Content', store=True,
-            help="Content of the message. This content equals the body_text field "\
-                 "for plain-test messages, and body_html for rich-text/HTML "\
-                 "messages. This allows having one field if we want to access "\
-                 "the content matching the message content_subtype."),
-        'parent_id': fields.many2one('mail.message.common', 'Parent Message',
-            select=True, ondelete='set null',
-            help="Parent message, used for displaying as threads with hierarchy"),
-    }
-
-    _defaults = {
-        'content_subtype': 'plain',
-        'date': (lambda *a: fields.datetime.now()),
-    }
-
-class mail_message(osv.Model):
-    """Model holding messages: system notification (replacing res.log
-       notifications), comments (for OpenChatter feature) and
-       RFC2822 email messages. This model also provides facilities to
-       parse, queue and send new email messages. Type of messages
-       are differentiated using the 'type' column. """
-
-    _name = 'mail.message'
-    _inherit = 'mail.message.common'
-    _description = 'Mail Message (email, comment, notification)'
-    _order = 'date desc'
-
-    def open_document(self, cr, uid, ids, context=None):
-        """ Open the message related document. Note that only the document of
-            ids[0] will be opened.
-            TODO: how to determine the action to use ?
-        """
-        action_data = False
-        if not ids:
-            return action_data
-        msg = self.browse(cr, uid, ids[0], context=context)
-        ir_act_window = self.pool.get('ir.actions.act_window')
-        action_ids = ir_act_window.search(cr, uid, [('res_model', '=', msg.model)], context=context)
-        if action_ids:
-            action_data = ir_act_window.read(cr, uid, action_ids[0], context=context)
-            action_data.update({
-                    'domain' : "[('id', '=', %d)]" % (msg.res_id),
-                    'nodestroy': True,
-                    'context': {}
-                    })
-        return action_data
-
-    def open_attachment(self, cr, uid, ids, context=None):
-        """ Open the message related attachments.
-            TODO: how to determine the action to use ?
-        """
-        action_data = False
-        if not ids:
-            return action_data
-        action_pool = self.pool.get('ir.actions.act_window')
-        messages = self.browse(cr, uid, ids, context=context)
-        att_ids = [x.id for message in messages for x in message.attachment_ids]
-        action_ids = action_pool.search(cr, uid, [('res_model', '=', 'ir.attachment')], context=context)
-        if action_ids:
-            action_data = action_pool.read(cr, uid, action_ids[0], context=context)
-            action_data.update({
-                'domain': [('id', 'in', att_ids)],
-                'nodestroy': True
-                })
-        return action_data
-    
     _columns = {
         'type': fields.selection([
-                        ('email', 'email'),
+                        ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type',
             help="Message type: email for email message, notification for system "\
-                  "message, comment for other messages such as user replies"),
-        'partner_id': fields.many2one('res.partner', 'Related partner',
-            help="Deprecated field. Use partner_ids instead."),
-        'partner_ids': fields.many2many('res.partner',
-            'mail_message_res_partner_rel',
-            'message_id', 'partner_id', 'Destination partners',
-            help="When sending emails through the social network composition wizard"\
-                 "you may choose to send a copy of the mail to partners."),
-        'user_id': fields.many2one('res.users', 'Related User', readonly=1),
+                 "message, comment for other messages such as user replies"),
+        'email_from': fields.char('From',
+            help="Email address of the sender. This field is set when no matching partner is found for incoming emails."),
+        'author_id': fields.many2one('res.partner', 'Author', select=1,
+            ondelete='set null',
+            help="Author of the message. If not set, email_from may hold an email address that did not match any partner."),
+        'partner_ids': fields.many2many('res.partner', string='Recipients'),
+        'notified_partner_ids': fields.many2many('res.partner', 'mail_notification',
+            'message_id', 'partner_id', 'Notified partners',
+            help='Partners that have a notification pushing this message in their mailboxes'),
         'attachment_ids': fields.many2many('ir.attachment', 'message_attachment_rel',
             'message_id', 'attachment_id', 'Attachments'),
-        'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
-        'state': fields.selection([
-                        ('outgoing', 'Outgoing'),
-                        ('sent', 'Sent'),
-                        ('received', 'Received'),
-                        ('exception', 'Delivery Failed'),
-                        ('cancel', 'Cancelled'),
-                        ], 'Status', readonly=True),
-        'auto_delete': fields.boolean('Auto Delete',
-            help="Permanently delete this email after sending it, to save space"),
-        'original': fields.binary('Original', readonly=1,
-            help="Original version of the message, as it was sent on the network"),
-        'parent_id': fields.many2one('mail.message', 'Parent Message',
-            select=True, ondelete='set null',
-            help="Parent message, used for displaying as threads with hierarchy"),
+        'parent_id': fields.many2one('mail.message', 'Parent Message', select=True,
+            ondelete='set null', help="Initial thread message."),
         'child_ids': fields.one2many('mail.message', 'parent_id', 'Child Messages'),
+        'model': fields.char('Related Document Model', size=128, select=1),
+        'res_id': fields.integer('Related Document ID', select=1),
+        'record_name': fields.function(_get_record_name, type='char',
+            store=True, string='Message Record Name',
+            help="Name get of the related document."),
+        'notification_ids': fields.one2many('mail.notification', 'message_id',
+            string='Notifications',
+            help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
+        'subject': fields.char('Subject'),
+        'date': fields.datetime('Date'),
+        'message_id': fields.char('Message-Id', help='Message unique identifier', select=1, readonly=1),
+        'body': fields.html('Contents', help='Automatically sanitized HTML contents'),
+        'to_read': fields.function(_get_to_read, fnct_search=_search_to_read,
+            type='boolean', string='To read',
+            help='Functional field to search for messages the current user has to read'),
+        'subtype_id': fields.many2one('mail.message.subtype', 'Subtype',
+            ondelete='set null', select=1,),
+        'vote_user_ids': fields.many2many('res.users', 'mail_vote',
+            'message_id', 'user_id', string='Votes',
+            help='Users that voted for this message'),
+        'favorite_user_ids': fields.many2many('res.users', 'mail_favorite',
+            'message_id', 'user_id', string='Favorite',
+            help='Users that set this message in their favorites'),
     }
-        
+
+    def _needaction_domain_get(self, cr, uid, context=None):
+        if self._needaction:
+            return [('to_read', '=', True)]
+        return []
+
+    def _get_default_author(self, cr, uid, context=None):
+        return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+
     _defaults = {
         'type': 'email',
-        'state': 'received',
+        'date': lambda *a: fields.datetime.now(),
+        'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
+        'body': '',
     }
-    
+
     #------------------------------------------------------
-    # Email api
+    # Vote/Like
     #------------------------------------------------------
-    
+
+    def vote_toggle(self, cr, uid, ids, context=None):
+        ''' Toggles vote. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may vote for a message he cannot modify. '''
+        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
+            new_has_voted = not (uid in message.get('vote_user_ids'))
+            if new_has_voted:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, uid)]}, context=context)
+            else:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, uid)]}, context=context)
+        return new_has_voted or False
+
+    #------------------------------------------------------
+    # Favorite
+    #------------------------------------------------------
+
+    def favorite_toggle(self, cr, uid, ids, context=None):
+        ''' Toggles favorite. Performed using read to avoid access rights issues.
+            Done as SUPERUSER_ID because uid may star a message he cannot modify. '''
+        for message in self.read(cr, uid, ids, ['favorite_user_ids'], context=context):
+            new_is_favorite = not (uid in message.get('favorite_user_ids'))
+            if new_is_favorite:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
+            else:
+                self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
+        return new_is_favorite or False
+
+    #------------------------------------------------------
+    # Message loading for web interface
+    #------------------------------------------------------
+
+    def _message_read_dict_postprocess(self, cr, uid, messages, message_tree, context=None):
+        """ Post-processing on values given by message_read. This method will
+            handle partners in batch to avoid doing numerous queries.
+
+            :param list messages: list of message, as get_dict result
+            :param dict message_tree: {[msg.id]: msg browse record}
+        """
+        res_partner_obj = self.pool.get('res.partner')
+        ir_attachment_obj = self.pool.get('ir.attachment')
+        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
+
+        # 1. Aggregate partners (author_id and partner_ids) and attachments
+        partner_ids = set()
+        attachment_ids = set()
+        for key, message in message_tree.iteritems():
+            if message.author_id:
+                partner_ids |= set([message.author_id.id])
+            if message.partner_ids:
+                partner_ids |= set([partner.id for partner in message.partner_ids])
+            if message.attachment_ids:
+                attachment_ids |= set([attachment.id for attachment in message.attachment_ids])
+
+        # Filter author_ids uid can see
+        # partner_ids = self.pool.get('res.partner').search(cr, uid, [('id', 'in', partner_ids)], context=context)
+        partners = res_partner_obj.name_get(cr, uid, list(partner_ids), context=context)
+        partner_tree = dict((partner[0], partner) for partner in partners)
+
+        # 2. Attachments
+        attachments = ir_attachment_obj.read(cr, uid, list(attachment_ids), ['id', 'datas_fname'], context=context)
+        attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
+
+        # 3. Update message dictionaries
+        for message_dict in messages:
+            message_id = message_dict.get('id')
+            message = message_tree[message_id]
+            if message.author_id:
+                author = partner_tree[message.author_id.id]
+            else:
+                author = (0, message.email_from)
+            partner_ids = []
+            for partner in message.partner_ids:
+                if partner.id in partner_tree:
+                    partner_ids.append(partner_tree[partner.id])
+            attachment_ids = []
+            for attachment in message.attachment_ids:
+                if attachment.id in attachments_tree:
+                    attachment_ids.append(attachments_tree[attachment.id])
+            message_dict.update({
+                'is_author': pid == author[0],
+                'author_id': author,
+                'partner_ids': partner_ids,
+                'attachment_ids': attachment_ids,
+                })
+        return True
+
+    def _message_read_dict(self, cr, uid, message, parent_id=False, context=None):
+        """ Return a dict representation of the message. This representation is
+            used in the JS client code, to display the messages. Partners and
+            attachments related stuff will be done in post-processing in batch.
+
+            :param dict message: mail.message browse record
+        """
+        # private message: no model, no res_id
+        is_private = False
+        if not message.model or not message.res_id:
+            is_private = True
+        # votes and favorites: res.users ids, no prefetching should be done
+        vote_nb = len(message.vote_user_ids)
+        has_voted = uid in [user.id for user in message.vote_user_ids]
+        is_favorite = uid in [user.id for user in message.favorite_user_ids]
+
+        return {'id': message.id,
+                'type': message.type,
+                'body': html_email_clean(message.body),
+                'model': message.model,
+                'res_id': message.res_id,
+                'record_name': message.record_name,
+                'subject': message.subject,
+                'date': message.date,
+                'to_read': message.to_read,
+                'parent_id': parent_id,
+                'is_private': is_private,
+                'author_id': False,
+                'is_author': False,
+                'partner_ids': [],
+                'vote_nb': vote_nb,
+                'has_voted': has_voted,
+                'is_favorite': is_favorite,
+                'attachment_ids': [],
+            }
+
+    def _message_read_add_expandables(self, cr, uid, messages, message_tree, parent_tree,
+            message_unload_ids=[], thread_level=0, domain=[], parent_id=False, context=None):
+        """ Create expandables for message_read, to load new messages.
+            1. get the expandable for new threads
+                if display is flat (thread_level == 0):
+                    fetch message_ids < min(already displayed ids), because we
+                    want a flat display, ordered by id
+                else:
+                    fetch message_ids that are not childs of already displayed
+                    messages
+            2. get the expandables for new messages inside threads if display
+               is not flat
+                for each thread header, search for its childs
+                    for each hole in the child list based on message displayed,
+                    create an expandable
+
+            :param list messages: list of message structure for the Chatter
+                widget to which expandables are added
+            :param dict message_tree: dict [id]: browse record of this message
+            :param dict parent_tree: dict [parent_id]: [child_ids]
+            :param list message_unload_ids: list of message_ids we do not want
+                to load
+            :return bool: True
+        """
+        def _get_expandable(domain, message_nb, parent_id, max_limit):
+            return {
+                'domain': domain,
+                'nb_messages': message_nb,
+                'type': 'expandable',
+                'parent_id': parent_id,
+                'max_limit':  max_limit,
+            }
+
+        if not messages:
+            return True
+        message_ids = sorted(message_tree.keys())
+
+        # 1. get the expandable for new threads
+        if thread_level == 0:
+            exp_domain = domain + [('id', '<', min(message_unload_ids + message_ids))]
+        else:
+            exp_domain = domain + ['!', ('id', 'child_of', message_unload_ids + parent_tree.keys())]
+        ids = self.search(cr, uid, exp_domain, context=context, limit=1)
+        if ids:
+            # inside a thread: prepend
+            if parent_id:
+                messages.insert(0, _get_expandable(exp_domain, -1, parent_id, True))
+            # new threads: append
+            else:
+                messages.append(_get_expandable(exp_domain, -1, parent_id, True))
+
+        # 2. get the expandables for new messages inside threads if display is not flat
+        if thread_level == 0:
+            return True
+        for message_id in message_ids:
+            message = message_tree[message_id]
+
+            # generate only for thread header messages (TDE note: parent_id may be False is uid cannot see parent_id, seems ok)
+            if message.parent_id:
+                continue
+
+            # check there are message for expandable
+            child_ids = set([child.id for child in message.child_ids]) - set(message_unload_ids)
+            child_ids = sorted(list(child_ids), reverse=True)
+            if not child_ids:
+                continue
+
+            # make groups of unread messages
+            id_min, id_max, nb = max(child_ids), 0, 0
+            for child_id in child_ids:
+                if not child_id in message_ids:
+                    nb += 1
+                    if id_min > child_id:
+                        id_min = child_id
+                    if id_max < child_id:
+                        id_max = child_id
+                elif nb > 0:
+                    exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
+                    messages.append(_get_expandable(exp_domain, nb, message_id, False))
+                    id_min, id_max, nb = max(child_ids), 0, 0
+                else:
+                    id_min, id_max, nb = max(child_ids), 0, 0
+            if nb > 0:
+                exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
+                idx = [msg.get('id') for msg in messages].index(message_id) + 1
+                # messages.append(_get_expandable(exp_domain, nb, message_id, id_min))
+                messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
+
+        return True
+
+    def message_read(self, cr, uid, ids=None, domain=None, message_unload_ids=None,
+                        thread_level=0, context=None, parent_id=False, limit=None):
+        """ Read messages from mail.message, and get back a list of structured
+            messages to be displayed as discussion threads. If IDs is set,
+            fetch these records. Otherwise use the domain to fetch messages.
+            After having fetch messages, their ancestors will be added to obtain
+            well formed threads, if uid has access to them.
+
+            After reading the messages, expandable messages are added in the
+            message list (see ``_message_read_add_expandables``). It consists
+            in messages holding the 'read more' data: number of messages to
+            read, domain to apply.
+
+            :param list ids: optional IDs to fetch
+            :param list domain: optional domain for searching ids if ids not set
+            :param list message_unload_ids: optional ids we do not want to fetch,
+                because i.e. they are already displayed somewhere
+            :param int parent_id: context of parent_id
+                - if parent_id reached when adding ancestors, stop going further
+                  in the ancestor search
+                - if set in flat mode, ancestor_id is set to parent_id
+            :param int limit: number of messages to fetch, before adding the
+                ancestors and expandables
+            :return list: list of message structure for the Chatter widget
+        """
+        assert thread_level in [0, 1], 'message_read() thread_level should be 0 (flat) or 1 (1 level of thread); given %s.' % thread_level
+        domain = domain if domain is not None else []
+        message_unload_ids = message_unload_ids if message_unload_ids is not None else []
+        if message_unload_ids:
+            domain += [('id', 'not in', message_unload_ids)]
+        limit = limit or self._message_read_limit
+        message_tree = {}
+        message_list = []
+        parent_tree = {}
+
+        # no specific IDS given: fetch messages according to the domain, add their parents if uid has access to
+        if ids is None:
+            ids = self.search(cr, uid, domain, context=context, limit=limit)
+
+        # fetch parent if threaded, sort messages
+        for message in self.browse(cr, uid, ids, context=context):
+            message_id = message.id
+            if message_id in message_tree:
+                continue
+            message_tree[message_id] = message
+
+            # find parent_id
+            if thread_level == 0:
+                tree_parent_id = parent_id
+            else:
+                tree_parent_id = message_id
+                parent = message
+                while parent.parent_id and parent.parent_id.id != parent_id:
+                    parent = parent.parent_id
+                    tree_parent_id = parent.id
+                if not parent.id in message_tree:
+                    message_tree[parent.id] = parent
+            # newest messages first
+            parent_tree.setdefault(tree_parent_id, [])
+            if tree_parent_id != message_id:
+                parent_tree[tree_parent_id].append(self._message_read_dict(cr, uid, message_tree[message_id], parent_id=tree_parent_id, context=context))
+
+        if thread_level:
+            for key, message_id_list in parent_tree.iteritems():
+                message_id_list.sort(key=lambda item: item['id'])
+                message_id_list.insert(0, self._message_read_dict(cr, uid, message_tree[key], context=context))
+
+        parent_list = parent_tree.items()
+        parent_list = sorted(parent_list, key=lambda item: max([msg.get('id') for msg in item[1]]) if item[1] else item[0], reverse=True)
+        message_list = [message for (key, msg_list) in parent_list for message in msg_list]
+
+        # get the child expandable messages for the tree
+        self._message_read_dict_postprocess(cr, uid, message_list, message_tree, context=context)
+        self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
+            thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
+        return message_list
+
+    # TDE Note: do we need this ?
+    # def user_free_attachment(self, cr, uid, context=None):
+    #     attachment = self.pool.get('ir.attachment')
+    #     attachment_list = []
+    #     attachment_ids = attachment.search(cr, uid, [('res_model', '=', 'mail.message'), ('create_uid', '=', uid)])
+    #     if len(attachment_ids):
+    #         attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
+    #     return attachment_list
+
+    #------------------------------------------------------
+    # mail_message internals
+    #------------------------------------------------------
+
     def init(self, cr):
         cr.execute("""SELECT indexname FROM pg_indexes WHERE indexname = 'mail_message_model_res_id_idx'""")
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
-    def check(self, cr, uid, ids, mode, context=None, values=None):
-        """Restricts the access to a mail.message, according to referred model
+    def _search(self, cr, uid, args, offset=0, limit=None, order=None,
+        context=None, count=False, access_rights_uid=None):
+        """ Override that adds specific access rights of mail.message, to remove
+            ids uid could not see according to our custom rules. Please refer
+            to check_access_rule for more details about those rules.
+
+            After having received ids of a classic search, keep only:
+            - if author_id == pid, uid is the author, OR
+            - a notification (id, pid) exists, uid has been notified, OR
+            - uid have read access to the related document is model, res_id
+            - otherwise: remove the id
         """
-        if not ids:
+        # Rules do not apply to administrator
+        if uid == SUPERUSER_ID:
+            return super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+                context=context, count=count, access_rights_uid=access_rights_uid)
+        # Perform a super with count as False, to have the ids, not a counter
+        ids = super(mail_message, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
+            context=context, count=False, access_rights_uid=access_rights_uid)
+        if not ids and count:
+            return 0
+        elif not ids:
+            return ids
+
+        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'])['partner_id'][0]
+        author_ids, partner_ids, allowed_ids = set([]), set([]), set([])
+        model_ids = {}
+
+        messages = super(mail_message, self).read(cr, uid, ids, ['author_id', 'model', 'res_id', 'notified_partner_ids'], context=context)
+        for message in messages:
+            if message.get('author_id') and message.get('author_id')[0] == pid:
+                author_ids.add(message.get('id'))
+            elif pid in message.get('notified_partner_ids'):
+                partner_ids.add(message.get('id'))
+            elif message.get('model') and message.get('res_id'):
+                model_ids.setdefault(message.get('model'), {}).setdefault(message.get('res_id'), set()).add(message.get('id'))
+
+        model_access_obj = self.pool.get('ir.model.access')
+        for doc_model, doc_dict in model_ids.iteritems():
+            if not model_access_obj.check(cr, uid, doc_model, 'read', False):
+                continue
+            doc_ids = doc_dict.keys()
+            allowed_doc_ids = self.pool.get(doc_model).search(cr, uid, [('id', 'in', doc_ids)], context=context)
+            allowed_ids |= set([message_id for allowed_doc_id in allowed_doc_ids for message_id in doc_dict[allowed_doc_id]])
+
+        final_ids = author_ids | partner_ids | allowed_ids
+        if count:
+            return len(final_ids)
+        else:
+            return list(final_ids)
+
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """ Access rules of mail.message:
+            - read: if
+                - author_id == pid, uid is the author, OR
+                - mail_notification (id, pid) exists, uid has been notified, OR
+                - uid have read access to the related document if model, res_id
+                - otherwise: raise
+            - create: if
+                - no model, no res_id, I create a private message
+                - pid in message_follower_ids if model, res_id OR
+                - uid have write access on the related document if model, res_id, OR
+                - otherwise: raise
+            - write: if
+                - uid has write access on the related document if model, res_id
+                - Otherwise: raise
+            - unlink: if
+                - uid has write access on the related document if model, res_id
+                - Otherwise: raise
+        """
+        if uid == SUPERUSER_ID:
             return
-        res_ids = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        cr.execute('SELECT DISTINCT model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
-        for rmod, rid in cr.fetchall():
-            if not (rmod and rid):
-                continue
-            res_ids.setdefault(rmod,set()).add(rid)
-        if values:
-            if 'res_model' in values and 'res_id' in values:
-                res_ids.setdefault(values['res_model'],set()).add(values['res_id'])
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
 
-        ima_obj = self.pool.get('ir.model.access')
-        for model, mids in res_ids.items():
-            # ignore mail messages that are not attached to a resource anymore when checking access rights
-            # (resource was deleted but message was not)
-            mids = self.pool.get(model).exists(cr, uid, mids)
-            ima_obj.check(cr, uid, model, mode)
-            self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
-    
+        # Read mail_message.ids to have their values
+        message_values = dict.fromkeys(ids)
+        model_record_ids = {}
+        cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, author_id in cr.fetchall():
+            message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
+            if rmod:
+                model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
+
+        # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
+        if operation == 'read':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if message.get('author_id') and message.get('author_id') == partner_id]
+        elif operation == 'create':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if not message.get('model') and not message.get('res_id')]
+        else:
+            author_ids = []
+
+        # Notification condition, for read (check for received notifications and create (in message_follower_ids)) -> could become an ir.rule, but not till we do not have a many2one variable field
+        if operation == 'read':
+            not_obj = self.pool.get('mail.notification')
+            not_ids = not_obj.search(cr, SUPERUSER_ID, [
+                ('partner_id', '=', partner_id),
+                ('message_id', 'in', ids),
+            ], context=context)
+            notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
+        elif operation == 'create':
+            notified_ids = []
+            for doc_model, doc_dict in model_record_ids.items():
+                fol_obj = self.pool.get('mail.followers')
+                fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
+                    ('res_model', '=', doc_model),
+                    ('res_id', 'in', list(doc_dict.keys())),
+                    ('partner_id', '=', partner_id),
+                    ], context=context)
+                fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
+                notified_ids += [mid for mid, message in message_values.iteritems()
+                    if message.get('res_model') == doc_model and message.get('res_id') in fol_mids]
+        else:
+            notified_ids = []
+
+        # Calculate remaining ids, and related model/res_ids
+        model_record_ids = {}
+        other_ids = set(ids).difference(set(author_ids), set(notified_ids))
+        for id in other_ids:
+            if message_values[id]['res_model']:
+                model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
+
+        # CRUD: Access rights related to the document
+        document_related_ids = []
+        for model, mids in model_record_ids.items():
+            model_obj = self.pool.get(model)
+            mids = model_obj.exists(cr, uid, mids)
+            if operation in ['create', 'write', 'unlink']:
+                model_obj.check_access_rights(cr, uid, 'write')
+                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+            else:
+                model_obj.check_access_rights(cr, uid, operation)
+                model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            document_related_ids += [mid for mid, message in message_values.iteritems()
+                if message.get('res_model') == model and message.get('res_id') in mids]
+
+        # Calculate remaining ids: if not void, raise an error
+        other_ids = other_ids - set(document_related_ids)
+        if not other_ids:
+            return
+        raise orm.except_orm(_('Access Denied'),
+                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                            (self._description, operation))
+
     def create(self, cr, uid, values, context=None):
-        self.check(cr, uid, [], mode='create', context=context, values=values)
-        return super(mail_message, self).create(cr, uid, values, context)
+        if not values.get('message_id') and values.get('res_id') and values.get('model'):
+            values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
+        elif not values.get('message_id'):
+            values['message_id'] = tools.generate_tracking_message_id('private')
+        newid = super(mail_message, self).create(cr, uid, values, context)
+        self._notify(cr, SUPERUSER_ID, newid, context=context)
+        return newid
 
-    def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
-        self.check(cr, uid, ids, 'read', context=context)
-        return super(mail_message, self).read(cr, uid, ids, fields_to_read, context, load)
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        """Overridden to avoid duplicating fields that are unique to each email"""
-        if default is None:
-            default = {}
-        self.check(cr, uid, [id], 'read', context=context)
-        default.update(message_id=False, original=False, headers=False)
-        return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
-    
-    def write(self, cr, uid, ids, vals, context=None):
-        self.check(cr, uid, ids, 'write', context=context, values=vals)
-        return super(mail_message, self).write(cr, uid, ids, vals, context)
-
-    def unlink(self, cr, uid, ids, context=None):
-        self.check(cr, uid, ids, 'unlink', context=context)
-        return super(mail_message, self).unlink(cr, uid, ids, context)
-
-    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, type='email',
-                             email_cc=None, email_bcc=None, reply_to=False, partner_ids=None, attachments=None,
-                             message_id=False, references=False, res_id=False, content_subtype='plain',
-                             headers=None, mail_server_id=False, auto_delete=False, context=None):
-        """ Schedule sending a new email message, to be sent the next time the
-            mail scheduler runs, or the next time :meth:`process_email_queue` is
-            called explicitly.
-
-            :param string email_from: sender email address
-            :param list email_to: list of recipient addresses (to be joined with commas) 
-            :param string subject: email subject (no pre-encoding/quoting necessary)
-            :param string body: email body, according to the ``content_subtype`` 
-                (by default, plaintext). If html content_subtype is used, the
-                message will be automatically converted to plaintext and wrapped
-                in multipart/alternative.
-            :param list email_cc: optional list of string values for CC header
-                (to be joined with commas)
-            :param list email_bcc: optional list of string values for BCC header
-                (to be joined with commas)
-            :param string model: optional model name of the document this mail
-                is related to (this will also be used to generate a tracking id,
-                used to match any response related to the same document)
-            :param int res_id: optional resource identifier this mail is related
-                to (this will also be used to generate a tracking id, used to
-                match any response related to the same document)
-            :param string reply_to: optional value of Reply-To header
-            :param partner_ids: destination partner_ids
-            :param string content_subtype: optional mime content_subtype for
-                the text body (usually 'plain' or 'html'), must match the format
-                of the ``body`` parameter. Default is 'plain', making the content
-                part of the mail "text/plain".
-            :param dict attachments: map of filename to filecontents, where
-                filecontents is a string containing the bytes of the attachment
-            :param dict headers: optional map of headers to set on the outgoing
-                mail (may override the other headers, including Subject,
-                Reply-To, Message-Id, etc.)
-            :param int mail_server_id: optional id of the preferred outgoing
-                mail server for this mail
-            :param bool auto_delete: optional flag to turn on auto-deletion of
-                the message after it has been successfully sent (default to False)
-        """
-        if context is None:
-            context = {}
-        if attachments is None:
-            attachments = {}
-        if partner_ids is None:
-            partner_ids = []
-        attachment_obj = self.pool.get('ir.attachment')
-        for param in (email_to, email_cc, email_bcc):
-            if param and not isinstance(param, list):
-                param = [param]
-        msg_vals = {
-                'subject': subject,
-                'date': fields.datetime.now(),
-                'user_id': uid,
-                'model': model,
-                'res_id': res_id,
-                'type': type,
-                'body_text': body if content_subtype != 'html' else False,
-                'body_html': body if content_subtype == 'html' else False,
-                'email_from': email_from,
-                'email_to': email_to and ','.join(email_to) or '',
-                'email_cc': email_cc and ','.join(email_cc) or '',
-                'email_bcc': email_bcc and ','.join(email_bcc) or '',
-                'partner_ids': partner_ids,
-                'reply_to': reply_to,
-                'message_id': message_id,
-                'references': references,
-                'content_subtype': content_subtype,
-                'headers': headers, # serialize the dict on the fly
-                'mail_server_id': mail_server_id,
-                'state': 'outgoing',
-                'auto_delete': auto_delete
-            }
-        email_msg_id = self.create(cr, uid, msg_vals, context)
-        attachment_ids = []
-        for attachment in attachments:
-            fname, fcontent = attachment
-            attachment_data = {
-                    'name': fname,
-                    'datas_fname': fname,
-                    'datas': fcontent and fcontent.encode('base64'),
-                    'res_model': self._name,
-                    'res_id': email_msg_id,
-            }
-            if context.has_key('default_type'):
-                del context['default_type']
-            attachment_ids.append(attachment_obj.create(cr, uid, attachment_data, context))
-        if attachment_ids:
-            self.write(cr, uid, email_msg_id, { 'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
-        return email_msg_id
-
-    def mark_outgoing(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'outgoing'}, context=context)
-
-    def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
-
-    def process_email_queue(self, cr, uid, ids=None, context=None):
-        """Send immediately queued messages, committing after each
-           message is sent - this is not transactional and should
-           not be called during another transaction!
-
-           :param list ids: optional list of emails ids to send. If passed
-                            no search is performed, and these ids are used
-                            instead.
-           :param dict context: if a 'filters' key is present in context,
-                                this value will be used as an additional
-                                filter to further restrict the outgoing
-                                messages to send (by default all 'outgoing'
-                                messages are sent).
-        """
-        if context is None:
-            context = {}
-        if not ids:
-            filters = ['&', ('state', '=', 'outgoing'), ('type', '=', 'email')]
-            if 'filters' in context:
-                filters.extend(context['filters'])
-            ids = self.search(cr, uid, filters, context=context)
-        res = None
-        try:
-            # Force auto-commit - this is meant to be called by
-            # the scheduler, and we can't allow rolling back the status
-            # of previously sent emails!
-            res = self.send(cr, uid, ids, auto_commit=True, context=context)
-        except Exception:
-            _logger.exception("Failed processing mail queue")
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        """ Override to explicitely call check_access_rule, that is not called
+            by the ORM. It instead directly fetches ir.rules and apply them. """
+        self.check_access_rule(cr, uid, ids, 'read', context=context)
+        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
 
-    def parse_message(self, message, save_original=False, context=None):
-        """Parses a string or email.message.Message representing an
-           RFC-2822 email, and returns a generic dict holding the
-           message details.
-
-           :param message: the message to parse
-           :type message: email.message.Message | string | unicode
-           :param bool save_original: whether the returned dict
-               should include an ``original`` entry with the base64
-               encoded source of the message.
-           :rtype: dict
-           :return: A dict with the following structure, where each
-                    field may not be present if missing in original
-                    message::
-
-                    { 'message-id': msg_id,
-                      'subject': subject,
-                      'from': from,
-                      'to': to,
-                      'cc': cc,
-                      'headers' : { 'X-Mailer': mailer,
-                                    #.. all X- headers...
-                                  },
-                      'content_subtype': msg_mime_subtype,
-                      'body_text': plaintext_body
-                      'body_html': html_body,
-                      'attachments': [('file1', 'bytes'),
-                                       ('file2', 'bytes') }
-                       # ...
-                       'original': source_of_email,
-                    }
-        """
-        msg_txt = message
-        if isinstance(message, str):
-            msg_txt = email.message_from_string(message)
-
-        # Warning: message_from_string doesn't always work correctly on unicode,
-        # we must use utf-8 strings here :-(
-        if isinstance(message, unicode):
-            message = message.encode('utf-8')
-            msg_txt = email.message_from_string(message)
-
-        message_id = msg_txt.get('message-id', False)
-        msg = {}
-
-        if save_original:
-            # save original, we need to be able to read the original email sometimes
-            msg['original'] = message.as_string() if isinstance(message, Message) \
-                                                  else message
-            msg['original'] = base64.b64encode(msg['original']) # binary fields are b64
-
-        if not message_id:
-            # Very unusual situation, be we should be fault-tolerant here
-            message_id = time.time()
-            msg_txt['message-id'] = message_id
-            _logger.info('Parsing Message without message-id, generating a random one: %s', message_id)
-
-        msg_fields = msg_txt.keys()
-        msg['id'] = message_id
-        msg['message-id'] = message_id
-
-        if 'Subject' in msg_fields:
-            msg['subject'] = decode(msg_txt.get('Subject'))
-
-        if 'Content-Type' in msg_fields:
-            msg['content-type'] = msg_txt.get('Content-Type')
-
-        if 'From' in msg_fields:
-            msg['from'] = decode(msg_txt.get('From') or msg_txt.get_unixfrom())
-
-        if 'To' in msg_fields:
-            msg['to'] = decode(msg_txt.get('To'))
-
-        if 'Delivered-To' in msg_fields:
-            msg['to'] = decode(msg_txt.get('Delivered-To'))
-
-        if 'CC' in msg_fields:
-            msg['cc'] = decode(msg_txt.get('CC'))
-
-        if 'Cc' in msg_fields:
-            msg['cc'] = decode(msg_txt.get('Cc'))
-
-        if 'Reply-To' in msg_fields:
-            msg['reply'] = decode(msg_txt.get('Reply-To'))
-
-        if 'Date' in msg_fields:
-            date_hdr = decode(msg_txt.get('Date'))
-            # convert from email timezone to server timezone
-            date_server_datetime = dateutil.parser.parse(date_hdr).astimezone(pytz.timezone(tools.get_server_timezone()))
-            date_server_datetime_str = date_server_datetime.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
-            msg['date'] = date_server_datetime_str
-
-        if 'Content-Transfer-Encoding' in msg_fields:
-            msg['encoding'] = msg_txt.get('Content-Transfer-Encoding')
-
-        if 'References' in msg_fields:
-            msg['references'] = msg_txt.get('References')
-
-        if 'In-Reply-To' in msg_fields:
-            msg['in-reply-to'] = msg_txt.get('In-Reply-To')
-
-        msg['headers'] = {}
-        msg['content_subtype'] = 'plain'
-        for item in msg_txt.items():
-            if item[0].startswith('X-'):
-                msg['headers'].update({item[0]: item[1]})
-        if not msg_txt.is_multipart() or 'text/plain' in msg.get('content-type', ''):
-            encoding = msg_txt.get_content_charset()
-            body = msg_txt.get_payload(decode=True)
-            if 'text/html' in msg.get('content-type', ''):
-                msg['body_html'] =  body
-                msg['content_subtype'] = 'html'
-                if body:
-                    body = tools.html2plaintext(body)
-            msg['body_text'] = tools.ustr(body, encoding)
-
-        attachments = []
-        if msg_txt.is_multipart() or 'multipart/alternative' in msg.get('content-type', ''):
-            body = ""
-            if 'multipart/alternative' in msg.get('content-type', ''):
-                msg['content_subtype'] = 'alternative'
-            else:
-                msg['content_subtype'] = 'mixed'
-            for part in msg_txt.walk():
-                if part.get_content_maintype() == 'multipart':
-                    continue
-
-                encoding = part.get_content_charset()
-                filename = part.get_filename()
-                if part.get_content_maintype()=='text':
-                    content = part.get_payload(decode=True)
-                    if filename:
-                        attachments.append((filename, content))
-                    content = tools.ustr(content, encoding)
-                    if part.get_content_subtype() == 'html':
-                        msg['body_html'] = content
-                        msg['content_subtype'] = 'html' # html version prevails
-                        body = tools.ustr(tools.html2plaintext(content))
-                        body = body.replace('&#13;', '')
-                    elif part.get_content_subtype() == 'plain':
-                        body = content
-                elif part.get_content_maintype() in ('application', 'image'):
-                    if filename :
-                        attachments.append((filename,part.get_payload(decode=True)))
-                    else:
-                        res = part.get_payload(decode=True)
-                        body += tools.ustr(res, encoding)
-
-            msg['body_text'] = body
-        msg['attachments'] = attachments
-
-        # for backwards compatibility:
-        msg['body'] = msg['body_text']
-        msg['sub_type'] = msg['content_subtype'] or 'plain'
-        return msg
-
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        """Perform any post-processing necessary after sending ``message``
-        successfully, including deleting it completely along with its
-        attachment if the ``auto_delete`` flag of the message was set.
-        Overridden by subclasses for extra post-processing behaviors. 
-
-        :param browse_record message: the message that was just sent
-        :return: True
-        """
-        if message.auto_delete:
-            self.pool.get('ir.attachment').unlink(cr, uid,
-                [x.id for x in message.attachment_ids
-                    if x.res_model == self._name and x.res_id == message.id],
-                context=context)
-            message.unlink()
-        return True
-
-    def send(self, cr, uid, ids, auto_commit=False, context=None):
-        """Sends the selected emails immediately, ignoring their current
-           state (mails that have already been sent should not be passed
-           unless they should actually be re-sent).
-           Emails successfully delivered are marked as 'sent', and those
-           that fail to be deliver are marked as 'exception', and the
-           corresponding error message is output in the server logs.
-
-           :param bool auto_commit: whether to force a commit of the message
-                                    status after sending each message (meant
-                                    only for processing by the scheduler),
-                                    should never be True during normal
-                                    transactions (default: False)
-           :return: True
-        """
-        ir_mail_server = self.pool.get('ir.mail_server')
-        self.write(cr, uid, ids, {'state': 'outgoing'}, context=context)
+    def unlink(self, cr, uid, ids, context=None):
+        # cascade-delete attachments that are directly attached to the message (should only happen
+        # for mail.messages that act as parent for a standalone mail.mail record).
+        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
+        attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
-            try:
-                attachments = []
-                for attach in message.attachment_ids:
-                    attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
+            for attach in message.attachment_ids:
+                if attach.res_model == self._name and attach.res_id == message.id:
+                    attachments_to_delete.append(attach.id)
+        if attachments_to_delete:
+            self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
+        return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
-                body = message.body_html if message.content_subtype == 'html' else message.body_text
-                body_alternative = None
-                content_subtype_alternative = None
-                if message.content_subtype == 'html' and message.body_text:
-                    # we have a plain text alternative prepared, pass it to 
-                    # build_message instead of letting it build one
-                    body_alternative = message.body_text
-                    content_subtype_alternative = 'plain'
+    def copy(self, cr, uid, id, default=None, context=None):
+        """ Overridden to avoid duplicating fields that are unique to each email """
+        if default is None:
+            default = {}
+        default.update(message_id=False, headers=False)
+        return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
 
-                # handle destination_partners
-                partner_ids_email_to = ''
-                for partner in message.partner_ids:
-                    partner_ids_email_to += '%s ' % (partner.email or '')
-                message_email_to = '%s %s' % (partner_ids_email_to, message.email_to or '')
+    #------------------------------------------------------
+    # Messaging API
+    #------------------------------------------------------
 
-                # build an RFC2822 email.message.Message object and send it
-                # without queuing
-                msg = ir_mail_server.build_email(
-                    email_from=message.email_from,
-                    email_to=mail_tools_to_email(message_email_to),
-                    subject=message.subject,
-                    body=body,
-                    body_alternative=body_alternative,
-                    email_cc=mail_tools_to_email(message.email_cc),
-                    email_bcc=mail_tools_to_email(message.email_bcc),
-                    reply_to=message.reply_to,
-                    attachments=attachments, message_id=message.message_id,
-                    references = message.references,
-                    object_id=message.res_id and ('%s-%s' % (message.res_id,message.model)),
-                    subtype=message.content_subtype,
-                    subtype_alternative=content_subtype_alternative,
-                    headers=message.headers and ast.literal_eval(message.headers))
-                res = ir_mail_server.send_email(cr, uid, msg,
-                                                mail_server_id=message.mail_server_id.id,
-                                                context=context)
-                if res:
-                    message.write({'state':'sent', 'message_id': res, 'email_to': message_email_to})
-                else:
-                    message.write({'state':'exception', 'email_to': message_email_to})
-                message.refresh()
-                if message.state == 'sent':
-                    self._postprocess_sent_message(cr, uid, message, context=context)
-            except Exception:
-                _logger.exception('failed sending mail.message %s', message.id)
-                message.write({'state':'exception'})
+    # TDE note: this code is not used currently, will be improved in a future merge, when quoted context
+    # will be added to email send for notifications. Currently only WIP.
+    MAIL_TEMPLATE = """<div>
+    % if message:
+        ${display_message(message)}
+    % endif
+    % for ctx_msg in context_messages:
+        ${display_message(ctx_msg)}
+    % endfor
+    % if add_expandable:
+        ${display_expandable()}
+    % endif
+    ${display_message(header_message)}
+    </div>
 
-            if auto_commit == True:
-                cr.commit()
-        return True
+    <%def name="display_message(message)">
+        <div>
+            Subject: ${message.subject}<br />
+            Body: ${message.body}
+        </div>
+    </%def>
 
+    <%def name="display_expandable()">
+        <div>This is an expandable.</div>
+    </%def>
+    """
 
+    def message_quote_context(self, cr, uid, id, context=None, limit=3, add_original=False):
+        """
+            1. message.parent_id = False: new thread, no quote_context
+            2. get the lasts messages in the thread before message
+            3. get the message header
+            4. add an expandable between them
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+            :param dict quote_context: options for quoting
+            :return string: html quote
+        """
+        add_expandable = False
+
+        message = self.browse(cr, uid, id, context=context)
+        if not message.parent_id:
+            return ''
+        context_ids = self.search(cr, uid, [
+            ('parent_id', '=', message.parent_id.id),
+            ('id', '<', message.id),
+            ], limit=limit, context=context)
+
+        if len(context_ids) >= limit:
+            add_expandable = True
+            context_ids = context_ids[0:-1]
+
+        context_ids.append(message.parent_id.id)
+        context_messages = self.browse(cr, uid, context_ids, context=context)
+        header_message = context_messages.pop()
+
+        try:
+            if not add_original:
+                message = False
+            result = MakoTemplate(self.MAIL_TEMPLATE).render_unicode(message=message,
+                                                        context_messages=context_messages,
+                                                        header_message=header_message,
+                                                        add_expandable=add_expandable,
+                                                        # context kw would clash with mako internals
+                                                        ctx=context,
+                                                        format_exceptions=True)
+            result = result.strip()
+            return result
+        except Exception:
+            _logger.exception("failed to render mako template for quoting message")
+            return ''
+        return result
+
+    def _notify(self, cr, uid, newid, context=None):
+        """ Add the related record followers to the destination partner_ids if is not a private message.
+            Call mail_notification.notify to manage the email sending
+        """
+        message = self.read(cr, uid, newid, ['model', 'res_id', 'author_id', 'subtype_id', 'partner_ids'], context=context)
+
+        partners_to_notify = set([])
+        # message has no subtype_id: pure log message -> no partners, no one notified
+        if not message.get('subtype_id'):
+            return True
+        # all partner_ids of the mail.message have to be notified
+        if message.get('partner_ids'):
+            partners_to_notify |= set(message.get('partner_ids'))
+        # all followers of the mail.message document have to be added as partners and notified
+        if message.get('model') and message.get('res_id'):
+            fol_obj = self.pool.get("mail.followers")
+            fol_ids = fol_obj.search(cr, uid, [
+                ('res_model', '=', message.get('model')),
+                ('res_id', '=', message.get('res_id')),
+                ('subtype_ids', 'in', message.get('subtype_id')[0])
+                ], context=context)
+            fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
+            partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
+        # remove me from notified partners, unless the message is written on my own wall
+        if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
+            partners_to_notify |= set([message.get('author_id')[0]])
+        elif message.get('author_id'):
+            partners_to_notify = partners_to_notify - set([message.get('author_id')[0]])
+
+        if partners_to_notify:
+            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
+
+        self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
+
+    #------------------------------------------------------
+    # Tools
+    #------------------------------------------------------
+
+    def check_partners_email(self, cr, uid, partner_ids, context=None):
+        """ Verify that selected partner_ids have an email_address defined.
+            Otherwise throw a warning. """
+        partner_wo_email_lst = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            if not partner.email:
+                partner_wo_email_lst.append(partner)
+        if not partner_wo_email_lst:
+            return {}
+        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
+        for partner in partner_wo_email_lst:
+            warning_msg += '\n- %s' % (partner.name)
+        return {'warning': {
+                    'title': _('Partners email addresses not found'),
+                    'message': warning_msg,
+                    }
+                }

@@ -24,22 +24,20 @@
     'name': 'Portal CRM',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
-This module adds a contact page (with a contact form creating a lead when
-submitted) to your portal if crm and portal are installed.
+This module adds a contact page (with a contact form creating a lead when submitted) to your portal if crm and portal are installed.
+====================================================================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','portal'],
-    'data': [
-        'wizard/contact_view.xml',
+    'data': ['wizard/contact_view.xml'],
+    'test': [
+        'test/contact_form.yml',
     ],
-    'installable': True
-,    'auto_install':True,
-    'category':'Hidden',
-    'css': [
-        'static/src/css/portal_crm.css',
-    ],
-
+    'installable': True,
+    'auto_install': True,
+    'category': 'Hidden',
+    'css': ['static/src/css/portal_crm.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

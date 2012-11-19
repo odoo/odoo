@@ -67,7 +67,7 @@ class project_task(osv.osv):
         default['context_id'] = False
         return super(project_task,self).copy_data(cr, uid, id, default, context)
 
-    def _get_context(self,cr, uid, context=None):
+    def _get_context(self, cr, uid, context=None):
         ids = self.pool.get('project.gtd.context').search(cr, uid, [], context=context)
         return ids and ids[0] or False
 

@@ -1,13 +1,8 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-    <!-- budget form and tree view from account module *********************************** -->
-        <record id="action_account_budget_post_tree" model="ir.actions.act_window">
-            <field name="name">Budgets</field>
-            <field name="res_model">account.budget.post</field>
-            <field name="view_type">tree</field>
-        </record>
-        <menuitem action="action_account_budget_post_tree" id="menu_action_account_budget_post_tree" parent="account.menu_finance_generic_reporting" sequence="6"/>
+
+        <menuitem name="Budgets" id="menu_action_account_budget_post_tree" parent="account.menu_finance_generic_reporting" sequence="6"/>
 
         <!--
     Budgets
@@ -62,12 +57,7 @@
                             <field name="account_ids"/>
                         </page>
                         <page string="Budget Lines">
-                            <field name="crossovered_budget_line" widget="one2many_list" mode="graph,tree">
-                                <graph type="bar" string="Lines">
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="planned_amount" operator="+"/>
-                                    <field group="True" name="general_budget_id"/>
-                                </graph>
+                            <field name="crossovered_budget_line" widget="one2many_list" mode="tree">
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
@@ -230,7 +220,17 @@
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"
             action="act_crossovered_budget_view" sequence="1" />
-
+        
+       <record id="view_crossovered_budget_line_search" model="ir.ui.view">
+            <field name="name">account.budget.line.search</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <search string="Budget Lines">
+                    <field name="analytic_account_id"/>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
             <field name="name">crossovered.budget.line.tree</field>
             <field name="model">crossovered.budget.lines</field>
@@ -294,13 +294,13 @@
 
 
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit_budget">
-            <field name="name">account.analytic.account.form.inherot.budget</field>
+            <field name="name">account.analytic.account.form.inherit.budget</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Budget Lines">
-                            <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree,graph">
+                    <page string="Budget Lines" groups="account.group_account_user">
+                            <field name="crossovered_budget_line" widget="one2many_list" colspan="4" nolabel="1" mode="tree">
                                 <tree string="Budget Lines" editable="top">
                                     <field name="crossovered_budget_id"/>
                                     <field name="general_budget_id"/>
@@ -320,11 +320,6 @@
                                     <field name="paid_date"/>
                                     <field name="planned_amount"/>
                                 </form>
-                                <graph type="bar" string="Lines">
-                                    <field name="general_budget_id" />
-                                    <field name="planned_amount" operator="+"/>
-                                    <field group="True" name="analytic_account_id"/>
-                                </graph>
                             </field>
                     </page>
                 </notebook>

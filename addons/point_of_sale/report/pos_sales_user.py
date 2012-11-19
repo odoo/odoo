@@ -33,7 +33,7 @@ class pos_sales_user(report_sxw.rml_parse):
 
         })
 
-    def _get_data(self,form):
+    def _get_data(self, form):
         dt1 = form['date_start'] + ' 00:00:00'
         dt2 = form['date_end'] + ' 23:59:59'
         data={}

@@ -13,13 +13,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-07 05:15+0000\n"
-"X-Generator: Launchpad (build 15745)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:13+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,7 +29,7 @@ msgstr "Примечание"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Способ выставления счета"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -37,11 +37,13 @@ msgid ""
 "This invoicing type will be used, by default, for invoicing the current "
 "partner."
 msgstr ""
+"Этот способ выставления счета будет использоваться по умолчанию при "
+"выставлении счета этому партнеру."
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -91,15 +93,15 @@ msgid ""
 "can create a specific invoicing journal to group your invoicing according to "
 "your customer's needs: daily, each Wednesday, monthly, etc."
 msgstr ""
-"Типы счетов используются для партнеров, заказов на продажу, заказов на "
-"доставку. Вы можете создать специальный журнал счетов для группировки счетов "
-"в соответствии с требованиями заказчиков ежедневно, каждую среду, ежемесячно "
-"и т.д."
+"Типы счетов используются для партнеров, заказов продаж, заказов доставки. Вы "
+"можете создать специальный журнал счетов для группировки счетов в "
+"соответствии с требованиями заказчиков ежедневно, каждую среду, ежемесячно и "
+"т.д."
 
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка должна быть уникальна для каждой компании!"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0
@@ -122,7 +124,7 @@ msgstr "Партнер"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_sale_order
 msgid "Sales Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ продаж"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking

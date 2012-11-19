@@ -6,7 +6,7 @@
     to_date: !eval "'%s-12-31' %(datetime.now().year)"
     invoice_state: open_paid
 -
-  I open margin for PC3
+  I open margin for PC-DEM
 -
   !python {model: product.margin}: |
     self.action_open_window(cr, uid, [ref("product_margin_wiz0")], {"lang": 'en_US',

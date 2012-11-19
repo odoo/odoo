@@ -48,14 +48,12 @@ reports.""",
         'wizard/hr_timesheet_invoice_create_view.xml',
         'wizard/hr_timesheet_invoice_create_final_view.xml',
     ],
-    'demo': [
-        'hr_timesheet_invoice_demo.xml',
-    ],
+    'demo': ['hr_timesheet_invoice_demo.xml'],
     'test': ['test/test_hr_timesheet_invoice.yml',
+             'test/test_hr_timesheet_invoice_no_prod_tax.yml',
              'test/hr_timesheet_invoice_report.yml',
-             ],
+    ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0056091842381',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

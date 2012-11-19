@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-09 04:51+0000\n"
-"X-Generator: Launchpad (build 15761)\n"
+"X-Launchpad-Export-Date: 2012-10-30 05:16+0000\n"
+"X-Generator: Launchpad (build 16206)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -28,7 +28,8 @@ msgid "Allocation Type"
 msgstr "Type d'attribution"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "En attente d'une deuxième approbation"
 
@@ -53,7 +54,8 @@ msgid "Allocation Mode"
 msgstr "Mode d'allocation"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,department_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Département"
 
@@ -63,7 +65,8 @@ msgid "Requests Approve"
 msgstr "Approuver la demande"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Refusée"
 
@@ -141,7 +144,8 @@ msgid "Summary Of Leaves"
 msgstr "Résumé des congés"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0
+#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "Approuvée"
@@ -207,7 +211,8 @@ msgid "Leaves by Department"
 msgstr "Congés par département"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Annulé"
 
@@ -262,7 +267,8 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0
+#: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -289,8 +295,10 @@ msgid "You have to select at least 1 Department. And try again"
 msgstr "Vous devez sélectionner au moins 1 département. Veuillez réessayer."
 
 #. module: hr_holidays
+#: code:addons/hr_holidays/report/holidays_summary_report.py:114
 #: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Confirmed"
 msgstr "Confirmé"
 
@@ -317,7 +325,8 @@ msgid "Remaining Leaves"
 msgstr "Congés restants"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,state:0
+#: view:hr.holidays:0
+#: field:hr.holidays,state:0
 msgid "State"
 msgstr "Statut"
 
@@ -327,14 +336,17 @@ msgid "Total holidays by type"
 msgstr "Total des congés par type"
 
 #. module: hr_holidays
-#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
+#: view:hr.employee:0
+#: view:hr.holidays:0
+#: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Employé"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "New"
 msgstr "Nouveau"
 
@@ -376,7 +388,8 @@ msgid "Allocation for %s"
 msgstr "Allocation pour %s"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0
+#: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Nombre de jours"
@@ -420,7 +433,8 @@ msgid ""
 msgstr ""
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "En attente d'approbation"
 
@@ -454,6 +468,7 @@ msgid "Lavender"
 msgstr "Lavande"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
 msgid "Month"
 msgstr "Mois"
@@ -477,7 +492,8 @@ msgid "Employee's Holidays"
 msgstr "Congés des employés"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,category_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Catégorie"
 
@@ -522,7 +538,8 @@ msgid "Holiday"
 msgstr "Vacances"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0
+#: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr "Rendez-vous"
 
@@ -565,7 +582,8 @@ msgstr ""
 "Erreur ! Vous ne pouvez pas créer de hiérarchie d'employés récursives."
 
 #. module: hr_holidays
-#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr "Jours de congés restants"
 
@@ -647,7 +665,8 @@ msgid "Compensatory Days"
 msgstr "Jours de compensation"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,notes:0
+#: view:hr.holidays:0
+#: field:hr.holidays,notes:0
 msgid "Reasons"
 msgstr "Raisons"
 
@@ -658,7 +677,8 @@ msgid "Leaves Analysis"
 msgstr "Analyse des congés"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Annuler"
 
@@ -672,13 +692,17 @@ msgstr ""
 "Rapports\\Congés par département"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
+#: code:addons/hr_holidays/report/holidays_summary_report.py:117
+#: view:hr.holidays:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
+#, python-format
 msgid "Validated"
 msgstr "Validé"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Demande d'attribution"
 
@@ -694,7 +718,8 @@ msgid "Apply Double Validation"
 msgstr "Appliquer la double validation"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Imprimer"
 
@@ -715,7 +740,8 @@ msgid "By Employee Category"
 msgstr "Par catégorie d'employé"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "Demande de congé"
 
@@ -847,7 +873,8 @@ msgid "Approve"
 msgstr "Approuver"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,date_from:0
+#: view:hr.holidays:0
+#: field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Date de début"
 

@@ -8,12 +8,8 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[last()]" position="after">
-                    <page string="Portal Settings">
-                        <group>
-                            <field name="visibility"/>
-                        </group>
-                    </page>
+                <xpath expr="//field[@name='active']" position="before">
+                    <field name="visibility"/>
                 </xpath>
             </field>
         </record>
@@ -38,7 +34,7 @@
                                         </div>
                                         <div class="oe_employee_details">
                                             <h4>
-                                                <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                                <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
                                             </h4>
                                             <ul>
                                                 <li t-if="record.job_id.raw_value"><field name="job_id"/></li>

@@ -45,12 +45,12 @@ class account_installer(osv.osv_memory):
             sorted(((m.name, m.shortdesc)
                     for m in modules.browse(cr, uid, ids, context=context)),
                    key=itemgetter(1)))
-        charts.insert(0, ('configurable', 'Generic Chart Of Accounts'))
+        charts.insert(0, ('configurable', _('Custom')))
         return charts
 
     _columns = {
         # Accounting
-        'charts': fields.selection(_get_charts, 'Chart of Accounts',
+        'charts': fields.selection(_get_charts, 'Accounting Package',
             required=True,
             help="Installs localized accounting charts to match as closely as "
                  "possible the accounting needs of your company based on your "
@@ -118,15 +118,6 @@ class account_installer(osv.osv_memory):
     def execute(self, cr, uid, ids, context=None):
         self.execute_simple(cr, uid, ids, context)
         super(account_installer, self).execute(cr, uid, ids, context=context)
-
-    def action_next(self, cr, uid, ids, context=None):
-        next = self.execute(cr, uid, ids, context=context)
-        for installer in self.browse(cr, uid, ids, context=context):
-            if installer.charts == 'l10n_be':
-                return {'type': 'ir.actions.act_window_close'}
-            else :
-                if next : return next
-                return self.next(cr, uid, ids, context=context)
 
     def execute_simple(self, cr, uid, ids, context=None):
         if context is None:

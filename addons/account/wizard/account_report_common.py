@@ -30,9 +30,11 @@ class account_common_report(osv.osv_memory):
     _description = "Account Common Report"
 
     def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
+        res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-        return {'value': {'company_id': company_id}}
+            res['value'] = {'company_id': company_id}
+        return res
 
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
@@ -117,7 +119,11 @@ class account_common_report(osv.osv_memory):
 
     def _get_fiscalyear(self, cr, uid, context=None):
         now = time.strftime('%Y-%m-%d')
-        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now)], limit=1 )
+        company_id = False
+        ids = context.get('active_ids', [])
+        if ids:
+            company_id = self.browse(cr, uid, ids[0], context=context).company_id.id
+        fiscalyears = self.pool.get('account.fiscalyear').search(cr, uid, [('date_start', '<', now), ('date_stop', '>', now), ('company_id', '=', company_id)], limit=1)
         return fiscalyears and fiscalyears[0] or False
 
     def _get_all_journal(self, cr, uid, context=None):

@@ -61,7 +61,7 @@ class account_bank_statement(osv.osv):
         return res
 
     def _get_period(self, cr, uid, context=None):
-        periods = self.pool.get('account.period').find(cr, uid)
+        periods = self.pool.get('account.period').find(cr, uid,context=context)
         if periods:
             return periods[0]
         return False
@@ -123,8 +123,8 @@ class account_bank_statement(osv.osv):
                                    ('open','Open'), # used by cash statements
                                    ('confirm', 'Closed')],
                                    'Status', required=True, readonly="1",
-                                   help='When new statement is created the state will be \'Draft\'.\n'
-                                        'And after getting confirmation from the bank it will be in \'Confirmed\' state.'),
+                                   help='When new statement is created the status will be \'Draft\'.\n'
+                                        'And after getting confirmation from the bank it will be in \'Confirmed\' status.'),
         'currency': fields.function(_currency, string='Currency',
             type='many2one', relation='res.currency'),
         'account_id': fields.related('journal_id', 'default_debit_account_id', type='many2one', relation='account.account', string='Account used in this journal', readonly=True, help='used in statement reconciliation domain, but shouldn\'t be used elswhere.'),
@@ -304,7 +304,7 @@ class account_bank_statement(osv.osv):
             'date': st_line.date,
             'ref': st_line.ref,
             'move_id': move_id,
-            'partner_id': partner_id,
+            'partner_id': par_id,
             'account_id': acc_id,
             'credit': credit,
             'debit': debit,
@@ -430,7 +430,7 @@ class account_bank_statement(osv.osv):
                     'name': st_number,
                     'balance_end_real': st.balance_end
             }, context=context)
-            self.message_append_note(cr, uid, [st.id], body=_('Statement %s is confirmed, journal items are created.') % (st_number,), context=context)
+            self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st_number,), context=context)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -447,20 +447,24 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
-        cr.execute('SELECT balance_end_real \
-                FROM account_bank_statement \
-                WHERE journal_id = %s AND NOT state = %s \
-                ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-        res = cr.fetchone()
+        res = False
+        if journal_id:
+            cr.execute('SELECT balance_end_real \
+                    FROM account_bank_statement \
+                    WHERE journal_id = %s AND NOT state = %s \
+                    ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
+            res = cr.fetchone()
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        if not journal_id:
+            return {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
 
-        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
-        account_id = journal_data['default_debit_account_id']
+        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['company_id', 'currency'], context=context)
         company_id = journal_data['company_id']
-        return {'value': {'balance_start': balance_start, 'account_id': account_id, 'company_id': company_id}}
+        currency_id = journal_data['currency'] or self.pool.get('res.company').browse(cr, uid, company_id[0], context=context).currency_id.id
+        return {'value': {'balance_start': balance_start, 'company_id': company_id, 'currency': currency_id}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'], context=context)
@@ -481,6 +485,19 @@ class account_bank_statement(osv.osv):
         default = default.copy()
         default['move_line_ids'] = []
         return super(account_bank_statement, self).copy(cr, uid, id, default, context=context)
+
+    def button_journal_entries(self, cr, uid, ids, context=None):
+      ctx = (context or {}).copy()
+      ctx['journal_id'] = self.browse(cr, uid, ids[0], context=context).journal_id.id
+      return {
+        'view_type':'form',
+        'view_mode':'tree',
+        'res_model':'account.move.line',
+        'view_id':False,
+        'type':'ir.actions.act_window',
+        'domain':[('statement_id','in',ids)],
+        'context':ctx,
+      }
 
 account_bank_statement()
 

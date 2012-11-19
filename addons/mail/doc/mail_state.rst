@@ -1,15 +1,15 @@
 .. _mail_state:
 
-message_state
+message_unread
 =============
 
-``message_state`` is a boolean field that states whether the document
+``message_unread`` is a boolean field that states whether the document
 has unread messages. In previous versions, some documents were going
 back to ``pending`` state when receiving an email through the mail
 gateway. Now the state related to messages differs from the state or
 stage of the document itself.
 
-message_state and need action mechanism
+message_unread and need action mechanism
 +++++++++++++++++++++++++++++++++++++++
 
 The ``mail`` module introduces a default behavior for the need_action
@@ -23,6 +23,6 @@ mechanism [REF].
     """
     result = super(ir_needaction_mixin, self).get_needaction_user_ids(cr, uid, ids, context=context)
     for obj in self.browse(cr, uid, ids, context=context):
-      if obj.message_state == False and obj.user_id:
+      if obj.message_unread == False and obj.user_id:
         result[obj.id].append(obj.user_id.id)
     return result

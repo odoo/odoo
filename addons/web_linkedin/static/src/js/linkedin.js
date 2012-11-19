@@ -14,13 +14,13 @@ openerp.web_linkedin = function(instance) {
         },
         test_linkedin: function() {
             var self = this;
-            return this.test_api_key().pipe(function() {
+            return this.test_api_key().then(function() {
                 if (self.linkedin_added)
                     return self.linkedin_def.promise();
                 var tag = document.createElement('script');
                 tag.type = 'text/javascript';
                 tag.src = "http://platform.linkedin.com/in.js";
-                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true';
+                tag.innerHTML = 'api_key : ' + self.api_key + '\nauthorize : true\nscope: r_network r_contactinfo';
                 document.getElementsByTagName('head')[0].appendChild(tag);
                 self.linkedin_added = true;
                 $(tag).load(function() {
@@ -37,7 +37,7 @@ openerp.web_linkedin = function(instance) {
             if (this.api_key) {
                 return $.when();
             }
-            return new instance.web.Model("ir.config_parameter").call("get_param", ["web.linkedin.apikey"]).pipe(function(a) {
+            return new instance.web.Model("ir.config_parameter").call("get_param", ["web.linkedin.apikey"]).then(function(a) {
                 if (!!a) {
                     self.api_key = a;
                     return true;
@@ -69,30 +69,26 @@ openerp.web_linkedin = function(instance) {
         },
         search_linkedin: function() {
             var self = this;
-            this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).then(function() {
+            this.display_dm.add(instance.web_linkedin.tester.test_linkedin()).done(function() {
                 var pop = new instance.web_linkedin.LinkedinPopup(self, self.get("value"));
                 pop.open();
                 pop.on("selected", this, function(entity) {
                     self.selected_entity(entity);
                 });
-            }, _.bind(this.linkedin_disabled, this));
+            }).fail(_.bind(this.linkedin_disabled, this));
         },
         linkedin_disabled: function() {
-            if (instance.session.uid !== 1) {
-                instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
-                    title: _t("LinkedIn is not enabled"),
-                    buttons: [
-                        {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
-                    ]
-                });
-            } else {
-                new instance.web_linkedin.KeyWizard(this).open();
-            }
+            instance.web.dialog($(QWeb.render("LinkedIn.DisabledWarning")), {
+                title: _t("LinkedIn is not enabled"),
+                buttons: [
+                    {text: _t("Ok"), click: function() { $(this).dialog("close"); }}
+                ]
+            });
         },
         selected_entity: function(entity) {
             var self = this;
-            this.create_on_change(entity).then(function(to_change) {
-                self.view.on_processed_onchange({value:to_change});
+            this.create_on_change(entity).done(function(to_change) {
+                self.view.set_values(to_change);
             });
         },
         create_on_change: function(entity) {
@@ -105,13 +101,13 @@ openerp.web_linkedin = function(instance) {
                 to_change.image = false;
                 if (entity.logoUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
-                                       {'url': entity.logoUrl}).pipe(function(data){
+                                       {'url': entity.logoUrl}).then(function(data){
                         to_change.image = data;
                     }));
                 }
                 to_change.website = entity.websiteUrl;
                 to_change.phone = false;
-                _.each(entity.locations.values || [], function(el) {
+                _.each((entity.locations || {}).values || [], function(el) {
                     to_change.phone = el.contactInfo.phone1;
                 });
                 var children_def = $.Deferred();
@@ -121,8 +117,10 @@ openerp.web_linkedin = function(instance) {
                         "count": 25,
                     }).result(function(result) {
                         children_def.resolve(result);
+                    }).error(function() {
+                        children_def.reject();
                     });
-                defs.push(children_def.pipe(function(result) {
+                defs.push(children_def.then(function(result) {
                     result = _.reject(result.people.values || [], function(el) {
                         return ! el.formattedName;
                     });
@@ -130,10 +128,12 @@ openerp.web_linkedin = function(instance) {
                         el.__type = "people";
                         return self.create_on_change(el);
                     });
-                    return $.when.apply($, defs).pipe(function() {
+                    return $.when.apply($, defs).then(function() {
                         var p_to_change = _.toArray(arguments);
                         to_change.child_ids = p_to_change;
                     });
+                }, function() {
+                    return $.when();
                 }));
                 /* TODO
                 to_change.linkedinUrl = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);
@@ -144,7 +144,7 @@ openerp.web_linkedin = function(instance) {
                 to_change.image = false;
                 if (entity.pictureUrl) {
                     defs.push(self.rpc('/web_linkedin/binary/url2binary',
-                                       {'url': entity.pictureUrl}).pipe(function(data){
+                                       {'url': entity.pictureUrl}).then(function(data){
                         to_change.image = data;
                     }));
                 }
@@ -163,7 +163,7 @@ openerp.web_linkedin = function(instance) {
                 to_change.linkedinUrl = entity.publicProfileUrl;
                 */
             }
-            return $.when.apply($, defs).pipe(function() {
+            return $.when.apply($, defs).then(function() {
                 return to_change;
             });
         },
@@ -186,7 +186,7 @@ openerp.web_linkedin = function(instance) {
             this._super();
             var self = this;
             this.on("authentified", this, this.authentified);
-            instance.web_linkedin.tester.test_authentication().then(function() {
+            instance.web_linkedin.tester.test_authentication().done(function() {
                 self.trigger("authentified");
             });
         },
@@ -200,7 +200,7 @@ openerp.web_linkedin = function(instance) {
                     encodeURI(this.text), this.limit)).result(function (result) {
                 cdef.resolve(result);
             });
-            var def = cdef.pipe(function(companies) {
+            var def = cdef.then(function(companies) {
                 var lst = companies.companies.values || [];
                 lst = _.first(lst, self.limit);
                 lst = _.map(lst, function(el) {
@@ -214,7 +214,7 @@ openerp.web_linkedin = function(instance) {
                 params({"keywords": this.text, "count": this.limit}).result(function(result) {
                 pdef.resolve(result);
             });
-            var def2 = pdef.pipe(function(people) {
+            var def2 = pdef.then(function(people) {
                 var plst = people.people.values || [];
                 plst = _.first(plst, self.limit);
                 plst = _.map(plst, function(el) {
@@ -237,8 +237,8 @@ openerp.web_linkedin = function(instance) {
                     $row.appendTo($elem);
                 }
                 pc.appendTo($row);
-                pc.$element.css("display", "table-cell");
-                pc.$element.css("width", "20%");
+                pc.$el.css("display", "table-cell");
+                pc.$el.css("width", "20%");
                 pc.on("selected", self, function(data) {
                     self.trigger("selected", data);
                     self.destroy();
@@ -259,7 +259,7 @@ openerp.web_linkedin = function(instance) {
         },
         start: function() {
             var self = this;
-            this.$element.click(function() {
+            this.$el.click(function() {
                 self.trigger("selected", self.data);
             });
             if (this.data.__type === "company") {
@@ -270,25 +270,6 @@ openerp.web_linkedin = function(instance) {
                 self.$("img").attr("src", this.data.pictureUrl);
                 self.$(".oe_linkedin_entity_headline").text(this.data.headline);
             }
-        },
-    });
-    
-    
-    instance.web_linkedin.KeyWizard = instance.web.Dialog.extend({
-        template: "LinkedIn.KeyWizard", 
-        init: function(parent, text) {
-            this._super(parent, {title:_t("LinkedIn API Key")});
-            this.api_domain = window.location.origin;
-        },
-        start: function() {
-            this._super();
-            var self = this;
-            this.$("button").click(function() {
-                var value = self.$("input").val();
-                return new instance.web.Model("ir.config_parameter").call("set_param", ["web.linkedin.apikey", value]).pipe(function() {
-                    self.destroy();
-                });
-            });
         },
     });
 };

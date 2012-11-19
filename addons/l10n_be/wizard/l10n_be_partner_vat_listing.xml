@@ -6,18 +6,18 @@
       <field name="model">partner.vat</field>
       <field name="arch" type="xml">
         <form string="Partner VAT Listing" version="7.0">
-          <header>
+          <p class="oe_grey">
+              This wizard will create an XML file for VAT details and total invoiced amounts per partner.
+          </p>
+          <group>
+            <field name="year"/>
+            <field name="limit_amount"/>
+          </group>
+          <footer>
             <button name="get_partner" string="View Customers" type="object"  class="oe_highlight"  />
             or 
             <button string="Cancel" class="oe_link" special="cancel" />
-          </header>
-          <group>
-            <label string="This wizard will create an XML file for VAT details and total invoiced amounts per partner." colspan="4"/>
-          </group>
-          <newline/>
-          <field name="year"/>
-          <newline/>
-          <field name="limit_amount"/>
+          </footer>
         </form>
       </field>
     </record>

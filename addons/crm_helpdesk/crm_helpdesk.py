@@ -20,10 +20,12 @@
 ##############################################################################
 
 from base_status.base_state import base_state
+from base_status.base_stage import base_stage
 from crm import crm
 from osv import fields, osv
 import tools
 from tools.translate import _
+from tools import html2plaintext
 
 CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -31,14 +33,14 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_helpdesk(base_state, osv.osv):
+class crm_helpdesk(base_state, base_stage, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
     _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mail.thread']
-    _mail_compose_message = True
+
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -51,13 +53,12 @@ class crm_helpdesk(base_state, osv.osv):
             'date_deadline': fields.date('Deadline'),
             'user_id': fields.many2one('res.users', 'Responsible'),
             'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                            select=True, help='Sales team to which Case belongs to.\
-                                 Define Responsible user and Email account for mail gateway.'),
+                            select=True, help='Responsible sales team. Define Responsible user and Email account for mail gateway.'),
             'company_id': fields.many2one('res.company', 'Company'),
             'date_closed': fields.datetime('Closed', readonly=True),
             'partner_id': fields.many2one('res.partner', 'Partner'),
             'email_cc': fields.text('Watchers Emails', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-            'email_from': fields.char('Email', size=128, help="These people will receive email."),
+            'email_from': fields.char('Email', size=128, help="Destination email for email gateway"),
             'date': fields.datetime('Date'),
             'ref' : fields.reference('Reference', selection=crm._links_get, size=128),
             'ref2' : fields.reference('Reference 2', selection=crm._links_get, size=128),
@@ -68,13 +69,13 @@ class crm_helpdesk(base_state, osv.osv):
             'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.helpdesk')]"), 
-            'duration': fields.float('Duration', states={'done': [('readonly', True)]}), 
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True, 
-                                  help='The state is set to \'Draft\', when a case is created.\
-                                  \nIf the case is in progress the state is set to \'Open\'.\
-                                  \nWhen the case is over, the state is set to \'Done\'.\
-                                  \nIf the case needs to be reviewed then the state is set to \'Pending\'.'),
+                            ('object_id.model', '=', 'crm.helpdesk')]"),
+            'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
+            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
+                                  help='The status is set to \'Draft\', when a case is created.\
+                                  \nIf the case is in progress the status is set to \'Open\'.\
+                                  \nWhen the case is over, the status is set to \'Done\'.\
+                                  \nIf the case needs to be reviewed then the status is set to \'Pending\'.'),
     }
 
     _defaults = {
@@ -103,14 +104,14 @@ class crm_helpdesk(base_state, osv.osv):
             This override updates the document according to the email.
         """
         if custom_values is None: custom_values = {}
+        desc = html2plaintext(msg.get('body')) if msg.get('body') else ''
         custom_values.update({
             'name': msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': desc,
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
         })
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
         return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
@@ -130,7 +131,7 @@ class crm_helpdesk(base_state, osv.osv):
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -139,9 +140,9 @@ class crm_helpdesk(base_state, osv.osv):
 
         return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
-    # ******************************
+    # ---------------------------------------------------
     # OpenChatter
-    # ******************************
+    # ---------------------------------------------------
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ override of default base_state method. """
@@ -149,8 +150,7 @@ class crm_helpdesk(base_state, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         msg = _('Case has been <b>created</b>.')
-        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        self.message_post(cr, uid, ids, body=msg, context=context)
         return True
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

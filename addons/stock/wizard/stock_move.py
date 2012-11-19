@@ -170,7 +170,8 @@ class split_in_production_lot(osv.osv_memory):
         'product_uom': fields.many2one('product.uom', 'Unit of Measure'),
         'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Numbers'),
         'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Numbers'),
-        'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'use_exist' : fields.boolean('Existing Serial Numbers',
+            help="Check this option to select existing serial numbers in the list below, otherwise you should enter new ones line by line."),
         'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
@@ -271,8 +272,8 @@ class stock_move_split_lines_exist(osv.osv_memory):
     }
 
     def onchange_lot_id(self, cr, uid, ids, prodlot_id=False, product_qty=False,
-                        loc_id=False, product_id=False, uom_id=False):
+                        loc_id=False, product_id=False, uom_id=False,context=None):
         return self.pool.get('stock.move').onchange_lot_id(cr, uid, [], prodlot_id, product_qty,
-                        loc_id, product_id, uom_id)
+                        loc_id, product_id, uom_id, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

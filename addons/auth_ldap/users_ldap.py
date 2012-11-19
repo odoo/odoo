@@ -180,8 +180,8 @@ class CompanyLDAP(osv.osv):
         """
         
         user_id = False
-        login = tools.ustr(login)
-        cr.execute("SELECT id, active FROM res_users WHERE login=%s", (login,))
+        login = tools.ustr(login.lower())
+        cr.execute("SELECT id, active FROM res_users WHERE lower(login)=%s", (login,))
         res = cr.fetchone()
         if res:
             if res[1]:

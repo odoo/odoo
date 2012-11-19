@@ -81,7 +81,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
                             'DELETE', 'TRACE', 'REPORT', ]
                     }
 
-    def get_userinfo(self,user,pw):
+    def get_userinfo(self, user, pw):
         return False
 
     def _log(self, message):
@@ -167,7 +167,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             self.close_connection = 1
         DAVRequestHandler.send_header(self, key, value)
 
-    def send_body(self, DATA, code = None, msg = None, desc = None, ctype='application/octet-stream', headers=None):
+    def send_body(self, DATA, code=None, msg=None, desc=None, ctype='application/octet-stream', headers=None):
         if headers and 'Connection' in headers:
             pass
         elif self.request_version in ('HTTP/1.0', 'HTTP/0.9'):
@@ -441,10 +441,10 @@ class dummy_dav_interface(object):
     def __init__(self, parent):
         self.parent = parent
 
-    def get_propnames(self,uri):
+    def get_propnames(self, uri):
         return self.PROPS
 
-    def get_prop(self,uri,ns,propname):
+    def get_prop(self, uri, ns, propname):
         if self.M_NS.has_key(ns):
             prefix=self.M_NS[ns]
         else:
@@ -460,10 +460,10 @@ class dummy_dav_interface(object):
     def get_data(self, uri, range=None):
         raise DAV_NotFound
 
-    def _get_dav_creationdate(self,uri):
+    def _get_dav_creationdate(self, uri):
         return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 
-    def _get_dav_getlastmodified(self,uri):
+    def _get_dav_getlastmodified(self, uri):
         return time.strftime("%a, %d %b %Y %H:%M:%S GMT", time.gmtime())
 
     def _get_dav_displayname(self, uri):

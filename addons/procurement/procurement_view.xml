@@ -103,8 +103,8 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_ids" widget="mail_thread"/>
                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
                     </div>
                 </form>
             </field>
@@ -166,7 +166,11 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{'search_default_perm_exceptions':1}</field>
             <field name="search_view_id" ref="view_procurement_filter"/>
-            <field name="help">Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).</field>
+            <field name="help" type="html">
+                <p>
+                Procurement Orders represent the need for a certain quantity of products, at a given time, in a given location. Sales Orders are one typical source of Procurement Orders (but these are distinct documents). Depending on the procurement parameters and the product configuration, the procurement engine will attempt to satisfy the need by reserving products from stock, ordering products from a supplier, or passing a manufacturing order, etc. A Procurement Exception occurs when the system cannot find a way to fulfill a procurement. Some exceptions will resolve themselves automatically, but others require manual intervention (those are identified by a specific error message).
+                </p>
+            </field>
         </record>
 
         <record id="procurement_action5" model="ir.actions.act_window">
@@ -261,12 +265,12 @@
         </record>
 
         <act_window
-        context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
-        id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Reordering Rules"
-        res_model="stock.warehouse.orderpoint"
-        src_model="stock.warehouse"
-        groups="stock.group_stock_user"/>
+            context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
+            id="act_stock_warehouse_2_stock_warehouse_orderpoint"
+            name="Reordering Rules"
+            res_model="stock.warehouse.orderpoint"
+            src_model="stock.warehouse"
+            groups="stock.group_stock_user"/>
 
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
@@ -283,22 +287,33 @@
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
 
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.orderpoint.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+
+        <record model="ir.actions.act_window" id="product_open_orderpoint">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Orderpoints</field>
+            <field name="res_model">stock.warehouse.orderpoint</field>
+        </record>
+
+        <record model="ir.ui.view" id="product_template_form_view_procurement">
+            <field name="name">product.template.procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
-                <page string="Procurement &amp; Locations" position="inside">
-                    <separator string="Minimum Stock Rules"/>
-                        <field name="orderpoint_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
-                            <tree string="Reordering Rules">
-                                <field name="name"/>
-                                <field name="warehouse_id"/>
-                                <field name="product_min_qty"/>
-                                <field name="product_max_qty"/>
-                            </tree>
-                        </field>
-                </page>
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_search_form_view_procurment" model="ir.ui.view">
+            <field name="name">product.search.procurment.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter name="consumable" position="before">
+                   <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
+                </filter>
             </field>
         </record>
 
@@ -307,10 +322,36 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='image_medium']" position="after">
-                    <div class='oe_right oe_button_box'>
-                        <button string="Procurement Request" name="%(act_make_procurement)d" type="action"/>
-                    </div>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button string="Request Procurement" name="%(act_make_procurement)d" type="action"/>
+                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action"/>
+                </xpath>
+                <xpath expr="//field[@name='cost_method']" position="before">
+                    <field name="procure_method" groups="base.group_user"/>
+                    <field name="supply_method" groups="base.group_user"/> 
+                </xpath>
+                <xpath expr="//group[@name='general']" position="after" >
+                   <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                           When you sell this service, nothing special will be triggered
+                           to deliver the customer, as you set the procurement method as
+                           'Make to Stock'.
+                       </p>
+                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                           When you sell this product, OpenERP will <b>use the available
+                           inventory</b> for the delivery order.
+                           <br/><br/>
+                           If there are not enough quantities available, the delivery order
+                           will wait for new products. To fulfill the inventory, you should
+                           create others rules like orderpoints.
+                       </p>
+                       <p attrs="{'invisible': ['|','|',('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                           When you sell this product, a delivery order will be created.
+                           OpenERP will consider that the <b>required quantities are always
+                           available</b> as it's a consumable (as a result of this, the quantity
+                           on hand may become negative).
+                       </p>
+                   </group>
                 </xpath>
             </field>
         </record>

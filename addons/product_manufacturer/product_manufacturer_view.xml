@@ -7,23 +7,21 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Manufacturer">
-                        <group string="Manufacturer">
-                            <field name="manufacturer" />
-                            <field name="manufacturer_pname"/>
-                            <field name="manufacturer_pref"/>
-                        </group>
-                        <group string="Attributes">
-                            <field name="attribute_ids" colspan="4" nolabel="1">
-                                <tree string="Product Attributes" editable="bottom">
-                                    <field name="name"/>
-                                    <field name="value"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </page>
-                </notebook>
+                <group name="procurement" position="inside">
+                    <group string="Manufacturer">
+                        <field name="manufacturer" />
+                        <field name="manufacturer_pname"/>
+                        <field name="manufacturer_pref"/>
+                    </group>
+                    <group string="Attributes">
+                        <field name="attribute_ids" colspan="4" nolabel="1">
+                            <tree string="Product Attributes" editable="bottom">
+                                <field name="name"/>
+                                <field name="value"/>
+                            </tree>
+                        </field>
+                    </group>
+                </group>
             </field>
         </record>
 

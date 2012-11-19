@@ -41,7 +41,7 @@ TRANS=[
     (u'ä','a'),
 ]
 
-def _u2a(text) :
+def _u2a(text):
     """Tries to convert unicode charactere to asci equivalence"""
     if not text : return ""
     txt = ""

@@ -57,10 +57,10 @@ class account_partner_reconcile_process(osv.osv_memory):
     def _get_partner(self, cr, uid, context=None):
         move_line_obj = self.pool.get('account.move.line')
 
-        partner = move_line_obj.get_next_partner_only(cr, uid, offset=1, context=context)
+        partner = move_line_obj.list_partners_to_reconcile(cr, uid, context=context)
         if not partner:
             return False
-        return partner[0]
+        return partner[0][0]
 
     def data_get(self, cr, uid, to_reconcile, today_reconciled, context=None):
         return {'progress': (100 / (float(to_reconcile + today_reconciled) or 1.0)) * today_reconciled}

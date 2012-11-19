@@ -83,24 +83,28 @@
 
 
         <!-- Project Phase -->
-        <act_window id="act_project_phases"
-            name="Phases"
-            src_model="project.project"
-            res_model="project.phase"
-            view_type="form"
-            view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
+
+        <record id="act_project_phases" model="ir.actions.act_window">
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+            <field name="name">Phases</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+        </record>
 
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_phases"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr="//div[@name='options_active']" position='inside'>
+                       <field name="use_phases" class="oe_inline"/>
+                       <label for="use_phases"/>
+                </xpath>
+                <xpath expr="//div[@name='buttons']" position='inside'>
+                        <button name="%(act_project_phases)d"
+                                string="Phases" type="action"
+                                attrs="{'invisible':[('use_phases','=', 0)]}"/>
                 </xpath>
             </field>
         </record>
@@ -116,9 +120,20 @@
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_phases.raw_value"
-                        name="%(act_project_phases)d" type="action">Phases(<field name="phase_count"/>)</a>
+                        name="%(act_project_phases)d" type="action">
+                        <span t-if="record.phase_count.raw_value gt 1"><field name="phase_count"/> Phases</span>
+                        <span t-if="record.phase_count.raw_value lt 2"><field name="phase_count"/> Phase</span>
+                    </a>
                 </xpath>
             </field>
+        </record>
+        
+        <record id="project_phase_task_list" model="ir.actions.act_window">
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="name">Tasks</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}</field>
         </record>
 
         <record id="view_project_phase_form" model="ir.ui.view">
@@ -135,6 +150,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
+                    <button name="%(project_phase_task_list)d" string="Related Tasks" type="action" class="oe_right"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -333,25 +349,15 @@
             </field>
         </record>
 
-        <act_window
-            context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}"
-            id="project_phase_task_list"
-            name="Related Tasks"
-            res_model="project.task"
-            src_model="project.phase"
-            view_mode="tree,form"/>
-
         <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
             <field name="name">account.analytic.account.phase.form.inherit</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_phases"/>
+                    <label for="use_phases"/>
                 </xpath>
             </field>
         </record>
