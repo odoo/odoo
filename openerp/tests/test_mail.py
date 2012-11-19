@@ -175,6 +175,7 @@ class TestCleaner(unittest2.TestCase):
 
         # Test5: False boolean for text must return empty string
         new_html = html_email_clean(False)
+        self.assertEqual(new_html, '', 'html_email_cleaner did not change a False (boolean) in an empty string.')
         self.assertEqual(type(new_html), type(''), 'html_email_cleaner did not change a False (boolean) in an empty string.')
 
 class TestHtmlTools(unittest2.TestCase):
