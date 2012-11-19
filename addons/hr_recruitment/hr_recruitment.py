@@ -508,11 +508,7 @@ class hr_applicant(base_stage, osv.Model):
         message = _("Applicant has been <b>created</b>.")
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.job_id:
-                if applicant.partner_name:
-                    job_message = _('Applicant %s <b>created</b>.') % applicant.partner_name
-                else:
-                    job_message = message
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=job_message, subtype="hr_recruitment.mt_applicant_new", context=context)
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
 class hr_job(osv.osv):
