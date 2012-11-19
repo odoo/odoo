@@ -4026,9 +4026,11 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         }
         this._super(value_);
     },
+    is_false: function() {
+        return _(this.get("value")).isEmpty();
+    },
     get_value: function() {
-        var tmp = [commands.replace_with(this.get("value"))];
-        return tmp;
+        return [commands.replace_with(this.get("value"))];
     },
     get_search_blacklist: function() {
         return this.get("value");
