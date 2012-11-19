@@ -1,16 +1,8 @@
-$(document).ready(function () {
-    var openerp;
-
-    module('Misordered resolution management', {
-        setup: function () {
-            openerp = window.openerp.init([]);
-            window.openerp.web.corelib(openerp);
-            window.openerp.web.coresetup(openerp);
-            window.openerp.web.data(openerp);
-        }
-    });
-    test('Resolve all correctly ordered, sync', function () {
-        var dm = new openerp.web.DropMisordered(), flag = false;
+openerp.testing.section('misordered resolution managemeng', {
+    dependencies: ['web.data']
+}, function (test) {
+    test('Resolve all correctly ordered, sync', function (instance) {
+        var dm = new instance.web.DropMisordered(), flag = false;
 
         var d1 = $.Deferred(), d2 = $.Deferred(),
             r1 = dm.add(d1), r2 = dm.add(d2);
@@ -23,8 +15,8 @@ $(document).ready(function () {
 
         ok(flag);
     });
-    test("Don't resolve mis-ordered, sync", function () {
-        var dm = new openerp.web.DropMisordered(),
+    test("Don't resolve mis-ordered, sync", function (instance) {
+        var dm = new instance.web.DropMisordered(),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
 
@@ -44,8 +36,8 @@ $(document).ready(function () {
         ok(done2);
         ok(!fail2);
     });
-    test('Fail mis-ordered flag, sync', function () {
-        var dm = new openerp.web.DropMisordered(true),
+    test('Fail mis-ordered flag, sync', function (instance) {
+        var dm = new instance.web.DropMisordered(true),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
 
@@ -66,8 +58,8 @@ $(document).ready(function () {
         ok(!fail2);
     });
 
-    asyncTest('Resolve all correctly ordered, async', 1, function () {
-        var dm = new openerp.web.DropMisordered();
+    test('Resolve all correctly ordered, async', {asserts: 1}, function (instance) {
+        var dm = new instance.web.DropMisordered();
 
         var d1 = $.Deferred(), d2 = $.Deferred(),
             r1 = dm.add(d1), r2 = dm.add(d2);
@@ -75,13 +67,12 @@ $(document).ready(function () {
         setTimeout(function () { d1.resolve(); }, 100);
         setTimeout(function () { d2.resolve(); }, 200);
 
-        $.when(r1, r2).done(function () {
-            start();
+        return $.when(r1, r2).done(function () {
             ok(true);
         });
     });
-    asyncTest("Don't resolve mis-ordered, async", 4, function () {
-        var dm = new openerp.web.DropMisordered(),
+    test("Don't resolve mis-ordered, async", {asserts: 4}, function (instance) {
+        var dm = new instance.web.DropMisordered(),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
 
@@ -94,18 +85,20 @@ $(document).ready(function () {
         setTimeout(function () { d1.resolve(); }, 200);
         setTimeout(function () { d2.resolve(); }, 100);
 
+        var done = $.Deferred();
         setTimeout(function () {
-            start();
             // d1 is in limbo
             ok(!done1);
             ok(!fail1);
             // d2 is resolved
             ok(done2);
             ok(!fail2);
+            done.resolve();
         }, 400);
+        return $.when(d1, d2, done);
     });
-    asyncTest('Fail mis-ordered flag, async', 4, function () {
-        var dm = new openerp.web.DropMisordered(true),
+    test('Fail mis-ordered flag, async', {asserts: 4}, function (instance) {
+        var dm = new instance.web.DropMisordered(true),
             done1 = false, done2 = false,
             fail1 = false, fail2 = false;
 
@@ -118,6 +111,7 @@ $(document).ready(function () {
         setTimeout(function () { d1.resolve(); }, 200);
         setTimeout(function () { d2.resolve(); }, 100);
 
+        var done = $.Deferred();
         setTimeout(function () {
             start();
             // d1 is failed
@@ -126,6 +120,8 @@ $(document).ready(function () {
             // d2 is resolved
             ok(done2);
             ok(!fail2);
+            done.resolve();
         }, 400);
+        return $.when(d1, d2, done)
     });
 });

@@ -12,20 +12,19 @@ Contents:
     :maxdepth: 1
 
     presentation
-
-    changelog-7.0
-
     async
-    rpc
+
+    testing
 
     widget
     qweb
-    search-view
+    rpc
+    client_action
+    form_view
+    search_view
+    list_view
 
-    list-view
-    form-notes
-
-    guides/client-action
+    changelog-7.0
 
 Indices and tables
 ==================
