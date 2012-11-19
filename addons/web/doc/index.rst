@@ -14,17 +14,17 @@ Contents:
     presentation
     async
 
-    dev_rpc
-    dev_widget
-    dev_qweb
-    dev_client_action
+    testing
 
-    internal_form
-    internal_list
-    internal_search
+    widget
+    qweb
+    rpc
+    client_action
+    form_view
+    search_view
+    list_view
 
     changelog-7.0
-
 
 Indices and tables
 ==================
