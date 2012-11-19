@@ -28,8 +28,6 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
-from tools.html_sanitize import html_sanitize
-from tools import append_content_to_html
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 
@@ -293,10 +291,10 @@ class email_template(osv.osv):
                                                  or False
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body_html'] = append_content_to_html(values['body_html'], signature)
+            values['body_html'] = tools.append_content_to_html(values['body_html'], signature)
 
         if values['body_html']:
-            values['body'] = html_sanitize(values['body_html'])
+            values['body'] = tools.html_sanitize(values['body_html'])
 
         values.update(mail_server_id=template.mail_server_id.id or False,
                       auto_delete=template.auto_delete,
@@ -347,6 +345,7 @@ class email_template(osv.osv):
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
+        del values['email_recipients'] # TODO Properly use them.
         msg_id = mail_mail.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []

@@ -24,7 +24,7 @@ openerp.mail = function (session) {
                  */
                 var context_keys = ['default_template_id', 'default_composition_mode', 
                     'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_content_subtype', , 'default_subject',
+                    'default_res_id', 'default_content_subtype', 'default_subject',
                     'default_body', 'active_id', 'lang', 'bin_raw', 'tz',
                     'active_model', 'edi_web_url_view', 'active_ids', 
                     'default_attachment_ids']
@@ -56,12 +56,14 @@ openerp.mail = function (session) {
 
         /* Get an image in /web/binary/image?... */
         get_image: function (session, model, field, id, resize) {
-            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '') + '&resize=' + (resize ? encodeURIComponent(resize) : '');
+            var r = resize ? encodeURIComponent(resize) : '';
+            id = id || '';
+            return session.url('/web/binary/image', {model: model, field: field, id: id, resize: r});
         },
 
         /* Get the url of an attachment {'id': id} */
         get_attachment_url: function (session, attachment) {
-            return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+            return session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'datas_fname', id: attachment['id']});
         },
 
         /**
@@ -519,8 +521,6 @@ openerp.mail = function (session) {
         on_compose_fullmail: function (default_composition_mode) {
             if (default_composition_mode == 'reply') {
                 var context = {
-                    'default_model': this.context.default_model,
-                    'default_res_id': this.context.default_res_id,
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
@@ -530,7 +530,6 @@ openerp.mail = function (session) {
                 var context = {
                     'default_model': this.context.default_model,
                     'default_res_id': this.context.default_res_id,
-                    'default_content_subtype': 'html',
                     'default_composition_mode': default_composition_mode,
                     'default_parent_id': this.id,
                     'default_body': mail.ChatterUtils.get_text2html(this.$el ? (this.$el.find('textarea:not(.oe_compact)').val() || '') : ''),
@@ -590,7 +589,7 @@ openerp.mail = function (session) {
 
             if (body.match(/\S+/)) {
                 //session.web.blockUI();
-                this.parent_thread.ds_thread.call('message_post_api', [
+                this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         mail.ChatterUtils.get_text2html(body), 
                         false, 
@@ -599,16 +598,15 @@ openerp.mail = function (session) {
                         this.parent_thread.context
                     ]).done(function (record) {
                         var thread = self.parent_thread;
-
                         if (self.options.display_indented_thread < self.thread_level && thread.parent_message) {
-                            thread = thread.parent_message.parent_thread;
+                            var thread = thread.parent_message.parent_thread;
                         }
+                        var root = thread == self.options.root_thread;
                         // create object and attach to the thread object
                         thread.message_fetch([['id', 'child_of', [self.id]]], false, [record], function (arg, data) {
-                            data[0].no_sorted = true;
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
-                            thread.insert_message( message, self.$el );
+                            thread.insert_message( message, root ? undefined : self.$el, root );
                             if (thread.parent_message) {
                                 self.$el.remove();
                                 self.parent_thread.compose_message = null;
@@ -728,7 +726,6 @@ openerp.mail = function (session) {
 
     mail.ThreadMessage = mail.MessageCommon.extend({
         template: 'mail.thread.message',
-
         
         start: function () {
             this._super.apply(this, arguments);
@@ -1274,7 +1271,7 @@ openerp.mail = function (session) {
          * The sort is define by the thread_level (O for newer on top).
          * @param : {object} ThreadMessage object
          */
-        insert_message: function (message, dom_insert_after) {
+        insert_message: function (message, dom_insert_after, prepend) {
             var self=this;
             if (this.options.show_compact_message > this.thread_level) {
                 this.instantiate_compose_message();
@@ -1286,6 +1283,8 @@ openerp.mail = function (session) {
 
             if (dom_insert_after) {
                 message.insertAfter(dom_insert_after);
+            }if (prepend) {
+                message.prependTo(self.$el);
             } else {
                 message.appendTo(self.$el);
             }
@@ -1698,7 +1697,6 @@ openerp.mail = function (session) {
                     views: [[false, 'form']],
                     target: 'new',
                     context: {
-                        'default_content_subtype': 'html',
                     },
                 };
                 session.client.action_manager.do_action(action);
@@ -1732,7 +1730,7 @@ openerp.mail = function (session) {
                 view_type: 'form',
                 views: [[false, 'form']],
                 target: 'new',
-                context: { 'default_content_subtype': 'html' },
+                context: {},
             };
             session.client.action_manager.do_action(action);
         },
