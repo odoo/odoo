@@ -353,9 +353,12 @@ class res_partner(osv.osv, format_address):
         if not ids:
             return True
         res_user = self.pool.get('res.users')
-        res_id = res_user.search(cr, uid, [('partner_id', '=', ids)], context=context)
-        res_user.unlink(cr, uid, res_id)
-        return super(res_partner,self).unlink(cr, uid, ids, context=context)
+        user_ids = res_user.search(cr, uid, [('partner_id', '=', ids)], context=context)
+        if user_ids:
+            raise osv.except_osv(_('Error!'),
+                    _('You can not delete partner because there is some related user to this partner'))
+        res = super(res_partner,self).unlink(cr, uid, ids, context=context)
+        return res
 
     def write(self, cr, uid, ids, vals, context=None):
         # Update parent and siblings or children records
