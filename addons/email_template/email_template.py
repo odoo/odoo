@@ -345,6 +345,7 @@ class email_template(osv.osv):
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
+        del values['email_recipients'] # TODO Properly use them.
         msg_id = mail_mail.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []

@@ -20,7 +20,7 @@
 ##############################################################################
 from osv import osv, fields
 
-class lunch_order_order(osv.Model):
+class lunch_order_order(osv.TransientModel):
     """ lunch order meal """
     _name = 'lunch.order.order'
     _description = 'Wizard to order a meal'

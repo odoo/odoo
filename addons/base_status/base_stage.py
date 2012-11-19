@@ -224,8 +224,6 @@ class base_stage(object):
         cases = self.browse(cr, uid, ids, context=context)
         for case in cases:
             data = {'active': True}
-            if case.stage_id and case.stage_id.state == 'draft':
-                data['date_open'] = fields.datetime.now()
             if not case.user_id:
                 data['user_id'] = uid
             self.case_set(cr, uid, [case.id], 'open', data, context=context)
