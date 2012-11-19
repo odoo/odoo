@@ -105,7 +105,7 @@ class crm_claim(base_stage, osv.osv):
         'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
+                        domain="['&',('fold', '=', False),'|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,

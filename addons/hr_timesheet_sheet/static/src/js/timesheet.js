@@ -110,7 +110,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
                     new instance.web.CompoundContext({'user_id': self.get('user_id')})]).then(function(accounts_defaults) {
                     accounts = _(accounts).chain().map(function(lines, account_id) {
-                        account_defaults = _.extend({}, default_get, accounts_defaults[account_id]);
+                        account_defaults = _.extend({}, default_get, (accounts_defaults[account_id] || {}).value || {});
                         // group by days
                         account_id = account_id === "false" ? false :  Number(account_id);
                         var index = _.groupBy(lines, "date");

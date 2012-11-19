@@ -79,8 +79,6 @@ class stock_fill_inventory(osv.osv_memory):
 
         inventory_line_obj = self.pool.get('stock.inventory.line')
         location_obj = self.pool.get('stock.location')
-        product_obj = self.pool.get('product.product')
-        stock_location_obj = self.pool.get('stock.location')
         move_obj = self.pool.get('stock.move')
         uom_obj = self.pool.get('product.uom')
         if ids and len(ids):
