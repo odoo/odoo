@@ -112,6 +112,7 @@ class account_analytic_line(osv.osv):
                         "AND id IN %s AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id, user_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
 
+            curr_line = {}
             for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
                 if data.get('product'):
                     product_id = data['product'][0]
@@ -133,49 +134,52 @@ class account_analytic_line(osv.osv):
                     raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 taxes = product.taxes_id or general_account.tax_ids
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
-                curr_line = {
-                    'price_unit': price,
-                    'quantity': qty,
-                    'discount':factor.factor,
-                    'invoice_line_tax_id': [(6,0,tax )],
-                    'invoice_id': last_invoice,
-                    'name': factor_name,
-                    'product_id': product_id,
-                    'invoice_line_tax_id': [(6,0,tax)],
-                    'uos_id': uom,
-                    'account_id': general_account.id,
-                    'account_analytic_id': account.id,
-                }
-
-                #
-                # Compute for lines
-                #
-                cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
-
-                line_ids = cr.dictfetchall()
-                note = []
-                for line in line_ids:
-                    # set invoice_line_note
-                    details = []
-                    if data.get('date', False):
-                        details.append(line['date'])
-                    if data.get('time', False):
-                        if line['product_uom_id']:
-                            details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
-                        else:
-                            details.append("%s" % (line['unit_amount'], ))
-                    if data.get('name', False):
-                        details.append(line['name'])
-                    note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
-
-                if note:
-                    curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
-                invoice_line_obj.create(cr, uid, curr_line, context=context)
-                cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+                invoice_line_ids =  invoice_line_obj.search(cr, uid, [('product_id', '=', product.id), ('invoice_id', '=', last_invoice)])
+                if invoice_line_ids:
+                    invoice_line_obj.write(cr, uid, invoice_line_ids, {'quantity': qty+ curr_line.get('quantity')})
+                else:
+                    curr_line = {
+                        'price_unit': price,
+                        'quantity': qty,
+                        'discount':factor.factor,
+                        'invoice_line_tax_id': [(6,0,tax )],
+                        'invoice_id': last_invoice,
+                        'name': factor_name,
+                        'product_id': product_id,
+                        'invoice_line_tax_id': [(6,0,tax)],
+                        'uos_id': uom,
+                        'account_id': general_account.id,
+                        'account_analytic_id': account.id,
+                    }
+    
+                    #
+                    # Compute for lines
+                    #
+                    cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
+    
+                    line_ids = cr.dictfetchall()
+                    note = []
+                    for line in line_ids:
+                        # set invoice_line_note
+                        details = []
+                        if data.get('date', False):
+                            details.append(line['date'])
+                        if data.get('time', False):
+                            if line['product_uom_id']:
+                                details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
+                            else:
+                                details.append("%s" % (line['unit_amount'], ))
+                        if data.get('name', False):
+                            details.append(line['name'])
+                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+    
+                    if note:
+                        curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
+                    invoice_line_obj.create(cr, uid, curr_line, context=context)
+                    cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
 
             invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
         return invoices
-
 #
 # TODO: check unit of measure !!!
 #
