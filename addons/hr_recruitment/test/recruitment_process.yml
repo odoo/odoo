@@ -15,7 +15,7 @@
     applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
     assert applicant_ids, "Applicant is not created after getting the mail"
     applicant = self.browse(cr, uid, applicant_ids[0], context=context)
-    resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
+    resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.pdf'),('res_model','=',self._name),('res_id','=',applicant.id)])
     assert applicant.name == "Application for the post of Jr.application Programmer.", "Applicant name does not match."
     assert applicant.stage_id.id == ref('hr_recruitment.stage_job1'), "Stage should be 'Initial qualification' and is '%s'." % (applicant.stage_id.name)
     assert applicant.state == "draft", "Applicant state should be 'draft'."

@@ -24,7 +24,7 @@
     'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
-    'sequence': 20,
+    'sequence': 100,
     'summary': 'Personal Tasks, Contexts, Timeboxes',
     'description': """
 Implement concepts of the "Getting Things Done" methodology 

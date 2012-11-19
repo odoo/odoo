@@ -96,16 +96,16 @@ class crm_claim(base_stage, osv.osv):
         'user_id': fields.many2one('res.users', 'Responsible'),
         'user_fault': fields.char('Trouble Responsible', size=64),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help="Sales team to which Case belongs to."\
-                                "Define Responsible user and Email account for"\
+                        select=True, help="Responsible sales team."\
+                                " Define Responsible user and Email account for"\
                                 " mail gateway."),
         'company_id': fields.many2one('res.company', 'Company'),
         'partner_id': fields.many2one('res.partner', 'Partner'),
         'email_cc': fields.text('Watchers Emails', size=252, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
-        'email_from': fields.char('Email', size=128, help="These people will receive email."),
+        'email_from': fields.char('Email', size=128, help="Destination email for email gateway."),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
+                        domain="['&',('fold', '=', False),'|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,

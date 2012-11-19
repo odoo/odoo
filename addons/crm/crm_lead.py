@@ -188,7 +188,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', ondelete='set null',
-            select=True, help="Optional linked partner, usually after conversion of the lead"),
+            select=True, help="Linked partner (optional). Usually created when converting the lead."),
 
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Subject', size=64, required=True, select=1),
@@ -232,7 +232,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
-        'date_deadline': fields.date('Expected Closing'),
+        'date_deadline': fields.date('Expected Closing', help="Estimate of the date on which the opportunity will be won."),
         'date_action': fields.date('Next Action Date', select=True),
         'title_action': fields.char('Next Action', size=64),
         'color': fields.integer('Color Index'),
@@ -247,7 +247,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'street2': fields.char('Street2', size=128),
         'zip': fields.char('Zip', change_default=True, size=24),
         'city': fields.char('City', size=128),
-        'state_id': fields.many2one("res.country.state", 'State', domain="[('country_id','=',country_id)]"),
+        'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -609,9 +609,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
-        partner = self.pool.get('res.partner')
         customer = False
         if partner_id:
+            partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
@@ -675,19 +675,17 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        This function convert partner based on action.
+        Convert partner based on action.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
         """
         if context is None:
             context = {}
         partner_ids = {}
-        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
                 if not partner_id:
                     partner_id = self._create_lead_partner(cr, uid, lead, context)
-                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context=context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
@@ -779,14 +777,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_name': opportunity.name,
         }
         return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error!'),
-                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
-                      "You can still cancel it, instead of deleting it.") % lead.name)
-        return super(crm_lead, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id') and not vals.get('probability'):
@@ -895,6 +885,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         lead.message_post(body=message)
         return True
 
-crm_lead()
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id=self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

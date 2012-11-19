@@ -59,18 +59,18 @@
 
               <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
                 <div class="oe_dropdown_kanban">
-                  <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
-                  </span>
 
                   <!-- dropdown menu -->
-                  <div class="oe_dropdown_toggle">
+                  <span class="oe_dropdown_toggle">
                     <span class="oe_e">í</span>
                     <ul class="oe_dropdown_menu">
                       <li><a type="delete">Delete</a></li>
                       <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                     </ul>
+                  </span>
+                  <div style="display: inline">
+                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
                   </div>
                 </div>
                 <!-- kanban note -->
@@ -120,7 +120,7 @@
                 <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
-                    <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
+                    <field name="message_ids" widget="mail_thread"/>
                 </div>
             </form>
         </field>

@@ -120,7 +120,10 @@
                 </field>
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_phases.raw_value"
-                        name="%(act_project_phases)d" type="action">Phases(<field name="phase_count"/>)</a>
+                        name="%(act_project_phases)d" type="action">
+                        <span t-if="record.phase_count.raw_value gt 1"><field name="phase_count"/> Phases</span>
+                        <span t-if="record.phase_count.raw_value lt 2"><field name="phase_count"/> Phase</span>
+                    </a>
                 </xpath>
             </field>
         </record>

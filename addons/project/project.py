@@ -166,19 +166,30 @@ class project(osv.osv):
                 res[id]['progress_rate'] = 0.0
         return res
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
-        for proj in self.browse(cr, uid, ids):
+        for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise osv.except_osv(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
-        res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
-        mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
+        res =  super(project, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
-
+    
+    def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        attachment = self.pool.get('ir.attachment')
+        task = self.pool.get('project.task')
+        for id in ids:
+            project_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', 'in', [id])], context=context, count=True)
+            task_ids = task.search(cr, uid, [('project_id', 'in', [id])], context=context)
+            task_attachments = attachment.search(cr, uid, [('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)], context=context, count=True)
+            res[id] = project_attachments or 0 + task_attachments or 0
+        return res
+        
     def _task_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
@@ -189,7 +200,26 @@ class project(osv.osv):
     def _get_alias_models(self, cr, uid, context=None):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
-
+    
+    def attachment_tree_view(self, cr, uid, ids, context):
+        task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
+        domain = [
+             '|', 
+             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
+             '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
+		]
+        res_id = ids and ids[0] or False
+        return {
+            'name': _('Attachments'),
+            'domain': domain,
+            'res_model': 'ir.attachment',
+            'type': 'ir.actions.act_window',
+            'view_id': False,
+            'view_mode': 'tree,form',
+            'view_type': 'form',
+            'limit': 80,
+            'context': "{'default_res_model': '%s','default_res_id': %d}" % (self._name, res_id)
+        }
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
     _columns = {
@@ -232,6 +262,7 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
+        'doc_count':fields.function(_get_attached_docs, string="Number of documents attached", type='int')
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -443,7 +474,7 @@ def Project():
     resource = %s
 """       % (
             project.id,
-            project.date_start, working_days,
+            project.date_start or time.strftime('%Y-%m-%d'), working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
@@ -728,11 +759,11 @@ class task(base_stage, osv.osv):
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'categ_ids': fields.many2many('project.category', string='Tags'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
                                               " * Blocked indicates something is preventing the progress of this task\n"
-                                              " * Ready To Pull indicates the task is ready to be pulled to the next stage",
+                                              " * Ready for next stage indicates the task is ready to be pulled to the next stage",
                                          readonly=True, required=False),
         'create_date': fields.datetime('Create Date', readonly=True,select=True),
         'date_start': fields.datetime('Starting Date',select=True),
@@ -792,6 +823,11 @@ class task(base_stage, osv.osv):
         """
         return self.write(cr, uid, ids, {'priority' : priority})
 
+    def set_very_high_priority(self, cr, uid, ids, *args):
+        """Set task priority to very high
+        """
+        return self.set_priority(cr, uid, ids, '0')
+    
     def set_high_priority(self, cr, uid, ids, *args):
         """Set task priority to high
         """
@@ -1093,13 +1129,36 @@ class task(base_stage, osv.osv):
             }, context=context)
         return True
 
+    def _subscribe_project_followers_to_task(self, cr, uid, task_id, context=None):
+        """ TDE note: not the best way to do this, we could override _get_followers
+            of task, and perform a better mapping of subtypes than a mapping
+            based on names.
+            However we will keep this implementation, maybe to be refactored
+            in 7.1 of future versions. """
+        # task followers are project followers, with matching subtypes
+        task_record = self.browse(cr, uid, task_id, context=context)
+        subtype_obj = self.pool.get('mail.message.subtype')
+        follower_obj = self.pool.get('mail.followers')
+        if task_record.project_id:
+            # create mapping
+            task_subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', False), ('res_model', '=', self._name)], context=context)
+            task_subtypes = subtype_obj.browse(cr, uid, task_subtype_ids, context=context)
+            # fetch subscriptions
+            follower_ids = follower_obj.search(cr, uid, [('res_model', '=', 'project.project'), ('res_id', '=', task_record.project_id.id)], context=context)
+            # copy followers
+            for follower in follower_obj.browse(cr, uid, follower_ids, context=context):
+                if not follower.subtype_ids:
+                    continue
+                project_subtype_names = [project_subtype.name for project_subtype in follower.subtype_ids]
+                task_subtype_ids = [task_subtype.id for task_subtype in task_subtypes if task_subtype.name in project_subtype_names]
+                self.message_subscribe(cr, uid, [task_id], [follower.partner_id.id],
+                    subtype_ids=task_subtype_ids, context=context)
+
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
-        task_record = self.browse(cr, uid, task_id, context=context)
-        if task_record.project_id:
-            project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [task_id], project_follower_ids,
-                context=context)
+        # subscribe project followers to the task
+        self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
+
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
@@ -1109,9 +1168,6 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('project_id'):
-            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
-            vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
@@ -1121,13 +1177,18 @@ class task(base_stage, osv.osv):
                 #if new_stage not in stages:
                     #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
-                super(task,self).write(cr, uid, [t.id], write_vals, context=context)
+                super(task, self).write(cr, uid, [t.id], write_vals, context=context)
                 self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
-            result = super(task,self).write(cr, uid, ids, vals, context=context)
+            result = super(task, self).write(cr, uid, ids, vals, context=context)
         if ('stage_id' in vals) or ('remaining_hours' in vals) or ('user_id' in vals) or ('state' in vals) or ('kanban_state' in vals):
             self._store_history(cr, uid, ids, context=context)
+
+        # subscribe new project followers to the task
+        if vals.get('project_id'):
+            for id in ids:
+                self._subscribe_project_followers_to_task(cr, uid, id, context=context)
         return result
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1244,7 +1305,17 @@ class task(base_stage, osv.osv):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
             self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
-
+   
+    def project_task_reevaluate(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
+            return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'project.task.reevaluate',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
+        return self.do_reopen(cr, uid, ids, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"
@@ -1289,7 +1360,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks',help="If checked, this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
 
@@ -1398,7 +1469,7 @@ class project_task_history(osv.osv):
         'task_id': fields.many2one('project.task', 'Task', ondelete='cascade', required=True, select=True),
         'type_id': fields.many2one('project.task.type', 'Stage'),
         'state': fields.selection([('draft', 'New'), ('cancelled', 'Cancelled'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done')], 'Status'),
-        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State', required=False),
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State', required=False),
         'date': fields.date('Date', select=True),
         'end_date': fields.function(_get_date, string='End Date', type="date", store={
             'project.task.history': (_get_related_date, None, 20)

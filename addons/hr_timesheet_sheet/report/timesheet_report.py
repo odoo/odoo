@@ -32,6 +32,7 @@ class timesheet_report(osv.osv):
             ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
             ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'day': fields.char('Day', size=128, readonly=True),
+        'date': fields.date('Date', readonly=True),
         'name': fields.char('Description', size=64,readonly=True),
         'product_id' : fields.many2one('product.product', 'Product'),
         'general_account_id' : fields.many2one('account.account', 'General Account', readonly=True),
@@ -63,6 +64,7 @@ class timesheet_report(osv.osv):
                     select
                         min(aal.id) as id,
                         htss.name,
+                        aal.date as date,
                         htss.date_from,
                         htss.date_to,
                         to_char(htss.date_from, 'YYYY-MM-DD') as day,
@@ -96,6 +98,7 @@ class timesheet_report(osv.osv):
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
                     group by
                         aal.account_id,
+                        aal.date,
                         htss.date_from,
                         htss.date_to,
                         aal.unit_amount,

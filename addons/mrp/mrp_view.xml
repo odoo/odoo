@@ -366,7 +366,7 @@
                             </div>
                         </group>
                         <group>
-                            <field name="name" class="oe_inline"/>
+                            <field name="name" groups="base.group_no_one"/>
                             <field name="code" string="Reference"/>
                             <field name="type"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
@@ -442,11 +442,11 @@
             <field name="arch" type="xml">
                 <tree string="Bill of Materials" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name"/>
-                    <field name="code"/>
+                    <field name="name" invisible="1"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
+                    <field name="code"/>
                     <field name="type"/>
                     <field name="method"/>
                     <field name="routing_id" groups="mrp.group_mrp_routings"/>
@@ -462,9 +462,9 @@
             <field name="arch" type="xml">
                 <tree string="BoM Structure" colors="blue:method">
                     <field name="sequence" invisible="1"/>
-                    <field name="name" string="Component Name"/>
+                    <field name="name" groups="base.group_no_one"/>
                     <field name="code"/>
-                    <field name="product_id" string="Component Product"/>
+                    <field name="product_id"/>
                     <field name="bom_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" groups="product.group_uom"/>
@@ -507,7 +507,7 @@
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
               </p><p>
-                Bills of materials components are components and sub-products
+                Bills of materials components are components and by-products
                 used to create master bills of materials.  Use this menu to
                 search in which BoM a specific component is used.
               </p>
@@ -606,7 +606,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <graph string="Manufacturing Orders" type="bar">
-                    <field name="date_planned_date"/>
+                    <field name="date_planned"/>
                     <field name="hour_total" operator="+"/>
                     <field name="cycle_total" operator="+"/>
                 </graph>
@@ -751,7 +751,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Work Orders">
+                        <page string="Work Orders" groups="mrp.group_mrp_routings">
                             <button name="action_compute" states="draft"
                                 string="Compute Data" type="object"
                                 icon="terp-stock_format-scientific"/>

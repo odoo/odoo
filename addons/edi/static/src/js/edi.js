@@ -15,7 +15,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this._super();
         var self = this;
         var param = {"db": self.db, "token": self.token};
-        return self.rpc('/edi/get_edi_document', param).then(this.on_document_loaded, this.on_document_failed);
+        return self.rpc('/edi/get_edi_document', param).done(this.on_document_loaded).fail(this.on_document_failed);
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
@@ -108,7 +108,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
 });
 
 openerp.edi.edi_view = function (db, token) {
-    openerp.session.session_bind().then(function () {
+    openerp.session.session_bind().done(function () {
         new openerp.edi.EdiView(null,db,token).appendTo($("body").addClass('openerp'));
     });
 }
@@ -149,11 +149,11 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     },
 
     do_import: function() {
-        this.rpc('/edi/import_edi_url', {url: this.url}).then(this.on_imported, this.on_imported_error);
+        this.rpc('/edi/import_edi_url', {url: this.url}).done(this.on_imported).fail(this.on_imported_error);
     },
     on_imported: function(response) {
         if ('action' in response) {
-            this.rpc("/web/session/save_session_action", {the_action: response.action}).then(function(key) {
+            this.rpc("/web/session/save_session_action", {the_action: response.action}).done(function(key) {
                 window.location = "/#sa="+encodeURIComponent(key);
             });
         }
@@ -188,7 +188,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
 });
 
 openerp.edi.edi_import = function (url) {
-    openerp.session.session_bind().then(function () {
+    openerp.session.session_bind().done(function () {
         new openerp.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
     });
 }
