@@ -1,3 +1,5 @@
+.. _module-dev-actions:
+
 =================
 Menus and Actions 
 =================

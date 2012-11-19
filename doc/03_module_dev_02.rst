@@ -1,3 +1,5 @@
+.. _module-dev-api:
+
 Objects, Fields and Methods
 ===========================
 
