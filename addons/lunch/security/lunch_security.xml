@@ -3,6 +3,7 @@
     <data>
         <record id="group_lunch_manager" model="res.groups">
             <field name="name">Lunch / Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_lunch_user'))]"/>
         </record>
         <record id="group_lunch_user" model="res.groups">
             <field name="name">Lunch / User</field>
