@@ -356,7 +356,8 @@ class hr_applicant(base_stage, osv.Model):
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if update_vals is None: vals = {}
+        if update_vals is None:
+            update_vals = {}
 
         update_vals.update({
             'description': msg.get('body'),
@@ -378,7 +379,7 @@ class hr_applicant(base_stage, osv.Model):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
 
-        return super(hr_applicant, self).message_update(cr, uids, ids, update_vals=update_vals, context=context)
+        return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
@@ -420,7 +421,7 @@ class hr_applicant(base_stage, osv.Model):
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
             else:
-                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
+                raise osv.except_osv(_('Warning!'), _('You must define Applied Job for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
@@ -433,13 +434,13 @@ class hr_applicant(base_stage, osv.Model):
         """Overrides cancel for crm_case for setting probability
         """
         res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
+        self.write(cr, uid, ids, {'probability': 0.0})
         return res
 
     def case_pending(self, cr, uid, ids, context=None):
         """Marks case as pending"""
         res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
+        self.write(cr, uid, ids, {'probability': 0.0})
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -452,7 +453,7 @@ class hr_applicant(base_stage, osv.Model):
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority
         """
-        return self.write(cr, uid, ids, {'priority' : priority})
+        return self.write(cr, uid, ids, {'priority': priority})
 
     def set_high_priority(self, cr, uid, ids, *args):
         """Set applicant priority to high
@@ -475,7 +476,7 @@ class hr_applicant(base_stage, osv.Model):
         return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		return 'Applicant'
+        return 'Applicant'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been set <b>in progress</b>.")
@@ -507,7 +508,11 @@ class hr_applicant(base_stage, osv.Model):
         message = _("Applicant has been <b>created</b>.")
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.job_id:
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
+                if applicant.partner_name:
+                    job_message = _('Applicant %s <b>created</b>.') % applicant.partner_name
+                else:
+                    job_message = message
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=job_message, subtype="hr_recruitment.mt_applicant_new", context=context)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
 class hr_job(osv.osv):
