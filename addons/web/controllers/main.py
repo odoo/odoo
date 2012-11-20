@@ -82,7 +82,6 @@ def rjsmin(script):
     return result
 
 def db_list(req):
-    dbs = []
     proxy = req.session.proxy("db")
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
@@ -92,7 +91,7 @@ def db_list(req):
     return dbs
 
 def db_monodb(req):
-    # if only one db is listed returns it else return False
+    # if only one db exists, return it else return False
     try:
         dbs = db_list(req)
         if len(dbs) == 1:
@@ -189,14 +188,14 @@ def module_installed_bypass_session(dbname):
     sorted_modules = module_topological_sort(modules)
     return sorted_modules
 
-def module_boot(req):
+def module_boot(req, db=None):
     server_wide_modules = openerp.conf.server_wide_modules or ['web']
     serverside = []
     dbside = []
     for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
-    monodb = db_monodb(req)
+    monodb = db or db_monodb(req)
     if monodb:
         dbside = module_installed_bypass_session(monodb)
         dbside = [i for i in dbside if i not in serverside]
@@ -273,9 +272,9 @@ def fs2web(path):
     """convert FS path into web path"""
     return '/'.join(path.split(os.path.sep))
 
-def manifest_glob(req, addons, key):
+def manifest_glob(req, extension, addons=None, db=None):
     if addons is None:
-        addons = module_boot(req)
+        addons = module_boot(req, db=db)
     else:
         addons = addons.split(',')
     r = []
@@ -285,19 +284,21 @@ def manifest_glob(req, addons, key):
             continue
         # ensure does not ends with /
         addons_path = os.path.join(manifest['addons_path'], '')[:-1]
-        globlist = manifest.get(key, [])
+        globlist = manifest.get(extension, [])
         for pattern in globlist:
             for path in glob.glob(os.path.normpath(os.path.join(addons_path, addon, pattern))):
                 r.append((path, fs2web(path[len(addons_path):])))
     return r
 
-def manifest_list(req, mods, extension):
+def manifest_list(req, extension, mods=None, db=None):
     if not req.debug:
         path = '/web/webclient/' + extension
         if mods is not None:
             path += '?mods=' + mods
+        elif db:
+            path += '?db=' + db
         return [path]
-    files = manifest_glob(req, mods, extension)
+    files = manifest_glob(req, extension, addons=mods, db=db)
     i_am_diabetic = req.httprequest.environ["QUERY_STRING"].count("no_sugar") >= 1 or \
                     req.httprequest.environ.get('HTTP_REFERER', '').count("no_sugar") >= 1
     if i_am_diabetic:
@@ -366,13 +367,13 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(req, action))
+    return [(id, name, clean_action(req, action, context))
             for id, name, action in actions]
 
-def clean_action(req, action, do_not_eval=False):
+def clean_action(req, action, context, do_not_eval=False):
     action.setdefault('flags', {})
 
-    context = req.session.eval_context(req.context)
+    context = context or {}
     eval_ctx = req.session.evaluation_context(context)
 
     if not do_not_eval:
@@ -598,14 +599,14 @@ class Home(openerpweb.Controller):
     _cp_path = '/'
 
     @openerpweb.httprequest
-    def index(self, req, s_action=None, **kw):
-        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, None, 'js'))
-        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, None, 'css'))
+    def index(self, req, s_action=None, db=None, **kw):
+        js = "\n        ".join('<script type="text/javascript" src="%s"></script>' % i for i in manifest_list(req, 'js', db=db))
+        css = "\n        ".join('<link rel="stylesheet" href="%s">' % i for i in manifest_list(req, 'css', db=db))
 
         r = html_template % {
             'js': js,
             'css': css,
-            'modules': simplejson.dumps(module_boot(req)),
+            'modules': simplejson.dumps(module_boot(req, db=db)),
             'init': 'var wc = new s.web.WebClient();wc.appendTo($(document.body));'
         }
         return r
@@ -619,19 +620,19 @@ class WebClient(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def csslist(self, req, mods=None):
-        return manifest_list(req, mods, 'css')
+        return manifest_list(req, 'css', mods=mods)
 
     @openerpweb.jsonrequest
     def jslist(self, req, mods=None):
-        return manifest_list(req, mods, 'js')
+        return manifest_list(req, 'js', mods=mods)
 
     @openerpweb.jsonrequest
     def qweblist(self, req, mods=None):
-        return manifest_list(req, mods, 'qweb')
+        return manifest_list(req, 'qweb', mods=mods)
 
     @openerpweb.httprequest
-    def css(self, req, mods=None):
-        files = list(manifest_glob(req, mods, 'css'))
+    def css(self, req, mods=None, db=None):
+        files = list(manifest_glob(req, 'css', addons=mods, db=db))
         last_modified = get_last_modified(f[0] for f in files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
@@ -669,8 +670,8 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.httprequest
-    def js(self, req, mods=None):
-        files = [f[0] for f in manifest_glob(req, mods, 'js')]
+    def js(self, req, mods=None, db=None):
+        files = [f[0] for f in manifest_glob(req, 'js', addons=mods, db=db)]
         last_modified = get_last_modified(files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
@@ -682,8 +683,8 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.httprequest
-    def qweb(self, req, mods=None):
-        files = [f[0] for f in manifest_glob(req, mods, 'qweb')]
+    def qweb(self, req, mods=None, db=None):
+        files = [f[0] for f in manifest_glob(req, 'qweb', addons=mods, db=db)]
         last_modified = get_last_modified(files)
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
@@ -1236,9 +1237,10 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
+        context = req.session.eval_context(req.context)
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(req, action)
+            return clean_action(req, action, context)
         return False
 
     @openerpweb.jsonrequest
@@ -1617,10 +1619,11 @@ class Action(openerpweb.Controller):
     _cp_path = "/web/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id, do_not_eval=False):
+    def load(self, req, action_id, do_not_eval=False, eval_context=None):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
+        eval_context = req.session.eval_context(nonliterals.CompoundContext(context, eval_context or {}))
 
         try:
             action_id = int(action_id)
@@ -1641,15 +1644,16 @@ class Action(openerpweb.Controller):
             ctx.update(context)
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
-                value = clean_action(req, action[0], do_not_eval)
+                value = clean_action(req, action[0], eval_context, do_not_eval)
         return value
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
+        context = req.session.eval_context(req.context)
         return_action = req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context))
         if return_action:
-            return clean_action(req, return_action)
+            return clean_action(req, return_action, context)
         else:
             return False
 
