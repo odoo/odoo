@@ -123,11 +123,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
             self.on("change:actual_mode", self, self.check_actual_mode);
+            self.widgetAccesskey();
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
             self.on("change:actual_mode", self, self.widgetAccesskey);
-            self.widgetAccesskey();
         });
         self.on("load_record", self, self.load_record);
         this.on('view_loaded', self, self.load_form);
@@ -218,7 +218,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 	        self.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click',function (e) {
 	        if(self.get("actual_mode") == "view") {
 		        $button.effect('bounce', {distance:18, times: 5}, 150);
-		        e.stopImmediatePropagation();	
+		        e.stopImmediatePropagation();
 	        }
 	        });
         })
@@ -227,10 +227,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
-       var list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a');
-       list = _.reject(list,function(r){ return $(r).hasClass('oe_form_invisible')})
-       var accesskey = _.map(list,function(r){ return $(r).attr('accesskey')});
-       _.each(list,function(el,i){
+         var list;
+         $(window).blur(function() {unhighlightAccessKeys()});
+
+         var highlightAccessKeys = function(){
+           list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a')
+                  .not('.oe_form_invisible,.oe_edit_only');
+           var accesskey = _.map(list,function(r){ return $(r).attr('accesskey')});
+           _.each(list,function(el,i){
               if (!$(el).attr("accesskey")) {
                  var text = $(el).text().trim().substr(0,1);
                  if (_.contains(accesskey.slice(0, i),text)|| !(/^[a-z0-9\_]+$/i.test(text))){
@@ -244,17 +248,22 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     }
                 }
           });
-         $(document).keydown(function(e){
-           if (e.keyCode === 18 || e.keycode === 16 && e.altkey) {
+         }
+       $(document).keydown(function(e){
+           highlightAccessKeys();
+           if (e.keyCode === 18 || e.keycode === 16 && e.altkey || e.keyCode == 18 && e.shiftKey) {
                 _.each(list,function(rl,i){
                     $(rl).html(function(i, html){
                         return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
                 })})
           }}).keyup(function(){
+            unhighlightAccessKeys();
+        });
+        var unhighlightAccessKeys = function() {
             _.each(list,function(rl,i){
                 $(rl).find('.access').removeClass('access');
             })
-        });
+        };
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
