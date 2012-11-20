@@ -19,12 +19,12 @@
 #
 ##############################################################################
 
-from openerp.addons.mail.tests import test_mail
-from openerp.tools import append_content_to_html
-from osv.orm import except_orm
+from openerp.addons.mail.tests import test_mail_mockup
+from openerp.osv.orm import except_orm
+from openerp.tools.misc import mute_logger
 
 
-class test_portal(test_mail.TestMailMockups):
+class test_portal(test_mail_mockup.TestMailMockups):
 
     def setUp(self):
         super(test_portal, self).setUp()
@@ -53,6 +53,7 @@ class test_portal(test_mail.TestMailMockups):
         # Set an email address for the user running the tests, used as Sender for outgoing mails
         self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
 
+    @mute_logger('openerp.addons.base.ir.ir_model')
     def test_00_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid

@@ -557,7 +557,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 setTimeout(function(){
                     var def = job.fun();
                     if(def){
-                        def.then(run); 
+                        def.done(run);
                     }else{
                         run();
                     }
@@ -615,7 +615,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 var def = new $.Deferred();
                 console.log("START");
                 self.pos.proxy.payment_request(self.pos.get('selectedOrder').getDueLeft())
-                    .then(function(ack){
+                    .done(function(ack){
                         if(ack === 'ok'){
                             self.queue.schedule(self.update);
                         }else if(ack.indexOf('error') === 0){
@@ -638,7 +638,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return def.resolve();
                 }
                 self.pos.proxy.payment_status()
-                    .then(function(status){
+                    .done(function(status){
                         if(status.status === 'paid'){
 
                             var currentOrder = self.pos.get('selectedOrder');
@@ -941,8 +941,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
-                });
-            x.on('delete_payment_line', self, self.deleteLine);
+            });
+            x.on('delete_payment_line', self, function(r) {
+                self.deleteLine(r);
+            });
             x.appendTo(this.$('#paymentlines'));
         },
         renderElement: function() {

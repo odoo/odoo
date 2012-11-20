@@ -35,7 +35,7 @@ class crm_lead2partner(osv.osv_memory):
     }
     def view_init(self, cr, uid, fields, context=None):
         """
-        This function checks for precondition before wizard executes
+        Check for precondition before wizard executes.
         """
         if context is None:
             context = {}
@@ -69,22 +69,19 @@ class crm_lead2partner(osv.osv_memory):
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
-        """
-        This function gets default values
-        """
-        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)        
+        res = super(crm_lead2partner, self).default_get(cr, uid, fields, context=context)
         partner_id = self._select_partner(cr, uid, context=context)
 
         if 'partner_id' in fields:
             res.update({'partner_id': partner_id})
         if 'action' in fields:
             res.update({'action': partner_id and 'exist' or 'create'})
-            
+
         return res
 
     def open_create_partner(self, cr, uid, ids, context=None):
         """
-        This function Opens form of create partner.
+        Open form of create partner.
         """
         view_obj = self.pool.get('ir.ui.view')
         view_id = view_obj.search(cr, uid, [('model', '=', self._name), \
@@ -101,21 +98,21 @@ class crm_lead2partner(osv.osv_memory):
 
     def _create_partner(self, cr, uid, ids, context=None):
         """
-        This function Creates partner based on action.
+        Create partner based on action.
         """
         if context is None:
             context = {}
         lead = self.pool.get('crm.lead')
-        lead_ids = context and context.get('active_ids') or []
+        lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
         partner_id = data.partner_id and data.partner_id.id or False
         return lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
 
     def make_partner(self, cr, uid, ids, context=None):
         """
-        This function Makes partner based on action.
+        Make a partner based on action.
+        Only called from form view, so only meant to convert one lead at a time.
         """
-        # Only called from Form view, so only meant to convert  one Lead. 
         lead_id = context and context.get('active_id') or False
         partner_ids_map = self._create_partner(cr, uid, ids, context=context)
         return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids_map.get(lead_id, False), context=context)

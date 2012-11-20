@@ -37,12 +37,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 callbacks[i](params);
             }
 
-            this.connection.rpc('/pos/'+name, params || {}).then(function(result){
-                        ret.resolve(result);
-                    },
-                    function(error){
-                        ret.reject(error);
-                    });
+            this.connection.rpc('/pos/' + name, params || {}).done(function(result) {
+                ret.resolve(result);
+            }).fail(function(error) {
+                ret.reject(error);
+            });
             return ret;
         },
 
@@ -96,7 +95,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 return this.weight;
             }else{
                 this.message('weighting_read_kg',{})
-                    .then(function(weight){
+                    .done(function(weight){
                         if(self.weighting && !self.bypass_proxy){
                             self.weight = weight;
                         }

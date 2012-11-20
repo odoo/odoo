@@ -41,7 +41,7 @@
             		<field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
             	</group>
             	<group name="delay" position="after">
-            		<group name="store" string="Storage Localization">
+            		<group name="store" string="Storage Location">
                         <field name="loc_rack"/>
                         <field name="loc_row"/>
                     	<field name="loc_case"/>
@@ -103,7 +103,7 @@
                     </group>
                 </group>
                 <group name="status" position="after" version="7.0">
-                     <group name="store" string="Storage Localization">
+                     <group name="store" string="Storage Location">
                          <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                          <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
                          <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>

@@ -102,9 +102,9 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
-            domain=lambda self: [('res_model', '=', self._name)],
-            string='Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment',
+            'mail_compose_message_ir_attachments_rel',
+            'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
@@ -114,7 +114,7 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
-        'content_subtype': lambda self, cr, uid, ctx={}: 'plain',
+        'content_subtype': lambda self, cr, uid, ctx={}: 'html',
         'body_text': lambda self, cr, uid, ctx={}: False,
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
@@ -135,7 +135,12 @@ class mail_compose_message(osv.TransientModel):
                 related to.
             :param int res_id: id of the document record this mail is related to
         """
-        return {'model': model, 'res_id': res_id}
+        doc_name_get = self.pool.get(model).name_get(cr, uid, [res_id], context=context)
+        if doc_name_get:
+            record_name = doc_name_get[0][1]
+        else:
+            record_name = False
+        return {'model': model, 'res_id': res_id, 'record_name': record_name}
 
     def get_message_data(self, cr, uid, message_id, context=None):
         """ Returns a defaults-like dict with initial values for the composition
@@ -161,6 +166,7 @@ class mail_compose_message(osv.TransientModel):
 
         # update the result
         result = {
+            'record_name': message_data.record_name,
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
@@ -185,17 +191,6 @@ class mail_compose_message(osv.TransientModel):
             :param values: 'plain' or 'html'
         """
         return {'value': {'content_subtype': value}}
-
-    def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ The basic purpose of this method is to check that destination partners
-            effectively have email addresses. Otherwise a warning is thrown.
-            :param value: value format: [[6, 0, [3, 4]]]
-        """
-        res = {'value': {}}
-        if not value or not value[0] or not value[0][0] == 6:
-            return
-        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
-        return res
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is

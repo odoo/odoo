@@ -14,14 +14,22 @@
                         <field name="parent_id" invisible="1"/>
                         <field name="content_subtype" invisible="1"/>
                         <!-- visible wizard -->
-                        <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
-                                context="{'force_email':True}"
-                                on_change="onchange_partner_ids(partner_ids)" required="1"/>
+                        <label for="partner_ids" string="Recipients"/>
+                        <div>
+                            <span attrs="{'invisible':[('model', '=', False)]}">
+                                Followers of
+                                <field name="record_name" readonly="1" class="oe_inline"
+                                    attrs="{'invisible':[('model', '=', False)]}"/>
+                                and 
+                            </span>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                context="{'force_email':True}" required="1"/>
+                        </div>
                         <field name="subject" placeholder="Subject..."
-                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                            attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                     </group>
                     <field name="body"/>
-                    <field name="attachment_ids" widget="one2many_binary" blockui="0"/>
+                    <field name="attachment_ids" widget="many2many_binary"/>
                     <footer>
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"/>
                         or

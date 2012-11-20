@@ -50,7 +50,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
@@ -224,11 +224,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The Status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the Status is set to \'Open\'.\
-                      When the case is over, the Status is set to \'Done\'.\
-                      If the case needs to be reviewed then the Status is \
-                      set to \'Pending\'.'),
+                help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
@@ -328,7 +324,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
@@ -341,6 +337,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         # collect all section_ids
         section_ids = []
         types = ['both']
+        if not cases :
+            type = context.get('default_type')
+            types += [type]
         if section_id:
             section_ids.append(section_id)
         for lead in cases:
@@ -610,9 +609,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
-        partner = self.pool.get('res.partner')
         customer = False
         if partner_id:
+            partner = self.pool.get('res.partner')
             customer = partner.browse(cr, uid, partner_id, context=context)
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
@@ -676,19 +675,17 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def convert_partner(self, cr, uid, ids, action='create', partner_id=False, context=None):
         """
-        This function convert partner based on action.
+        Convert partner based on action.
         if action is 'create', create new partner with contact and assign lead to new partner_id.
         otherwise assign lead to specified partner_id
         """
         if context is None:
             context = {}
         partner_ids = {}
-        force_partner_id = partner_id
         for lead in self.browse(cr, uid, ids, context=context):
             if action == 'create':
                 if not partner_id:
                     partner_id = self._create_lead_partner(cr, uid, lead, context)
-                partner_id = force_partner_id or self._create_lead_partner(cr, uid, lead, context=context)
             self._lead_set_partner(cr, uid, lead, partner_id, context=context)
             partner_ids[lead.id] = partner_id
         return partner_ids
@@ -780,14 +777,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             'default_name': opportunity.name,
         }
         return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        for lead in self.browse(cr, uid, ids, context):
-            if (not lead.section_id.allow_unlink) and (lead.state != 'draft'):
-                raise osv.except_osv(_('Error!'),
-                    _("You cannot delete lead '%s' because it is not in 'Draft' state. " \
-                      "You can still cancel it, instead of deleting it.") % lead.name)
-        return super(crm_lead, self).unlink(cr, uid, ids, context)
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('stage_id') and not vals.get('probability'):
