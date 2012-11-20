@@ -1215,7 +1215,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
         $('button', doc).each(function() {
-            $(this).attr('data-button-type', $(this).attr('type'));
+            $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
         xml = instance.web.xml_to_str(doc);
         return $(xml);

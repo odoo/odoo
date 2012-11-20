@@ -565,13 +565,19 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$el.find('.oe_login_manage_db').click(function() {
             self.do_action("database_manager");
         });
-        var d;
-        if (self.params.db) {
-            if (self.params.login && self.params.password) {
-                d = self.do_login(self.params.db, self.params.login, self.params.password);
-            }
+        var d = $.when();
+        if ($.deparam.querystring().db) {
+            self.params.db = $.deparam.querystring().db;
+        }
+        // used by dbmanager.do_create via internal client action
+        if (self.params.db && self.params.login && self.params.password) {
+            d = self.do_login(self.params.db, self.params.login, self.params.password);
         } else {
-            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
+            if (self.params.db) {
+                self.on_db_loaded([self.params.db])
+            } else {
+                d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
+            }
         }
         return d;
     },
@@ -981,7 +987,7 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            var $e = $(QWeb.render(self._template, {}));
+            var $e = $(QWeb.render(self._template, {widget: self}));
             self.replaceElement($e);
             $e.openerpClass();
             self.bind_events();

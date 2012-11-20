@@ -26,6 +26,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.dialog) {
             this.dialog.destroy();
         }
+        this.dialog = null;
     },
     /**
      * Add a new item to the breadcrumb
