@@ -90,7 +90,7 @@
         <record id="msg_discus6" model="mail.message">
             <field name="subject">RedHat server updated spec</field>
             <field name="body"><![CDATA[<p>Hello Demo,</p>
-            <p>We have a lot of inquiries about our now solution using RedHat servers. However I do not have the updated specification ready at hand.</p>
+            <p>We have a lot of inquiries about our now solution based on RedHat servers. However I do not have the updated specification ready at hand.</p>
             <p>Could you please send me the last version of the file asap?</p>
             <p>Thanks,</p>]]></field>
             <field name="type">comment</field>
@@ -110,7 +110,7 @@
             <field name="date" eval="(DateTime.today() - timedelta(hours=3)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discus6_2" model="mail.message">
-            <field name="body"><![CDATA[<p>I just found a newer draft of the spec. Jon did some cleaning in the specifications. Could you merge the two documents to have an updated one?</p><p>When it's done, put it on the internal document management system.</p><p>Thanks,</p>]]></field>
+            <field name="body"><![CDATA[<p>I just found a more recent draft of the spec. Jon did some cleaning in the specifications. Could you merge the two documents to have an updated one?</p><p>When it's done, put it on the internal document management system.</p><p>Thanks,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus6"/>
@@ -124,17 +124,17 @@
         <record id="msg_discus5" model="mail.message">
             <field name="subject">Plan to install backup servers</field>
             <field name="body"><![CDATA[<p>Hello,</p>
-      <p>We need to deploy new backup servers, with the following requirements:</p>
-      <ul>
-        <li>Daily incremental backups, with an history of 15 days,</li>
-        <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
-        <li>We need two redundant servers,</li>
-        <li>A total capacity of 200Gb.</li>
-      </ul>
-                <p>
-                Do you have a simple solution with servers running on Redhat Linux?
-                </p>
-                <p>Best regards,</p>
+<p>We need to deploy new backup servers, with the following requirements:</p>
+<ul>
+    <li>daily incremental backups, with an history of 15 days,</li>
+    <li>45 servers should be backuped between 1am and 3am when our offices are closed,</li>
+    <li>two redundant servers,</li>
+    <li>total capacity of 200Gb.</li>
+</ul>
+<p>
+    Do you have a simple solution with servers running on Redhat Linux?
+</p>
+<p>Best regards,</p>
             ]]></field>
             <field name="type">email</field>
             <field name="subtype_id" ref="mt_comment"/>
@@ -221,7 +221,7 @@
         </record>
         <record id="msg_discus4" model="mail.message">
             <field name="body"><![CDATA[<p>Hi Demo,</p>
-            <p>The next version of our products catalog is scheduled for next month. Our product team send me their updated info about the prices and costs, and I updated our catalog.</p>
+            <p>The next version of our products catalog is scheduled for next month. Our product team send me their updated document holding the prices and costs, and I updated our catalog.</p>
             <p>You will find it in attachment, as well as a comparative benchmark of the different solutions currently existing on the market.<br />Have a nice reading!<br />
             Sincerely,</p>]]></field>
             <field name="type">comment</field>
@@ -232,7 +232,8 @@
             <field name="date" eval="(DateTime.today() - timedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
         </record>
         <record id="msg_discuss4_1" model="mail.message">
-            <field name="body"><![CDATA[<p>Thank you!<br/>Could you send me the updated pricelists as negociated beginning of this year?<br/>Sincerely,</p>]]></field>
+            <field name="body"><![CDATA[<p>Thank you!<br/>Could you send me the updated pricelists as negotiated at the beginning of this year?</p>
+            <p>Sincerely,</p>]]></field>
             <field name="type">comment</field>
             <field name="subtype_id" ref="mt_comment"/>
             <field name="parent_id" ref="msg_discus4"/>
@@ -263,7 +264,7 @@
         <!-- Thread: Epic Technologies and Admin as salesman discuss about a meeting [DEMO: see context, mark thread as done] -->
         <record id="msg_discus2" model="mail.message">
             <field name="subject">Information meeting</field>
-            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in software managing huge volume of data. Having an efficient and reliable backup system is very important to us, and critical for our customers. I eared you have some interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need? Here is a first list of requirements:</p>
+            <field name="body"><![CDATA[<p>Hello,</p><p>Epic Technologies is a small company specialized in software managing huge volume of data. Having an efficient and reliable backup system is very important for us, and critical for our customers. I eared you have some interesting solutions to manage our backups. Could we meet each other as soon as possible to discuss our need? Here is a first list of requirements:</p>
             <ul>
                 <li>about 25 backup servers, running on Redhat Linux</li>
                 <li>minimum 200Gb of storage per server</li>
