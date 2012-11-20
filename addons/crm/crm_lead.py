@@ -493,9 +493,11 @@ class crm_lead(base_stage, format_address, osv.osv):
         details = []
         merge_message = _('Merged opportunities')
         subject = [merge_message]
-        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
-                  'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
-                  'country_id', 'city', 'street', 'street2', 'zip']
+        fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id',
+            'categ_ids', 'channel_id', 'company_id', 'contact_name',
+            'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description',
+            'probability', 'planned_revenue', 'country_id', 'city', 'street',
+            'street2', 'zip']
         for opportunity in opportunities:
             subject.append(opportunity.name)
             title = "%s : %s" % (merge_message, opportunity.name)
@@ -561,18 +563,18 @@ class crm_lead(base_stage, format_address, osv.osv):
         opportunities = self.browse(cr, uid, ids, context=context)
         opportunities_list = list(set(opportunities) - set(ctx_opportunities))
         oldest = self._merge_find_oldest(cr, uid, ids, context=context)
-        if ctx_opportunities :
+        if ctx_opportunities:
             first_opportunity = ctx_opportunities[0]
             tail_opportunities = opportunities_list + ctx_opportunities[1:]
         else:
             first_opportunity = opportunities_list[0]
             tail_opportunities = opportunities_list[1:]
 
-        fields = ['partner_id', 'title', 'name', 'categ_ids', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
+        # Define fields to merge and process to the merge
+        fields_to_merge = ['partner_id', 'title', 'name', 'categ_ids', 'channel_id', 'city', 'company_id', 'contact_name', 'country_id', 'type_id', 'user_id', 'section_id', 'state_id', 'description', 'email', 'fax', 'mobile',
             'partner_name', 'phone', 'probability', 'planned_revenue', 'street', 'street2', 'zip', 'create_date', 'date_action_last',
             'date_action_next', 'email_from', 'email_cc', 'partner_name']
-
-        data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
+        merged_data = self._merge_data(cr, uid, ids, oldest, fields_to_merge, context=context)
 
         # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
@@ -581,7 +583,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         # Merge notifications about loss of information
         self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
         # Write merged data into first opportunity
-        self.write(cr, uid, [first_opportunity.id], data, context=context)
+        self.write(cr, uid, [first_opportunity.id], merged_data, context=context)
         # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
