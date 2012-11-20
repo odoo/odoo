@@ -18,5 +18,26 @@ Leave Management (keep track of employee leaves), Expense Management (manage emp
             <field name="user_id" ref="base.user_root"/>
         </record>
 
+    <record id="mt_new_applicant" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mt_stage_changed" model="mail.message.subtype">
+        <field name="name">Stage changed</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mt_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mt_applicant_refused" model="mail.message.subtype">
+        <field name="name">Applicant Refused</field>
+        <field name="res_model">hr.job</field>
+        <field name="default" eval="False"/>
+    </record>
+
     </data>
 </openerp>
