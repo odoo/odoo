@@ -1,18 +1,29 @@
+.. _module-dev-views:
+
 Views and Events
 ================
 
 Introduction to Views
 ---------------------
 
-As all data of the program is stored in objects, as explained in the Objects section, how are these objects exposed to the user ? We will try to answer this question in this section.
+As all data of the program is stored in objects, as explained in the Objects
+section, how are these objects exposed to the user ? We will try to answer this
+question in this section.
 
-First of all, let's note that every resource type uses its own interface. For example, the screen to modify a partner's data is not the same as the one to modify an invoice.
+First of all, let's note that every resource type uses its own interface. For
+example, the screen to modify a partner's data is not the same as the one to
+modify an invoice.
 
-Then, you have to know that the OpenERP user interface is dynamic, it means that it is not described "statically" by some code, but dynamically built from XML descriptions of the client screens.
+Then, you have to know that the OpenERP user interface is dynamic, it means
+that it is not described "statically" by some code, but dynamically built from
+XML descriptions of the client screens.
 
 From now on, we will call these screen descriptions views.
 
-A notable characteristic of these views is that they can be edited at any moment (even during the program execution). After a modification to a displayed view has occurred, you simply need to close the tab corresponding to that 'view' and re-open it for the changes to appear. 
+A notable characteristic of these views is that they can be edited at any
+moment (even during the program execution). After a modification to a displayed
+view has occurred, you simply need to close the tab corresponding to that
+'view' and re-open it for the changes to appear. 
 
 Views principles
 ++++++++++++++++
@@ -36,111 +47,93 @@ The field disposition in a form view always follows the same principle. Fields a
     * Fields are placed on the screen from left to right, and from top to bottom, according to the order in which they are declared in the view.
     * Every screen is divided into 4 columns, each column being able to contain either a label, or an "edition" field. As every edition field is preceded (by default) by a label with its name, there will be two fields (and their respective labels) on each line of the screen. The green and red zones on the screen-shot below, illustrate those 4 columns. They designate respectively the labels and their corresponding fields. 
 
-.. figure::  images/sale_order.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/sale_order.png
+..    :scale: 50
+..    :align: center
 
 
 Views also support more advanced placement options:
 
     * A view field can use several columns. For example, on the screen-shot below, the zone in the blue frame is, in fact, the only field of a "one to many". We will come back later on this note, but let's note that it uses the whole width of the screen and not only one column. 
 
-      .. figure::  images/sale_order_sale_order_lines.png
-        :scale: 50
-        :align: center
+      .. .. figure::  images/sale_order_sale_order_lines.png
+      ..   :scale: 50
+      ..   :align: center
 
     * We can also make the opposite operation: take a columns group and divide it in as many columns as desired. The surrounded green zones of the screen above are good examples. Precisely, the green framework up and on the right side takes the place of two columns, but contains 4 columns. 
 
 As we can see below in the purple zone of the screen, there is also a way to distribute the fields of an object on different tabs.
 
-.. figure::  images/sale_order_notebook.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/sale_order_notebook.png
+..    :scale: 50
+..    :align: center
+
+On Change
++++++++++
+
+The on_change attribute defines a method that is called when the content of a view field has changed.
+
+This method takes at least arguments: cr, uid, ids, which are the three classical arguments and also the context dictionary. You can add parameters to the method. They must correspond to other fields defined in the view, and must also be defined in the XML with fields defined this way::
+
+        <field name="name_of_field" on_change="name_of_method(other_field'_1_', ..., other_field'_n_')"/> 
+
+The example below is from the sale order view.
+
+You can use the 'context' keyword to access data in the context that can be used as params of the function.::
+
+        <field name="shop_id" on_change="onchange_shop_id(shop_id)"/>
+
+.. code-block:: python
+
+        def onchange_shop_id(self, cr, uid, ids, shop_id):
+
+            v={} 
+            if shop_id:
+
+                shop=self.pool.get('sale.shop').browse(cr,uid,shop_id) 
+                v['project_id']=shop.project_id.id 
+                if shop.pricelist_id.id:
+
+                    v['pricelist_id']=shop.pricelist_id.id 
+
+                v['payment_default_id']=shop.payment_default_id.id 
+
+            return {'value':v} 
+
+
+When editing the shop_id form field, the onchange_shop_id method of the sale_order object is called and returns a dictionary where the 'value' key contains a dictionary of the new value to use in the 'project_id', 'pricelist_id' and 'payment_default_id' fields.
+
+Note that it is possible to change more than just the values of
+fields. For example, it is possible to change the value of some fields
+and the domain of other fields by returning a value of the form:
+return {'domain': d, 'value': value}
+
+:returns: a dictionary with any mix of the following keys:
+
+    ``domain``
+      A mapping of ``{field: domain}``.
+
+      The returned domains should be set on the fields instead of the
+      default ones.
+
+    ``value``
+      A mapping of ``{field: value}}``, the values will be set on the
+      corresponding fields and may trigger new onchanges or attrs
+      changes
+
+    ``warning`` A dict with the keys ``title`` and ``message``. Both
+      are mandatory. Indicate that an error message should be
+      displayed to the user.
 
 
 Tree views
------------
+----------
 
 These views are used when we work in list mode (in order to visualize several resources at once) and in the search screen. These views are simpler than the form views and thus have less options.
 
-.. figure::  images/tree_view.png
-   :scale: 50
-   :align: center
-
-Graph views
---------------
-
-A graph is a new mode of view for all views of type form. If, for example, a sale order line must be visible as list or as graph, define it like this in the action that open this sale order line. Do not set the view mode as "tree,form,graph" or "form,graph" - it must be "graph,tree" to show the graph first or "tree,graph" to show the list first. (This view mode is extra to your "form,tree" view and should have a separate menu item):
-
-.. code-block:: xml
-
-	 <field name="view_type">form</field>
-	 <field name="view_mode">tree,graph</field>
-
-view_type::
-
-        tree = (tree with shortcuts at the left), form = (switchable view form/list) 
-
-view_mode::
-
-        tree,graph : sequences of the views when switching 
-
-Then, the user will be able to switch from one view to the other. Unlike forms and trees, OpenERP is not able to automatically create a view on demand for the graph type. So, you must define a view for this graph:
-
-
-.. code-block:: xml
-
-	<record model="ir.ui.view" id="view_order_line_graph">
-	   <field name="name">sale.order.line.graph</field>
-	   <field name="model">sale.order.line</field>
-	   <field name="type">graph</field>
-	   <field name="arch" type="xml">
-		 <graph string="Sales Order Lines">
-		      <field name="product_id" group="True"/>
-		      <field name="price_unit" operator="*"/>
-		</graph>
-	    </field>
-	</record>
-
-
-The graph view
-
-A view of type graph is just a list of fields for the graph.
-
-Graph tag
-++++++++++
-
-The default type of the graph is a pie chart - to change it to a barchart change **<graph string="Sales Order Lines">** to **<graph string="Sales Order Lines" type="bar">** You also may change the orientation.
-
-:Example : 
-
-.. code-block:: xml
-
-	<graph string="Sales Order Lines" orientation="horizontal" type="bar">
-
-Field tag
-+++++++++
-
-The first field is the X axis. The second one is the Y axis and the optional third one is the Z axis for 3 dimensional graphs. You can apply a few attributes to each field/axis:
-
-    * **group**: if set to true, the client will group all item of the same value for this field. For each other field, it will apply an operator
-    * **operator**: the operator to apply is another field is grouped. By default it's '+'. Allowed values are:
-
-          + +: addition
-          + \*: multiply
-          + \**: exponent
-          + min: minimum of the list
-          + max: maximum of the list 
-
-:Defining real statistics on objects:
-
-The easiest method to compute real statistics on objects is:
-
-   1. Define a statistic object which is a postgresql view
-   2. Create a tree view and a graph view on this object 
-
-You can get en example in all modules of the form: report\_.... Example: report_crm. 
-
+.. .. figure::  images/tree_view.png
+..    :scale: 50
+..    :align: center
 
 Search views
 --------------
@@ -149,9 +142,9 @@ Search views are a new feature of OpenERP supported as of version 6.0
 It creates a customized search panel, and is declared quite similarly to a form view,
 except that the view type and root element change to ``search`` instead of ``form``.
 
-.. image:: images/search.png
-   :scale: 50
-   :align: center
+.. .. image:: images/search.png
+..    :scale: 50
+..    :align: center
 
 Following is the list of new elements and features supported in search views.
 
@@ -309,15 +302,91 @@ combining them with AND/OR operators. It is also possible to save any search con
 of all currently applied domain and context values) as a personal filter, which can be recalled
 at any time. Filters can also be turned into Shortcuts directly available in the User's homepage.
 
-.. image:: images/filter.png
-   :scale: 50
-   :align: center
+.. .. image:: images/filter.png
+..    :scale: 50
+..    :align: center
 
 
 In above screenshot we filter Partner where Salesman = Demo user and Country = Belgium,
 We can save this search criteria as a Shortcut or save as Filter.
 
 Filters are user specific and can be modified via the Manage Filters option in the filters drop-down.
+
+
+Graph views
+-----------
+
+A graph is a new mode of view for all views of type form. If, for example, a sale order line must be visible as list or as graph, define it like this in the action that open this sale order line. Do not set the view mode as "tree,form,graph" or "form,graph" - it must be "graph,tree" to show the graph first or "tree,graph" to show the list first. (This view mode is extra to your "form,tree" view and should have a separate menu item):
+
+.. code-block:: xml
+
+	 <field name="view_type">form</field>
+	 <field name="view_mode">tree,graph</field>
+
+view_type::
+
+        tree = (tree with shortcuts at the left), form = (switchable view form/list) 
+
+view_mode::
+
+        tree,graph : sequences of the views when switching 
+
+Then, the user will be able to switch from one view to the other. Unlike forms and trees, OpenERP is not able to automatically create a view on demand for the graph type. So, you must define a view for this graph:
+
+
+.. code-block:: xml
+
+	<record model="ir.ui.view" id="view_order_line_graph">
+	   <field name="name">sale.order.line.graph</field>
+	   <field name="model">sale.order.line</field>
+	   <field name="type">graph</field>
+	   <field name="arch" type="xml">
+		 <graph string="Sales Order Lines">
+		      <field name="product_id" group="True"/>
+		      <field name="price_unit" operator="*"/>
+		</graph>
+	    </field>
+	</record>
+
+
+The graph view
+
+A view of type graph is just a list of fields for the graph.
+
+Graph tag
+++++++++++
+
+The default type of the graph is a pie chart - to change it to a barchart change **<graph string="Sales Order Lines">** to **<graph string="Sales Order Lines" type="bar">** You also may change the orientation.
+
+:Example : 
+
+.. code-block:: xml
+
+	<graph string="Sales Order Lines" orientation="horizontal" type="bar">
+
+Field tag
++++++++++
+
+The first field is the X axis. The second one is the Y axis and the optional third one is the Z axis for 3 dimensional graphs. You can apply a few attributes to each field/axis:
+
+    * **group**: if set to true, the client will group all item of the same value for this field. For each other field, it will apply an operator
+    * **operator**: the operator to apply is another field is grouped. By default it's '+'. Allowed values are:
+
+          + +: addition
+          + \*: multiply
+          + \**: exponent
+          + min: minimum of the list
+          + max: maximum of the list 
+
+:Defining real statistics on objects:
+
+The easiest method to compute real statistics on objects is:
+
+   1. Define a statistic object which is a postgresql view
+   2. Create a tree view and a graph view on this object 
+
+You can get en example in all modules of the form: report\_.... Example: report_crm. 
+
 
 
 Calendar Views
@@ -373,15 +442,15 @@ Screenshots
 
 Month Calendar:
 
-.. figure::  images/calendar_month.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/calendar_month.png
+..     :scale: 50%
+..     :align: center
 
 Week Calendar:
     
-.. figure::  images/calendar_week.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/calendar_week.png
+..     :scale: 50%
+..     :align: center
 
 
 Gantt Views
@@ -489,9 +558,9 @@ end time can be changed by dragging right end of a bar.
 Screenshots
 +++++++++++
     
-.. figure::  images/gantt.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/gantt.png
+..     :scale: 50%
+..     :align: center
 
 
 Design Elements
@@ -1270,9 +1339,9 @@ The *view_id* method works very well for menus/actions, but how can you specify 
 field, for example? When you have a one2many field, two views are used, a tree view (**in blue**), and a form view when
 you click on the add button (**in red**).
 
-.. figure::  images/one2many_views.png
-    :scale: 70%
-    :align: center
+.. .. figure::  images/one2many_views.png
+..     :scale: 70%
+..     :align: center
 
 When you add a one2many field in a form view, you do something like this :
 
@@ -1367,62 +1436,3 @@ flexible if you define the child views separately and then specify which child
 view to use as part of the one2many field.
 
 
-Events
-------
-
-On Change
-+++++++++
-
-The on_change attribute defines a method that is called when the content of a view field has changed.
-
-This method takes at least arguments: cr, uid, ids, which are the three classical arguments and also the context dictionary. You can add parameters to the method. They must correspond to other fields defined in the view, and must also be defined in the XML with fields defined this way::
-
-        <field name="name_of_field" on_change="name_of_method(other_field'_1_', ..., other_field'_n_')"/> 
-
-The example below is from the sale order view.
-
-You can use the 'context' keyword to access data in the context that can be used as params of the function.::
-
-        <field name="shop_id" on_change="onchange_shop_id(shop_id)"/>
-
-.. code-block:: python
-
-        def onchange_shop_id(self, cr, uid, ids, shop_id):
-
-            v={} 
-            if shop_id:
-
-                shop=self.pool.get('sale.shop').browse(cr,uid,shop_id) 
-                v['project_id']=shop.project_id.id 
-                if shop.pricelist_id.id:
-
-                    v['pricelist_id']=shop.pricelist_id.id 
-
-                v['payment_default_id']=shop.payment_default_id.id 
-
-            return {'value':v} 
-
-
-When editing the shop_id form field, the onchange_shop_id method of the sale_order object is called and returns a dictionary where the 'value' key contains a dictionary of the new value to use in the 'project_id', 'pricelist_id' and 'payment_default_id' fields.
-
-Note that it is possible to change more than just the values of
-fields. For example, it is possible to change the value of some fields
-and the domain of other fields by returning a value of the form:
-return {'domain': d, 'value': value}
-
-:returns: a dictionary with any mix of the following keys:
-
-    ``domain``
-      A mapping of ``{field: domain}``.
-
-      The returned domains should be set on the fields instead of the
-      default ones.
-
-    ``value``
-      A mapping of ``{field: value}}``, the values will be set on the
-      corresponding fields and may trigger new onchanges or attrs
-      changes
-
-    ``warning`` A dict with the keys ``title`` and ``message``. Both
-      are mandatory. Indicate that an error message should be
-      displayed to the user.

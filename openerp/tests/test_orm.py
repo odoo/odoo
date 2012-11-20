@@ -109,6 +109,7 @@ class TestInherits(common.TransactionCase):
         self.assertEqual(foo.name, 'Foo')
         self.assertEqual(foo.partner_id.id, par_id)
 
+    @mute_logger('openerp.osv.orm')
     def test_read(self):
         """ inherited fields should be read without any indirection """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -120,6 +121,7 @@ class TestInherits(common.TransactionCase):
         foo = self.user.browse(self.cr, UID, foo_id)
         self.assertEqual(foo.name, foo.partner_id.name)
 
+    @mute_logger('openerp.osv.orm')
     def test_copy(self):
         """ copying a user should automatically copy its partner, too """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
@@ -134,6 +136,7 @@ class TestInherits(common.TransactionCase):
         self.assertNotEqual(foo.id, bar.id)
         self.assertNotEqual(foo.partner_id.id, bar.partner_id.id)
 
+    @mute_logger('openerp.osv.orm')
     def test_copy_with_ancestor(self):
         """ copying a user with 'parent_id' in defaults should not duplicate the partner """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})

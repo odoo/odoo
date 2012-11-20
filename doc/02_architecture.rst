@@ -33,16 +33,11 @@ three main components:
   Another layer allows communications between the server and a web browser,
   the Web layer. Having more than one server is possible, for example in
   conjunction with a load balancing mechanism.
-- the client, which allow users to access OpenERP. Two clients exist, a
-  desktop GTK client and a browser-based client
+- the client running in the a web browser as javascript application.
 
- - the GTK client access directly to the OpenERP Server
- - users can also use standard web browsers to access OpenERP. In that
-   case, an OpenERP application is loaded. It handles communications between
-   the browser and the Web layer of the server.
-
-The database server and the OpenERP server can be installed on the same computer,
-or distributed onto separate computer servers, for example for performance considerations.
+The database server and the OpenERP server can be installed on the same
+computer, or distributed onto separate computer servers, for example for
+performance considerations.
 
 .. _`Figure 1`:
 .. figure:: _static/02_openerp_architecture.png
@@ -116,8 +111,9 @@ The services granted by the ORM are among other :
 
 The web layer offers an interface to communicate with standard browsers.
 In the 6.1 version of OpenERP, the web-client has been rewritten and integrated
-into the OpenERP server tier. This layer relies on CherryPy for the routing
-layer of communications, especially for session and cookies management.
+into the OpenERP server tier. This web layer is a WSGI-compatible application
+based on werkzeug. It handles regular http queries to server static file or
+dynamic content and JSON-RPC queries for the RPC made from the browser.
 
 **Modules**
 
@@ -137,20 +133,8 @@ and display the result (e.g. a list of customers) in different ways
 (as forms, lists, calendars, ...). Upon user actions, it sends queries
 to modify data to the server.
 
-Two clients can be used for user access to OpenERP, a GTK client and a
-browser-based client. The GTK client communicates directly with the server.
-Using the GTK client requires the client to be installed on the workstation
-of each user.
-
-The browser-based client holds an OpenERP application that handles communications
-between the browser and the Web layer of the server. The static code of the web
-application is minimal. It consists of a minimal flow of HTML that is in charge
-of loading the application code in Javascript. This client-side OpenERP application
-sends user requests to the server, and gets data back. Data management is
-done dynamically in this client. Using this client is therefore easy for
-users, but also for administrators because it does not require any software
-installation on the user machine.
-
+The default client of OpenERP is an JavaScript application running in the
+browser that communicates with the server using JSON-RPC.
 
 MVC architecture in OpenERP
 ===========================
@@ -194,37 +178,32 @@ OpenERP follows the MVC semantic with
  - view : views are defined in XML files in OpenERP.
  - controller : The objects of OpenERP. 
 
+Network communications and WSGI
+===============================
+OpenERP is an HTTP web server and may also be deployed as an WSGI-compliant
+application.
 
-Network communications
-======================
-
-GTK clients communicate with the OpenERP server using XML-RPC protocol by
-default. However, using a secured version XML-RPCS is possible when configurating
-your OpenERP instance. In previous versions of OpenERP, a custom protocol
-called NET-RPC was used. It was a binary version of the XML-RPC protocol,
-allowing faster communications. However, this protocol will no longer be
-used in OpenERP. The use of JSON-RPC is also planned for the 6.1 version
-of OpenERP.
-
-Web-based clients communicate using HTTP protocol. As for XML-RPC, it is
-possible to configure OpenERP to use secured HTTPS connections.
-
-Services and WSGI
-=================
+Clients may communicate with OpenERP using sessionless XML-RPC, the recommended
+way to interoperate with OpenERP. Web-based clients communicates using the
+session aware JSON-RPC.
 
 Everything in OpenERP, and objects methods in particular, are exposed via
 the network and a security layer. Access to the data model is in fact a ‘service’
 and it is possible to expose new services. For instance, a WebDAV service and
 a FTP service are available.
 
-While not mandatory, the services can make use of the `WSGI
-<http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ stack. WSGI is
-a standard solution in the Python ecosystem to write HTTP servers, applications,
-and middleware which can be used in a mix-and-match fashion. By using WSGI,
-it is possible to run OpenERP in any WSGI compliant server. It is also
-possible to use OpenERP to host a WSGI application.
+Services can make use of the `WSGI
+<http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface>`_ stack. WSGI is a
+standard solution in the Python ecosystem to write HTTP servers, applications,
+and middleware which can be used in a mix-and-match fashion. By using WSGI, it
+is possible to run OpenERP in any WSGI compliant server. It is also possible to
+use OpenERP to host a WSGI application.
 
 A striking example of this possibility is the OpenERP Web layer that is
 the server-side counter part to the web clients. It provides the requested
 data to the browser and manages web sessions. It is a WSGI-compliant application.
 As such, it can be run as a stand-alone HTTP server or embedded inside OpenERP.
+
+The HTTP namespaces /openerp/ /object/ /common/ are reserved for the XML-RPC
+layer, every module restrict it's HTTP namespace to /<name_of_the_module>/
+

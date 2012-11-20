@@ -3807,6 +3807,8 @@ class BaseModel(object):
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(missing_ids),))
             if cr.rowcount:
                 # the missing ids are (at least partially) hidden by access rules
+                if uid == SUPERUSER_ID:
+                    return
                 _logger.warning('Access Denied by record rules for operation: %s, uid: %s, model: %s', operation, uid, self._name)
                 raise except_orm(_('Access Denied'),
                                  _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
