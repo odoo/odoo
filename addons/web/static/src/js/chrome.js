@@ -81,6 +81,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
+        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
     },
     _get_options: function(options) {
         var self = this;
@@ -90,7 +91,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             height: $(window.top).height(),
         };
         _.each(sizes, function(available_size, unit) {
-            o[unit] = self._get_size(o[unit]);
+            o[unit] = self._get_size(o[unit], available_size);
             o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
             o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
             if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
@@ -122,17 +123,15 @@ instance.web.Dialog = instance.web.Widget.extend({
     },
     open: function(options) {
         var o = this._get_options(options);
-        if (!this.dialog_inited) {
-            this.init_dialog(o);
-        }
         if (o.buttons) {
             this._add_buttons(o.buttons);
             delete(o.buttons);
         }
-        this.$buttons.appendTo($("body"));
+        if (!this.dialog_inited) {
+            this.init_dialog(o);
+        }
         instance.web.dialog(this.$el, o).dialog('open');
-        this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
-        this.$buttons.appendTo(this.$el.dialog("widget"));
+        this.$el.dialog("widget").append(this.$buttons);
         if (o.height === 'auto' && o.max_height) {
             this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -140,6 +139,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     },
     _add_buttons: function(buttons) {
         var self = this;
+        var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
             if (!_.isFunction(fn)) {
@@ -147,7 +147,7 @@ instance.web.Dialog = instance.web.Widget.extend({
                 fn = fn.click;
             }
             var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
-            self.$buttons.append($but);
+            $customButons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
@@ -156,8 +156,6 @@ instance.web.Dialog = instance.web.Widget.extend({
     init_dialog: function(options) {
         this.renderElement();
         instance.web.dialog(this.$el, options);
-        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
-        this.$el.dialog("widget").append(this.$buttons);
         this.dialog_inited = true;
         var res = this.start();
         return res;
@@ -177,6 +175,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     destroy: function () {
+        this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -185,7 +184,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.close();
             this.__tmp_dialog_destroying = undefined;
         }
-        if (this.dialog_inited && !this.isDestroyed()) {
+        if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
             this.$el.dialog('destroy');
         }
         this._super();

@@ -319,7 +319,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
