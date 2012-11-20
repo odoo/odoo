@@ -107,6 +107,16 @@ class groups(osv.osv):
 
 groups()
 
+class res_partner(osv.osv):
+    _inherit = 'res.partner'
+
+    def unlink(self, cr, uid, ids,context=None):
+        user_obj = self.pool.get('res.users')
+        partner_ids = user_obj.search(cr, uid, [('partner_id','in',ids)])
+        if partner_ids:
+            raise osv.except_osv(_('Warning!'), _('Please delete the user linked with this partner first.'))
+        return super(res_partner, self).unlink(cr, uid, ids, context)
+
 class res_users(osv.osv):
     """ User class. A res.users record models an OpenERP user and is different
         from an employee.
