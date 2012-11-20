@@ -832,7 +832,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
@@ -855,7 +855,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=message, context=context)
         return True
 

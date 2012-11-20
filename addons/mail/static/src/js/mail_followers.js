@@ -195,6 +195,7 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             var subtype = [];
             var subtype_list_ul = this.$('.oe_subtype_list');
+            subtype_list_ul.empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
             _(records).each(function (record, record_name) {
                 record.name = record_name;
