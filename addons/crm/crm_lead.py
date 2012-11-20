@@ -289,6 +289,17 @@ class crm_lead(base_stage, format_address, osv.osv):
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
+    def view_phone_calls(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+        partner = self.pool.get('crm.lead').browse(cr, uid, ids[0], context=context).partner_id.id
+
+        result = mod_obj.get_object_reference(cr, uid, 'crm', 'crm_case_categ_phone_incoming0')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result.update({'context':{'search_default_partner_id': partner}})
+        return result
+
     def onchange_stage_id(self, cr, uid, ids, stage_id, context=None):
         if not stage_id:
             return {'value':{}}
