@@ -66,50 +66,48 @@ instance.web.Dialog = instance.web.Widget.extend({
             max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: this.get_height('100%') - 200,
+            max_height: $(window.top).height() - 200,
             autoOpen: false,
             position: [false, 40],
-            buttons: {},
+            buttons: null,
             beforeClose: function () {
                 self.trigger("closing");
             },
-            resizeStop: this.on_resized
+            resizeStop: function() {
+                self.trigger("resized");
+            },
         };
-        for (var f in this) {
-            if (f.substr(0, 10) == 'on_button_') {
-                this.dialog_options.buttons[f.substr(10)] = this[f];
-            }
-        }
         if (options) {
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
     },
-    get_options: function(options) {
-        var self = this,
-            o = _.extend({}, this.dialog_options, options || {});
-        _.each(['width', 'height'], function(unit) {
-            o[unit] = self['get_' + unit](o[unit]);
-            o['min_' + unit] = self['get_' + unit](o['min_' + unit] || 0);
-            o['max_' + unit] = self['get_' + unit](o['max_' + unit] || 0);
-            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) o[unit] = o['min_' + unit];
-            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) o[unit] = o['max_' + unit];
+    _get_options: function(options) {
+        var self = this;
+        var o = _.extend({}, this.dialog_options, options || {});
+        var sizes = {
+            width: $(window.top).width(),
+            height: $(window.top).height(),
+        };
+        _.each(sizes, function(available_size, unit) {
+            o[unit] = self._get_size(o[unit]);
+            o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
+            o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
+            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
+                o[unit] = o['min_' + unit];
+            }
+            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) {
+                o[unit] = o['max_' + unit];
+            }
         });
-        if (!o.title && this.dialog_title) {
-            o.title = this.dialog_title;
-        }
+        o.title = o.title || this.dialog_title;
         return o;
     },
-    get_width: function(val) {
-        return this.get_size(val.toString(), $(window.top).width());
-    },
-    get_height: function(val) {
-        return this.get_size(val.toString(), $(window.top).height());
-    },
-    get_size: function(val, available_size) {
+    _get_size: function(val, available_size) {
+        val = val.toString();
         if (val === 'auto') {
             return val;
-        } else if (val.slice(-1) == "%") {
+        } else if (val.slice(-1) === "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
         } else {
             return parseInt(val, 10);
@@ -123,11 +121,14 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     open: function(options) {
-        if (! this.dialog_inited)
-            this.init_dialog();
-        var o = this.get_options(options);
-        this.add_buttons(o.buttons);
-        delete(o.buttons);
+        var o = this._get_options(options);
+        if (!this.dialog_inited) {
+            this.init_dialog(o);
+        }
+        if (o.buttons) {
+            this._add_buttons(o.buttons);
+            delete(o.buttons);
+        }
         this.$buttons.appendTo($("body"));
         instance.web.dialog(this.$el, o).dialog('open');
         this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
@@ -137,10 +138,15 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
         return this;
     },
-    add_buttons: function(buttons) {
+    _add_buttons: function(buttons) {
         var self = this;
-        _.each(buttons, function(fn, but) {
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: but, node: { attrs: {} }}}));
+        _.each(buttons, function(fn, text) {
+            // buttons can be object or array
+            if (!_.isFunction(fn)) {
+                text = fn.text;
+                fn = fn.click;
+            }
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
             self.$buttons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
@@ -149,8 +155,7 @@ instance.web.Dialog = instance.web.Widget.extend({
     },
     init_dialog: function(options) {
         this.renderElement();
-        var o = this.get_options(options);
-        instance.web.dialog(this.$el, o);
+        instance.web.dialog(this.$el, options);
         this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
         this.$el.dialog("widget").append(this.$buttons);
         this.dialog_inited = true;
@@ -170,8 +175,6 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.destroy();
             this.__tmp_dialog_closing = undefined;
         }
-    },
-    on_resized: function() {
     },
     destroy: function () {
         _.each(this.getChildren(), function(el) {
@@ -565,13 +568,19 @@ instance.web.Login =  instance.web.Widget.extend({
         self.$el.find('.oe_login_manage_db').click(function() {
             self.do_action("database_manager");
         });
-        var d;
-        if (self.params.db) {
-            if (self.params.login && self.params.password) {
-                d = self.do_login(self.params.db, self.params.login, self.params.password);
-            }
+        var d = $.when();
+        if ($.deparam.querystring().db) {
+            self.params.db = $.deparam.querystring().db;
+        }
+        // used by dbmanager.do_create via internal client action
+        if (self.params.db && self.params.login && self.params.password) {
+            d = self.do_login(self.params.db, self.params.login, self.params.password);
         } else {
-            d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
+            if (self.params.db) {
+                self.on_db_loaded([self.params.db])
+            } else {
+                d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
+            }
         }
         return d;
     },
@@ -985,7 +994,7 @@ instance.web.Client = instance.web.Widget.extend({
     start: function() {
         var self = this;
         return instance.session.session_bind(this.origin).then(function() {
-            var $e = $(QWeb.render(self._template, {}));
+            var $e = $(QWeb.render(self._template, {widget: self}));
             self.replaceElement($e);
             $e.openerpClass();
             self.bind_events();

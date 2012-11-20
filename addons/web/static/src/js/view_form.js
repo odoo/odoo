@@ -1009,8 +1009,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         return true;
     },
-    sidebar_context: function () {
-        return this.save().then(_.bind(function() {return this.get_fields_values();}, this));
+    sidebar_eval_context: function () {
+        return $.when(this.build_eval_context());
     },
     open_defaults_dialog: function () {
         var self = this;
@@ -1215,7 +1215,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         var doc = $.parseXML('<div class="oe_form">' + xml + '</div>');
         $('button', doc).each(function() {
-            $(this).attr('data-button-type', $(this).attr('type'));
+            $(this).attr('data-button-type', $(this).attr('type')).attr('type', 'button');
         });
         xml = instance.web.xml_to_str(doc);
         return $(xml);
