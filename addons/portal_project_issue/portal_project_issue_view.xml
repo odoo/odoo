@@ -18,8 +18,8 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_kanban_content">
-                                    <div>
-                                        <h1><a type="open"><field name="name"/></a></h1>
+                                    <div class="oe_left">
+                                        <h1><field name="name"/></h1>
                                         <field name="partner_id"/> <br/>
                                         <field name="version_id"/>
                                     </div>
@@ -30,31 +30,56 @@
                                             </t>
                                             <field name="categ_ids"/>
                                         </div>
-                                        <div class="oe_right">
-                                            Creation: <field name="create_date"/>
-                                            <span class="oe_kanban_highlight">
-                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
-                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
-                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                                </a>
-                                            </span>
-                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
-                                                <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
-                                            </t>
-                                            <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                    </div>
+                                    <t t-if="record.stage_id.raw_value[1] == 'Analysis' or record.stage_id.raw_value[1] == 'Specification'">
+                                        <div class="oe_text_right" style="color:blue;">
+                                            <h1><field name="stage_id" readonly="1"/></h1>
                                         </div>
+                                    </t>
+                                    <t t-if="record.stage_id.raw_value[1] == 'Design' or record.stage_id.raw_value[1] == 'Development' or record.stage_id.raw_value[1] == 'Testing'">
+                                        <div class="oe_text_right" style="color:#c7ffd5;">
+                                            <h1><field name="stage_id" readonly="1"/></h1>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.stage_id.raw_value[1] == 'Merge'">
+                                        <div class="oe_text_right" style="color:red;">
+                                            <h1><field name="stage_id" readonly="1"/></h1>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.stage_id.raw_value[1] == 'done'">
+                                        <div class="oe_text_right" style="color:black;">
+                                            <h1><field name="stage_id" readonly="1"/></h1>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.stage_id.raw_value[1] == 'Cancelled'">
+                                        <div class="oe_text_right" style="color:gray;">
+                                            <h1><field name="stage_id" readonly="1"/></h1>
+                                        </div>
+                                    </t>
+                                    <div class="oe_clear"></div>
+                                    <div class="oe_right">                                        
+                                        Creation: <field name="create_date"/>
+                                        <span class="oe_kanban_highlight">
+                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['2']" title="High Priority">
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                            <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                            </a>
+                                        </span>
+                                        <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
+                                            <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
+                                        </t>
+                                        <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                     </div>
                                 </div>
-                                <div class="oe_clear"></div>
                             </div>
                         </t>
                     </templates>

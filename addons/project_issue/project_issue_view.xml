@@ -116,7 +116,7 @@
                             <field name="priority"/>
                             <label for="project_id"/>
                             <div>
-                                <field name="project_id" required="True" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
+                                <field name="project_id" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
                                 <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending" class="oe_inline"/>
                             </div>
                             <label for="task_id"/>

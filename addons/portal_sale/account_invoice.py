@@ -21,50 +21,12 @@
 
 from osv import fields,osv
 
-class mail_mail(osv.osv):
-    _inherit = 'mail.mail'
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
 
-    def _postprocess_sent_message(self, cr, uid, mail, context=None):
-        if mail.model == 'account.invoice':
-            so_obj = self.pool.get('sale.order')
-            inv_obj = self.pool.get('account.invoice')
-
-            inv_follower_ids = inv_obj.read(cr, uid, mail.res_id, ['message_follower_ids'], context=context)['message_follower_ids']
-
-            cr.execute('SELECT rel.order_id FROM sale_order_invoice_rel AS rel WHERE rel.invoice_id='+str(mail.res_id))
-            so_invoice_ids = cr.fetchall()        
-            so_follower_ids = []
-            for so_invoice_id in so_invoice_ids:
-                order_id, = so_invoice_id
-                so_follower_ids += so_obj.read(cr, uid, order_id, ['message_follower_ids'], context=context)['message_follower_ids']
-
-            partner_ids = list(set(so_follower_ids).difference(set(inv_follower_ids)))
-
-            if partner_ids:
-                partner_obj = self.pool.get('res.partner')
-                user_obj = self.pool.get('res.users')
-                group_obj = self.pool.get('res.groups')
-
-                document = inv_obj.browse(cr, uid, mail.res_id, context=context)
-                group_ids = []                
-                for partner in partner_obj.browse(cr, uid, partner_ids, context=context):
-                    for user_id in partner.user_ids:
-                        group_ids += user_id.groups_id
-                    if group_ids:
-                        for group_id in group_ids:
-                            if group_id.is_portal == True:
-                                inv_obj.message_subscribe(cr, uid, [mail.res_id], partner_ids, context=context)
-                                mail_values = {
-                                    'email_from': 'vta@openerp.com',
-                                    'email_to': 'falcobolger@gmail.com',
-                                    'subject': 'Invitation to follow %s' % document.name_get()[0][1],
-                                    'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
-                                    'auto_delete': True,
-                                }
-                                mail_id = self.create(cr, uid, mail_values, context=context)
-                                self.send(cr, uid, [mail_id], recipient_ids=[partner['id']], context=context)
-                        group_ids = []
-                                
-        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
-
-mail_mail()
+    def invoice_validate(self, cr, uid, ids, context=None):
+        # fetch the partner's id and subscribe the partner to the sale order
+        partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
+        if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
+            self.message_subscribe(cr, uid, ids, [partner.id], context=context)
+        return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
