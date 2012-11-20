@@ -58,7 +58,7 @@ class account_cashbox_line(osv.osv):
         return {'value' : {'subtotal_closing' : (pieces * number) or 0.0 }}
 
     _columns = {
-        'pieces': fields.float('Unit of Currency', digits_compute=dp.get_precision('Account')),
+        'pieces': fields.float('Currency Denomination', digits_compute=dp.get_precision('Account')),
         'number_opening' : fields.integer('Number of Units', help='Opening Unit Numbers'),
         'number_closing' : fields.integer('Number of Units', help='Closing Unit Numbers'),
         'subtotal_opening': fields.function(_sub_total, string='Opening Subtotal', type='float', digits_compute=dp.get_precision('Account'), multi='subtotal'),
