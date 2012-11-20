@@ -22,7 +22,6 @@ instance.web.DataExport = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.open();
         self.$el.removeClass('ui-dialog-content ui-widget-content');
         self.$el.find('#add_field').click(function() {
             if ($('#field-tree-structure tr.ui-selected')) {

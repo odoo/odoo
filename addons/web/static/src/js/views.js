@@ -26,6 +26,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         if (this.dialog) {
             this.dialog.destroy();
         }
+        this.dialog = null;
     },
     /**
      * Add a new item to the breadcrumb
@@ -318,7 +319,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
@@ -1060,23 +1060,24 @@ instance.web.Sidebar = instance.web.Widget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        self.getParent().sidebar_context().done(function (context) {
+        self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
-            var additional_context = _.extend({
+            var active_ids_context = {
                 active_id: ids[0],
                 active_ids: ids,
                 active_model: self.getParent().dataset.model
-            }, context);
+            };
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: additional_context
+                context: active_ids_context,
+                eval_context: new instance.web.CompoundContext(sidebar_eval_context, active_ids_context),
             }).done(function(result) {
-                result.context = _.extend(result.context || {},
-                    additional_context);
+                console.log(result.context);
+                result.context = new instance.web.CompoundContext(result.context || {}, active_ids_context);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
                 self.do_action(result, {
@@ -1329,7 +1330,7 @@ instance.web.View = instance.web.Widget.extend({
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
     },
-    sidebar_context: function () {
+    sidebar_eval_context: function () {
         return $.when();
     },
     /**
