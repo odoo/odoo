@@ -1109,11 +1109,13 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
-        return False
+        self.case_block_send_note(cr, uid, ids, context=context)
+        return True
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        return False
+        self.case_open_send_note(cr, uid, ids, context=context)
+        return True
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
@@ -1295,8 +1297,17 @@ class task(base_stage, osv.osv):
             context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="project.mt_task_new", context=context)
 
+    def case_open_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>started</b>."), subtype="project.mt_task_started", context=context)
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>done</b>."), subtype="project.mt_task_closed", context=context)
+
+    def case_block_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>blocked</b>."), subtype="project.mt_task_blocked", context=context)
+    
     def case_draft_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), context=context)
 

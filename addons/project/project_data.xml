@@ -104,20 +104,32 @@
         </record>
 
         <record id="mt_task_new" model="mail.message.subtype">
-            <field name="name">New</field>
+            <field name="name">Task created</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
-            <field name="name">Closed</field>
+            <field name="name">Done</field>
             <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_started" model="mail.message.subtype">
+            <field name="name">Task Started</field>
+            <field name="res_model">project.task</field>
+        </record>
+       <record id="mt_task_blocked" model="mail.message.subtype">
+            <field name="name">Tasks Blocked</field>
+            <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
         </record>
         <record id="mt_task_canceled" model="mail.message.subtype">
             <field name="name">Canceled</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
         </record>
         <record id="mt_task_change" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
         </record>
 
         <!-- notify all employees of module installation -->
