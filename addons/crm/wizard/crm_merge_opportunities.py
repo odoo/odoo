@@ -22,7 +22,7 @@ from tools.translate import _
 
 class crm_merge_opportunity(osv.osv_memory):
     """
-    Merge two opportunities together.
+    Merge opportunities together.
     If we're talking about opportunities, it's just because it makes more sense
     to merge opps than leads, because the leads are more ephemeral objects.
     But since opportunities are leads, it's also possible to merge leads
@@ -37,23 +37,25 @@ class crm_merge_opportunity(osv.osv_memory):
     }
 
     def action_merge(self, cr, uid, ids, context=None):
-        """
-        Different cases of merge:
-        - merge 2 leads together = 1 new lead
-        - merge 2 opps together = 1 new opp
-        - merge 1 lead and 1 opp together = 1 new opp
-        """
         if context is None:
             context = {}
 
-        lead = self.pool.get('crm.lead')
+        lead_obj = self.pool.get('crm.lead')
         wizard = self.browse(cr, uid, ids[0], context=context)
         opportunity2merge_ids = wizard.opportunity_ids
-        #TODO: why is this passed through the context, and not as an argument ?  It looks dirty...
+
+        #TODO: why is this passed through the context ?
         context['lead_ids'] = [opportunity2merge_ids[0].id]
 
-        merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], context=context)
-        return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
+        merge_id = lead_obj.merge_opportunity(cr, uid, [x.id for x in opportunity2merge_ids], context=context)
+
+        # The newly created lead might be a lead or an opp: redirect toward the right view
+        merge_result = lead_obj.browse(cr, uid, merge_id, context=context)
+
+        if merge_result.type == 'opportunity':
+            return lead_obj.redirect_opportunity_view(cr, uid, merge_id, context=context)
+        else:
+            return lead_obj.redirect_lead_view(cr, uid, merge_id, context=context)
 
     def default_get(self, cr, uid, fields, context=None):
         """

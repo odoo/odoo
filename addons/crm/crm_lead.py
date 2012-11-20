@@ -445,16 +445,22 @@ class crm_lead(base_stage, format_address, osv.osv):
         return data
 
     def _merge_find_oldest(self, cr, uid, ids, context=None):
+        """
+        Return the oldest lead found among ids.
+
+        :param list ids: list of ids of the leads to inspect
+        :return int id: the id of the oldest of the leads
+        """
         if context is None:
             context = {}
-        #TOCHECK: where pass 'convert' in context ?
-        if context.get('convert'):
-            ids = list(set(ids) - set(context.get('lead_ids', False)) )
 
-        #search opportunities order by create date
-        opportunity_ids = self.search(cr, uid, [('id', 'in', ids)], order='create_date' , context=context)
-        oldest_id = opportunity_ids[0]
-        return self.browse(cr, uid, oldest_id, context=context)
+        if context.get('convert'):
+            ids = list(set(ids) - set(context.get('lead_ids', [])))
+
+        # Search opportunities order by create date
+        opportunity_ids = self.search(cr, uid, [('id', 'in', ids)], order='create_date', context=context)
+        oldest_opp_id = opportunity_ids[0]
+        return self.browse(cr, uid, oldest_opp_id, context=context)
 
     def _mail_body(self, cr, uid, lead, fields, title=False, context=None):
         body = []
@@ -537,8 +543,12 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def merge_opportunity(self, cr, uid, ids, context=None):
         """
-        To merge opportunities
-            :param ids: list of opportunities ids to merge
+        Different cases of merge:
+        - merge leads together = 1 new lead
+        - merge at least 1 opp with anything else (lead or opp) = 1 new opp
+
+        :param ids: list of leads/opportunities ids to merge
+        :return int id: id of the resulting lead/opp
         """
         if context is None: context = {}
 
