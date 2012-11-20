@@ -58,11 +58,13 @@
         <record id="mt_salesteam_confirmed" model="mail.message.subtype">
             <field name="name">Quotation sent</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_salesteam_confirmed" model="mail.message.subtype">
             <field name="name">Sale Order Confirmed</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
     </data>
 </openerp>

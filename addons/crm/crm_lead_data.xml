@@ -157,16 +157,19 @@
         <record id="mt_lead_convert_to_opportunity" model="mail.message.subtype">
             <field name="name">Convert to Opportunity</field>
             <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_lead_stage" model="mail.message.subtype">
             <field name="name">Stage Changed</field>
             <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_lead_lost" model="mail.message.subtype">
             <field name="name">Lost</field>
             <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_lead_won" model="mail.message.subtype">
@@ -177,21 +180,25 @@
         <record id="mt_salesteam_lead" model="mail.message.subtype">
             <field name="name">Leads Created</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_salesteam_lead_opportunity" model="mail.message.subtype">
             <field name="name">Leads to Opportunity</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_salesteam_stage" model="mail.message.subtype">
             <field name="name">Leads Stage Changed</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_salesteam_lost" model="mail.message.subtype">
             <field name="name">Opportunity Lost</field>
             <field name="res_model">crm.case.section</field>
+            <field name="default" eval="False"/>
         </record>
 
         <record id="mt_salesteam_won" model="mail.message.subtype">
