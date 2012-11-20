@@ -23,6 +23,10 @@
         </record>
 
         <!-- mail: subtypes -->
+        <record id="mt_account_renew" model="mail.message.subtype">
+            <field name="name">Contract to Renew</field>
+            <field name="res_model">account.analytic.account</field>
+        </record>
         <record id="mt_account_closed" model="mail.message.subtype">
             <field name="name">Contract Finished</field>
             <field name="res_model">account.analytic.account</field>
@@ -31,12 +35,8 @@
             <field name="name">Contract Renewed</field>
             <field name="res_model">account.analytic.account</field>
         </record>
-        <record id="mt_account_renew" model="mail.message.subtype">
-            <field name="name">Contract to Renew</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
         <record id="mt_account_canceled" model="mail.message.subtype">
-            <field name="name">canceled</field>
+            <field name="name">Canceled</field>
             <field name="res_model">account.analytic.account</field>
         </record>
         <record id="mt_salesteam_renew" model="mail.message.subtype">
