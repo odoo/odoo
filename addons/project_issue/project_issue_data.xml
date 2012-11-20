@@ -45,11 +45,11 @@ Access all issues from the top Project menu, and access the issues of a specific
 
         <!-- Mail subtypes -->
         <record id="mail.mt_issue_new" model="mail.message.subtype">
-            <field name="name">New</field>
+            <field name="name">Issue created</field>
             <field name="res_model">project.issue</field>
         </record>
         <record id="mail.mt_issue_closed" model="mail.message.subtype">
-            <field name="name">Closed</field>
+            <field name="name">Issue closed</field>
             <field name="res_model">project.issue</field>
         </record>
         <record id="mail.mt_issue_canceled" model="mail.message.subtype">
@@ -60,6 +60,13 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
         </record>
-
+        <record id="mail.mt_issue_started" model="mail.message.subtype">
+            <field name="name">Issue started</field>
+            <field name="res_model">project.issue</field>
+        </record>
+        <record id="mail.mt_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
+            <field name="res_model">project.issue</field>
+        </record>
     </data>
 </openerp>
