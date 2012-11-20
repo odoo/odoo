@@ -30,7 +30,7 @@ cr.execute("select coalesce(sum(debit),0) as debit_new_fyear,coalesce(sum(credit
 rec =  cr.dictfetchall()
 cr.execute("select coalesce(sum(debit),0) as debit_last_fyear,coalesce(sum(credit),0) as credit_last_fyear from account_move_line where period_id in (select period_id from account_fiscalyear where state='done' order by id desc limit 1);")
 rec2= cr.dictfetchall()
-if (rec2[0]['credit_last_fyear']-rec[0]['credit_new_fyear']!=0) or (rec2[0]['dedit_last_fyear']-rec[0]['dedit_new_fyear']!=0) :
+if (rec2[0]['credit_last_fyear']-rec[0]['credit_new_fyear']!=0) or (rec2[0]['debit_last_fyear']-rec[0]['debit_new_fyear']!=0) :
    res.append(rec[0])
    res.insert(0,_('* New fiscalyear debit and credit are:'))
    res.append(rec2[0])
@@ -61,7 +61,7 @@ cr.execute(sql)
 res = cr.dictfetchall()
 if res:
     res.insert(0,_('* The test failed for these movement lines:'))
-    result = res
+result = res
 
 ]]></field>
     </record>
@@ -80,7 +80,7 @@ for record in rec_ids :
     res.append(', '.join(["Reconcile name: %(name)s, id=%(id)s " % r for r in reconcile_ids]))
 result = res
 if result:
-    res.insert(0,_('* The test failed for these reconciled items(id/name):'))
+    result.insert(0,_('* The test failed for these reconciled items(id/name):'))
 ]]></field>
     </record>
 
@@ -101,18 +101,19 @@ if result:
 ]]></field>
     </record>
 
-
     <record model="accounting.assert.test" id="account_test_05_2">
         <field name="sequence">6</field>
         <field name="name">Test 5.2 : Reconcilied invoices and Payable/Receivable accounts</field>
         <field name="desc">Check that reconciled account moves, that define Payable and Receivable accounts, are belonging to reconciled invoices</field>
         <field name="code_exec"><![CDATA[res = reconciled_inv()
-cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move_line ml, account_account a, account_move m where m.id=ml.move_id and inv.move_id=m.id and inv.id=inv.move_id and ml.reconcile_id is null and a.type in ('receivable','payable')  and ml.account_id=a.id and inv.id in %s",(tuple(res),))
-records = cr.dictfetchall()
-groups = group(list(records),'number')
-result = [rec for rec in records]
-if result:
-    result.insert(0,_('* Invoices that need to be checked: '))
+result=[]
+if res:
+    cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move_line ml, account_account a, account_move m where m.id=ml.move_id and inv.move_id=m.id and inv.id=inv.move_id and ml.reconcile_id is null and a.type in ('receivable','payable') and ml.account_id=a.id and inv.id in %s",(tuple(res),))
+    records = cr.dictfetchall()
+    groups = group(list(records),'number')
+    result = [rec for rec in records]
+    if result:
+        result.insert(0,_('* Invoices that need to be checked: '))
 ]]></field>
     </record>
 

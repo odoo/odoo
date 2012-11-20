@@ -56,9 +56,9 @@ class accounting_assert_test(osv.osv):
     }
 
     _defaults = {
-        'code_exec': lambda *a: CODE_EXEC_DEFAULT,
-        'active': lambda *a: True,
-        'sequence': lambda *a: 10,
+        'code_exec': CODE_EXEC_DEFAULT,
+        'active': True,
+        'sequence': 10,
     }
 
 accounting_assert_test()
