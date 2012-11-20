@@ -29,4 +29,15 @@ class account_invoice(osv.osv):
         partner = self.browse(cr, uid, ids[0], context=context)['partner_id']
         if partner.id not in self.browse(cr, uid, ids[0], context=context)['message_follower_ids']:
             self.message_subscribe(cr, uid, ids, [partner.id], context=context)
+            document = self.browse(cr, uid, ids[0], context=context)
+            mail_values = {
+                'email_from': self.pool.get('res.users').browse(cr, uid, uid, context=context)['partner_id']['email'],
+                'email_to': partner.email,
+                'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                'body_html': 'You have been invited to follow %s' % document.name_get()[0][1],
+                'auto_delete': True,
+            }
+            mail_obj = self.pool.get('mail.mail')
+            mail_id = mail_obj.create(cr, uid, mail_values, context=context)
+            mail_obj.send(cr, uid, [mail_id], recipient_ids=[partner.id], context=context)
         return super(account_invoice, self).invoice_validate(cr, uid, ids, context=context)
