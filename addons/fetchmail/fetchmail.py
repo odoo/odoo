@@ -243,20 +243,20 @@ class mail_mail(osv.osv):
 
     def create(self, cr, uid, values, context=None):
         if context is None:
-            context={}
+            context = {}
         fetchmail_server_id = context.get('fetchmail_server_id')
         if fetchmail_server_id:
             values['fetchmail_server_id'] = fetchmail_server_id
-        res = super(mail_mail,self).create(cr, uid, values, context=context)
+        res = super(mail_mail, self).create(cr, uid, values, context=context)
         return res
 
     def write(self, cr, uid, ids, values, context=None):
         if context is None:
-            context={}
+            context = {}
         fetchmail_server_id = context.get('fetchmail_server_id')
         if fetchmail_server_id:
-            values['fetchmail_server_id'] = server_id
-        res = super(mail_mail,self).write(cr, uid, ids, values, context=context)
+            values['fetchmail_server_id'] = fetchmail_server_id
+        res = super(mail_mail, self).write(cr, uid, ids, values, context=context)
         return res
 
 

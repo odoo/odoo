@@ -220,7 +220,17 @@
         <menuitem parent="next_id_31"
             id="menu_act_crossovered_budget_view"
             action="act_crossovered_budget_view" sequence="1" />
-
+        
+       <record id="view_crossovered_budget_line_search" model="ir.ui.view">
+            <field name="name">account.budget.line.search</field>
+            <field name="model">crossovered.budget.lines</field>
+            <field name="arch" type="xml">
+                <search string="Budget Lines">
+                    <field name="analytic_account_id"/>
+                </search>
+            </field>
+        </record>
+        
         <record model="ir.ui.view" id="view_crossovered_budget_line_tree">
             <field name="name">crossovered.budget.line.tree</field>
             <field name="model">crossovered.budget.lines</field>

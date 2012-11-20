@@ -470,7 +470,14 @@ class Product(osv.osv):
         'membership_date_from': fields.date('Date from', help='Date from which membership becomes active.'),
         'membership_date_to': fields.date('Date to', help='Date until which membership remains active.'),
     }
-
+    def _check_end_date(self, cr, uid, ids, context=None):
+        for membership in self.browse(cr, uid, ids, context=context):
+            if membership.membership_date_to < membership.membership_date_from:
+                return False
+        return True
+    _constraints = [
+        (_check_end_date, 'Error ! Ending Date cannot be set before Beginning Date.', ['membership_date_to']),
+    ]
     _defaults = {
         'membership': False,
     }

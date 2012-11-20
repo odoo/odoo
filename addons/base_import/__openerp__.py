@@ -24,9 +24,12 @@ Re-implement openerp's file import system:
     'category': 'Uncategorized',
     'website': 'http://www.openerp.com',
     'author': 'OpenERP SA',
-    'depends': ['base'],
+    'depends': ['web'],
     'installable': True,
     'auto_install': False,
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'css': [
         'static/lib/select2/select2.css',
         'static/src/css/import.css',
@@ -37,4 +40,5 @@ Re-implement openerp's file import system:
         'static/src/js/import.js',
     ],
     'qweb': ['static/src/xml/import.xml'],
+    'test': ['static/test/states.js'],
 }

@@ -6,7 +6,7 @@ import string
 import urllib2
 import logging
 from tools.translate import _
-from openerp.tools.misc import html2plaintext
+from openerp.tools import html2plaintext
 from py_etherpad import EtherpadLiteClient
 
 _logger = logging.getLogger(__name__)
@@ -19,7 +19,7 @@ class pad_common(osv.osv_memory):
 
         pad = {
             "server" : company.pad_server,
-            "key" : company.pad_key or "4DxmsNIbnQUVQMW9S9tx2oLOSjFdrx1l",
+            "key" : company.pad_key,
         }
 
         # make sure pad server in the form of http://hostname
