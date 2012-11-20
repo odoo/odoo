@@ -532,7 +532,7 @@ def Project():
         # Prevent double project creation when 'use_tasks' is checked!
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
+        if not vals.get('alias_id') and vals.get('name', False):
             vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
@@ -1247,7 +1247,7 @@ class task(base_stage, osv.osv):
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res:
                 match = res.group(1).lower()
                 field = maps.get(match)

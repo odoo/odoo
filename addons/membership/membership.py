@@ -471,6 +471,7 @@ class Product(osv.osv):
         'membership_date_to': fields.date('Date to', help='Date until which membership remains active.'),
     }
 
+    _sql_constraints = [('membership_date_greater','check(membership_date_to >= membership_date_from)','Error ! Ending Date cannot be set before Beginning Date.')]
     _defaults = {
         'membership': False,
     }
