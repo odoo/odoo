@@ -774,10 +774,10 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
         }
         return false;
     },
-    rpc: function(url, data, success, error) {
-        var def = $.Deferred().done(success).fail(error);
+    rpc: function(url, data, options) {
+        var def = $.Deferred();
         var self = this;
-        instance.session.rpc(url, data).done(function() {
+        instance.session.rpc(url, data, options).done(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }).fail(function() {
@@ -1231,12 +1231,14 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
      *
      * @param {String} url RPC endpoint
      * @param {Object} params call parameters
+     * @param {Object} options additional options for rpc call
      * @param {Function} success_callback function to execute on RPC call success
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params) {
+    rpc: function(url, params, options) {
         var self = this;
+        options = options || {};
         // url can be an $.ajax option object
         if (_.isString(url)) {
             url = { url: url };
@@ -1251,10 +1253,12 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             id: _.uniqueId('r')
         };
         var deferred = $.Deferred();
-        this.trigger('request', url, payload);
+        if (! options.shadow)
+            this.trigger('request', url, payload);
         var request = this.rpc_function(url, payload).done(
             function (response, textStatus, jqXHR) {
-                self.trigger('response', response);
+                if (! options.shadow)
+                    self.trigger('response', response);
                 if (!response.error) {
                     if (url.url === '/web/session/eval_domain_and_context') {
                         self.test_eval(params, response.result);
@@ -1268,7 +1272,8 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             }
         ).fail(
             function(jqXHR, textStatus, errorThrown) {
-                self.trigger('response_failed', jqXHR);
+                if (! options.shadow)
+                    self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
@@ -1276,7 +1281,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
                 };
                 deferred.reject(error, $.Event());
             });
-        // Allow deferred user to disable on_rpc_error in fail
+        // Allow deferred user to disable rpc_error call in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
@@ -1309,9 +1314,18 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         // extracted from payload to set on the url
         var data = {
             session_id: this.session_id,
-            id: payload.id
+            id: payload.id,
+            sid: this.httpsessionid,
         };
-        url.url = this.get_url(url.url);
+        
+        var set_sid = function (response, textStatus, jqXHR) {
+            // If response give us the http session id, we store it for next requests...
+            if (response.httpsessionid) {
+                self.httpsessionid = response.httpsessionid;
+            }
+        };
+
+        url.url = this.url(url.url, null);
         var ajax = _.extend({
             type: "GET",
             dataType: 'jsonp', 
@@ -1326,7 +1340,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         if(payload_url.length < 2000) {
             // Direct jsonp request
             ajax.data.r = payload_str;
-            return $.ajax(ajax);
+            return $.ajax(ajax).done(set_sid);
         } else {
             // Indirect jsonp request
             var ifid = _.uniqueId('oe_rpc_iframe');
@@ -1364,11 +1378,20 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
             });
             // append the iframe to the DOM (will trigger the first load)
             $form.after($iframe);
-            return deferred;
+            return deferred.done(set_sid);
         }
     },
-    get_url: function (file) {
-        return this.prefix + file;
+
+    url: function(path, params) {
+        var qs = '';
+        if (!_.isNull(params)) {
+            params = _.extend(params || {}, {session_id: this.session_id});
+            if (this.httpsessionid) {
+                params.sid = this.httpsessionid;
+            }
+            qs = '?' + $.param(params);
+        }
+        return this.prefix + path + qs;
     },
 });
 
