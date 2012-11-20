@@ -205,7 +205,6 @@ class wizard_user(osv.osv_memory):
             'name': user.name,
             'login': user.login,
             'url': user.signup_url,
-            'password': user.password,
         }
         mail_mail = self.pool.get('mail.mail')
         mail_values = {

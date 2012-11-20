@@ -31,19 +31,18 @@
             <field name="res_model">account.invoice</field>
             <field name="view_mode">tree,form,calendar,graph</field>
             <field name="domain">[('type','=','out_invoice')]</field>
-            <field name="context">{'default_type':'out_invoice', 'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="help">We haven't sent you any invoice.</field>
         </record>
 
         <record id="action_vendor_receipt" model="ir.actions.act_window">
-            <field name="name">Customer Payment</field>
-            <field name="res_model">account.voucher</field>
-            <field name="domain">[('journal_id.type', 'in', ['bank', 'cash']), ('type','=','receipt')]</field>
-            <field name="context">{'type':'receipt'}</field>
-            <field name="search_view_id" ref="account_voucher.view_voucher_filter_customer_pay"/>
-            <field name="target">current</field>
-            <field name="help">We haven't sent you any credit note.</field>
+            <field name="name">Customer Refunds</field>
+            <field name="res_model">account.invoice</field>
+            <field name="domain">[('type','=','out_refund')]</field>
+            <field name="context">{'type':'out_refund'}</field>
+            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
+            <field name="help">We haven't sent you any refund.</field>
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
@@ -52,7 +51,7 @@
             action="action_order_form" sequence="20"/>
         <menuitem name="Invoices" id="portal_invoices" parent="portal.portal_orders"
             action="action_invoice_tree1" sequence="30"/>
-        <menuitem name="Credit Notes" id="portal_payments" parent="portal.portal_orders"
+        <menuitem name="Customer Refunds" id="portal_payments" parent="portal.portal_orders"
             action="action_vendor_receipt" sequence="40"/>
 
     </data>

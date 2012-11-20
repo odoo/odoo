@@ -41,14 +41,10 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context:
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if context.get('portal'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             return user.partner_id.id
-        if hasattr(user, 'partner_address_id') and user.partner_address_id:
-            return user.partner_address_id
-        return user.company_id.partner_id.id
+        return False
 
     def _get_default_email(self, cr, uid, context=None):
         """ Gives default email address for current user
@@ -56,10 +52,10 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.email
+        if context.get('portal'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            return user.email
+        return False        
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
