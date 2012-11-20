@@ -305,11 +305,9 @@
                                             'default_subject': 'Reminder to fill up Survey' }"/>
                         </div>
                         <group>
-                            <group col="3" colspan="1">
+                            <group>
                                 <field name="survey_id"/>
-                                <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
                                 <field name="user_to_review_id"/>
-                                <label string=""/>
                                 <field name="user_id" string="Interviewer"/>
                             </group>
                             <group>
