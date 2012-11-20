@@ -1603,7 +1603,7 @@ class BaseModel(object):
                 if fld_def._type == 'many2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         if not obj.search(cr, uid, [('id', '=',
                             field_value[i])]):
                             continue
@@ -1612,7 +1612,7 @@ class BaseModel(object):
                 if fld_def._type == 'one2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         field_value2.append({})
                         for field2 in field_value[i]:
                             if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
