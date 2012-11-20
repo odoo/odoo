@@ -44,5 +44,19 @@
             <field name="limit">True</field>
             <field name="color_name">brown</field>
         </record>
+
+        <!--subtype for leaves -->
+        <record id="mt_approve" model="mail.message.subtype">
+            <field name="name">To Approve</field>
+        </record>
+
+        <record id="mt_approved" model="mail.message.subtype">
+            <field name="name">Approved</field>
+        </record>
+
+        <record id="mt_refused" model="mail.message.subtype">
+            <field name="name">Refused</field>
+        </record>
+
     </data>
 </openerp>
