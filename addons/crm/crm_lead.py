@@ -273,7 +273,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     }
 
     _sql_constraints = [
-        ('check_probability', 'check(probability <= 100)', 'Probability can not be more than 100% !')
+        ('check_probability', 'check(probability >= 0 and probability <= 100)', 'Probability should be between 0-100% !')
     ]
 
     def create(self, cr, uid, vals, context=None):
