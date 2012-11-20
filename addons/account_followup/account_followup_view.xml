@@ -148,7 +148,7 @@
           </field>
         </record>
         
-        <menuitem id="account.periodical_processing_reconciliation" parent="menu_finance_followup" name="Reconciliation" sequence="1"/>
+        <menuitem id="account.periodical_processing_reconciliation" groups="account.group_account_user" parent="menu_finance_followup" name="Reconciliation" sequence="1"/>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_finance_configuration" name="Follow-up Levels"/>
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Follow-up Report"/>
 
