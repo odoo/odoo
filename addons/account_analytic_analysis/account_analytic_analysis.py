@@ -296,11 +296,14 @@ class account_analytic_account(osv.osv):
     def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         lines_obj = self.pool.get('account.analytic.line')
         res = {}
+        inv_ids = []
         for account in self.browse(cr, uid, ids, context=context):
             res[account.id] = 0.0
             line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
             for line in lines_obj.browse(cr, uid, line_ids, context=context):
-                res[account.id] = line.invoice_id.amount_untaxed
+                if line.invoice_id not in inv_ids:
+                    inv_ids.append(line.invoice_id)
+                    res[account.id] += line.invoice_id.amount_untaxed
         return res
 
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
