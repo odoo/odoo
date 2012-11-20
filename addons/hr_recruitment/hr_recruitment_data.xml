@@ -470,5 +470,17 @@
         <field name="name">New Applicant</field>
         <field name="res_model">hr.job</field>
     </record>
+    <record id="mt_stage_changed" model="mail.message.subtype">
+        <field name="name">Stage changed</field>
+        <field name="res_model">hr.applicant</field>
+    </record>
+    <record id="mt_applicant_hired" model="mail.message.subtype">
+        <field name="name">Applicant Hired</field>
+        <field name="res_model">hr.applicant</field>
+    </record>
+    <record id="mt_applicant_refused" model="mail.message.subtype">
+        <field name="name">Applicant Refused</field>
+        <field name="res_model">hr.applicant</field>
+    </record>
 </data>
 </openerp>
