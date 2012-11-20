@@ -387,6 +387,10 @@ class project_issue(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
+        if 'stage_id' in vals:
+            for t in self.browse(cr, uid, ids, context=context):
+                new_stage = vals.get('stage_id')
+                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
