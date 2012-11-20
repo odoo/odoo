@@ -25,7 +25,7 @@
  				<field name="parent_id" invisible="1"/>
  				<!--<field name="payment_note"/>
  				<field name="phone"/>-->
- 				<field name="payment_amount_overdue"/>
+ 				<field name="credit"/>
  				<field name="payment_responsible_id"/>
  				<!--<field name="email"/>-->
  				<field name="latest_followup_level_id"/>
@@ -48,7 +48,7 @@
  					<!--<filter string="Actions to be taken with overdue amount" domain="['&amp;', ('payment_amount_outstanding', '>', 0.0), ('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
  					<separator/>-->
  					<group string="Follow-up">
- 					<filter string="Partners with Credits" domain="[('payment_amount_overdue', '>', 0.0)]" name="credits"/>
+ 					<filter string="Partners with Credits" domain="[('credit', '>', 0.0)]" name="credits"/>
  					<separator/>
  					<filter string="Follow-ups to do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]" name="todo"/>
  					<separator/>
@@ -78,7 +78,7 @@
  					
  					<!--<filter string="Actions to be taken with overdue amount" domain="['&amp;', ('payment_amount_outstanding', '>', 0.0), ('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
  					<separator/>-->
- 					<filter string="Overdue amount" domain="[('payment_amount_overdue', '>', 0.0)]"/>
+ 					<filter string="Overdue amount" domain="[('credit', '>', 0.0)]"/>
  					<separator/>
  					<filter string="Follow-ups to do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]"/>
  					<separator/>
@@ -100,7 +100,7 @@
  			<field name="view_type">form</field>
  			<field name="view_mode">tree,form</field>
  			<field name="context">{} </field>
- 			<!--<field name="domain">[('payment_amount_overdue', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
+ 			<!--<field name="domain">[('credit', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
  			<field name="context">{'Followupfirst':True, 'search_default_todo': True, 'search_default_credits': True} </field>
  			<field name="search_view_id" ref="customer_followup_search_view"/>
  		</record>
@@ -118,21 +118,21 @@
             <!--<field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/>--><!-- or user? --> 
             <field name="arch" type="xml" >
             		<div name="buttons" position="inside">
-            			<button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}" />
-            			<button name="do_button_mail" type="object" string="Send Overdue Email" groups="account.group_account_user" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}"/>
+            			<button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}" />
+            			<button name="do_button_mail" type="object" string="Send Overdue Email" groups="account.group_account_user" help="If not specified by the latest follow-up level, it will send from the default follow-up of overdue invoices template" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}"/>
             		</div>
             		<page string="Accounting" position="before" version="7.0">
-            		<page string="Payments Follow-up" position="inside" groups="account.group_account_user">
+            		<page string="Payments Follow-up" position="inside" groups="account.group_account_invoice">
             			<div class = "oe_inline">
             			<p attrs="{'invisible':[('latest_followup_date','=', False)]}" class="oe_inline">The <field name="latest_followup_date" />, the latest level that was executed, was <field name="latest_followup_level_id" class="oe_inline"/>.
             			</p>
-            			<p class="oe_inline" attrs="{'invisible':[('payment_amount_overdue', '&lt;=', 0.0)]}">The partner owns us <field name="payment_amount_overdue" class="oe_inline"/> 
-            		</p>
+            			<!--<p class="oe_inline" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}">The partner owns us <field name="credit" class="oe_inline"/> 
+            		</p>-->
             		<!--<p attrs="{'invisible':[('payment_next_action', '=', False)]}">This is the action required now:</p>-->
             		</div>
             			<p class="oe_inline">
             						<label for="payment_next_action" string="Next Follow-up Action"/>
-                                    <field name="payment_next_action_date" nolabel="1"/> <label string="-" attrs="{'invisible': ['|', ('payment_next_action_date', '=', False), ('payment_next_action', '=', False)]}"/>
+                                    <field name="payment_next_action_date" nolabel="1" class="oe_inline"/> <label string="-" attrs="{'invisible': ['|', ('payment_next_action_date', '=', False), ('payment_next_action', '=', False)]}"/>
                                     <field name="payment_next_action" class="oe_inline" nolabel="1" string="Next Follow-up action" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
                                      <span attrs="{'invisible':[('payment_responsible_id', '=', False)]}"> to be done by: </span> <field name="payment_responsible_id" placeholder="The user responsible for taking this action e.g. sales" class="oe_inline"/>
                                  
@@ -147,12 +147,12 @@
  					 		<field name="payment_note" string="The customer promised:"/> 
  					 	</group>
             			<p class="oe_grey"> <!--maybe only when accountmovelines empty-->
-            				Here is the history of the transactions of this customer. By clicking on the light bulb, you can put an invoice as litigation.  This means you are still in discussion about it and it 
-            				won't be taken into account for going to the next follow-up level.        
+            				Here is the history of the transactions of this customer. By clicking on the check box, you can put an invoice as litigation.  This means you are still in discussion about it and it 
+            				will not be taken into account by the wizard.          
             			</p>            		
  						<group>
  					 <field name="accountmoveline_ids" nolabel="1" > <!--ontext="{'default_partner_id': active_id}" mode="kanban"-->
- 						<tree string="Account Move line" editable="bottom" create="false" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
+ 						<tree string="Account Move line" editable="bottom" create="false" delete="false" colors="red:date_maturity and date_maturity&lt;current_date or date&lt;current_date"> 
  							<field name="date" readonly="True"/>
                     		<field name="move_id" readonly="True"/> 							
  							<field name="blocked" string="Litigation"/>
@@ -161,6 +161,7 @@
  							<field name="result" readonly="True"/>
  							<field name="followup_line_id" invisible='1'/>
  						</tree>
+ 						
  					<!--	<kanban default_group_by="followup_line_id" create="false">
  							<field name="followup_line_id"/>
  							<field name="result"/>
@@ -189,8 +190,8 @@
                     </templates>
 						</kanban>-->
  					</field>
- 						
  					</group>
+ 					<p align="right"><B>Total amount: <field name="payment_amount_due" class="oe_inline"/> </B></p> 					
             		</page>
             		</page>
             </field>

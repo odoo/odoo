@@ -74,35 +74,22 @@
             <field name="name">account.followup.sending.results.form</field>
             <field name="model">account.followup.sending.results</field>
             <field name="arch" type="xml">
-            <form string="Results of the sending committee" version="7.0">
+            <form string="Summary of actions" version="7.0">
                 <header>
-                    <field name="description"/>
+                    <field name="description" readonly="True" />
                 </header>
                 <footer>
-                	<button name="do_report" string="Download report here" type="object" class="oe_highlight"/>
+                	<field name="needprinting" invisible="1"/>
+                	<div attrs="{'invisible':[('needprinting','=', False)]}">
+                	<button name="do_report" string="Download report here" type="object" class="oe_highlight"/>                
+                	</div>
+                	<div attrs="{'invisible':[('needprinting','!=', False)]}">
+                	<button name="do_done" string="Close" type="object" class="oe_highlight"/>
+                	</div>
                 </footer>
             </form>
             </field>
         </record>
 
-           <!--<record id="view_account_followup_print_all_msg" model="ir.ui.view">
-            <field name="name">account.followup.print.all.msg.form</field>
-            <field name="model">account.followup.print.all</field>
-            <field name="arch" type="xml">
-            <form string="Summary" version="7.0">
-                <separator string="Summary"/>
-                <field name="summary"/>
-            </form>
-            </field>
-        </record>
-
-        <record id="action_account_followup_print_all" model="ir.actions.act_window">
-            <field name="name">Send Follow-Ups</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.followup.print.all</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-        </record>-->
     </data>
 </openerp>

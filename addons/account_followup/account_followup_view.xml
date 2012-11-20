@@ -23,30 +23,40 @@
                 <form string="Follow-up Steps" version="7.0">
                                          
                        	<h1><field name="name"/></h1>        
-                       	
+                       <group>
                        	<group>               
                        	<div class="oe_inline">
                         After <field name="delay" style="width: 15%%" nolabel="1"/> days, do the following actions: 
                                  	</div>
-                        </group> 
-                        <group>
-                         <field name="manual_action"/>
-                         <field name="send_letter"/>
-                        <field name="send_email"/>
-                        <!--<field name="start" style="width: 25%%"/>--> 
-                       	</group>
-                       	<p class="oe_grey">                       		
+                      </group>
+                      <group>
+                      	<p class="oe_grey">                       		
                        			Manual actions can be followed up in the Customers Requiring Action report for 
                        			every customer and will only be set when the previous action has been marked as done, 
-                       			which can be done in the Payments Follow-up tab of the Customer Form.   
+                       			which can be done in the Payments Follow-up tab of the Customer Form.  
                        	</p>
-                       	<p class="oe_grey">   
+                       	
+                        
+                        <!--<field name="start" style="width: 25%%"/>--> 
+                       	</group>
+                       </group>
+                       <group>
+                       	<group>
+                       	 <field name="manual_action"/>
+                         <field name="send_letter"/>
+                        <field name="send_email"/>
+                    </group>
+                    <group>
+                    	<p class="oe_grey">   
                        		The format for the letters and emails can be specified.  For the letters (PDF report), 
                        		the legend is specified below.  For emails, we make use of an email template.  Changing the text, 
-                       		will change the text of the email template.    
+                       		will change the text of the email template.  Don't forget to translate them as the language of the partner 
+                       		is used.  
                        		
                        	</p>
-                    
+                    </group>
+                    </group>
+                   
                       <group string="Manual Action" attrs="{'invisible': [('manual_action', '=', False)]}">
                        
                        <field name="manual_action_note" string="Action to perform" attrs="{'invisible': [('manual_action', '=', False)]}" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
@@ -92,13 +102,7 @@
                     	into folow-up levels that are triggered when the due date of the most overdue invoice has passed a 
                     	certain amount of days.         	                     	      
                     	</p>
-                    		
-                    	<p class ="oe_grey">
-                    	When the wizard for procesing the follow-ups is run, for every partner the most overdue invoice (without litigation) is checked.  
-                    	If the amount of days overdue is greater or equal than the amount of days specified
-                       		and the actions of the previous follow-up level were done, then the actions checked 
-                       		for the new follow-up level will be executed.                       	
-                    	</p>
+                    	
                     <field name="followup_line"/>
                 </form>
             </field>
