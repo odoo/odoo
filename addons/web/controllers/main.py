@@ -367,13 +367,13 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
     Values = req.session.model('ir.values')
     actions = Values.get(key, key2, models, meta, context)
 
-    return [(id, name, clean_action(req, action))
+    return [(id, name, clean_action(req, action, context))
             for id, name, action in actions]
 
-def clean_action(req, action, do_not_eval=False):
+def clean_action(req, action, context, do_not_eval=False):
     action.setdefault('flags', {})
 
-    context = req.session.eval_context(req.context)
+    context = context or {}
     eval_ctx = req.session.evaluation_context(context)
 
     if not do_not_eval:
@@ -1237,9 +1237,10 @@ class DataSet(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
+        context = req.session.eval_context(req.context)
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(req, action)
+            return clean_action(req, action, context)
         return False
 
     @openerpweb.jsonrequest
@@ -1618,10 +1619,11 @@ class Action(openerpweb.Controller):
     _cp_path = "/web/action"
 
     @openerpweb.jsonrequest
-    def load(self, req, action_id, do_not_eval=False):
+    def load(self, req, action_id, do_not_eval=False, eval_context=None):
         Actions = req.session.model('ir.actions.actions')
         value = False
         context = req.session.eval_context(req.context)
+        eval_context = req.session.eval_context(nonliterals.CompoundContext(context, eval_context or {}))
 
         try:
             action_id = int(action_id)
@@ -1642,15 +1644,16 @@ class Action(openerpweb.Controller):
             ctx.update(context)
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
-                value = clean_action(req, action[0], do_not_eval)
+                value = clean_action(req, action[0], eval_context, do_not_eval)
         return value
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
+        context = req.session.eval_context(req.context)
         return_action = req.session.model('ir.actions.server').run(
             [action_id], req.session.eval_context(req.context))
         if return_action:
-            return clean_action(req, return_action)
+            return clean_action(req, return_action, context)
         else:
             return False
 

@@ -1074,7 +1074,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
             };
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: new instance.web.CompoundContext(sidebar_eval_context, active_ids_context),
+                context: active_ids_context,
+                eval_context: new instance.web.CompoundContext(sidebar_eval_context, active_ids_context),
             }).done(function(result) {
                 console.log(result.context);
                 result.context = new instance.web.CompoundContext(result.context || {}, active_ids_context);
