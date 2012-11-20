@@ -20,7 +20,7 @@
 ##############################################################################
 
 from openerp.addons.mail.tests import test_mail_mockup
-from osv.orm import except_orm
+from openerp.osv.orm import except_orm
 from openerp.tools import mute_logger
 
 

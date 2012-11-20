@@ -377,7 +377,9 @@ class mail_message(osv.Model):
                         id_max = child_id
                 elif nb > 0:
                     exp_domain = [('id', '>=', id_min), ('id', '<=', id_max), ('id', 'child_of', message_id)]
-                    messages.append(_get_expandable(exp_domain, nb, message_id, False))
+                    idx = [msg.get('id') for msg in messages].index(child_id) + 1
+                    # messages.append(_get_expandable(exp_domain, nb, message_id, False))
+                    messages.insert(idx, _get_expandable(exp_domain, nb, message_id, False))
                     id_min, id_max, nb = max(child_ids), 0, 0
                 else:
                     id_min, id_max, nb = max(child_ids), 0, 0

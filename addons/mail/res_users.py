@@ -141,6 +141,11 @@ class res_users(osv.Model):
         partner_id = self.pool.get('res.users').read(cr, uid, thread_id, ['partner_id'], context=context)['partner_id'][0]
         return self.pool.get('res.partner').message_post(cr, uid, partner_id, context=context, **kwargs)
 
+    def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, ids)[0].partner_id.id
+        return self.pool.get('res.partner').message_update(cr, uid, [partner_id], msg_dict,
+            update_vals=update_vals, context=context)
+
 
 class res_users_mail_group(osv.Model):
     """ Update of res.users class

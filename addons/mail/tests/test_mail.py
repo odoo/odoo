@@ -505,7 +505,7 @@ class test_mail(test_mail_mockup.TestMailMockups):
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
             self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test, 'mail.message attachment name / data incorrect')
-
+       
         # ----------------------------------------
         # CASE3: mass_mail on Pigs and Bird
         # ----------------------------------------

@@ -23,9 +23,10 @@ class EDI(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def import_edi_url(self, req, url):
+        context = req.session.eval_context(req.context)
         result = req.session.proxy('edi').import_edi_url(req.session._db, req.session._uid, req.session._password, url)
         if len(result) == 1:
-            return {"action": webmain.clean_action(req, result[0][2])}
+            return {"action": webmain.clean_action(req, result[0][2], context)}
         return True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

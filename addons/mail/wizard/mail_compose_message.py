@@ -102,8 +102,9 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.many2many('ir.attachment', 'mail_compose_message_ir_attachments_rel',
-            'wizard_id', 'attachment_id', string='Attachments'),
+        'attachment_ids': fields.many2many('ir.attachment',
+            'mail_compose_message_ir_attachments_rel',
+            'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
     }
 
