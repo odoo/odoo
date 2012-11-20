@@ -1782,7 +1782,7 @@ class BaseModel(object):
                         # TODO: find a way to remove this hack, by allow dynamic domains
                         dom = []
                         if column._domain and not isinstance(column._domain, basestring):
-                            dom = column._domain
+                            dom = list(column._domain)
                         dom += eval(node.get('domain', '[]'), {'uid': user, 'time': time})
                         search_context = dict(context)
                         if column._context and not isinstance(column._context, basestring):
