@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-23 11:48+0000\n"
-"PO-Revision-Date: 2012-09-21 14:27+0000\n"
+"PO-Revision-Date: 2012-11-18 21:31+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-24 05:45+0000\n"
-"X-Generator: Launchpad (build 16179)\n"
+"X-Launchpad-Export-Date: 2012-11-19 04:59+0000\n"
+"X-Generator: Launchpad (build 16278)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1841,7 +1841,7 @@ msgstr "Rechnung"
 #. module: account
 #: field:account.move,balance:0
 msgid "balance"
-msgstr ""
+msgstr "Saldo"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
@@ -2111,7 +2111,7 @@ msgstr "Produktkategorie"
 #: code:addons/account/installer.py:94
 #, python-format
 msgid "No unconfigured company !"
-msgstr ""
+msgstr "Kein nicht konfiguriertes Unternehmen!"
 
 #. module: account
 #: selection:account.account.type,report_type:0
@@ -2255,7 +2255,7 @@ msgstr "Geschäftsjahr"
 #. module: account
 #: xsl:account.transfer:0
 msgid "Partner ID"
-msgstr ""
+msgstr "Partner-ID"
 
 #. module: account
 #: view:account.journal.select:0
@@ -3079,7 +3079,7 @@ msgstr ""
 #. module: account
 #: field:accounting.report,debit_credit:0
 msgid "Display Debit/Credit Columns"
-msgstr ""
+msgstr "Debitoren/Kreditoren-Spalten anzeigen"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -3171,7 +3171,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
 msgid "Financial Accounting"
-msgstr "Finanzbuchhaltung"
+msgstr "Finanzen"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report_pl
@@ -4583,6 +4583,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "expenses for the current product"
 msgstr ""
+"Dieses Konto wird anstelle des Vorgabekontos in Rechnungen verwendet, um den "
+"Einstandswert dieses Produktes zu verbuchen"
 
 #. module: account
 #: model:ir.model,name:account.model_account_chart
@@ -6845,7 +6847,7 @@ msgstr "Aufwandskonto"
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr ""
+msgstr "Steuerbezeichnung muss je Unternehemen eindeutig sein"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7138,7 +7140,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.menu_action_move_journal_line_form
 #: model:ir.ui.menu,name:account.menu_finance_entries
 msgid "Journal Entries"
-msgstr "Buchungen"
+msgstr "Buchungssätze"
 
 #. module: account
 #: help:account.partner.ledger,page_split:0
@@ -7611,6 +7613,9 @@ msgid ""
 "are computed. Because it is space consumming, we do not allow to use it "
 "while doing a comparison"
 msgstr ""
+"Diese Option liefert Ihnen mehr Details über die Berechnung Ihrer Salden. "
+"Weil dies sehr Platz in Anspruch nimmt, zeigen wir diese, auch der Übersicht "
+"wegen, im direkten Vergleich nicht an."
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
@@ -8458,6 +8463,8 @@ msgid ""
 "This account will be used for invoices instead of the default one to value "
 "sales for the current product"
 msgstr ""
+"Dieses Konto wird bei Rechnungen verwendet um den Verkaufswert dieses "
+"Produktes zu verbuchen."
 
 #. module: account
 #: help:account.journal,group_invoice_lines:0
@@ -8802,6 +8809,8 @@ msgid ""
 "This account will be used for invoices to value sales for the current "
 "product category"
 msgstr ""
+"Dieses Konto wird bei Rechnungen verwendet, um den Verkaufswert für diese "
+"Warengruppe zu verbuchen."
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8949,6 +8958,7 @@ msgstr ""
 #, python-format
 msgid "The entries to reconcile should belong to the same company"
 msgstr ""
+"Die rückzubuchenden Buchungssätze müssen zum gleichen Unternehmen gehören"
 
 #. module: account
 #: help:account.invoice,account_id:0
@@ -9970,6 +9980,8 @@ msgid ""
 "There are currently no company without chart of account. The wizard will "
 "therefore not be executed."
 msgstr ""
+"Es gibt derzeit kein Unternehmen ohne Kontenplan. Der Assistent wird daher "
+"nicht ausgeführt."
 
 #. module: account
 #: field:account.move.line,date_maturity:0
@@ -10789,6 +10801,8 @@ msgid ""
 "This account will be used for invoices to value expenses for the current "
 "product category"
 msgstr ""
+"Das Konto wird bei Rechnungen verwendet, um Einstandspreise dieser "
+"Warengruppe zu verbuchen."
 
 #. module: account
 #: constraint:account.account.template:0
@@ -10888,6 +10902,7 @@ msgstr "Manuell"
 msgid ""
 "This is a field only used for internal purpose and shouldn't be displayed"
 msgstr ""
+"Dieses Feld wird nur intern genutzt und sollte nicht angezeigt werden."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -11058,6 +11073,7 @@ msgstr "Anzahl der Perioden"
 #, python-format
 msgid "You can not modify a posted entry of closed periods"
 msgstr ""
+"Sie können den Buchungssatz einer abgeschlossen Periode nicht verändern"
 
 #. module: account
 #: report:account.general.journal:0
