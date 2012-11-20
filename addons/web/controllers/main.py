@@ -345,7 +345,13 @@ def make_conditional(req, response, last_modified=None, etag=None):
     return response.make_conditional(req.httprequest)
 
 def login_and_redirect(req, db, login, key, redirect_url='/'):
-    req.session.authenticate(db, login, key, {})
+    wsgienv = req.httprequest.environ
+    env = dict(
+        base_location=req.httprequest.url_root.rstrip('/'),
+        HTTP_HOST=wsgienv['HTTP_HOST'],
+        REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+    )
+    req.session.authenticate(db, login, key, env)
     return set_cookie_and_redirect(req, redirect_url)
 
 def set_cookie_and_redirect(req, redirect_url):
