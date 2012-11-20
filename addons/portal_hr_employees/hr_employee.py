@@ -21,10 +21,10 @@
 
 from osv import osv, fields
 
-class crm_contact_us(osv.TransientModel):
+class crm_team(osv.TransientModel):
     """ Add employees list to the portal's contact page """
+    _name = 'crm.team'
     _description = 'Contact form for the portal'
-    _inherit = 'portal_crm.crm_contact_us'
     _columns = {
         'employee_ids' : fields.many2many('hr.employee', string='Employees', readonly=True),
     }

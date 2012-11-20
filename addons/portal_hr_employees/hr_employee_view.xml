@@ -4,7 +4,7 @@
 
         <!-- add visibility field to the employee form view -->
         <record id="view_employee_form" model="ir.ui.view">
-            <field name="name">portal_hr_employees.employee.form</field>
+            <field name="name">portal_hr_employees_form</field>
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
@@ -17,7 +17,7 @@
         <!-- a kanban view of the employees to the portal's contact page -->
         <record id="portal_hr_employees_view" model="ir.ui.view">
             <field name="name">portal_hr_employees_view</field>
-            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="model">crm.team</field>
             <field name="arch" type="xml">
                 <form string="Our Team" version="7.0">
                     <field name="employee_ids" widget="many2many_kanban">
@@ -51,11 +51,11 @@
 
         <record id="action_team" model="ir.actions.act_window">
             <field name="name">Meet the team</field>
-            <field name="res_model">portal_crm.crm_contact_us</field>
+            <field name="res_model">crm.team</field>
             <field name="view_id" ref="portal_hr_employees_view"/>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
-            <field name="help">Here you can see our employees' public profile, if any</field>
+            <field name="target">inline</field>
+            <field name="help">Here you can see our employees' public profile, if any.</field>
         </record>
 
         <menuitem name="Meet the team" id="portal_company_team"
