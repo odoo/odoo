@@ -46,5 +46,47 @@
             </field>
         </record>
 
+        <!-- Update account invoice !-->
+        <record model="ir.ui.view" id="account_invoice_form">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date_invoice']" position="after">
+                        <field name="section_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record model="ir.ui.view" id="res_user_form">
+            <field name="name">Users Preferences</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='email']" position="after">
+                        <field name="default_section_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_preferences" model="ir.ui.view">
+            <field name="name">res.users.preferences.form</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                    <xpath expr="//field[@name='company_id']" position="after">
+                        <field name="default_section_id"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
     </data>
 </openerp>

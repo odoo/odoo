@@ -46,4 +46,37 @@ class sale_order(osv.osv):
 
 sale_order()
 
+
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+    _defaults = {
+        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id,
+    }
+
+    def create(self, cr, uid, vals, context=None):
+        section_id = vals.get('section_id', False)
+        invoice_type = context.get('type', False)
+        user_id = vals.get('user_id', False)
+        if not section_id and invoice_type in ['out_invoice', 'out_refund'] and user_id:
+            vals['section_id'] = user_id
+        obj_id =  super(account_invoice, self).create(cr, uid, vals, context=context)
+        return obj_id
+
+account_invoice()
+
+
+class res_users(osv.Model):
+    _inherit = 'res.partner'
+
+    _columns = {
+        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
+    }
+
+res_users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
