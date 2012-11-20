@@ -39,7 +39,6 @@ You have been given access to %(portal)s.
 Your login account data is:
 Database: %(db)s
 Username: %(login)s
-Password: %(password)s
 
 In order to complete the signin process, click on the following url:
 %(url)s
@@ -51,10 +50,6 @@ OpenERP - Open Source Business Applications
 http://www.openerp.com
 """)
 
-def random_password():
-    # temporary random stuff; user password is reset by signup process
-    chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for i in xrange(12))
 
 def extract_email(email):
     """ extract the email address from a user-friendly email address """
@@ -181,7 +176,6 @@ class wizard_user(osv.osv_memory):
         create_context = dict(context or {}, noshortcut=True)       # to prevent shortcut creation
         values = {
             'login': extract_email(wizard_user.email),
-            'password': random_password(),
             'partner_id': wizard_user.partner_id.id,
             'groups_id': [(6, 0, [])],
             'share': True,

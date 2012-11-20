@@ -22,9 +22,9 @@
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 
-class contact(osv.TransientModel):
+class crm_contact_us(osv.TransientModel):
     """ Create new leads through the "contact us" form """
-    _name = 'contact'
+    _name = 'portal_crm.crm_contact_us'
     _description = 'Contact form for the portal'
     _inherit = 'crm.lead'
     _columns = {
@@ -104,7 +104,7 @@ class contact(osv.TransientModel):
         Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
         """
         empty_values = dict((k, False) if k != 'name' else (k, '') for k, v in values.iteritems())
-        return super(contact, self).create(cr, uid, empty_values)
+        return super(crm_contact_us, self).create(cr, uid, empty_values)
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """

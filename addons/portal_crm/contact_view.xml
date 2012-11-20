@@ -4,7 +4,7 @@
 
         <record id="contact_form_view" model="ir.ui.view">
             <field name="name">Contact form</field>
-            <field name="model">contact</field>
+            <field name="model">portal_crm.crm_contact_us</field>
             <field name="arch" type="xml">
                 <form string="Contact form" version="7.0">
                     <sheet>
@@ -12,12 +12,11 @@
                         <group class="oe_portal_crm_contact">
                             <group col="6">
                                 <group class="oe_portal_crm_contact_form" colspan="4">                                        
-                                        <field name="partner_name" invisible="1"/>
-                                        <field name="email_from" invisible="1"/>
-                                        <field name="phone" nolabel="1" placeholder="Your phone number..."/>
+                                        <field name="partner_name"/>
+                                        <field name="email_from" placeholder="Your email..."/>
+                                        <field name="phone" placeholder="Your phone number..."/>
                                         <field name="name" nolabel="1" placeholder="Subject..." colspan="6"/>
                                         <field name="description" nolabel="1" placeholder="Content..." colspan="6"/>
-                                        <!-- <field name="description" nolabel="1" placeholder="Content..." colspan="6" attrs="{'required': [(context.get('user_id'), 'in', 'portal.group_portal.users')]}"/> -->
                                         <button string="Submit" name="submit" type="object"/>
                                 </group>
                                 <group class="oe_portal_crm_office">
@@ -65,7 +64,7 @@
         <!-- wizard thanks message (shows after submitting the form) -->
         <record id="wizard_contact_form_view_thanks" model="ir.ui.view">
             <field name="name">Wizard thanks message</field>
-            <field name="model">contact</field>
+            <field name="model">portal_crm.crm_contact_us</field>
             <!-- give it a low priority to ensure this won't be the default view -->
             <field name="priority">99</field>
             <field name="arch" type="xml">
@@ -83,8 +82,9 @@
 
         <record id="action_contact_us" model="ir.actions.act_window">
             <field name="name">Contact Us</field>
-            <field name="res_model">contact</field>
+            <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_mode">form</field>
+            <field name="view_id" ref="contact_form_view"/>
             <field name="target">inline</field>
         </record>
 
