@@ -1151,7 +1151,7 @@
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward" help="Done"/>
                 </tree>
             </field>
         </record>
@@ -1457,7 +1457,7 @@
                         states="assigned" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed"
                         icon="gtk-go-forward" type="object"
-                        class="oe_highlight"/>
+                        class="oe_highlight" help="Done"/>
                 </tree>
             </field>
         </record>
