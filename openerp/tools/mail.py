@@ -131,7 +131,7 @@ def html_email_clean(html):
         return dest
 
     if not html:
-        return ''
+        return False
 
     html = ustr(html)
 
