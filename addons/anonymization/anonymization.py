@@ -297,7 +297,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         res['name'] = '.pickle'
         res['summary'] = self._get_summary_value(cr, uid, context)
         res['state'] = self._get_state_value(cr, uid, context)
-        res['msg'] = """Before executing the anonymization process, you should make a backup of your database."""
+        res['msg'] = _("""Before executing the anonymization process, you should make a backup of your database.""")
 
         return res
 
