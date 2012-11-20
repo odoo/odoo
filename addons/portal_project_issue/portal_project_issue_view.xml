@@ -31,31 +31,9 @@
                                             <field name="categ_ids"/>
                                         </div>
                                     </div>
-                                    <t t-if="record.stage_id.raw_value[1] == 'Analysis' or record.stage_id.raw_value[1] == 'Specification'">
-                                        <div class="oe_text_right" style="color:blue;">
-                                            <h1><field name="stage_id" readonly="1"/></h1>
-                                        </div>
-                                    </t>
-                                    <t t-if="record.stage_id.raw_value[1] == 'Design' or record.stage_id.raw_value[1] == 'Development' or record.stage_id.raw_value[1] == 'Testing'">
-                                        <div class="oe_text_right" style="color:#c7ffd5;">
-                                            <h1><field name="stage_id" readonly="1"/></h1>
-                                        </div>
-                                    </t>
-                                    <t t-if="record.stage_id.raw_value[1] == 'Merge'">
-                                        <div class="oe_text_right" style="color:red;">
-                                            <h1><field name="stage_id" readonly="1"/></h1>
-                                        </div>
-                                    </t>
-                                    <t t-if="record.stage_id.raw_value[1] == 'done'">
-                                        <div class="oe_text_right" style="color:black;">
-                                            <h1><field name="stage_id" readonly="1"/></h1>
-                                        </div>
-                                    </t>
-                                    <t t-if="record.stage_id.raw_value[1] == 'Cancelled'">
-                                        <div class="oe_text_right" style="color:gray;">
-                                            <h1><field name="stage_id" readonly="1"/></h1>
-                                        </div>
-                                    </t>
+                                    <div class="oe_text_right">
+                                        <h1><field name="stage_id" readonly="1"/></h1>
+                                    </div>
                                     <div class="oe_clear"></div>
                                     <div class="oe_right">                                        
                                         Creation: <field name="create_date"/>
