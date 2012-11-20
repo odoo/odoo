@@ -21,6 +21,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
+        //whether the editable property of the view has to be disabled
+        'disable_editable_mode': false,
     },
     view_type: 'tree',
     /**
