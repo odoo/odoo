@@ -50,7 +50,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
@@ -224,11 +224,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The Status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the Status is set to \'Open\'.\
-                      When the case is over, the Status is set to \'Done\'.\
-                      If the case needs to be reviewed then the Status is \
-                      set to \'Pending\'.'),
+                help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
@@ -328,7 +324,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
@@ -341,6 +337,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         # collect all section_ids
         section_ids = []
         types = ['both']
+        if not cases :
+            type = context.get('default_type')
+            types += [type]
         if section_id:
             section_ids.append(section_id)
         for lead in cases:
