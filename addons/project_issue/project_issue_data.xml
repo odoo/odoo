@@ -60,15 +60,7 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="name">Stage Changed</field>
             <field name="res_model">project.issue</field>
         </record>
-        <record id="mail.mt_issue_started" model="mail.message.subtype">
-            <field name="name">Issue Started</field>
-            <field name="res_model">project.issue</field>
-        </record>
-        <record id="mail.mt_issue_blocked" model="mail.message.subtype">
-            <field name="name">Issue Blocked</field>
-            <field name="res_model">project.issue</field>
-        </record>
-       
+
         <record id="mail.mt_prj_issue_new" model="mail.message.subtype">
             <field name="name">Issue Created</field>
             <field name="res_model">project.project</field>
@@ -84,6 +76,7 @@ Access all issues from the top Project menu, and access the issues of a specific
         <record id="mail.mt_prj_issue_blocked" model="mail.message.subtype">
             <field name="name">Issue Blocked</field>
             <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
         </record>
     </data>
 </openerp>
