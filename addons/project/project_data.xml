@@ -102,14 +102,31 @@
             <field name="name">Stage Changed</field>
             <field name="res_model">project.project</field>
         </record>
-
+        <record id="mt_t_new" model="mail.message.subtype">
+            <field name="name">Task Created</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_t_closed" model="mail.message.subtype">
+            <field name="name">Task Done</field>
+            <field name="res_model">project.project</field>
+        </record>
+        <record id="mt_t_started" model="mail.message.subtype">
+            <field name="name">Task Started</field>
+            <field name="res_model">project.project</field>
+        </record>
+       <record id="mt_t_blocked" model="mail.message.subtype">
+            <field name="name">Tasks Blocked</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+        </record>
         <record id="mt_task_new" model="mail.message.subtype">
-            <field name="name">Task created</field>
+            <field name="name">Task Created</field>
             <field name="res_model">project.task</field>
             <field name="default" eval="False"/>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
-            <field name="name">Done</field>
+            <field name="name">Task Done</field>
             <field name="res_model">project.task</field>
         </record>
         <record id="mt_task_started" model="mail.message.subtype">
