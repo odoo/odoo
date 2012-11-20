@@ -891,15 +891,19 @@ class Session(openerpweb.Controller):
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
             return {'error':'You cannot leave any password empty.','title': 'Change Password'}
+        user_pwd = req.session.model('res.users').read([req.session._uid], ['password'], None)[0]['password']
         try:
-            if req.session.model('res.users').change_password(
-                old_password, new_password):
-                return {'new_password':new_password}
+            if old_password == user_pwd:
+                if old_password == new_password:
+                    return {'error':'New password must be different from the old password. Please try again.','title': 'Change Password'}
+                elif new_password != confirm_password:
+                    return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
+                elif req.session.model('res.users').change_password(old_password, new_password):
+                    return {'new_password':new_password}
+            else:
+                return {'error': 'The Old Password you provided is incorrect. Please try again.', 'title': 'Change Password'}
         except Exception:
-            return {'error': 'The Old Password you provided is incorrect. Please try again.', 'title': 'Change Password'}
-        if new_password != confirm_password:
-            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+            return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
     @openerpweb.jsonrequest
     def sc_list(self, req):
