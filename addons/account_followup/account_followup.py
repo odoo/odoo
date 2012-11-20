@@ -203,29 +203,33 @@ class res_partner(osv.osv):
             latest_date = False
             latest_level = False
             latest_level_without_lit = False
-
-            for aml in amls:
+            latest_days = False
+            latest_days_without_lit = False
+            for aml in amls:                
+                #Give initial value
                 if latest_date == False:
                     latest_date = aml.followup_date
-                    latest_level = aml.followup_line_id.id
-                    latest_days = aml.followup_line_id.delay
-                    if not aml.blocked: 
-                        latest_level_without_lit = latest_level 
+                    if aml.followup_line_id: 
+                        latest_level = aml.followup_line_id.id                    
+                        latest_days = aml.followup_line_id.delay
+                if not aml.blocked and latest_level_without_lit == False and aml.followup_line_id: 
+                    latest_level_without_lit = aml.followup_line_id.id 
+                    latest_days_without_lit = aml.followup_line_id.delay
+                #If initial value < ...
                 if latest_date and latest_level:
                     if aml.followup_date > latest_date:
                         latest_date = aml.followup_date
-                    if aml.followup_line_id.delay > latest_days:
+                    if aml.followup_line_id and aml.followup_line_id.delay > latest_days:
                         latest_days = aml.followup_line_id.delay
                         latest_level = aml.followup_line_id.id
-                        if not aml.blocked: 
-                            latest_level_without_lit = latest_level 
-            res[partner.id] = {'latest_followup_date': latest_date, 
+                if not aml.blocked and latest_level_without_lit and aml.followup_line_id and aml.followup_line_id.delay > latest_days_without_lit:
+                    latest_days_without_lit = aml.followup_line_id.delay                     
+                    latest_level_without_lit = aml.followup_line_id.id
+            res[partner.id] = {'latest_followup_date': latest_date,
                                'latest_followup_level_id': latest_level, 
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
-                
-            
-            
+
             #Problems company id? / Method necessary?
     def _get_next_followup_level_id(self, cr, uid, ids, name, arg, context=None):
         res = {}
@@ -323,7 +327,8 @@ class res_partner(osv.osv):
         mtp = self.pool.get('email.template')
         unknown_mails = 0
         for partner in self.browse(cr, uid, partner_ids, context):
-            if partner.email != '' and partner.email != ' ':
+            print "Email", partner.email
+            if partner.email != False and partner.email != '' and partner.email != ' ':
                 if partner.latest_followup_level_id_without_lit and partner.latest_followup_level_id_without_lit.send_email and partner.latest_followup_level_id_without_lit.email_template_id.id != False :                
                     mtp.send_mail(cr, uid, partner.latest_followup_level_id_without_lit.email_template_id.id, partner.id, context=context)
                 else :

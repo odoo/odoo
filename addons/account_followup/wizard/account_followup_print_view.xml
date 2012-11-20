@@ -10,14 +10,13 @@
                 <group col="4">
                     <field name="followup_id" groups="base.group_multi_company"/>
                     <field name="date" groups="base.group_no_one"/>
-                </group>
-                <p class = "oe_grey">
-                	This wizard will check the customers with overdue invoices and will execute the actions needed to 
-                	send to the customer according to the Follow-up Levels defined.  By clicking on the button, the emails will be sent 
-                	a report will be generated for the letters.  In the next screen you will see which actions were executed and be able to 
-                	print the letters if there are any.  Also the manual actions will be set when needed.  
-                </p>
-                <footer>                	
+                </group>                
+                	<p class ="oe_grey">                		
+                    	When you hit the button below, for every partner the most overdue invoice (without litigation) is checked.                      	
+                    	If the amount of days overdue is greater or equal than the amount of days specified by a next follow-up level,  
+                    	it will be updated to that next level and the actions of that level will be executed.  (See Configuration > Follow-up Levels)                                    	
+                    	</p>           
+                    <footer>                	
                     <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel"/>
@@ -38,6 +37,7 @@
                   id="account_followup_print_menu"
                   parent="menu_finance_followup"
                   name = "Send Letters and Emails"
+                  groups = "account.group_account_user"
                   sequence="2"/>
 
         <record id="account_followup_stat_by_partner_search" model="ir.ui.view">

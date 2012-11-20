@@ -167,7 +167,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
                 nbprints += 1
-            partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent"), context=context)
+                partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent"), context=context)
         resulttext = resulttext + str(nbmails) + " emails sent (" + str(nbunknownmails) + " with unknown email) \n " + str(nbprints) + " letters in report \n " + str(nbmanuals) + " total manual action(s) assigned: \n \n"
         needprinting = False
         if nbprints > 0:
@@ -178,7 +178,7 @@ class account_followup_print(osv.osv_memory):
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         result['needprinting'] = needprinting
         result['resulttext'] = resulttext
-        result['action'] = action or {} 
+        result['action'] = action or {}
         return result
 
     def do_update_followup_level(self, cr, uid, to_update, partner_list, date, context=None):
