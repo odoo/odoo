@@ -1,15 +1,9 @@
-$(document).ready(function () {
-    var openerp;
-
-    module("eval.types", {
-        setup: function () {
-            openerp = window.openerp.testing.instanceFor('coresetup');
-            openerp.session.uid = 42;
-        }
-    });
-    test('strftime', function () {
+openerp.testing.section('eval.types', {
+    dependencies: ['web.coresetup']
+}, function (test) {
+    test('strftime', function (instance) {
         var d = new Date();
-        var context = openerp.web.pyeval.context();
+        var context = instance.web.pyeval.context();
         strictEqual(
             py.eval("time.strftime('%Y')", context),
             String(d.getFullYear()));
@@ -22,33 +16,30 @@ $(document).ready(function () {
                 d.getFullYear(), d.getMonth() + 1, d.getDate(),
                 d.getHours(), d.getMinutes(), d.getSeconds()));
     });
-
-    module("eval.contexts", {
-        setup: function () {
-            openerp = window.openerp.testing.instanceFor('coresetup');
-            openerp.session.uid = 42;
-        }
-    });
-    test('context_recursive', function () {
+});
+openerp.testing.section('eval.contexts', {
+    dependencies: ['web.coresetup']
+}, function (test) {
+    test('context_recursive', function (instance) {
         var context_to_eval = [{
             __ref: 'context',
             __debug: '{"foo": context.get("bar", "qux")}'
         }];
         deepEqual(
-            openerp.web.pyeval.eval('contexts', context_to_eval, {bar: "ok"}),
+            instance.web.pyeval.eval('contexts', context_to_eval, {bar: "ok"}),
             {foo: 'ok'});
         deepEqual(
-            openerp.web.pyeval.eval('contexts', context_to_eval, {bar: false}),
+            instance.web.pyeval.eval('contexts', context_to_eval, {bar: false}),
             {foo: false});
         deepEqual(
-            openerp.web.pyeval.eval('contexts', context_to_eval),
+            instance.web.pyeval.eval('contexts', context_to_eval),
             {foo: 'qux'});
     });
-    test('context_sequences', function () {
+    test('context_sequences', function (instance) {
         // Context n should have base evaluation context + all of contexts
         // 0..n-1 in its own evaluation context
         var active_id = 4;
-        var result = openerp.web.pyeval.eval('contexts', [
+        var result = instance.web.pyeval.eval('contexts', [
             {
                 "__contexts": [
                     {
@@ -91,8 +82,8 @@ $(document).ready(function () {
             record_id: active_id
         });
     });
-    test('non-literal_eval_contexts', function () {
-        var result = openerp.web.pyeval.eval('contexts', [{
+    test('non-literal_eval_contexts', function (instance) {
+        var result = instance.web.pyeval.eval('contexts', [{
             "__ref": "compound_context",
             "__contexts": [
                 {"__ref": "context", "__debug": "{'type':parent.type}",
@@ -169,46 +160,41 @@ $(document).ready(function () {
         }]);
         deepEqual(result, {type: 'out_invoice'});
     });
-    module('eval.domains', {
-        setup: function () {
-            openerp = window.openerp.testing.instanceFor('coresetup');
-            window.openerp.web.dates(openerp);
-            openerp.session.uid = 42;
-        }
-    });
-    test('current_date', function () {
-        var current_date = openerp.web.date_to_str(new Date());
-        var result = openerp.web.pyeval.eval('domains',
-            [[],{"__ref":"domain","__debug":"[('name','>=',current_date),('name','<=',current_date)]","__id":"5dedcfc96648"}]);
+});
+openerp.testing.section('eval.contexts', {
+    dependencies: ['web.coresetup', 'web.dates']
+}, function (test) {
+    test('current_date', function (instance) {
+        var current_date = instance.web.date_to_str(new Date());
+        var result = instance.web.pyeval.eval('domains',
+            [[],{"__ref":"domain","__debug":"[('name','>=',current_date),('name','<=',current_date)]","__id":"5dedcfc96648"}],
+            instance.web.pyeval.context());
         deepEqual(result, [
             ['name', '>=', current_date],
             ['name', '<=', current_date]
         ]);
     });
-    test('context_freevar', function () {
+    test('context_freevar', function (instance) {
         var domains_to_eval = [{
             __ref: 'domain',
             __debug: '[("foo", "=", context.get("bar", "qux"))]'
         }, [['bar', '>=', 42]]];
         deepEqual(
-            openerp.web.pyeval.eval('domains', domains_to_eval, {bar: "ok"}),
+            instance.web.pyeval.eval('domains', domains_to_eval, {bar: "ok"}),
             [['foo', '=', 'ok'], ['bar', '>=', 42]]);
         deepEqual(
-            openerp.web.pyeval.eval('domains', domains_to_eval, {bar: false}),
+            instance.web.pyeval.eval('domains', domains_to_eval, {bar: false}),
             [['foo', '=', false], ['bar', '>=', 42]]);
         deepEqual(
-            openerp.web.pyeval.eval('domains', domains_to_eval),
+            instance.web.pyeval.eval('domains', domains_to_eval),
             [['foo', '=', 'qux'], ['bar', '>=', 42]]);
     });
-
-    module('eval.groupbys', {
-        setup: function () {
-            openerp = window.openerp.testing.instanceFor('coresetup');
-            openerp.session.uid = 42;
-        }
-    });
-    test('groupbys_00', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+});
+openerp.testing.section('eval.groupbys', {
+    dependencies: ['web.coresetup']
+}, function (test) {
+    test('groupbys_00', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             {group_by: ['bar', 'qux']},
             {group_by: null},
@@ -216,16 +202,16 @@ $(document).ready(function () {
         ]);
         deepEqual(result, ['foo', 'bar', 'qux', 'grault']);
     });
-    test('groupbys_01', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+    test('groupbys_01', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             { __ref: 'context', __debug: '{"group_by": "bar"}' },
             {group_by: 'grault'}
         ]);
         deepEqual(result, ['foo', 'bar', 'grault']);
     });
-    test('groupbys_02', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+    test('groupbys_02', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             {
                 __ref: 'compound_context',
@@ -236,8 +222,8 @@ $(document).ready(function () {
         ]);
         deepEqual(result, ['foo', 'bar', 'grault']);
     });
-    test('groupbys_03', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+    test('groupbys_03', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             {
                 __ref: 'compound_context',
@@ -250,8 +236,8 @@ $(document).ready(function () {
         ]);
         deepEqual(result, ['foo', 'bar', 'grault']);
     });
-    test('groupbys_04', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+    test('groupbys_04', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             {
                 __ref: 'compound_context',
@@ -264,8 +250,8 @@ $(document).ready(function () {
         ], { value: 'bar' });
         deepEqual(result, ['foo', 'bar', 'grault']);
     });
-    test('groupbys_05', function () {
-        var result = openerp.web.pyeval.eval('groupbys', [
+    test('groupbys_05', function (instance) {
+        var result = instance.web.pyeval.eval('groupbys', [
             {group_by: 'foo'},
             { __ref: 'context', __debug: '{"group_by": value}' },
             {group_by: 'grault'}

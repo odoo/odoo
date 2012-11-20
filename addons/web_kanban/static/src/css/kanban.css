@@ -113,7 +113,7 @@
   padding: 0;
   margin: 0px;
 }
-.openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_group_title, .openerp .oe_kanban_view .oe_kanban_group_folded.oe_kanban_column > *, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_aggregates, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_add {
+.openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_group_title, .openerp .oe_kanban_view .oe_kanban_group_folded.oe_kanban_column *, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_aggregates, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_add {
   display: none;
 }
 .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_group_title_vertical {
@@ -144,7 +144,12 @@
   margin-left: 4px;
   cursor: pointer;
   position: relative;
+}
+.openerp .oe_kanban_view .oe_kanban_add {
   top: -8px;
+}
+.openerp .oe_kanban_view .oe_kanban_header .oe_dropdown_toggle {
+  top: -2px;
 }
 .openerp .oe_kanban_view .oe_kanban_card, .openerp .oe_kanban_view .oe_dropdown_toggle {
   cursor: pointer;
@@ -272,7 +277,7 @@
   width: 100%;
 }
 .openerp .oe_kanban_view.oe_kanban_ungrouped .oe_kanban_column .oe_kanban_record {
-  float: left;
+  display: inline-block;
   padding: 2px;
   box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -481,7 +486,6 @@
 }
 .openerp .oe_kanban_view .oe_dropdown_kanban {
   float: right;
-  clear: both;
   cursor: pointer;
   margin-top: -6px;
 }
@@ -608,4 +612,16 @@
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
   -box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(255, 255, 255, 0.8) inset;
+}
+
+@media print {
+  .openerp .oe_kanban_groups button {
+    visibility: hidden;
+  }
+  .openerp .oe_kanban_groups a[data-type=object], .openerp .oe_kanban_groups a[data-type=delete] {
+    visibility: hidden;
+  }
+  .openerp .oe_kanban_view .oe_kanban_group_title {
+    text-shadow: none !important;
+  }
 }

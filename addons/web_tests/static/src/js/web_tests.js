@@ -18,19 +18,19 @@ openerp.web_tests = function (instance) {
         start: function () {
             $.when(
                 this.dataset.read_slice(),
-                this.form.appendTo(this.$el)).then(this.on_everything_loaded);
+                this.form.appendTo(this.$el)).done(this.on_everything_loaded);
         },
         on_everything_loaded: function (slice) {
             var records = slice[0].records;
             if (!records.length) {
-                this.form.on_record_loaded({});
+                this.form.trigger("load_record", {});
                 return;
             }
-            this.form.on_record_loaded(records[0]);
+            this.form.trigger("load_record", records[0]);
             _(records.slice(1)).each(function (record, index) {
                 this.dataset.index = index+1;
                 this.form.reposition($('<div>').appendTo(this.$el));
-                this.form.on_record_loaded(record);
+                this.form.trigger("load_record", record);
             }, this);
         }
     });

@@ -152,6 +152,32 @@
                     </tr>
                 </table>
             </form>
+            <form id="db_duplicate" name="duplicate_db_form" style="display: none;">
+                <div class="oe_view_manager oe_view_manager_current">
+                    <div class="oe_view_manager_header" style="padding: 8px;">
+                        <div class="oe_header_row">
+                            <h2 class="oe_view_title">
+                                <span class="oe_view_title_text oe_breadcrumb_title">Duplicate Database</span>
+                            </h2>
+                            <button type="submit" class="oe_button oe_highlight db_duplicate">Duplicate</button>
+                        </div>
+                    </div>
+                </div>
+                <table align="center" class="db_option_table">
+                    <tr>
+                        <td><label for="super_admin_pwd">Master password:</label></td>
+                        <td><input type="password" name="super_admin_pwd" class="required" value="admin" /></td>
+                    </tr>
+                    <tr>
+                        <td><label for="db_original_name">Original database name:</label></td>
+                        <td><input type="text" name="db_original_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
+                    </tr>
+                    <tr>
+                        <td><label for="db_name">New database name:</label></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" /></td>
+                    </tr>
+                </table>
+            </form>
             <form id="db_drop" name="drop_db_form" style="display: none; ">
                 <div class="oe_view_manager oe_view_manager_current">
                     <div class="oe_view_manager_header" style="padding: 8px;">
@@ -279,6 +305,7 @@
     <div class="oe_secondary_menu_section">Database Management</div>
     <ul class="oe_secondary_submenu">
         <li><a href="#db_create">Create</a></li>
+        <li><a href="#db_duplicate">Duplicate</a></li>
         <li><a href="#db_drop">Drop</a></li>
         <li><a href="#db_backup">Backup</a></li>
         <li><a href="#db_restore">Restore</a></li>
@@ -548,7 +575,7 @@
                         <a class="oe_sidebar_action_a" t-att-title="item.title" t-att-data-section="section.name" t-att-data-index="item_index" t-att-href="item.url" target="_blank">
                             <t t-raw="item.label"/>
                         </a>
-                        <a t-if="section.name == 'files'" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
+                         <a t-if="section.name == 'files' and !item.callback" class="oe_sidebar_delete_item" t-att-data-id="item.id" title="Delete this attachment">x</a>
                     </li>
                     <li t-if="section.name == 'files'" class="oe_sidebar_add_attachment">
                         <t t-call="HiddenInputFile">
@@ -567,16 +594,14 @@
 </t>
 
 <t t-name="TreeView">
-    <div class = "tree_header">
-         <select t-if="toolbar" ></select>
-         <button id = "tree_view_collapse">Collapse All</button>
-         <button id = "tree_view_expand">Expand All</button>
-     </div>
-    <table class="oe-treeview-table">
+    <select t-if="toolbar" style="width: 30%">
+    </select>
+    <table class="oe_tree_table oe-treeview-table">
         <thead>
             <tr>
                 <th t-foreach="fields_view" t-as="field"
-                    t-if="!field.attrs.modifiers.tree_invisible">
+                    t-if="!field.attrs.modifiers.tree_invisible"
+                    class="treeview-header">
                     <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
                 </th>
             </tr>
@@ -588,11 +613,11 @@
 <tr t-name="TreeView.rows"
         t-foreach="records" t-as="record"
         t-att-id="'treerow_' + record.id"
-        t-att-data-id="record.id" t-att-data-level="level">
+        t-att-data-id="record.id" t-att-data-level="level + 1">
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + (4 + 19*(level-1)) + 'px;'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level) + 'px; padding-left: ' + (4 + 19*(level)) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -630,10 +655,10 @@
                 <input type="checkbox" class="oe_list_record_selector"/>
             </th>
             <t t-foreach="columns" t-as="column">
-                <th t-if="!column.meta and column.invisible !== '1' and !column.reorderable" t-att-data-id="column.id"
-                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}">
+                <th t-if="!column.meta and column.invisible !== '1'" t-att-data-id="column.id"
+                    t-attf-class="oe_list_header_#{column.widget or column.type} #{((options.sortable and column.tag !== 'button') ? 'oe_sortable' : null)}"><div>
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
-                </th>
+                </div></th>
             </t>
             <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
         </tr>
@@ -683,7 +708,7 @@
     <t t-foreach="columns" t-as="column">
         <t t-set="number" t-value="column.type === 'integer' or column.type == 'float'"/>
         <t t-set="modifiers" t-value="column.modifiers_for(asData)"/>
-        <td t-if="!column.meta and column.invisible !== '1' and !column.reorderable" t-att-title="column.help"
+        <td t-if="!column.meta and column.invisible !== '1'" t-att-title="column.help"
             t-attf-class="oe_list_field_cell oe_list_field_#{column.widget or column.type} #{number ? 'oe_number' : ''} #{column.tag === 'button' ? 'oe-button' : ''} #{modifiers.readonly ? 'oe_readonly' : ''} #{modifiers.required ? 'oe_required' : ''}"
             t-att-data-field="column.id"
             ><t t-raw="render_cell(record, column)"/></td>
@@ -916,7 +941,7 @@
 </t>
 <t t-name="FieldChar">
     <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
-        <t  t-if="!widget.get('effective_readonly')">
+        <t t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
@@ -924,6 +949,9 @@
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        </t>
+        <t t-if="widget.get('effective_readonly')">
+            <span class="oe_form_char_content"></span>
         </t>
     </span>
 </t>
@@ -1026,6 +1054,13 @@
         </t>
     </span>
 </t>
+<t t-name="Many2OneButton">
+    <span class="oe_form_field">
+    </span>
+</t>
+<t t-name="Many2OneButton.cell"
+    ><img t-attf-src="#{_s}/web/static/src/img/icons/gtk-#{widget.has_value ? 'yes' : 'no'}.png" width="16" height="16"/>
+</t>
 <t t-name="FieldMany2ManyTags">
     <div class="oe_form_field oe_tags" t-att-style="widget.node.attrs.style">
         <t t-if="! widget.get('effective_readonly')">
@@ -1075,7 +1110,7 @@
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
-        <li t-att-class="i[0] === widget.selected_value ? 'oe_active' : ''" t-att-data-id="i[0]">
+        <li t-att-class="i[0] === widget.get('value') ? 'oe_active' : ''" t-att-data-id="i[0]">
             <span class="label"><t t-esc="i[1]"/></span>
             <!-- are you mit ? -->
             <span class="arrow"><span></span></span>
@@ -1166,9 +1201,54 @@
             <input type="hidden" name="session_id" value=""/>
             <input type="hidden" name="callback" t-att-value="fileupload_id"/>
             <t t-raw="__content__"/>
-            <input type="file" class="oe_form_binary_file" name="ufile"/>
+            <input type="file" class="oe_form_binary_file" name="ufile" t-if="widget.widget!='image'"/>
+            <input type="file" class="oe_form_binary_file" name="ufile" accept="image/*" t-if="widget.widget=='image'"/>
         </form>
         <iframe t-att-id="fileupload_id" t-att-name="fileupload_id" style="display: none"/>
+    </div>
+</t>
+<t t-name="FieldBinaryFileUploader.files">
+    <div class="oe_attachments">
+        <t t-if="widget.get('value')">
+            <t t-if="!widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+                <div class="oe_attachment">
+                    <span t-if="(file.upload or file.percent_loaded&lt;100)" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}" t-attf-name="{file.name || file.filename}">
+                        <span class="oe_fileuploader_in_process">...Upload in progress...</span>
+                        <t t-raw="file.name || file.filename"/>
+                    </span>
+                    <a t-if="(!file.upload or file.percent_loaded&gt;=100)" t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                        <t t-raw="file.name || file.filename"/>
+                    </a>
+                    <t t-if="(!file.upload or file.percent_loaded&gt;=100)">
+                        <a class="oe_right oe_delete oe_e" title="Delete this file" t-attf-data-id="{file.id}">[</a>
+                    </t>
+                </div>
+            </t>
+            <t t-if="widget.get('effective_readonly')" t-foreach="widget.get('value')" t-as="file">
+                <div>
+                    <a t-att-href="file.url" t-attf-title="{(file.name || file.filename) + (file.date?' \n('+file.date+')':'' )}">
+                        <t t-raw="file.name || file.filename"/>
+                    </a>
+                </div>
+            </t>
+        </t>
+    </div>
+</t>
+<t t-name="FieldBinaryFileUploader">
+    <div t-att-style="widget.node.attrs.style" t-attf-class="oe_fileupload #{widget.node.attrs.class ? widget.node.attrs.class :''}">
+        <div class="oe_placeholder_files"/>
+        <div class="oe_add" t-if="!widget.get('effective_readonly')">
+            <!-- uploader of file -->
+            <button class="oe_attach"><span class="oe_e">'</span></button> 
+            <span class='oe_attach_label'>File</span>
+            <t t-call="HiddenInputFile">
+                <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                <input type="hidden" name="model" t-att-value="widget.view.model"/>
+                <input type="hidden" name="id" value="0"/>
+                <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+            </t>
+        </div>
     </div>
 </t>
 <t t-name="WidgetButton">
@@ -1233,9 +1313,9 @@
 <t t-name="SelectCreatePopup.search.buttons">
     <t t-if="! widget.options.disable_multiple_selection">
         <button type="button" class="oe_button oe_selectcreatepopup-search-select" disabled="disabled">Select</button>
-        or
     </t>
-    <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
+    <button type="button" class="oe_button oe_selectcreatepopup-search-create">Create</button>
+    or <a class="oe_button oe_selectcreatepopup-search-close oe_bold oe_form_button_cancel" href="javascript:void(0)">Cancel</a>
 </t>
 <t t-name="AbstractFormPopup.buttons">
     <t t-if="! readonly">
@@ -1294,7 +1374,8 @@
 
 <div t-name="SearchView.InputView"
      class="oe_searchview_input"
-     contenteditable="true"/>
+     contenteditable="true"
+     tabindex="0"/>
 <!-- tabindex: makes div focusable -->
 <div t-name="SearchView.FacetView"
      class="oe_tag oe_tag_dark oe_searchview_facet"
@@ -1460,16 +1541,18 @@
         <h3><span class="oe_i">M</span> Custom Filters</h3>
         <ul class="oe_searchview_custom_list"/>
         <div class="oe_searchview_custom">
-          <h4>Save current filter</h4>
-          <form>
-            <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
-            <p><input id="oe_searchview_custom_public" type="checkbox"/>
-              <label for="oe_searchview_custom_public">Share with all users</label></p>
-            <button>Save</button>
-          </form>
+            <h4>Save current filter</h4>
+            <form>
+                <p><input id="oe_searchview_custom_input" placeholder="Filter name"/></p>
+                <p>
+                    <input id="oe_searchview_custom_public" type="checkbox"/>
+                    <label for="oe_searchview_custom_public">Share with all users</label>
+                    <input id="oe_searchview_custom_default" type="checkbox"/>
+                    <label for="oe_searchview_custom_default">Use by default</label>
+                </p>
+                <button>Save</button>
+            </form>
         </div>
-    </div>
-    <div>
     </div>
 </div>
 
@@ -1534,7 +1617,7 @@
         <td colspan="3">
             <label for="import_compat">Export Type:</label>
             <select id="import_compat" name="import_compat">
-                <option value="yes">Import Compatible Export</option>
+                <option value="yes">Import-Compatible Export</option>
                 <option value="">Export all Data</option>
             </select>
 
@@ -1716,5 +1799,17 @@
     <button class="oe_form_m2o_qc_button oe_button oe_highlight">Quick Add</button>
     <button class="oe_form_m2o_sc_button oe_button">Add All Info...</button>
     <button class="oe_form_m2o_cancel_button oe_button">Cancel</button>
+</t>
+<t t-name="FieldMonetary" t-extend="FieldChar">
+    <t t-jquery="t:first" t-operation="before">
+        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'before'">
+            <t t-esc="widget.get('currency_info').symbol"/>
+        </t>
+    </t>
+    <t t-jquery="t:last" t-operation="after">
+        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'after'">
+            <t t-esc="widget.get('currency_info').symbol"/>
+        </t>
+    </t>
 </t>
 </templates>

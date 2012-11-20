@@ -4,7 +4,7 @@ import mock
 import unittest2
 
 from ..controllers import main
-from ..common.session import OpenERPSession
+from ..session import OpenERPSession
 
 class Placeholder(object):
     def __init__(self, **kwargs):

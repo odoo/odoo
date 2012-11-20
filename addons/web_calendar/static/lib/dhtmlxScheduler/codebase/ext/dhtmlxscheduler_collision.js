@@ -1,8 +1,0 @@
-/*
-This software is allowed to use under GPL or you need to obtain Commercial or Enterise License
-to use it in not GPL project. Please contact sales@dhtmlx.com for details
-*/
-(function(){function h(a){var b=scheduler._props?scheduler._props[scheduler._mode]:null,f=scheduler.matrix?scheduler.matrix[scheduler._mode]:null,c=b||f;if(b)var d=c.map_to;if(f)d=c.y_property;c&&a&&(n=scheduler.getEvent(a)[d])}function g(a){var b=[];if(a.rec_type){for(var f=scheduler.getRecDates(a),c=0;c<f.length;c++)for(var d=scheduler.getEvents(f[c].start_date,f[c].end_date),i=0;i<d.length;i++)(d[i].event_pid||d[i].id)!=a.id&&b.push(d[i]);b.push(a)}else b=scheduler.getEvents(a.start_date,a.end_date);
-var e=scheduler._props?scheduler._props[scheduler._mode]:null,g=scheduler.matrix?scheduler.matrix[scheduler._mode]:null,m=e||g;if(e)var j=m.map_to;if(g)j=m.y_property;var k=!0;if(m){for(var h=0,l=0;l<b.length;l++)b[l][j]==a[j]&&b[l].id!=a.id&&h++;h>=scheduler.config.collision_limit&&(a[j]=n,k=!1)}else b.length>scheduler.config.collision_limit&&(k=!1);return!k?!scheduler.callEvent("onEventCollision",[a,b]):k}var n,e;scheduler.config.collision_limit=1;scheduler.attachEvent("onBeforeDrag",function(a){h(a);
-return!0});scheduler.attachEvent("onBeforeLightbox",function(a){var b=scheduler.getEvent(a);e=[b.start_date,b.end_date];h(a);return!0});scheduler.attachEvent("onEventChanged",function(a){if(!a)return!0;var b=scheduler.getEvent(a);if(!g(b)){if(!e)return!1;b.start_date=e[0];b.end_date=e[1];b._timed=this.is_one_day_event(b)}return!0});scheduler.attachEvent("onBeforeEventChanged",function(a){return g(a)});scheduler.attachEvent("onEventSave",function(a,b){return b.rec_type?(scheduler._roll_back_dates(b),
-g(b)):!0})})();

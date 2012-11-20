@@ -82,16 +82,16 @@ $(document).ready(function () {
     });
     t.test('call', function (openerp) {
         var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
-        t.expect(ds.call('frob', ['a', 'b', 42]), function (r) {
+        t.expect(ds.call('frob', ['a', 'b', 42]).done(function (r) {
             strictEqual(r.method, 'frob');
 
             strictEqual(r.args.length, 3);
             deepEqual(r.args, ['a', 'b', 42]);
 
             ok(_.isEmpty(r.kwargs));
-        });
+        }));
     });
-    t.test('name_get').then(function (openerp) {
+    t.test('name_get').done(function (openerp) {
         var ds = new openerp.web.DataSet({session: openerp.session}, 'mod');
         t.expect(ds.name_get([1, 2], null), function (r) {
             strictEqual(r.method, 'name_get');
