@@ -41,9 +41,11 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
+        if not context:
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if context.get('portal'):
+            return user.partner_id.id
         if hasattr(user, 'partner_address_id') and user.partner_address_id:
             return user.partner_address_id
         return user.company_id.partner_id.id
@@ -65,7 +67,7 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
+        if not context or context.get('portal'):
             return False
         return uid
 

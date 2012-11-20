@@ -1,14 +1,80 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data>        
+
+        <record id="portal_crm_claim_kanban_view" model="ir.ui.view">
+            <field name="name">CRM Claim Kanban</field>
+            <field name="model">crm.claim</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <kanban version="7.0" class="oe_portal_project_issue">
+                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="priority"/>
+                    <field name="date_deadline"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="categ_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_kanban_content">
+                                    <div class="oe_left">
+                                        <h1><field name="name"/></h1>
+                                    </div>
+                                    <div class="oe_text_right">
+                                        <h1><field name="stage_id" readonly="1"/></h1>
+                                    </div>
+                                    <div class="oe_kanban_footer_left">
+                                        <field name="partner_id"/>
+                                    </div>
+                                    <div class="oe_clear"/>
+                                    <div>
+                                        <div class="oe_right">
+                                            Creation: <field name="date"/>
+                                            <span class="oe_kanban_highlight">
+                                                <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                                <a type="object" name="set_priority" args="['3']" t-if="priority gt 3" title="Normal Priority">
+                                                   <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['5']" t-if="priority lte 3" title="Normal Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['2']" title="High Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                                <a type="object" name="set_priority" args="['1']" title="Highest Priority">
+                                                   <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
+                                                </a>
+                                            </span>
+                                            <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())">
+                                                <span t-attf-class="oe_kanban_status oe_kaban_status_red"> </span>
+                                            </t>
+                                            <t t-if="record.user_id">
+                                                <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+                                            </t>
+                                        </div>
+                                        <t t-if="record.categ_id.raw_value">
+                                            <div class="oe_left oe_tags">
+                                                <span class="oe_tag oe_left" t-att-data-categ_id="record.categ_id.raw_value[0]"><t t-raw="record.categ_id.raw_value[1]"/></span>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
 
         <record id="crm_case_categ_claim0" model="ir.actions.act_window">
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
-            <field name="view_id" ref="crm_claim.crm_case_claims_tree_view"/>
-            <field name="context">{"search_default_user_id":'', "stage_type":'claim'}</field>
+            <field name="view_mode">tree,form,kanban,calendar</field>
+            <field name="view_id" ref="portal_crm_claim_kanban_view"/>
+            <field name="context">{"search_default_user_id":'', "stage_type":'claim', "portal":'True'}</field>
             <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
             <field name="help"  type="html">
               <p class="oe_view_nocontent_create">
