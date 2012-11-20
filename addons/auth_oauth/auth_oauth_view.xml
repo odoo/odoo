@@ -39,6 +39,8 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="menu_oauth_providers" parent="base.menu_users" name="OAuth Providers" action="action_oauth_provider" sequence="30"/>
+        <menuitem id="menu_oauth_providers" name="OAuth Providers"
+            parent="base.menu_users" sequence="30"
+            action="action_oauth_provider" groups="base.group_no_one"/>
     </data>
 </openerp>
