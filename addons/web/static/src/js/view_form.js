@@ -4628,6 +4628,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'selectable': !self.options.disable_multiple_selection,
                         'import_enabled': false,
                         '$buttons': self.$buttonpane,
+                        'disable_editable_mode': true,
                     }, self.options.list_view_options || {}));
             self.view_list.on('edit:before', self, function (e) {
                 e.cancel = true;

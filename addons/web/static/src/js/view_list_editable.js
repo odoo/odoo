@@ -88,9 +88,10 @@ openerp.web.list_editable = function (instance) {
             });
         },
         editable: function () {
-            return this.fields_view.arch.attrs.editable
+            return !this.options.disable_editable_mode 
+                && (this.fields_view.arch.attrs.editable
                 || this._context_editable
-                || this.options.editable;
+                || this.options.editable);
         },
         /**
          * Replace do_search to handle editability process
