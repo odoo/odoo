@@ -114,7 +114,7 @@ class mail_group(osv.Model):
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
                           # have a catchall domain setup.
-                          {'alias_name': "group+"+vals['name']},
+                          {'alias_name': "group+" + vals['name']},
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
@@ -133,6 +133,7 @@ class mail_group(osv.Model):
                 'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id, 'search_default_message_unread': True},
                 'res_model': 'mail.message',
                 'thread_level': 1,
+                'header_description': vals.get('description'),
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -160,6 +161,13 @@ class mail_group(osv.Model):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
             self._subscribe_users(cr, uid, ids, context=context)
+        # if description is changed: update client action
+        if vals.get('description'):
+            cobj = self.pool.get('ir.actions.client')
+            for action in [group.action for group in self.browse(cr, SUPERUSER_ID, ids, context=context) if group.action]:
+                new_params = action.params
+                new_params['header_description'] = vals.get('description')
+                cobj.write(cr, SUPERUSER_ID, [action.id], {'params': str(new_params)}, context=context)
         return result
 
     def action_follow(self, cr, uid, ids, context=None):

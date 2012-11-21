@@ -562,12 +562,13 @@
         </record>
 
         <!-- mail: subtypes -->
-        <record id="mt_invoice_new" model="mail.message.subtype">
-            <field name="name">created</field>
+        <record id="mt_invoice_validated" model="mail.message.subtype">
+            <field name="name">Validated</field>
             <field name="res_model">account.invoice</field>
+            <field name="default" eval="False"/>
         </record>
         <record id="mt_invoice_paid" model="mail.message.subtype">
-            <field name="name">paid</field>
+            <field name="name">Paid</field>
             <field name="res_model">account.invoice</field>
         </record>
     </data>
