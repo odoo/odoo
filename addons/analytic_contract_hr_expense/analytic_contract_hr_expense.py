@@ -131,12 +131,21 @@ class account_analytic_account(osv.osv):
         domain = [('line_ids', 'in', line_ids)]
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Expenses of %s') % ','.join(names)
+        view_context = {
+                        'analytic_account_id' : ids[0]
+                        } 
+        form_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_expense', 'view_expenses_form')
+        tree_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'hr_expense', 'view_expenses_tree')
+        
         return {
             'type': 'ir.actions.act_window',
             'name': name,
-            'view_type': 'form',
+            'context' : view_context,
             'view_mode': 'tree,form',
             'domain' : domain,
+            'views': [(tree_view and tree_view[1] or False, 'tree'),
+                      (form_view and form_view[1] or False, 'form'),
+                          (False, 'calendar'), (False, 'graph')],
             'res_model': 'hr.expense.expense',
             'nodestroy': True,
         }
