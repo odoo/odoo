@@ -20,19 +20,25 @@
 ##############################################################################
 
 import base64
+from collections import defaultdict
 import dateutil
 import email
+from functools import partial
 import logging
 import pytz
 import time
 import tools
 import xmlrpclib
 
+from mako.template import Template as MakoTemplate
+
 from email.message import Message
 from mail_message import decode
 from openerp import SUPERUSER_ID
 from osv import osv, fields
+from openerp.osv.orm import browse_record
 from tools.safe_eval import safe_eval as eval
+from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -68,6 +74,14 @@ class mail_thread(osv.AbstractModel):
     _name = 'mail.thread'
     _description = 'Email Thread'
     _mail_flat_thread = True
+    _TRACK_TEMPLATE = """
+        <span>${updated_fields}</span>
+        <ul>
+        %for chg in changes:
+            <li><span>${chg[0]}</span>: ${chg[1]} -> ${chg[2]}</li>
+        %endfor
+        </ul>
+    """
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
@@ -248,6 +262,84 @@ class mail_thread(osv.AbstractModel):
         default['message_comment_ids'] = []
         default['message_follower_ids'] = []
         return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
+
+    #------------------------------------------------------
+    # Automatically log tracked fields
+    #------------------------------------------------------
+
+    def write(self, cr, uid, ids, values, context=None):
+        # XXX is translation a good idea?
+        # TODO get user lang if not in context
+        # XXX idea: store a datastructure and render it on demand in the correct language
+        # TODO? use link to record for m2o
+        # TODO handle x2m fields. how?
+
+        if context is None:
+            context = {}
+        #import pudb;pudb.set_trace()
+
+        def false_value(f):
+            if f._type == 'boolean':
+                return False
+            return f._symbol_set[1](False)
+
+        def convert_for_comparison(v, f):
+            if not v:
+                return false_value(f)
+            if isinstance(v, browse_record):
+                return v.id
+            return v
+
+        def convert_for_display(v, f):
+            if not v:
+                return false_value(f)
+            if f._type == 'many2one':
+                if not isinstance(v, browse_record):
+                    v = self.pool[f.relation].browse(cr, SUPERUSER_ID, v)
+                return v.name_get()[0][1]
+            if f._type == 'selection':
+                # TODO get translated value
+                pass
+            return v
+
+        tracked = dict((n, f) for n, f in self._all_columns.items() if getattr(f.column, 'tracked', False))
+        to_log = [k for k in values if k in tracked]
+
+        changes = defaultdict(list)
+        if to_log:
+            for record in self.browse(cr, uid, ids, context):
+                for tl in to_log:
+                    column = tracked[tl].column
+                    current = convert_for_comparison(record[tl], column)
+                    new = convert_for_comparison(values[tl], column)
+                    if new != current:
+                        changes[record].append(tl)
+
+        result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
+
+        updated_fields = _('Updated Fields:')
+
+        Trans = self.pool['ir.translation']
+        def _t(c):
+            model = c.parent_model or self._name
+            lang = context.get('lang')
+            return Trans._get_source(cr, uid, '{0},{1}'.format(model, c.name), 'field', lang, ci.column.string)
+
+        for record, changed_fields in changes.items():
+            # TODO tpl changed_fields
+            chg = []
+            for f in changed_fields:
+                ci = tracked[f]
+                from_ = convert_for_display(record[f], ci.column)
+                to = convert_for_display(values[f], ci.column)
+                chg.append((_t(ci), from_, to))
+
+            message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
+                                                                        changes=chg)
+
+            record.message_post(message)
+
+        return result
 
     #------------------------------------------------------
     # mail.message wrappers and tools
