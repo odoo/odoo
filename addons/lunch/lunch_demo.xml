@@ -21,12 +21,10 @@
 
         <record model="res.partner" id="partner_coin_gourmand">
             <field name="name">Coin gourmand</field>
-            <field name="supplier_lunch">True</field>
         </record>
 
         <record model="res.partner" id="partner_pizza_inn">
             <field name="name">Pizza Inn</field>
-            <field name="supplier_lunch">True</field>
         </record>
 
         <record model="lunch.product" id="product_cheese_ham">
@@ -102,31 +100,28 @@
         </record>
 
         <record model="lunch.order" id="order_1">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-23')"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">new</field>
-            <field name='company_id'>1</field>
         </record>
 
         <record model="lunch.order" id="order_2">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-22')"/>
             <field name="order_line_ids" eval="[]"/>
             <field name="state">confirmed</field>
-            <field name='company_id'>1</field>
         </record>
 
         <record model="lunch.order" id="order_3">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-24')"/>
             <field name="order_line_ids" eval="[]"/>
-            <field name="state">cancelled</field>
-            <field name='company_id'>1</field>
+            <field name="state">partially</field>
         </record>
 
         <record model="lunch.order.line" id="order_line_1">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_Bolognese"/>
             <field name="date" eval="time.strftime('2012-10-23')"/>
             <field name="state">new</field>
@@ -136,7 +131,7 @@
         </record>
 
         <record model="lunch.order.line" id="order_line_2">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_italiana"/>
             <field name="date" eval="time.strftime('2012-10-22')"/>
             <field name="state">confirmed</field>
@@ -146,7 +141,7 @@
         </record>
 
         <record model="lunch.order.line" id="order_line_3">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="product_id" ref="product_gouda"/>
             <field name="date" eval="time.strftime('2012-10-24')"/>
             <field name="state">cancelled</field>
@@ -155,9 +150,18 @@
             <field name="order_id" ref="order_3"/>
         </record>
 
+        <record model="lunch.order.line" id="order_line_4">
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="product_id" ref="product_chicken_curry"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="state">confirmed</field>
+            <field name="supplier" ref="partner_coin_gourmand"/>
+            <field name="note">+Salad +Tomatoes +Eggs</field>
+            <field name="order_id" ref="order_3"/>
+        </record>
     
         <record model="lunch.cashmove" id="cashmove_1">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-23')"/>
             <field name="description">Pizza Italiana</field>
             <field name="amount">-7.40</field>
@@ -166,7 +170,16 @@
         </record>
 
         <record model="lunch.cashmove" id="cashmove_2">
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="date" eval="time.strftime('2012-10-24')"/>
+            <field name="description">Chicken curry</field>
+            <field name="amount">-2.60</field>
+            <field name="order_id" ref="order_3"/>
+            <field name="state">order</field>
+        </record>
+
+        <record model="lunch.cashmove" id="cashmove_3">
+            <field name="user_id" ref="base.user_demo"/>
             <field name="date" eval="time.strftime('2012-10-24')"/>
             <field name="description">Payment: 5 lunch tickets (6€)</field>
             <field name="amount">30</field>
@@ -175,7 +188,6 @@
 
         <record model="lunch.alert" id="alert_1">
             <field name="message">Lunch must be ordered before 10h30 am</field>
-            <field name="day">days</field>
         </record>
 
     </data>
