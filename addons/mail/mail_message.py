@@ -59,6 +59,12 @@ class mail_message(osv.Model):
     _message_record_name_length = 18
     _message_read_more_limit = 1024
 
+    def default_get(self, cr, uid, fields, context=None):
+        # protection for `default_type` values leaking from menu action context (e.g. for invoices)
+        if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
+            context = dict(context, default_type=None)
+        return super(mail_message, self).default_get(cr, uid, fields, context=context) 
+
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length + 3):
             return name
