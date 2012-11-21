@@ -8,7 +8,10 @@ class test_expression(common.TransactionCase):
 
         registry, cr, uid = self.registry, self.cr, self.uid
 
-        # Create 6 partners with a given name, and a given creation order to ensure the order of their ID. Some are set as unactive to verify they are by default excluded from the searchs and to provide a second order argument
+	# Create 6 partners with a given name, and a given creation order to
+	# ensure the order of their ID. Some are set as unactive to verify they
+	# are by default excluded from the searches and to provide a second
+	# `order` argument.
 
         partners = registry('res.partner')
         c = partners.create(cr, uid, {'name': 'test_search_order_C'})
@@ -20,8 +23,9 @@ class test_expression(common.TransactionCase):
 
         # The tests.
 
-        # The basic searchs should exclude records that have active = False. The order of ids returned 
-        # should be given by the 'order' parameter of search()
+	# The basic searches should exclude records that have active = False.
+	# The order of the returned ids should be given by the `order`
+	# parameter of search().
 
         name_asc = partners.search(cr, uid, [('name', 'like', 'test_search_order%')], order="name asc")
         self.assertEqual([a, ab, b, c], name_asc, "Search with 'NAME ASC' order failed.")
@@ -32,8 +36,9 @@ class test_expression(common.TransactionCase):
         id_desc = partners.search(cr, uid, [('name', 'like', 'test_search_order%')], order="id desc")
         self.assertEqual([ab, b, a, c], id_desc, "Search with 'ID DESC' order failed.")
 
-        # The inactive records shouldn't be ecxluded as soon as a condition on this field is present in the domain 
-        # criteria. The 'order' parameter of search() should support any valable coma-separated value
+	# The inactive records shouldn't be excluded as soon as a condition on
+	# that field is present in the domain. The `order` parameter of
+	# search() should support any legal coma-separated values.
 
         active_asc_id_asc = partners.search(cr, uid, [('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="active asc, id asc")
         self.assertEqual([d, e, c, a, b, ab], active_asc_id_asc, "Search with 'ACTIVE ASC, ID ASC' order failed.")
