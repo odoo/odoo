@@ -112,8 +112,8 @@ class res_partner(osv.osv):
 
     def unlink(self, cr, uid, ids,context=None):
         user_obj = self.pool.get('res.users')
-        partner_ids = user_obj.search(cr, uid, [('partner_id','in',ids)])
-        if partner_ids:
+        user_ids = user_obj.search(cr, uid, [('partner_id','in',ids)])
+        if user_ids:
             raise osv.except_osv(_('Warning!'), _('Please delete the user linked with this partner first.'))
         return super(res_partner, self).unlink(cr, uid, ids, context)
 
