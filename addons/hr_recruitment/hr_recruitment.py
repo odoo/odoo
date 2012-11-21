@@ -480,7 +480,7 @@ class hr_applicant(base_stage, osv.Model):
             context = {}
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.job_id:
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), context=context)
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
                 self.message_post(cr, uid, [applicant.id], body=message, context=context)
