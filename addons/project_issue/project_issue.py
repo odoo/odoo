@@ -387,10 +387,6 @@ class project_issue(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
-        if 'stage_id' in vals:
-            for t in self.browse(cr, uid, ids, context=context):
-                new_stage = vals.get('stage_id')
-                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -461,7 +457,6 @@ class project_issue(base_stage, osv.osv):
     def case_cancel(self, cr, uid, ids, context=None):
         """ Cancels case """
         self.case_set(cr, uid, ids, 'cancelled', {'active': True}, context=context)
-        self.case_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def case_escalate(self, cr, uid, ids, context=None):
@@ -539,11 +534,6 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
