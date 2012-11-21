@@ -11,31 +11,30 @@ sum(debit)-sum(credit) as balance
 FROM  account_move_line 
 """
 cr.execute(sql)
-result= cr.dictfetchall()
-cr.execute(sql)
 result=[]
 res= cr.dictfetchall()
-if res[0]['balance']!=0.0:
-  result=res
-  result.insert(0,_('* The difference of the balance is: '))
+if res[0]['balance']!=0.0 and res[0]['balance'] is not None:
+  result.append(_('* The difference of the balance is: '))
+  result.append(res)
 ]]></field>
     </record>
 
     <record model="accounting.assert.test" id="account_test_02">
         <field name="sequence">2</field>
         <field name="name">Test 2: Opening a fiscal year</field>
+        <!--TODO : bad description of the test, does not really match what the SQL querry does, should adapt description name -->
         <field name="desc">Check if the balance of the new opened fiscal year matches with last year's balance</field>
-        <field name="code_exec"><![CDATA[res = []
+        <field name="code_exec"><![CDATA[result = []
 cr.execute("select coalesce(sum(debit),0) as debit_new_fyear,coalesce(sum(credit),0) as credit_new_fyear from account_move_line where period_id in (select id from account_period where state='draft' and special order by id desc limit 1);")
 rec =  cr.dictfetchall()
 cr.execute("select coalesce(sum(debit),0) as debit_last_fyear,coalesce(sum(credit),0) as credit_last_fyear from account_move_line where period_id in (select period_id from account_fiscalyear where state='done' order by id desc limit 1);")
 rec2= cr.dictfetchall()
 if (rec2[0]['credit_last_fyear']-rec[0]['credit_new_fyear']!=0) or (rec2[0]['debit_last_fyear']-rec[0]['debit_new_fyear']!=0) :
-   res.append(rec[0])
-   res.insert(0,_('* New fiscalyear debit and credit are:'))
-   res.append(rec2[0])
-   res.insert(2,_('* Last year debit and credit are:'))
-result = res
+   result.append(_('* New fiscalyear debit and credit are:'))
+   result.append(rec[0])
+   result.append(_('* Last year debit and credit are:'))
+   result.append(rec2[0])
+
 ]]></field>
     </record>
 
