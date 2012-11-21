@@ -156,7 +156,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.manual_action:                
                 partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)                
                 nbmanuals = nbmanuals + 1                
-                key = partner.partner_id.payment_responsible_id.name or "Empty"
+                key = partner.partner_id.payment_responsible_id.name or _("Nobody")
                 if not key in manuals.keys():                
                     manuals[key]= 1
                 else:

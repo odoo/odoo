@@ -23,8 +23,3 @@
 - 
   !python {model: account.followup.print}:  |
     self.do_process(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),})
-- 
-  Unnecessary test of invoice
-- 
-  !assert {model: account.invoice, id: account.demo_invoice_0}:
-    - check_total == 14.0

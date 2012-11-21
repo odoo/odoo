@@ -32,23 +32,23 @@ class followup(osv.osv):
     _description = 'Account Follow-up'
     _rec_name = 'name'
     _columns = {
-        #'name': fields.char('Name', size=64, required=True),         
+        #'name': fields.char('Name', size=64, required=True),
         #'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
-        'company_id': fields.many2one('res.company', 'Company', required=True),   
+        'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.related('company_id', 'name', string = "Name"),
     }
     _defaults = {
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'account_followup.followup', context=c),
     }
     _sql_constraints = [('company_uniq', 'unique(company_id)', 'Only one follow-up per company is allowed')] 
-    
+
 followup()
 
 
 
-class followup_line(osv.osv):    
-    
+class followup_line(osv.osv):
+
     def _get_default_template(self, cr, uid, ids, context=None):
         dummy, templ = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')
         return templ
@@ -56,18 +56,17 @@ class followup_line(osv.osv):
     _name = 'account_followup.followup.line'
     _description = 'Follow-up Criteria'
     _columns = {
-        'name': fields.char('Name', size=64, required=True),
+        'name': fields.char('Follow-Up Action', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),
         'delay': fields.integer('Due Days', help="The number of days after the due date of the invoice to wait before sending the reminder.  Could be negative if you want to send a polite alert beforehand."),
-        #'start': fields.selection([('days','Net Days'),('end_of_month','End of Month')], 'Type of Term', size=64, required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
-        'send_email':fields.boolean('Send Email', help="When processing, it will send an email"),
-        'send_letter':fields.boolean('Send Letter', help="When processing, it will print a letter"),
+        'send_email':fields.boolean('Send an Email', help="When processing, it will send an email"),
+        'send_letter':fields.boolean('Send a Letter', help="When processing, it will print a letter"),
         'manual_action':fields.boolean('Manual Action', help="When processing, it will set the manual action to be taken for that customer. "),
-        'manual_action_note':fields.text('Action Text', placeholder="e.g. Give a phone call, check with others , ..."),
-        'manual_action_responsible_id':fields.many2one('res.users', 'Responsible', ondelete='set null'),
-        'email_template_id':fields.many2one('email.template', 'Email Template', ondelete='set null'), 
+        'manual_action_note':fields.text('Action To Do', placeholder="e.g. Give a phone call, check with others , ..."),
+        'manual_action_responsible_id':fields.many2one('res.users', 'Assign a Responsible', ondelete='set null'),
+        'email_template_id':fields.many2one('email.template', 'Email Template', ondelete='set null'),
         'email_body':fields.related('email_template_id', 'body_html', type='text', string="Email Message", relation="email.template", translate="True"),
     }
     _order = 'delay'
@@ -75,7 +74,7 @@ class followup_line(osv.osv):
     _defaults = {
         'send_email': True,
         'send_letter': False,
-        'manual_action':False, 
+        'manual_action':False,
         'description': """
         Dear %(partner_name)s,
 
@@ -87,22 +86,22 @@ Best Regards,
 """,
     'email_template_id': _get_default_template,
     }
-    
-    
-    
-    
+
+
+
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         #result = {}
         values = {}
         if template_id:
             template  = self.pool.get('email.template').browse(cr, uid, template_id, context=context)
             values = {
-                'email_body':template.body_html,                      
+                'email_body':template.body_html,
                 }
         return {'value': values}
-            
-    
-    
+
+
+
     def _check_description(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.description:
@@ -119,19 +118,19 @@ Best Regards,
 followup_line()
 
 class account_move_line(osv.osv):
-    
-    
+
+
     def set_kanban_state_litigation(self, cr, uid, ids, context=None):
         for l in self.browse(cr, uid, ids, context):
             self.write(cr, uid, [l.id], {'blocked': not l.blocked})
         return False
-    
+
     def _get_result(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for aml in self.browse(cr, uid, ids, context): 
+        for aml in self.browse(cr, uid, ids, context):
             res[aml.id] = aml.debit - aml.credit
         return res
-    
+
     _inherit = 'account.move.line'
     _columns = {
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level', ondelete='restrict'), #restrict deletion of the followup line
@@ -147,7 +146,7 @@ account_move_line()
 
 class email_template(osv.osv):
     _inherit = 'email.template'
-    
+
     #Adds current_date to the context.  That way it can be used in the email templates
     #TODO: need information
     def render_template(self, cr, uid, template, model, res_id, context=None):
@@ -162,28 +161,29 @@ class res_partner(osv.osv):
 
     #TODO: that was not what we decided... 
     def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
-        res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, 
+        res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                                        toolbar=toolbar, submenu=submenu)
-        
+
         if view_type == 'form' and context and 'Followupfirst' in context.keys() and context['Followupfirst'] == True:
             doc = etree.XML(res['arch'], parser=None, base_url=None)
-            first_node = doc.xpath("//page[@string='Payments Follow-up']")            
-            #first_node[0].getparent().append(first_node[0])            
-            root = first_node[0].getparent()            
+            first_node = doc.xpath("//page[@string='Payments Follow-up']")
+            #first_node[0].getparent().append(first_node[0])
+            root = first_node[0].getparent()
             root.insert(0, first_node[0])
             res['arch'] = etree.tostring(doc)
         return res
-        
+
 
 #    def _get_latest_followup_date(self, cr, uid, ids, name, arg, context=None):
 #        res = {}
-#        for partner in self.browse(cr, uid, ids, context): 
-#            amls = partner.accountmoveline_ids      
-#            res[partner.id] = max([x.followup_date for x in amls]) if len(amls) else False            
+#        for partner in self.browse(cr, uid, ids, context):
+#            amls = partner.accountmoveline_ids
+#            res[partner.id] = max([x.followup_date for x in amls]) if len(amls) else False
 #        return res
 #    
 #    
     #TODO: refactor these functions: remove this one, rework _get_latest and _get_newt_followup_level_id must call _get_latest
+
     def _get_latest_followup_level_id(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context):
@@ -195,8 +195,8 @@ class res_partner(osv.osv):
                     res[partner.id] = accountmoveline.followup_line_id.id
             #res[partner.id] = max(x.followup_line_id.delay for x in amls) if len(amls) else False
         return res
-    
-    
+
+
     def _get_latest(self, cr, uid, ids, names, arg, context=None):
         res={}
         for partner in self.browse(cr, uid, ids, context):
@@ -206,15 +206,15 @@ class res_partner(osv.osv):
             latest_level_without_lit = False
             latest_days = False
             latest_days_without_lit = False
-            for aml in amls:                
+            for aml in amls:
                 #Give initial value
                 if latest_date == False:
                     latest_date = aml.followup_date
-                    if aml.followup_line_id: 
-                        latest_level = aml.followup_line_id.id                    
+                    if aml.followup_line_id:
+                        latest_level = aml.followup_line_id.id
                         latest_days = aml.followup_line_id.delay
-                if not aml.blocked and latest_level_without_lit == False and aml.followup_line_id: 
-                    latest_level_without_lit = aml.followup_line_id.id 
+                if not aml.blocked and latest_level_without_lit == False and aml.followup_line_id:
+                    latest_level_without_lit = aml.followup_line_id.id
                     latest_days_without_lit = aml.followup_line_id.delay
                 #If initial value < ...
                 if latest_date and latest_level:
@@ -224,10 +224,10 @@ class res_partner(osv.osv):
                         latest_days = aml.followup_line_id.delay
                         latest_level = aml.followup_line_id.id
                 if not aml.blocked and latest_level_without_lit and aml.followup_line_id and aml.followup_line_id.delay > latest_days_without_lit:
-                    latest_days_without_lit = aml.followup_line_id.delay                     
+                    latest_days_without_lit = aml.followup_line_id.delay
                     latest_level_without_lit = aml.followup_line_id.id
             res[partner.id] = {'latest_followup_date': latest_date,
-                               'latest_followup_level_id': latest_level, 
+                               'latest_followup_level_id': latest_level,
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
 
@@ -244,10 +244,10 @@ class res_partner(osv.osv):
             if latest: #if latest exists
                 newlevel = latest.id
                 old_delay = latest.delay
-            fl_ar = self.pool.get('account_followup.followup.line').search(cr, uid, [('followup_id.company_id.id','=', partner.company_id.id)])            
+            fl_ar = self.pool.get('account_followup.followup.line').search(cr, uid, [('followup_id.company_id.id','=', partner.company_id.id)])
             for fl_obj in self.pool.get('account_followup.followup.line').browse(cr, uid, fl_ar):
-                if not old_delay: 
-                    if not delay or fl_obj.delay < delay: 
+                if not old_delay:
+                    if not delay or fl_obj.delay < delay:
                         delay = fl_obj.delay
                         newlevel = fl_obj.id
                 else:
@@ -264,16 +264,20 @@ class res_partner(osv.osv):
 #        print "get amount overdue"
 #        for partner in self.browse(cr, uid, ids, context):
 #            res[partner.id] = 0.0
-#            for aml in partner.accountmoveline_ids:        
+#            for aml in partner.accountmoveline_ids:
 #                res[partner.id] = res[partner.id] + aml.debit - aml.credit  #or by using function field
 #        return res
+
 #    
     #TODO: remove
+#
+
     def _get_amount_due(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for partner in self.browse(cr, uid, ids, context):
             res[partner.id] = partner.credit
         return res
+
 
     #TODO: to refactor and to comment. I don't get the 'else' statements...
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
@@ -283,7 +287,7 @@ class res_partner(osv.osv):
                 action_text= ""
                 #Check action
                 if partner.payment_next_action:
-                    action_text = partner.payment_next_action + " + " + partner.latest_followup_level_id_without_lit.manual_action_note
+                    action_text = (partner.payment_next_action or '') + "\n" + (partner.latest_followup_level_id_without_lit.manual_action_note or '')
                 else:
                     action_text = partner.latest_followup_level_id_without_lit.manual_action_note
                 #Check minimum date
@@ -298,17 +302,16 @@ class res_partner(osv.osv):
                     responsible_id = partner.payment_responsible_id.id
                 else:
                     if partner.latest_followup_level_id_without_lit.manual_action_responsible_id:
-                        responsible_id = partner.latest_followup_level_id_without_lit.manual_action_responsible_id.id 
-                                                                    
-                self.write(cr, uid, [partner.id], {'payment_next_action_date': action_date, 
-                                            'payment_next_action': action_text, 
+                        responsible_id = partner.latest_followup_level_id_without_lit.manual_action_responsible_id.id
+                self.write(cr, uid, [partner.id], {'payment_next_action_date': action_date,
+                                            'payment_next_action': action_text,
                                             'payment_responsible_id': responsible_id})
-                
+
 
     def do_partner_print(self, cr, uid, partner_ids, data, context=None):
-        #partner_ids are ids from special view, not from res.partner        
+        #partner_ids are ids from special view, not from res.partner
         #data.update({'date': context['date']})
-        if not partner_ids: 
+        if not partner_ids:
             return {}
         data['partner_ids'] = partner_ids
         datas = {
@@ -317,9 +320,9 @@ class res_partner(osv.osv):
              'form': data
         }
         return {
-            'type': 'ir.actions.report.xml', 
-            'report_name': 'account_followup.followup.print', 
-            'datas': datas, 
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account_followup.followup.print',
+            'datas': datas,
             }
 
     def do_partner_mail(self, cr, uid, partner_ids, context=None):
@@ -330,7 +333,7 @@ class res_partner(osv.osv):
         for partner in self.browse(cr, uid, partner_ids, context):
             print "Email", partner.email
             if partner.email != False and partner.email != '' and partner.email != ' ':
-                if partner.latest_followup_level_id_without_lit and partner.latest_followup_level_id_without_lit.send_email and partner.latest_followup_level_id_without_lit.email_template_id.id != False :                
+                if partner.latest_followup_level_id_without_lit and partner.latest_followup_level_id_without_lit.send_email and partner.latest_followup_level_id_without_lit.email_template_id.id != False :
                     mtp.send_mail(cr, uid, partner.latest_followup_level_id_without_lit.email_template_id.id, partner.id, context=context)
                 else :
                     mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')
@@ -346,13 +349,13 @@ class res_partner(osv.osv):
                     payment_next_action = partner.payment_next_action + " + " + action_text
                 else:
                     payment_next_action = action_text
-                self.write(cr, uid, [partner.id], {'payment_next_action_date': payment_action_date, 
+                self.write(cr, uid, [partner.id], {'payment_next_action_date': payment_action_date,
                                                    'payment_next_action': payment_next_action}, context)
         return unknown_mails
 
     def action_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids,  {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False}, context)
-    
+
     def do_button_print(self, cr, uid, ids, context=None):
         #TODO: assert that ids is a list of 1 element only before doing ids[0]
         self.message_post(cr, uid, [ids[0]], body=_('Printed overdue payments report'), context=context)
@@ -367,54 +370,27 @@ class res_partner(osv.osv):
             'datas': datas,
             'nodestroy' : True
         }
-        
-    
+
+
     def do_button_mail(self, cr, uid, ids, context=None):
         self.do_partner_mail(cr, uid, ids, context)
-        
-        
+
+
     def _get_aml_storeids(self, cr, uid, ids, context=None):
         partnerlist = []
         for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context):
-            if aml.partner_id.id not in partnerlist: 
+            if aml.partner_id.id not in partnerlist:
                 partnerlist.append(aml.partner_id.id)
         return partnerlist
-#    
-#    def _get_am_storeids(self, cr, uid, ids, context=None):
-#        partnerlist = []
-#        for am in self.pool.get("account.move").browse(cr, uid, ids, context): 
-#            if am.partner_id.id not in partnerlist: 
-#                partnerlist.append(am.partner_id.id)
-#                print am.partner_id.id
-#        return partnerlist
-#    
-#    def _get_rec_storeids(self, cr, uid, ids, context=None):
-#        partnerlist = []
-#        for rec in self.pool.get("account.move.reconcile").browse(cr, uid, ids, context): 
-#            for am in self.pool.get("account.move.line").browse(cr, uid, [x.id for x in rec.line_partial_ids], context):                
-#                if am.partner_id.id not in partnerlist: 
-#                    partnerlist.append(am.partner_id.id)
-#        return partnerlist
-#    
-#    
-#    def _get_aml_storeids2(self, cr, uid, ids, context=None):
-#        partnerlist = []
-#        for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context):
-#            if aml.partner_id not in partnerlist: 
-#                partnerlist.append(aml.partner_id.id)
-#        return partnerlist
-#    
-    
-        
 
     _inherit = "res.partner"
     _columns = {
+
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Followup Responsible', help="Responsible for making sure the action happens."), #TODO find better name for field
-        #'payment_followup_level_id':fields.many2one('account_followup.followup.line', 'Followup line'),
-        'payment_note':fields.text('Payment Note', help="Payment Note"), 
-        'payment_next_action':fields.char('Next Action', 50, 
-                                    help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), #Just an action #TODO: size=128
-        'payment_next_action_date':fields.date('Next Action Date', 
+        'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
+        'payment_next_action':fields.text('Next Action',
+                                    help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), #TODO: size=128
+        'payment_next_action_date':fields.date('Next Action Date',
                                     help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), # next action date
         'accountmoveline_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]),  #TODO: find better name
@@ -436,15 +412,9 @@ class res_partner(osv.osv):
                                                  string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
                                                  store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date'], 10)}),
         'payment_amount_due':fields.function(_get_amount_due, method=True, type='float', store=False), #TODO: use a fields.related
-        #'credit':fields.function(_get_amount_overdue, method=True, type='float', string="Amount Overdue", 
-#                                                 help="Amount Overdue: The amount the customer owns us", 
-#                                                 store={'account.move.line': (_get_aml_storeids, ['followup_line_id', 'followup_date', 'debit', 'credit', 'invoice', 'reconcile_partial_id'], 10),                                                  
-#                                                        'account.move': (_get_am_storeids, ['ref', 'name'], 10), 
-#                                                        #'account.move.reconcile': (_get_rec_storeids, ['name', 'type'], 10), 
-#                                                        },                                     
-#                                               ),
-    }
-    
+        }
+
+
 res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -21,66 +21,48 @@
             <field name="model">account_followup.followup.line</field>
             <field name="arch" type="xml">
                 <form string="Follow-up Steps" version="7.0">
-                                         
-                       	<h1><field name="name"/></h1>        
-                       <group>
-                       	<group>               
-                       	<div class="oe_inline">
-                        After <field name="delay" style="width: 15%%" nolabel="1"/> days, do the following actions: 
-                                 	</div>
-                      </group>
-                      <group>
-                      	<p class="oe_grey">                       		
-                       			Manual actions can be followed up in the Customers Requiring Action report for 
-                       			every customer and will only be set when the previous action has been marked as done, 
-                       			which can be done in the Payments Follow-up tab of the Customer Form.  
-                       	</p>
-                       	
-                        
-                        <!--<field name="start" style="width: 25%%"/>--> 
-                       	</group>
-                       </group>
-                       <group>
-                       	<group>
-                       	 <field name="manual_action"/>
-                         <field name="send_letter"/>
-                        <field name="send_email"/>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1><field name="name"/></h1>
+                    <div class="oe_inline">
+                        After <field name="delay" class="oe_inline"/> days overdue, do the following actions:
+                    </div>
+                    <div>
+                        <field name="manual_action" class="oe_inline"/>
+                        <label for="manual_action"/>
+                    </div><div>
+                        <field name="send_email" class="oe_inline"/>
+                        <label for="send_email"/>
+                    </div><div>
+                        <field name="send_letter" class="oe_inline"/>
+                        <label for="send_letter"/>
+                    </div>
+
+                    <group string="Manual Action" attrs="{'invisible': [('manual_action', '=', False)]}">
+                       <field name="manual_action_responsible_id"/>
+                       <field name="manual_action_note" attrs="{'required': [('manual_action', '&lt;&gt;', False)]}"
+                            placeholder="e.g. Call the customer, check if it's paid, ..."/>
                     </group>
-                    <group>
-                    	<p class="oe_grey">   
-                       		The format for the letters and emails can be specified.  For the letters (PDF report), 
-                       		the legend is specified below.  For emails, we make use of an email template.  Changing the text, 
-                       		will change the text of the email template.  Don't forget to translate them as the language of the partner 
-                       		is used.  
-                       		
-                       	</p>
+
+                    <group string="Send an Email" attrs="{'invisible': [('send_email', '=', False)]}">
+                        <field name="email_template_id" attrs="{'required': [('send_email', '&lt;&gt;', False)]}"/>
                     </group>
+
+                    <group string="Send a Letter" attrs="{'invisible': [('send_letter', '=', False)]}">
+                        <p colspan="2" class="oe_grey">
+                            Write here the introduction in the letter,
+                            according to the level of the follow-up. You can
+                            use the following keywords in the text. Don't
+                            forget to translate in all languages you installed
+                            using to top right icon.
+                            <group class="oe_grey">
+                                <b>%%(partner_name)s</b>: Partner Name
+                                <b>%%(date)s</b>: Current Date
+                                <b>%%(user_signature)s</b>: User Name
+                                <b>%%(company_name)s</b>: User's Company Name
+                            </group>
+                        </p>
+                        <field name="description" nolabel="1" colspan="2"/>
                     </group>
-                   
-                      <group string="Manual Action" attrs="{'invisible': [('manual_action', '=', False)]}">
-                       
-                       <field name="manual_action_note" string="Action to perform" attrs="{'invisible': [('manual_action', '=', False)]}" placeholder="e.g. Give a phonecall, Check if he paid, ..."/>
-                       <field name="manual_action_responsible_id" attrs="{'invisible': [('manual_action', '=', False)]}"/>
-                      </group>
-                     
-      
-                    <group col="2">
-                    <group string="Send Letter" attrs="{'invisible': [('send_letter', '=', False)]}" colspan="2">
-                     <field name="description" nolabel="1" colspan="2" />                 
-                     <p>
-                      <group>
-                    	<label string="%%(partner_name)s: Partner Name"/>
-                        <label string="%%(date)s: Current Date"/>
-                        <label string="%%(user_signature)s: User Name"/>
-                        <label string="%%(company_name)s: User's Company Name"/>
-                       </group>
-                      </p>
-                   </group>
-                   <group string="Email" attrs="{'invisible': [('send_email', '=', False)]}" > 
-                    <field name="email_template_id" attrs="{'invisible': [('send_email', '=', False)]}" nolabel="1" on_change="on_change_template(email_template_id)"/>
-                    <field name="email_body" attrs="{'invisible': [('send_email', '=', False)]}" colspan="2" nolabel="1"/>
-                   </group>
-                   </group>
                 </form>
             </field>
         </record>
@@ -88,21 +70,18 @@
         <record id="view_account_followup_followup_form" model="ir.ui.view">
             <field name="name">account_followup.followup.form</field>
             <field name="model">account_followup.followup</field>
-           <!-- <field name="group_ids" groups="base.group_multi_company"/>--> 
+           <!-- <field name="group_ids" groups="base.group_multi_company"/>-->
             <field name="arch" type="xml">
-                <form string="Follow-up" version="7.0">                    
-                        <!-- <field name="name"/> -->
-                        
-                    
-                    
-                    <h1><field name="company_id" widget="selection" class="oe_inline"/> Follow-up </h1><!--groups="base.group_multi_company"-->
+                <form string="Follow-up" version="7.0">
+                    <h1><field name="company_id" widget="selection" class="oe_inline"/></h1>
                     <p class="oe_grey">
-                    	To remind our customers of paying their invoices, 
-                    	we define different actions depending on how severely overdue the customer is.  These actions are bundled
-                    	into folow-up levels that are triggered when the due date of the most overdue invoice has passed a 
-                    	certain amount of days.         	                     	      
-                    	</p>
-                    	
+                        To remind our customers of paying their invoices, we
+                        define different actions depending on how severely
+                        overdue the customer is.  These actions are bundled
+                        into folow-up levels that are triggered when the due
+                        date of the most overdue invoice has passed a certain
+                        amount of days.
+                    </p>
                     <field name="followup_line"/>
                 </form>
             </field>
@@ -126,7 +105,7 @@
                 <search string="Search Follow-up">
                     <!-- <field name="name" string="Follow-up"/> -->
                     <field name="company_id" groups="base.group_multi_company"/>
-                    
+
                 </search>
             </field>
         </record>
@@ -141,14 +120,21 @@
               <p class="oe_view_nocontent_create">
                 Click to define follow-up levels and their related actions.
               </p><p>
-                For each step, specify the actions to be taken and delay in days. It is 
-                possible to use print and e-mail templates to send specific messages to 
-                the customer.  
+                For each step, specify the actions to be taken and delay in days. It is
+                possible to use print and e-mail templates to send specific messages to
+                the customer.
               </p>
           </field>
         </record>
-        
-        <menuitem id="account.periodical_processing_reconciliation" groups="account.group_account_user" parent="menu_finance_followup" name="Reconciliation" sequence="1"/>
+
+        <menuitem
+             name="Reconcile Invoices &amp; Payments"
+             action="account.action_account_manual_reconcile"
+             parent="menu_finance_followup"
+             sequence="0"
+             id="menu_manual_reconcile_followup"/>
+
+
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_finance_configuration" name="Follow-up Levels"/>
         <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Follow-up Report"/>
 
@@ -199,14 +185,5 @@
             </field>
         </record>
 
-      <act_window domain="[('reconcile_id', '=', False),('account_id.type','=','receivable')]" id="act_account_partner_account_move_all" name="Receivable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
-
-      <!-- <menuitem action="act_account_partner_account_move_all" id="menu_account_move_open_unreconcile" parent="account_followup.menu_action_followup_stat"/> -->
-
-      <act_window domain="[('reconcile_id', '=', False), ('account_id.type','=','payable')]" id="act_account_partner_account_move_payable_all" name="Payable Items" res_model="account.move.line" src_model="" view_id="account_move_line_partner_tree"/>
-
-      <!-- <menuitem action="act_account_partner_account_move_payable_all" id="menu_account_move_open_unreconcile_payable" parent="account_followup.menu_action_followup_stat"/> -->
-
-    
     </data>
 </openerp>
