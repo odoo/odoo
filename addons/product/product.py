@@ -784,6 +784,9 @@ class product_packaging(osv.osv):
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
+        'uom_id': fields.related('uom_id', 'product_id', type='many2one', relation='product.uom', string='UoM', readonly=True),
+        'uom_id1': fields.related('uom_id', 'product_id', type='many2one', relation='product.uom', string='UoM', readonly=True),
+        'uom_id2': fields.related('uom_id', 'product_id', type='many2one', relation='product.uom', string='UoM', readonly=True),
     }
 
 
@@ -809,10 +812,21 @@ class product_packaging(osv.osv):
         res = cr.fetchone()
         return (res and res[0]) or False
 
+    def _get_uom(self, cr, uid, context=None):
+        try:
+            product = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'product_uom_cm')
+        except ValueError:
+            # a ValueError is returned if the xml id given is not found in the table ir_model_data
+            return False
+        return product.id
+ 
     _defaults = {
         'rows' : lambda *a : 3,
         'sequence' : lambda *a : 1,
         'ul' : _get_1st_ul,
+        'uom_id': _get_uom,
+        'uom_id1': _get_uom,
+        'uom_id2': _get_uom,
     }
 
     def checksum(ean):

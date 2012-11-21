@@ -547,26 +547,32 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <form string="Packaging" version="7.0">
-                    <group col="4">
-                        <field name="product_id"/>
-                        <newline/>
-                        <field name="ean"/>
-                        <field name="sequence" invisible="1"/>
-                        <newline/>
-                        <field name="qty"/>
-                        <field name="ul"/>
-                        <field name="weight_ul"/>
-                        <separator colspan="4" string="Palletization"/>
-                        <field name="ul_qty"/>
-                        <field name="rows"/>
-                        <field name="weight"/>
-                        <separator colspan="4" string="Pallet Dimension"/>
-                        <field name="height"/>
-                        <field name="width"/>
-                        <field name="length"/>
-                        <separator colspan="4" string="Other Info"/>
-                        <field colspan="4" name="name"/>
-                    </group>
+                    <group col="6">
+                         <field name="product_id"/>
+                         <newline/>
+                         <field name="ean"/>
+                         <newline/>
+                         <field name="qty"/>
+                         <field name="ul"/>
+                         <newline/>
+                         <field name="weight_ul"/>
+                         <newline/>
+                         <separator colspan="6" string="Palletization"/>
+                         <field name="ul_qty"/>
+                         <field name="rows"/>
+                         <newline/>
+                         <field name="weight"/>
+                         <separator colspan="6" string="Pallet Dimension"/>
+                         <field name="height"/>
+                         <field name="uom_id" nolabel="1"/>
+                         <field name="width"/>
+                         <field name="uom_id2" nolabel="1"/>
+                         <field name="length"/>
+                         <field name="uom_id1" nolabel="1"/>
+                         <newline/>
+                         <separator colspan="6" string="Other Info"/>
+                         <field colspan="4" name="name"/>
+                     </group>
                 </form>
             </field>
         </record>
