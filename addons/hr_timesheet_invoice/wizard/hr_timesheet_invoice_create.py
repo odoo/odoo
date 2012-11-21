@@ -106,20 +106,19 @@ class account_analytic_line(osv.osv):
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
             invoices.append(last_invoice)
 
-            cr.execute("SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id, name " \
+            cr.execute("SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id, user_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
+                    "GROUP BY product_id, user_id, to_invoice, product_uom_id", (account.id, tuple(ids),))
 
             curr_line = {}
-            total_qty = 0
-            for product_id, user_id, factor_id, qty, uom, line_name in cr.fetchall():
+            for product_id, user_id, factor_id, qty, uom in cr.fetchall():
                 if data.get('product'):
                     product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
-                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
+                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line. Please select one or force the product through the wizard.'))
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
                 factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
                 if factor.customer_name:
@@ -136,10 +135,6 @@ class account_analytic_line(osv.osv):
                 taxes = product.taxes_id or general_account.tax_ids
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 invoice_line_ids =  invoice_line_obj.search(cr, uid, [('product_id', '=', product.id), ('invoice_id', '=', last_invoice)])
-                total_qty +=qty
-                if invoice_line_ids:
-                    invoice_line_obj.write(cr, uid, invoice_line_ids, {'quantity': total_qty})
-                    continue
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
