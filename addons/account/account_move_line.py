@@ -551,6 +551,33 @@ class account_move_line(osv.osv):
         cur = self.pool.get('account.journal').browse(cr, uid, context['journal_id']).currency
         return cur and cur.id or False
 
+    def _get_period(self, cr, uid, context=None):
+        """
+        Return  default account period value
+        """
+        account_period_obj = self.pool.get('account.period')
+        ids = account_period_obj.find(cr, uid, context=context)
+        period_id = False
+        if ids:
+            period_id = ids[0]
+        return period_id
+
+    def _get_journal(self, cr, uid, context=None):
+        """
+        Return journal based on the journal type
+        """
+
+        journal_id = False
+
+        journal_pool = self.pool.get('account.journal')
+        if context.get('journal_type', False):
+            jids = journal_pool.search(cr, uid, [('type','=', context.get('journal_type'))])
+            if not jids:
+                raise osv.except_osv(_('Configuration Error!'), _('Cannot find any account journal of %s type for this company.\n\nYou can create one in the menu: \nConfiguration/Journals/Journals.') % context.get('journal_type'))
+            journal_id = jids[0]
+        return journal_id
+
+
     _defaults = {
         'blocked': False,
         'centralisation': 'normal',
@@ -558,12 +585,12 @@ class account_move_line(osv.osv):
         'date_created': fields.date.context_today,
         'state': 'draft',
         'currency_id': _get_currency,
-        'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
+        'journal_id': _get_journal,
         'credit': 0.0,
         'debit': 0.0,
         'amount_currency': 0.0,
         'account_id': lambda self, cr, uid, c: c.get('account_id', False),
-        'period_id': lambda self, cr, uid, c: c.get('period_id', False),
+        'period_id': _get_period,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
     }
     _order = "date desc, id desc"
@@ -1381,6 +1408,20 @@ class account_move_line(osv.osv):
             tmp = move_obj.validate(cr, uid, [vals['move_id']], context)
             if journal.entry_posted and tmp:
                 move_obj.button_validate(cr,uid, [vals['move_id']], context)
+        return result
+
+    def list_periods(self, cr, uid, context=None):
+        ids = self.pool.get('account.period').search(cr,uid,[])
+        return self.pool.get('account.period').name_get(cr, uid, ids, context=context)
+
+    def list_journals(self, cr, uid, context=None):
+        ng = dict(self.pool.get('account.journal').name_search(cr,uid,'',[]))
+        ids = ng.keys()
+        result = []
+        print ng
+        for journal in self.pool.get('account.journal').browse(cr, uid, ids, context=context):
+            result.append((journal.id,ng[journal.id],journal.type,
+                bool(journal.currency),bool(journal.analytic_journal_id)))
         return result
 
 account_move_line()
