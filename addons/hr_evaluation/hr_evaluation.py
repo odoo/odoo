@@ -187,13 +187,17 @@ class hr_evaluation(osv.osv):
         return res
 
     def onchange_employee_id(self, cr, uid, ids, employee_id, context=None):
-        evaluation_plan_id=False
+        vals = {}
+        vals['plan_id']=False
+        vals['date']=False
         if employee_id:
             employee_obj=self.pool.get('hr.employee')
             for employee in employee_obj.browse(cr, uid, [employee_id], context=context):
                 if employee and employee.evaluation_plan_id and employee.evaluation_plan_id.id:
-                    evaluation_plan_id=employee.evaluation_plan_id.id
-        return {'value': {'plan_id':evaluation_plan_id}}
+                    vals.update({'plan_id':employee.evaluation_plan_id.id})
+                if employee.evaluation_date :
+                    vals.update({'date': employee.evaluation_date})
+        return {'value': vals}
 
     def button_plan_in_progress(self, cr, uid, ids, context=None):
         mail_message = self.pool.get('mail.message')
