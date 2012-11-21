@@ -37,7 +37,10 @@ openerp.pad = function(instance) {
                 }else{
                     this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
                     $.get(value+'/export/html').success(function(data){
-                        self.$('.oe_pad_content').html('<div class="oe_pad_readonly">'+data+'<div>');
+                        groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
+                        data = (groups || []).length >= 2 ? groups[1] : '';
+                        self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
+                        self.$('.oe_pad_readonly').html(data);
                     }).error(function(){
                         self.$('.oe_pad_content').text('Unable to load pad');
                     });

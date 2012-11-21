@@ -154,5 +154,21 @@
             <field name="object_id" search="[('model','=','crm.lead')]" model="ir.model"/>
         </record>
 
+        <!--  mail subtype -->
+        <record id="mail.mt_crm_won" model="mail.message.subtype">
+            <field name="name">Won</field>
+            <field name="res_model">crm.lead</field>
+        </record>
+        <record id="mail.mt_crm_lost" model="mail.message.subtype">
+            <field name="name">Lost</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mt_crm_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+        </record>
+
     </data>
 </openerp>

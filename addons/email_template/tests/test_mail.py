@@ -100,25 +100,27 @@ class test_message_compose(test_mail_mockup.TestMailMockups):
         # ----------------------------------------
 
         # 1. Comment on pigs
-        compose_id = mail_compose.create(cr, uid,
-            {'subject': 'Forget me subject', 'body': 'Dummy body'},
-            {'default_composition_mode': 'comment',
-                'default_model': 'mail.group',
-                'default_res_id': self.group_pigs_id,
-                'default_use_template': False,
-                'default_template_id': email_template_id,
-                'active_ids': [self.group_pigs_id, self.group_bird_id]})
-        compose = mail_compose.browse(cr, uid, compose_id)
-
-        # 2. Perform 'toggle_template', to set use_template and use template_id
-        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        context = {
+            'default_composition_mode': 'comment',
+            'default_model': 'mail.group',
+            'default_res_id': self.group_pigs_id,
+            'default_use_template': False,
+            'default_template_id': email_template_id,
+            'active_ids': [self.group_pigs_id, self.group_bird_id]
+        }
+        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body'}, context)
+        compose = mail_compose.browse(cr, uid, compose_id, context)
+        onchange_res = compose.onchange_template_id(email_template_id, 'comment', 'mail.group', self.group_pigs_id)['value']
+        onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
+        onchange_res['attachment_ids'] = [(4, attachment_id) for attachment_id in onchange_res.pop('attachment_ids', [])]
+        compose.write(onchange_res)
         compose.refresh()
+
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
-        # Test: mail.compose.message: subject, body, content_subtype, partner_ids
+        # Test: mail.compose.message: subject, body, partner_ids
         self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
         self.assertEqual(compose.body, _body_html1, 'mail.compose.message body incorrect')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
         # Test: mail.compose.message: attachments
         # Test: mail.message: attachments
@@ -128,41 +130,34 @@ class test_message_compose(test_mail_mockup.TestMailMockups):
             self.assertIn((attach.name, base64.b64decode(attach.datas)), _attachments_test,
                 'mail.message attachment name / data incorrect')
 
-        # 3. Perform 'toggle_template': template is not set anymore
-        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
-        compose.refresh()
-        # Test: subject, body, partner_ids
-        self.assertEqual(compose.subject, False, 'mail.compose.message subject incorrect')
-        self.assertEqual(compose.body, '', 'mail.compose.message body incorrect')
-
         # ----------------------------------------
         # CASE3: mass_mail with template
         # ----------------------------------------
 
         # 1. Mass_mail on pigs and bird, with a default_partner_ids set to check he is correctly added
-        compose_id = mail_compose.create(cr, uid,
-            {'subject': 'Forget me subject', 'body': 'Dummy body'},
-            {'default_composition_mode': 'mass_mail',
-                'default_model': 'mail.group',
-                'default_res_id': self.group_pigs_id,
-                'default_use_template': False,
-                'default_template_id': email_template_id,
-                'default_partner_ids': [p_a_id],
-                'active_ids': [self.group_pigs_id, self.group_bird_id]})
-        compose = mail_compose.browse(cr, uid, compose_id)
-
-        # 2. Perform 'toggle_template', to set use_template and use template_id
-        mail_compose.toggle_template(cr, uid, [compose_id], {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        context = {
+            'default_composition_mode': 'mass_mail',
+            'default_model': 'mail.group',
+            'default_res_id': self.group_pigs_id,
+            'default_template_id': email_template_id,
+            'default_partner_ids': [p_a_id],
+            'active_ids': [self.group_pigs_id, self.group_bird_id]
+        }
+        compose_id = mail_compose.create(cr, uid, {'subject': 'Forget me subject', 'body': 'Dummy body'}, context)
+        compose = mail_compose.browse(cr, uid, compose_id, context)
+        onchange_res = compose.onchange_template_id(email_template_id, 'mass_mail', 'mail.group', self.group_pigs_id)['value']
+        onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
+        onchange_res['attachment_ids'] = [(4, attachment_id) for attachment_id in onchange_res.pop('attachment_ids', [])]
+        compose.write(onchange_res)
         compose.refresh()
+
         message_pids = [partner.id for partner in compose.partner_ids]
         partner_ids = [p_a_id]
-        # Test: mail.compose.message: subject, body, content_subtype, partner_ids
         self.assertEqual(compose.subject, '${object.name}', 'mail.compose.message subject incorrect')
         self.assertEqual(compose.body, '${object.description}', 'mail.compose.message body incorrect')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
         self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
 
-        # 3. Post the comment, get created message
+        # 2. Post the comment, get created message
         mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, self.group_bird_id]})
         group_pigs.refresh()
         group_bird.refresh()
