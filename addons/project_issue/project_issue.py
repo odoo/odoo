@@ -394,6 +394,10 @@ class project_issue(base_stage, osv.osv):
         if vals.get('project_id'):
             for id in ids:
                 self._subscribe_project_followers_to_issue(cr, uid, id, context=context)
+        if 'stage_id' in vals:
+            for t in self.browse(cr, uid, ids, context=context):
+                new_stage = vals.get('stage_id')
+                self.stage_set(cr, uid, [t.id], new_stage, context=context)
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
@@ -546,7 +550,15 @@ class project_issue(base_stage, osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>created</b>.")
         return self.message_post(cr, uid, ids, body=message, subtype="mt_issue_new", context=context)
-
+    def stage_set(self, cr, uid, ids, stage_id, context=None):
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        if stage_name in['Design','Development','Testing','Merge']:
+            self.issue_start_send_note(cr, uid, ids, context=context)
+        return True
+    
+    def issue_start_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Issue has been <b>started</b>."), subtype="mt_issue_started", context=context)
+    
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
