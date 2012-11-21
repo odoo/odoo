@@ -100,6 +100,7 @@ class account_invoice_report(osv.osv):
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
         'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg"),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _order = 'date desc'
     def init(self, cr):
@@ -124,6 +125,7 @@ class account_invoice_report(osv.osv):
                     ai.journal_id as journal_id,
                     ai.fiscal_position as fiscal_position,
                     ai.user_id as user_id,
+                    ai.section_id as section_id,
                     ai.company_id as company_id,
                     count(ail.*) as nbr,
                     ai.type as type,
@@ -217,7 +219,8 @@ class account_invoice_report(osv.osv):
                     ai.residual,
                     ai.amount_total,
                     u.uom_type,
-                    u.category_id
+                    u.category_id,
+                    ai.section_id
             )
         """)
 
