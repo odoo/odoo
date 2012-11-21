@@ -4722,7 +4722,7 @@ class BaseModel(object):
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
                 if order_field == 'id':
-                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
