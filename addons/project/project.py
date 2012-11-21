@@ -1249,7 +1249,7 @@ class task(base_stage, osv.osv):
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res:
                 match = res.group(1).lower()
                 field = maps.get(match)

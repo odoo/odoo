@@ -63,7 +63,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
     _defaults = {
         'history_mode': 'latest',
-        'content_subtype': lambda self,cr, uid, context={}: 'html',
     }
 
     def get_record_data(self, cr, uid, model, res_id, context=None):
