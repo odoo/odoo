@@ -1063,31 +1063,78 @@
                 </tree_account_reconciliation>
             </field>
         </record>
+        <!-- 
 
+Sale : 
+
+1   Journal Entry
+2   Ref
+3   Date
+5   Partner
+6   Account
+7   Name
+8   Due Date
+11  Debit
+12  Credit
+13  Tax
+14  Analytic Account
+19  Status
+20  Reconcile 
+
+Bank : 
+1   Journal Entry
+2   Ref
+3   Date
+4   Statement
+5   Partner
+6   Account
+7   Name
+11  Debit
+12  Credit
+19  Status
+20  Reconcile
+Sale Refund : 
+
+1   Journal Entry
+2   Ref
+3   Date
+5   Partner
+6   Account
+7   Name
+8   Due Date
+11  Debit
+12  Credit
+13  Tax
+14  Analytic Account
+19  Status
+20  Reconcile
+        -->
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
-                    <field name="date"/>
-                    <field name="period_id"/>
                     <field name="move_id"/>
                     <field name="ref"/>
-                    <field name="invoice"/>
-                    <field name="name"/>
+                    <field name="date"/>
+                    <field name="statement_id" invisible="context.get('journal_type', False) in ['sale','purchase']"/>
                     <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                     <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
-                    <field name="journal_id"/>
+                    <field name="name"/>
+                    <field name="date_maturity" invisible="context.get('journal_type', False) in ['bank']"/>
                     <field name="debit" sum="Total debit"/>
                     <field name="credit" sum="Total credit"/>
-                    <field name="account_tax_id"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
-                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                    <field name="account_tax_id" invisible="context.get('journal_type', False) in ['bank']"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]" invisible="context.get('journal_type', False) in ['sale','purchase']"/>
+                    <field name="state" />
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
-                    <field name="state" invisible="1"/>
+                    <field name="invoice" invisible="context.get('journal_type', False) in ['sale','purchase','bank']"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency" />
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency" />
+                    <field name="journal_id" invisible="1"/>
+                    <field name="period_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -1279,6 +1326,39 @@
             sequence="1"
             groups="group_account_user"
         />
+
+        <record id="action_account_moves_sale" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="context">{'journal_type':'sale'}</field>
+            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a customer invoice, select the journal and the period in the search toolbar. Then, start by recording the entry line of the income account. OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account receivable".</field>
+        </record>
+        <menuitem action="action_account_moves_sale" sequence="16" id="menu_eaction_account_moves_sale"
+            parent="menu_finance_receivables" icon="STOCK_JUSTIFY_FILL" groups="group_account_user,group_account_manager"/>
+
+        <record id="action_account_moves_purchase" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="context">{'journal_type':'purchase'}</field>
+            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. If you want to record a supplier invoice, start by recording the line of the expense account, OpenERP will propose to you automatically the Tax related to this account and the counter-part "Account Payable".</field>
+        </record>
+        <menuitem action="action_account_moves_purchase"
+            id="menu_eaction_account_moves_purchase"
+            parent="menu_finance_payables"
+            icon="STOCK_JUSTIFY_FILL"
+            sequence="16"
+            groups="group_account_user,group_account_manager"/>
+
+        <record id="action_account_moves_bank" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.journal</field>
+            <field name="view_type">form</field>
+            <field name="context">{'journal_type':'bank'}</field>
+            <field name="help">This view is used by accountants in order to record entries massively in OpenERP. Journal items are created by OpenERP if you use Bank Statements, Cash Registers, or Customer/Supplier payments.</field>
+        </record>
+
 
         <record id="action_view_move_line" model="ir.actions.act_window">
             <field name="name">Lines to reconcile</field>
