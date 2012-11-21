@@ -4791,6 +4791,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super(field_manager, node);
         this.binary_value = false;
         this.useFileAPI = !!window.FileReader;
+        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
         if (!this.useFileAPI) {
             this.fileupload_id = _.uniqueId('oe_fileupload');
             $(window).on(this.fileupload_id, function() {
@@ -4816,6 +4817,11 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
             if (this.useFileAPI) {
                 var file = file_node.files[0];
+                if (file.size > this.max_upload_size) {
+                    var msg = _t("The selected file exceed the maximum file size of %s.");
+                    instance.webclient.notification.warn(_t("File upload"), _.str.sprintf(msg, instance.web.human_size(this.max_upload_size)));
+                    return false;
+                }
                 var filereader = new FileReader();
                 filereader.readAsDataURL(file);
                 filereader.onloadend = function(upload) {
