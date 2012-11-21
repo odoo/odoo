@@ -82,11 +82,11 @@
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
-            action="action_order_tree5" sequence="10"/>
+            action="action_quotations_portal" sequence="10"/>
         <menuitem name="Sales Orders" id="portal_sales_orders" parent="portal.portal_orders"
-            action="action_order_form" sequence="20"/>
+            action="action_orders_portal" sequence="20"/>
         <menuitem name="Invoices" id="portal_invoices" parent="portal.portal_orders"
-            action="action_invoice_tree1" sequence="30"/>
+            action="portal_action_invoices" sequence="30"/>
         <menuitem name="Customer Refunds" id="portal_payments" parent="portal.portal_orders"
             action="action_invoice_tree2" sequence="40"/>
 
