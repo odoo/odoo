@@ -327,8 +327,6 @@
                             </group>
                         </group>
                         <field name='alerts' attrs="{'invisible': ['|',('state','!=','new'),('alerts','=','')]}" class="oe_inline oe_lunch_alert"/> 
-                        <div name="preferences">
-                        </div>
                         <separator string='Select your order'/>
                         <field name='order_line_ids' nolabel='1' on_change='onchange_price(order_line_ids)'>
                             <tree string='List' editable='bottom'>
@@ -342,6 +340,8 @@
                         <group class='oe_subtotal_footer oe_right'>
                             <field name='total'/> 
                         </group>
+                        <div name="preferences">
+                        </div>
                         <br/><br/>
                     </sheet>
                 </form>
@@ -389,7 +389,7 @@
             <field name="name">cashmove tree</field>
             <field name="model">lunch.cashmove</field>
             <field name="arch" type="xml">
-                <tree string="cashmove tree">
+                <tree string="cashmove tree" create="false">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="description"/>

@@ -174,9 +174,10 @@ class lunch_order(osv.Model):
             if len(pref_ids)==0:
                 #create Elements
                 xml_no_pref_1 = etree.Element("div")
-                xml_no_pref_1.set('class','oe_inline oe_lunch_intro')
-                xml_no_pref_2 = etree.Element("h3")
-                xml_no_pref_2.text = _("This is the first time you order a meal")
+                xml_no_pref_1.set('class','oe_view_nocontent')
+                xml_no_pref_2 = etree.Element("p")
+                xml_no_pref_2.set('class','oe_view_nocontent_create')
+                xml_no_pref_2.text = _("Click to record your lunch order.")
                 xml_no_pref_3 = etree.Element("p")
                 xml_no_pref_3.set('class','oe_grey')
                 xml_no_pref_3.text = _("Select a product and put your order comments on the note.")
