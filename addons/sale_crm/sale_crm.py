@@ -66,7 +66,7 @@ class account_invoice(osv.osv):
         'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id,
     }
 
-    def create(self, cr, uid, vals, context=None):
+    def create(self, cr, uid, vals, context={}):
         section_id = vals.get('section_id', False)
         invoice_type = context.get('type', False)
         user_id = vals.get('user_id', False)
