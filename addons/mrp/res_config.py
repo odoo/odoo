@@ -28,10 +28,6 @@ class mrp_config_settings(osv.osv_memory):
     _inherit = 'res.config.settings'
 
     _columns = {
-        'module_stock_planning': fields.boolean('Manage master production shedule',
-            help ="""This allows to create a manual procurement plan apart of the normal MRP scheduling,
-                which works automatically based on minimum stock rules.
-                This installs the module stock_planning."""),
         'module_mrp_repair': fields.boolean("Manage repairs of products ",
             help="""Allows to manage all product repairs.
                     * Add/remove products in the reparation

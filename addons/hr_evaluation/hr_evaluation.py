@@ -291,6 +291,7 @@ survey_request()
 class hr_evaluation_interview(osv.osv):
     _name = 'hr.evaluation.interview'
     _inherits = {'survey.request': 'request_id'}
+    _inherit =  'mail.thread'
     _rec_name = 'request_id'
     _description = 'Appraisal Interview'
     _columns = {

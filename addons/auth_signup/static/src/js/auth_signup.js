@@ -41,7 +41,7 @@ openerp.auth_signup = function(instance) {
         on_token_loaded: function(result) {
             // select the right the database
             this.selected_db = result.db;
-            this.on_db_loaded({db_list: [result.db]});
+            this.on_db_loaded([result.db]);
             if (result.token) {
                 // switch to signup mode, set user name and login
                 this.$el.addClass("oe_login_signup");
@@ -80,16 +80,16 @@ openerp.auth_signup = function(instance) {
                     this.do_warn("Login", "No database selected !");
                     return false;
                 } else if (!name) {
-                    this.do_warn("Login", "Please enter a name.")
+                    this.do_warn("Login", "Please enter a name.");
                     return false;
                 } else if (!login) {
-                    this.do_warn("Login", "Please enter a username.")
+                    this.do_warn("Login", "Please enter a username.");
                     return false;
                 } else if (!password || !confirm_password) {
-                    this.do_warn("Login", "Please enter a password and confirm it.")
+                    this.do_warn("Login", "Please enter a password and confirm it.");
                     return false;
                 } else if (password !== confirm_password) {
-                    this.do_warn("Login", "Passwords do not match; please retype them.")
+                    this.do_warn("Login", "Passwords do not match; please retype them.");
                     return false;
                 }
                 var params = {

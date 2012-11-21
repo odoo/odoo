@@ -100,6 +100,23 @@ class product_uom(osv.osv):
     def _factor_inv_write(self, cursor, user, id, name, value, arg, context=None):
         return self.write(cursor, user, id, {'factor': self._compute_factor_inv(value)}, context=context)
 
+    def name_create(self, cr, uid, name, context=None):
+        """ The UoM category and factor are required, so we'll have to add temporary values
+            for imported UoMs """
+        uom_categ = self.pool.get('product.uom.categ')
+        # look for the category based on the english name, i.e. no context on purpose!
+        # TODO: should find a way to have it translated but not created until actually used
+        categ_misc = 'Unsorted/Imported Units'
+        categ_id = uom_categ.search(cr, uid, [('name', '=', categ_misc)])
+        if categ_id:
+            categ_id = categ_id[0]
+        else:
+            categ_id, _ = uom_categ.name_create(cr, uid, categ_misc)
+        uom_id = self.create(cr, uid, {self._rec_name: name,
+                                       'category_id': categ_id,
+                                       'factor': 1})
+        return self.name_get(cr, uid, [uom_id], context=context)[0]
+
     def create(self, cr, uid, data, context=None):
         if 'factor_inv' in data:
             if data['factor_inv'] <> 1:
@@ -657,9 +674,9 @@ class product_product(osv.osv):
                 # Performing a quick memory merge of ids in Python will give much better performance
                 ids = set()
                 ids.update(self.search(cr, user, args + [('default_code',operator,name)], limit=limit, context=context))
-                if len(ids) < limit:
+                if not limit or len(ids) < limit:
                     # we may underrun the limit because of dupes in the results, that's fine
-                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit-len(ids)), context=context))
+                    ids.update(self.search(cr, user, args + [('name',operator,name)], limit=(limit and (limit-len(ids)) or False) , context=context))
                 ids = list(ids)
             if not ids:
                 ptrn = re.compile('(\[(.*?)\])')

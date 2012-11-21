@@ -166,17 +166,17 @@ class project(osv.osv):
                 res[id]['progress_rate'] = 0.0
         return res
 
-    def unlink(self, cr, uid, ids, *args, **kwargs):
+    def unlink(self, cr, uid, ids, context=None):
         alias_ids = []
         mail_alias = self.pool.get('mail.alias')
-        for proj in self.browse(cr, uid, ids):
+        for proj in self.browse(cr, uid, ids, context=context):
             if proj.tasks:
                 raise osv.except_osv(_('Invalid Action!'),
                                      _('You cannot delete a project containing tasks. You can either delete all the project\'s tasks and then delete the project or simply deactivate the project.'))
             elif proj.alias_id:
                 alias_ids.append(proj.alias_id.id)
-        res =  super(project, self).unlink(cr, uid, ids, *args, **kwargs)
-        mail_alias.unlink(cr, uid, alias_ids, *args, **kwargs)
+        res =  super(project, self).unlink(cr, uid, ids, context=context)
+        mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res
     
     def _get_attached_docs(self, cr, uid, ids, field_name, arg, context):
@@ -204,8 +204,8 @@ class project(osv.osv):
     def attachment_tree_view(self, cr, uid, ids, context):
         task_ids = self.pool.get('project.task').search(cr, uid, [('project_id', 'in', ids)])
         domain = [
-            ('|', 
-             '&', 'res_model', '=', 'project.project'), ('res_id', 'in', ids),
+             '|', 
+             '&', ('res_model', '=', 'project.project'), ('res_id', 'in', ids),
              '&', ('res_model', '=', 'project.task'), ('res_id', 'in', task_ids)
 		]
         res_id = ids and ids[0] or False
@@ -474,7 +474,7 @@ def Project():
     resource = %s
 """       % (
             project.id,
-            project.date_start, working_days,
+            project.date_start or time.strftime('%Y-%m-%d'), working_days,
             '|'.join(['User_'+str(x) for x in puids])
         )
         vacation = calendar_id and tuple(resource_pool.compute_vacation(cr, uid, calendar_id, context=context)) or False
@@ -1247,7 +1247,7 @@ class task(base_stage, osv.osv):
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res:
                 match = res.group(1).lower()
                 field = maps.get(match)
@@ -1305,7 +1305,17 @@ class task(base_stage, osv.osv):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
             self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
-
+   
+    def project_task_reevaluate(self, cr, uid, ids, context=None):
+        if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
+            return {
+                'view_type': 'form',
+                "view_mode": 'form',
+                'res_model': 'project.task.reevaluate',
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+            }
+        return self.do_reopen(cr, uid, ids, context=context)
 
 class project_work(osv.osv):
     _name = "project.task.work"

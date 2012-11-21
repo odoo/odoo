@@ -272,7 +272,7 @@ class abstracted_fs(object):
             if path.startswith('/'):
                 path = path[1:]
 
-        p_parts = path.split('/') # hard-code the unix sep here, by spec.
+        p_parts = path.split(os.sep)
 
         assert '..' not in p_parts
 

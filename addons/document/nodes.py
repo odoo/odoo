@@ -823,6 +823,7 @@ class node_res_dir(node_class):
         uid = self.context.uid
         ctx = self.context.context.copy()
         ctx.update(self.dctx)
+        ctx.update(self.context.extra_ctx)
         where = []
         if self.domain:
             app = safe_eval(self.domain, ctx)
