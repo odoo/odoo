@@ -6,14 +6,9 @@
             <field name="model">base.gengo.translations</field>
             <field name="arch" type="xml">
                 <form string="Gengo Request Form" version="7.0">
-                   <group col="4">
-                        <group>
-                            <field name="lang_id" required="1"/>
-                            <field name="restart_send_job"/>
-                        </group>
-                        <group>
-                            <label colspan="2" string="Leave empty for requesting all the terms to Gengo that needs it, regardless of their language"/>
-                        </group>
+                    <group>
+                        <field name="lang_id"/>
+                        <field name="restart_send_job"/>
                     </group>
                     <footer>
                         <button name="act_update" string="Send" type="object" class="oe_highlight"/> 

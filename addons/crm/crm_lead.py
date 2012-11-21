@@ -50,7 +50,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _get_default_stage_id(self, cr, uid, context=None):
         """ Gives default stage_id """
         section_id = self._get_default_section_id(cr, uid, context=context)
-        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft'), ('type', '=', 'both')], context=context)
+        return self.stage_find(cr, uid, [], section_id, [('state', '=', 'draft')], context=context)
 
     def _resolve_section_id_from_context(self, cr, uid, context=None):
         """ Returns ID of section based on the value of 'section_id'
@@ -224,11 +224,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                                 multi='day_close', type="float", store=True),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="Status", readonly=True,
-                help='The Status is set to \'Draft\', when a case is created.\
-                      If the case is in progress the Status is set to \'Open\'.\
-                      When the case is over, the Status is set to \'Done\'.\
-                      If the case needs to be reviewed then the Status is \
-                      set to \'Pending\'.'),
+                help='The Status is set to \'Draft\', when a case is created. If the case is in progress the Status is set to \'Open\'. When the case is over, the Status is set to \'Done\'. If the case needs to be reviewed then the Status is  set to \'Pending\'.'),
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
@@ -328,7 +324,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         cases = self.browse(cr, uid, ids2, context=context)
         return self._action(cr, uid, cases, False, context=context)
 
-    def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
+    def stage_find(self, cr, uid, cases, section_id, domain=None, order='sequence', context=None):
         """ Override of the base.stage method
             Parameter of the stage search taken from the lead:
             - type: stage type must be the same or 'both'
@@ -341,6 +337,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         # collect all section_ids
         section_ids = []
         types = ['both']
+        if not cases :
+            type = context.get('default_type')
+            types += [type]
         if section_id:
             section_ids.append(section_id)
         for lead in cases:
@@ -833,7 +832,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
@@ -847,7 +846,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_crm_stage", context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
@@ -856,17 +855,17 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=message, context=context)
         return True
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>lost</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_lost", context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>won</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_won", context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
