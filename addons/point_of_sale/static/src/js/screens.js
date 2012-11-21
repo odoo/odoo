@@ -198,10 +198,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // - if there's a user with a matching ean, put it as the active 'client' and return true
         // - else : return false. 
         barcode_client_action: function(ean){
-            var users = this.pos.get('user_list');
-            for(var i = 0, len = users.length; i < len; i++){
-                if(users[i].ean13 === ean.ean){
-                    this.pos.get('selectedOrder').set_client(users[i]);
+            var partners = this.pos.get('partner_list');
+            for(var i = 0, len = partners.length; i < len; i++){
+                if(partners[i].ean13 === ean.ean){
+                    this.pos.get('selectedOrder').set_client(partners[i]);
                     this.pos_widget.username.refresh();
                     this.pos.proxy.scan_item_success(ean);
                     return true;

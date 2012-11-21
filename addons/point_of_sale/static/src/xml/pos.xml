@@ -536,7 +536,7 @@
 
     <t t-name="OrderButtonWidget">
         <li class="order-selector-button">
-            <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
+            <button class="select-order"><t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'') + widget.order.get('creationDate').toString('t')"/></button>
         </li>
     </t>
 

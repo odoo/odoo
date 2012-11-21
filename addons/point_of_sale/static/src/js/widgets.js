@@ -323,10 +323,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderButtonWidget',
         init: function(parent, options) {
             this._super(parent,options);
+            var self = this;
+
             this.order = options.order;
-            this.order.bind('destroy', _.bind( function() {
-                this.destroy();
-            }, this));
+            this.order.bind('destroy',function(){ self.destroy(); });
+            this.order.bind('change', function(){ self.renderElement(); });
             this.pos.bind('change:selectedOrder', _.bind( function(pos) {
                 var selectedOrder;
                 selectedOrder = pos.get('selectedOrder');
@@ -337,8 +338,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         renderElement:function(){
             this._super();
-            this.$('button.select-order').click(_.bind(this.selectOrder, this));
-            this.$('button.close-order').click(_.bind(this.closeOrder, this));
+            this.$('button.select-order').off('click').click(_.bind(this.selectOrder, this));
+            this.$('button.close-order').off('click').click(_.bind(this.closeOrder, this));
         },
         selectOrder: function(event) {
             this.pos.set({
@@ -667,7 +668,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: "DebugWidget",
         eans:{
             admin_badge:  '0410100000006',
-            client_badge: '0420100000005',
+            client_badge: '0420200000004',
             invalid_ean:  '1232456',
             soda_33cl:    '5449000000996',
             oranges_kg:   '2100002031410',
