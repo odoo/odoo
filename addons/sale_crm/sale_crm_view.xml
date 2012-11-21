@@ -46,6 +46,32 @@
             </field>
         </record>
 
+        <!-- Update account invoice list view!-->
+        <record model="ir.ui.view" id="account_invoice_tree">
+            <field name="name">Account Invoice</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='date_invoice']" position="after">
+                        <field name="section_id" invisible="1"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="account_invoice_groupby_inherit" model="ir.ui.view">
+            <field name="name">account.invoice.groupby</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Due Date']" position="after">
+                    <separator/>
+                    <filter string="Sales Team" icon="terp-partner" domain="[]" context="{'group_by':'section_id'}"/>
+                </xpath>
+            </field>
+        </record>
+
         <!-- Update account invoice !-->
         <record model="ir.ui.view" id="account_invoice_form">
             <field name="name">Account Invoice</field>
