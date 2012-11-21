@@ -112,13 +112,12 @@ class account_analytic_line(osv.osv):
                         "AND id IN %s AND to_invoice IS NOT NULL " \
                     "GROUP BY product_id, user_id, to_invoice, product_uom_id", (account.id, tuple(ids),))
 
-            curr_line = {}
             for product_id, user_id, factor_id, qty, uom in cr.fetchall():
                 if data.get('product'):
                     product_id = data['product'][0]
                 product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
-                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line. Please select one or force the product through the wizard.'))
+                    raise osv.except_osv(_('Error!'), _('There is no product defined. Please select one or force the product through the wizard.'))
                 factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
                 factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
                 if factor.customer_name:
@@ -134,7 +133,6 @@ class account_analytic_line(osv.osv):
                     raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 taxes = product.taxes_id or general_account.tax_ids
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
-                invoice_line_ids =  invoice_line_obj.search(cr, uid, [('product_id', '=', product.id), ('invoice_id', '=', last_invoice)])
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
