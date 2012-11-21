@@ -6,6 +6,17 @@
             <field name="name">Discussion Group</field>
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
+            <field name="context">{
+              'search_default_message_unread': True
+            }</field>
+            <field name="params">{
+                'read_action': 'read'
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    No message in this group.
+                </p>
+            </field>
         </record>
 
         <!-- Group Kanban View  !-->
