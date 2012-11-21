@@ -311,7 +311,6 @@ class project(osv.osv):
         task_ids = task_obj.search(cr, uid, [('project_id', 'in', ids), ('state', '!=', 'done')])
         task_obj.case_cancel(cr, uid, task_ids, context=context)
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        self.set_cancel_send_note(cr, uid, ids, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
@@ -555,9 +554,6 @@ def Project():
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Project is now <b>pending</b>."), context=context)
-
-    def set_cancel_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Project has been <b>canceled</b>."), context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Project has been <b>closed</b>."), context=context)
