@@ -65,7 +65,10 @@ Main Features
         'mail_alias_view.xml',
         'res_users_view.xml',
     ],
-    'demo': ['data/mail_demo.xml'],
+    'demo': [
+        'data/mail_demo.xml',
+        'data/mail_group_demo_data.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,
