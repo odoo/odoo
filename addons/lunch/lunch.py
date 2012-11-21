@@ -180,19 +180,15 @@ class lunch_order(osv.Model):
                 xml_no_pref_2.text = _("Click to record your lunch order.")
                 xml_no_pref_3 = etree.Element("p")
                 xml_no_pref_3.set('class','oe_grey')
-                xml_no_pref_3.text = _("Select a product and put your order comments on the note.")
+                xml_no_pref_3.text = _("Your favorite meals will be created based on your last orders.")
                 xml_no_pref_4 = etree.Element("p")
                 xml_no_pref_4.set('class','oe_grey')
-                xml_no_pref_4.text = _("Your favorite meals will be created based on your last orders.")
-                xml_no_pref_5 = etree.Element("p")
-                xml_no_pref_5.set('class','oe_grey')
-                xml_no_pref_5.text = _("Don't forget the alerts displayed in the reddish area")
+                xml_no_pref_4.text = _("Don't forget the alerts displayed in the reddish area")
                 #structure Elements
                 xml_start.append(xml_no_pref_1)
                 xml_no_pref_1.append(xml_no_pref_2)
                 xml_no_pref_1.append(xml_no_pref_3)
                 xml_no_pref_1.append(xml_no_pref_4)
-                xml_no_pref_1.append(xml_no_pref_5)
             #Else: the user already have preferences so we display them
             else:
                 preferences = line_ref.browse(cr, uid, pref_ids, context=context)
