@@ -51,12 +51,14 @@ class ir_config_parameter(osv.osv):
         ('key_uniq', 'unique (key)', 'Key must be unique.')
     ]
 
-    def init(self, cr):
+    def init(self, cr, force=False):
         """
         Initializes the parameters listed in _default_parameters.
+        It overrides existing parameters if force is ``True``.
         """
         for key, func in _default_parameters.iteritems():
-            ids = self.search(cr, SUPERUSER_ID, [('key','=',key)])
+            # force=True skips search and always performs the 'if' body (because ids=False)
+            ids = not force and self.search(cr, SUPERUSER_ID, [('key','=',key)])
             if not ids:
                 self.set_param(cr, SUPERUSER_ID, key, func())
 
