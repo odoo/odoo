@@ -67,8 +67,10 @@
                     <filter string="Global" icon="terp-stage" domain="[('global','=',True)]"/>
                     <separator/>
                     <filter string="Full Access" icon="terp-gtk-select-all" domain="[('perm_read','=',True),('perm_write','=',True),('perm_create','=',True),('perm_unlink','=',True)]"/>
-                    <filter string="Read Access" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
+                    <filter string="Read Access Right" icon="terp-stock_align_left_24" domain="[('perm_read','=',True)]"/>
                     <filter string="Write Access" icon="terp-tools" domain="[('perm_write','=',True)]"/>
+                    <filter string="Create Access" domain="[('perm_create','=',True)]"/>
+                    <filter string="Delete Access" domain="[('perm_unlink','=',True)]"/>
                     <field name="model_id"/>
                     <field name="groups"/>
                 </search>
