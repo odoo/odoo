@@ -245,11 +245,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     refresh_scheduler: function() {
         scheduler.setCurrentView(scheduler._date);
     },
-    refresh_minical: function() {
-        if (this.sidebar) {
-            scheduler.updateCalendar(this.sidebar.mini_calendar);
-        }
-    },
     reload_event: function(id) {
         this.dataset.read_ids([id], _.keys(this.fields)).done(this.proxy('events_loaded'));
     },
@@ -306,7 +301,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
         scheduler.parse(res_events, 'json');
         this.refresh_scheduler();
-        this.refresh_minical();
         if (!no_filter_reload && this.sidebar) {
             this.sidebar.filter.events_loaded(sidebar_items);
         }
@@ -402,9 +396,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}).done(function() {
-                self.refresh_minical();
-            });
+            this.dataset.write(event_id, data, {});
         }
     },
     quick_create: function(event_id, event_obj) {
@@ -414,7 +406,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             var id = r;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
-            self.refresh_minical();
             self.reload_event(id);
         }).fail(function(r, event) {
             event.preventDefault();
@@ -487,9 +478,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this;
         var index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(event_id).done(function() {
-                self.refresh_minical();
-            });
+            this.dataset.unlink(event_id);
         }
     },
 });
@@ -506,6 +495,7 @@ instance.web_calendar.Sidebar = instance.web.Widget.extend({
                 scheduler.setCurrentView(date, 'day');
             }
         });
+        scheduler.linkCalendar(this.mini_calendar);
         this.filter = new instance.web_calendar.SidebarFilter(this, this.getParent());
         this.filter.appendTo(this.$el.find('.oe_calendar_filter'));
     }
