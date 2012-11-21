@@ -49,8 +49,10 @@ very handy when used in combination with the module 'share'.
         'portal_view.xml',
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
+        'acquirer_view.xml',
     ],
     'demo': ['portal_demo.xml'],
+    'css': ['static/src/css/portal.css'],
     'installable': True,
 }
 

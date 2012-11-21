@@ -34,7 +34,6 @@ class Controller(openerp.addons.web.http.Controller):
     def retrieve(self, req, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
-        user_info = None
         with registry.cursor() as cr:
             res_partner = registry.get('res.partner')
             user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
