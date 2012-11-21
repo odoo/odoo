@@ -47,7 +47,7 @@ class sale_order(osv.osv):
 sale_order()
 
 class res_users(osv.Model):
-    _inherit = 'res.partner'
+    _inherit = 'res.users'
 
     _columns = {
         'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
@@ -66,12 +66,14 @@ class account_invoice(osv.osv):
         'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id,
     }
 
-    def create(self, cr, uid, vals, context={}):
+    def create(self, cr, uid, vals, context=None):
         section_id = vals.get('section_id', False)
         invoice_type = context.get('type', False)
         user_id = vals.get('user_id', False)
+        user_obj = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
+        user_default_section_id = user_obj.default_section_id.id or False
         if not section_id and invoice_type in ['out_invoice', 'out_refund'] and user_id:
-            vals['section_id'] = user_id
+            vals['section_id'] = user_default_section_id
         obj_id =  super(account_invoice, self).create(cr, uid, vals, context=context)
         return obj_id
 
