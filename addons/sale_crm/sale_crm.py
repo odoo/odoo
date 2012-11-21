@@ -46,6 +46,14 @@ class sale_order(osv.osv):
 
 sale_order()
 
+class res_users(osv.Model):
+    _inherit = 'res.partner'
+
+    _columns = {
+        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
+    }
+
+res_users()
 
 class account_invoice(osv.osv):
     _inherit = 'account.invoice'
@@ -68,15 +76,5 @@ class account_invoice(osv.osv):
         return obj_id
 
 account_invoice()
-
-
-class res_users(osv.Model):
-    _inherit = 'res.partner'
-
-    _columns = {
-        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
-    }
-
-res_users()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
