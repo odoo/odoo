@@ -207,10 +207,11 @@ class act_window(osv.osv):
     def _search_view(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for act in self.browse(cr, uid, ids, context=context):
-            field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
-                act.search_view_id and act.search_view_id.id or False,
-                'search', context=context)
-            res[act.id] = str(field_get)
+            if self.pool.get(act.res_model): #TOFIX: from action todo, sometime lost object from pooler on executing next action
+                field_get = self.pool.get(act.res_model).fields_view_get(cr, uid,
+                    act.search_view_id and act.search_view_id.id or False,
+                    'search', context=context)
+                res[act.id] = str(field_get)
         return res
 
     _columns = {
