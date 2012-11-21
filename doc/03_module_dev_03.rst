@@ -1,3 +1,5 @@
+.. _module-dev-views:
+
 Views and Events
 ================
 
