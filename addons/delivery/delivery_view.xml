@@ -243,8 +243,13 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="company_id" position="before">
-                    <field name="weight"/>
-                    <field name="weight_net" groups="base.group_no_one"/>
+                    <group>
+                        <field name="weight"/>
+                        <field name="weight_net" groups="base.group_no_one"/>
+                    </group>
+                    <group>
+                        <field name="uom_id" nolabel="1"/>
+                    </group>
                 </field>
             </field>
         </record>
