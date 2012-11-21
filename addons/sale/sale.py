@@ -682,7 +682,7 @@ class sale_order(osv.osv):
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), subtype="sale.mt_order_confirmed", context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
