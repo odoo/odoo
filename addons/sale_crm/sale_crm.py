@@ -67,14 +67,17 @@ class account_invoice(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
+        if context is None:
+            context = {}
         section_id = vals.get('section_id', False)
         invoice_type = context.get('type', False)
         user_id = vals.get('user_id', False)
-        user_obj = self.pool.get('res.users').browse(cr, uid, user_id, context=context)       
+        user_obj = self.pool.get('res.users').browse(cr, uid, user_id, context=context)
         if not section_id and invoice_type in ['out_invoice', 'out_refund'] and user_id and user_obj.default_section_id:
             vals['section_id'] = user_obj.default_section_id.id
         obj_id =  super(account_invoice, self).create(cr, uid, vals, context=context)
         return obj_id
+
 
 account_invoice()
 
