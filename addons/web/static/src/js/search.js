@@ -1893,6 +1893,9 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     get_value: function() {
         return this.datewidget.get_value();
     },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"datetime" });
+    },
     start: function() {
         var ready = this._super();
         this.datewidget = new (this.widget())(this);
@@ -1901,7 +1904,10 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     }
 });
 instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.DateTime.extend({
-    widget: function () { return instance.web.DateWidget; }
+    widget: function () { return instance.web.DateWidget; },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"date" });
+    }
 });
 instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
