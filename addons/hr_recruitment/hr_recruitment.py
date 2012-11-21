@@ -468,12 +468,6 @@ class hr_applicant(base_stage, osv.Model):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        if not stage_id: return True
-        stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), subtype="hr_recruitment.mt_stage_changed", context=context)
-
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
 
