@@ -1106,7 +1106,7 @@ class task(base_stage, osv.osv):
     def set_kanban_state_blocked(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
         self.case_block_send_note(cr, uid, ids, context=context)
-        return False
+        return True
 
     def set_kanban_state_normal(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
@@ -1115,7 +1115,7 @@ class task(base_stage, osv.osv):
 
     def set_kanban_state_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
-        return True
+        return False
 
     def _store_history(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
