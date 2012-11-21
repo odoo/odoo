@@ -100,14 +100,13 @@ class account_invoice_report(osv.osv):
         'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
         'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg"),
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
     _order = 'date desc'
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_invoice_report')
-        cr.execute("""
-            create or replace view account_invoice_report as (
-                 select min(ail.id) as id,
+
+
+    def _select(self):
+        select_str = """
+            SELECT min(ail.id) as id,
                     ai.date_invoice as date,
                     to_char(ai.date_invoice, 'YYYY') as year,
                     to_char(ai.date_invoice, 'MM') as month,
@@ -125,7 +124,6 @@ class account_invoice_report(osv.osv):
                     ai.journal_id as journal_id,
                     ai.fiscal_position as fiscal_position,
                     ai.user_id as user_id,
-                    ai.section_id as section_id,
                     ai.company_id as company_id,
                     count(ail.*) as nbr,
                     ai.type as type,
@@ -185,15 +183,30 @@ class account_invoice_report(osv.osv):
                          where a.id=ai.id)
                        ELSE 1
                        END) / cr.rate as residual
-                from account_invoice_line as ail
+        """
+        return select_str
+
+    def _where(self):
+        where_str = """
+            WHERE cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
+                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) order by name desc limit 1)
+        """
+        return where_str
+
+    def _from(self):
+        from_str = """
+            FROM account_invoice_line as ail
                 left join account_invoice as ai ON (ai.id=ail.invoice_id)
                 left join product_product pr on (pr.id=ail.product_id)
                 left join product_template pt on (pt.id=pr.product_tmpl_id)
                 left join product_uom u on (u.id=ail.uos_id),
                 res_currency_rate cr
-                where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
-                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) order by name desc limit 1)
-                group by ail.product_id,
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
+            GROUP BY ail.product_id,
                     ai.date_invoice,
                     ai.id,
                     cr.rate,
@@ -219,10 +232,16 @@ class account_invoice_report(osv.osv):
                     ai.residual,
                     ai.amount_total,
                     u.uom_type,
-                    u.category_id,
-                    ai.section_id
-            )
-        """)
+                    u.category_id
+        """
+        return group_by_str
+
+    def init(self, cr):
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("CREATE or REPLACE VIEW %s as (%s %s %s %s)" % (
+                    self._table, 
+                    self._select(), self._from(), self._where(), self._group_by()))
 
 account_invoice_report()
 

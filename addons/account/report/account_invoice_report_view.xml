@@ -27,7 +27,6 @@
                 <field name="account_line_id" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="product_qty" sum="Qty"/>
-                <field name="section_id"/>
                 <!-- <field name="reconciled"  sum="# Reconciled"/> -->
                 <field name="user_currency_price_total" sum="Total Without Tax"/>
                 <field name="user_currency_residual"  sum="Total Residual" invisible="context.get('residual_invisible',False)"/>
@@ -66,7 +65,6 @@
                 <filter icon="terp-dolar_ok!" string="Refund" domain="['|', ('type','=','out_refund'),('type','=','in_refund')]" help="Customer And Supplier Refunds"/>
                 <field name="partner_id"/>
                 <field name="user_id" />
-                <field name="section_id" />
                 <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]"/>
                 <group expand="1" string="Group By...">
                     <filter string="Partner" name="partner" icon="terp-partner" context="{'group_by':'partner_id','residual_visible':True}"/>
@@ -83,7 +81,6 @@
                     <filter string="Day" name="day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by Invoice Date"/>
                     <filter string="Month" name="month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of Invoice Date"/>
                     <filter string="Year" name="group_year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of Invoice Date"/>
-                    <filter string="Sales Team" name='section_id' icon="terp-personal" context="{'group_by':'section_id'}"/>
                 </group>
             </search>
         </field>

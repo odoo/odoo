@@ -18,9 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields,osv
 
-import wizard
-import sale_crm
-import report
+class account_invoice_report(osv.osv):
+    _inherit = 'account.invoice.report'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+
+    def _select(self):
+        return  super(account_invoice_report, self)._select() + ", ai.section_id as section_id"
+
+    def _group_by(self):
+        return super(account_invoice_report, self)._group_by() + ", ai.section_id"
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
