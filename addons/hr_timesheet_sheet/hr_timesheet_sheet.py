@@ -235,7 +235,7 @@ class hr_timesheet_sheet(osv.osv):
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Timesheet has been submitted by %s.") % (obj.employee_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Timesheet has been submitted by %s.") % (obj.employee_id.name), subtype="hr_timesheet_sheet.mt_submit_timesheet", context=context)
 
 hr_timesheet_sheet()
 
