@@ -1028,17 +1028,14 @@ class sale_order_line(osv.osv):
                 raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a sales order line which is in state \'%s\'.') %(rec.state,))
         return super(sale_order_line, self).unlink(cr, uid, ids, context=context)
 
-sale_order_line()
 
 class mail_compose_message(osv.osv):
     _inherit = 'mail.compose.message'
     def send_mail(self, cr, uid, ids, context=None):
         context = context or {}
-        if context.get('mark_so_as_sent', False) and context.get('default_res_id', False):
+        if context.get('default_model') == 'sale.order' and context.get('default_res_id') and context.get('mark_so_as_sent'):
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', context.get('default_res_id', False), 'quotation_sent', cr)
+            wf_service.trg_validate(uid, 'sale.order', context['default_res_id'], 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
-
-mail_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
