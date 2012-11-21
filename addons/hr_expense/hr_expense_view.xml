@@ -85,7 +85,7 @@
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="line_ids" context="{'currency_id': currency_id}">
+                            <field name="line_ids" context="{'currency_id': currency_id,'default_analytic_account': context.get('analytic_account_id')}">
                                 <form string="Expense Lines" version="7.0">
                                     <group>
                                         <group>
