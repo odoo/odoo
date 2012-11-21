@@ -123,19 +123,19 @@ class hr_expense_expense(osv.osv):
             company_id = employee.company_id.id
         return {'value': {'department_id': department_id, 'company_id': company_id}}
 
-    def expense_confirm(self, cr, uid, ids, context=None):
+    def expense_confirm(self, cr, uid, ids, *args):
         for expense in self.browse(cr, uid, ids):
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
-        self.expense_toapprove_notificate(cr, uid, ids, context=context)
+        self.expense_toapprove_notificate(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
         })
         return True
 
-    def expense_accept(self, cr, uid, ids, context=None):
-        self.expense_approve_notificate(cr, uid, ids, context=context)
+    def expense_accept(self, cr, uid, ids, *args):
+        self.expense_approve_notificate(cr, uid, ids)
         self.write(cr, uid, ids, {
             'state':'accepted',
             'date_valid':time.strftime('%Y-%m-%d'),
@@ -143,8 +143,8 @@ class hr_expense_expense(osv.osv):
             })
         return True
 
-    def expense_canceled(self, cr, uid, ids, context=None):
-        self.expense_refuse_notificate(cr, uid, ids , context=context)
+    def expense_canceled(self, cr, uid, ids, *args):
+        self.expense_refuse_notificate(cr, uid, ids)
         self.write(cr, uid, ids, {'state':'cancelled'})
         return True
 
