@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (c) 2012-TODAY OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,9 +19,14 @@
 #
 ##############################################################################
 
-import portal
-import mail_mail
-import wizard
-import acquirer
+from openerp.osv import fields, osv 
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class sale_portal_config_settings(osv.TransientModel):
+    _inherit = 'account.config.settings'
+
+    _columns = {
+        'group_payment_options': fields.boolean('Show payment buttons to employees too',
+            implied_group='portal_sale.group_payment_options',
+            help="Show online payment options on Sale Orders and Customer Invoices to employees. "
+                 "If not checked, these options are only visible to portal users."),
+    }
