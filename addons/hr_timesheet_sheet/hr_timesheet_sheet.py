@@ -220,8 +220,33 @@ class hr_timesheet_sheet(osv.osv):
         if employee_id:
             department_id = self.pool.get('hr.employee').browse(cr, uid, employee_id, context=context).department_id.id
         return {'value': {'department_id': department_id}}
-
+    
 hr_timesheet_sheet()
+
+class hr_employee(osv.osv):
+    _inherit = "hr.employee"
+    
+    def open_timesheet(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        employee = self.browse(cr, uid, ids[0], context)
+        view_context = {
+            'search_default_employee_id' : [employee.id],
+            'default_employee_id' : employee.id,
+            'default_user_id': employee.user_id.id,
+        }
+        value = {
+            'name': _('Timesheets'),
+            'context': view_context,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'hr_timesheet_sheet.sheet',
+            'view_id': False,
+            'type': 'ir.actions.act_window'
+        }
+        return value
+    
+hr_employee()
 
 class account_analytic_line(osv.osv):
     _inherit = "account.analytic.line"
