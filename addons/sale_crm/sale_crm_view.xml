@@ -66,7 +66,6 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//group/filter[@string='Due Date']" position="after">
-                    <separator/>
                     <filter string="Sales Team" icon="terp-partner" domain="[]" context="{'group_by':'section_id'}"/>
                 </xpath>
             </field>
@@ -79,7 +78,7 @@
             <field name="inherit_id" ref="account.invoice_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='date_invoice']" position="after">
+                    <xpath expr="//field[@name='user_id']" position="after">
                         <field name="section_id"/>
                     </xpath>
                 </data>
