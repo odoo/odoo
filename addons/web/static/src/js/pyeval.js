@@ -2,7 +2,6 @@
  * py.js helpers and setup
  */
 openerp.web.pyeval = function (instance) {
-    var _t = instance.web._t;
     instance.web.pyeval = {};
 
     var obj = function () {};
@@ -226,6 +225,7 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
+                evaluation_context.context = py.dict.fromJSON(evaluation_context);
                 evaluated = py.eval(ctx.__debug, evaluation_context);
                 break;
             case 'compound_context':
@@ -245,6 +245,7 @@ openerp.web.pyeval = function (instance) {
         _(domains).each(function (domain) {
             switch(domain.__ref) {
             case 'domain':
+                evaluation_context.context = py.dict.fromJSON(evaluation_context);
                 result_domain.push.apply(
                     result_domain, py.eval(domain.__debug, evaluation_context));
                 break;
@@ -268,6 +269,7 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
+                evaluation_context.context = py.dict.fromJSON(evaluation_context);
                 evaluated = py.eval(ctx.__debug, evaluation_context);
                 break;
             case 'compound_context':
@@ -327,7 +329,7 @@ openerp.web.pyeval = function (instance) {
         case 'context': case 'compound_context':
             return instance.web.pyeval.eval('contexts', [arg]);
         default:
-            throw new Error(_t("Unknown nonliteral type " + arg.__ref));
+            throw new Error(instance.web._t("Unknown nonliteral type " + arg.__ref));
         }
     };
     /**
@@ -362,11 +364,11 @@ openerp.web.pyeval = function (instance) {
             } catch (e) {
                 d.resolve({ error: {
                     code: 400,
-                    message: _t("Evaluation Error"),
+                    message: instance.web._t("Evaluation Error"),
                     data: {
                         type: 'local_exception',
                         debug: _.str.sprintf(
-                                _t("Local evaluation failure\n%s\n\n%s"),
+                                instance.web._t("Local evaluation failure\n%s\n\n%s"),
                                 e.message, JSON.stringify(source))
                     }
                 }});
