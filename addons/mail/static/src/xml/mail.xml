@@ -115,7 +115,11 @@
             </t>
             <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
             <t t-set="inc" t-value="0"/>
-            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
+            <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner">
+                <span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/>
+                    <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a>
+                    <t t-if="!widget.options.show_link_partner" t-raw="partner[1]"/>
+                </span><t t-set="inc" t-value="inc+1"/>
             </t>
             <t t-if="widget.partner_ids.length>=3">
                 <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
@@ -194,9 +198,10 @@
         <div t-attf-class="oe_msg #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''} oe_msg_#{widget.type}">
 
             <div class='oe_msg_left'>
-                <a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
+                <a t-if="widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}" t-att-title="widget.author_id[1]">
                     <img class="oe_msg_icon" t-att-src="widget.avatar"/>
                 </a>
+                <img t-if="!widget.options.show_link_partner" class="oe_msg_icon" t-att-src="widget.avatar"/>
             </div>
 
             <div class="oe_msg_center">
@@ -221,7 +226,8 @@
                     <t t-if="widget.attachment_ids.length > 0">
                         <div class="oe_msg_attachment_list"></div>
                     </t>
-                    <a t-if="widget.author_id" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a> 
+                    <a t-if="widget.author_id and widget.options.show_link_partner" t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a>
+                    <span t-if="widget.author_id and !widget.options.show_link_partner"><t t-raw="widget.author_id[1]"/></span>
                     <span class='oe_subtle'>•</span>
                     <span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span>
                     <span class='oe_subtle'>•</span>

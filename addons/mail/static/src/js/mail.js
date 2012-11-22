@@ -1394,6 +1394,7 @@ openerp.mail = function (session) {
          *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
          *      When you use this option, the domain is not used for the fetch root.
          *     @param {String} [no_message] Message to display when there are no message
+         *     @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
          */
         init: function (parent, action) {
             this._super(parent, action);
@@ -1411,6 +1412,7 @@ openerp.mail = function (session) {
                 'show_compose_message' : false,
                 'show_compact_message' : false,
                 'compose_placeholder': false,
+                'show_link_partner': true,
                 'view_inbox': false,
                 'message_ids': undefined,
             }, this.action.params);
