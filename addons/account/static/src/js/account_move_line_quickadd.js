@@ -28,11 +28,11 @@ openerp.account.quickadd = function (instance) {
             this.$el.parent().prepend(QWeb.render("AccountMoveLineQuickAdd", {widget: this}));
             
             this.$el.parent().find('.oe_account_select_journal').change(function() {
-                    self.current_journal = parseInt(this.value);
+                    self.current_journal = this.value === '' ? null : parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
             this.$el.parent().find('.oe_account_select_period').change(function() {
-                    self.current_period = parseInt(this.value);
+                    self.current_period = this.value === '' ? null : parseInt(this.value);
                     self.do_search(self.last_domain, self.last_context, self.last_group_by);
                 });
             this.on('edit:after', this, function () {
@@ -42,6 +42,11 @@ openerp.account.quickadd = function (instance) {
             this.on('save:after cancel:after', this, function () {
                 self.$el.parent().find('.oe_account_select_journal').removeAttr('disabled');
                 self.$el.parent().find('.oe_account_select_period').removeAttr('disabled');
+            });
+            var mod = new instance.web.Model("account.move.line", self.dataset.context, self.dataset.domain);
+            mod.call("default_get", [['journal_id','period_id'],self.dataset.context]).then(function(result) {
+                self.current_period = result['period_id'];
+                self.current_journal = result['journal_id'];
             });
             return tmp;
         },
@@ -56,15 +61,10 @@ openerp.account.quickadd = function (instance) {
                 self.journals = result;
             }),mod.call("list_periods", []).then(function(result) {
                 self.periods = result;
-            }),mod.call("default_get", [['journal_id','period_id'],self.last_context]).then(function(result) {
-                self.default_period = result['period_id'];
-                self.default_journal = result['journal_id'];
             })).then(function () {
-                self.current_journal = self.current_journal === null ? self.default_journal : self.current_journal;
-                self.current_period = self.current_period === null ? self.default_period :self.current_period;
                 var o;
-                //self.$('.oe_account_select_journal',self.$el.parent())[0].children().remove().end();
                 self.$el.parent().find('.oe_account_select_journal').children().remove().end();
+                self.$el.parent().find('.oe_account_select_journal').append(new Option('', ''));
                 for (var i = 0;i < self.journals.length;i++){
                     o = new Option(self.journals[i][1], self.journals[i][0]);
                     if (self.journals[i][0] === self.current_journal){
@@ -76,6 +76,7 @@ openerp.account.quickadd = function (instance) {
                     self.$el.parent().find('.oe_account_select_journal').append(o);
                 }
                 self.$el.parent().find('.oe_account_select_period').children().remove().end();
+                self.$el.parent().find('.oe_account_select_period').append(new Option('', ''));
                 for (var i = 0;i < self.periods.length;i++){
                     o = new Option(self.periods[i][1], self.periods[i][0]);
                     self.$el.parent().find('.oe_account_select_period').append(o);
@@ -86,19 +87,15 @@ openerp.account.quickadd = function (instance) {
         },
         search_by_journal_period: function() {
             var self = this;
-            
-            var compoundDomain = new instance.web.CompoundDomain(self.last_domain, 
-                [
-                ["journal_id", "=", self.current_journal], 
-                ["period_id", "=", self.current_period] 
-                ]);
-            self.last_context["journal_id"] = self.current_journal;
-            self.last_context["period_id"] = self.current_period;
+            var domain = [];
+            if (self.current_journal !== null) domain.push(["journal_id", "=", self.current_journal]);
+            if (self.current_period !== null) domain.push(["period_id", "=", self.current_period]);
+            self.last_context["journal_id"] = self.current_journal === null ? false : self.current_journal;
+            self.last_context["period_id"] = self.current_period === null ? false : self.current_period;
             self.last_context["journal_type"] = self.current_journal_type;
             self.last_context["currency"] = self.current_journal_currency;
             self.last_context["analytic_journal_id"] = self.current_journal_analytic;
-            var compoundContext = self.last_context;
-            return self.old_search(compoundDomain, compoundContext, self.last_group_by);
+            return self.old_search(new instance.web.CompoundDomain(self.last_domain, domain), self.last_context, self.last_group_by);
         },
     });
 };

@@ -1428,7 +1428,6 @@ class account_move_line(osv.osv):
         ng = dict(self.pool.get('account.journal').name_search(cr,uid,'',[]))
         ids = ng.keys()
         result = []
-        print ng
         for journal in self.pool.get('account.journal').browse(cr, uid, ids, context=context):
             result.append((journal.id,ng[journal.id],journal.type,
                 bool(journal.currency),bool(journal.analytic_journal_id)))
