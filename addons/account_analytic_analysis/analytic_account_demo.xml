@@ -9,7 +9,17 @@
         <record id="account.analytic_super_product_trainings" model="account.analytic.account">
             <field name="invoice_on_timesheets">True</field>
             <field name="hours_qtt_est">64</field>
+            <field name="fix_price_invoices">True</field>
         </record>
+
+        <record id="hr_timesheet.working_hours_maintenance" model="hr.analytic.timesheet">
+            <field name="account_id" ref="account.analytic_consultancy"/>
+        </record>
+
+        <record id="sale.sale_order_3" model="sale.order">
+            <field name="project_id" ref="account.analytic_super_product_trainings"/>
+        </record>
+
     </data>
 </openerp>
 
