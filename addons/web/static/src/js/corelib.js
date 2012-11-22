@@ -966,13 +966,13 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         if (! options.shadow)
             this.trigger('request', url, payload);
         var request;
-        if (url.url === '/web/session/eval_domain_and_context') {
-            // intercept eval_domain_and_context
-            request = instance.web.pyeval.eval_domains_and_contexts(
-                params)
-        } else {
+//        if (url.url === '/web/session/eval_domain_and_context') {
+//            // intercept eval_domain_and_context
+//            request = instance.web.pyeval.eval_domains_and_contexts(
+//                params)
+//        } else {
             request = this.rpc_function(url, payload);
-        }
+//        }
         request.then(
             function (response, textStatus, jqXHR) {
                 if (! options.shadow)
