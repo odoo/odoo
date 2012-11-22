@@ -295,7 +295,7 @@ class mail_thread(osv.AbstractModel):
                 return false_value(f)
             if f._type == 'many2one':
                 if not isinstance(v, browse_record):
-                    v = self.pool[f.relation].browse(cr, SUPERUSER_ID, v)
+                    v = self.pool[f._obj].browse(cr, SUPERUSER_ID, v)
                 return v.name_get()[0][1]
             if f._type == 'selection':
                 # TODO get translated value

@@ -197,7 +197,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'email_from': fields.char('Email', size=128, help="Email address of the contact", select=1),
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
-                        select=True, help='When sending mails, the default email address is taken from the sales team.'),
+                        select=True, tracked=True, help='When sending mails, the default email address is taken from the sales team.'),
         'create_date': fields.datetime('Creation Date' , readonly=True),
         'email_cc': fields.text('Global CC', size=252 , help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'description': fields.text('Notes'),
@@ -213,9 +213,9 @@ class crm_lead(base_stage, format_address, osv.osv):
         'type':fields.selection([ ('lead','Lead'), ('opportunity','Opportunity'), ],'Type', help="Type is used to separate Leads and Opportunities"),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'stage_id': fields.many2one('crm.case.stage', 'Stage',
+        'stage_id': fields.many2one('crm.case.stage', 'Stage',tracked=True,
                         domain="['&', ('fold', '=', False), '&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
-        'user_id': fields.many2one('res.users', 'Salesperson'),
+        'user_id': fields.many2one('res.users', 'Salesperson',tracked=True),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),
         'day_open': fields.function(_compute_day, string='Days to Open', \
@@ -228,7 +228,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         # Only used for type opportunity
         'probability': fields.float('Success Rate (%)',group_operator="avg"),
-        'planned_revenue': fields.float('Expected Revenue'),
+        'planned_revenue': fields.float('Expected Revenue',tracked=True),
         'ref': fields.reference('Reference', selection=crm._links_get, size=128),
         'ref2': fields.reference('Reference 2', selection=crm._links_get, size=128),
         'phone': fields.char("Phone", size=64),
