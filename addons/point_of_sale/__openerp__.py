@@ -74,6 +74,7 @@ Main Features
         'account_statement_view.xml',
         'account_statement_report.xml',
         'res_users_view.xml',
+        'res_partner_view.xml',
     ],
     'demo': [
         'point_of_sale_demo.xml',
