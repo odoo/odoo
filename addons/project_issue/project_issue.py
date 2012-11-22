@@ -539,7 +539,11 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
+    
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
         return 'Project issue'
@@ -547,10 +551,7 @@ class project_issue(base_stage, osv.osv):
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>converted</b> to task.")
         return self.message_post(cr, uid, ids, body=message, context=context)
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
+    
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>created</b>.")
         return self.message_post(cr, uid, ids, body=message, subtype="mt_issue_new", context=context)
