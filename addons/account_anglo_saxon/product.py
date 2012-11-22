@@ -38,14 +38,14 @@ class product_category(osv.osv):
             relation='account.account',
             string="Income Account",
             view_load=True,
-            help="This account will be used to value outgoing stock for the current product category using sale price"),
+            help="This account will be used to value outgoing stock using sale price."),
         'property_account_expense_categ': fields.property(
             'account.account',
             type='many2one',
             relation='account.account',
             string="Expense Account",
             view_load=True,
-            help="This account will be used to value outgoing stock for the current product category using cost price"),                
+            help="This account will be used to value outgoing stock using cost price."),
 
     }
 product_category()
@@ -68,14 +68,14 @@ class product_template(osv.osv):
             relation='account.account',
             string="Income Account",
             view_load=True,
-            help="This account will be used to value outgoing stock for the current product category using sale price"),
+            help="This account will be used to value outgoing stock using sale price."),
         'property_account_expense': fields.property(
             'account.account',
             type='many2one',
             relation='account.account',
             string="Expense Account",
             view_load=True,
-            help="This account will be used to value outgoing stock for the current product category using cost price"),                
+            help="This account will be used to value outgoing stock using cost price."),
 
     }
 product_template()

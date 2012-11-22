@@ -226,7 +226,7 @@ class account_fiscalyear_close(osv.osv_memory):
         for account in obj_acc_account.browse(cr, uid, account_ids, context={'fiscalyear': fy_id}):
             balance_in_currency = 0.0
             if account.currency_id:
-                cr.execute('SELECT sum(amount_currency) as balance_in_currency FROM account_move_line ' \
+                cr.execute('SELECT sum(COALESCE(amount_currency,0.0)) as balance_in_currency FROM account_move_line ' \
                         'WHERE account_id = %s ' \
                             'AND ' + query_line + ' ' \
                             'AND currency_id = %s', (account.id, account.currency_id.id))

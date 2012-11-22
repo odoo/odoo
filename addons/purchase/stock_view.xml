@@ -18,7 +18,7 @@
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='date']" position="before">
-                    <field name="purchase_id"/>
+                    <field name="purchase_id" domain="[('invoice_method','=','picking')]"  context="{'search_default_partner_id':partner_id,'default_partner_id':partner_id, 'default_invoice_method':'picking'}"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="warehouse_id" groups="stock.group_locations"/>
@@ -48,6 +48,8 @@
                         <button type="object"
                             name="view_picking"
                             string="Incoming Shipments" states="approved"/>
+                        <button type="object"  name="invoice_open"
+                            string="Invoices" attrs="{'invisible': [('state', '=', 'draft')]}"/> 
                     </div>
                 </xpath>
             </field>
@@ -59,7 +61,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,calendar</field>
-            <field name="domain">[('type','=','in')]</field>
+            <field name="domain">[('type','=','in'),('purchase_id.invoice_method','=','picking')]</field>
             <field name="context">{"default_type": "in", "contact_display": "partner_address", "search_default_done": 1, "search_default_to_invoice": 1}</field>
             <field name="search_view_id" ref="stock.view_picking_in_search"/>
             <field name="help" type="html">

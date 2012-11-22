@@ -44,20 +44,23 @@
   text-align: center;
   overflow: hidden;
   -moz-border-radius: 3px;
+  border-collapse: separate;
   -webkit-border-radius: 3px;
   -o-border-radius: 3px;
   -ms-border-radius: 3px;
   border-radius: 3px;
+  border-collapse: separate;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
   -o-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
-  -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
 }
 
 .oe_group_photo {
   width: 100px;
   height: 100px;
   clip: rect(0px, 100px, 100px, 0px);
+  border:none;
 }
 
 .oe_group_details {
@@ -68,22 +71,9 @@
   min-height: 120px;
 }
 
-.oe_group_details a, .oe_group_details a:hover {
-  font-weight: bold;
-  color: #4c4c4c;
-}
-
 .oe_group_details h4 {
   margin: 0;
   font-size: 13px;
-}
-
-.oe_group_details h4 a {
-  color: #4c4c4c;
-}
-
-.oe_group_details h4 a:hover {
-  text-decoration: underline;
 }
 
 .oe_group_details ul {
@@ -92,6 +82,20 @@
   list-style: none;
 }
 
-.oe_group_details li {
+.openerp .oe_group_details li {
   margin: 2px 0;
+}
+
+.openerp .oe_group_button {
+    padding-top: 7px;
+}
+
+.openerp .oe_group_button .oe_group_join {
+    color: white;
+    background-color: #3465A4;
+    background-image: -webkit-linear-gradient(top, #729FCF, #3465A4);
+    background-image:    -moz-linear-gradient(top, #729FCF, #3465A4);
+    background-image:     -ms-linear-gradient(top, #729FCF, #3465A4);
+    background-image:      -o-linear-gradient(top, #729FCF, #3465A4);
+    background-image:         linear-gradient(to bottom, #729FCF, #3465A4);
 }

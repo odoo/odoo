@@ -23,16 +23,17 @@ import time
 import urllib
 import urlparse
 
-import openerp
 from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
+
+class SignupError(Exception):
+    pass
 
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for i in xrange(20))
+    return ''.join(random.choice(chars) for _ in xrange(20))
 
 def now():
     return time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
@@ -48,29 +49,44 @@ class res_partner(osv.Model):
                                 (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
-    def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
-        """ determine a signup url for a given partner """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-
-        # if required, make sure that every partner without user has a valid signup token
-        if context and context.get('signup_valid'):
-            unsigned_ids = [p.id for p in self.browse(cr, uid, ids, context) if not p.user_ids]
-            self.signup_prepare(cr, uid, unsigned_ids, context=context)
-
+    def _get_signup_url_for_action(self, cr, uid, ids, action='login', view_type=None, menu_id=None, res_id=None, context=None):
+        """ generate a signup url for the given partner ids and action, possibly overriding
+            the url state components (menu_id, id, view_type) """
         res = dict.fromkeys(ids, False)
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
         for partner in self.browse(cr, uid, ids, context):
+            # when required, make sure the partner has a valid signup token
+            if context and context.get('signup_valid') and not partner.user_ids:
+                self.signup_prepare(cr, uid, [partner.id], context=context)
+    
+            action_template = None
+            params = {
+                'action': urllib.quote(action),
+                'db': urllib.quote(cr.dbname),
+            }
             if partner.signup_token:
-                params = (urllib.quote(cr.dbname), urllib.quote(partner.signup_token))
-                res[partner.id] = urlparse.urljoin(base_url, "#action=login&db=%s&token=%s" % params)
+                action_template = "?db=%(db)s#action=%(action)s&token=%(token)s"
+                params['token'] = urllib.quote(partner.signup_token)
             elif partner.user_ids:
-                user = partner.user_ids[0]
-                params = (urllib.quote(cr.dbname), urllib.quote(user.login))
-                res[partner.id] = urlparse.urljoin(base_url, "#action=login&db=%s&login=%s" % params)
+                action_template = "?db=%(db)s#action=%(action)s&db=%(db)s&login=%(login)s"
+                params['login'] = urllib.quote(partner.user_ids[0].login)
+            if action_template:
+                if view_type:
+                    action_template += '&view_type=%s' % urllib.quote(view_type)
+                if menu_id:
+                    action_template += '&menu_id=%s' % urllib.quote(str(menu_id))
+                if res_id:
+                    action_template += '&id=%s' % urllib.quote(str(res_id))
+                res[partner.id] = urlparse.urljoin(base_url, action_template % params)
         return res
 
+    def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
+        """ proxy for function field towards actual implementation """
+        return self._get_signup_url_for_action(cr, uid, ids, context=context)
+
     _columns = {
-        'signup_token': fields.char(size=24, string='Signup Token'),
-        'signup_expiration': fields.datetime(string='Signup Expiration'),
+        'signup_token': fields.char('Signup Token'),
+        'signup_expiration': fields.datetime('Signup Expiration'),
         'signup_valid': fields.function(_get_signup_valid, type='boolean', string='Signup Token is Valid'),
         'signup_url': fields.function(_get_signup_url, type='char', string='Signup URL'),
     }
@@ -101,12 +117,12 @@ class res_partner(osv.Model):
         partner_ids = self.search(cr, uid, [('signup_token', '=', token)], context=context)
         if not partner_ids:
             if raise_exception:
-                raise Exception("Signup token '%s' is not valid" % token)
+                raise SignupError("Signup token '%s' is not valid" % token)
             return False
         partner = self.browse(cr, uid, partner_ids[0], context)
         if check_validity and not partner.signup_valid:
             if raise_exception:
-                raise Exception("Signup token '%s' is no longer valid" % token)
+                raise SignupError("Signup token '%s' is no longer valid" % token)
             return False
         return partner
 
@@ -194,7 +210,7 @@ class res_users(osv.Model):
         # check that uninvited users may sign up
         if 'partner_id' not in values:
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
-                raise Exception('Signup is not allowed for uninvited users')
+                raise SignupError('Signup is not allowed for uninvited users')
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True

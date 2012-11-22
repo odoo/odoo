@@ -74,7 +74,7 @@ class share_wizard(osv.TransientModel):
 
     def _user_type_selection(self, cr, uid, context=None):
         """Selection values may be easily overridden/extended via inheritance"""
-        return [('embedded', 'Direct link or embed code'), ('emails','Emails'), ]
+        return [('embedded', _('Direct link or embed code')), ('emails',_('Emails')), ]
 
     """Override of create() to auto-compute the action name"""
     def create(self, cr, uid, values, context=None):

@@ -35,8 +35,8 @@ class share_wizard_portal(osv.TransientModel):
 
     def _user_type_selection(self, cr, uid, context=None):
         selection = super(share_wizard_portal, self)._user_type_selection(cr, uid, context=context)
-        selection.extend([('existing','Users you already shared with'),
-                          ('groups','Existing Groups (e.g Portal Groups)')])
+        selection.extend([('existing',_('Users you already shared with')),
+                          ('groups',_('Existing Groups (e.g Portal Groups)'))])
         return selection
 
     _columns = {

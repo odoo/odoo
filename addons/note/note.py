@@ -20,16 +20,14 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
-from tools.translate import _
-import re
-from openerp.tools.misc import html2plaintext
+from openerp.tools import html2plaintext
 
 class note_stage(osv.osv):
     """ Category of Note """
     _name = "note.stage"
     _description = "Note Stage"
     _columns = {
-        'name': fields.char('Stage Name', required=True),
+        'name': fields.char('Stage Name', translate=True, required=True),
         'sequence': fields.integer('Sequence', help="Used to order the note stages"),
         'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True),
         'fold': fields.boolean('Folded by Default'),
@@ -186,3 +184,21 @@ class note_base_config_settings(osv.osv_memory):
         'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
         'group_note_fancy': fields.boolean('Use fancy layouts for notes', implied_group='note.group_note_fancy'),
     }
+
+class res_users(osv.Model):
+    _name = 'res.users'
+    _inherit = ['res.users']
+    def create(self, cr, uid, data, context=None):
+        user_id = super(res_users, self).create(cr, uid, data, context=context)
+        user = self.browse(cr, uid, uid, context=context)
+        note_obj = self.pool.get('note.stage')
+        data_obj = self.pool.get('ir.model.data')
+        model_id = data_obj.get_object_reference(cr, uid, 'base', 'group_user') #Employee Group
+        group_id = model_id and model_id[1] or False
+        if group_id in [x.id for x in user.groups_id]:
+            for note_xml_id in ['note_stage_01','note_stage_02','note_stage_03','note_stage_04']:
+                data_id = data_obj._get_id(cr, uid, 'note', note_xml_id)
+                stage_id  = data_obj.browse(cr, uid, data_id, context=context).res_id
+                note_obj.copy(cr, uid, stage_id, default = { 
+                                        'user_id': user_id}, context=context)
+        return user_id

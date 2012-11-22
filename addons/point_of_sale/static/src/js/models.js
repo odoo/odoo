@@ -59,10 +59,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
             // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
             $.when(this.load_server_data())
-                .then(function(){ 
+                .done(function(){
                     //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
                     self.ready.resolve();
-                },function(){
+                }).fail(function(){
                     //we failed to load some backend data, or the backend was badly configured.
                     //the error messages will be displayed in PosWidget
                     self.ready.reject();
@@ -78,7 +78,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
 
             var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
-                .pipe(function(users){
+                .then(function(users){
                     self.set('user',users[0]);
 
                     return self.fetch('res.company',
@@ -93,19 +93,19 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'partner_id',
                     ],
                     [['id','=',users[0].company_id[0]]]);
-                }).pipe(function(companies){
+                }).then(function(companies){
                     self.set('company',companies[0]);
 
                     return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
-                }).pipe(function(company_partners){
+                }).then(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
 
                     return self.fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
-                }).pipe(function(currencies){
+                }).then(function(currencies){
                     self.set('currency',currencies[0]);
 
                     return self.fetch('product.uom', null, null);
-                }).pipe(function(units){
+                }).then(function(units){
                     self.set('units',units);
                     var units_by_id = {};
                     for(var i = 0, len = units.length; i < len; i++){
@@ -114,15 +114,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.set('units_by_id',units_by_id);
                     
                     return self.fetch('product.packaging', null, null);
-                }).pipe(function(packagings){
+                }).then(function(packagings){
                     self.set('product.packaging',packagings);
 
                     return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
-                }).pipe(function(users){
+                }).then(function(users){
                     self.set('user_list',users);
 
                     return self.fetch('account.tax', ['amount', 'price_include', 'type']);
-                }).pipe(function(taxes){
+                }).then(function(taxes){
                     self.set('taxes', taxes);
 
                     return self.fetch(
@@ -130,7 +130,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
                         [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
                     );
-                }).pipe(function(sessions){
+                }).then(function(sessions){
                     self.set('pos_session', sessions[0]);
 
                     return self.fetch(
@@ -141,7 +141,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                          'iface_print_via_proxy','iface_cashdrawer','state','sequence_id','session_ids'],
                         [['id','=', self.get('pos_session').config_id[0]]]
                     );
-                }).pipe(function(configs){
+                }).then(function(configs){
                     var pos_config = configs[0];
                     self.set('pos_config', pos_config);
                     self.iface_electronic_scale    =  !!pos_config.iface_electronic_scale;  
@@ -151,15 +151,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
 
                     return self.fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
-                }).pipe(function(shops){
+                }).then(function(shops){
                     self.set('shop',shops[0]);
 
                     return self.fetch('product.packaging',['ean','product_id']);
-                }).pipe(function(packagings){
+                }).then(function(packagings){
                     self.db.add_packagings(packagings);
 
                     return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
-                }).pipe(function(categories){
+                }).then(function(categories){
                     self.db.add_categories(categories);
 
                     return self.fetch(
@@ -169,7 +169,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         [['pos_categ_id','!=', false],['sale_ok','=',true]],
                         {pricelist: self.get('shop').pricelist_id[0]} // context for price
                     );
-                }).pipe(function(products){
+                }).then(function(products){
                     self.db.add_products(products);
 
                     return self.fetch(
@@ -177,11 +177,14 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
                         [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
                     );
-                }).pipe(function(bank_statements){
+                }).then(function(bank_statements){
+                    var journals = new Array();
+                    _.each(bank_statements,function(statement) {
+                        journals.push(statement.journal_id[0])
+                    });
                     self.set('bank_statements', bank_statements);
-
-                    return self.fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
-                }).pipe(function(journals){
+                    return self.fetch('account.journal', undefined, [['id','in', journals]]);
+                }).then(function(journals){
                     self.set('journals',journals);
 
                     // associate the bank statements with their journals. 
@@ -317,7 +320,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
     module.Product = Backbone.Model.extend({
         get_image_url: function(){
-            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+this.get('id');
+            return instance.session.url('/web/binary/image', {model: 'product.product', field: 'image', id: this.get('id')});
         },
     });
 
@@ -462,7 +465,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             var product_list = this.pos.get('product_list');
             var product =  this.get_product(); 
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = product.get('taxes_id');;
             var taxes =  self.pos.get('taxes');
             var taxtotal = 0;
             _.each(taxes_ids, function(el) {
@@ -612,6 +615,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         getTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_with_tax();
+            }), 0);
+        },
+        getDiscountTotal: function() {
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             }), 0);
         },
         getTotalTaxExcluded: function() {

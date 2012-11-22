@@ -3,12 +3,12 @@ openerp.auth_anonymous = function(instance) {
     instance.web.Login.include({
         start: function() {
             var self = this;
-            return $.when(this._super()).pipe(function() {
-                var dblist = self._db_list || [];
+            return $.when(this._super()).then(function() {
+                var dblist = self.db_list || [];
                 if (!self.session.session_is_valid() && dblist.length === 1) {
                     self.remember_credentials = false;
                     // XXX get login/pass from server (via a rpc call) ?
-                    return self.do_login(dblist[0], 'anonymous', 'anonymous')
+                    return self.do_login(dblist[0], 'anonymous', 'anonymous');
                 }
 
             });

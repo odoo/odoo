@@ -391,28 +391,34 @@ class account_invoice(osv.osv):
         '''
         This function opens a window to compose an email, with the edi invoice template message loaded by default
         '''
-        mod_obj = self.pool.get('ir.model.data')
-        template = mod_obj.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')
-        template_id = template and template[1] or False
-        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
-        res_id = res and res[1] or False
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
         ctx = dict(context)
         ctx.update({
             'default_model': 'account.invoice',
             'default_res_id': ids[0],
-            'default_use_template': True,
+            'default_use_template': bool(template_id),
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
             })
         return {
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(res_id, 'form')],
-            'view_id': res_id,
-            'type': 'ir.actions.act_window',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
             'target': 'new',
             'context': ctx,
-            'nodestroy': True,
         }
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -431,7 +437,7 @@ class account_invoice(osv.osv):
             if t['state'] in ('draft', 'cancel') and t['internal_number']== False:
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid Action!'), _('You cannot delete an invoice which is open or paid. You should refund it instead.'))
+                raise osv.except_osv(_('Invalid Action!'), _('You can not delete an invoice which is not cancelled. You should refund it instead.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -983,13 +989,13 @@ class account_invoice(osv.osv):
                 for i in line:
                     i[2]['period_id'] = period_id
 
+            ctx.update(invoice=inv)
             move_id = move_obj.create(cr, uid, move, context=ctx)
             new_move_name = move_obj.browse(cr, uid, move_id, context=ctx).name
             # make the invoice point to that move
             self.write(cr, uid, [inv.id], {'move_id': move_id,'period_id':period_id, 'move_name':new_move_name}, context=ctx)
             # Pass invoice in context in method post: used if you want to get the same
             # account move reference when creating the same invoice after a cancelled one:
-            ctx.update({'invoice':inv})
             move_obj.post(cr, uid, [move_id], context=ctx)
         self._log_event(cr, uid, ids)
         return True
@@ -1725,8 +1731,6 @@ class account_invoice_tax(osv.osv):
             })
         return res
 
-account_invoice_tax()
-
 
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
@@ -1740,16 +1744,14 @@ class res_partner(osv.osv):
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-res_partner()
 
-class mail_message(osv.osv):
-    _name = 'mail.message'
-    _inherit = 'mail.message'
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'account.invoice':
-            self.pool.get('account.invoice').write(cr, uid, [message.res_id], {'sent':True}, context=context)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
+            self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
-mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
