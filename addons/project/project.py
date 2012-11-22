@@ -39,7 +39,7 @@ class project_task_type(osv.osv):
     _columns = {
         'name': fields.char('Stage Name', required=True, size=64, translate=True),
         'description': fields.text('Description'),
-        'sequence': fields.integer('Sequence'),
+        'sequence': fields.char('Sequence'),
         'case_default': fields.boolean('Common to All Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
@@ -50,12 +50,11 @@ class project_task_type(osv.osv):
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
     _defaults = {
-        'sequence': 1,
+        'sequence': lambda obj, cr, uid, context: obj.pool.get('ir.sequence').get(cr, uid, 'project.task.type'),
         'state': 'open',
         'fold': False,
         'case_default': True,
     }
-    _order = 'sequence'
 
 def short_name(name):
         """Keep first word(s) of name to make it small enough
