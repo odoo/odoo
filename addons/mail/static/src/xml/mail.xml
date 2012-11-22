@@ -152,7 +152,7 @@
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
             </tr>
-            <tr class="oe_header_row" t-if="widget.action.params.view_inbox" >
+            <tr class="oe_header_row" t-if="widget.action.params.view_inbox and widget.action.params.show_compose_message" >
                 <td colspan="2">
                     <button type="button" class="oe_write_full oe_highlight">
                         Compose a new message
