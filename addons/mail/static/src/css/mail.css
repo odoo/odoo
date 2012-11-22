@@ -70,7 +70,7 @@
     margin-left: 40px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_footer{
-    padding-left: 4px;
+    margin-left: 4px;
     padding-top: 3px;
     overflow: hidden;
     margin-bottom: 4px;
@@ -384,6 +384,10 @@
     line-height: 12px;
     vertical-align: middle;
 }
+.openerp .oe_mail .oe_msg_footer button.oe_post{
+    position: relative;
+    z-index: 2;
+}
 .openerp .oe_mail .oe_msg_footer button.oe_attach{
     width: 24px;
     overflow: hidden;
@@ -422,13 +426,17 @@
     color: #7C7BAD;
     margin-left: -3px;
 }
+.openerp .oe_mail .oe_msg_footer .oe_attachment_file{
+    cursor: pointer;
+}
 .openerp .oe_mail .oe_msg_footer .oe_attachment_file .oe_form_binary_file{
     display: inline-block;
-    margin-left: -47px;
-    height: 28px;
-    width: 52px;
-    margin-top: -6px;
+    margin-left: -122px;
+    height: 22px;
+    width: 128px;
+    margin-top: -4px;
     filter:none;
+    cursor: pointer;
 }
 .openerp .oe_mail .oe_mail_list_recipients{
     font-size: 12px;
