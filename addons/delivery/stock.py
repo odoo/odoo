@@ -66,7 +66,7 @@ class stock_picking(osv.osv):
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
-        'uom_id': fields.related('uom_id', 'product_id', type='many2one', relation='product.uom', string='UoM', readonly=True),
+        'product_uom_weight': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration",),
         }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
@@ -134,16 +134,8 @@ class stock_picking(osv.osv):
                 invoice_obj.button_compute(cr, uid, [invoice.id], context=context)
         return result
 
-    def _get_uom(self, cr, uid, context=None):
-        try:
-            product = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'product_uom_kgm')
-        except ValueError:
-            # a ValueError is returned if the xml id given is not found in the table ir_model_data
-            return False
-        return product.id
-
     _defaults = {
-        'uom_id': _get_uom,
+        'product_uom_weight': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
     }
 
 stock_picking()
