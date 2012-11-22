@@ -32,7 +32,7 @@ class crm_merge_opportunity(osv.osv_memory):
         lead = self.pool.get('crm.lead')
         record = self.browse(cr, uid, ids[0], context=context)
         opportunities = record.opportunity_ids
-        if opportunities:
+        if len(opportunities):
             #TOFIX: why need to check lead_ids here
             lead_ids = [opportunities[0].id]
             self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
