@@ -106,6 +106,7 @@ class configmanager(object):
                          help="specify additional addons paths (separated by commas).",
                          action="callback", callback=self._check_addons_path, nargs=1, type="string")
         group.add_option("--load", dest="server_wide_modules", help="Comma-separated list of server-wide modules default=web")
+        group.add_option("--gevent", dest="gevent", action="store_true", my_default=False, help="Activate the GEvent mode, this also desactivate the cron.")
         parser.add_option_group(group)
 
         # XML-RPC / HTTP
@@ -380,7 +381,7 @@ class configmanager(object):
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
                 'xmlrpcs_interface', 'xmlrpcs_port', 'xmlrpcs',
                 'static_http_enable', 'static_http_document_root', 'static_http_url_prefix',
-                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level'
+                'secure_cert_file', 'secure_pkey_file', 'dbfilter', 'log_handler', 'log_level', 'gevent'
                 ]
 
         for arg in keys:

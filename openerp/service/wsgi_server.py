@@ -424,10 +424,11 @@ def serve():
     # TODO Change the xmlrpc_* options to http_*
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
-    #httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
-    # TODO  GEVENT if event
-    from gevent.wsgi import WSGIServer
-    httpd = WSGIServer((interface, port), application)
+    if not openerp.tools.config.options["gevent"]:
+        httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+    else:
+        from gevent.wsgi import WSGIServer
+        httpd = WSGIServer((interface, port), application)
     _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     httpd.serve_forever()
 
