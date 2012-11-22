@@ -70,7 +70,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             - buttons: The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button label,
                 value = click handler) or a list of dictionaries (each element in the dictionary is send to the corresponding
                 method of a jQuery element targeting the <button> tag).
-            - destroy_on_close: Default to true. If true and the dialog is closed, it is automatically destroyed.
+            - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
         @param {jQuery object} content Some content to replace this.$el .
     */
     init: function (parent, options, content) {
@@ -141,7 +141,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     /**
-        Open the popup. Init the dialog if it is not already inited.
+        Opens the popup. Inits the dialog if it is not already inited.
 
         @param {dictionary} options Additional options, see the options param in init().
         @return this
@@ -171,7 +171,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         });
     },
     /**
-        Initialize the popup.
+        Initializes the popup.
 
         @param {dictionary} options Additional options, see the options param in init().
         @return The result returned by start().
@@ -192,7 +192,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         return res;
     },
     /**
-        Close the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
+        Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
     */
     close: function() {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
@@ -209,7 +209,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         }
     },
     /**
-        Destroy the popup, also closes it.
+        Destroys the popup, also closes it.
     */
     destroy: function () {
         this.$buttons.remove();
