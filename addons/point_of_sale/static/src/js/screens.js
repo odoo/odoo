@@ -467,6 +467,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         close: function(){
             this._super();
             clearInterval(this.intervalID);
+            this.pos.proxy.weighting_end();
         },
     });
 
