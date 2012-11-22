@@ -1175,6 +1175,7 @@ class task(base_stage, osv.osv):
                     #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task, self).write(cr, uid, [t.id], write_vals, context=context)
+                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)   
             result = True
         else:
             result = super(task, self).write(cr, uid, ids, vals, context=context)
@@ -1286,7 +1287,11 @@ class task(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="project.mt_task_new", context=context)
-
+    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
+        """ Override of the (void) default notification method. """
+        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
+            context=context)
     def case_open_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Task has been <b>started</b>."), subtype="project.mt_task_started", context=context)
 
