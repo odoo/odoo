@@ -401,7 +401,6 @@
             <field name="name">Miscellaneous Journal - (test)</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
-            <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
             <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
@@ -410,7 +409,6 @@
             <field name="name">Opening Entries Journal - (test)</field>
             <field name="code">TOEJ</field>
             <field name="type">situation</field>
-            <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_opening_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="o_income"/>
             <field model="account.account" name="default_credit_account_id" ref="o_expense"/>
@@ -422,7 +420,6 @@
             <field name="name">USD Bank Journal - (test)</field>
             <field name="code">TUBK</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account_journal_bank_view"/>
             <field model="account.account" name="default_debit_account_id" ref="usd_bnk"/>
             <field model="account.account" name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
