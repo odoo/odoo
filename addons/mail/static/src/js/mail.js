@@ -590,11 +590,11 @@ openerp.mail = function (session) {
         */
         on_compose_expandable: function (event) {
 
-            if (!this.stay_open && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
+            if ((!this.stay_open || event.type == 'click') && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }
-            if (!this.stay_open && this.show_composer) {
+            if (!this.stay_open && this.show_composer && event.type != 'blur') {
                 this.$('textarea:not(.oe_compact):first').focus();
             }
             return true;
@@ -724,7 +724,7 @@ openerp.mail = function (session) {
         on_message_reply:function (event) {
             event.stopPropagation();
             this.create_thread();
-            this.thread.on_compose_message();
+            this.thread.on_compose_message(event);
             return false;
         },
 
@@ -1135,9 +1135,9 @@ openerp.mail = function (session) {
         * Call the on_compose_expandable method to allow the user to write his message.
         * (Is call when a user click on "Reply" button)
         */
-        on_compose_message: function () {
+        on_compose_message: function (event) {
             this.instantiate_compose_message();
-            this.compose_message.on_compose_expandable();
+            this.compose_message.on_compose_expandable(event);
             return false;
         },
 
