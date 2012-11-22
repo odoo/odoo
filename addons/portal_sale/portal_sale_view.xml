@@ -53,32 +53,24 @@
             <field name="name">Invoices</field>
             <field name="res_model">account.invoice</field>
             <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','out_invoice')]</field>
-            <field name="context">{'type':'out_invoice', 'journal_type': 'sale'}</field>
+            <field name="domain">[('type','in',['out_invoice','out_refund'])]</field>
+            <field name="context">{'type':['out_invoice','out_refund'], 'journal_type': 'sale'}</field>
             <field name="search_view_id" ref="account.view_account_invoice_filter"/>
             <field name="help">We haven't sent you any invoice.</field>
         </record>
+
         <record id="portal_action_invoices_tree_spec" model="ir.actions.act_window.view">
             <field name="act_window_id" ref="portal_action_invoices"/>
             <field name="view_id" ref="account.invoice_tree"/>
             <field name="view_mode">tree</field>
             <field name="sequence" eval="0"/>
         </record>
+
         <record id="portal_action_invoices_form_spec" model="ir.actions.act_window.view">
             <field name="act_window_id" ref="portal_action_invoices"/>
             <field name="view_id" ref="account.invoice_form"/>
             <field name="view_mode">form</field>
             <field name="sequence" eval="1"/>
-        </record>
-
-        <record id="action_invoice_tree2" model="ir.actions.act_window">
-            <field name="name">Customer Refunds</field>
-            <field name="res_model">account.invoice</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('type','=','out_refund')]</field>
-            <field name="context">{'type':'out_refund'}</field>
-            <field name="search_view_id" ref="account.view_account_invoice_filter"/>
-            <field name="help">We haven't sent you any refund.</field>
         </record>
 
         <menuitem name="Quotations" id="portal_quotations" parent="portal.portal_orders"
@@ -87,8 +79,6 @@
             action="action_orders_portal" sequence="20"/>
         <menuitem name="Invoices" id="portal_invoices" parent="portal.portal_orders"
             action="portal_action_invoices" sequence="30"/>
-        <menuitem name="Customer Refunds" id="portal_payments" parent="portal.portal_orders"
-            action="action_invoice_tree2" sequence="40"/>
 
     </data>
 </openerp>
