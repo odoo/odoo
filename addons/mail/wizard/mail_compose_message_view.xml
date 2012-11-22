@@ -22,7 +22,7 @@
                                 and 
                             </span>
                             <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
-                                context="{'force_email':True}" required="1"/>
+                                context="{'force_email':True}" groups="base.group_user"/>
                         </div>
                         <field name="subject" placeholder="Subject..."/>
                     </group>

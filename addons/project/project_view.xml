@@ -63,14 +63,14 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight"/>
-                    <button name="set_done" string="Close Project" type="object" states="open,pending"/>
-                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close"/>
-                    <button name="set_pending" string="Pending" type="object" states="open"/>
-                    <button name="set_template" string="Set as Template" type="object" states="open"/>
-                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight"/>
-                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight"/>
-                    <button name="set_cancel" string="Cancel" type="object" states="open,pending"/>
+                    <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight" groups="base.group_user"/>
+                    <button name="set_done" string="Close Project" type="object" states="open,pending" groups="base.group_user"/>
+                    <button name="set_open" string="Re-open project" type="object" states="cancelled,close" groups="base.group_user"/>
+                    <button name="set_pending" string="Pending" type="object" states="open" groups="base.group_user"/>
+                    <button name="set_template" string="Set as Template" type="object" states="open" groups="base.group_user"/>
+                    <button string="New Project Based on Template" name="duplicate_template"  type="object" states="template" context="{'parent_id':parent_id}" class="oe_highlight" groups="base.group_user"/>
+                    <button name="reset_project" string="Reset as Project" type="object" states="template" class="oe_highlight" groups="base.group_user"/>
+                    <button name="set_cancel" string="Cancel" type="object" states="open,pending" groups="base.group_user"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,close" statusbar_colors='{"pending":"blue"}' readonly="1"/>
                 </header>
                 <sheet string="Project">
@@ -85,7 +85,7 @@
                             <label for="use_tasks"/>
                         </div>
                     </div>
-                    <div class="oe_right oe_button_box" name="buttons">
+                    <div class="oe_right oe_button_box" name="buttons" groups="base.group_user">
                         <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
                             type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
                         <button name="attachment_tree_view" string="Documents" type="object"/>
@@ -152,7 +152,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues."/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues." groups="base.group_user"/>
                     <field name="message_ids" widget="mail_thread"/>
                 </div>
                 </form>
