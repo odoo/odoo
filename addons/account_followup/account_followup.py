@@ -67,7 +67,6 @@ class followup_line(osv.osv):
         'manual_action_note':fields.text('Action To Do', placeholder="e.g. Give a phone call, check with others , ..."),
         'manual_action_responsible_id':fields.many2one('res.users', 'Assign a Responsible', ondelete='set null'),
         'email_template_id':fields.many2one('email.template', 'Email Template', ondelete='set null'),
-        'email_body':fields.related('email_template_id', 'body_html', type='text', string="Email Message", relation="email.template", translate="True"),
     }
     _order = 'delay'
     _sql_constraints = [('days_uniq', 'unique(followup_id, delay)', 'Days of the follow-up levels must be different')] #TODO: ADD FOR multi-company!
@@ -87,18 +86,6 @@ Best Regards,
     'email_template_id': _get_default_template,
     }
 
-
-
-
-    def on_change_template(self, cr, uid, ids, template_id, context=None):
-        #result = {}
-        values = {}
-        if template_id:
-            template  = self.pool.get('email.template').browse(cr, uid, template_id, context=context)
-            values = {
-                'email_body':template.body_html,
-                }
-        return {'value': values}
 
 
 
@@ -163,7 +150,6 @@ class res_partner(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
         res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                                        toolbar=toolbar, submenu=submenu)
-
         if view_type == 'form' and context and 'Followupfirst' in context.keys() and context['Followupfirst'] == True:
             doc = etree.XML(res['arch'], parser=None, base_url=None)
             first_node = doc.xpath("//page[@string='Payments Follow-up']")

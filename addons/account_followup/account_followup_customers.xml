@@ -15,10 +15,8 @@
                     <field name="payment_next_action"/>
                     <field name="user_id" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
-                    <field name="credit"/>
                     <field name="payment_responsible_id"/>
-                    <field name="latest_followup_level_id"/>
-                    <field name="latest_followup_date"/>
+                    <field name="credit"/>
                 </tree>
             </field>
         </record>
@@ -32,7 +30,7 @@
                     <group string="Follow-up">
                         <filter string="Partners with Credits" domain="[('credit', '>', 0.0)]" name="credits"/>
                         <separator/>
-                        <filter string="Follow-ups to do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d'))]" name="todo"/>
+                        <filter string="Follow-ups To Do" domain="[('payment_next_action_date', '&lt;=', time.strftime('%%Y-%%m-%%d')), ('credit', '>', 0.0)]" name="todo"/>
                         <separator/>
                         <filter string="No Responsible" domain="[('payment_responsible_id', '=', False)]"/>
                         <filter string="My Follow-ups" domain="[('payment_responsible_id','=', uid)]"/>
@@ -76,7 +74,7 @@
             <field name="view_mode">tree,form</field>
             <field name="context">{} </field>
             <!--<field name="domain">[('credit', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
-            <field name="context">{'Followupfirst':True, 'search_default_todo': True, 'search_default_credits': True} </field>
+            <field name="context">{'Followupfirst':True, 'search_default_todo': True} </field>
             <field name="search_view_id" ref="customer_followup_search_view"/>
         </record>
 
@@ -115,7 +113,7 @@
                         <label for="payment_note" class="oe_edit_only"/>
                         <field name="payment_note" placeholder="e.g. 50%% before 15th of may, balance before 1st of july."/>
                         <p class="oe_grey"> <!--maybe only when accountmovelines empty-->
-                            Here is the history of the transactions of this
+                            Below is the history of the transactions of this
                             customer. You can set an invoice in litigation in
                             order to not include it in the next payment
                             follow-ups.

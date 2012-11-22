@@ -11,7 +11,6 @@
                     <field name="send_email"/>
                     <field name="send_letter"/>
                     <field name="manual_action"/>
-                    <!--<field name="start"/>-->
                 </tree>
             </field>
         </record>
@@ -92,20 +91,17 @@
             <field name="model">account_followup.followup</field>
             <field name="arch" type="xml">
                 <tree string="Follow-up">
-                    <!--<field name="name"/>-->
                     <field name="company_id" /> <!--groups="base.group_multi_company"-->
                 </tree>
             </field>
-        </record>
+        </record>        
 
         <record id="view_account_followup_filter" model="ir.ui.view">
             <field name="name">account.followup.select</field>
             <field name="model">account_followup.followup</field>
             <field name="arch" type="xml">
                 <search string="Search Follow-up">
-                    <!-- <field name="name" string="Follow-up"/> -->
                     <field name="company_id" groups="base.group_multi_company"/>
-
                 </search>
             </field>
         </record>

@@ -139,7 +139,7 @@ class account_followup_print(osv.osv_memory):
 
 
 
-  
+
 
 
 
@@ -153,7 +153,7 @@ class account_followup_print(osv.osv_memory):
         nbprints = 0
         resulttext = " "
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
-            if partner.max_followup_id.manual_action:                
+            if partner.max_followup_id.manual_action:
                 partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)                
                 nbmanuals = nbmanuals + 1                
                 key = partner.partner_id.payment_responsible_id.name or _("Nobody")
@@ -167,13 +167,15 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
                 nbprints += 1
-                partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent"), context=context)
+                partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent from follow_up <I>") + partner.partner_id.latest_followup_level_id.name, context=context) + "</I>"
         resulttext = resulttext + str(nbmails) + " emails sent (" + str(nbunknownmails) + " with unknown email) \n " + str(nbprints) + " letters in report \n " + str(nbmanuals) + " total manual action(s) assigned: \n \n"
         needprinting = False
         if nbprints > 0:
             needprinting = True
-        for item in manuals:
-            resulttext = resulttext + item + ":" + str(manuals[item]) +  "\n"
+        resulttext += "<ul>"
+        for item in manuals:            
+            resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) +  "\n </li>"
+        resulttext += "</ul>"
         result = {}
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         result['needprinting'] = needprinting
@@ -214,9 +216,6 @@ class account_followup_print(osv.osv_memory):
             'type': 'ir.actions.act_window',
             'target': 'new',
             }
-    
-    
- 
 
     def _get_msg(self, cr, uid, context=None):
         return self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.follow_up_msg
@@ -267,7 +266,7 @@ class account_followup_print(osv.osv_memory):
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])
-            #if result['start'] == 'end_of_month': -> fait rien du tout
+            #if result['start'] == 'end_of_month': -> did not do anything
             #    print "Important date change start:", fups[old][0]#.strftime("%Y-%m%-%d")
             #   fups[old][0].replace(day=1)
             #    print "Important date change end:", fups[old][0]#.strftime("%Y-%m%-%d")
@@ -280,10 +279,8 @@ class account_followup_print(osv.osv_memory):
         
         #Fill dictionary of accountmovelines to_update with the partners that need to be updated
         for partner_id, followup_line_id, date_maturity,date, id in move_lines:
-            
             if not partner_id:
                 continue
-
             if followup_line_id not in fups:
                 continue
             stat_line_id = partner_id * 10000 + company_id
@@ -297,7 +294,6 @@ class account_followup_print(osv.osv_memory):
                     partner_list.append(stat_line_id)
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
-        
 
 account_followup_print()
 

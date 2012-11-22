@@ -76,12 +76,12 @@
             <field name="arch" type="xml">
             <form string="Summary of actions" version="7.0">
                 <header>
-                    <field name="description" readonly="True" />
+                    <field name="description" widget="html" class="oe_view_only"/>
                 </header>
                 <footer>
                 	<field name="needprinting" invisible="1"/>
                 	<div attrs="{'invisible':[('needprinting','=', False)]}">
-                	<button name="do_report" string="Download report here" type="object" class="oe_highlight"/>                
+                	<button name="do_report" string="Download Letters" type="object" class="oe_highlight"/>                
                 	</div>
                 	<div attrs="{'invisible':[('needprinting','!=', False)]}">
                 	<button name="do_done" string="Close" type="object" class="oe_highlight"/>
