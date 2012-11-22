@@ -394,11 +394,10 @@ class project_issue(base_stage, osv.osv):
         if vals.get('project_id'):
             for id in ids:
                 self._subscribe_project_followers_to_issue(cr, uid, id, context=context)
+        if vals.get('stage_id'):
+            self.stage_set_send_note(cr, uid, ids,vals.get('stage_id'), context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
     
-    def issue_start_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Issue has been <b>started</b>."), subtype="mt_issue_change", context=context)
-
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if not task_id:
             return {'value': {}}
