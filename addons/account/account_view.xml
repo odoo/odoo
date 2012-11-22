@@ -1003,8 +1003,7 @@
                     <field name="move_id" required="0"/>
                     <field name="debit" sum="Total Debit"/>
                     <field name="credit" sum="Total Credit"/>
-                    <field name="reconcile_partial_id"/>
-                    <field name="reconcile_id"/>
+                    <field name="reconcile"/>
                     <field name="invoice" invisible="1"/>
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
@@ -1183,7 +1182,7 @@
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Click to register a new journal item.
+                Select the period and the journal you want to fill.
               </p><p>
                 This view can be used by accountants in order to quickly record
                 entries in OpenERP. If you want to record a supplier invoice,
