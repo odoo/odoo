@@ -991,8 +991,8 @@
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
-                    <field name="journal_id" invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" invisible="context.get('period_id',False)"/>
+                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
+                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="ref"/>
@@ -1010,6 +1010,7 @@
                     <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
                     <field name="state" />
+                    <field name="company_id" invisible="1"/>
                 </tree>
             </field>
         </record>
