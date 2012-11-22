@@ -19,8 +19,9 @@
 #
 ##############################################################################
 
-from osv import osv
-import tools
+from openerp.osv import osv
+from openerp.tools import append_content_to_html
+from openerp.tools.translate import _
 
 class mail_mail(osv.Model):
     """ Update of mail_mail class, to add the signin URL to notifications. """
@@ -36,5 +37,6 @@ class mail_mail(osv.Model):
         if partner:
             context = dict(context or {}, signup_valid=True)
             partner = self.pool.get('res.partner').browse(cr, uid, partner.id, context)
-            body = tools.append_content_to_html(body, ("<div><p>Log in our portal at: %s</p></div>" % partner.signup_url), plaintext=False)
+            text = _("""Access your personal documents through <a href="%s">our Customer Portal</a>""") % partner.signup_url
+            body = append_content_to_html(body, ("<div><p>%s</p></div>" % text), plaintext=False)
         return body

@@ -36,20 +36,20 @@ openerp_mail_followers = function(session, mail) {
 
         start: function() {
             // use actual_mode property on view to know if the view is in create mode anymore
-            this.view.on("change:actual_mode", this, this._check_visibility);
-            this._check_visibility();
+            this.view.on("change:actual_mode", this, this.on_check_visibility_mode);
+            this.on_check_visibility_mode();
             this.reinit();
             this.bind_events();
             this._super();
         },
 
+        on_check_visibility_mode: function () {
+            this.set({"force_invisible": this.view.get("actual_mode") == "create"});
+        },
+
         set_value: function(_value) {
             this.value = _value;
             this._super(_value);
-        },
-
-        _check_visibility: function() {
-            this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
         reinit: function() {
@@ -194,6 +194,7 @@ openerp_mail_followers = function(session, mail) {
         display_subtypes:function (data) {
             var self = this;
             var subtype_list_ul = this.$('.oe_subtype_list');
+            subtype_list_ul.empty();
             var records = data[this.view.datarecord.id || this.view.dataset.ids[0]].message_subtype_data;
             _(records).each(function (record, record_name) {
                 record.name = record_name;
