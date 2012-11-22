@@ -1240,6 +1240,7 @@ openerp.mail = function (session) {
             } else {
                 message.appendTo(self.$el);
             }
+            message.$el.hide().fadeIn(500);
 
             return message
         },
