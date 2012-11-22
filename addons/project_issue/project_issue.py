@@ -387,6 +387,7 @@ class project_issue(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
+        print "logged_fields-------",logged_fields
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -394,7 +395,12 @@ class project_issue(base_stage, osv.osv):
         if vals.get('project_id'):
             for id in ids:
                 self._subscribe_project_followers_to_issue(cr, uid, id, context=context)
+        st = self.pool.get('project.task.type').browse(cr, uid, vals.get('stage_id'), context=context);
+        if st.state  =='open':
+            self.issue_start_send_note(cr, uid, ids, context=context)
         return super(project_issue, self).write(cr, uid, ids, vals, context)
+    def issue_start_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Issue has been <b>started</b>."), subtype="mt_issue_change", context=context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
         if not task_id:
