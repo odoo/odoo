@@ -1334,7 +1334,7 @@ instance.web.View = instance.web.Widget.extend({
         new instance.web.DataExport(this, this.dataset).open();
     },
     sidebar_eval_context: function () {
-        return $.when();
+        return $.when({});
     },
     /**
      * Asks the view to reload itself, if the reloading is asynchronous should
