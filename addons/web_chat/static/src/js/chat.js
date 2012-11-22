@@ -26,8 +26,10 @@ openerp.web_chat = function(instance) {
         },
         poll: function() {
             var self = this;
-            var model = new instance.web.Model("chat.message");
-            model.call("poll", [this.last], {context: new instance.web.CompoundContext()}, {shadow: true}).then(function(result) {
+            this.rpc("/chat/poll", {
+                last: this.last,
+                context: new instance.web.CompoundContext()
+            }, {shadow: true}).then(function(result) {
                 self.last = result.last;
                 _.each(result.res, function(mes) {
                     $("<div>").text(mes).appendTo(self.$(".oe_chat_content"));
