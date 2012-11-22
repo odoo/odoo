@@ -573,12 +573,7 @@ openerp.mail = function (session) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
-                            if (thread.parent_message) {
-                                self.$el.remove();
-                                self.parent_thread.compose_message = null;
-                            } else {
-                                self.on_cancel();
-                            }
+                            self.on_cancel();
                         });
                         //session.web.unblockUI();
                     });
@@ -1291,8 +1286,10 @@ openerp.mail = function (session) {
             var messages = _.sortBy( this.messages, function (val) { return val.id; });
             var it = _.indexOf( messages, message );
 
-            var msg_up = messages[it-1];
-            var msg_down = messages[it+1];
+            var msg_up = message.$el.prev('.oe_msg');
+            var msg_down = message.$el.next('.oe_msg');
+            var msg_up = msg_up.hasClass('oe_msg_expandable') ? _.find( this.messages, function (val) { return val.$el[0] == msg_up[0]; }) : false;
+            var msg_down = msg_down.hasClass('oe_msg_expandable') ? _.find( this.messages, function (val) { return val.$el[0] == msg_down[0]; }) : false;
 
             var message_dom = [ ["id", "=", message.id] ];
 
