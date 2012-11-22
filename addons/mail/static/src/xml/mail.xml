@@ -75,9 +75,11 @@
         <t t-foreach='widget.attachment_ids' t-as='attachment'>
             <t t-if="attachment.filetype !== 'webimage'">
                 <div t-attf-class="oe_attachment #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'><img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img></a>
+                    <a t-att-href='attachment.url'>
+                        <img t-att-src="'/mail/static/src/img/mimetypes/' + attachment.filetype + '.png'"></img>
+                        <div class='oe_name'><t t-raw='attachment.name' /></div>
+                    </a>
                     <div class='oe_delete oe_e' title="Delete this attachment" t-attf-data-id="{attachment.id}">[</div>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
@@ -85,9 +87,11 @@
             </t>
             <t t-if="attachment.filetype === 'webimage'">
                 <div t-attf-class="oe_attachment oe_preview #{attachment.upload ? 'oe_uploading' : ''}">
-                    <a t-att-href='attachment.url'><img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img></a>
+                    <a t-att-href='attachment.url'>
+                        <img t-att-src="widget.attachments_resize_image(attachment.id, [100,80])"></img>
+                        <div class='oe_name'><t t-raw='attachment.name' /></div>
+                    </a>
                     <div class='oe_delete oe_e'>[</div>
-                    <div class='oe_name'><t t-raw='attachment.name' /></div>
                     <div class='oe_progress_bar'>
                         uploading
                     </div>
