@@ -149,6 +149,7 @@ CREATE TABLE res_users (
     active boolean default True,
     login varchar(64) NOT NULL UNIQUE,
     password varchar(64) default null,
+    lang varchar(64) default '',
     -- No FK references below, will be added later by ORM
     -- (when the destination rows exist)
     company_id int,
