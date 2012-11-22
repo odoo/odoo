@@ -350,8 +350,8 @@
             parent="account.menu_multi_currency"/>
 
         <!--
-    # Account Journal
-    -->
+        # Account Journal
+        -->
 
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
@@ -1178,7 +1178,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree_account_move_line_quickadd</field>
-            <field name="context">{'journal_type':'general','view_mode':True}</field>
+            <field name="context">{'journal_type':'general'}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
