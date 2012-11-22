@@ -52,8 +52,27 @@ instance.web.dialog = function(element) {
     return result;
 };
 
+/**
+    A useful class to handle dialogs.
+
+    Attributes:
+    - $buttons: A jQuery element targeting a dom part where buttons can be added. It always exists
+    during the lifecycle of the dialog.
+*/
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
+    /**
+        Constructor.
+
+        @param {Widget} parent
+        @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
+            dictionary can contain the following keys:
+            - buttons: The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button label,
+                value = click handler) or a list of dictionaries (each element in the dictionary is send to the corresponding
+                method of a jQuery element targeting the <button> tag).
+            - destroy_on_close: Default to true. If true and the dialog is closed, it is automatically destroyed.
+        @param {jQuery object} content Some content to replace this.$el .
+    */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -121,20 +140,18 @@ instance.web.Dialog = instance.web.Widget.extend({
             this._super();
         }
     },
+    /**
+        Open the popup. Init the dialog if it is not already inited.
+
+        @param {dictionary} options Additional options, see the options param in init().
+        @return this
+    */
     open: function(options) {
-        var o = this._get_options(options);
-        if (o.buttons) {
-            this._add_buttons(o.buttons);
-            delete(o.buttons);
-        }
         if (!this.dialog_inited) {
-            this.init_dialog(o);
+            this.init_dialog(options);
         }
-        instance.web.dialog(this.$el, o).dialog('open');
+        this.$el.dialog('open');
         this.$el.dialog("widget").append(this.$buttons);
-        if (o.height === 'auto' && o.max_height) {
-            this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
-        }
         return this;
     },
     _add_buttons: function(buttons) {
@@ -153,13 +170,30 @@ instance.web.Dialog = instance.web.Widget.extend({
             });
         });
     },
+    /**
+        Initialize the popup.
+
+        @param {dictionary} options Additional options, see the options param in init().
+        @return The result returned by start().
+    */
     init_dialog: function(options) {
+        var options = this._get_options(options);
+        if (options.buttons) {
+            this._add_buttons(options.buttons);
+            delete(options.buttons);
+        }
         this.renderElement();
         instance.web.dialog(this.$el, options);
+        if (options.height === 'auto' && options.max_height) {
+            this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
+        }
         this.dialog_inited = true;
         var res = this.start();
         return res;
     },
+    /**
+        Close the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
+    */
     close: function() {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
             this.$el.dialog('close');
@@ -174,6 +208,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_closing = undefined;
         }
     },
+    /**
+        Destroy the popup, also closes it.
+    */
     destroy: function () {
         this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
