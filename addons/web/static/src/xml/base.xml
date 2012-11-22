@@ -501,8 +501,11 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
-    <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <t t-if="view_manager.active_view === 'form'">
+        <option value="perm_read">View Log (perm_read)</option>
+        <option value="toggle_layout_outline">Toggle Form Layout Outline</option>
+        <option value="set_defaults">Set Defaults</option>
+    </t>
     <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>

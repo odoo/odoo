@@ -809,6 +809,9 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'toggle_layout_outline':
                 current_view.rendering_engine.toggle_layout_debugging();
                 break;
+            case 'set_defaults':
+                current_view.open_defaults_dialog();
+                break;
             case 'translate':
                 this.do_action({
                     name: "Technical Translation",
