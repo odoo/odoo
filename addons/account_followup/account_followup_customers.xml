@@ -111,7 +111,7 @@
                             </div>
                         </group>
                         <label for="payment_note" class="oe_edit_only"/>
-                        <field name="payment_note" placeholder="e.g. 50%% before 15th of may, balance before 1st of july."/>
+                        <field name="payment_note" placeholder="e.g. 50%% before 15th of May, balance before 1st of July."/>
                         <p class="oe_grey"> <!--maybe only when accountmovelines empty-->
                             Below is the history of the transactions of this
                             customer. You can set an invoice in litigation in
@@ -152,7 +152,8 @@
         </record>
 
         <!-- Menus about followup of customers -->
-        <menuitem id="account_followup_s" action="action_customer_followup" parent="menu_finance_followup" name="Do Manual Follow-Ups" sequence="3"/>
+        <menuitem id="account_followup_s" action="action_customer_followup" 
+            parent="menu_finance_followup" name="Do Manual Follow-Ups" sequence="3"/>
 
     </data>
 </openerp>

@@ -87,13 +87,13 @@ class account_followup_sending_results(osv.osv_memory):
     def _get_description(self, cr, uid, context=None):
         res = ""
         if context!=None:
-            res = context['description']            
+            res = context['description']
         return res
     
     def _get_need_printing(self, cr, uid, context=None):
         res = False
         if context!=None:
-            if context['needprinting']:                
+            if context['needprinting']:
                 res = context['needprinting']
         return res
     
@@ -154,28 +154,33 @@ class account_followup_print(osv.osv_memory):
         resulttext = " "
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
             if partner.max_followup_id.manual_action:
-                partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)                
-                nbmanuals = nbmanuals + 1                
+                partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)
+                nbmanuals = nbmanuals + 1
                 key = partner.partner_id.payment_responsible_id.name or _("Nobody")
-                if not key in manuals.keys():                
+                if not key in manuals.keys():
                     manuals[key]= 1
                 else:
                     manuals[key] = manuals[key] + 1
-            if partner.max_followup_id.send_email:                
+            if partner.max_followup_id.send_email:
                 nbunknownmails += partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
                 nbmails += 1
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
                 nbprints += 1
-                partner_obj.message_post(cr, uid, [partner.partner_id.id], body=_("Follow-up letter will be sent from follow_up <I>") + partner.partner_id.latest_followup_level_id.name, context=context) + "</I>"
-        resulttext = resulttext + str(nbmails) + " emails sent (" + str(nbunknownmails) + " with unknown email) \n " + str(nbprints) + " letters in report \n " + str(nbmanuals) + " total manual action(s) assigned: \n \n"
+                message = _("Follow-up letter of ") + "\"" + partner.partner_id.latest_followup_level_id_without_lit.name + "\"" + "</I>" + _(" will be sent")
+                partner_obj.message_post(cr, uid, [partner.partner_id.id], body=message, context=context)
+        if nbunknownmails == 0:
+            resulttext += str(nbmails) + _(" emails sent")
+        else:
+            resulttext += str(nbmails) + _(" emails should have been sent, but ") + str(nbunknownmails) + _(" had unknown email addresses") + "\n <BR/> "
+        resulttext += "<BR/>" + str(nbprints) + _(" letters in report") + " \n <BR/>" + str(nbmanuals) + _(" total manual action(s) assigned:")
         needprinting = False
         if nbprints > 0:
             needprinting = True
-        resulttext += "<ul>"
-        for item in manuals:            
+        resulttext += "<p><ul>"
+        for item in manuals:
             resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) +  "\n </li>"
-        resulttext += "</ul>"
+        resulttext += "</ul></p>"
         result = {}
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         result['needprinting'] = needprinting

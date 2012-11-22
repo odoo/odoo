@@ -32,8 +32,6 @@ class followup(osv.osv):
     _description = 'Account Follow-up'
     _rec_name = 'name'
     _columns = {
-        #'name': fields.char('Name', size=64, required=True),
-        #'description': fields.text('Description'),
         'followup_line': fields.one2many('account_followup.followup.line', 'followup_id', 'Follow-up'),
         'company_id': fields.many2one('res.company', 'Company', required=True),
         'name': fields.related('company_id', 'name', string = "Name"),
@@ -58,7 +56,7 @@ class followup_line(osv.osv):
     _columns = {
         'name': fields.char('Follow-Up Action', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of follow-up lines."),
-        'delay': fields.integer('Due Days', help="The number of days after the due date of the invoice to wait before sending the reminder.  Could be negative if you want to send a polite alert beforehand."),
+        'delay': fields.integer('Due Days', help="The number of days after the due date of the invoice to wait before sending the reminder.  Could be negative if you want to send a polite alert beforehand.", required=True),
         'followup_id': fields.many2one('account_followup.followup', 'Follow Ups', required=True, ondelete="cascade"),
         'description': fields.text('Printed Message', translate=True),
         'send_email':fields.boolean('Send an Email', help="When processing, it will send an email"),
@@ -69,7 +67,7 @@ class followup_line(osv.osv):
         'email_template_id':fields.many2one('email.template', 'Email Template', ondelete='set null'),
     }
     _order = 'delay'
-    _sql_constraints = [('days_uniq', 'unique(followup_id, delay)', 'Days of the follow-up levels must be different')] #TODO: ADD FOR multi-company!
+    _sql_constraints = [('days_uniq', 'unique(followup_id, delay)', 'Days of the follow-up levels must be different')]
     _defaults = {
         'send_email': True,
         'send_letter': False,
@@ -85,8 +83,6 @@ Best Regards,
 """,
     'email_template_id': _get_default_template,
     }
-
-
 
 
     def _check_description(self, cr, uid, ids, context=None):
@@ -106,7 +102,6 @@ followup_line()
 
 class account_move_line(osv.osv):
 
-
     def set_kanban_state_litigation(self, cr, uid, ids, context=None):
         for l in self.browse(cr, uid, ids, context):
             self.write(cr, uid, [l.id], {'blocked': not l.blocked})
@@ -120,24 +115,26 @@ class account_move_line(osv.osv):
 
     _inherit = 'account.move.line'
     _columns = {
-        'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level', ondelete='restrict'), #restrict deletion of the followup line
+        'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level', 
+                                        ondelete='restrict'), #restrict deletion of the followup line
         'followup_date': fields.date('Latest Follow-up', select=True),
         'payment_commitment':fields.text('Commitment'),
         'payment_date':fields.date('Date'),
-        #'payment_note':fields.text('Payment note'),
         'payment_next_action':fields.text('Next Action'),
-        'result':fields.function(_get_result, type='float', method=True, string="Balance") #TODO: what difference with the balance field on account.move.line?
+        'result':fields.function(_get_result, type='float', method=True, 
+                                string="Balance") #'balance' field is not the same
     }
 
 account_move_line()
 
+
 class email_template(osv.osv):
     _inherit = 'email.template'
 
-    #Adds current_date to the context.  That way it can be used in the email templates
-    #TODO: need information
+    # Adds current_date to the context.  That way it can be used to put
+    # the account move lines in bold that are overdue in the email
     def render_template(self, cr, uid, template, model, res_id, context=None):
-        context['current_date'] = fields.date.context_today(cr, uid, context) #change by inheritance
+        context['current_date'] = fields.date.context_today(cr, uid, context)
         return super(email_template, self).render_template(cr, uid, template, model, res_id, context)
 
 email_template()
@@ -168,11 +165,11 @@ class res_partner(osv.osv):
 #        return res
 #    
 #    
-    #TODO: refactor these functions: remove this one, rework _get_latest and _get_newt_followup_level_id must call _get_latest
+#TODO: refactor these functions: remove this one, rework _get_latest and _get_next_followup_level_id must call _get_latest
 
     def _get_latest_followup_level_id(self, cr, uid, ids, name, arg, context=None):
         res = {}
-        for partner in self.browse(cr, uid, ids, context):
+        for partner in self.browse(cr, uid, ids, context=context):
             level_days = False
             res[partner.id] = False
             for accountmoveline in partner.accountmoveline_ids:
@@ -183,40 +180,39 @@ class res_partner(osv.osv):
         return res
 
 
-    def _get_latest(self, cr, uid, ids, names, arg, context=None):
+#TODO: refactor + take into account company id
+    def get_latest_from_company(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
-        for partner in self.browse(cr, uid, ids, context):
+#        if company_id == None:
+#            company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
+#        else:
+#            company = self.pool.get('res.company').browse(cr, uid, company_id, context=context)
+            
+        for partner in self.browse(cr, uid, ids, context=context):
             amls = partner.accountmoveline_ids
             latest_date = False
             latest_level = False
-            latest_level_without_lit = False
             latest_days = False
+            latest_level_without_lit = False
             latest_days_without_lit = False
             for aml in amls:
-                #Give initial value
-                if latest_date == False:
+                if (aml.followup_line_id != False) and (not latest_days or latest_days < aml.followup_line_id.delay):
+                    latest_days = aml.followup_line_id.delay
+                    latest_level = aml.followup_line_id.id
+                if (not latest_date or latest_date < aml.followup_date):
                     latest_date = aml.followup_date
-                    if aml.followup_line_id:
-                        latest_level = aml.followup_line_id.id
-                        latest_days = aml.followup_line_id.delay
-                if not aml.blocked and latest_level_without_lit == False and aml.followup_line_id:
-                    latest_level_without_lit = aml.followup_line_id.id
-                    latest_days_without_lit = aml.followup_line_id.delay
-                #If initial value < ...
-                if latest_date and latest_level:
-                    if aml.followup_date > latest_date:
-                        latest_date = aml.followup_date
-                    if aml.followup_line_id and aml.followup_line_id.delay > latest_days:
-                        latest_days = aml.followup_line_id.delay
-                        latest_level = aml.followup_line_id.id
-                if not aml.blocked and latest_level_without_lit and aml.followup_line_id and aml.followup_line_id.delay > latest_days_without_lit:
-                    latest_days_without_lit = aml.followup_line_id.delay
+                if (aml.blocked == False) and (aml.followup_line_id != False and 
+                            (not latest_days_without_lit or latest_days_without_lit < aml.followup_line_id.delay)):
+                    latest_days_without_lit =  aml.followup_line_id.delay
                     latest_level_without_lit = aml.followup_line_id.id
             res[partner.id] = {'latest_followup_date': latest_date,
                                'latest_followup_level_id': latest_level,
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
-
+    
+    def _get_latest(self, cr, uid, ids, names, arg, context=None):
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        return self.get_latest_from_company(cr, uid, ids, names, arg, context=context, company_id=company)
             #Problems company id? / Method necessary?
             #TODO: must use the company_id of the uid + refactor
     def _get_next_followup_level_id(self, cr, uid, ids, name, arg, context=None):
