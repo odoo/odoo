@@ -43,7 +43,7 @@ class acquirer(osv.Model):
         'visible': fields.boolean('Visible', help="Make this payment acquirer available in portal forms (Customer invoices, etc.)"),
     }
 
-    _default = {
+    _defaults = {
         'visible': True,
     }
 
