@@ -3300,11 +3300,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         '''
         obj_data = self.pool.get('ir.model.data')
         obj_journal = self.pool.get('account.journal')
-        # Get the id of journal views
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
-        view_id_cur = tmp and tmp[1] or False
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
-        view_id_cash = tmp and tmp[1] or False
+        
 
         # we need to loop again to find next number for journal code
         # because we can't rely on the value current_num as,
@@ -3330,10 +3326,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_debit_account_id': default_account_id,
         }
         if line['currency_id']:
-            vals['view_id'] = view_id_cur
             vals['currency'] = line['currency_id']
-        else:
-            vals['view_id'] = view_id_cash
+        
         return vals
 
     def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):
