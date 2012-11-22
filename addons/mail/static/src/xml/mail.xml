@@ -34,14 +34,14 @@
                     <button class="oe_post">Post</button>
                     <t t-call="mail.compose_message.add_attachment"/>
                     <!--<a class="oe_cancel oe_e">X</a>-->
-                    <button class="oe_full"><span class='oe_e'>&amp;ograve</span></button>
+                    <button class="oe_full" title="Open the full mail composer"><span class='oe_e'>&amp;ograve</span></button>
                 </div>
             </div>
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <textarea t-if="widget.options.compose_placeholder" class="field_text oe_compact" t-att-placeholder="widget.options.compose_placeholder"/>
             <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write an internal note..."/>
-            <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share to my followers..."/>
+            <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share with my followers..."/>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
     </t>
@@ -197,7 +197,7 @@
 
             <div class="oe_msg_center">
                 <div class='oe_msg_icons'>
-                    <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">X</a></span>
+                    <span class='oe_read' t-if="widget.options.show_read"><a title="Done" class="oe_e">W</a></span>
                     <span class='oe_unread' t-if="widget.is_favorite and widget.options.show_unread"><a title="Set back to Todo" class="oe_e">v</a></span>
                     <span class='oe_unread' t-if="!widget.is_favorite and widget.options.show_unread"><a title="Set back to Inbox" class="oe_e">v</a></span>
                     <span class='oe_reply' t-if="widget.options.show_reply_button"><a title="Reply" class="oe_e">(</a></span>
