@@ -17,6 +17,254 @@ openerp.testing.section('eval.types', {
                 d.getHours(), d.getMinutes(), d.getSeconds()));
     });
 });
+openerp.testing.section('eval.edc', {
+    dependencies: ['web.data'],
+    rpc: 'rpc',
+    setup: function (instance) {
+        instance.edc = function (domains, contexts) {
+            return this.session.rpc('/web/session/eval_domain_and_context', {
+                contexts: contexts || [],
+                domains: domains || []
+            });
+        }
+    }
+}, function (test) {
+    test('empty, basic', {asserts: 3}, function (instance) {
+        return instance.edc().then(function (result) {
+            // default values for new db
+            deepEqual(result.context, {
+                lang: 'en_US',
+                tz: false,
+                uid: 1
+            });
+            deepEqual(result.domain, []);
+            deepEqual(result.group_by, []);
+        });
+    });
+    test('empty, context altered', {
+        asserts: 3,
+        setup: function (instance) {
+            var lang = new instance.web.Model('res.lang');
+            var users = new instance.web.Model('res.users');
+            return lang.call('load_lang', ['ru_RU']).then(function () {
+                return users.call('write', [instance.session.uid, {
+                    lang: 'ru_RU',
+                    tz: 'America/Santarem'
+                }]);
+            }).then(function () {
+                return instance.session.session_reload();
+            });
+        }
+    }, function (instance) {
+        return instance.edc().then(function (result) {
+            // default values for new db
+            deepEqual(result.context, {
+                lang: 'ru_RU',
+                tz: 'America/Santarem',
+                uid: 1
+            });
+            deepEqual(result.domain, []);
+            deepEqual(result.group_by, []);
+        });
+    });
+    test('context_merge_00', {asserts: 1}, function (instance) {
+        var ctx = [
+            {
+                "__contexts": [
+                    { "lang": "en_US", "tz": false, "uid": 1 },
+                    {
+                        "active_id": 8,
+                        "active_ids": [ 8 ],
+                        "active_model": "sale.order",
+                        "bin_raw": true,
+                        "default_composition_mode": "comment",
+                        "default_model": "sale.order",
+                        "default_res_id": 8,
+                        "default_template_id": 18,
+                        "default_use_template": true,
+                        "edi_web_url_view": "faaaake",
+                        "lang": "en_US",
+                        "mark_so_as_sent": null,
+                        "show_address": null,
+                        "tz": false,
+                        "uid": null
+                    },
+                    {}
+                ],
+                "__eval_context": null,
+                "__ref": "compound_context"
+            },
+            { "active_id": 9, "active_ids": [ 9 ], "active_model": "mail.compose.message" }
+        ];
+        return instance.edc([], ctx).then(function (result) {
+            deepEqual(result.context, {
+                active_id: 9,
+                active_ids: [9],
+                active_model: 'mail.compose.message',
+                bin_raw: true,
+                default_composition_mode: 'comment',
+                default_model: 'sale.order',
+                default_res_id: 8,
+                default_template_id: 18,
+                default_use_template: true,
+                edi_web_url_view: "faaaake",
+                lang: 'en_US',
+                mark_so_as_sent: null,
+                show_address: null,
+                tz: false,
+                uid: null
+            });
+        });
+    });
+    test('context_merge_01', {asserts: 1}, function (instance) {
+        var ctx = [{
+            "__contexts": [
+                {
+                    "lang": "en_US",
+                    "tz": false,
+                    "uid": 1
+                },
+                {
+                    "default_attachment_ids": [],
+                    "default_body": "",
+                    "default_content_subtype": "html",
+                    "default_model": "res.users",
+                    "default_parent_id": false,
+                    "default_res_id": 1
+                },
+                {}
+            ],
+            "__eval_context": null,
+            "__ref": "compound_context"
+        }];
+        return instance.edc([], ctx).then(function (result) {
+            deepEqual(result.context, {
+                "default_attachment_ids": [],
+                "default_body": "",
+                "default_content_subtype": "html",
+                "default_model": "res.users",
+                "default_parent_id": false,
+                "default_res_id": 1,
+                "lang": "en_US",
+                "tz": false,
+                "uid": 1
+            });
+        });
+    });
+});
+openerp.testing.section('eval.edc.nonliterals', {
+    dependencies: ['web.data'],
+    rpc: 'rpc',
+    setup: function (instance) {
+        _.extend(instance, {
+            edc: function (domains, contexts) {
+                return this.session.rpc('/web/session/eval_domain_and_context', {
+                    contexts: contexts || [],
+                    domains: domains || []
+                });
+            },
+            load_context: function (index) {
+                return this.session.rpc('/web/tests/load_context', {index: index});
+            },
+            load_domain: function (index) {
+                return this.session.rpc('/web/tests/load_domain', {index: index});
+            },
+        });
+    }
+}, function (test) {
+    test('domain with time', {asserts: 2}, function (instance) {
+        return instance.load_domain(0).then(function (d) {
+            strictEqual(d.__ref, 'domain');
+            return instance.edc([
+                [['type', '=', 'contract']],
+                { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
+                  "__eval_context": null,
+                  "__ref": "compound_domain"
+                },
+                d,
+                [['user_id', '=', 1]]
+            ])
+        }).then(function (result) {
+            var d = new Date();
+            var today = _.str.sprintf("%04d-%02d-%02d",
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            deepEqual(result.domain, [
+                ["type", "=", "contract"],
+                "|", ["state", "in", ["open", "draft"]],
+                     ["state", "=", "pending"],
+                "|",
+                    "&", ["date", "!=", false],
+                         ["date", "<=", today],
+                    ["is_overdue_quantity", "=", true],
+                ["user_id", "=", 1]
+            ]);
+        });
+    });
+    test('conditional context', {asserts: 2}, function (instance) {
+        return instance.load_domain(1).then(function (d) {
+            var e1 = instance.edc([d]).then(function (result) {
+                deepEqual(result.domain, [
+                    ['company_id', '=', false]
+                ]);
+            });
+            var cd = new instance.web.CompoundDomain(d);
+            cd.set_eval_context({company_id: 42});
+            var e2 = instance.edc([cd]).then(function (result) {
+                deepEqual(result.domain, [
+                    ['company_id', '=', 42]
+                ]);
+            });
+
+            return $.when(e1, e2);
+        });
+    });
+    test('substitution in context', {asserts: 1}, function (instance) {
+        return instance.load_context(0).then(function (c) {
+            var cc = new instance.web.CompoundContext(c);
+            cc.set_eval_context({active_id: 42});
+            return instance.edc([], [cc]);
+        }).then(function (result) {
+            deepEqual(result.context, {
+                lang: "en_US",
+                tz: false,
+                uid: 1,
+                default_opportunity_id: 42,
+                default_duration: 1.0,
+                lng: "en_US"
+            });
+        });
+    });
+    test('date', {asserts: 1}, function (instance) {
+        return instance.load_domain(4).then(function (d) {
+            return instance.edc([d]);
+        }).then(function (result) {
+            var d = new Date();
+            var today = _.str.sprintf("%04d-%02d-%02d",
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            deepEqual(result.domain, [
+                ['state', '!=', 'cancel'],
+                ['opening_date', '>', today]
+            ]);
+        });
+    });
+    test('delta', {asserts: 1}, function (instance) {
+        return instance.load_domain(5).then(function (d) {
+            return instance.edc([d]);
+        }).then(function (result) {
+            var d = new Date();
+            var today = _.str.sprintf("%04d-%02d-%02d",
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            d.setDate(d.getDate() - 15);
+            var ago_15_d = _.str.sprintf("%04d-%02d-%02d",
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            deepEqual(result.domain, [
+                ['type', '=', 'in'],
+                ['day', '<=', today],
+                ['day', '>', ago_15_d]
+            ]);
+        });
+    });
+});
 openerp.testing.section('eval.contexts', {
     dependencies: ['web.coresetup']
 }, function (test) {
@@ -161,7 +409,7 @@ openerp.testing.section('eval.contexts', {
         deepEqual(result, {type: 'out_invoice'});
     });
 });
-openerp.testing.section('eval.contexts', {
+openerp.testing.section('eval.domains', {
     dependencies: ['web.coresetup', 'web.dates']
 }, function (test) {
     test('current_date', function (instance) {
