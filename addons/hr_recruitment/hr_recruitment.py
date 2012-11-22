@@ -469,12 +469,6 @@ class hr_applicant(base_stage, osv.Model):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        if not stage_id: return True
-        stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
-
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Applicant'
 
@@ -487,18 +481,18 @@ class hr_applicant(base_stage, osv.Model):
             context = {}
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.job_id:
-                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), context=context)
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
                 self.message_post(cr, uid, [applicant.id], body=message, context=context)
             else:
                 message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="hr_recruitment.mt_applicant_hired", context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, subtype="hr_recruitment.mt_applicant_refused",context=context)
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         message =_("Applicant has been set as <b>new</b>.")
