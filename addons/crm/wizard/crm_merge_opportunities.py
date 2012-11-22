@@ -32,12 +32,13 @@ class crm_merge_opportunity(osv.osv_memory):
         lead = self.pool.get('crm.lead')
         record = self.browse(cr, uid, ids[0], context=context)
         opportunities = record.opportunity_ids
-        #TOFIX: why need to check lead_ids here
-        lead_ids = [opportunities[0].id]
-        self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
-        context['lead_ids'] = lead_ids
-        merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunities], context=context)
-        return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
+        if opportunities:
+            #TOFIX: why need to check lead_ids here
+            lead_ids = [opportunities[0].id]
+            self.write(cr, uid, ids, {'opportunity_ids' : [(6,0, lead_ids)]}, context=context)
+            context['lead_ids'] = lead_ids
+            merge_id = lead.merge_opportunity(cr, uid, [x.id for x in opportunities], context=context)
+            return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
 
     _columns = {
         'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
