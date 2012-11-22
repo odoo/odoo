@@ -91,28 +91,18 @@ class chat_message(osv.osv):
         'message': fields.char(string="Message", size=200),
     }
     
-    def poll(self, cr, uid, last=None, context=None):
-        if not openerp.tools.config.options["gevent"]:
-            raise Exception("Not usable in a server not running gevent")
-        num = 0
-        while True:
-            if not last:
-                tmp = self.search(cr, uid, [], context=context)
-                last = 0
-                for i in tmp:
-                    last = i if i > last else last
-            res = self.search(cr, uid, [['id', '>', last]], order="id", context=context)
-            res = self.read(cr, uid, res, ["id", "message"], context=context)
-            lst = [x["message"] for x in res]
-            if len(lst) > 0:
-                last = res[-1]["id"]
-                return {"res": lst, "last": last}
-            num += 1
-            if num == 2:
-                return {"res": [], "last": last}
-            cr.commit()
-            Watcher.get_watcher(cr.dbname).stop(30)
-            cr.commit()
+    def get_messages(self, cr, uid, last=None, context=None):
+        if not last:
+            tmp = self.search(cr, uid, [], context=context)
+            last = 0
+            for i in tmp:
+                last = i if i > last else last
+        res = self.search(cr, uid, [['id', '>', last]], order="id", context=context)
+        res = self.read(cr, uid, res, ["id", "message"], context=context)
+        lst = [x["message"] for x in res]
+        if len(lst) > 0:
+            last = res[-1]["id"]
+        return {"res": lst, "last": last, "dbname": cr.dbname}
 
     def post(self, cr, uid, message, context=None):
         self.create(cr, uid, {"message": message}, context=context)
