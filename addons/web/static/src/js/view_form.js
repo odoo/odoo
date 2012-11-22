@@ -4631,6 +4631,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'import_enabled': false,
                         '$buttons': self.$buttonpane,
                         'disable_editable_mode': true,
+                        '$pager': self.$('.oe_popup_list_pager'),
                     }, self.options.list_view_options || {}));
             self.view_list.on('edit:before', self, function (e) {
                 e.cancel = true;
