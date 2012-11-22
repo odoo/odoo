@@ -1439,9 +1439,9 @@ class account_move(osv.osv):
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id']
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
-            c['date'] = vals['date']
+            if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
             self.validate(cr, uid, [result], context)
         else:
