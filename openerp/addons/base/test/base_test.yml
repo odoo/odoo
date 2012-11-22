@@ -42,15 +42,13 @@
 -
     !python {model: ir.model}: |
         from tools.safe_eval import safe_eval
+        from tools.misc import mute_logger
         try:
-           safe_eval('open("/etc/passwd","r")')
-           assert False, "safe_eval should not allow calling open() builtin"
+            with mute_logger('openerp.tools.safe_eval'):
+                safe_eval('open("/etc/passwd","r")')
+            assert False, "safe_eval should not allow calling open() builtin"
         except NameError:
-           pass
-        except:
-           # NameError should be raised because open() builtin is not found,
-           # but other exceptions probably indicate that open() was executed!
-           assert False, "safe_eval should not allow calling open() builtin"
+            pass
 
 -
     "ORM test: verify that parent_store computation are going right"

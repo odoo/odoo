@@ -7,14 +7,14 @@
         <record id="view_module_category_form" model="ir.ui.view">
             <field name="name">ir.module.category.form</field>
             <field name="model">ir.module.category</field>
-            <field name="type">form</field>
-            <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <form string="Module Category">
-                    <field name="name"/>
-                    <field name="parent_id"/>
-                    <field name="sequence"/>
-                    <field name="description" colspan="4"/>
+                <form string="Module Category" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="parent_id"/>
+                        <field name="sequence"/>
+                    </group>
+                    <field name="description"/>
                 </form>
             </field>
         </record>
@@ -22,7 +22,6 @@
         <record id="view_module_category_tree" model="ir.ui.view">
             <field name="name">ir.module.category.tree</field>
             <field name="model">ir.module.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Module Category">
@@ -37,27 +36,19 @@
         <record id="view_module_filter" model="ir.ui.view">
             <field name="name">ir.module.module.list.select</field>
             <field name="model">ir.module.module</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search modules">
-                    <group col='10' colspan='4'>
-                        <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
-                        <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
-
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
-                        <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
-                        <separator orientation="vertical"/>
-                        <field name="name"
-                            filter_domain="['|', ('name','ilike',self), ('shortdesc','ilike',self)]"
-                            string="Name"/>
-                        <field name="description" string="Keywords"/>
-                        <field name="category_id"/>
-                        <newline/>
-                        <group expand="0" string="Group By...">
-                            <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
-                            <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
-                        </group>
+                    <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
+                        'ilike', self)]" string="Module"/>
+                    <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
+                    <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
+                    <separator/>
+                    <filter icon="terp-check" string="Installed" domain="[('state', 'in', ['installed', 'to upgrade', 'to remove'])]"/>
+                    <filter icon="terp-dialog-close" string="Not Installed" domain="[('state', 'in', ['uninstalled', 'uninstallable', 'to install'])]"/>
+                    <field name="category_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Author" icon="terp-personal" domain="[]" context="{'group_by':'author'}"/>
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'category_id'}"/>
                     </group>
                </search>
             </field>
@@ -66,33 +57,30 @@
         <record model="ir.ui.view" id="module_view_kanban">
             <field name="name">Modules Kanban</field>
             <field name="model">ir.module.module</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
-
-              <kanban create="false">
+                <kanban create="false">
                   <field name="icon"/>
                   <field name="name"/>
                   <field name="state"/>
+                  <field name="summary"/>
                   <templates>
                     <t t-name="kanban-box">
-                      <div class="oe_module_vignette oe_kanban_auto_height">
+                      <div class="oe_module_vignette">
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
-                        <a type="edit">
-                          <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
-                        </a>
+                        <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         <div class="oe_module_desc">
-                          <h4><a type="edit"><field name="shortdesc"/></a></h4>
+                          <h4><a type="open"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
-                             <field name="name"/><br/>
+                             <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
+                             <i><field name="name" groups="base.group_no_one"/></i>
                           </p>
-                          <button type="object" name="button_immediate_install" states="uninstalled" class="oe_button">Install</button>
-                          <button t-if="installed" class="oe_button" disabled="disabled">Installed</button>
+                          <button type="object" name="button_immediate_install" states="uninstalled">Install</button>
+                          <button t-if="installed" disabled="disabled">Installed</button>
                         </div>
                       </div>
                     </t>
                   </templates>
-              </kanban>
-
+                </kanban>
             </field>
         </record>
 
@@ -116,42 +104,47 @@
         <record id="module_form" model="ir.ui.view">
             <field name="name">ir.module.module.form</field>
             <field name="model">ir.module.module</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form layout="manual">
-                <div class="oe_form_topbar">
-                    <button name="button_install" states="uninstalled" string="Install" icon="terp-gtk-jump-to-ltr" type="object" class="oe_form_button_hi"/>
-                    <button name="button_upgrade" states="installed" string="Upgrade" icon="terp-gtk-go-back-rtl" type="object" class="oe_form_button_hi"/>
-                    <button name="button_uninstall" states="installed" string="Uninstall (beta)"
-                                        icon="terp-dialog-close" type="object"
-                                        confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
-                    <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" icon="gtk-cancel" type="object"/>
-                    <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" icon="gtk-cancel" type="object"/>
-                    <button name="button_install_cancel" states="to install" string="Cancel Install" icon="gtk-cancel" type="object"/>
-                    <div class="oe_right">
-                        <field name="state" widget="statusbar" nolabel="1" statusbar_visible="uninstalled"/>
+                <form create="0" edit="0" string="Module" version="7.0">
+                <sheet>
+                    <field name="icon_image" widget="image" class="oe_avatar oe_left"/>
+                    <div class="oe_title">
+                        <h1><field name="shortdesc"/></h1>
+                        <h2 class="oe_fade"><field name="summary"/></h2>
+                        <button name="button_immediate_install" states="uninstalled" string="Install" type="object" class="oe_highlight"/>
+                        <button name="button_immediate_upgrade" states="installed" string="Upgrade" type="object" class="oe_highlight"/>
+                        <button name="button_immediate_uninstall" states="installed" string="Uninstall" type="object"
+                            confirm="Do you confirm the uninstallation of this module? This will permanently erase all data currently stored by the module!"/>
+                        <button name="button_uninstall_cancel" states="to remove" string="Cancel Uninstall" type="object"/>
+                        <button name="button_upgrade_cancel" states="to upgrade" string="Cancel Upgrade" type="object"/>
+                        <button name="button_install_cancel" states="to install" string="Cancel Install" type="object"/>
                     </div>
-                </div>
-                <sheet string="Module" layout="auto">
-                    <field name="icon" widget='image' nolabel="1" rowspan="6" colspan="1"/>
-                    <group colspan="2" col="2" class="oe_form_group_label_border">
-                        <field name="shortdesc" string="Application Name"/>
-                        <field name="category_id"/>
-                        <field name="author" select="2"/>
-                        <field name="license"/>
-                        <field name="website" select="2" widget="url" string="Author Website"/>
-                        <field name="installed_version"/>
-                    </group>
-                    <notebook colspan="4">
-                        <page string="Description">
-                            <field colspan="4" name="description" select="2" nolabel="1" rowspan="6"/>
-                        </page>
-                        <page string="Technical Data">
+                    <group>
+                        <group>
+                            <field name="author"/>
+                            <field name="website" widget="url" attrs="{'invisible':[('website','=',False)]}"/>
+                            <field name="category_id" widget="selection"/>
+                        </group>
+                        <group>
                             <field name="name"/>
-                            <field name="certificate" />
-                            <field name="demo"/>
-                            <field name="application"/>
-                            <field colspan="4" name="dependencies_id" nolabel="1">
+                            <field name="license"/>
+                            <field name="installed_version"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field name="description_html"/>
+                        </page>
+                        <page string="Technical Data" groups="base.group_no_one">
+                            <group col="4">
+                                <field name="demo"/>
+                                <field name="application"/>
+                                <field name="state"/>
+                            </group>
+                            <label for="views_by_module" string="Created Views"/>
+                            <field name="views_by_module"/>
+                            <label for="dependencies_id"/>
+                            <field name="dependencies_id">
                                 <tree string="Dependencies">
                                     <field name="name"/>
                                     <field name="state"/>
@@ -159,12 +152,10 @@
                             </field>
                         </page>
                         <page string="Features" attrs="{'invisible':[('state','!=','installed')]}">
-                            <separator string="Created Menus" colspan="4"/>
-                            <field colspan="4" name="menus_by_module" nolabel="1"/>
-                            <separator string="Created Views" colspan="2"/>
-                            <separator string="Defined Reports" colspan="2"/>
-                            <field colspan="2" name="views_by_module" nolabel="1"/>
-                            <field colspan="2" name="reports_by_module" nolabel="1"/>
+                            <label for="menus_by_module" string="Created Menus"/>
+                            <field name="menus_by_module"/>
+                            <label for="reports_by_module" string="Defined Reports"/>
+                            <field name="reports_by_module"/>
                         </page>
                     </notebook>
                     </sheet>
@@ -174,7 +165,6 @@
         <record id="module_tree" model="ir.ui.view">
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
                     <field name="shortdesc"/>
@@ -182,19 +172,24 @@
                     <field name="author"/>
                     <field name="installed_version"/>
                     <field name="state"/>
+                    <field name="category_id" invisible="1"/>
                 </tree>
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Modules</field>
+            <field name="name">Install a Module</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="context">{'search_default_app':1}</field>
             <field name="search_view_id" ref="view_module_filter"/>
-            <field name="help">You can install new modules in order to activate new features, menu, reports or data in your OpenERP instance. To install some modules, click on the button "Install" from the form view and then click on "Start Upgrade".</field>
+            <field name="help" type="html">
+              <p><b>No module found!</b></p>
+              <p>You should try others search criteria.</p>
+            </field>
         </record>
-        <menuitem action="open_module_tree" id="menu_module_tree" parent="base.menu_management" sequence="1"/>
+        <menuitem id="menu_module_tree" parent="base.menu_management" name="Modules"
+            sequence="1" action="open_module_tree"/>
 
     </data>
 </openerp>

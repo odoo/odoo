@@ -82,7 +82,7 @@ class NumberedCanvas(canvas.Canvas):
     def showPage(self):
         self._currentPage +=1
         if not self._flag:
-           self._pageCount += 1
+            self._pageCount += 1
         else:
             self.pages.update({self._currentPage:self._pageCount})
         self._codes.append({'code': self._code, 'stack': self._codeStack})
@@ -424,7 +424,7 @@ class _rml_canvas(object):
                 flow.drawOn(self.canvas,infos['x'],infos['y'])
                 infos['height']-=h
             else:
-                raise ValueError, "Not enough space"
+                raise ValueError("Not enough space")
 
     def _line_mode(self, node):
         ljoin = {'round':1, 'mitered':0, 'bevelled':2}

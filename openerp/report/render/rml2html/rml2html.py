@@ -39,7 +39,7 @@ import sys
 import cStringIO
 from lxml import etree
 import copy
-import utils
+
 from openerp.report.render.rml2pdf import utils
 
 class _flowable(object):
@@ -98,7 +98,7 @@ class _flowable(object):
                     try:
                         if new_child.get('style').find('terp_tblheader')!= -1:
                             new_node.tag = 'th'
-                    except:
+                    except Exception:
                         pass
         process(node,new_node)
         if new_node.get('colWidths',False):
@@ -232,7 +232,7 @@ class _rml_stylesheet(object):
             attr = {}
             attrs = ps.attrib
             for key, val in attrs.items():
-                 attr[key] = val
+                attr[key] = val
             attrs = []
             for a in attr:
                 if a in self._tags:
@@ -296,13 +296,13 @@ class _rml_template(object):
                 frames[(posy,posx,tmpl.get('id'))] = _rml_tmpl_frame(posx, utils.unit_get(tmpl.get('width')))
             for tmpl in pt.findall('pageGraphics'):
                 for n in tmpl:
-                        if n.tag == 'image':
-                           self.data = rc + utils._process_text(self, n.text)
-                        if n.tag in self._tags:
-                            t = self._tags[n.tag](n, self.style,self.localcontext)
-                            frames[(t.posy,t.posx,n.tag)] = t
-                        else:
-                            self.style.update(n)
+                    if n.tag == 'image':
+                        self.data = rc + utils._process_text(self, n.text)
+                    if n.tag in self._tags:
+                        t = self._tags[n.tag](n, self.style,self.localcontext)
+                        frames[(t.posy,t.posx,n.tag)] = t
+                    else:
+                        self.style.update(n)
             keys = frames.keys()
             keys.sort()
             keys.reverse()

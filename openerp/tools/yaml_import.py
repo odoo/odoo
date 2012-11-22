@@ -1,4 +1,4 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import threading
 import types
 import time # used to eval time.strftime expressions
@@ -13,6 +13,7 @@ import yaml_tag
 import yaml
 import re
 from lxml import etree
+from openerp import SUPERUSER_ID
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
@@ -100,7 +101,7 @@ class RecordDictWrapper(dict):
         return dict.__getitem__(self, key)
 
 class YamlInterpreter(object):
-    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False):
+    def __init__(self, cr, module, id_map, mode, filename, report=None, noupdate=False, loglevel=logging.DEBUG):
         self.cr = cr
         self.module = module
         self.id_map = id_map
@@ -110,6 +111,7 @@ class YamlInterpreter(object):
             report = assertion_report.assertion_report()
         self.assertion_report = report
         self.noupdate = noupdate
+        self.loglevel = loglevel
         self.pool = pooler.get_pool(cr.dbname)
         self.uid = 1
         self.context = {} # opererp context
@@ -118,6 +120,9 @@ class YamlInterpreter(object):
                              'time': time,
                              'datetime': datetime,
                              'timedelta': timedelta}
+
+    def _log(self, *args, **kwargs):
+        _logger.log(self.loglevel, *args, **kwargs)
 
     def _ref(self):
         return lambda xml_id: self.get_id(xml_id)
@@ -281,21 +286,24 @@ class YamlInterpreter(object):
         model = self.get_model(record.model)
 
         view_id = record.view
-        if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, 1, self.module, record.view)[1]
+        if view_id and (view_id is not True) and isinstance(view_id, basestring):
+            module = self.module
+            if '.' in view_id:
+                module, view_id = view_id.split('.',1)
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
             try:
-                self.pool.get('ir.model.data')._get_id(self.cr, 1, self.module, record.id)
+                self.pool.get('ir.model.data')._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool.get('ir.model.data')._update_dummy(self.cr, 1, record.model, self.module, record.id)
+                id = self.pool.get('ir.model.data')._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -308,29 +316,38 @@ class YamlInterpreter(object):
             #context = self.get_context(record, self.eval_context)
             #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             context = record.context
+            view_info = False
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
-                view = model.fields_view_get(self.cr, 1, varg, 'form', context)
-                view_id = etree.fromstring(view['arch'].encode('utf-8'))
+                view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
-            record_dict = self._create_record(model, fields, view_id, default=default)
+            record_dict = self._create_record(model, fields, view_info, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
+            id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view=False, parent={}, default=True):
-        if view is not False:
-            defaults = default and model._add_missing_default_values(self.cr, 1, {}, context=self.context) or {}
-            fg = model.fields_get(self.cr, 1, context=self.context)
-        else:
-            defaults = {}
-            fg = {}
-        record_dict = {}
-        fields = fields or {}
+    def _create_record(self, model, fields, view_info=False, parent={}, default=True):
+        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+            view (either specified on the !record tag or the default one for this object), including the calls to
+            on_change() functions, and sending only values for fields that aren't set as readonly.
+            :param model: model instance
+            :param fields: dictonary mapping the field names and their values
+            :param view_info: result of fields_view_get() called on the object
+            :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
+            :param default: if True, the default values must be processed too or not
+            :return: dictionary mapping the field names and their values, ready to use when calling the create() function
+            :rtype: dict
+        """
+        def _get_right_one2many_view(fg, field_name, view_type):
+            one2many_view = fg[field_name]['views'].get(view_type)
+            # if the view is not defined inline, we call fields_view_get()
+            if not one2many_view:
+                one2many_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, view_type, self.context)
+            return one2many_view
 
         def process_val(key, val):
             if fg[key]['type']=='many2one':
@@ -340,73 +357,110 @@ class YamlInterpreter(object):
                 if val is False:
                     val = []
                 if len(val) and type(val[0]) == dict:
+                    #we want to return only the fields that aren't readonly
+                    #For that, we need to first get the right tree view to consider for the field `key´
+                    one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
+                    for rec in val:
+                        #make a copy for the iteration, as we will alterate the size of `rec´ dictionary
+                        rec_copy = rec.copy()
+                        for field_key in rec_copy:
+                            #seek in the view for the field `field_key´ and removing it from `key´ values, as this column is readonly in the tree view
+                            subfield_obj = etree.fromstring(one2many_tree_view['arch'].encode('utf-8')).xpath("//field[@name='%s']"%(field_key))
+                            if subfield_obj and (subfield_obj[0].get('modifiers', '{}').find('"readonly": true') >= 0):
+                                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                                del(rec[field_key])
+
+                    #now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
                     val = map(lambda x: (0,0,x), val)
+
+            #we want to return only the fields that aren't readonly
+            if el.get('modifiers', '{}').find('"readonly": true') >= 0:
+                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                return False
             return val
 
-        # Process all on_change calls
-        nodes = (view is not False) and [view] or []
-        while nodes:
-            el = nodes.pop(0)
-            if el.tag=='field':
-                field_name = el.attrib['name']
-                assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
-                if field_name in fields:
-                    view2 = None
-                    # if the form view is not inline, we call fields_view_get
-                    if (view is not False) and (fg[field_name]['type']=='one2many'):
-                        view2 = view.find("field[@name='%s']/form"%(field_name,))
-                        if not view2:
-                            view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, 1, False, 'form', self.context)
-                            view2 = etree.fromstring(view2['arch'].encode('utf-8'))
+        if view_info:
+            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            view = arch if len(arch) else False
+        else:
+            view = False
+        fields = fields or {}
+        if view is not False:
+            fg = view_info['fields']
+            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
 
-                    field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
-                    record_dict[field_name] = field_value
-                    #if (field_name in defaults) and defaults[field_name] == field_value:
-                    #    print '*** You can remove these lines:', field_name, field_value
-                elif (field_name in defaults):
-                    if (field_name not in record_dict):
-                        record_dict[field_name] = process_val(field_name, defaults[field_name])
-                else:
-                    continue
+            # copy the default values in record_dict, only if they are in the view (because that's what the client does)
+            # the other default values will be added later on by the create().
+            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
 
-                if not el.attrib.get('on_change', False):
-                    continue
-                match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
-                assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+            # Process all on_change calls
+            nodes = [view]
+            while nodes:
+                el = nodes.pop(0)
+                if el.tag=='field':
+                    field_name = el.attrib['name']
+                    assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
+                    if field_name in fields:
+                        one2many_form_view = None
+                        if (view is not False) and (fg[field_name]['type']=='one2many'):
+                            # for one2many fields, we want to eval them using the inline form view defined on the parent
+                            one2many_form_view = _get_right_one2many_view(fg, field_name, 'form')
 
-                # creating the context
-                class parent2(object):
-                    def __init__(self, d):
-                        self.d = d
-                    def __getattr__(self, name):
-                        return self.d.get(name, False)
+                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
 
-                ctx = record_dict.copy()
-                ctx['context'] = self.context
-                ctx['uid'] = 1
-                ctx['parent'] = parent2(parent)
-                for a in fg:
-                    if a not in ctx:
-                        ctx[a]=process_val(a, defaults.get(a, False))
+                        #call process_val to not update record_dict if values were given for readonly fields
+                        val = process_val(field_name, field_value)
+                        if val:
+                            record_dict[field_name] = val
+                        #if (field_name in defaults) and defaults[field_name] == field_value:
+                        #    print '*** You can remove these lines:', field_name, field_value
 
-                # Evaluation args
-                args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                result = getattr(model, match.group(1))(self.cr, 1, [], *args)
-                for key, val in (result or {}).get('value', {}).items():
-                    if key not in fields:
-                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
+                    #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
+                    elif field_name not in defaults:
+                        continue
+
+                    if not el.attrib.get('on_change', False):
+                        continue
+                    match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                    assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+
+                    # creating the context
+                    class parent2(object):
+                        def __init__(self, d):
+                            self.d = d
+                        def __getattr__(self, name):
+                            return self.d.get(name, False)
+
+                    ctx = record_dict.copy()
+                    ctx['context'] = self.context
+                    ctx['uid'] = SUPERUSER_ID
+                    ctx['parent'] = parent2(parent)
+                    for a in fg:
+                        if a not in ctx:
+                            ctx[a] = process_val(a, defaults.get(a, False))
+
+                    # Evaluation args
+                    args = map(lambda x: eval(x, ctx), match.group(2).split(','))
+                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                    for key, val in (result or {}).get('value', {}).items():
+                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist either on the object '%s', either in the view '%s' used for the creation" % (key, match.group(1), model._name, view_info['name'])
                         record_dict[key] = process_val(key, val)
                         #if (key in fields) and record_dict[key] == process_val(key, val):
                         #    print '*** You can remove these lines:', key, val
-            else:
-                nodes = list(el) + nodes
+                else:
+                    nodes = list(el) + nodes
+        else:
+            record_dict = {}
 
         for field_name, expression in fields.items():
             if field_name in record_dict:
                 continue
             field_value = self._eval_field(model, field_name, expression, default=False)
             record_dict[field_name] = field_value
-
         return record_dict
 
     def process_ref(self, node, column=None):
@@ -435,7 +489,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view=False, parent={}, default=True):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
             column = model._columns[field_name]
@@ -456,7 +510,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view, parent, default=default)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
@@ -484,12 +538,10 @@ class YamlInterpreter(object):
             self.noupdate = node.noupdate
 
     def process_python(self, node):
-        def log(msg, *args):
-            _logger.log(logging.TEST, msg, *args)
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': log, 'context': self.context}
+        code_context = { 'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context }
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
@@ -653,7 +705,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        pid = self.pool.get('ir.model.data')._update(self.cr, 1, \
+        pid = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
@@ -664,7 +716,7 @@ class YamlInterpreter(object):
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
                     'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
@@ -698,7 +750,7 @@ class YamlInterpreter(object):
 
         if node.target:
             values['target'] = node.target
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
                 'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
 
@@ -706,7 +758,7 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', keyword, \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
                     node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
@@ -720,23 +772,23 @@ class YamlInterpreter(object):
             if len(ids):
                 self.pool.get(node.model).unlink(self.cr, self.uid, ids)
         else:
-            _logger.log(logging.TEST, "Record not deleted.")
+            self._log("Record not deleted.")
 
     def process_url(self, node):
         self.validate_xml_id(node.id)
 
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
-                "ir.actions.url", self.module, res, node.id, mode=self.mode)
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
+                "ir.actions.act_url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
         if (not node.menu or eval(node.menu)) and id:
             keyword = node.keyword or 'client_action_multi'
-            value = 'ir.actions.url,%s' % id
+            value = 'ir.actions.act_url,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
-                    keyword, node.url, ["ir.actions.url"], value, replace=replace, \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
+                    keyword, node.url, ["ir.actions.act_url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
     def process_ir_set(self, node):
@@ -750,7 +802,7 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.pool.get('ir.model.data').ir_set(self.cr, 1, res['key'], res['key2'], \
+        self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
@@ -779,7 +831,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, "ir.actions.report.xml", \
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, "ir.actions.report.xml", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
@@ -787,7 +839,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
 
     def process_none(self):
@@ -805,11 +857,9 @@ class YamlInterpreter(object):
 
         is_preceded_by_comment = False
         for node in yaml.load(yaml_string):
-            is_preceded_by_comment = self._log(node, is_preceded_by_comment)
+            is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
                 self._process_node(node)
-            except YamlImportException, e:
-                _logger.exception(e)
             except Exception, e:
                 _logger.exception(e)
                 raise
@@ -852,26 +902,27 @@ class YamlInterpreter(object):
         else:
             raise YamlImportException("Can not process YAML block: %s" % node)
 
-    def _log(self, node, is_preceded_by_comment):
+    def _log_node(self, node, is_preceded_by_comment):
         if is_comment(node):
             is_preceded_by_comment = True
-            _logger.log(logging.TEST, node)
+            self._log(node)
         elif not is_preceded_by_comment:
             if isinstance(node, types.DictionaryType):
                 msg = "Creating %s\n with %s"
                 args = node.items()[0]
-                _logger.log(logging.TEST, msg, *args)
+                self._log(msg, *args)
             else:
-                _logger.log(logging.TEST, node)
+                self._log(node)
         else:
             is_preceded_by_comment = False
         return is_preceded_by_comment
 
-def yaml_import(cr, module, yamlfile, idref=None, mode='init', noupdate=False, report=None):
+def yaml_import(cr, module, yamlfile, kind, idref=None, mode='init', noupdate=False, report=None):
     if idref is None:
         idref = {}
+    loglevel = logging.TEST if kind == 'test' else logging.DEBUG
     yaml_string = yamlfile.read()
-    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate)
+    yaml_interpreter = YamlInterpreter(cr, module, idref, mode, filename=yamlfile.name, report=report, noupdate=noupdate, loglevel=loglevel)
     yaml_interpreter.process(yaml_string)
 
 # keeps convention of convert.py

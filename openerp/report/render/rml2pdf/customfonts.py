@@ -65,6 +65,7 @@ TTFSearchPath_Linux = [
             '/usr/share/fonts/dejavu', '/usr/share/fonts/liberation', # Fedora, RHEL
             '/usr/share/fonts/truetype/*', # Ubuntu,
             '/usr/share/fonts/TTF/*', # at Mandriva/Mageia
+            '/usr/share/fonts/TTF', # Arch Linux
             ]
 
 TTFSearchPath_Windows = [

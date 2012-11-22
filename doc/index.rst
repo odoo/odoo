@@ -1,40 +1,31 @@
-.. OpenERP Web documentation master file, created by
-   sphinx-quickstart on Fri Mar 18 16:31:55 2011.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+:orphan:
 
-Welcome to OpenERP Web's documentation!
-=======================================
+========================================
+OpenERP Server Developers Documentation
+========================================
 
-Contents:
-
-.. toctree::
-    :maxdepth: 1
-
-    changelog-6.2
-
-    async
-    rpc
-
-    search-view
-
-Older stuff
------------
+OpenERP Server
+''''''''''''''
 
 .. toctree::
    :maxdepth: 2
 
-   getting-started
-   production
-   widgets
-   addons
-   development
-   project
-   old-version
+   01_getting_started
+   02_architecture
+   03_module_dev
+   04_security
+   05_test_framework
+   06_misc
+   09_deployment
 
-Indices and tables
-==================
+OpenERP Server API
+''''''''''''''''''
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+.. toctree::
+   :maxdepth: 1
+
+   api_core.rst
+   api_models.rst
+
+
+

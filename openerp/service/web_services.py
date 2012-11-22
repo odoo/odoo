@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from __future__ import with_statement
+import contextlib
 import base64
 import locale
 import logging
@@ -40,6 +41,7 @@ import openerp.tools as tools
 import openerp.modules
 import openerp.exceptions
 from openerp.service import http_server
+from openerp import SUPERUSER_ID
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
@@ -72,13 +74,13 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
 
         if lang:
             modobj = pool.get('ir.module.module')
-            mids = modobj.search(cr, 1, [('state', '=', 'installed')])
-            modobj.update_translations(cr, 1, mids, lang)
+            mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
+            modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
-        cr.execute('UPDATE res_users SET password=%s, context_lang=%s, active=True WHERE login=%s', (
+        cr.execute('UPDATE res_users SET password=%s, lang=%s, active=True WHERE login=%s', (
             user_password, lang, 'admin'))
-        cr.execute('SELECT login, password, name ' \
-                   '  FROM res_users ' \
+        cr.execute('SELECT login, password ' \
+                   ' FROM res_users ' \
                    ' ORDER BY login')
         serv.actions[id].update(users=cr.dictfetchall(), clean=True)
         cr.commit()
@@ -97,13 +99,11 @@ class db(netsvc.ExportService):
         self.id = 0
         self.id_protect = threading.Semaphore()
 
-        self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
-
     def dispatch(self, method, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
             'restore', 'rename',
             'change_admin_password', 'migrate_databases',
-            'create_database' ]:
+            'create_database', 'duplicate_database' ]:
             passwd = params[0]
             params = params[1:]
             security.check_super(passwd)
@@ -117,7 +117,7 @@ class db(netsvc.ExportService):
         return fn(*params)
 
     def _create_empty_database(self, name):
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         chosen_template = tools.config['db_template']
         try:
@@ -152,9 +152,20 @@ class db(netsvc.ExportService):
 
         self.actions[id] = {'clean': False}
 
-        _logger.info('CREATE DATABASE %s', db_name.lower())
+        _logger.info('Create database `%s`.', db_name)
         self._create_empty_database(db_name)
         _initialize_db(self, id, db_name, demo, lang, user_password)
+        return True
+
+    def exp_duplicate_database(self, db_original_name, db_name):
+        _logger.info('Duplicate database `%s` to `%s`.', db_original_name, db_name)
+        db = sql_db.db_connect('postgres')
+        cr = db.cursor()
+        try:
+            cr.autocommit(True) # avoid transaction block
+            cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
+        finally:
+            cr.close()
         return True
 
     def exp_get_progress(self, id):
@@ -178,7 +189,7 @@ class db(netsvc.ExportService):
         openerp.modules.registry.RegistryManager.delete(db_name)
         sql_db.close_db(db_name)
 
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         cr.autocommit(True) # avoid transaction block
         try:
@@ -204,23 +215,28 @@ class db(netsvc.ExportService):
             cr.close()
         return True
 
+    @contextlib.contextmanager
+    def _set_pg_password_in_environment(self):
+        """ On Win32, pg_dump (and pg_restore) require that
+        :envvar:`PGPASSWORD` be set
 
-    def _set_pg_psw_env_var(self):
-        # see http://www.postgresql.org/docs/8.4/static/libpq-envars.html
-        # FIXME: This is not thread-safe, and should never be enabled for
-        # SaaS (giving SaaS users the super-admin password is not a good idea
-        # anyway)
-        if tools.config['db_password'] and not os.environ.get('PGPASSWORD', ''):
+        This context management method handles setting
+        :envvar:`PGPASSWORD` iif win32 and the envvar is not already
+        set, and removing it afterwards.
+        """
+        if os.name != 'nt' or os.environ.get('PGPASSWORD'):
+            yield
+        else:
             os.environ['PGPASSWORD'] = tools.config['db_password']
-            self._pg_psw_env_var_is_set = True
+            try:
+                yield
+            finally:
+                del os.environ['PGPASSWORD']
 
-    def _unset_pg_psw_env_var(self):
-        if self._pg_psw_env_var_is_set:
-            os.environ['PGPASSWORD'] = ''
 
     def exp_dump(self, db_name):
-        try:
-            self._set_pg_psw_env_var()
+        logger = logging.getLogger('openerp.service.web_services.db.dump')
+        with self._set_pg_password_in_environment():
             cmd = ['pg_dump', '--format=c', '--no-owner']
             if tools.config['db_user']:
                 cmd.append('--username=' + tools.config['db_user'])
@@ -236,23 +252,20 @@ class db(netsvc.ExportService):
             res = stdout.close()
     
             if not data or res:
-                _logger.error(
-                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '\
-                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '\
-                        'server configuration file.\n %s'  % (db_name, data))
+                logger.error(
+                        'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
+                        'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
+                        'server configuration file.\n %s', db_name, data)
                 raise Exception, "Couldn't dump database"
-            _logger.info('DUMP DB successful: %s', db_name)
+            logger.info('DUMP DB successful: %s', db_name)
     
             return base64.encodestring(data)
-        finally:
-            self._unset_pg_psw_env_var()
 
     def exp_restore(self, db_name, data):
-        try:
-            self._set_pg_psw_env_var()
-
+        logger = logging.getLogger('openerp.service.web_services.db.restore')
+        with self._set_pg_password_in_environment():
             if self.exp_db_exist(db_name):
-                _logger.warning('RESTORE DB: %s already exists' % (db_name,))
+                logger.warning('RESTORE DB: %s already exists', db_name)
                 raise Exception, "Database already exists"
 
             self._create_empty_database(db_name)
@@ -281,17 +294,15 @@ class db(netsvc.ExportService):
             res = stdout.close()
             if res:
                 raise Exception, "Couldn't restore database"
-            _logger.info('RESTORE DB: %s' % (db_name))
+            logger.info('RESTORE DB: %s', db_name)
 
             return True
-        finally:
-            self._unset_pg_psw_env_var()
 
     def exp_rename(self, old_name, new_name):
         openerp.modules.registry.RegistryManager.delete(old_name)
         sql_db.close_db(old_name)
 
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         cr.autocommit(True) # avoid transaction block
         try:
@@ -319,7 +330,7 @@ class db(netsvc.ExportService):
             raise openerp.exceptions.AccessDenied()
         chosen_template = tools.config['db_template']
         templates_list = tuple(set(['template0', 'template1', 'postgres', chosen_template]))
-        db = sql_db.db_connect('template1')
+        db = sql_db.db_connect('postgres')
         cr = db.cursor()
         try:
             try:
@@ -425,7 +436,7 @@ OpenERP is an ERP+CRM program for small and medium businesses.
 The whole source code is distributed under the terms of the
 GNU Public Licence.
 
-(c) 2003-TODAY, Fabien Pinckaers - Tiny sprl''')
+(c) 2003-TODAY - OpenERP SA''')
 
         if extended:
             return info, release.version
@@ -464,8 +475,7 @@ GNU Public Licence.
 
             backup_directory = os.path.join(tools.config['root_path'], 'backup', time.strftime('%Y-%m-%d-%H-%M'))
             if zips and not os.path.isdir(backup_directory):
-                _logger.info('create a new backup directory to \
-                                store the old modules: %s', backup_directory)
+                _logger.info('create a new backup directory to store the old modules: %s', backup_directory)
                 os.makedirs(backup_directory)
 
             for module in zips:
@@ -525,11 +535,11 @@ GNU Public Licence.
                      'OS Name : %s\n' \
                      %(platform.platform(), platform.os.name)
         if os.name == 'posix':
-          if platform.system() == 'Linux':
-             lsbinfo = os.popen('lsb_release -a').read()
-             environment += '%s'%(lsbinfo)
-          else:
-             environment += 'Your System is not lsb compliant\n'
+            if platform.system() == 'Linux':
+                lsbinfo = os.popen('lsb_release -a').read()
+                environment += '%s'%(lsbinfo)
+            else:
+                environment += 'Your System is not lsb compliant\n'
         environment += 'Operating System Release : %s\n' \
                     'Operating System Version : %s\n' \
                     'Operating System Architecture : %s\n' \
@@ -557,7 +567,7 @@ GNU Public Licence.
         return http_server.list_http_services()
 
     def exp_check_connectivity(self):
-        return bool(sql_db.db_connect('template1'))
+        return bool(sql_db.db_connect('postgres'))
 
     def exp_get_os_time(self):
         return os.times()
@@ -694,7 +704,7 @@ class report_spool(netsvc.ExportService):
             self._reports[id]['state'] = True
         except Exception, exception:
 
-            _logger.exception('Exception: %s\n', str(exception))
+            _logger.exception('Exception: %s\n', exception)
             if hasattr(exception, 'name') and hasattr(exception, 'value'):
                 self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
             else:
@@ -731,7 +741,7 @@ class report_spool(netsvc.ExportService):
                 self._reports[id]['format'] = format
                 self._reports[id]['state'] = True
             except Exception, exception:
-                _logger.exception('Exception: %s\n', str(exception))
+                _logger.exception('Exception: %s\n', exception)
                 if hasattr(exception, 'name') and hasattr(exception, 'value'):
                     self._reports[id]['exception'] = openerp.exceptions.DeferredException(tools.ustr(exception.name), tools.ustr(exception.value))
                 else:

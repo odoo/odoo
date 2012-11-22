@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -38,7 +38,7 @@ import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.assertion_report as assertion_report
+from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
@@ -60,7 +60,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases, and even raise osv_except if certificate is invalid)
+                              for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
@@ -84,7 +84,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
-            _logger.error(
+            _logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -112,6 +112,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'demo_xml'):
                 noupdate = True
             try:
+                ext = ext.lower()
                 if ext == '.csv':
                     if kind in ('init', 'init_xml'):
                         noupdate = True
@@ -119,9 +120,13 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate, report)
-                else:
+                    tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
+                elif ext == '.xml':
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                elif ext == '.js':
+                    pass # .js files are valid but ignored here.
+                else:
+                    _logger.warning("Can't load unknown file type %s.", filename)
             finally:
                 fp.close()
 
@@ -154,7 +159,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
         loaded_modules.append(package.name)
         if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
-
+        pool._init_modules.add(package.name)
         status['progress'] = float(index) / len(graph)
 
         # Can't put this line out of the loop: ir.module.module will be
@@ -284,7 +289,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
-        report = assertion_report.assertion_report()
+        report = pool._assertion_report
         loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
 
         if tools.config['load_language']:
@@ -296,7 +301,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             modobj = pool.get('ir.module.module')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
-                modobj.update_list(cr, 1)
+                modobj.update_list(cr, SUPERUSER_ID)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
@@ -343,7 +348,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj and not model_obj.is_transient():
-                    _logger.warning('Model %s (%s) has no access rules!', model, name)
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
+                        model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights

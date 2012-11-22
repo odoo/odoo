@@ -138,6 +138,16 @@ class Cursor(object):
         sure you use psycopg2 v2.4.2 or newer if you use PostgreSQL 9.1 and
         the performance hit is a concern for you.
 
+        .. attribute:: cache
+
+            Cache dictionary with a "request" (-ish) lifecycle, only lives as
+            long as the cursor itself does and proactively cleared when the
+            cursor is closed.
+
+            This cache should *only* be used to store repeatable reads as it
+            ignores rollbacks and savepoints, it should not be used to store
+            *any* data which may be modified during the life of the cursor.
+
     """
     IN_MAX = 1000 # decent limit on size of IN queries - guideline = Oracle limit
 
@@ -182,6 +192,8 @@ class Cursor(object):
 
         self._default_log_exceptions = True
 
+        self.cache = {}
+
     def __del__(self):
         if not self.__closed and not self._cnx.closed:
             # Oops. 'self' has not been closed explicitly.
@@ -203,6 +215,9 @@ class Cursor(object):
             _logger.warning(query)
             _logger.warning("SQL queries cannot contain %d or %f anymore. "
                          "Use only %s")
+        if params and not isinstance(params, (tuple, list, dict)):
+            _logger.error("SQL query parameters should be a tuple, list or dict; got %r", params)
+            raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
             now = mdt.now()
@@ -278,6 +293,8 @@ class Cursor(object):
     def _close(self, leak=False):
         if not self._obj:
             return
+
+        del self.cache
 
         if self.sql_log:
             self.__closer = frame_codeinfo(currentframe(),3)

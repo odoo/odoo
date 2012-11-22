@@ -25,25 +25,25 @@
         </record>
 
         <record model="ir.module.category" id="module_category_sales_management">
-            <field name="name">Sales Management</field>
+            <field name="name">Sales</field>
             <field name="description">Helps you handle your quotations, sale orders and invoicing.</field>
             <field name="sequence">2</field>
         </record>
 
         <record model="ir.module.category" id="module_category_project_management">
-            <field name="name">Project Management</field>
+            <field name="name">Project</field>
             <field name="description">Helps you manage your projects and tasks by tracking them, generating plannings, etc...</field>
             <field name="sequence">3</field>
         </record>
 
         <record model="ir.module.category" id="module_category_knowledge_management">
-            <field name="name">Knowledge Management</field>
+            <field name="name">Knowledge</field>
             <field name="description">Lets you install addons geared towards sharing knowledge with and between your employees.</field>
             <field name="sequence">4</field>
         </record>
 
         <record model="ir.module.category" id="module_category_warehouse_management">
-            <field name="name">Warehouse Management</field>
+            <field name="name">Warehouse</field>
             <field name="description">Helps you manage your inventory and main stock operations: delivery orders, receptions, etc.</field>
             <field name="sequence">5</field>
         </record>
@@ -67,7 +67,7 @@
         </record>
 
         <record model="ir.module.category" id="module_category_purchase_management">
-            <field name="name">Purchase Management</field>
+            <field name="name">Purchases</field>
             <field name="description">Helps you manage your purchase-related processes such as requests for quotations, supplier invoices, etc...</field>
             <field name="sequence">9</field>
         </record>
@@ -91,7 +91,7 @@
         </record>
 
         <record model="ir.module.category" id="module_category_point_of_sale">
-            <field name="name">Point of Sales</field>
+            <field name="name">Point of Sale</field>
             <field name="description">Helps you get the most out of your points of sales with fast sale encoding, simplified payment mode encoding, automatic picking lists generation and more.</field>
             <field name="sequence">13</field>
         </record>
@@ -132,6 +132,11 @@
         <record model="res.groups" id="group_multi_company">
             <field name="category_id" ref="module_category_usability"/>
         </record>
+        
+        <record model="res.groups" id="group_multi_currency">
+            <field name="category_id" ref="module_category_hidden"/>
+        </record>
+        
         <record model="res.groups" id="group_no_one">
             <field name="category_id" ref="module_category_usability"/>
         </record>

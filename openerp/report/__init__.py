@@ -24,7 +24,6 @@ import print_xml
 import print_fnc
 import custom
 import render
-import openerp.pychart
 import int_to_text
 
 import report_sxw
