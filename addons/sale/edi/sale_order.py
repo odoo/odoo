@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
-from edi.models import edi
-from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,
@@ -65,15 +60,6 @@ SALE_ORDER_EDI_STRUCT = {
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
 
-    def action_quotation_send(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_objs = self.browse(cr, uid, ids, context=context) 
-        edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
-        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
-        return super(sale_order, self).action_quotation_send(cr, uid, ids, context=ctx)
-
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""
         edi_struct = dict(edi_struct or SALE_ORDER_EDI_STRUCT)
@@ -102,34 +88,36 @@ class sale_order(osv.osv, EDIMixin):
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 
-
     def _edi_import_company(self, cr, uid, edi_document, context=None):
         # TODO: for multi-company setups, we currently import the document in the
         #       user's current company, but we should perhaps foresee a way to select
         #       the desired company among the user's allowed companies
 
         self._edi_requires_attributes(('company_id','company_address'), edi_document)
-        res_partner_obj = self.pool.get('res.partner')
+        res_partner = self.pool.get('res.partner')
 
-        # imported company_address = new partner address
-        src_company_id, src_company_name = edi_document.pop('company_id')
+        xid, company_name = edi_document.pop('company_id')
+        # Retrofit address info into a unified partner info (changed in v7 - used to keep them separate)
+        company_address_edi = edi_document.pop('company_address')
+        company_address_edi['name'] = company_name
+        company_address_edi['is_company'] = True
+        company_address_edi['__import_model'] = 'res.partner'
+        company_address_edi['__id'] = xid  # override address ID, as of v7 they should be the same anyway
+        if company_address_edi.get('logo'):
+            company_address_edi['image'] = company_address_edi.pop('logo')
+        company_address_edi['customer'] = True
+        partner_id = res_partner.edi_import(cr, uid, company_address_edi, context=context)
 
-        address_info = edi_document.pop('company_address')
-        address_info['supplier'] = True
-        if 'name' not in address_info:
-            address_info['name'] = src_company_name
+        # modify edi_document to refer to new partner
+        partner = res_partner.browse(cr, uid, partner_id, context=context)
+        partner_edi_m2o = self.edi_m2o(cr, uid, partner, context=context)
+        edi_document['partner_id'] = partner_edi_m2o
+        edi_document['partner_invoice_id'] = partner_edi_m2o
+        edi_document['partner_shipping_id'] = partner_edi_m2o
 
-        address_id = res_partner_obj.edi_import(cr, uid, address_info, context=context)
+        edi_document.pop('partner_address', None) # ignored, that's supposed to be our own address!
+        return partner_id
 
-        # modify edi_document to refer to new partner/address
-        partner_address = res_partner_obj.browse(cr, uid, address_id, context=context)
-        edi_document.pop('partner_address', False) # ignored
-        address_edi_m2o = self.edi_m2o(cr, uid, partner_address, context=context)
-        edi_document['partner_id'] = address_edi_m2o
-        edi_document['partner_invoice_id'] = address_edi_m2o
-        edi_document['partner_shipping_id'] = address_edi_m2o
-
-        return address_id
 
     def _edi_get_pricelist(self, cr, uid, partner_id, currency, context=None):
         # TODO: refactor into common place for purchase/sale, e.g. into product module
@@ -171,7 +159,6 @@ class sale_order(osv.osv, EDIMixin):
         currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
         order_currency = res_currency.browse(cr, uid, currency_id)
 
-        date_order = edi_document['date_order']
         partner_ref = edi_document.pop('partner_ref', False)
         edi_document['client_order_ref'] = edi_document['name']
         edi_document['name'] = partner_ref or edi_document['name']
@@ -185,7 +172,7 @@ class sale_order(osv.osv, EDIMixin):
 
         order_lines = edi_document['order_line']
         for order_line in order_lines:
-            self._edi_requires_attributes(( 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
+            self._edi_requires_attributes(('product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
             order_line['product_uom_qty'] = order_line['product_qty']
             del order_line['product_qty']
 
