@@ -2548,6 +2548,7 @@ class stock_move(osv.osv):
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             uos_qty = quantity / move_qty * move.product_uos_qty
+            move_qty = move_qty - quantity
             default_val = {
                 'product_qty': quantity,
                 'product_uos_qty': uos_qty,
@@ -2558,6 +2559,7 @@ class stock_move(osv.osv):
                 'prodlot_id': move.prodlot_id.id,
             }
             new_move = self.copy(cr, uid, move.id, default_val)
+            self.write(cr, uid, [move.id], {'product_qty': move_qty}, context=context)
 
             res += [new_move]
             product_obj = self.pool.get('product.product')
