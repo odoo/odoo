@@ -227,28 +227,42 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
-         var list;
+         var list = [];
+         var accesskey;
          $(window).blur(function() {unhighlightAccessKeys()});
 
-         var highlightAccessKeys = function(){
-           list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a')
+         var highlightAccessKeys = function(ins){
+            list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a')
                   .not('.oe_form_invisible,.oe_edit_only');
-           var accesskey = _.map(list,function(r){ return $(r).attr('accesskey')});
-           _.each(list,function(el,i){
-              if (!$(el).attr("accesskey")) {
-                 var text = $(el).text().trim().substr(0,1);
-                 if (_.contains(accesskey.slice(0, i),text)|| !(/^[a-z0-9\_]+$/i.test(text))){
-                     var index = $(el).text().trim().indexOf(text);
-                     var str = $(el).text().trim().substr(index + 1, index + 1);
-                     $(el).attr('accesskey',str);
-                     accesskey[i] = str;
-                  }else {
-                        $(el).attr('accesskey',text);
-                        accesskey[i] = text ;
-                    }
-                }
-          });
-         }
+            accesskey = _.map(list, function(r){return $(r).attr('accesskey') });
+            
+            _.each(list,function(el,i){
+                 if (!$(el).attr("accesskey")) {
+                    accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
+                    if (accesskey[i]) {
+                     var index = 0;
+                     _.each(accesskey, function(key,j){
+                           
+                           if(_.contains(accesskey,$(el).text().replace(/\s/g, '').toUpperCase().charAt(index))){
+                                 index++;
+                                 return false
+                          }else {
+                                   accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(index)
+                                   $(el).attr("accesskey",$(el).text().replace(/\s/g, '').charAt(index))
+                                   index = 0
+                                   return true
+                          }
+                          return false
+            })
+                        }else {
+                                $(el).attr('accesskey',$(el).text().replace(/\s/g, '').charAt(0));
+                                accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
+                                return true
+                          
+                        }
+                     }
+            })
+       }
        $(document).keydown(function(e){
            highlightAccessKeys();
            if (e.keyCode === 18 || e.keycode === 16 && e.altkey || e.keyCode == 18 && e.shiftKey) {
