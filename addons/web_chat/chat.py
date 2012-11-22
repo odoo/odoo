@@ -20,62 +20,68 @@
 ##############################################################################
 
 import openerp
+import openerp.tools.config
 import openerp.modules.registry
 from osv import osv, fields
-import gevent
-import gevent.event
-import select
 
-class Watcher:
-    watchers = {}
 
-    @staticmethod
-    def get_watcher(db_name):
-        if not Watcher.watchers.get(db_name):
-            Watcher(db_name)
-        return Watcher.watchers[db_name]
+if openerp.tools.config.options["gevent"]:
+    import gevent
+    import gevent.event
+    import select
 
-    def __init__(self, db_name):
-        self.db_name = db_name
-        Watcher.watchers[db_name] = self
-        self.posted = gevent.event.Event()
-        self.waiting = 0
-        gevent.spawn(self.loop)
+    global Watcher
 
-    def loop(self):
-        try:
-            while True:
-                if self.waiting == 0:
-                    return
-                registry = openerp.modules.registry.RegistryManager.get(self.db_name)
-                with registry.cursor() as c:
-                    conn = c._cnx
-                    try:
-                        c.execute("listen received_message;")
-                        c.commit();
-                        if select.select([conn], [], [], 60) == ([],[],[]):
-                            pass
-                        else:
-                            conn.poll()
-                            while conn.notifies:
-                                notify = conn.notifies.pop()
-                            self.posted.set()
-                            self.posted.clear()
-                    finally:
+    class Watcher:
+        watchers = {}
+
+        @staticmethod
+        def get_watcher(db_name):
+            if not Watcher.watchers.get(db_name):
+                Watcher(db_name)
+            return Watcher.watchers[db_name]
+
+        def __init__(self, db_name):
+            self.db_name = db_name
+            Watcher.watchers[db_name] = self
+            self.posted = gevent.event.Event()
+            self.waiting = 0
+            gevent.spawn(self.loop)
+
+        def loop(self):
+            try:
+                while True:
+                    if self.waiting == 0:
+                        return
+                    registry = openerp.modules.registry.RegistryManager.get(self.db_name)
+                    with registry.cursor() as c:
+                        conn = c._cnx
                         try:
-                            c.execute("unlisten received_message;")
-                            c.commit()
-                        except:
-                            pass # can't do anything if that fails
-        finally:
-            del Watcher.watchers[self.db_name]
-            self.posted.set()
-            self.posted = None
+                            c.execute("listen received_message;")
+                            c.commit();
+                            if select.select([conn], [], [], 60) == ([],[],[]):
+                                pass
+                            else:
+                                conn.poll()
+                                while conn.notifies:
+                                    notify = conn.notifies.pop()
+                                self.posted.set()
+                                self.posted.clear()
+                        finally:
+                            try:
+                                c.execute("unlisten received_message;")
+                                c.commit()
+                            except:
+                                pass # can't do anything if that fails
+            finally:
+                del Watcher.watchers[self.db_name]
+                self.posted.set()
+                self.posted = None
 
-    def stop(self, timeout=None):
-        self.waiting += 1
-        self.posted.wait(timeout)
-        self.waiting -= 1
+        def stop(self, timeout=None):
+            self.waiting += 1
+            self.posted.wait(timeout)
+            self.waiting -= 1
 
 
 
@@ -86,6 +92,8 @@ class chat_message(osv.osv):
     }
     
     def poll(self, cr, uid, last=None, context=None):
+        if not openerp.tools.config.options["gevent"]:
+            raise Exception("Not usable in a server not running gevent")
         num = 0
         while True:
             if not last:
