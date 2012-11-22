@@ -394,8 +394,7 @@ class project_issue(base_stage, osv.osv):
         if vals.get('project_id'):
             for id in ids:
                 self._subscribe_project_followers_to_issue(cr, uid, id, context=context)
-        if vals.get('stage_id'):
-            self.stage_set_send_note(cr, uid, ids,vals.get('stage_id'), context=context)
+
         return super(project_issue, self).write(cr, uid, ids, vals, context)
     
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -538,7 +537,7 @@ class project_issue(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_issue_new", context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
     
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
@@ -561,6 +560,9 @@ class project_issue(base_stage, osv.osv):
                 message = _("<b>escalated</b>.")
                 obj.message_post(body=message)
         return True
+
+    def case_close_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Project issue has been <b>done</b>."), subtype="mail.mt_issue_closed", context=context)
 
 project_issue()
 
