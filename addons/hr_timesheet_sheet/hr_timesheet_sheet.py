@@ -100,6 +100,15 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
 
+    def button_cancel(self, cr, uid, ids, context=None):
+        for sheet in self.browse(cr, uid, ids, context=context):
+            if sheet.employee_id and sheet.employee_id.user_id:
+                self.message_subscribe_users(cr, uid, [sheet.id], user_ids=[sheet.employee_id.user_id.id], context=context)
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'hr_timesheet_sheet.sheet', sheet.id, 'cancel', cr)
+            self.cancel_send_note(cr, uid, ids, context=context)
+        return True
+
     def attendance_action_change(self, cr, uid, ids, context=None):
         hr_employee = self.pool.get('hr.employee')
         employee_ids = []
@@ -236,6 +245,11 @@ class hr_timesheet_sheet(osv.osv):
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("Timesheet has been submitted by %s.") % (obj.employee_id.name), subtype="hr_timesheet_sheet.mt_submit_timesheet", context=context)
+
+    def cancel_send_note(self, cr, uid, ids, context=None):
+        user_name = self.pool.get("res.users").browse(cr, uid, uid, context=context).name
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("Timesheet has been refused by %s.") % (user_name), subtype="hr_timesheet_sheet.mt_refuse_timesheet", context=context)
 
 hr_timesheet_sheet()
 

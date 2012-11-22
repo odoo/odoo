@@ -24,7 +24,12 @@
         <menuitem name="My Current Timesheet" id="menu_act_hr_timesheet_sheet_form_my_current" parent="hr_attendance.menu_hr_time_tracking" action="ir_actions_server_timsheet_sheet" sequence="1"/>
         
         <record id="mt_submit_timesheet" model="mail.message.subtype">
-            <field name="name">Timesheets to Validate</field>
+            <field name="name">Submit</field>
+            <field name="res_model">hr_timesheet_sheet.sheet</field>
+        </record>
+
+        <record id="mt_refuse_timesheet" model="mail.message.subtype">
+            <field name="name">Refuse</field>
             <field name="res_model">hr_timesheet_sheet.sheet</field>
         </record>
 
