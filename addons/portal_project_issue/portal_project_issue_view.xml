@@ -18,17 +18,17 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_card oe_kanban_global_click">
                                 <div class="oe_kanban_content">
-                                    <div class="oe_left">
-                                        <h1><field name="name"/></h1>
+                                    <div class="oe_portal_project_issue">
+                                        <div><h1><field name="name"/></h1></div>
                                         <div class="oe_kanban_footer_left">
                                             <field name="partner_id" context="{'portal':1}"/> <br/>
                                             <field name="version_id"/>                                            
                                         </div>
+                                        <div><field name="categ_ids" widget="many2many_tags" class="oe_left"/></div>
+                                        <div class="oe_text_right">
+                                            <h1><field name="state" readonly="1"/></h1>
+                                        </div>
                                     </div>
-                                    <div class="oe_text_right">
-                                        <h1><field name="state" readonly="1"/></h1>
-                                    </div>
-                                    <div class="oe_clear"/>
                                     <div>
                                         <div class="oe_right">
                                             Creation: <field name="create_date"/>
@@ -52,7 +52,6 @@
                                             </t>
                                             <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
                                         </div>
-                                        <field name="categ_ids" widget="many2many_tags" class="oe_left"/>
                                     </div>
                                 </div>
                                 <div class="oe_clear"/>
@@ -72,6 +71,7 @@
             <field name="domain" eval=""/>
             <field name="context">{"search_default_user_id":'', "search_default_draft":'', "search_default_todo":'', "portal":'True'}</field>
             <field name="search_view_id" ref="project_issue.view_project_issue_filter"/>
+            <field name="target">current</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to create an issue.
