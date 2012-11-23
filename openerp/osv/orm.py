@@ -1603,7 +1603,7 @@ class BaseModel(object):
                 if fld_def._type == 'many2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         if not obj.search(cr, uid, [('id', '=',
                             field_value[i])]):
                             continue
@@ -1612,7 +1612,7 @@ class BaseModel(object):
                 if fld_def._type == 'one2many':
                     obj = self.pool.get(fld_def._obj)
                     field_value2 = []
-                    for i in range(len(field_value)):
+                    for i in range(len(field_value or [])):
                         field_value2.append({})
                         for field2 in field_value[i]:
                             if field2 in obj._columns.keys() and obj._columns[field2]._type == 'many2one':
@@ -1782,7 +1782,7 @@ class BaseModel(object):
                         # TODO: find a way to remove this hack, by allow dynamic domains
                         dom = []
                         if column._domain and not isinstance(column._domain, basestring):
-                            dom = column._domain
+                            dom = list(column._domain)
                         dom += eval(node.get('domain', '[]'), {'uid': user, 'time': time})
                         search_context = dict(context)
                         if column._context and not isinstance(column._context, basestring):
@@ -4722,7 +4722,7 @@ class BaseModel(object):
                 order_direction = order_split[1].strip() if len(order_split) == 2 else ''
                 inner_clause = None
                 if order_field == 'id':
-                    order_by_clause = '"%s"."%s"' % (self._table, order_field)
+                    order_by_elements.append('"%s"."id" %s' % (self._table, order_direction))
                 elif order_field in self._columns:
                     order_column = self._columns[order_field]
                     if order_column._classic_read:
