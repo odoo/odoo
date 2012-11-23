@@ -1175,11 +1175,11 @@
         </record>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
+            <field name="context">{'journal_type':'general'}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
             <field name="view_mode">tree_account_move_line_quickadd</field>
-            <field name="context">{'journal_type':'general'}</field>
             <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -1449,25 +1449,6 @@
             res_model="account.move.line"
             src_model="account.move"/>
 
-        <record id="action_move_line_search" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="search_view_id" ref="view_account_move_line_filter"/>
-        </record>
-        <record id="action_move_line_search_view1" model="ir.actions.act_window.view">
-            <field eval="10" name="sequence"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="act_window_id" ref="action_move_line_search"/>
-        </record>
-        <record id="action_move_line_search_view2" model="ir.actions.act_window.view">
-            <field eval="11" name="sequence"/>
-            <field name="view_mode">form</field>
-            <field name="act_window_id" ref="action_move_line_search"/>
-        </record>
 
         <record id="action_account_manual_reconcile" model="ir.actions.act_window">
             <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
@@ -1884,15 +1865,6 @@
                     </group>
                 </form>
             </field>
-        </record>
-
-        <record id="action_move_line_tree1" model="ir.actions.act_window">
-            <field name="name">Journal Items</field>
-            <field name="res_model">account.move.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[('account_id','child_of', [active_id]),('state','&lt;&gt;','draft')]</field>
-            <field name="context">{'account_id':active_id}</field>
         </record>
 
         <record id="view_move_line_tax_tree" model="ir.ui.view">

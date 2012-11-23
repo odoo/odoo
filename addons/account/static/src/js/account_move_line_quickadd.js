@@ -1,15 +1,12 @@
-
 openerp.account.quickadd = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
     
     instance.web.account = instance.web.account || {};
-    
+
     instance.web.views.add('tree_account_move_line_quickadd', 'instance.web.account.QuickAddListView');
     instance.web.account.QuickAddListView = instance.web.ListView.extend({
-        _template: 'ListView',
-
         init: function() {
             this._super.apply(this, arguments);
             this.journals = [];
