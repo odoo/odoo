@@ -585,11 +585,11 @@ openerp.mail = function (session) {
         */
         on_compose_expandable: function (event) {
 
-            if ((!this.stay_open || event.type == 'click') && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
+            if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }
-            if (!this.stay_open && this.show_composer && event.type != 'blur') {
+            if (!this.stay_open && this.show_composer && (!event || event.type != 'blur')) {
                 this.$('textarea:not(.oe_compact):first').focus();
             }
             return true;
