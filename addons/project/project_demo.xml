@@ -36,7 +36,7 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_analysis'),ref('project_tt_specification'),ref('project_tt_negotiation'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_deployment')])]"/>
+            <field name="type_ids" eval="[(6, 0, [ref('project_tt_analysis'),ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_deployment')])]"/>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -114,7 +114,7 @@
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Budget Planning</field>
             <field name="date_deadline" eval="time.strftime('%Y-%m-24')"/>
-            <field name="stage_id" ref="project_tt_negotiation"/>
+            <field name="stage_id" ref="project_tt_testing"/>
             <field name="color">4</field>
         </record>
         <record id="project_task_4" model="project.task">
