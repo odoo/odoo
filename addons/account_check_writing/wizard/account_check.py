@@ -18,16 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
-import datetime
-import time
-import tools
 from osv import fields, osv
-from tools.translate import _
 
 class account_check_write(osv.osv_memory):
     _name = 'account.check.write'
     _description = 'Take input as sequence and print report'
+
     _columns = {
         'check_number': fields.char('Check Number', required=True, help="This is the Check Number"),
     }
@@ -35,24 +31,35 @@ class account_check_write(osv.osv_memory):
     _defaults = {
         'check_number': lambda obj, cr, uid, context:obj.pool.get('ir.sequence').get(cr, uid, 'account.check.write'),
    }
+
     def print_check_write(self, cr, uid, ids, context=None):
-        if not ids:
-            return  {}
+        voucher_obj = self.pool.get('account.voucher')
+        if context is None:
+            context = {}
+        voucher_ids = context.get('active_ids', [])
+        number = int(self.browse(cr, uid, ids[0], context=context).check_number)
+        if voucher_ids:
+            checks = voucher_obj.browse(cr, uid, context['active_ids'], context=context)
+            for check in checks:
+                voucher_obj.write(cr, uid, [check.id], {'number': str(number)}, context=context)
+                number += 1
 
         check_layout_report = {
             'top' : 'account.print.check.top',
             'middle' : 'account.print.check.middle',
             'bottom' : 'account.print.check.bottom',
         }
-        check_layout = self.pool.get('account.voucher').browse(cr, uid, context['active_ids'], context=context)[0].company_id.check_layout
+
+        check_layout = voucher_obj.browse(cr, uid, voucher_ids[0], context=context).company_id.check_layout
+        if not check_layout:
+            check_layout = 'top'
         return {
             'type': 'ir.actions.report.xml', 
             'report_name':check_layout_report[check_layout],
             'datas': {
-                    'model':'account.voucher',
-                    'id': context['active_ids'] and context['active_ids'][0] or False,
-                    'ids': context['active_ids'] and context['active_ids'] or [],
-                    'report_type': 'pdf'
+                'model':'account.voucher',
+                'ids': voucher_ids,
+                'report_type': 'pdf'
                 },
             'nodestroy': True
             }
