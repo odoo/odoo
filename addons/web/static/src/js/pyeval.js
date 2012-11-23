@@ -739,13 +739,13 @@ openerp.web.pyeval = function (instance) {
     instance.web.pyeval.eval_domains_and_contexts = function (source) {
         return new $.Deferred(function (d) {setTimeout(function () {
             try {
-                var contexts = ([instance.session.context] || []).concat(source.contexts);
+                var contexts = ([instance.session.user_context] || []).concat(source.contexts);
                 // see Session.eval_context in Python
-                d.resolve({result: {
+                d.resolve({
                     context: instance.web.pyeval.eval('contexts', contexts),
                     domain: instance.web.pyeval.eval('domains', source.domains),
-                    group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq)
-                }}, 'success', {});
+                    group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq || [])
+                });
             } catch (e) {
                 d.resolve({ error: {
                     code: 400,

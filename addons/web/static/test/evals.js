@@ -247,8 +247,13 @@ openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],
     rpc: 'rpc',
     setup: function (instance) {
+        instance.session.user_context = {
+            lang: 'en_US',
+            tz: false,
+            uid: 1
+        };
         instance.edc = function (domains, contexts) {
-            return this.session.rpc('/web/session/eval_domain_and_context', {
+            return instance.web.pyeval.eval_domains_and_contexts({
                 contexts: contexts || [],
                 domains: domains || []
             });
@@ -382,9 +387,14 @@ openerp.testing.section('eval.edc.nonliterals', {
     dependencies: ['web.data'],
     rpc: 'rpc',
     setup: function (instance) {
+        instance.session.user_context = {
+            lang: 'en_US',
+            tz: false,
+            uid: 1
+        };
         _.extend(instance, {
             edc: function (domains, contexts) {
-                return this.session.rpc('/web/session/eval_domain_and_context', {
+                return instance.web.pyeval.eval_domains_and_contexts({
                     contexts: contexts || [],
                     domains: domains || []
                 });
@@ -398,7 +408,7 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     }
 }, function (test) {
-    test('domain with time', {asserts: 2}, function (instance) {
+    test('domain with time', {asserts: 1}, function (instance) {
         return instance.load_domain(0).then(function (d) {
             strictEqual(d.__ref, 'domain');
             return instance.edc([
@@ -409,7 +419,7 @@ openerp.testing.section('eval.edc.nonliterals', {
                 },
                 d,
                 [['user_id', '=', 1]]
-            ])
+            ]);
         }).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",

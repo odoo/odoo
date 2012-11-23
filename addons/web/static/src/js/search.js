@@ -1614,7 +1614,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
         var set_as_default = this.$('#oe_searchview_custom_default').prop('checked');
 
         var search = this.view.build_search_data();
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: search.domains,
             contexts: search.contexts,
             group_by_seq: search.groupbys || []

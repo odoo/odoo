@@ -396,7 +396,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        self.rpc("/web/session/eval_domain_and_context", {
+        instance.web.pyeval.eval_domains_and_contexts({
             contexts: [action.context],
             domains: []
         }).done(function(res) {
@@ -667,7 +667,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this,
             controller = this.views[this.active_view].controller,
             action_context = this.action.context || {};
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: [this.action.domain || []].concat(domains || []),
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
@@ -1227,7 +1227,7 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }
                 ncontext.add(action.context || {});
-                return self.rpc('/web/session/eval_domain_and_context', {
+                return instance.web.pyeval.eval_domains_and_contexts({
                     contexts: [ncontext],
                     domains: []
                 }).then(function (results) {

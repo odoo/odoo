@@ -236,7 +236,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             if (action.context) {
                 c.add(action.context);
             }
-            return self.rpc('/web/session/eval_domain_and_context', {
+            return instance.web.pyeval.eval_domains_and_contexts({
                 contexts: [c], domains: []
             }).then(function (res) {
                 action.context = res.context;

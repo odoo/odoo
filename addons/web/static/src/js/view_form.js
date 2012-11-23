@@ -4588,7 +4588,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            self.rpc('/web/session/eval_domain_and_context', {
+            instance.web.pyeval.eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
             }).done(function (results) {
@@ -4659,7 +4659,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: domains || [],
             contexts: contexts || [],
             group_by_seq: groupbys || []
