@@ -1231,10 +1231,11 @@
                                     class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
-                            <field name="name" string="Reason"/>
+                            <field name="name"/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
+                            <field name="origin"/>
                             <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>
@@ -1247,7 +1248,7 @@
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability"
+                        <group string="Traceability"
                             groups="stock.group_tracking_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
