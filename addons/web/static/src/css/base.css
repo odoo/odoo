@@ -1,4 +1,4 @@
-@charset "utf-8";
+@charset "UTF-8";
 @font-face {
   font-family: "mnmliconsRegular";
   src: url("/web/static/src/font/mnmliconsv21-webfont.eot") format("eot");
@@ -1912,11 +1912,19 @@
   max-width: 700px;
 }
 .openerp .oe_view_nocontent .oe_view_nocontent_create {
-  background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0;
   margin-top: 0;
   padding-top: 35px;
-  min-height: 28px;
   color: #4c4c4c;
+}
+.openerp .oe_view_nocontent .oe_view_nocontent_create:before {
+  content: "";
+  display: inline-block;
+  position: absolute;
+  width: 70px;
+  height: 80px;
+  margin-left: -80px;
+  margin-top: -10px;
+  background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px;
 }
 .openerp .oe_view_nocontent > p {
   padding-left: 95px;
