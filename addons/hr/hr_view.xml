@@ -228,6 +228,7 @@
                     <field name="department_id"/>
                     <field name="job_id"/>
                     <field name="coach_id" invisible="1"/>
+                    <field name="parent_id" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -236,7 +237,7 @@
             <field name="name">Subordinate Hierarchy</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.employee</field>
-            <field name="domain">[('id','in',active_ids)]</field>
+            <field name="domain">[('parent_id','=',False)]</field>
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_partner_tree2"/>
         </record>
