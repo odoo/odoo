@@ -24,7 +24,6 @@ from lxml import etree
 
 from tools.translate import _
 
-#TODO: remove trailing spaces and commented code
 
 class followup(osv.osv):
     _name = 'account_followup.followup'
@@ -136,7 +135,6 @@ email_template()
 
 class res_partner(osv.osv):
 
-    #TODO: that was not what we decided... 
     def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
         res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                                        toolbar=toolbar, submenu=submenu)
@@ -150,7 +148,6 @@ class res_partner(osv.osv):
 
 
 
-#TODO: refactor these functions: remove this one, rework _get_latest and _get_next_followup_level_id must call _get_latest
 
     def get_latest_from_company(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
@@ -212,7 +209,6 @@ class res_partner(osv.osv):
 
 
 
-    #TODO: to refactor and to comment. I don't get the 'else' statements...
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
         #partner_ids -> res.partner
         for partner in self.browse(cr, uid, partner_ids, context=context):

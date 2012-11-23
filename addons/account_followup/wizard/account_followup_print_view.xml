@@ -10,17 +10,17 @@
                 <group col="4">
                     <field name="followup_id" groups="base.group_multi_company"/>
                     <field name="date" groups="base.group_no_one"/>
-                </group>                
-                	<p class ="oe_grey">                		
-                    	When you hit the button below, for every partner the most overdue invoice (without litigation) is checked.                      	
-                    	If the amount of days overdue is greater or equal than the amount of days specified by a next follow-up level,  
-                    	it will be updated to that next level and the actions of that level will be executed.  (See Configuration > Follow-up Levels)                                    	
-                    </p>           
-                    <footer>                	
-                    <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
+                </group>
+                	<p class ="oe_grey">
+                        When you hit the button below, for every partner the most overdue invoice (without litigation) is checked.
+                        If the amount of days overdue is greater or equal than the amount of days specified by a next follow-up level, 
+                        it will be updated to that next level and the actions of that level will be executed.  (See Configuration > Follow-up Levels)
+                    </p>
+                    <footer>
+                        <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
             </form>
            </field>
         </record>
@@ -54,7 +54,6 @@
             </field>
         </record>
 
-       <!-- Screen2 -->
            <record id="account_followup_stat_by_partner_tree" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.tree</field>
             <field name="model">account_followup.stat.by.partner</field>
@@ -79,17 +78,16 @@
                     <field name="description" widget="html" class="oe_view_only"/>
                 </header>
                 <footer>
-                	<field name="needprinting" invisible="1"/>
-                	<div attrs="{'invisible':[('needprinting','=', False)]}">
-                	<button name="do_report" string="Download Letters" type="object" class="oe_highlight"/>                
-                	</div>
-                	<div attrs="{'invisible':[('needprinting','!=', False)]}">
-                	<button name="do_done" string="Close" type="object" class="oe_highlight"/>
-                	</div>
+                    <field name="needprinting" invisible="1"/>
+                    <div attrs="{'invisible':[('needprinting','=', False)]}">
+                        <button name="do_report" string="Download Letters" type="object" class="oe_highlight"/>
+                    </div>
+                    <div attrs="{'invisible':[('needprinting','!=', False)]}">
+                        <button name="do_done" string="Close" type="object" class="oe_highlight"/>
+                    </div>
                 </footer>
             </form>
             </field>
         </record>
-
     </data>
 </openerp>

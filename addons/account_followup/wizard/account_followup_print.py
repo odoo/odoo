@@ -116,16 +116,21 @@ class account_followup_print(osv.osv_memory):
     _name = 'account.followup.print'
     _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
-        'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
+        'date': fields.date('Follow-up Sending Date', required=True, 
+                            help="This field allow you to select a forecast date to plan your follow-ups"),
         'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
-        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
-        'company_id':fields.related('followup_id', 'company_id', type='many2one', relation='res.company', store=True, readonly=True), 
+        'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 
+                                        'osv_memory_id', 'partner_id', 'Partners', required=True),
+        'company_id':fields.related('followup_id', 'company_id', type='many2one', 
+                                    relation='res.company', store=True, readonly=True), 
         'email_conf': fields.boolean('Send Email Confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
-        'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
+        'partner_lang': fields.boolean('Send Email in Partner Language', 
+                                    help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
-        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.'),       
+        'test_print': fields.boolean('Test Print', 
+                                     help='Check if you want to print follow-ups without changing follow-ups level.'),       
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -167,10 +172,10 @@ class account_followup_print(osv.osv_memory):
                 message = _("Follow-up letter of ") + "<I> " + partner.partner_id.latest_followup_level_id_without_lit.name + "</I>" + _(" will be sent")
                 partner_obj.message_post(cr, uid, [partner.partner_id.id], body=message, context=context)
         if nbunknownmails == 0:
-            resulttext += str(nbmails) + _(" emails sent")
+            resulttext += str(nbmails) + _(" email(s) sent")
         else:
-            resulttext += str(nbmails) + _(" emails should have been sent, but ") + str(nbunknownmails) + _(" had unknown email addresses") + "\n <BR/> "
-        resulttext += "<BR/>" + str(nbprints) + _(" letters in report") + " \n <BR/>" + str(nbmanuals) + _(" total manual action(s) assigned:")
+            resulttext += str(nbmails) + _(" email(s) should have been sent, but ") + str(nbunknownmails) + _(" had unknown email address(es)") + "\n <BR/> "
+        resulttext += "<BR/>" + str(nbprints) + _(" letter(s) in report") + " \n <BR/>" + str(nbmanuals) + _(" manual action(s) assigned:")
         needprinting = False
         if nbprints > 0:
             needprinting = True
@@ -268,11 +273,6 @@ class account_followup_print(osv.osv_memory):
         for result in cr.dictfetchall():
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])
-            #if result['start'] == 'end_of_month': -> did not do anything
-            #    print "Important date change start:", fups[old][0]#.strftime("%Y-%m%-%d")
-            #   fups[old][0].replace(day=1)
-            #    print "Important date change end:", fups[old][0]#.strftime("%Y-%m%-%d")
-                #fups[old][0] = fups[old][0] + datetime.timedelta(months=1)
             old = result['id']
         #fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old) --> By commenting this, last level won't be printed again and again
         fups 
