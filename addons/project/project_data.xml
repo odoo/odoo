@@ -35,7 +35,7 @@
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Specification</field>
-            <field name="state">draft</field>
+            <field name="state">pending</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_design" model="project.task.type">
@@ -44,37 +44,31 @@
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_negotiation" model="project.task.type">
-            <field name="sequence">3</field>
-            <field name="name">Negotiation</field>
-            <field name="state">pending</field>
-            <field name="case_default" eval="False"/>
-            <field name="fold" eval="True"/>
-        </record>
         <record id="project_tt_development" model="project.task.type">
-            <field name="sequence">4</field>
+            <field name="sequence">3</field>
             <field name="name">Development</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_testing" model="project.task.type">
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
             <field name="name">Testing</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">6</field>
+            <field name="sequence">5</field>
             <field name="name">Merge</field>
             <field name="state">open</field>
             <field name="case_default" eval="False"/>
             <field name="fold" eval="True"/>
         </record>
         <record id="project_tt_deployment" model="project.task.type">
-            <field name="sequence">7</field>
+            <field name="sequence">6</field>
             <field name="name">Done</field>
             <field name="state">done</field>
             <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
         <record id="project_tt_cancel" model="project.task.type">
             <field name="sequence">7</field>
