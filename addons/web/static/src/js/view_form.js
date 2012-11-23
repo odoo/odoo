@@ -123,10 +123,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.done(function() {
             self.on("change:actual_mode", self, self.check_actual_mode);
+            self.widgetAccesskey();
             self.check_actual_mode();
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
-            self.widgetAccesskey();
+            self.on("change:actual_mode", self, self.widgetAccesskey);
         });
         self.on("load_record", self, self.load_record);
         this.on('view_loaded', self, self.load_form);
@@ -225,16 +226,63 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
-        $(document).keydown(function(e){
-            if(e.keyCode === $.ui.keyCode.ALT || e.keyCode === $.ui.keyCode.SHIFT && e.altKey) {
-                $("[accesskey]").addClass('accessactive');
-            }else {
-                $("[accesskey]").removeClass('accessactive');
-            }
-            e.stopPropagation();
-        }).keyup(function(e){
-                $("[accesskey]").removeClass('accessactive');
+         var self= this;
+         var list,accesskey = [];
+         $(window).blur(function() {unhighlightAccessKeys()});
+        
+         var highlightAccessKeys = function(){
+            var buttons = _.toArray(self.$el.find('header button:visible,.oe_button_box button:visible'));
+            var form_button = _.toArray(self.$buttons.find('button:visible,a:visible'));
+            var o2m = _.toArray($(document).find('.oe_list_content:visible .oe_form_field_one2many_list_row_add > a'))
+            list = o2m.concat(form_button,buttons);
+            accesskey = _.map(list, function(r){return $(r).attr('accesskey') });
+
+            _.each(list,function(el,i){
+                 if (! $(el).attr("accesskey")) {
+                    if(!accesskey[i]){
+                        var index = 0;
+                        _.each(accesskey,function(_key,j){
+                            if (!_key){
+                                accesskey[i] =  $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
+                                return 
+                            } else {
+                                if (_.contains(accesskey, $(el).text().replace(/\s/g, '').toUpperCase().charAt(index))) {
+                                    index++;
+                                    return false;
+                                } else {
+                                    if (! accesskey[i]) {
+                                        $(el).attr("accesskey",$(el).text().replace(/\s/g, '').charAt(index))
+                                        index = 0
+                                        return true
+                                    }else {
+                                        $(el).attr("accesskey",accesskey[i])
+                                    }
+                                }
+                            }
+                         return
+                        })
+                    }
+                    
+                 }else {
+                    $(el).attr("accesskey",accesskey[i])
+                 }
+            })
+       }
+       $(document).keydown(function(e){
+           if (e.keyCode === 18 || e.keycode === 16 && e.altkey || e.keyCode == 18 && e.shiftKey) {
+                 highlightAccessKeys();
+                _.each(list,function(rl,i){
+                    $(rl).html(function(i, html){
+                        return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
+                })})
+          }}).keyup(function(){
+            unhighlightAccessKeys();
         });
+        var unhighlightAccessKeys = function() {
+            _.each(list,function(rl,i){
+                $(rl).find('.access').removeClass('access');
+            })
+        };
     },
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
