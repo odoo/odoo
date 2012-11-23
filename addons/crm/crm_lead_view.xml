@@ -317,7 +317,7 @@
                                     <div>
                                         <b><field name="name"/></b>
                                         <t t-if="record.planned_revenue.raw_value">
-                                            - <b><t t-esc="Math.round(record.planned_revenue.value)"/>
+                                            - <b><t t-esc="record.planned_revenue.value"/>
                                             <field name="company_currency"/></b>
                                         </t>
                                     </div>
