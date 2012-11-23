@@ -243,6 +243,12 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default.update({'stage_id': self._get_default_stage_id(cr, uid, context=context)})
+        return super(hr_applicant, self).copy(cr, uid, id, default, context=context)
+
     def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
