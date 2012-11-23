@@ -228,22 +228,22 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     widgetAccesskey:function(){
          var self= this;
-         var list = [];
-         var accesskey = [];
+         var list,accesskey = [];
          $(window).blur(function() {unhighlightAccessKeys()});
-         
+        
          var highlightAccessKeys = function(){
-            var o2m = $.makeArray($(document).find('.oe_list_content:visible .oe_form_field_one2many_list_row_add > a'))
-            var list1 = $.makeArray($(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button').not('.oe_form_invisible,.oe_edit_only'));
-            list = o2m.concat(list1);
+            var buttons = _.toArray(self.$el.find('header button:visible,.oe_button_box button:visible'));
+            var form_button = _.toArray(self.$buttons.find('button:visible,a:visible'));
+            var o2m = _.toArray($(document).find('.oe_list_content:visible .oe_form_field_one2many_list_row_add > a'))
+            list = o2m.concat(form_button,buttons);
             accesskey = _.map(list, function(r){return $(r).attr('accesskey') });
-            
+
             _.each(list,function(el,i){
-                 if (!$(el).attr("accesskey")) {
-                    if(! accesskey[i]){
+                 if (! $(el).attr("accesskey")) {
+                    if(!accesskey[i]){
                         var index = 0;
-                        _.each(accesskey,function(name,j){
-                            if (!name) {
+                        _.each(accesskey,function(_key,j){
+                            if (!_key){
                                 accesskey[i] =  $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
                                 return 
                             } else {
