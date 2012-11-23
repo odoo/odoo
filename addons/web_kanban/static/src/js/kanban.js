@@ -50,7 +50,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this._super.apply(this, arguments);
         this.$el.on('click', '.oe_kanban_dummy_cell', function() {
             if (self.$buttons) {
-                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 150);
+                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 250);
             }
         });
     },
@@ -468,7 +468,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 250);
         });
     },
 
@@ -612,7 +612,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);                    
+                    add_btn.effect('bounce', {distance: 18, times: 5}, 250);                    
                 }
             }
         });
