@@ -319,7 +319,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
@@ -809,6 +808,9 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'toggle_layout_outline':
                 current_view.rendering_engine.toggle_layout_debugging();
+                break;
+            case 'set_defaults':
+                current_view.open_defaults_dialog();
                 break;
             case 'translate':
                 this.do_action({
@@ -1332,7 +1334,7 @@ instance.web.View = instance.web.Widget.extend({
         new instance.web.DataExport(this, this.dataset).open();
     },
     sidebar_eval_context: function () {
-        return $.when();
+        return $.when({});
     },
     /**
      * Asks the view to reload itself, if the reloading is asynchronous should

@@ -52,8 +52,27 @@ instance.web.dialog = function(element) {
     return result;
 };
 
+/**
+    A useful class to handle dialogs.
+
+    Attributes:
+    - $buttons: A jQuery element targeting a dom part where buttons can be added. It always exists
+    during the lifecycle of the dialog.
+*/
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
+    /**
+        Constructor.
+
+        @param {Widget} parent
+        @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
+            dictionary can contain the following keys:
+            - buttons: The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button label,
+                value = click handler) or a list of dictionaries (each element in the dictionary is send to the corresponding
+                method of a jQuery element targeting the <button> tag).
+            - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
+        @param {jQuery object} content Some content to replace this.$el .
+    */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -81,6 +100,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
+        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
     },
     _get_options: function(options) {
         var self = this;
@@ -90,7 +110,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             height: $(window.top).height(),
         };
         _.each(sizes, function(available_size, unit) {
-            o[unit] = self._get_size(o[unit]);
+            o[unit] = self._get_size(o[unit], available_size);
             o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
             o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
             if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
@@ -120,26 +140,23 @@ instance.web.Dialog = instance.web.Widget.extend({
             this._super();
         }
     },
+    /**
+        Opens the popup. Inits the dialog if it is not already inited.
+
+        @param {dictionary} options Additional options, see the options param in init().
+        @return this
+    */
     open: function(options) {
-        var o = this._get_options(options);
         if (!this.dialog_inited) {
-            this.init_dialog(o);
+            this.init_dialog(options);
         }
-        if (o.buttons) {
-            this._add_buttons(o.buttons);
-            delete(o.buttons);
-        }
-        this.$buttons.appendTo($("body"));
-        instance.web.dialog(this.$el, o).dialog('open');
-        this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
-        this.$buttons.appendTo(this.$el.dialog("widget"));
-        if (o.height === 'auto' && o.max_height) {
-            this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
-        }
+        this.$el.dialog('open');
+        this.$el.dialog("widget").append(this.$buttons);
         return this;
     },
     _add_buttons: function(buttons) {
         var self = this;
+        var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
         _.each(buttons, function(fn, text) {
             // buttons can be object or array
             if (!_.isFunction(fn)) {
@@ -147,21 +164,36 @@ instance.web.Dialog = instance.web.Widget.extend({
                 fn = fn.click;
             }
             var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
-            self.$buttons.append($but);
+            $customButons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
         });
     },
+    /**
+        Initializes the popup.
+
+        @param {dictionary} options Additional options, see the options param in init().
+        @return The result returned by start().
+    */
     init_dialog: function(options) {
+        var options = this._get_options(options);
+        if (options.buttons) {
+            this._add_buttons(options.buttons);
+            delete(options.buttons);
+        }
         this.renderElement();
         instance.web.dialog(this.$el, options);
-        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
-        this.$el.dialog("widget").append(this.$buttons);
+        if (options.height === 'auto' && options.max_height) {
+            this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
+        }
         this.dialog_inited = true;
         var res = this.start();
         return res;
     },
+    /**
+        Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
+    */
     close: function() {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
             this.$el.dialog('close');
@@ -176,7 +208,11 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_closing = undefined;
         }
     },
+    /**
+        Destroys the popup, also closes it.
+    */
     destroy: function () {
+        this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -185,7 +221,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.close();
             this.__tmp_dialog_destroying = undefined;
         }
-        if (this.dialog_inited && !this.isDestroyed()) {
+        if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
             this.$el.dialog('destroy');
         }
         this._super();
@@ -317,11 +353,11 @@ instance.web.favicon = instance.web.Loading.include({
             'border':"white",//border of favicon
             'background' :"gray",//main color of circle
             'inner_circle':"white",//innter circle color
-            'fill_color':"red",//fill color 
+            'fill_color':"red",//fill color
             'width': 5 //width of circle
         }
     },
-    
+
     //when time interval is known than start favicon can be used.
     start_favicon: function(second, options){
         if(!this.interval)
@@ -334,7 +370,7 @@ instance.web.favicon = instance.web.Loading.include({
            self.draw_favicon(count, options);
         }, second || 1);
     },
-    
+
     stop_favicon: function(){
         if(this.interval)
             clearInterval(this.interval);
@@ -344,11 +380,11 @@ instance.web.favicon = instance.web.Loading.include({
         document.title = this.old_title;
         this.interval = null;
     },
-    
+
     loading_title:function(percentage){
         document.title = percentage + "% processed |" + this.old_title;
     },
-    
+
     draw_favicon: function(percentage, options){
         var self = this;
         var options = _.extend(this.options, options || {});
@@ -1157,7 +1193,6 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     start: function() {
         var self = this;
-
         return $.when(this._super()).pipe(function() {
             self.$el.on('contextmenu','.oe_logo',function(e) {
                 self.$el.find('.resolution').remove();
@@ -1216,9 +1251,7 @@ instance.web.WebClient = instance.web.Client.extend({
                     });
                 });
             });
-            self.$el.on('click', '.oe_logo', function(e) {
-                self.action_manager.do_action('home');
-            });
+            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
