@@ -198,7 +198,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="wkf_send_rfq" states="draft" string="Send Request for Quotation" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
+                    <button name="wkf_send_rfq" states="draft" string="Send RFQ by Mail" type="object" context="{'send_rfq':True}" class="oe_highlight"/>
                     <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight" groups="base.group_user"/>
                     <button name="print_quotation" string="Print" type="object" states="sent" groups="base.group_user"/>
                     <button name="purchase_confirm" states="draft" string="Confirm Order"/>
