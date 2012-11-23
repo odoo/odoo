@@ -45,7 +45,7 @@ class bank(osv.osv):
 
     def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
         """Add ability to have %(currency_name)s in the format_layout of res.partner.bank.type"""
-        currency_ids = list(set(data['currency_id'][0] for data in bank_dicts if 'currency_id' in data))
+        currency_ids = list(set(data['currency_id'][0] for data in bank_dicts if data.get('currency_id')))
         currencies = self.pool.get('res.currency').browse(cr, uid, currency_ids, context=context)
         currency_name = dict((currency.id, currency.name) for currency in currencies)
 
