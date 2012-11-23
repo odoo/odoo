@@ -33,19 +33,22 @@ ${user.name}
 <br/>
 <br/>
 
-    <table width=80%>
+    
+    <table border="2" width=100%>
 
         <tr>
-        	<td>Invoice date</td>
-        	<td>Reference</td>
+            <td>Invoice date</td>
+            <td>Reference</td>
             <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
+
 <%
-    amls = object.accountmoveline_ids
+    amls = object.unreconciled_aml_ids
     mel = {}
-    for aml in amls: 
+    total = 0
+    for aml in amls:             
         strbegin = "<TD> "
         strend = "</TD> "
         date = False
@@ -65,20 +68,22 @@ ${user.name}
         block = " "
         if aml.blocked: 
             block = "X"
-        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
+        if (aml.company_id.id != user.company_id.id): 
+            mel[aml.id] = ""
+        else:
+            total += aml.result
 %>
 <tr>
 </tr>
 % for aml in amls: 
-<tr>
 ${mel[aml.id]}
-</tr>
 % endfor
 
-
 </table>
-<center>Total overdue amount: ${object.credit} ${object.company_id.currency_id.name} </center>   
+<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
     <br/>
+
 </div>
             ]]></field>
         </record>
@@ -116,20 +121,22 @@ ${user.name}
 <br/>
 <br/>
 
-    <table width=80%>
+   
+    <table border="2" width=100%>
 
         <tr>
-        	<td>Invoice date</td>
-        	<td>Reference</td>
+            <td>Invoice date</td>
+            <td>Reference</td>
             <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
 <%
-    amls = object.accountmoveline_ids
+    amls = object.unreconciled_aml_ids
     mel = {}
-    for aml in amls: 
+    total = 0
+    for aml in amls:             
         strbegin = "<TD> "
         strend = "</TD> "
         date = False
@@ -149,20 +156,22 @@ ${user.name}
         block = " "
         if aml.blocked: 
             block = "X"
-        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
+        if (aml.company_id.id != user.company_id.id): 
+            mel[aml.id] = ""
+        else:
+            total += aml.result
 %>
 <tr>
 </tr>
 % for aml in amls: 
-<tr>
 ${mel[aml.id]}
-</tr>
 % endfor
 
-
 </table>
-<center>Total overdue amount: ${object.credit} ${object.company_id.currency_id.name} </center>   
+<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
     <br/>
+
 </div>
             ]]></field>
         </record>
@@ -195,20 +204,22 @@ ${user.name}
 <br/>
 <br/>
 
-    <table width=80%>
+    
+    <table border="2" width=100%>
 
         <tr>
-        	<td>Invoice date</td>
-        	<td>Reference</td>
+            <td>Invoice date</td>
+            <td>Reference</td>
             <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
 <%
-    amls = object.accountmoveline_ids
+    amls = object.unreconciled_aml_ids
     mel = {}
-    for aml in amls: 
+    total = 0
+    for aml in amls:             
         strbegin = "<TD> "
         strend = "</TD> "
         date = False
@@ -228,21 +239,22 @@ ${user.name}
         block = " "
         if aml.blocked: 
             block = "X"
-        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
+        if (aml.company_id.id != user.company_id.id): 
+            mel[aml.id] = ""
+        else:
+            total += aml.result
 %>
 <tr>
 </tr>
 % for aml in amls: 
-<tr>
 ${mel[aml.id]}
-</tr>
 % endfor
 
-
 </table>
-<center>Total overdue amount: ${object.credit} ${object.company_id.currency_id.name}  </center>   
-    <br/> 
+<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
     <br/>
+
 </div>
             ]]></field>
         </record>
@@ -277,20 +289,22 @@ ${user.name}
 <br/>
 <br/>
 
-    <table width=80%>
+   
+    <table border="2" width=100%>
 
         <tr>
-        	<td>Invoice date</td>
-        	<td>Reference</td>
+            <td>Invoice date</td>
+            <td>Reference</td>
             <td>Due date</td>
             <td>Amount</td>            
             <td>Lit.</td>
         </tr>
 
 <%
-    amls = object.accountmoveline_ids
+    amls = object.unreconciled_aml_ids
     mel = {}
-    for aml in amls: 
+    total = 0
+    for aml in amls:             
         strbegin = "<TD> "
         strend = "</TD> "
         date = False
@@ -310,19 +324,22 @@ ${user.name}
         block = " "
         if aml.blocked: 
             block = "X"
-        mel[aml.id] = strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend
+        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
+        if (aml.company_id.id != user.company_id.id): 
+            mel[aml.id] = ""
+        else:
+            total += aml.result
 %>
 <tr>
 </tr>
 % for aml in amls: 
-<tr>
 ${mel[aml.id]}
-</tr>
 % endfor
 
 </table>
-<center>Total overdue amount: ${object.credit} ${object.company_id.currency_id.name} </center>   
+<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
     <br/>
+
 </div>
             ]]></field>
         </record>

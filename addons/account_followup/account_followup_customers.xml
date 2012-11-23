@@ -67,19 +67,17 @@
         </record>
 
         <record id="action_customer_followup" model="ir.actions.act_window">
-            <field name="name">Customer Follow Up</field>
+            <field name="name">Manual Follow-Ups</field>
             <field name="view_id" ref="customer_followup_tree"/>
             <field name="res_model">res.partner</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{} </field>
-            <!--<field name="domain">[('credit', '>', 0)]</field>-->  <!--('customer', '=', True), ('latest_followup_date','!=', False)-->
             <field name="context">{'Followupfirst':True, 'search_default_todo': True} </field>
             <field name="search_view_id" ref="customer_followup_search_view"/>
         </record>
 
         <!--Inherited view -->
-
         <record id="view_partner_inherit_followup_form" model="ir.ui.view">
             <field name="name">res.partner.followup.form.inherit</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
@@ -87,7 +85,7 @@
             <!--<field eval="[(4, ref('account.group_account_user'))]" name="groups_id"/>--><!-- or user? -->
             <field name="arch" type="xml" >
                 <page string="Accounting" position="before" version="7.0">
-                    <page string="Payments Follow-up" position="inside" groups="account.group_account_invoice">
+                    <page string="Payment Follow-up" position="inside" groups="account.group_account_invoice">
                         <div class="oe_right oe_button_box" name="followup_button">
                             <button name="do_button_print" type="object" string="Print Overdue Payments" groups="account.group_account_user" 
                                 help="Print overdue payments report independent of follow-up line" attrs="{'invisible':[('credit', '&lt;=', 0.0)]}" />
@@ -96,10 +94,11 @@
                         </div>
                         <p attrs="{'invisible':[('latest_followup_date','=', False)]}">
                             The <field name="latest_followup_date"  class = "oe_inline"/>, the latest payment follow-up
-                            was: <field name="latest_followup_level_id" class="oe_inline"/>.
+                            was: <field name="latest_followup_level_id" class="oe_inline"/>
                         </p>
                         <group>
                             <field name="payment_responsible_id" placeholder="Responsible of credit collection" class="oe_inline"/>
+                            
                             <label for="payment_next_action"/>
                             <div>
                                 <field name="payment_next_action_date" class="oe_inline"/>
@@ -118,7 +117,7 @@
                             order to not include it in the next payment
                             follow-ups.
                         </p>
-                        <field name="accountmoveline_ids">
+                        <field name="unreconciled_aml_ids">
                             <tree string="Account Move line" editable="bottom" create="false" delete="false" colors="red:(not date_maturity or date_maturity&lt;=current_date) and result&gt;0">
                                 <field name="date" readonly="True"/>
                                 <field name="move_id" readonly="True"/>

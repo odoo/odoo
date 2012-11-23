@@ -140,9 +140,6 @@ class account_followup_print(osv.osv_memory):
 
 
 
-
-
-
     def process_partners(self, cr, uid, partner_ids, data, context=None):
         partner_obj = self.pool.get('res.partner')
         partner_ids_to_print = []
@@ -167,7 +164,7 @@ class account_followup_print(osv.osv_memory):
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
                 nbprints += 1
-                message = _("Follow-up letter of ") + "\"" + partner.partner_id.latest_followup_level_id_without_lit.name + "\"" + "</I>" + _(" will be sent")
+                message = _("Follow-up letter of ") + "<I> " + partner.partner_id.latest_followup_level_id_without_lit.name + "</I>" + _(" will be sent")
                 partner_obj.message_post(cr, uid, [partner.partner_id.id], body=message, context=context)
         if nbunknownmails == 0:
             resulttext += str(nbmails) + _(" emails sent")
@@ -177,10 +174,10 @@ class account_followup_print(osv.osv_memory):
         needprinting = False
         if nbprints > 0:
             needprinting = True
-        resulttext += "<p><ul>"
+        resulttext += "<p align=\"center\">"
         for item in manuals:
             resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) +  "\n </li>"
-        resulttext += "</ul></p>"
+        resulttext += "</p>"
         result = {}
         action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
         result['needprinting'] = needprinting
@@ -189,7 +186,7 @@ class account_followup_print(osv.osv_memory):
         return result
 
     def do_update_followup_level(self, cr, uid, to_update, partner_list, date, context=None):
-        #update the followupo level on account.move.line
+        #update the follow-up level on account.move.line
         for id in to_update.keys():
             if to_update[id]['partner_id'] in partner_list:
                 self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 'followup_date': date})
@@ -235,7 +232,7 @@ class account_followup_print(osv.osv_memory):
     }
 
     def _get_partners_followp(self, cr, uid, ids, context=None):
-        data = {}       
+        data = {}
         data = self.browse(cr, uid, ids, context=context)[0]
         company_id = data.company_id.id
 
@@ -277,7 +274,7 @@ class account_followup_print(osv.osv_memory):
             #    print "Important date change end:", fups[old][0]#.strftime("%Y-%m%-%d")
                 #fups[old][0] = fups[old][0] + datetime.timedelta(months=1)
             old = result['id']
-        #fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old) --> By commenting this, will anything happen?
+        #fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old) --> By commenting this, last level won't be printed again and again
         fups 
         partner_list = []
         to_update = {}
