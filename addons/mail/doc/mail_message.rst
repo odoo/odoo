@@ -18,6 +18,41 @@ should inherit from this class.
 
 .. versionchanged:: 7.0
 
+ClientAction (ir.actions.client)
++++++++
+     <record id="action_mail_inbox_feeds" model="ir.actions.client">
+         <field name="name">Inbox</field>
+         <field name="tag">mail.wall</field>
+         <field name="res_model">mail.message</field>
+         <field name="context"></field>
+         <field name="params"></field>
+         <field name="help" type="html"></field>
+     </record>
+
+ - ``tag`` : 'mail.wall', 'mail_thread' or 'mail.widget'
+      'mail.wall' to have a display like the mail wall with threads, title, search view 
+         (default value like a wall)
+      'mail_thread' widget for field on standard view. (default value like a thread for 
+         record, view on flat mode, no reply, no read/unread)
+      'mail.widget' it's the root thread, used by 'mail.wall' and 'mail_thread'
+ - ``help`` : Text HTML to display if there are no message
+ - ``context`` : insert 'default_model' and 'default_res_id'
+ - ``params`` : options for the widget
+      - ``domain`` : choose the domain of the messages
+      - ``truncate_limit`` : {Number} number of character to display before having a "show more" 
+         link; note that the text will not be truncated if it does not have 110% of the parameter
+      - ``show_record_name`` : {Boolean} display the name and link of the related record
+      - ``show_reply_button`` : {Boolean} display the reply button
+      - ``show_read_unread_button`` : {Boolean} display the read/unread button
+      - ``display_indented_thread`` : {int [0,1]} number thread level to indented threads.
+      - ``show_compose_message`` : display the composer on top thread
+      - ``show_compact_message`` : display the compact message on the thread when the user clic 
+         on this compact mode, the composer is open
+      - ``message_ids`` : {Array | False} List of ids to fetch by the root thread. If no value,
+         the root search the message by the domain
+      - ``help`` : Message to display when there are no message.
+      - ``compose_placeholder`` : Message to display on the textareaboxes.
+
 Fields
 +++++++
 

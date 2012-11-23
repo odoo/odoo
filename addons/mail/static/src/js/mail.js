@@ -1429,7 +1429,8 @@ openerp.mail = function (session) {
          *      when the user clic on this compact mode, the composer is open
          *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
          *      When you use this option, the domain is not used for the fetch root.
-         *     @param {String} [no_message] Message to display when there are no message
+         *     @param {String} [help] Message to display when there are no message.
+         *     @param {String} [compose_placeholder] Message to display on the textareaboxes.
          */
         init: function (parent, action) {
             this._super(parent, action);
