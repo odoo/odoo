@@ -18,28 +18,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{
-    'name': 'Check Writing',
-    'version': '1.1',
-    'author': 'OpenERP SA, NovaPoint Group',
-    'category': 'Generic Modules/Accounting',
-    'description': """
-Module for the Check Writing and Check Printing.
-================================================
-    """,
-    'website': 'http://www.openerp.com',
-    'depends' : ['account_voucher'],
-    'data': [
-        'wizard/account_check_view.xml',
-        'account_check_writing_report.xml',
-        'account_view.xml',
-        'account_voucher_view.xml',
-        'account_check_writing_data.xml',
-        'account_check_sequence.xml'
-    ],
-    'demo': ['account_demo.xml'],
-    'test': [],
-    'installable': True,
-    'active': False,
-}
+
+import account_check
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

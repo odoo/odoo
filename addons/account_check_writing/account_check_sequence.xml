@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <record forcecreate="1" id="sequence_type_check_number" model="ir.sequence.type">
+            <field name="name">Number</field>
+            <field name="code">account.check.write</field>
+        </record>
+
+        <record id="sequence_check_number" model="ir.sequence">
+            <field name="name">Number</field>
+            <field name="code">account.check.write</field>
+            <field eval="3" name="padding"/>
+        </record>        
+    </data>
+</openerp>
