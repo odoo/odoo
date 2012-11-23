@@ -163,6 +163,87 @@ openerp.testing.section('eval.types', {
         ok(py.eval('bool(td(microseconds=1))', c));
         ok(py.eval('bool(not td(0))', c));
     });
+
+    test('date.test_computations', function (instance) {
+        var d = instance.web.pyeval.context().datetime;
+
+        var a = d.date.fromJSON(2002, 1, 31);
+        var b = d.date.fromJSON(1956, 1, 31);
+        strictEqual(
+            py.eval('(a - b).days', {a: a, b: b}),
+            46 * 365 + 12);
+        strictEqual(py.eval('(a - b).seconds', {a: a, b: b}), 0);
+        strictEqual(py.eval('(a - b).microseconds', {a: a, b: b}), 0);
+
+        var day = py.PY_call(d.timedelta, [py.float.fromJSON(1)]);
+        var week = py.PY_call(d.timedelta, [py.float.fromJSON(7)]);
+        a = d.date.fromJSON(2002, 3, 2);
+        var ctx = {
+            a: a,
+            day: day,
+            week: week,
+            date: d.date
+        };
+        ok(py.eval('a + day == date(2002, 3, 3)', ctx));
+        ok(py.eval('day + a == date(2002, 3, 3)', ctx)); // 5
+        ok(py.eval('a - day == date(2002, 3, 1)', ctx));
+        ok(py.eval('-day + a == date(2002, 3, 1)', ctx));
+        ok(py.eval('a + week == date(2002, 3, 9)', ctx));
+        console.group(9)
+        ok(py.eval('a - week == date(2002, 2, 23)', ctx));
+        console.groupEnd();
+        ok(py.eval('a + 52*week == date(2003, 3, 1)', ctx)); // 10
+        ok(py.eval('a - 52*week == date(2001, 3, 3)', ctx));
+        ok(py.eval('(a + week) - a == week', ctx));
+        ok(py.eval('(a + day) - a == day', ctx));
+        ok(py.eval('(a - week) - a == -week', ctx));
+        ok(py.eval('(a - day) - a == -day', ctx)); // 15
+        ok(py.eval('a - (a + week) == -week', ctx));
+        ok(py.eval('a - (a + day) == -day', ctx));
+        ok(py.eval('a - (a - week) == week', ctx));
+        ok(py.eval('a - (a - day) == day', ctx));
+
+        raises(function () {
+            py.eval('a + 1', ctx);
+        }, /^Error: TypeError:/); // 20
+        raises(function () {
+            py.eval('a - 1', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('1 + a', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('1 - a', ctx);
+        }, /^Error: TypeError:/);
+
+        // delta - date is senseless.
+        raises(function () {
+            py.eval('day - a', ctx);
+        }, /^Error: TypeError:/);
+        // mixing date and (delta or date) via * or // is senseless
+        raises(function () {
+            py.eval('day * a', ctx);
+        }, /^Error: TypeError:/); // 25
+        raises(function () {
+            py.eval('a * day', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('day // a', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('a // day', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('a * a', ctx);
+        }, /^Error: TypeError:/);
+        raises(function () {
+            py.eval('a // a', ctx);
+        }, /^Error: TypeError:/); // 30
+        // date + date is senseless
+        raises(function () {
+            py.eval('a + a', ctx);
+        }, /^Error: TypeError:/);
+    });
 });
 openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],

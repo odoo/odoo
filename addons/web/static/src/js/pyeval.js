@@ -41,7 +41,177 @@ openerp.web.pyeval = function (instance) {
         return fn(mod, Math.floor(x));
     };
     var zero = py.float.fromJSON(0);
+
     // Port from pypy/lib_pypy/datetime.py
+    var DAYS_IN_MONTH = [null, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    var DAYS_BEFORE_MONTH = [null];
+    var dbm = 0;
+    for (var i=1; i<DAYS_IN_MONTH.length; ++i) {
+        DAYS_BEFORE_MONTH.push(dbm);
+        dbm += DAYS_IN_MONTH[i];
+    }
+    var is_leap = function (year) {
+        return year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
+    };
+    var days_before_year = function (year) {
+        var y = year - 1;
+        return y*365 + Math.floor(y/4) - Math.floor(y/100) + Math.floor(y/400);
+    };
+    var days_in_month = function (year, month) {
+        if (month === 2 && is_leap(year)) {
+            return 29;
+        }
+        return DAYS_IN_MONTH[month];
+    };
+    var days_before_month = function (year, month) {
+        var post_leap_feb = month > 2 && is_leap(year);
+        return DAYS_BEFORE_MONTH[month]
+             + (post_leap_feb ? 1 : 0);
+    };
+    var ymd2ord = function (year, month, day) {
+        var dim = days_in_month(year, month);
+        if (!(1 <= day && day <= dim)) {
+            throw new Error("ValueError: day must be in 1.." + dim);
+        }
+        return days_before_year(year)
+             + days_before_month(year, month)
+             + day;
+    };
+    var DI400Y = days_before_year(401);
+    var DI100Y = days_before_year(101);
+    var DI4Y = days_before_year(5);
+    var assert = function (bool) {
+        if (!bool) {
+            throw new Error("AssertionError");
+        }
+    };
+    var ord2ymd = function (n) {
+        --n;
+        var n400, n100, n4, n1, n0;
+        divmod(n, DI400Y, function (_n400, n) {
+            n400 = _n400;
+            divmod(n, DI100Y, function (_n100, n) {
+                n100 = _n100;
+                divmod(n, DI4Y, function (_n4, n) {
+                    n4 = _n4;
+                    divmod(n, 365, function (_n1, n) {
+                        n1 = _n1;
+                        n0 = n;
+                    })
+                });
+            });
+        });
+
+        n = n0;
+        var year = n400 * 400 + 1 + n100 * 100 + n4 * 4 + n1;
+        if (n1 == 4 || n100 == 100) {
+            assert(n0 === 0);
+            return {
+                year: year - 1,
+                month: 12,
+                day: 31
+            };
+        }
+
+        var leapyear = n1 === 3 && (n4 !== 24 || n100 == 3);
+        assert(leapyear == is_leap(year));
+        var month = (n + 50) >> 5;
+        var preceding = DAYS_BEFORE_MONTH[month] + ((month > 2 && leapyear) ? 1 : 0);
+        if (preceding > n) {
+            --month;
+            preceding -= DAYS_IN_MONTH[month] + ((month === 2 && leapyear) ? 1 : 0);
+        }
+        n -= preceding;
+        return {
+            year: year,
+            month: month,
+            day: n+1
+        };
+    };
+
+    /**
+     * Converts the stuff passed in into a valid date, applying overflows as needed
+     */
+    var tmxxx = function (year, month, day, hour, minute, second, microsecond) {
+        hour = hour || 0; minute = minute || 0; second = second || 0;
+        microsecond = microsecond || 0;
+
+        if (microsecond < 0 || microsecond > 999999) {
+            divmod(microsecond, 1000000, function (carry, ms) {
+                microsecond = ms;
+                second += carry
+            });
+        }
+        if (second < 0 || second > 59) {
+            divmod(second, 60, function (carry, s) {
+                second = s;
+                minute += carry;
+            });
+        }
+        if (minute < 0 || minute > 59) {
+            divmod(minute, 60, function (carry, m) {
+                minute = m;
+                hour += carry;
+            })
+        }
+        if (hour < 0 || hour > 23) {
+            divmod(hour, 24, function (carry, h) {
+                hour = h;
+                day += carry;
+            })
+        }
+        // That was easy.  Now it gets muddy:  the proper range for day
+        // can't be determined without knowing the correct month and year,
+        // but if day is, e.g., plus or minus a million, the current month
+        // and year values make no sense (and may also be out of bounds
+        // themselves).
+        // Saying 12 months == 1 year should be non-controversial.
+        if (month < 1 || month > 12) {
+            divmod(month-1, 12, function (carry, m) {
+                month = m + 1;
+                year += carry;
+            })
+        }
+        // Now only day can be out of bounds (year may also be out of bounds
+        // for a datetime object, but we don't care about that here).
+        // If day is out of bounds, what to do is arguable, but at least the
+        // method here is principled and explainable.
+        var dim = days_in_month(year, month);
+        if (day < 1 || day > dim) {
+            // Move day-1 days from the first of the month.  First try to
+            // get off cheap if we're only one day out of range (adjustments
+            // for timezone alone can't be worse than that).
+            if (day === 0) {
+                --month;
+                if (month > 0) {
+                    day = days_in_month(year, month);
+                } else {
+                    --year; month=12; day=31;
+                }
+            } else if (day == dim + 1) {
+                ++month;
+                day = 1;
+                if (month > 12) {
+                    month = 1;
+                    ++year;
+                }
+            } else {
+                var r = ord2ymd(ymd2ord(year, month, 1) + (day - 1));
+                year = r.year;
+                month = r.month;
+                day = r.day;
+            }
+        }
+        return {
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second,
+            microsecond: microsecond
+        };
+    };
     datetime.timedelta = py.type('timedelta', null, {
         __init__: function () {
             var args = py.PY_parseArgs(arguments, [
@@ -274,7 +444,40 @@ openerp.web.pyeval = function (instance) {
             var d = new Date();
             return py.PY_call(
                 datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
-        })
+        }),
+        __eq__: function (other) {
+            return (this.year === other.year
+                 && this.month === other.month
+                 && this.day === other.day)
+                ? py.True : py.False;
+        },
+        __add__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+                return py.NotImplemented;
+            }
+            var s = tmxxx(this.year, this.month, this.day + other.days);
+            console.log(this, other, s);
+            return datetime.date.fromJSON(s.year, s.month, s.day);
+        },
+        __radd__: function (other) { return this.__add__(other); },
+        __sub__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) === py.True) {
+                return this.__add__(other.__neg__());
+            }
+            if (py.PY_call(py.isinstance, [other, datetime.date]) === py.True) {
+                // FIXME: getattr and sub API methods
+                return py.PY_call(datetime.timedelta, [
+                    this.toordinal().__sub__(other.toordinal())
+                ]);
+            }
+            return py.NotImplemented;
+        },
+        toordinal: function () {
+            return py.float.fromJSON(ymd2ord(this.year, this.month, this.day));
+        },
+        fromJSON: function (year, month, day) {
+            return py.PY_call(datetime.date, [year, month, day])
+        }
     });
     datetime.time = py.type('time', null, {
         __init__: function () {
