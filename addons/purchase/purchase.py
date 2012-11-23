@@ -393,14 +393,9 @@ class purchase_order(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False 
-        ctx = dict(context)
-        ctx.update({
-            'default_model': 'purchase.order',
-            'default_res_id': ids[0],
-            'default_use_template': bool(template_id),
-            'default_template_id': template_id,
-            'default_composition_mode': 'comment',
-        })
+        ctx = dict(context, active_model='purchase.order', active_id=ids[0])
+        ctx.update({'mail.compose.template_id': template_id})
+        wf_service = netsvc.LocalService("workflow")
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
@@ -971,7 +966,6 @@ class purchase_order_line(osv.osv):
                     res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier only sells this product by %s') % supplierinfo.product_uom.name }
                 min_qty = product_uom._compute_qty(cr, uid, supplierinfo.product_uom.id, supplierinfo.min_qty, to_uom_id=uom_id)
                 if qty < min_qty: # If the supplier quantity is greater than entered from user, set minimal.
-                    res['warning'] = {'title': _('Warning!'), 'message': _('The selected supplier has a minimal quantity set to %s %s, you should not purchase less.') % (supplierinfo.min_qty, supplierinfo.product_uom.name)}
                     qty = min_qty
 
         dt = self._get_date_planned(cr, uid, supplierinfo, date_order, context=context).strftime(DEFAULT_SERVER_DATETIME_FORMAT)
