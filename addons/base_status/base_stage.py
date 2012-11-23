@@ -284,7 +284,6 @@ class base_stage(object):
         return True
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        print "--- Base_Stage (_action) ---"
         if context is None:
             context = {}
         context['state_to'] = state_to
