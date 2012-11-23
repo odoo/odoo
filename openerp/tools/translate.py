@@ -856,7 +856,7 @@ def trans_generate(lang, modules, cr):
                 for fname in fnmatch.filter(files, '*.js'):
                     babel_extract_terms(fname, path, root, 'javascript',
                                         extra_comments=[WEB_TRANSLATION_COMMENT],
-                                        extract_keywords={'_t': None})
+                                        extract_keywords={'_t': None, '_lt': None})
             # QWeb template files
             if fnmatch.fnmatch(root, '*/static/src/xml*'):
                 for fname in fnmatch.filter(files, '*.xml'):
