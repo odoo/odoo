@@ -40,7 +40,7 @@
         </div>
         <div t-if="widget.show_compact_message and !widget.show_composer" t-attf-class="oe_msg oe_msg_composer_compact #{widget.thread_level and widget.options.display_indented_thread > -1 ? 'oe_msg_indented' : ''}">
             <textarea t-if="widget.options.compose_placeholder" class="field_text oe_compact" t-att-placeholder="widget.options.compose_placeholder"/>
-            <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write an internal note..."/>
+            <textarea t-if="!widget.options.compose_placeholder and !widget.options.view_mailbox" class="field_text oe_compact" placeholder="Write to the followers of this document..."/>
             <textarea t-if="!widget.options.compose_placeholder and widget.options.view_mailbox" class="field_text oe_compact" placeholder="Share with my followers..."/>
         </div>
         <span t-if="!(widget.show_compact_message and !widget.show_composer) and !widget.show_composer" class="oe_placeholder_compose"></span>
