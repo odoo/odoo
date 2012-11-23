@@ -213,12 +213,11 @@ class account_move_line(osv.osv):
         return context
 
     def _default_get(self, cr, uid, fields, context=None):
+        #default_get should only do the following:
+        #   -propose the next amount in debit/credit in order to balance the move
+        #   -propose the next account from the journal (default debit/credit account) accordingly
         if context is None:
             context = {}
-        if not context.get('journal_id', False):
-            context['journal_id'] = context.get('search_default_journal_id')
-        if not context.get('period_id', False):
-            context['period_id'] = context.get('search_default_period_id')
         account_obj = self.pool.get('account.account')
         period_obj = self.pool.get('account.period')
         journal_obj = self.pool.get('account.journal')
@@ -227,134 +226,71 @@ class account_move_line(osv.osv):
         fiscal_pos_obj = self.pool.get('account.fiscal.position')
         partner_obj = self.pool.get('res.partner')
         currency_obj = self.pool.get('res.currency')
+
+        if not context.get('journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id', False)
+        if not context.get('period_id', False):
+            context['period_id'] = context.get('search_default_period_id', False)
         context = self.convert_to_period(cr, uid, context)
-        #pass the right context when search_defaul_journal_id
-        if context.get('search_default_journal_id',False):
-            context['journal_id'] = context.get('search_default_journal_id')
+
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
-        # Starts: Manual entry from account.move form
-        if context.get('lines'):
-            total_new = context.get('balance', 0.00)
-            if context['journal']:
-                journal_data = journal_obj.browse(cr, uid, context['journal'], context=context)
-                if journal_data.type == 'purchase':
-                    if total_new > 0:
-                        account = journal_data.default_credit_account_id
-                    else:
-                        account = journal_data.default_debit_account_id
-                else:
-                    if total_new > 0:
-                        account = journal_data.default_credit_account_id
-                    else:
-                        account = journal_data.default_debit_account_id
-                if account and ((not fields) or ('debit' in fields) or ('credit' in fields)) and 'partner_id' in data and (data['partner_id']):
-                    part = partner_obj.browse(cr, uid, data['partner_id'], context=context)
-                    account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
-                    account = account_obj.browse(cr, uid, account, context=context)
-                    data['account_id'] =  account.id
-
-            s = -total_new
-            data['debit'] = s > 0 and s or 0.0
-            data['credit'] = s < 0 and -s or 0.0
-            data = self._default_get_move_form_hook(cr, uid, data)
-            return data
-        # Ends: Manual entry from account.move form
-        if not 'move_id' in fields: #we are not in manual entry
-            return data
-        # Compute the current move
-        move_id = False
-        partner_id = False
-        if context.get('journal_id', False) and context.get('period_id', False):
-            if 'move_id' in fields:
-                cr.execute('SELECT move_id \
-                    FROM \
-                        account_move_line \
-                    WHERE \
-                        journal_id = %s and period_id = %s AND create_uid = %s AND state = %s \
-                    ORDER BY id DESC limit 1',
-                    (context['journal_id'], context['period_id'], uid, 'draft'))
+        if context.get('journal_id'):
+            total = 0.0
+            #in account.move form view, it is not possible to compute total debit and credit using
+            #a browse record. So we must use the context to pass the whole one2many field and compute the total
+            if context.get('line_id'):
+                for move_line_dict in move_obj.resolve_2many_commands(cr, uid, 'line_id', context.get('line_id'), context=context):
+                    data['name'] = data.get('name') or move_line_dict.get('name')
+                    data['partner_id'] = data.get('partner_id') or move_line_dict.get('partner_id')
+                    total += move_line_dict.get('debit', 0.0) - move_line_dict.get('credit', 0.0)
+            elif context.get('period_id'):
+                #find the date and the ID of the last unbalanced account.move encoded by the current user in that journal and period
+                move_id = False
+                cr.execute('''SELECT move_id, date FROM account_move_line
+                    WHERE journal_id = %s AND period_id = %s AND create_uid = %s AND state = %s
+                    ORDER BY id DESC limit 1''', (context['journal_id'], context['period_id'], uid, 'draft'))
                 res = cr.fetchone()
-                move_id = (res and res[0]) or False
-                if not move_id:
-                    return data
-                else:
-                    data['move_id'] = move_id
-            if 'date' in fields:
-                cr.execute('SELECT date \
-                    FROM \
-                        account_move_line \
-                    WHERE \
-                        journal_id = %s AND period_id = %s AND create_uid = %s \
-                    ORDER BY id DESC',
-                    (context['journal_id'], context['period_id'], uid))
-                res = cr.fetchone()
-                if res:
-                    data['date'] = res[0]
-                else:
-                    period = period_obj.browse(cr, uid, context['period_id'],
-                            context=context)
-                    data['date'] = period.date_start
-        if not move_id:
-            return data
-        total = 0
-        ref_id = False
-        move = move_obj.browse(cr, uid, move_id, context=context)
-        if 'name' in fields:
-            data.setdefault('name', move.line_id[-1].name)
-        acc1 = False
-        for l in move.line_id:
-            acc1 = l.account_id
-            partner_id = partner_id or l.partner_id.id
-            ref_id = ref_id or l.ref
-            total += (l.debit or 0.0) - (l.credit or 0.0)
+                move_id = res and res[0] or False
+                data['date'] = res and res[1] or period_obj.browse(cr, uid, context['period_id'], context=context).date_start
+                data['move_id'] = move_id
+                if move_id:
+                    #if there exist some unbalanced accounting entries that match the journal and the period,
+                    #we propose to continue the same move by copying the ref, the name, the partner...
+                    move = move_obj.browse(cr, uid, move_id, context=context)
+                    data.setdefault('name', move.line_id[-1].name)
+                    for l in move.line_id:
+                        data['partner_id'] = data.get('partner_id') or l.partner_id.id
+                        data['ref'] = data.get('ref') or l.ref
+                        total += (l.debit or 0.0) - (l.credit or 0.0)
 
-        if 'ref' in fields:
-            data['ref'] = ref_id
-        if 'partner_id' in fields:
-            data['partner_id'] = partner_id
-
-        if move.journal_id.type == 'purchase':
-            if total > 0:
-                account = move.journal_id.default_credit_account_id
-            else:
-                account = move.journal_id.default_debit_account_id
-        else:
-            if total > 0:
-                account = move.journal_id.default_credit_account_id
-            else:
-                account = move.journal_id.default_debit_account_id
-        part = partner_id and partner_obj.browse(cr, uid, partner_id) or False
-        # part = False is acceptable for fiscal position.
-        account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
-        if account:
-            account = account_obj.browse(cr, uid, account, context=context)
-
-        if account and ((not fields) or ('debit' in fields) or ('credit' in fields)):
-            data['account_id'] = account.id
-            # Propose the price Tax excluded, the Tax will be added when confirming line
-            if account.tax_ids:
-                taxes = fiscal_pos_obj.map_tax(cr, uid, part and part.property_account_position or False, account.tax_ids)
-                tax = tax_obj.browse(cr, uid, taxes)
-                for t in tax_obj.compute_inv(cr, uid, tax, total, 1):
-                    total -= t['amount']
-
-        s = -total
-        data['debit'] = s > 0  and s or 0.0
-        data['credit'] = s < 0  and -s or 0.0
-
-        if account and account.currency_id:
-            data['currency_id'] = account.currency_id.id
-            acc = account
-            if s>0:
-                acc = acc1
-            compute_ctx = context.copy()
-            compute_ctx.update({
-                    'res.currency.compute.account': acc,
-                    'res.currency.compute.account_invert': True,
-                })
-            v = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], s, context=compute_ctx)
-            data['amount_currency'] = v
+            #compute the total of current move
+            data['debit'] = total < 0 and -total or 0.0
+            data['credit'] = total > 0 and total or 0.0
+            #pick the good account on the journal accordingly if the next proposed line will be a debit or a credit
+            journal_data = journal_obj.browse(cr, uid, context['journal_id'], context=context)
+            account = total > 0 and journal_data.default_credit_account_id or journal_data.default_debit_account_id
+            #map the account using the fiscal position of the partner, if needed
+            part = data.get('partner_id') and partner_obj.browse(cr, uid, data['partner_id'], context=context) or False
+            if account and data.get('partner_id'):
+                account = fiscal_pos_obj.map_account(cr, uid, part and part.property_account_position or False, account.id)
+                account = account_obj.browse(cr, uid, account, context=context)
+            data['account_id'] =  account and account.id or False
+            #compute the amount in secondary currency of the account, if needed
+            if account and account.currency_id:
+                data['currency_id'] = account.currency_id.id
+                #set the context for the multi currency change
+                compute_ctx = context.copy()
+                compute_ctx.update({
+                        #the following 2 parameters are used to choose the currency rate, in case where the account
+                        #doesn't work with an outgoing currency rate method 'at date' but 'average'
+                        'res.currency.compute.account': account,
+                        'res.currency.compute.account_invert': True,
+                    })
+                if data.get('date'):
+                    compute_ctx.update({'date': data['date']})
+                data['amount_currency'] = currency_obj.compute(cr, uid, account.company_id.currency_id.id, data['currency_id'], -total, context=compute_ctx)
+        data = self._default_get_move_form_hook(cr, uid, data)
         return data
 
     def on_create_write(self, cr, uid, id, context=None):
@@ -687,6 +623,12 @@ class account_move_line(osv.osv):
             'credit': v < 0 and -v or 0.0
         }
         return result
+
+    def onchange_account_id(self, cr, uid, ids, account_id, context=None):
+        res = {'value': {}}
+        if account_id:
+            res['value']['account_tax_id'] = [x.id for x in self.pool.get('account.account').browse(cr, uid, account_id, context=context).tax_ids]
+        return res
 
     def onchange_partner_id(self, cr, uid, ids, move_id, partner_id, account_id=None, debit=0, credit=0, date=False, journal=False):
         partner_obj = self.pool.get('res.partner')

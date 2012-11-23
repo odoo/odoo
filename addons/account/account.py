@@ -1314,13 +1314,6 @@ class account_move(osv.osv):
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
 
-    def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
-        balance = 0.0
-        for line in line_ids:
-            if line[2]:
-                balance += (line[2].get('debit',0.00)- (line[2].get('credit',0.00)))
-        return {'value': {'balance': balance}}
-
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
