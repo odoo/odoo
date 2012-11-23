@@ -227,45 +227,51 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.when();
     },
     widgetAccesskey:function(){
+         var self= this;
          var list = [];
-         var accesskey;
+         var accesskey = [];
          $(window).blur(function() {unhighlightAccessKeys()});
-
-         var highlightAccessKeys = function(ins){
-            list = $(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button, .oe_list_content:visible .oe_form_field_one2many_list_row_add > a')
-                  .not('.oe_form_invisible,.oe_edit_only');
+         
+         var highlightAccessKeys = function(){
+            var o2m = $.makeArray($(document).find('.oe_list_content:visible .oe_form_field_one2many_list_row_add > a'))
+            var list1 = $.makeArray($(document).find('.oe_form_buttons span:visible button,.oe_form_buttons span a,.oe_form_button').not('.oe_form_invisible,.oe_edit_only'));
+            list = o2m.concat(list1);
             accesskey = _.map(list, function(r){return $(r).attr('accesskey') });
             
             _.each(list,function(el,i){
                  if (!$(el).attr("accesskey")) {
-                    accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
-                    if (accesskey[i]) {
-                     var index = 0;
-                     _.each(accesskey, function(key,j){
-                           
-                           if(_.contains(accesskey,$(el).text().replace(/\s/g, '').toUpperCase().charAt(index))){
-                                 index++;
-                                 return false
-                          }else {
-                                   accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(index)
-                                   $(el).attr("accesskey",$(el).text().replace(/\s/g, '').charAt(index))
-                                   index = 0
-                                   return true
-                          }
-                          return false
-            })
-                        }else {
-                                $(el).attr('accesskey',$(el).text().replace(/\s/g, '').charAt(0));
-                                accesskey[i] = $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
-                                return true
-                          
-                        }
-                     }
+                    if(! accesskey[i]){
+                        var index = 0;
+                        _.each(accesskey,function(name,j){
+                            if (!name) {
+                                accesskey[i] =  $(el).text().replace(/\s/g, '').toUpperCase().charAt(0);
+                                return 
+                            } else {
+                                if (_.contains(accesskey, $(el).text().replace(/\s/g, '').toUpperCase().charAt(index))) {
+                                    index++;
+                                    return false;
+                                } else {
+                                    if (! accesskey[i]) {
+                                        $(el).attr("accesskey",$(el).text().replace(/\s/g, '').charAt(index))
+                                        index = 0
+                                        return true
+                                    }else {
+                                        $(el).attr("accesskey",accesskey[i])
+                                    }
+                                }
+                            }
+                         return
+                        })
+                    }
+                    
+                 }else {
+                    $(el).attr("accesskey",accesskey[i])
+                 }
             })
        }
        $(document).keydown(function(e){
-           highlightAccessKeys();
            if (e.keyCode === 18 || e.keycode === 16 && e.altkey || e.keyCode == 18 && e.shiftKey) {
+                 highlightAccessKeys();
                 _.each(list,function(rl,i){
                     $(rl).html(function(i, html){
                         return $(rl).text().replace($(rl).attr('accesskey'), '<span class ="access">' + $(rl).attr('accesskey') + '</span>');
