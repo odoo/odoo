@@ -82,18 +82,6 @@ TESTING = Template(u"""<!DOCTYPE html>
 </html>
 """)
 
-nonliteral_test_contexts = [
-    "{'default_opportunity_id': active_id, 'default_duration': 1.0, 'lng': lang}",
-]
-nonliteral_test_domains = [
-    "['|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)]",
-    "[('company_id', '=', context.get('company_id',False))]",
-    "[('year','=',time.strftime('%Y'))]",
-    "[('state','=','draft'),('date_order','<',time.strftime('%Y-%m-%d %H:%M:%S'))]",
-    "[('state','!=','cancel'),('opening_date','>',datetime.date.today().strftime('%Y-%m-%d'))]",
-    "[('type','=','in'),('day','<=', time.strftime('%Y-%m-%d')),('day','>',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]",
-]
-
 class TestRunnerController(http.Controller):
     _cp_path = '/web/tests'
 
@@ -153,13 +141,6 @@ class TestRunnerController(http.Controller):
             [name for name in sorted_mods
              if module.get_module_resource(name, 'static')
              if manifests[name]['js']]), db_info=json.dumps(db_info))
-
-    @http.jsonrequest
-    def load_context(self, req, index):
-        return nonliterals.Context(req.session, nonliteral_test_contexts[index])
-    @http.jsonrequest
-    def load_domain(self, req, index):
-        return nonliterals.Domain(req.session, nonliteral_test_domains[index])
 
     def load_manifest(self, name):
         manifest = module.load_information_from_description_file(name)

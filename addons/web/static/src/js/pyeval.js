@@ -602,10 +602,13 @@ openerp.web.pyeval = function (instance) {
     var eval_contexts = function (contexts, evaluation_context) {
         evaluation_context = evaluation_context || {};
         return _(contexts).reduce(function (result_context, ctx) {
-            // TODO: wrap string contexts in nonlit?
             // __eval_context evaluations can lead to some of `contexts`'s
             // values being null, skip them as well as empty contexts
             if (_.isEmpty(ctx)) { return result_context; }
+            if (_.isString(ctx)) {
+                // wrap raw strings in context
+                ctx = { __ref: 'context', __debug: ctx };
+            }
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
@@ -627,7 +630,10 @@ openerp.web.pyeval = function (instance) {
     var eval_domains = function (domains, evaluation_context) {
         var result_domain = [];
         _(domains).each(function (domain) {
-            // TODO: wrap string domains in nonlit?
+            if (_.isString(domain)) {
+                // wrap raw strings in domain
+                domain = { __ref: 'domain', __debug: domain };
+            }
             switch(domain.__ref) {
             case 'domain':
                 evaluation_context.context = py.dict.fromJSON(evaluation_context);
@@ -650,7 +656,10 @@ openerp.web.pyeval = function (instance) {
     var eval_groupbys = function (contexts, evaluation_context) {
         var result_group = [];
         _(contexts).each(function (ctx) {
-            // TODO: wrap string contexts in nonlit?
+            if (_.isString(ctx)) {
+                // wrap raw strings in context
+                ctx = { __ref: 'context', __debug: ctx };
+            }
             var group;
             var evaluated = ctx;
             switch(ctx.__ref) {

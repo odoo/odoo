@@ -385,7 +385,6 @@ openerp.testing.section('eval.edc', {
 });
 openerp.testing.section('eval.edc.nonliterals', {
     dependencies: ['web.data'],
-    rpc: 'rpc',
     setup: function (instance) {
         instance.session.user_context = {
             lang: 'en_US',
@@ -398,29 +397,20 @@ openerp.testing.section('eval.edc.nonliterals', {
                     contexts: contexts || [],
                     domains: domains || []
                 });
-            },
-            load_context: function (index) {
-                return this.session.rpc('/web/tests/load_context', {index: index});
-            },
-            load_domain: function (index) {
-                return this.session.rpc('/web/tests/load_domain', {index: index});
-            },
+            }
         });
     }
 }, function (test) {
     test('domain with time', {asserts: 1}, function (instance) {
-        return instance.load_domain(0).then(function (d) {
-            strictEqual(d.__ref, 'domain');
-            return instance.edc([
-                [['type', '=', 'contract']],
-                { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
-                  "__eval_context": null,
-                  "__ref": "compound_domain"
-                },
-                d,
-                [['user_id', '=', 1]]
-            ]);
-        }).then(function (result) {
+        return instance.edc([
+            [['type', '=', 'contract']],
+            { "__domains": [["|"], [["state", "in", ["open", "draft"]]], [["state", "=", "pending"]]],
+              "__eval_context": null,
+              "__ref": "compound_domain"
+            },
+            "['|', '&', ('date', '!=', False), ('date', '<=', time.strftime('%Y-%m-%d')), ('is_overdue_quantity', '=', True)]",
+            [['user_id', '=', 1]]
+        ]).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
@@ -437,29 +427,30 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     });
     test('conditional context', {asserts: 2}, function (instance) {
-        return instance.load_domain(1).then(function (d) {
-            var e1 = instance.edc([d]).then(function (result) {
-                deepEqual(result.domain, [
-                    ['company_id', '=', false]
-                ]);
-            });
-            var cd = new instance.web.CompoundDomain(d);
-            cd.set_eval_context({company_id: 42});
-            var e2 = instance.edc([cd]).then(function (result) {
-                deepEqual(result.domain, [
-                    ['company_id', '=', 42]
-                ]);
-            });
-
-            return $.when(e1, e2);
+        var d = {
+            __ref: 'domain',
+            __debug: "[('company_id', '=', context.get('company_id',False))]"
+        };
+        var e1 = instance.edc([d]).then(function (result) {
+            deepEqual(result.domain, [
+                ['company_id', '=', false]
+            ]);
         });
+        var cd = new instance.web.CompoundDomain(d);
+        cd.set_eval_context({company_id: 42});
+        var e2 = instance.edc([cd]).then(function (result) {
+            deepEqual(result.domain, [
+                ['company_id', '=', 42]
+            ]);
+        });
+
+        return $.when(e1, e2);
     });
     test('substitution in context', {asserts: 1}, function (instance) {
-        return instance.load_context(0).then(function (c) {
-            var cc = new instance.web.CompoundContext(c);
-            cc.set_eval_context({active_id: 42});
-            return instance.edc([], [cc]);
-        }).then(function (result) {
+        var c = "{'default_opportunity_id': active_id, 'default_duration': 1.0, 'lng': lang}";
+        var cc = new instance.web.CompoundContext(c);
+        cc.set_eval_context({active_id: 42});
+        return instance.edc([], [cc]).then(function (result) {
             deepEqual(result.context, {
                 lang: "en_US",
                 tz: false,
@@ -471,9 +462,8 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     });
     test('date', {asserts: 1}, function (instance) {
-        return instance.load_domain(4).then(function (d) {
-            return instance.edc([d]);
-        }).then(function (result) {
+        var d = "[('state','!=','cancel'),('opening_date','>',datetime.date.today().strftime('%Y-%m-%d'))]";
+        return instance.edc([d]).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
@@ -484,9 +474,8 @@ openerp.testing.section('eval.edc.nonliterals', {
         });
     });
     test('delta', {asserts: 1}, function (instance) {
-        return instance.load_domain(5).then(function (d) {
-            return instance.edc([d]);
-        }).then(function (result) {
+        var d = "[('type','=','in'),('day','<=', time.strftime('%Y-%m-%d')),('day','>',(datetime.date.today()-datetime.timedelta(days=15)).strftime('%Y-%m-%d'))]";
+        return instance.edc([d]).then(function (result) {
             var d = new Date();
             var today = _.str.sprintf("%04d-%02d-%02d",
                 d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
