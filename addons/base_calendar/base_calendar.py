@@ -824,7 +824,7 @@ class calendar_alarm(osv.osv):
             res_obj = model_obj.browse(cr, uid, alarm.res_id, context=context)
             re_dates = []
 
-            if res_obj.rrule:
+            if hasattr(res_obj, 'rrule') and res_obj.rrule:
                 event_date = datetime.strptime(res_obj.date, '%Y-%m-%d %H:%M:%S')
                 recurrent_dates = get_recurrent_dates(res_obj.rrule, res_obj.exdate, event_date, res_obj.exrule)
 
