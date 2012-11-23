@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-06-20 16:18+0000\n"
-"Last-Translator: mikel <mikel.martin@gmail.com>\n"
+"PO-Revision-Date: 2012-11-21 18:46+0000\n"
+"Last-Translator: Pedro Manuel Baeza <pedro.baeza@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:04+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-22 05:07+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -2166,9 +2166,7 @@ msgstr "Pro-forma"
 msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
-msgstr ""
-"No se ha definido una cuenta debe por defecto \n"
-"en el diario \"%s\""
+msgstr "No se ha definido una cuenta deudora por defecto en el diario \"%s\""
 
 #. module: account
 #: help:account.account.template,type:0
@@ -2375,8 +2373,7 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
-"No se ha definido una cuenta haber por defecto \n"
-"en el diario \"%s\""
+"No se ha definido una cuenta acreedora por defecto en el diario \"%s\""
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_review_financial_journals_installer
@@ -3252,7 +3249,7 @@ msgstr "Plantillas para el plan contable"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
 msgid "Set Your Accounting Options"
-msgstr ""
+msgstr "Establezca las opciones de contabilidad"
 
 #. module: account
 #: view:report.account.sales:0
@@ -4010,7 +4007,7 @@ msgid ""
 msgstr ""
 "Lo más recomendable es usar un diario dedicado a contener los asientos de "
 "apertura de todos los ejercicios. Tenga en cuenta que lo debería definir con "
-"cuentas de debe/haber por defecto, de tipo 'situación' y con una "
+"cuentas acreedora/deudora por defecto, de tipo 'situación' y con una "
 "contrapartida centralizada."
 
 #. module: account
@@ -6387,7 +6384,7 @@ msgstr "Otra información"
 #. module: account
 #: field:account.journal,default_credit_account_id:0
 msgid "Default Credit Account"
-msgstr "Cuenta haber por defecto"
+msgstr "Cuenta acreedora por defecto"
 
 #. module: account
 #: help:account.analytic.line,currency_id:0
@@ -7696,7 +7693,7 @@ msgstr "Información opcional"
 #: code:addons/account/wizard/account_fiscalyear_close.py:100
 #, python-format
 msgid "The journal must have default credit and debit account"
-msgstr "El diario debe tener una cuenta haber y debe por defecto."
+msgstr "El diario debe tener una cuenta acreedora y deudora por defecto."
 
 #. module: account
 #: report:account.general.journal:0
