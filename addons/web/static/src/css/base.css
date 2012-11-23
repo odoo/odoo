@@ -1180,7 +1180,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightGray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1205,7 +1205,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightGray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -1387,60 +1387,6 @@
 .openerp .oe_view_manager table.oe_view_manager_header .oe_view_manager_buttons {
   white-space: nowrap;
 }
-.openerp .oe_view_manager .oe_view_manager_pager {
-  line-height: 26px;
-}
-.openerp .oe_view_manager .oe_view_manager_pager .oe_list_pager_single_page .oe_pager_group {
-  display: none;
-}
-.openerp .oe_view_manager .oe_pager_value {
-  float: left;
-  margin-right: 8px;
-}
-.openerp .oe_view_manager ul.oe_pager_group {
-  padding: 0;
-  margin: 0;
-}
-.openerp .oe_view_manager .oe_pager_group {
-  float: left;
-  height: 24px;
-  line-height: 24px;
-  display: inline-block;
-  border: 1px solid #ababab;
-  cursor: pointer;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-}
-.openerp .oe_view_manager .oe_pager_group li {
-  height: 24px;
-  line-height: 24px;
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-  float: left;
-  border-right: 1px solid #ababab;
-}
-.openerp .oe_view_manager .oe_pager_group li:last-child {
-  border: none;
-}
-.openerp .oe_view_manager .oe_pager_group a {
-  color: #4c4c4c;
-  padding: 0 8px;
-}
-.openerp .oe_view_manager .oe_pager_group a:hover {
-  text-decoration: none;
-}
-.openerp .oe_view_manager .oe_pager_group .active {
-  background: #999999;
-  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
-}
-.openerp .oe_view_manager .oe_pager_group .active a {
-  color: white;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-}
 .openerp .oe_view_manager .oe_view_manager_switch {
   padding: 0;
   margin: 0 0 0 8px;
@@ -1489,6 +1435,60 @@
 .openerp .oe_view_manager .oe_view_manager_switch .oe_vm_switch_diagram:after {
   content: "f";
 }
+.openerp .oe_list_pager {
+  line-height: 26px;
+}
+.openerp .oe_list_pager .oe_pager_value {
+  float: left;
+  margin-right: 8px;
+}
+.openerp .oe_list_pager ul.oe_pager_group {
+  padding: 0;
+  margin: 0;
+}
+.openerp .oe_list_pager .oe_pager_group {
+  float: left;
+  height: 24px;
+  line-height: 24px;
+  display: inline-block;
+  border: 1px solid #ababab;
+  cursor: pointer;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+.openerp .oe_list_pager .oe_pager_group li {
+  height: 24px;
+  line-height: 24px;
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  float: left;
+  border-right: 1px solid #ababab;
+}
+.openerp .oe_list_pager .oe_pager_group li:last-child {
+  border: none;
+}
+.openerp .oe_list_pager .oe_pager_group a {
+  color: #4c4c4c;
+  padding: 0 8px;
+}
+.openerp .oe_list_pager .oe_pager_group a:hover {
+  text-decoration: none;
+}
+.openerp .oe_list_pager .oe_pager_group .active {
+  background: #999999;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) inset;
+}
+.openerp .oe_list_pager .oe_pager_group .active a {
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+.openerp .oe_list_pager.oe_list_pager_single_page .oe_pager_group {
+  display: none;
+}
 .openerp .oe_view_manager_current {
   height: 100%;
 }
@@ -1519,6 +1519,9 @@
 }
 .openerp .oe_popup_form > .oe_formview > .oe_form_pager {
   display: none !important;
+}
+.openerp .oe_popup_list_pager {
+  float: right;
 }
 .openerp .oe_searchview {
   cursor: text;
@@ -2131,7 +2134,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;

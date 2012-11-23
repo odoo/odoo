@@ -1094,9 +1094,7 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$el.on('click', '.oe_logo', function() {
-                self.action_manager.do_action('home');
-            });
+            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {

@@ -1752,7 +1752,9 @@ class Export(View):
     def fields_info(self, req, model, export_fields):
         info = {}
         fields = self.fields_get(req, model)
-
+        if ".id" in export_fields:
+            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
         # arbitrary, this requires ordering all sub-fields of a given field
