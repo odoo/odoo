@@ -189,9 +189,7 @@ openerp.testing.section('eval.types', {
         ok(py.eval('a - day == date(2002, 3, 1)', ctx));
         ok(py.eval('-day + a == date(2002, 3, 1)', ctx));
         ok(py.eval('a + week == date(2002, 3, 9)', ctx));
-        console.group(9)
         ok(py.eval('a - week == date(2002, 2, 23)', ctx));
-        console.groupEnd();
         ok(py.eval('a + 52*week == date(2003, 3, 1)', ctx)); // 10
         ok(py.eval('a - 52*week == date(2001, 3, 3)', ctx));
         ok(py.eval('(a + week) - a == week', ctx));

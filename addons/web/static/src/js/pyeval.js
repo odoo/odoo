@@ -456,7 +456,6 @@ openerp.web.pyeval = function (instance) {
                 return py.NotImplemented;
             }
             var s = tmxxx(this.year, this.month, this.day + other.days);
-            console.log(this, other, s);
             return datetime.date.fromJSON(s.year, s.month, s.day);
         },
         __radd__: function (other) { return this.__add__(other); },
