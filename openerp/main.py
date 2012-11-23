@@ -210,12 +210,7 @@ def quit_on_signals():
 
     if getattr(openerp, 'phoenix', False):
         # like the phoenix, reborn from ashes...
-        strip_args = ['-d', '-u']
-        a = sys.argv[:]
-        args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
-
-        # FIXME http socket cannot be rebind ?!? socket seems to not be freed, even shutdown() is called
-        os.execv(sys.executable, [sys.executable] + args)
+        openerp.service._reexec()
         return
 
     if config['pidfile']:

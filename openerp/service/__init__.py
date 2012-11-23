@@ -22,6 +22,7 @@
 import logging
 import os
 import signal
+import sys
 import threading
 import time
 
@@ -126,15 +127,25 @@ def start_services_workers():
     openerp.multi_process = True
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
+def _reexec():
+    """reexecute openerp-server process with (nearly) the same arguments"""
+    strip_args = ['-d', '-u']
+    a = sys.argv[:]
+    args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+    os.execv(sys.executable, [sys.executable] + args)
+
 def restart_server():
     if openerp.multi_process:
         raise NotImplementedError("Multicorn is not supported (but gunicorn was)")
         pid = openerp.wsgi.core.arbiter_pid
         os.kill(pid, signal.SIGHUP)
     else:
-        openerp.phoenix = True
-        signame = 'CTRL_C_EVENT' if os.name == 'nt' else 'SIGINT'
-        sig = getattr(signal, signame)
-        os.kill(os.getpid(), sig)
+        if os.name == 'nt':
+            # TODO check if parent is a service
+            stop_services()
+            _reexec()
+        else:
+            openerp.phoenix = True
+            os.kill(os.getpid(), signal.SIGINT)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
