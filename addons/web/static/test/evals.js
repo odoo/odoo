@@ -245,19 +245,34 @@ openerp.testing.section('eval.types', {
 });
 openerp.testing.section('eval.edc', {
     dependencies: ['web.data'],
-    rpc: 'rpc',
-    setup: function (instance) {
-        instance.session.user_context = {
-            lang: 'en_US',
-            tz: false,
-            uid: 1
-        };
+    rpc: 'mock',
+    setup: function (instance, $fix, mock) {
+        var user = { login: 'admin', id: 1, lang: 'en_US', tz: false };
         instance.edc = function (domains, contexts) {
             return instance.web.pyeval.eval_domains_and_contexts({
                 contexts: contexts || [],
                 domains: domains || []
             });
-        }
+        };
+        mock('res.lang:load_lang', function () { return true; });
+        mock('res.users:write', function (args) {
+            _.extend(user, args[1]);
+            return true;
+        });
+        mock('/web/session/get_session_info', function () {
+            return {
+                session_id: 'foobar',
+                db: '3',
+                login: user.login,
+                uid: user.id,
+                context: {
+                    uid: user.id,
+                    lang: user.lang,
+                    tz: user.tz
+                }
+            };
+        });
+        return instance.session.session_reload();
     }
 }, function (test) {
     test('empty, basic', {asserts: 3}, function (instance) {
@@ -282,9 +297,7 @@ openerp.testing.section('eval.edc', {
                     lang: 'ru_RU',
                     tz: 'America/Santarem'
                 }]);
-            }).then(function () {
-                return instance.session.session_reload();
-            });
+            }).then(instance.session.session_reload.bind(instance.session));
         }
     }, function (instance) {
         return instance.edc().then(function (result) {
