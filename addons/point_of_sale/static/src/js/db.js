@@ -134,7 +134,7 @@ function openerp_pos_db(instance, module){
             for(var i = 0, len = products.length; i < len; i++){
                 var product = products[i];
                 var search_string = this._product_search_string(product);
-                var categ_id = product.pos_categ_id[0];
+                var categ_id = product.pos_categ_id ? product.pos_categ_id[0] : this.root_category_id;
                 if(!stored_categories[categ_id]){
                     stored_categories[categ_id] = [];
                 }
