@@ -1,11 +1,19 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <record id="group_lunch_manager" model="res.groups">
-            <field name="name">Lunch / Manager</field>
+        <record model="ir.module.category" id="module_lunch_category">
+            <field name="name">Lunch</field>
+            <field name="description">Helps you handle your lunch needs, if you are a manager you will be able to create new products, cashmoves and to confirm or cancel orders.</field>
+            <field name="sequence">16</field>
         </record>
         <record id="group_lunch_user" model="res.groups">
-            <field name="name">Lunch / User</field>
+            <field name="name">User</field>
+            <field name="category_id" ref="module_lunch_category"/>
+        </record>
+        <record id="group_lunch_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="implied_ids" eval="[(4, ref('group_lunch_user'))]"/>
+            <field name="category_id" ref="module_lunch_category"/>
         </record>
     </data>
 </openerp>

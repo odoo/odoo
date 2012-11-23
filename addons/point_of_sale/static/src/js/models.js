@@ -36,6 +36,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'company':          null,
                 'user':             null,   // the user that loaded the pos
                 'user_list':        null,   // list of all users
+                'partner_list':     null,   // list of all partners with an ean
                 'cashier':          null,   // the logged cashier, if different from user
 
                 'orders':           new module.OrderCollection(),
@@ -120,6 +121,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
                 }).then(function(users){
                     self.set('user_list',users);
+
+                    return self.fetch('res.partner', ['name','ean13'], [['ean13', '!=', false]]);
+                }).then(function(partners){
+                    self.set('partner_list',partners);
+                    console.log('Loaded partners:',partners);
 
                     return self.fetch('account.tax', ['amount', 'price_include', 'type']);
                 }).then(function(taxes){
@@ -656,6 +662,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         get_client: function(){
             return this.get('client');
+        },
+        get_client_name: function(){
+            var client = this.get('client');
+            return client ? client.name : "";
         },
         // the order also stores the screen status, as the PoS supports
         // different active screens per order. This method is used to
