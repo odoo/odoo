@@ -39,7 +39,7 @@ class account_check_write(osv.osv_memory):
         voucher_ids = context.get('active_ids', [])
         number = int(self.browse(cr, uid, ids[0], context=context).check_number)
         if voucher_ids:
-            checks = voucher_obj.browse(cr, uid, context['active_ids'], context=context)
+            checks = voucher_obj.browse(cr, uid, voucher_ids, context=context)
             for check in checks:
                 voucher_obj.write(cr, uid, [check.id], {'number': str(number)}, context=context)
                 number += 1

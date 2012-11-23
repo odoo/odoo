@@ -6,15 +6,15 @@
             <field name="name">account.check.form</field>
             <field name="model">account.check.write</field>
             <field name="arch" type="xml">
-            <form string="Check" version="7.0">
-                <group col="4">
-                    <field name="check_number"/>
-                </group>
-                <footer>
-                    <button name="print_check_write" string="Print Check" type="object" class="oe_highlight"/> or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
-            </form>
+                <form string="Check" version="7.0">
+                    <group col="4">
+                        <field name="check_number"/>
+                    </group>
+                    <footer>
+                        <button name="print_check_write" string="Print Check" type="object" class="oe_highlight"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
             </field>
         </record>
 
