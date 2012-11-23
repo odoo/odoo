@@ -313,7 +313,7 @@ class account_analytic_account(osv.osv):
             if obj.partner_id:
                 message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
             self.message_post(cr, uid, [obj.id], body=message,
-                subtype="analytic.mt_account_status", context=context)
+                context=context)
 
 account_analytic_account()
 

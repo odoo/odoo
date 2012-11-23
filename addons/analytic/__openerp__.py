@@ -38,8 +38,7 @@ that have no counterpart in the general financial accounts.
         'security/analytic_security.xml',
         'security/ir.model.access.csv',
         'analytic_sequence.xml',
-        'analytic_view.xml',
-        'analytic_data.xml'
+        'analytic_view.xml'
     ],
     'demo': [],
     'installable': True,
