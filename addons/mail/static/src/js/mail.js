@@ -9,39 +9,6 @@ openerp.mail = function (session) {
 
     /**
      * ------------------------------------------------------------
-     * FormView
-     * ------------------------------------------------------------
-     * 
-     * Override of formview do_action method, to catch all return action about
-     * mail.compose.message. The purpose is to bind 'Send by e-mail' buttons.
-     */
-
-    session.web.FormView = session.web.FormView.extend({
-        do_action: function (action) {
-            if (action.res_model == 'mail.compose.message') {
-                /* hack for stop context propagation of wrong value
-                 * delete this hack when a global method to clean context is create
-                 */
-                var context_keys = ['default_template_id', 'default_composition_mode', 
-                    'default_use_template', 'default_partner_ids', 'default_model',
-                    'default_res_id', 'default_content_subtype', 'default_subject',
-                    'default_body', 'active_id', 'lang', 'bin_raw', 'tz',
-                    'active_model', 'edi_web_url_view', 'active_ids', 
-                    'default_attachment_ids']
-                for (var key in action.context) {
-                    if (_.indexOf(context_keys, key) == -1) {
-                        action.context[key] = null;
-                    }
-                }
-                /* end hack */
-            }
-            return this._super.apply(this, arguments);
-        },
-    });
-
-
-    /**
-     * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 

@@ -408,6 +408,7 @@ class account_invoice(osv.osv):
             'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
             })
         return {
             'type': 'ir.actions.act_window',
@@ -1730,8 +1731,6 @@ class account_invoice_tax(osv.osv):
             })
         return res
 
-account_invoice_tax()
-
 
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
@@ -1745,16 +1744,14 @@ class res_partner(osv.osv):
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-res_partner()
 
-class mail_message(osv.osv):
-    _name = 'mail.message'
-    _inherit = 'mail.message'
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'account.invoice':
-            self.pool.get('account.invoice').write(cr, uid, [message.res_id], {'sent':True}, context=context)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
+            self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
-mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
