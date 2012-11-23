@@ -1,5 +1,8 @@
 openerp.testing.section('eval.types', {
-    dependencies: ['web.coresetup']
+    dependencies: ['web.coresetup'],
+    setup: function (instance) {
+        instance.session.uid = 42;
+    }
 }, function (test) {
     test('strftime', function (instance) {
         var d = new Date();
@@ -15,6 +18,150 @@ openerp.testing.section('eval.types', {
             _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
                 d.getFullYear(), d.getMonth() + 1, d.getDate(),
                 d.getHours(), d.getMinutes(), d.getSeconds()));
+    });
+    // Port from pypy/lib_pypy/test_datetime.py
+    var makeEq = function (instance, c2) {
+        var ctx = instance.web.pyeval.context();
+        var c = _.extend({ td: ctx.datetime.timedelta }, c2 || {});
+        return function (a, b, message) {
+            ok(py.eval(a + ' == ' + b, c), message);
+        };
+    };
+    test('timedelta.test_constructor', function (instance) {
+        var eq = makeEq(instance);
+
+        // keyword args to constructor
+        eq('td()', 'td(weeks=0, days=0, hours=0, minutes=0, seconds=0, ' +
+                      'milliseconds=0, microseconds=0)');
+        eq('td(1)', 'td(days=1)');
+        eq('td(0, 1)', 'td(seconds=1)');
+        eq('td(0, 0, 1)', 'td(microseconds=1)');
+        eq('td(weeks=1)', 'td(days=7)');
+        eq('td(days=1)', 'td(hours=24)');
+        eq('td(hours=1)', 'td(minutes=60)');
+        eq('td(minutes=1)', 'td(seconds=60)');
+        eq('td(seconds=1)', 'td(milliseconds=1000)');
+        eq('td(milliseconds=1)', 'td(microseconds=1000)');
+
+        // Check float args to constructor
+        eq('td(weeks=1.0/7)', 'td(days=1)');
+        eq('td(days=1.0/24)', 'td(hours=1)');
+        eq('td(hours=1.0/60)', 'td(minutes=1)');
+        eq('td(minutes=1.0/60)', 'td(seconds=1)');
+        eq('td(seconds=0.001)', 'td(milliseconds=1)');
+        eq('td(milliseconds=0.001)', 'td(microseconds=1)');
+    });
+    test('timedelta.test_computations', function (instance) {
+        var c = instance.web.pyeval.context();
+        var zero = py.float.fromJSON(0);
+        var eq = makeEq(instance, {
+            // one week
+            a: py.PY_call(c.datetime.timedelta, [
+                py.float.fromJSON(7)]),
+            // one minute
+            b: py.PY_call(c.datetime.timedelta, [
+                zero, py.float.fromJSON(60)]),
+            // one millisecond
+            c: py.PY_call(c.datetime.timedelta, [
+                zero, zero, py.float.fromJSON(1000)]),
+        });
+
+        eq('a+b+c', 'td(7, 60, 1000)');
+        eq('a-b', 'td(6, 24*3600 - 60)');
+        eq('-a', 'td(-7)');
+        eq('+a', 'td(7)');
+        eq('-b', 'td(-1, 24*3600 - 60)');
+        eq('-c', 'td(-1, 24*3600 - 1, 999000)');
+//        eq('abs(a)', 'a');
+//        eq('abs(-a)', 'a');
+        eq('td(6, 24*3600)', 'a');
+        eq('td(0, 0, 60*1000000)', 'b');
+        eq('a*10', 'td(70)');
+        eq('a*10', '10*a');
+        // eq('a*10L', '10*a');
+        eq('b*10', 'td(0, 600)');
+        eq('10*b', 'td(0, 600)');
+        // eq('b*10L', 'td(0, 600)');
+        eq('c*10', 'td(0, 0, 10000)');
+        eq('10*c', 'td(0, 0, 10000)');
+        // eq('c*10L', 'td(0, 0, 10000)');
+        eq('a*-1', '-a');
+        eq('b*-2', '-b-b');
+        eq('c*-2', '-c+-c');
+        eq('b*(60*24)', '(b*60)*24');
+        eq('b*(60*24)', '(60*b)*24');
+        eq('c*1000', 'td(0, 1)');
+        eq('1000*c', 'td(0, 1)');
+        eq('a//7', 'td(1)');
+        eq('b//10', 'td(0, 6)');
+        eq('c//1000', 'td(0, 0, 1)');
+        eq('a//10', 'td(0, 7*24*360)');
+        eq('a//3600000', 'td(0, 0, 7*24*1000)');
+
+        // Issue #11576
+        eq('td(999999999, 86399, 999999) - td(999999999, 86399, 999998)', 'td(0, 0, 1)');
+        eq('td(999999999, 1, 1) - td(999999999, 1, 0)',
+           'td(0, 0, 1)')
+    });
+    test('timedelta.test_basic_attributes', function (instance) {
+        var ctx = instance.web.pyeval.context();
+        strictEqual(py.eval('datetime.timedelta(1, 7, 31).days', ctx), 1);
+        strictEqual(py.eval('datetime.timedelta(1, 7, 31).seconds', ctx), 7);
+        strictEqual(py.eval('datetime.timedelta(1, 7, 31).microseconds', ctx), 31);
+    });
+    test('timedelta.test_total_seconds', function (instance) {
+        var c = { timedelta: instance.web.pyeval.context().datetime.timedelta };
+        strictEqual(py.eval('timedelta(365).total_seconds()', c), 31536000);
+        strictEqual(
+            py.eval('timedelta(seconds=123456.789012).total_seconds()', c),
+            123456.789012);
+        strictEqual(
+            py.eval('timedelta(seconds=-123456.789012).total_seconds()', c),
+            -123456.789012);
+        strictEqual(
+            py.eval('timedelta(seconds=0.123456).total_seconds()', c), 0.123456);
+        strictEqual(py.eval('timedelta().total_seconds()', c), 0);
+        strictEqual(
+            py.eval('timedelta(seconds=1000000).total_seconds()', c), 1e6);
+    });
+    test('timedelta.test_str', function (instance) {
+        var c = { td: instance.web.pyeval.context().datetime.timedelta };
+
+        strictEqual(py.eval('str(td(1))', c), "1 day, 0:00:00");
+        strictEqual(py.eval('str(td(-1))', c), "-1 day, 0:00:00");
+        strictEqual(py.eval('str(td(2))', c), "2 days, 0:00:00");
+        strictEqual(py.eval('str(td(-2))', c), "-2 days, 0:00:00");
+
+        strictEqual(py.eval('str(td(hours=12, minutes=58, seconds=59))', c),
+                    "12:58:59");
+        strictEqual(py.eval('str(td(hours=2, minutes=3, seconds=4))', c),
+                     "2:03:04");
+        strictEqual(
+            py.eval('str(td(weeks=-30, hours=23, minutes=12, seconds=34))', c),
+            "-210 days, 23:12:34");
+
+        strictEqual(py.eval('str(td(milliseconds=1))', c), "0:00:00.001000");
+        strictEqual(py.eval('str(td(microseconds=3))', c), "0:00:00.000003");
+
+        strictEqual(
+            py.eval('str(td(days=999999999, hours=23, minutes=59, seconds=59, microseconds=999999))', c),
+           "999999999 days, 23:59:59.999999");
+    });
+    test('timedelta.test_massive_normalization', function (instance) {
+        var td = py.PY_call(
+            instance.web.pyeval.context().datetime.timedelta,
+            {microseconds: py.float.fromJSON(-1)});
+        strictEqual(td.days, -1);
+        strictEqual(td.seconds, 24 * 3600 - 1);
+        strictEqual(td.microseconds, 999999);
+    });
+    test('timedelta.test_bool', function (instance) {
+        var c = { td: instance.web.pyeval.context().datetime.timedelta };
+        ok(py.eval('bool(td(1))', c));
+        ok(py.eval('bool(td(0, 1))', c));
+        ok(py.eval('bool(td(0, 0, 1))', c));
+        ok(py.eval('bool(td(microseconds=1))', c));
+        ok(py.eval('bool(not td(0))', c));
     });
 });
 openerp.testing.section('eval.edc', {

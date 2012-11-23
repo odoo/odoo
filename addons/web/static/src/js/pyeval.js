@@ -14,6 +14,188 @@ openerp.web.pyeval = function (instance) {
     };
 
     var datetime = py.PY_call(py.object);
+
+    /**
+     * computes (Math.floor(a/b), a%b and passes that to the callback.
+     *
+     * returns the callback's result
+     */
+    var divmod = function (a, b, fn) {
+        var mod = a%b;
+        // in python, sign(a % b) === sign(b). Not in JS. If wrong side, add a
+        // round of b
+        if (mod > 0 && b < 0 || mod < 0  && b > 0) {
+            mod += b;
+        }
+        return fn(Math.floor(a/b), mod);
+    };
+    /**
+     * Passes the fractional and integer parts of x to the callback, returns
+     * the callback's result
+     */
+    var modf = function (x, fn) {
+        var mod = x%1;
+        if (mod < 0) {
+            mod += 1;
+        }
+        return fn(mod, Math.floor(x));
+    };
+    var zero = py.float.fromJSON(0);
+    // Port from pypy/lib_pypy/datetime.py
+    datetime.timedelta = py.type('timedelta', null, {
+        __init__: function () {
+            var args = py.PY_parseArgs(arguments, [
+                ['days', zero], ['seconds', zero], ['microseconds', zero],
+                ['milliseconds', zero], ['minutes', zero], ['hours', zero],
+                ['weeks', zero]
+            ]);
+
+            var d = 0, s = 0, m = 0;
+            var days = args.days.toJSON() + args.weeks.toJSON() * 7;
+            var seconds = args.seconds.toJSON()
+                        + args.minutes.toJSON() * 60
+                        + args.hours.toJSON() * 3600;
+            var microseconds = args.microseconds.toJSON()
+                             + args.milliseconds.toJSON() * 1000;
+
+            // Get rid of all fractions, and normalize s and us.
+            // Take a deep breath <wink>.
+            var daysecondsfrac = modf(days, function (dayfrac, days) {
+                d = days;
+                if (dayfrac) {
+                    return modf(dayfrac * 24 * 3600, function (dsf, dsw) {
+                        s = dsw;
+                        return dsf;
+                    });
+                }
+                return 0;
+            });
+
+            var secondsfrac = modf(seconds, function (sf, s) {
+                seconds = s;
+                return sf + daysecondsfrac;
+            });
+            divmod(seconds, 24*3600, function (days, seconds) {
+                d += days;
+                s += seconds
+            });
+            // seconds isn't referenced again before redefinition
+
+            microseconds += secondsfrac * 1e6;
+            divmod(microseconds, 1000000, function (seconds, microseconds) {
+                divmod(seconds, 24*3600, function (days, seconds) {
+                    d += days;
+                    s += seconds;
+                    m += Math.round(microseconds);
+                });
+            });
+
+            // Carrying still possible here?
+
+            this.days = d;
+            this.seconds = s;
+            this.microseconds = m;
+        },
+        __str__: function () {
+            var hh, mm, ss;
+            divmod(this.seconds, 60, function (m, s) {
+                divmod(m, 60, function (h, m) {
+                    hh = h;
+                    mm = m;
+                    ss = s;
+                });
+            });
+            var s = _.str.sprintf("%d:%02d:%02d", hh, mm, ss);
+            if (this.days) {
+                s = _.str.sprintf("%d day%s, %s",
+                    this.days,
+                    (this.days != 1 && this.days != -1) ? 's' : '',
+                    s);
+            }
+            if (this.microseconds) {
+                s = _.str.sprintf("%s.%06d", s, this.microseconds);
+            }
+            return py.str.fromJSON(s);
+        },
+        __eq__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+                return py.False;
+            }
+            return (this.days === other.days
+                && this.seconds === other.seconds
+                && this.microseconds === other.microseconds)
+                    ? py.True : py.False;
+        },
+        __add__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.PY_call(datetime.timedelta, [
+                py.float.fromJSON(this.days + other.days),
+                py.float.fromJSON(this.seconds + other.seconds),
+                py.float.fromJSON(this.microseconds + other.microseconds)
+            ]);
+        },
+        __radd__: function (other) { return this.__add__(other); },
+        __sub__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.PY_call(datetime.timedelta, [
+                py.float.fromJSON(this.days - other.days),
+                py.float.fromJSON(this.seconds - other.seconds),
+                py.float.fromJSON(this.microseconds - other.microseconds)
+            ]);
+        },
+        __rsub__: function (other) {
+            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return this.__neg__().__add__(other);
+        },
+        __neg__: function () {
+            return py.PY_call(datetime.timedelta, [
+                py.float.fromJSON(-this.days),
+                py.float.fromJSON(-this.seconds),
+                py.float.fromJSON(-this.microseconds)
+            ]);
+        },
+        __pos__: function () { return this; },
+        __mul__: function (other) {
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            var n = other.toJSON();
+            return py.PY_call(datetime.timedelta, [
+                py.float.fromJSON(this.days * n),
+                py.float.fromJSON(this.seconds * n),
+                py.float.fromJSON(this.microseconds * n)
+            ]);
+        },
+        __rmul__: function (other) { return this.__mul__(other); },
+        __div__: function (other) {
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            var usec = ((this.days * 24 * 3600) + this.seconds) * 1000000
+                        + this.microseconds;
+            return py.PY_call(
+                datetime.timedelta, [
+                    zero, zero, py.float.fromJSON(usec / other.toJSON())]);
+        },
+        __floordiv__: function (other) { return this.__div__(other); },
+        total_seconds: function () {
+            return py.float.fromJSON(
+                this.days * 86400
+              + this.seconds
+              + this.microseconds / 1000000)
+        },
+        __nonzero__: function () {
+            return (!!this.days || !!this.seconds || !!this.microseconds)
+                ? py.True
+                : py.False;
+        }
+    });
     datetime.datetime = py.type('datetime', null, {
         __init__: function () {
             var zero = py.float.fromJSON(0);
@@ -108,7 +290,6 @@ openerp.web.pyeval = function (instance) {
             }
         }
     });
-
     var time = py.PY_call(py.object);
     time.strftime = py.PY_def.fromJSON(function () {
         // FIXME: needs PY_getattr
@@ -127,7 +308,7 @@ openerp.web.pyeval = function (instance) {
                 + 'weekday leakdays yearday nlyearday');
         },
         __add__: function (other) {
-            if (py.PY_call(py.isinstance, [datetime.date]) !== py.True) {
+            if (py.PY_call(py.isinstance, [other, datetime.date]) !== py.True) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
@@ -172,7 +353,7 @@ openerp.web.pyeval = function (instance) {
         },
 
         __sub__: function (other) {
-            if (py.PY_call(py.isinstance, [datetime.date]) !== py.True) {
+            if (py.PY_call(py.isinstance, [other, datetime.date]) !== py.True) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
