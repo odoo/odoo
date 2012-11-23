@@ -21,7 +21,8 @@
 
 import logging
 import time
-
+from osv import osv, fields
+from tools.translate import _
 import openerp
 
 _logger = logging.getLogger(__name__)
@@ -77,7 +78,6 @@ class ir_sequence(openerp.osv.osv.osv):
         'number_next': 1,
         'padding' : 0,
     }
-
     def init(self, cr):
         return # Don't do the following index yet.
         # CONSTRAINT/UNIQUE INDEX on (code, company_id) 
@@ -98,6 +98,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment is 0:
+             raise osv.except_osv(_('Warning!'),_("Increment must not be zero."))
         assert isinstance(id, (int, long))
         sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
         cr.execute(sql, (number_increment, number_next))
