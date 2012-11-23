@@ -109,7 +109,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
     _order = 'sequence'
 
 
-    def post_action(self, cr, uid, ids, model, context=None):
+    def post_action(self, cr, uid, ids, model, old_records_states=None, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
@@ -117,11 +117,11 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
-            obj = self.pool.get(obj_name)
+            model_pool = self.pool.get(obj_name)
             # If the rule doesn't involve a time condition, run it immediately
             # Otherwise we let the scheduler run the action
             if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
-                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
+                self._action(cr, uid, [rule_id], model_pool.browse(cr, uid, ids, context=context), old_records_states=old_records_states, context=context)
         return True
 
     def _create(self, old_create, model, context=None):
@@ -144,13 +144,23 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         `post_action`, in that order.
         """
         def wrapper(cr, uid, ids, vals, context=context):
+            old_records_states = {}
             if context is None:
                 context = {}
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
+            model_pool = self.pool.get(model)
+            # get the old records (before the write)
+            if model and ids:
+                for record in model_pool.browse(cr,uid,ids,context=context):
+                    old_records_states[record.id] = record.state
+                #old_records = model_pool.browse(cr,uid,ids,context=context)
+                #print old_records[0]
+            #print old_records[0].state
             old_write(cr, uid, ids, vals, context=context)
+            #print old_records[0].state
             if not context.get('action'):
-                self.post_action(cr, uid, ids, model, context=context)
+                self.post_action(cr, uid, ids, model, old_records_states=old_records_states, context=context)
             return True
         return wrapper
 
@@ -242,7 +252,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                         
                         
 
-    def do_check(self, cr, uid, action, obj, context=None):
+    def do_check(self, cr, uid, action, obj, old_records_states=None, context=None):
         """ check Action """
         if context is None:
             context = {}
@@ -263,14 +273,21 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                     (action.trg_partner_categ_id.id in map(lambda x: x.id, obj.partner_id.category_id or []))
                 )
             )
-        state_to = context.get('state_to', False)
-        state = getattr(obj, 'state', False)
-        if state:
-            ok = ok and (not action.trg_state_from or action.trg_state_from==state)
-        if state_to:
-            ok = ok and (not action.trg_state_to or action.trg_state_to==state_to)
-        elif action.trg_state_to:
-            ok = False
+        #state_to = the state after a write or a create
+        state_to = getattr(obj, 'state', False)
+        #state_from = nothing or the state of old_records
+        state_from = ""
+        if old_records_states != None:
+            if old_records_states[obj.id]:
+                state_from = old_records_states[obj.id]
+        #if we have an action that check the status
+        if action.trg_state_from:
+            print action.trg_state_from, " and ", state_to
+            ok = ok and action.trg_state_from==state_to
+        if action.trg_state_to:
+            print action.trg_state_to, " for ", state_from, " and ", state_to
+            ok = state_from!=state_to
+            ok = ok and action.trg_state_to==state_to
         reg_name = action.regex_name
         result_name = True
         if reg_name:
@@ -312,19 +329,16 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
         return True
 
-    def _action(self, cr, uid, ids, objects, scrit=None, context=None):
+    def _action(self, cr, uid, ids, objects, scrit=None, old_records_states=None, context=None):
         """ Do Action """
         if context is None:
             context = {}
-
         context.update({'action': True})
-        if not scrit:
-            scrit = []
         if not isinstance(objects, list):
             objects = [objects]
         for action in self.browse(cr, uid, ids, context=context):
             for obj in objects:
-                if self.do_check(cr, uid, action, obj, context=context):
+                if self.do_check(cr, uid, action, obj, old_records_states=old_records_states, context=context):
                     self.do_action(cr, uid, action, obj, context=context)
 
         context.update({'action': False})

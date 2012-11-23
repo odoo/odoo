@@ -29,6 +29,7 @@ from tools.translate import _
 from tools import html2plaintext
 
 from base.res.res_partner import format_address
+import pdb
 
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
@@ -380,8 +381,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         """ Mark the case as lost: state=cancel and probability=0 """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
-            if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
+            if not stage_id:
+                return False
+            else:
+                self.write(cr, uid, ids, {'probability' : 0.0, 'stage_id' : stage_id}, context=context)
         self.case_mark_lost_send_note(cr, uid, ids, context=context)
         return True
 
@@ -389,8 +392,10 @@ class crm_lead(base_stage, format_address, osv.osv):
         """ Mark the case as lost: state=done and probability=100 """
         for lead in self.browse(cr, uid, ids):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
-            if stage_id:
-                self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
+            if not stage_id:
+                return False
+            else:
+                self.write(cr, uid, ids, {'probability' : 100.0, 'stage_id' : stage_id}, context=context)
         self.case_mark_won_send_note(cr, uid, ids, context=context)
         return True
 

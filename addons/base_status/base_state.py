@@ -157,13 +157,14 @@ class base_state(object):
             :params: update_values: values that will be added with the state
                      update when writing values to the record.
         """
+        print "-------------------------BASE STATE--------------------------------"
         cases = self.browse(cr, uid, ids, context=context)
         cases[0].state # fill browse record cache, for _action having old and new values
         if update_values is None:
             update_values = {}
         update_values['state'] = state_name
         self.write(cr, uid, ids, update_values, context=context)
-        self._action(cr, uid, cases, state_name, context=context)
+        #self._action(cr, uid, cases, state_name, context=context)
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if context is None:

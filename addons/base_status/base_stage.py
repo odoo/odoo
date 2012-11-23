@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import pdb
 from osv import fields, osv
 from tools.translate import _
 
@@ -280,15 +281,10 @@ class base_stage(object):
         # 2. update values
         if values_to_update:
             self.write(cr, uid, ids, values_to_update, context=context)
-        # 3. call _action for base action rule
-        if new_state_name:
-            self._action(cr, uid, cases, new_state_name, context=context)
-        elif not (new_stage_id is None):
-            new_state_name = self.read(cr, uid, ids, ['state'], context=context)[0]['state']
-        self._action(cr, uid, cases, new_state_name, context=context)
         return True
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
+        print "--- Base_Stage (_action) ---"
         if context is None:
             context = {}
         context['state_to'] = state_to
