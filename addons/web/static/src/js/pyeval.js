@@ -737,8 +737,7 @@ openerp.web.pyeval = function (instance) {
         }
     };
     instance.web.pyeval.eval_domains_and_contexts = function (source) {
-        var d = new $.Deferred();
-        setTimeout(function () {
+        return new $.Deferred(function (d) {setTimeout(function () {
             try {
                 var contexts = ([instance.session.context] || []).concat(source.contexts);
                 // see Session.eval_context in Python
@@ -759,7 +758,6 @@ openerp.web.pyeval = function (instance) {
                     }
                 }});
             }
-        }, 0);
-        return d;
+        }, 0); });
     }
 };
