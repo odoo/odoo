@@ -29,7 +29,7 @@ class account_check_write(osv.osv_memory):
     }
 
     _defaults = {
-        'check_number': lambda obj, cr, uid, context:obj.pool.get('ir.sequence').get(cr, uid, 'account.check.write'),
+        'check_number': lambda obj, cr, uid, context:obj.pool.get('ir.sequence').get(cr, uid, 'check.number'),
    }
 
     def print_check_write(self, cr, uid, ids, context=None):

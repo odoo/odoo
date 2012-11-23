@@ -35,7 +35,6 @@ Module for the Check Writing and Check Printing.
         'account_view.xml',
         'account_voucher_view.xml',
         'account_check_writing_data.xml',
-        'account_check_sequence.xml'
     ],
     'demo': ['account_demo.xml'],
     'test': [],
