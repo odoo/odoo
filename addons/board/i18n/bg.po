@@ -6,55 +6,58 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-10-30 15:51+0000\n"
 "Last-Translator: Boris <boris.t.ivanov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:16+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:34+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Година  "
-
-#. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Създай меню"
-
-#. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Информация за меню"
-
-#. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Последни връзки"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
 msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Администраторски Панел"
+#: view:board.create:0
+msgid "Create"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Групирай по"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
 msgstr ""
 
 #. module: board
@@ -63,288 +66,104 @@ msgid "Board"
 msgstr "Табло"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Име на меню"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr ""
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Заглавие"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr ""
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Месец"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr ""
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr ""
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Задаване на табло"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Март"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Август"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
+#: field:board.create,name:0
+msgid "Board Name"
 msgstr ""
 
 #. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Дата на създаване"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
 msgstr ""
 
 #. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Обект"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Юни"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Изгледи на акция"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr ""
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Моля въведете изглед(и) на табло"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Юли"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Ден"
-
-#. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Създаване на меню за табло"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Февруари"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Октомври"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
+msgid "Add to Dashboard"
 msgstr ""
 
 #. module: board
-#: field:board.menu.create,menu_parent_id:0
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
+msgstr ""
+
+#. module: board
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
+
+#. module: board
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Родителско меню"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Януари"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr ""
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr ""
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr ""
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Табло"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Потребителска грешка !"
-
-#. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Действие"
-
-#. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Позиция"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Модел"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
+msgid "Change Layout.."
 msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
 msgstr ""
 
 #. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Отляво"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr ""
 
 #. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Изглед на табло"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Отдясно"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Ширина"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Месец   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Последователност"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Септември"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Декември"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Съзсдаване на меню"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Височина"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Създаване на меню на табло"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Май"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "Година"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Отказ"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Изглед на табло"
+#: view:board.create:0
+msgid "or"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -361,8 +180,23 @@ msgstr "Изглед на табло"
 #~ msgid "Note"
 #~ msgstr "Бележка"
 
+#~ msgid "Width"
+#~ msgstr "Ширина"
+
+#~ msgid "Title"
+#~ msgstr "Заглавие"
+
+#~ msgid "Dashboard Definition"
+#~ msgstr "Задаване на табло"
+
 #~ msgid "Publish a note"
 #~ msgstr "Публикувай бележка"
+
+#~ msgid "Menu Information"
+#~ msgstr "Информация за меню"
+
+#~ msgid "Action Views"
+#~ msgstr "Изгледи на акция"
 
 #~ msgid "board.note"
 #~ msgstr "board.note"
@@ -385,11 +219,38 @@ msgstr "Изглед на табло"
 #~ msgid "board.note.type"
 #~ msgstr "board.note.type"
 
+#~ msgid "Dashboard"
+#~ msgstr "Табло"
+
+#~ msgid "Menu Name"
+#~ msgstr "Име на меню"
+
 #~ msgid "Note type"
 #~ msgstr "Тип бележка"
 
+#~ msgid "Left"
+#~ msgstr "Отляво"
+
+#~ msgid "Right"
+#~ msgstr "Отдясно"
+
+#~ msgid "Sequence"
+#~ msgstr "Последователност"
+
+#~ msgid "Create Menu"
+#~ msgstr "Съзсдаване на меню"
+
 #~ msgid "Dashboards"
 #~ msgstr "Табла"
+
+#~ msgid "Height"
+#~ msgstr "Височина"
+
+#~ msgid "Create Board Menu"
+#~ msgstr "Създаване на меню на табло"
+
+#~ msgid "Dashboard View"
+#~ msgstr "Изглед на табло"
 
 #~ msgid "board.board.line"
 #~ msgstr "board.board.line"
@@ -400,11 +261,97 @@ msgstr "Изглед на табло"
 #~ msgid "Open Dashboard"
 #~ msgstr "Отваряне на табло"
 
+#~ msgid "Board View"
+#~ msgstr "Изглед на табло"
+
 #~ msgid "Dashboard main module"
 #~ msgstr "Основен модул на таблото"
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Потребителска грешка !"
+
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr "Моля въведете изглед(и) на табло"
 
 #~ msgid "Base module for all dashboards."
 #~ msgstr "Основен модул на всички табла"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Невалидно име на модел при задаването на действие."
+
+#~ msgid "  Year  "
+#~ msgstr "  Година  "
+
+#~ msgid "Group By..."
+#~ msgstr "Групирай по"
+
+#~ msgid "Menu Create"
+#~ msgstr "Създай меню"
+
+#~ msgid "Administration Dashboard"
+#~ msgstr "Администраторски Панел"
+
+#~ msgid "Latest Connections"
+#~ msgstr "Последни връзки"
+
+#~ msgid "Month"
+#~ msgstr "Месец"
+
+#~ msgid "March"
+#~ msgstr "Март"
+
+#~ msgid "Creation Date"
+#~ msgstr "Дата на създаване"
+
+#~ msgid "June"
+#~ msgstr "Юни"
+
+#~ msgid "August"
+#~ msgstr "Август"
+
+#~ msgid "January"
+#~ msgstr "Януари"
+
+#~ msgid "October"
+#~ msgstr "Октомври"
+
+#~ msgid "February"
+#~ msgstr "Февруари"
+
+#~ msgid "Day"
+#~ msgstr "Ден"
+
+#~ msgid "July"
+#~ msgstr "Юли"
+
+#~ msgid "Create Menu For Dashboard"
+#~ msgstr "Създаване на меню за табло"
+
+#~ msgid "Model"
+#~ msgstr "Модел"
+
+#~ msgid "Position"
+#~ msgstr "Позиция"
+
+#~ msgid "Action"
+#~ msgstr "Действие"
+
+#~ msgid "September"
+#~ msgstr "Септември"
+
+#~ msgid "   Month   "
+#~ msgstr "   Месец   "
+
+#~ msgid "December"
+#~ msgstr "Декември"
+
+#~ msgid "Year"
+#~ msgstr "Година"
+
+#~ msgid "May"
+#~ msgstr "Май"
+
+#~ msgid "Object"
+#~ msgstr "Обект"

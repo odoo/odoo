@@ -712,6 +712,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.pos.proxy.debug_set_weight(kg);
                 }
             });
+            this.$('.button.reset_weight').click(function(){
+                self.pos.proxy.debug_reset_weight();
+            });
             this.$('.button.custom_ean').click(function(){
                 var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
                 self.$('input.ean').val(ean);

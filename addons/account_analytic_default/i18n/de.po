@@ -6,26 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-13 19:25+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"select a partner which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytical account)"
-msgstr ""
-"Auswahl eines Partners, auf dessen hier definiertes analytisches Konto "
-"automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
-"wird."
+"X-Launchpad-Export-Date: 2012-11-24 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -35,24 +24,14 @@ msgid "Analytic Rules"
 msgstr "Analytische Kontierungsrichtlinie"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,analytic_id:0
-msgid "Analytical Account"
-msgstr "Analytisches Konto"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Current"
-msgstr "Aktuell"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
 msgstr "Gruppierung..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytical Account"
-msgstr "Gültig bis Datum für das Analytische Konto"
+msgid "Default end date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -65,20 +44,12 @@ msgid "Conditions"
 msgstr "Bedingungen"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: help:account.analytic.default,partner_id:0
 msgid ""
-"select a company which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytical account)"
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Auswahl eines Partners, auf dessen hier definiertes analytisches Konto "
-"automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
-"wird."
-
-#. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytical Account"
-msgstr "Gültig ab Datum des Analytischen Kontos"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -109,18 +80,17 @@ msgid "Entries"
 msgstr "Buchungen"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Endedatum"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"select a user which will use analytical account specified in analytic default"
-msgstr ""
-"Auswahl eines Verkäufers, auf dessen hier definiertes analytisches Konto "
-"automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
-"wird."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -135,25 +105,23 @@ msgid "Reference must be unique per Company!"
 msgstr "Die Referenz muss je Firma eindeutig sein"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Analytical defaults whose end date is greater than today or None"
-msgstr "Analyse Standards,  mit  keinem oder einem Enddatum größer als heute"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"select a product which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytical account)"
-msgstr ""
-"Auswahl eines Produkts, auf dessen hier definiertes analytisches Konto "
-"automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
-"wird."
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Reihenfolge"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -165,6 +133,11 @@ msgstr "Rechnungszeile"
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Analytische Konten"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -204,6 +177,15 @@ msgstr "Auftragsposition"
 #~ msgid "Analytic Distributions"
 #~ msgstr "Analyse Verteilung"
 
+#~ msgid "Current"
+#~ msgstr "Aktuell"
+
+#~ msgid "Analytical Account"
+#~ msgstr "Analytisches Konto"
+
+#~ msgid "Default end date for this Analytical Account"
+#~ msgstr "Gültig bis Datum für das Analytische Konto"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
@@ -233,5 +215,45 @@ msgstr "Auftragsposition"
 #~ "* Datum\n"
 #~ "    "
 
+#~ msgid ""
+#~ "select a partner which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "partner, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Auswahl eines Partners, auf dessen hier definiertes analytisches Konto "
+#~ "automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
+#~ "wird."
+
+#~ msgid ""
+#~ "select a company which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "company, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Auswahl eines Partners, auf dessen hier definiertes analytisches Konto "
+#~ "automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
+#~ "wird."
+
 #~ msgid "Account Analytic Default"
 #~ msgstr "Analytische Standardbuchungen"
+
+#~ msgid "Default start date for this Analytical Account"
+#~ msgstr "Gültig ab Datum des Analytischen Kontos"
+
+#~ msgid ""
+#~ "select a user which will use analytical account specified in analytic default"
+#~ msgstr ""
+#~ "Auswahl eines Verkäufers, auf dessen hier definiertes analytisches Konto "
+#~ "automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
+#~ "wird."
+
+#~ msgid ""
+#~ "select a product which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "product, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Auswahl eines Produkts, auf dessen hier definiertes analytisches Konto "
+#~ "automatisch bei einem Verkaufauftrag oder einer Ausgangsrechnung gebucht "
+#~ "wird."
+
+#~ msgid "Analytical defaults whose end date is greater than today or None"
+#~ msgstr "Analyse Standards,  mit  keinem oder einem Enddatum größer als heute"

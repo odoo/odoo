@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-09-20 07:32+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-09-21 13:56+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:470
 #, python-format
 msgid "Delivery Order <em>%s</em> <b>scheduled</b> for %s."
 msgstr ""
@@ -35,21 +35,14 @@ msgid "Delivery Order"
 msgstr "Comanda de livrare"
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
+#: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
-"If you don't have enough stock available to deliver all at once, do you "
-"accept partial shipments or not?"
+"Allows you to specify different delivery and invoice addresses on a sale "
+"order."
 msgstr ""
-"Daca nu aveai suficient stoc disponibil pentru a livra tot odata, acceptati "
-"expedierile partiale sau nu?"
 
 #. module: sale_stock
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "Metoda de aprovizionare"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:599
+#: code:addons/sale_stock/sale_stock.py:569
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Informatii la ridicare !: "
@@ -60,7 +53,7 @@ msgid "Pick List"
 msgstr "Lista de ridicare"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:594
+#: code:addons/sale_stock/sale_stock.py:564
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -89,17 +82,11 @@ msgid "Validate"
 msgstr "Valideaza"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:679
+#: code:addons/sale_stock/sale_stock.py:207
 #, python-format
 msgid ""
-"You cannot make an advance on a sales order                          that is "
-"defined as 'Automatic Invoice after delivery'."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "Magazin"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -121,7 +108,7 @@ msgstr ""
 "aprovizionare pentru a furniza produsul vandut."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:678
+#: code:addons/sale_stock/sale_stock.py:640
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -132,14 +119,17 @@ msgid "Shipping Policy"
 msgstr "Politica de expediere"
 
 #. module: sale_stock
-#: help:sale.order,incoterm:0
+#: code:addons/sale_stock/sale_stock.py:641
+#, python-format
 msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
+"You cannot make an advance on a sales order                      that is "
+"defined as 'Automatic Invoice after delivery'."
 msgstr ""
-"Incoterm care este prescurtarea de la \"Termeni Comerciali Internationali\" "
-"implica o serie de termeni de vanzare care sunt folositi in tranzactiile "
-"comerciale."
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
+msgid "Shop"
+msgstr "Magazin"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
@@ -154,7 +144,7 @@ msgid "Stock Move"
 msgstr "Miscare stoc"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -174,7 +164,13 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:647
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:571
+#: code:addons/sale_stock/sale_stock.py:622
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -197,7 +193,6 @@ msgstr "Comanda de vanzare"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
-#: view:sale.order:0
 msgid "Delivery Orders"
 msgstr ""
 
@@ -221,19 +216,9 @@ msgstr ""
 "linie comanda de vanzare care evolueaza odata cu disponibilitatea pieselor."
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Customer"
-msgstr "Client"
-
-#. module: sale_stock
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Eroare! Nu puteti crea companii recursive."
-
-#. module: sale_stock
-#: field:sale.config.settings,group_invoice_so_lines:0
-msgid "Generate invoices based on the sale order"
-msgstr ""
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -263,24 +248,18 @@ msgid "The default invoicing method is"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:233
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Comanda de vanzare nu poate fi anulata !"
-
-#. module: sale_stock
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
 msgstr "Timp de livrare"
 
 #. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Documentul miscarii catre client."
-
-#. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
 msgstr ""
 
 #. module: sale_stock
@@ -297,18 +276,6 @@ msgstr ""
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
 msgstr ""
-
-#. module: sale_stock
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
-msgstr ""
-"Daca este bifat 'la comanda', declanseaza o aprovizionare atunci cand "
-"comanda de vanzare este confirmata pentru a crea o sarcina, o comanda de "
-"achizitie sau o comanda de productie legata de aceasta linie a comenzii de "
-"vanzare."
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -332,14 +299,7 @@ msgid "Shipped"
 msgstr "Expediat"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_so_lines:0
-msgid ""
-"To allow your salesman to make invoices for sale order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:260
+#: code:addons/sale_stock/sale_stock.py:240
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "mod invalid pentru test_stare"
@@ -362,7 +322,7 @@ msgid "Generate invoices after and based on delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:499
+#: code:addons/sale_stock/sale_stock.py:473
 #, python-format
 msgid "Order <b>delivered</b>."
 msgstr ""
@@ -383,6 +343,13 @@ msgid "Packaging"
 msgstr "Ambalare"
 
 #. module: sale_stock
+#: help:sale.order,incoterm:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+
+#. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
 msgstr ""
@@ -393,18 +360,6 @@ msgid "Enable Invoicing Delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:689
-#, python-format
-msgid "Advance of %s %%"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:601
-#, python-format
-msgid "Configuration Error !"
-msgstr "Eroare de Configurare !"
-
-#. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
 msgstr "Zile de siguranta"
@@ -413,6 +368,18 @@ msgstr "Zile de siguranta"
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
 msgstr "Aprovizionarea materialelor vandute"
+
+#. module: sale_stock
+#: help:sale.order,picking_policy:0
+msgid ""
+"Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:206
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -478,22 +445,10 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "View Invoice"
-msgstr ""
-
-#. module: sale_stock
 #: sql_constraint:stock.picking:0
 #: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "Referinta trebuie sa fie unica per Companie!"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:696
-#: code:addons/sale_stock/sale_stock.py:698
-#, python-format
-msgid "Advance of %s %s"
-msgstr ""
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -510,7 +465,7 @@ msgid "Assign"
 msgstr "Atribuie"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:643
+#: code:addons/sale_stock/sale_stock.py:617
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Stoc insuficient ! : "
@@ -518,15 +473,9 @@ msgstr "Stoc insuficient ! : "
 #. module: sale_stock
 #: help:sale.order.line,delay:0
 msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
 msgstr ""
-"Numarul de zile intre confirmarea comenzii si expedierea produselor la client"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "din stoc"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -537,9 +486,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr ""
+#: model:process.node,note:sale_stock.process_node_deliveryorder0
+msgid "Document of the move to the customer."
+msgstr "Documentul miscarii catre client."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -554,7 +503,7 @@ msgid "Cancel"
 msgstr "Anuleaza"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -577,14 +526,6 @@ msgid "Delivered"
 msgstr "Livrat"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:234
-#, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
-"Trebuie sa anulati mai intai toate ridicarile atasate acestei comenzi de "
-"vanzare."
-
-#. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
 msgid "Create Invoice"
 msgstr "Creeaza Factura"
@@ -605,7 +546,7 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Factura Vanzare cu Plata in Avans"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:660
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
@@ -613,7 +554,7 @@ msgstr ""
 "comenzii de vanzare."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:590
+#: code:addons/sale_stock/sale_stock.py:560
 #, python-format
 msgid "(n/a)"
 msgstr "(n/a)"
@@ -629,25 +570,15 @@ msgid "You try to assign a lot which is not from the same product."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:659
+#: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Deliver"
-msgstr "Livrare"
-
-#. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
 msgstr "Anulare Atribuire"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "la comanda"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
@@ -697,7 +628,7 @@ msgid "Ignore Exception"
 msgstr "Ignora exceptia"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:639
+#: code:addons/sale_stock/sale_stock.py:613
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -740,3 +671,63 @@ msgid ""
 msgstr ""
 "In functie de configuratia locatiei de iesire, miscarea intre zona de iesire "
 "si client se face manual sau automat prin Comanda de  Livrare."
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Daca nu aveai suficient stoc disponibil pentru a livra tot odata, acceptati "
+#~ "expedierile partiale sau nu?"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "Eroare de Configurare !"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr ""
+#~ "Numarul de zile intre confirmarea comenzii si expedierea produselor la client"
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr ""
+#~ "Incoterm care este prescurtarea de la \"Termeni Comerciali Internationali\" "
+#~ "implica o serie de termeni de vanzare care sunt folositi in tranzactiile "
+#~ "comerciale."
+
+#~ msgid "on order"
+#~ msgstr "la comanda"
+
+#~ msgid "Procurement Method"
+#~ msgstr "Metoda de aprovizionare"
+
+#~ msgid ""
+#~ "If 'on order', it triggers a procurement when the sale order is confirmed to "
+#~ "create a task, purchase order or manufacturing order linked to this sale "
+#~ "order line."
+#~ msgstr ""
+#~ "Daca este bifat 'la comanda', declanseaza o aprovizionare atunci cand "
+#~ "comanda de vanzare este confirmata pentru a crea o sarcina, o comanda de "
+#~ "achizitie sau o comanda de productie legata de aceasta linie a comenzii de "
+#~ "vanzare."
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Comanda de vanzare nu poate fi anulata !"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr ""
+#~ "Trebuie sa anulati mai intai toate ridicarile atasate acestei comenzi de "
+#~ "vanzare."
+
+#~ msgid "from stock"
+#~ msgstr "din stoc"
+
+#~ msgid "Customer"
+#~ msgstr "Client"
+
+#~ msgid "Deliver"
+#~ msgstr "Livrare"

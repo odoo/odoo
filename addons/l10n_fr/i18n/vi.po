@@ -7,39 +7,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2011-12-23 09:56+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2010-08-02 14:33+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Vietnamese <vi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_receivable
-msgid "Receivable"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_equity
-msgid "Equity"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_immobilisations
-msgid "Immobilisations"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_asset
-msgid "Asset"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_income
-msgid "Income"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: l10n_fr
@@ -49,18 +29,13 @@ msgid "Print"
 msgstr ""
 
 #. module: l10n_fr
+#: field:l10n.fr.report,line_ids:0
+msgid "Lines"
+msgstr ""
+
+#. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_bilan_report
 msgid "Account Bilan Report"
-msgstr ""
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_expense
-msgid "Expense"
 msgstr ""
 
 #. module: l10n_fr
@@ -69,18 +44,8 @@ msgid "Account CDR Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_payable
-msgid "Payable"
-msgstr ""
-
-#. module: l10n_fr
-#: view:account.cdr.report:0
-msgid "Compte de resultant"
+#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_import_export
+msgid "French VAT exemption according to articles 262 I of \"CGI\""
 msgstr ""
 
 #. module: l10n_fr
@@ -89,8 +54,8 @@ msgid "Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_commitment
-msgid "Engagements"
+#: view:account.cdr.report:0
+msgid "Compte de resultat"
 msgstr ""
 
 #. module: l10n_fr
@@ -101,6 +66,11 @@ msgstr ""
 #. module: l10n_fr
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
+msgstr ""
+
+#. module: l10n_fr
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
 msgstr ""
 
 #. module: l10n_fr
@@ -115,23 +85,15 @@ msgid "Compte de resultat Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stock
-msgid "Stocks"
+#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_intraeub2b
+msgid ""
+"French VAT exemption according to articles 262 ter I (for products) and/or "
+"283-2 (for services) of \"CGI\""
 msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.report,line_ids:0
-msgid "Lines"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cash
-msgid "Cash"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_special
-msgid "Comptes spéciaux"
+#: model:ir.model,name:l10n_fr.model_res_company
+msgid "Companies"
 msgstr ""
 
 #. module: l10n_fr
@@ -146,18 +108,13 @@ msgid "Fiscal Year"
 msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_dettes
-msgid "Dettes long terme"
-msgstr ""
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
+#: field:res.company,siret:0
+msgid "SIRET"
 msgstr ""
 
 #. module: l10n_fr
@@ -166,8 +123,8 @@ msgid "The variable name must be unique !"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stocks
-msgid "Actif circulant"
+#: field:l10n.fr.report,code:0
+msgid "Code"
 msgstr ""
 
 #. module: l10n_fr
@@ -177,22 +134,23 @@ msgid "Bilan Report"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_tax
-msgid "Tax"
-msgstr ""
-
-#. module: l10n_fr
 #: view:account.bilan.report:0
 #: view:account.cdr.report:0
 msgid "Cancel"
 msgstr ""
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cloture
-msgid "Cloture"
+#: field:l10n.fr.line,code:0
+msgid "Variable Name"
 msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.line,code:0
-msgid "Variable Name"
+#: view:account.bilan.report:0
+#: view:account.cdr.report:0
+msgid "or"
+msgstr ""
+
+#. module: l10n_fr
+#: field:res.company,ape:0
+msgid "APE"
 msgstr ""

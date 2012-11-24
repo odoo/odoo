@@ -7,26 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-09-01 12:50+0000\n"
 "Last-Translator: Nauris Sedlers <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"select a partner which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytical account)"
-msgstr ""
-"Izvēlieties partneri, kurš tiks izmantots noklusētajā analītiskajā kontā. "
-"Piemēram, veidojot jaunu klienta rēķinu, izvēloties klientu, automātiski "
-"tiks izvēlēts attiecīgais analītiskais konts."
+"X-Launchpad-Export-Date: 2012-11-24 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -36,24 +25,14 @@ msgid "Analytic Rules"
 msgstr "Noteikumi Analītiskajiem Aprēķiniem"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,analytic_id:0
-msgid "Analytical Account"
-msgstr "Analītiskais Konts"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Current"
-msgstr "Tekošais"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
 msgstr "Grupēt pēc..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytical Account"
-msgstr "Noklusētais beigu datums Analītiskajam Kontam"
+msgid "Default end date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -66,20 +45,12 @@ msgid "Conditions"
 msgstr "Nosacījumi"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: help:account.analytic.default,partner_id:0
 msgid ""
-"select a company which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytical account)"
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Izvēlieties uzņēmumu, kurš tiks izmantots analītiskajā kontā pēc "
-"noklusējuma. Piemēram, veidojot jaunu klienta rēķinu, izvēloties uzņēmumu, "
-"automātiski tiks izvēlēts attiecīgais analītiskais konts."
-
-#. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytical Account"
-msgstr "Noklusētais sākuma datums Analītiskajam Kontam"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -110,17 +81,17 @@ msgid "Entries"
 msgstr "Ieraksti"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Beigu Datums"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"select a user which will use analytical account specified in analytic default"
-msgstr ""
-"Izvēlieties lietotāju, kurš tiks izmantots pēc noklusējuma attiecīgajam "
-"analītiskajam kontam."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -135,25 +106,23 @@ msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Analytical defaults whose end date is greater than today or None"
-msgstr ""
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"select a product which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytical account)"
-msgstr ""
-"Izvēlieties produktu, kurš tiks izmantots analītiskajā kontā pēc "
-"noklusējuma. Piemēram, veidojot jaunu klienta rēķinu, izvēloties produktu, "
-"automātiski tiks izvēlēts attiecīgais analītiskais konts."
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Secība"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -165,6 +134,11 @@ msgstr "Rēķina Rinda"
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Analītiskais Konts"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -193,8 +167,53 @@ msgstr "Tiek norādīta secība, kā tiks attēlots analītiskais sadalījums."
 msgid "Sales Order Line"
 msgstr "Pasūtījuma Rinda"
 
+#~ msgid "Default start date for this Analytical Account"
+#~ msgstr "Noklusētais sākuma datums Analītiskajam Kontam"
+
+#~ msgid "Analytical Account"
+#~ msgstr "Analītiskais Konts"
+
+#~ msgid "Default end date for this Analytical Account"
+#~ msgstr "Noklusētais beigu datums Analītiskajam Kontam"
+
+#~ msgid ""
+#~ "select a company which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "company, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Izvēlieties uzņēmumu, kurš tiks izmantots analītiskajā kontā pēc "
+#~ "noklusējuma. Piemēram, veidojot jaunu klienta rēķinu, izvēloties uzņēmumu, "
+#~ "automātiski tiks izvēlēts attiecīgais analītiskais konts."
+
+#~ msgid ""
+#~ "select a user which will use analytical account specified in analytic default"
+#~ msgstr ""
+#~ "Izvēlieties lietotāju, kurš tiks izmantots pēc noklusējuma attiecīgajam "
+#~ "analītiskajam kontam."
+
+#~ msgid ""
+#~ "select a product which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "product, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Izvēlieties produktu, kurš tiks izmantots analītiskajā kontā pēc "
+#~ "noklusējuma. Piemēram, veidojot jaunu klienta rēķinu, izvēloties produktu, "
+#~ "automātiski tiks izvēlēts attiecīgais analītiskais konts."
+
+#~ msgid ""
+#~ "select a partner which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "partner, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Izvēlieties partneri, kurš tiks izmantots noklusētajā analītiskajā kontā. "
+#~ "Piemēram, veidojot jaunu klienta rēķinu, izvēloties klientu, automātiski "
+#~ "tiks izvēlēts attiecīgais analītiskais konts."
+
 #~ msgid "Account Analytic Default"
 #~ msgstr "Noklusētais Analītiskais Konts"
+
+#~ msgid "Current"
+#~ msgstr "Tekošais"
 
 #~ msgid ""
 #~ "\n"

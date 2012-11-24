@@ -6,15 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-08 08:46+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:38+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "Select Dates Period"
+msgstr "Wähle Perioden"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -104,45 +112,15 @@ msgid "Percentage"
 msgstr "Prozentsatz"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "bis"
-
-#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "Status"
-
-#. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
-msgstr ""
-"Ein Budget repräsentiert die Planung für Umsatzerlöse und Aufwendungen einer "
-"zukünftigen Periode. Durch ein Budget kann das Unternehmen Kosten und "
-"Umsätze insgesamt planen und auf bestimmte Kategorien verteilen. Durch eine "
-"Kontrolle mit tatsächlichen Kosten und Aufwendungen kann dann verglichen "
-"werden, inwieweit die Kosten und Erlöse Ihrer Planung entsprechen und dabei "
-"so zeitnahe wie möglich Hinweise für erforderliche Anpassungen geben."
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr "Das Budget '%s' hat keine Konten!"
-
-#. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "%"
-msgstr "%"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -161,6 +139,11 @@ msgid "Total :"
 msgstr "Summe :"
 
 #. module: account_budget
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
@@ -168,9 +151,9 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "Zur Genehmigung"
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "bis"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -239,12 +222,6 @@ msgid "Budget Line"
 msgstr "Budgetposition"
 
 #. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-msgid "Lines"
-msgstr "Positionen"
-
-#. module: account_budget
 #: report:account.budget:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
@@ -260,10 +237,9 @@ msgid "To Approve Budgets"
 msgstr "Budgets genehmigen"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "Error!"
-msgstr "Fehler!"
+#: view:crossovered.budget:0
+msgid "Duration"
+msgstr ""
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -279,7 +255,6 @@ msgstr "Dieser Assistent wird genutzt, um Budgets zu drucken."
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
 #: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
@@ -305,10 +280,9 @@ msgid "Approve"
 msgstr "Genehmige"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "Anfangsdatum"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "Zur Genehmigung"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -337,12 +311,10 @@ msgid "Theoretical Amt"
 msgstr "Soll"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
-#: view:account.budget.crossvered.summary.report:0
-#: view:account.budget.report:0
-msgid "Select Dates Period"
-msgstr "Wähle Perioden"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "Error!"
+msgstr "Fehler!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -360,6 +332,14 @@ msgid "Theoretical Amount"
 msgstr "Sollwert"
 
 #. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "or"
+msgstr ""
+
+#. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
@@ -369,6 +349,29 @@ msgstr "Analytisches Konto"
 #: report:account.budget:0
 msgid "Budget :"
 msgstr "Budget:"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p>\n"
+"                A budget is a forecast of your company's income and/or "
+"expenses\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -406,9 +409,10 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "Anfangsdatum"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -448,6 +452,9 @@ msgstr "Budget Entwürfe"
 #~ msgid "Results"
 #~ msgstr "Ergebnisse"
 
+#~ msgid "%"
+#~ msgstr "%"
+
 #~ msgid "Analytic Account :"
 #~ msgstr "Analytisches Konto"
 
@@ -474,6 +481,9 @@ msgstr "Budget Entwürfe"
 
 #~ msgid "Spread amount"
 #~ msgstr "Spanne"
+
+#~ msgid "Lines"
+#~ msgstr "Positionen"
 
 #~ msgid "Amount"
 #~ msgstr "Betrag"
@@ -625,7 +635,27 @@ msgstr "Budget Entwürfe"
 #~ "Analysekonto.\n"
 #~ "\n"
 
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
+
 #~ msgid ""
 #~ "Error! The currency has to be the same as the currency of the selected "
 #~ "company"
 #~ msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+
+#~ msgid ""
+#~ "A budget is a forecast of your company's income and expenses expected for a "
+#~ "period in the future. With a budget, a company is able to carefully look at "
+#~ "how much money they are taking in during a given period, and figure out the "
+#~ "best way to divide it among various categories. By keeping track of where "
+#~ "your money goes, you may be less likely to overspend, and more likely to "
+#~ "meet your financial goals. Forecast a budget by detailing the expected "
+#~ "revenue per analytic account and monitor its evolution based on the actuals "
+#~ "realised during that period."
+#~ msgstr ""
+#~ "Ein Budget repräsentiert die Planung für Umsatzerlöse und Aufwendungen einer "
+#~ "zukünftigen Periode. Durch ein Budget kann das Unternehmen Kosten und "
+#~ "Umsätze insgesamt planen und auf bestimmte Kategorien verteilen. Durch eine "
+#~ "Kontrolle mit tatsächlichen Kosten und Aufwendungen kann dann verglichen "
+#~ "werden, inwieweit die Kosten und Erlöse Ihrer Planung entsprechen und dabei "
+#~ "so zeitnahe wie möglich Hinweise für erforderliche Anpassungen geben."

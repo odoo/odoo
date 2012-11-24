@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-10-09 08:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Macedonian <mk@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -28,34 +28,14 @@ msgid "Information"
 msgstr "Информации"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Пробен Период"
-
-#. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
 msgstr "Пробен Почетен Датум"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Систематски Преглед"
-
-#. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Службено Возило"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr "Разно"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Тековен"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -66,11 +46,6 @@ msgstr "Групирај По..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Сектор"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Изминат"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -86,16 +61,7 @@ msgstr "Пребарај Договор"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr "Договори во тек"
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Дома-Работа Одалеченост"
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -104,14 +70,9 @@ msgid "Contracts"
 msgstr "Договори"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Лични информации"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
-msgstr "Договори чии што краен рок е веќе поминат"
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Број на Деца"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -124,25 +85,14 @@ msgid "Job"
 msgstr "Работно Место"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr "Придобивки"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr "Валиден за"
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
 msgstr "Дозвола за Работа"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Број на Деца"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -151,9 +101,9 @@ msgid "Contract Types"
 msgstr "Типови на Договор"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Грешка! Не можете да креирате рекурзивна хиерархија на вработените."
+#: view:hr.employee:0
+msgid "Medical Exam"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -188,6 +138,7 @@ msgstr "Број на Дозвола за Работа"
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -210,19 +161,19 @@ msgid "Working Schedule"
 msgstr "Распоред за Работа"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr "Информации за Работата"
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
-msgstr "Виза Датум на Истекување"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
 msgstr "Звање"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -235,15 +186,19 @@ msgid "Start Date"
 msgstr "Почетен датум"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
-"Грешка! Почетниот датум на договорот мора да биде помал од крајниот датум."
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Пробен Краен Датум"
 
 #. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
 msgstr "Број на Виза"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,place_of_birth:0
@@ -252,8 +207,18 @@ msgstr "Место на раѓање"
 
 #. module: hr_contract
 #: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 msgid "Duration"
 msgstr "Траење"
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "Виза Датум на Истекување"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -261,11 +226,51 @@ msgid "Medical Examination Date"
 msgstr "Датум за Систематски Преглед"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Пробен Краен Датум"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Пребарај Тип на Договор"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Разно"
+
+#~ msgid "Current"
+#~ msgstr "Тековен"
+
+#~ msgid "Medical Examination"
+#~ msgstr "Систематски Преглед"
+
+#~ msgid "Trial Period"
+#~ msgstr "Пробен Период"
+
+#~ msgid "Overpassed"
+#~ msgstr "Изминат"
+
+#~ msgid "Personal Info"
+#~ msgstr "Лични информации"
+
+#~ msgid "Contracts whose end date already passed"
+#~ msgstr "Договори чии што краен рок е веќе поминат"
+
+#~ msgid "Contracts in progress"
+#~ msgstr "Договори во тек"
+
+#~ msgid "Home-Work Distance"
+#~ msgstr "Дома-Работа Одалеченост"
+
+#~ msgid "Valid for"
+#~ msgstr "Валиден за"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Грешка! Не можете да креирате рекурзивна хиерархија на вработените."
+
+#~ msgid "Job Info"
+#~ msgstr "Информации за Работата"
+
+#~ msgid "Error! contract start-date must be lower then contract end-date."
+#~ msgstr ""
+#~ "Грешка! Почетниот датум на договорот мора да биде помал од крајниот датум."

@@ -7,34 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-03-14 07:15+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: Russian <ru@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:34+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:52+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Настройка нумерации по счету"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
-"Вы не можете создавать более одного движения за период по централизованному "
-"журналу."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "Для счета и периода должна быть одна компания."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -108,11 +100,6 @@ msgid "Internal Number"
 msgstr "Внутренний номер"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "Нельзя создать элемент журнала по счету с типом вид."
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -128,17 +115,15 @@ msgstr "Название"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Нельзя создать элемент журнала по закрытому счету ."
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
 
 #. module: account_sequence
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
-"Ошибка настройки! Выбранная валюта должна соответствовать валюте счетов по "
-"умолчанию."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -146,9 +131,20 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Ошибочное значение проводки по дебету или кредиту !"
 
 #. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on a centralized journal."
+msgstr ""
+
+#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Внутренняя нумерация"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -164,11 +160,6 @@ msgstr "Проводка по счету"
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Суффикс"
-
-#. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Изображение"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -230,6 +221,9 @@ msgstr "Можно улучшить модуль нумерации счетов
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Нельзя сделать проводку по закрытому счету."
 
+#~ msgid "Image"
+#~ msgstr "Изображение"
+
 #~ msgid "Entries Sequence Numbering"
 #~ msgstr "Нумерация проводок"
 
@@ -258,3 +252,25 @@ msgstr "Можно улучшить модуль нумерации счетов
 #~ "You cannot create more than one move per period on centralized journal"
 #~ msgstr ""
 #~ "Нельзя сделать больше одной операции за период по централизованному журналу."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Нельзя создать элемент журнала по счету с типом вид."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Нельзя создать элемент журнала по закрытому счету ."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Для счета и периода должна быть одна компания."
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Ошибка настройки! Выбранная валюта должна соответствовать валюте счетов по "
+#~ "умолчанию."
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Вы не можете создавать более одного движения за период по централизованному "
+#~ "журналу."

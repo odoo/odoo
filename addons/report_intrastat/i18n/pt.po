@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-12-15 13:07+0000\n"
 "Last-Translator: Madalena_prime <madalena.barreto@prime.cv>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:08+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:25+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -22,9 +22,9 @@ msgid "Cancelled Invoice"
 msgstr "Fatura Cancelada"
 
 #. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "O nome do país deve ser único!"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Junho"
 
 #. module: report_intrastat
 #: sql_constraint:res.country:0
@@ -45,13 +45,6 @@ msgstr "Fatura do Fornecedor"
 #: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Preço Unitário"
-
-#. module: report_intrastat
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Erro: O  UDM por omissão e o UDM de compra devem estar na mesma categoria."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -109,9 +102,11 @@ msgid "Invoice Date"
 msgstr "Data da Fatura"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Junho"
+#: constraint:product.template:0
+msgid ""
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
+msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -127,11 +122,6 @@ msgstr "Quantidade"
 #: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "Base"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Este Ano"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -150,11 +140,6 @@ msgstr "Julho"
 #: view:report.intrastat.code:0
 msgid "Intrastat code"
 msgstr "Código interestadual"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Month"
-msgstr "Este Mês"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -190,6 +175,11 @@ msgstr "Fatura"
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
 msgstr "País"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "O nome do país deve ser único!"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -338,6 +328,7 @@ msgstr "Preço"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:0
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Código Interestadual"
@@ -366,8 +357,19 @@ msgstr "Código Interestadual"
 #~ msgid "Intrastat Reporting - Reporting"
 #~ msgstr "Relatório - Relatório Interestadual"
 
+#~ msgid "This Month"
+#~ msgstr "Este Mês"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista!"
 
 #~ msgid "Origin"
 #~ msgstr "Origem"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: O  UDM por omissão e o UDM de compra devem estar na mesma categoria."
+
+#~ msgid "This Year"
+#~ msgstr "Este Ano"

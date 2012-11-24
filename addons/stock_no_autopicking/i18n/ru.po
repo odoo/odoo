@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-12-09 09:46+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:36+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
@@ -27,6 +27,11 @@ msgid "Manufacturing Order"
 msgstr "Производственный заказ"
 
 #. module: stock_no_autopicking
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: stock_no_autopicking
 #: field:product.product,auto_pick:0
 msgid "Auto Picking"
 msgstr "Авто комплектование"
@@ -35,11 +40,6 @@ msgstr "Авто комплектование"
 #: help:product.product,auto_pick:0
 msgid "Auto picking for raw materials of production orders."
 msgstr "Авто комплектация для сырья производственных заказов."
-
-#. module: stock_no_autopicking
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Ошибка: Неправильный штрих-код"
 
 #. module: stock_no_autopicking
 #: sql_constraint:mrp.production:0
@@ -51,11 +51,21 @@ msgstr "Ссылка должна быть уникальна для каждо�
 msgid "Order quantity cannot be negative or zero!"
 msgstr "Заказываемое количество должно быть положительным!"
 
+#. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
 
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "Количество в заказе не может быть отрицательным или нулевым !"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Ошибка: Неправильный штрих-код"
 
 #~ msgid "Stock No Auto-Picking"
 #~ msgstr "ТМЦ без авто-комплектации"

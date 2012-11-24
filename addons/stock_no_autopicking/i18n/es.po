@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-12-29 13:01+0000\n"
 "Last-Translator: Borja López Soilán (NeoPolus) <borjalopezsoilan@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:36+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
@@ -27,6 +27,11 @@ msgid "Manufacturing Order"
 msgstr "Orden de fabricación"
 
 #. module: stock_no_autopicking
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: stock_no_autopicking
 #: field:product.product,auto_pick:0
 msgid "Auto Picking"
 msgstr "Auto empaquetado"
@@ -37,18 +42,20 @@ msgid "Auto picking for raw materials of production orders."
 msgstr "Auto empaquetado para materiales a granel en órdenes de producción."
 
 #. module: stock_no_autopicking
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Código EAN no válido"
-
-#. module: stock_no_autopicking
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "¡La referencia debe ser única por compañía!"
 
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
+msgstr "¡La cantidad del pedido no puede ser negativa o cero!"
+
+#. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
 msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
@@ -59,6 +66,9 @@ msgstr ""
 
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "¡La cantidad ordenada no puede ser negativa o cero!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Código EAN no válido"
 
 #~ msgid ""
 #~ "\n"

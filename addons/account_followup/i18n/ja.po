@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-06-09 02:19+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-msgid "Search Followup"
-msgstr "フォローアップの選択"
+"X-Launchpad-Export-Date: 2012-11-24 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -34,16 +29,9 @@ msgid "Follow-up Message"
 msgstr "フォローアップメッセージ"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account.followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "フォローアップ"
-
-#. module: account_followup
-#: help:account.followup.print.all,test_print:0
-msgid ""
-"Check if you want to print followups without changing followups level."
-msgstr "フォローアップレベルを変更せずにフォローアップを印刷したい場合はチェックして下さい。"
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -103,10 +91,14 @@ msgid "Email Subject"
 msgstr "Eメール件名"
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_followup_stat
-msgid ""
-"Follow up on the reminders sent over to your partners for unpaid invoices."
-msgstr "未払請求書のためにパートナに送信された通知のフォローアップ"
+#: view:account_followup.followup.line:0
+msgid "Follow-up Steps"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "期間のタイプ"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -115,14 +107,17 @@ msgid "Legend"
 msgstr "凡例"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow up Entries with period in current year"
-msgstr "現在年の期間におけるエントリーのフォローアップ"
+#: field:account.followup.print.all,email_body:0
+msgid "Email Body"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
-msgid "Ok"
-msgstr "OK"
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send Follow-Ups"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -138,12 +133,6 @@ msgstr "会計エントリーにおいて貸方または借方の値が誤って
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
 msgstr "実日数"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-msgid "Follow-Ups"
-msgstr "フォローアップ"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -168,7 +157,8 @@ msgid "%(heading)s: Move line header"
 msgstr "%(heading)s：行ヘッダーの移動"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
 msgid "Follow-up"
 msgstr "フォローアップ"
 
@@ -195,15 +185,10 @@ msgid "Partners"
 msgstr "パートナ"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:144
 #, python-format
 msgid "Invoices Reminder"
 msgstr "請求書の通知"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup
-msgid "Account Follow Up"
-msgstr "アカウントフォローアップ"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -221,24 +206,24 @@ msgid "%(user_signature)s: User name"
 msgstr "%(user_signature)s：ユーザ名"
 
 #. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
+msgid "Follow-up Report"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
 msgstr "借方"
 
 #. module: account_followup
-#: view:account.followup.print:0
-msgid ""
-"This feature allows you to send reminders to partners with pending invoices. "
-"You can send them the default message for unpaid invoices or manually enter "
-"a message should you need to remind them of a specific information."
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Follow-up Statistics"
 msgstr ""
-"この機能は保留中の請求書を持つパートナに通知を送ることができます。未払請求書のためのデフォルトメッセージ、あるいは特定の情報を通知する必要がある時にメッセ"
-"ージを手動で入力して送ることができます。"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Ref"
-msgstr "参照"
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-up Criteria"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
@@ -246,26 +231,52 @@ msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr "フォローアップ行のリスト表示の際の並び順を与えます。"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,email_body:0
-msgid "Email body"
-msgstr "Eメール本文"
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "フォローアップレベル"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "最新フォローアップ"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-msgid "Select Partners to Remind"
-msgstr "通知するパートナを選択"
+#: model:ir.model,name:account_followup.model_account_followup_print
+#: model:ir.model,name:account_followup.model_account_followup_print_all
+msgid "Print Follow-up & Send Mail to Customers"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:292
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Email sent to following Partners successfully. !\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr ""
+
+#. module: account_followup
+#: field:account.followup.print.all,email_conf:0
+msgid "Send Email Confirmation"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest follow-up"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -310,18 +321,14 @@ msgid "Printed Message"
 msgstr "メッセージ印刷済"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
-#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
-msgid "Send followups"
-msgstr "フォローアップ送信済"
-
-#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
 msgstr "通知するパートナ"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -330,16 +337,9 @@ msgid "Follow Ups"
 msgstr "フォローアップ"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:296
-#, python-format
-msgid ""
-"All E-mails have been successfully sent to Partners:.\n"
-"\n"
-"%s"
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow-up"
 msgstr ""
-"全てのEメールはパートナに正常に送信されました：\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -362,9 +362,9 @@ msgid "Send Mails"
 msgstr "メール送信"
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
-msgid "Followup Statistics by Partner"
-msgstr "パートナ別の統計のフォローアップ"
+#: view:account_followup.followup:0
+msgid "Search Follow-up"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -372,25 +372,29 @@ msgid "Message"
 msgstr "メッセージ"
 
 #. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "or"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
 msgstr "ブロック"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:299
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:291
 #, python-format
 msgid ""
-"\n"
-"\n"
-"E-Mail sent to following Partners successfully. !\n"
+"Email not sent to following Partners, Email not available !\n"
 "\n"
 "%s"
 msgstr ""
-"\n"
-"\n"
-"以下のパートナへのEメール送信が成功しました。\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -420,14 +424,14 @@ msgid "Print Follow Ups"
 msgstr "フォローアップの印刷"
 
 #. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-up Entries with period in current year"
+msgstr ""
+
+#. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
 msgstr "最新フォローアップ"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup Statistics"
-msgstr "統計のフォローアップ"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -435,19 +439,21 @@ msgid "%(user_signature)s: User Name"
 msgstr "%(user_signature)s：ユーザ名"
 
 #. module: account_followup
+#: help:account.followup.print.all,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-ups level."
+msgstr ""
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "仕訳帳項目"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"
-
-#. module: account_followup
-#: field:account.followup.print.all,email_conf:0
-msgid "Send email confirmation"
-msgstr "Eメール確認を送信"
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-ups"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -470,10 +476,13 @@ msgid "Companies"
 msgstr "会社"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
-msgid "Summary"
-msgstr "要約"
+#: code:addons/account_followup/wizard/account_followup_print.py:289
+#, python-format
+msgid ""
+"All Emails have been successfully sent to Partners:.\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -492,8 +501,8 @@ msgstr "%(partner_name)s：パートナ名"
 
 #. module: account_followup
 #: view:account_followup.stat:0
-msgid "Follow-Up lines"
-msgstr "フォローアップ行"
+msgid "Latest Follow-up Date"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -508,15 +517,22 @@ msgid "Balance"
 msgstr "残高"
 
 #. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
-msgstr "期間のタイプ"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_print
-#: model:ir.model,name:account_followup.model_account_followup_print_all
-msgid "Print Followup & Send Mail to Customers"
-msgstr "フォローアップの印刷＆顧客にメール送信"
+#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define follow-up levels and their related "
+"messages.\n"
+"              </p><p>\n"
+"                For each step, specify the message and the day of delay. "
+"Use\n"
+"                the legend to know the using code to adapt the email content "
+"to\n"
+"                the good context (good name, good date) and you can manage "
+"the\n"
+"                multi language of messages.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -525,22 +541,12 @@ msgid "Last move"
 msgstr "前回動作"
 
 #. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Followup Report"
-msgstr "フォローアップレポート"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Steps"
-msgstr "フォローアップステップ"
-
-#. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
 msgstr "期間"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:307
+#: code:addons/account_followup/wizard/account_followup_print.py:300
 #, python-format
 msgid "Followup Summary"
 msgstr "フォローアップの要約"
@@ -562,42 +568,9 @@ msgid "Max Follow Up Level"
 msgstr "最大フォローアップレベル"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
-msgid "Review Invoicing Follow-Ups"
-msgstr "請求フォローアップのレビュー"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
-
-#. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
-msgid ""
-"Define follow up levels and their related messages and delay. For each step, "
-"specify the message and the day of delay. Use the legend to know the using "
-"code to adapt the email content to the good context (good name, good date) "
-"and you can manage the multi language of messages."
-msgstr ""
-"フォローアップレベル、それに関するメッセージ、猶予期間を定義して下さい。各ステップ毎にメッセージと猶予日数を定義します。良い文脈（良い名前、良い日付）にE"
-"メールを適合させるためのコードの使い方を知るために凡例を使って下さい。また、多言語のメッセージが管理できます。"
-
-#. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
 msgstr "買掛金項目"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:298
-#, python-format
-msgid ""
-"E-Mail not sent to following Partners, E-mail not available !\n"
-"\n"
-"%s"
-msgstr ""
-"Eメールが利用可能ではないため次のパートナにEメールは送信されません。\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -616,20 +589,15 @@ msgid "Including journal entries marked as a litigation"
 msgstr "訴訟としてマークされた仕訳帳エントリーを含みます。"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Followup Level"
-msgstr "フォローアップレベル"
-
-#. module: account_followup
 #: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
 msgid "Description"
 msgstr "説明"
 
 #. module: account_followup
-#: constraint:account_followup.followup:0
-msgid "Only One Followup by Company."
-msgstr "会社による１つのフォローアップのみです。"
+#: report:account_followup.followup.print:0
+msgid "Ref"
+msgstr "参照"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -640,6 +608,11 @@ msgstr "今会計年度"
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "パートナエントリー"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-up lines"
+msgstr ""
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -678,8 +651,8 @@ msgid "First move"
 msgstr "最初の動作"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Li."
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Follow-up Statistics by Partner"
 msgstr ""
 
 #. module: account_followup
@@ -693,9 +666,20 @@ msgid "Days of delay"
 msgstr "猶予日数"
 
 #. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr "要約"
+
+#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
 msgstr "ドキュメント：顧客口座取引明細書"
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid "Send follow-ups"
+msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -735,11 +719,6 @@ msgstr ""
 "敬具\n"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(line)s：元帳記帳行"
@@ -769,12 +748,130 @@ msgstr "テストプリント"
 msgid "%(partner_name)s: Partner name"
 msgstr "%(partner_name)s：パートナ名"
 
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Latest Followup Date"
-msgstr "最新フォローアップ日"
+#~ msgid ""
+#~ "Follow up on the reminders sent over to your partners for unpaid invoices."
+#~ msgstr "未払請求書のためにパートナに送信された通知のフォローアップ"
 
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-Up Criteria"
-msgstr "フォローアップ基準"
+#~ msgid "Search Followup"
+#~ msgstr "フォローアップの選択"
+
+#~ msgid ""
+#~ "Check if you want to print followups without changing followups level."
+#~ msgstr "フォローアップレベルを変更せずにフォローアップを印刷したい場合はチェックして下さい。"
+
+#~ msgid "Ok"
+#~ msgstr "OK"
+
+#~ msgid "Follow up Entries with period in current year"
+#~ msgstr "現在年の期間におけるエントリーのフォローアップ"
+
+#~ msgid "Follow-Ups"
+#~ msgstr "フォローアップ"
+
+#~ msgid "Account Follow Up"
+#~ msgstr "アカウントフォローアップ"
+
+#~ msgid "Select Partners to Remind"
+#~ msgstr "通知するパートナを選択"
+
+#~ msgid ""
+#~ "This feature allows you to send reminders to partners with pending invoices. "
+#~ "You can send them the default message for unpaid invoices or manually enter "
+#~ "a message should you need to remind them of a specific information."
+#~ msgstr ""
+#~ "この機能は保留中の請求書を持つパートナに通知を送ることができます。未払請求書のためのデフォルトメッセージ、あるいは特定の情報を通知する必要がある時にメッセ"
+#~ "ージを手動で入力して送ることができます。"
+
+#~ msgid "Email body"
+#~ msgstr "Eメール本文"
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "全てのEメールはパートナに正常に送信されました：\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Send followups"
+#~ msgstr "フォローアップ送信済"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "以下のパートナへのEメール送信が成功しました。\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Followup Statistics by Partner"
+#~ msgstr "パートナ別の統計のフォローアップ"
+
+#~ msgid "Send email confirmation"
+#~ msgstr "Eメール確認を送信"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "ビュータイプのアカウントでは仕訳帳項目を作ることはできません。"
+
+#~ msgid "Followup Statistics"
+#~ msgstr "統計のフォローアップ"
+
+#~ msgid "Print Followup & Send Mail to Customers"
+#~ msgstr "フォローアップの印刷＆顧客にメール送信"
+
+#~ msgid "Followup Report"
+#~ msgstr "フォローアップレポート"
+
+#~ msgid "Follow-Up lines"
+#~ msgstr "フォローアップ行"
+
+#~ msgid "Review Invoicing Follow-Ups"
+#~ msgstr "請求フォローアップのレビュー"
+
+#~ msgid "Follow-Up Steps"
+#~ msgstr "フォローアップステップ"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "会社は関連するアカウントと期間は同じでなければなりません。"
+
+#~ msgid ""
+#~ "Define follow up levels and their related messages and delay. For each step, "
+#~ "specify the message and the day of delay. Use the legend to know the using "
+#~ "code to adapt the email content to the good context (good name, good date) "
+#~ "and you can manage the multi language of messages."
+#~ msgstr ""
+#~ "フォローアップレベル、それに関するメッセージ、猶予期間を定義して下さい。各ステップ毎にメッセージと猶予日数を定義します。良い文脈（良い名前、良い日付）にE"
+#~ "メールを適合させるためのコードの使い方を知るために凡例を使って下さい。また、多言語のメッセージが管理できます。"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, E-mail not available !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "Eメールが利用可能ではないため次のパートナにEメールは送信されません。\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Followup Level"
+#~ msgstr "フォローアップレベル"
+
+#~ msgid "Only One Followup by Company."
+#~ msgstr "会社による１つのフォローアップのみです。"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "閉鎖アカウントには仕訳項目を作ることはできません。"
+
+#~ msgid "Follow-Up Criteria"
+#~ msgstr "フォローアップ基準"
+
+#~ msgid "Latest Followup Date"
+#~ msgstr "最新フォローアップ日"

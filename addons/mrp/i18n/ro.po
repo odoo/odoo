@@ -6,35 +6,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:49+0000\n"
+"POT-Creation-Date: 2012-11-24 02:51+0000\n"
 "PO-Revision-Date: 2011-03-23 12:20+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:50+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:05+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: mrp
-#: view:mrp.routing.workcenter:0
-msgid "Routing Work Centers"
-msgstr "Circuit Centre de Lucru"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action
+#: help:mrp.config.settings,module_mrp_repair:0
 msgid ""
-"Manufacturing Orders are usually proposed automatically by OpenERP based on "
-"the bill of materials and the procurement rules, but you can also create "
-"manufacturing orders manually. OpenERP will handle the consumption of the "
-"raw materials (stock decrease) and the production of the finished products "
-"(stock increase) when the order is processed."
+"Allows to manage all product repairs.\n"
+"                    * Add/remove products in the reparation\n"
+"                    * Impact for stocks\n"
+"                    * Invoicing (products and/or services)\n"
+"                    * Warranty concept\n"
+"                    * Repair quotation report\n"
+"                    * Notes for the technician and for the final customer.\n"
+"                This installs the module mrp_repair."
 msgstr ""
-"Comenzile de productie sunt propuse de obicei in mod automat de catre "
-"OpenERP pe baza listei de materiale și a normelor de aprovizionare, dar "
-"puteti crea, de asemenea, comenzi de productie manual. OpenERP va gestiona "
-"consumul de materii prime (scadere stoc) si productia de produse finite "
-"(crestere stoc), atunci cand comanda este procesata."
+
+#. module: mrp
+#: report:mrp.production.order:0
+msgid "No. Of Cycles"
+msgstr "Nr de Cicluri"
 
 #. module: mrp
 #: help:mrp.production,location_src_id:0
@@ -47,24 +45,16 @@ msgid "Work Centers Utilisation"
 msgstr "Utilizare centre de lucru"
 
 #. module: mrp
-#: model:product.template,name:mrp.product_sugar_product_template
-msgid "Sugar"
-msgstr "Zahar"
+#: view:mrp.routing.workcenter:0
+msgid "Routing Work Centers"
+msgstr "Circuit Centre de Lucru"
 
 #. module: mrp
-#: report:mrp.production.order:0
-msgid "No. Of Cycles"
-msgstr "Nr de Cicluri"
-
-#. module: mrp
+#: field:mrp.production.workcenter.line,cycle:0
 #: field:mrp.routing.workcenter,cycle_nbr:0
+#: field:report.workcenter.load,cycle:0
 msgid "Number of Cycles"
 msgstr "Numarul de Cicluri"
-
-#. module: mrp
-#: model:product.uom.categ,name:mrp.product_uom_categ_fluid
-msgid "Fluid"
-msgstr "Lichid"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -76,21 +66,10 @@ msgstr ""
 "aprovizionare, de indata ce este atins stocul minim."
 
 #. module: mrp
-#: field:mrp.production,picking_id:0
-msgid "Picking list"
-msgstr "Lista de ridicare"
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:130
 #, python-format
 msgid "Hourly Cost"
 msgstr "Costuri pe ora"
-
-#. module: mrp
-#: code:addons/mrp/report/price.py:139
-#, python-format
-msgid "Cost Price per Uom"
-msgstr "Pretul de cost per Udm"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -98,15 +77,15 @@ msgid "Scrap Products"
 msgstr "Produse rebuturi"
 
 #. module: mrp
+#: view:mrp.workcenter:0
+msgid "Mrp Workcenter"
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_routing_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_routing_action
 msgid "Routings"
 msgstr "Fise tehnologice"
-
-#. module: mrp
-#: field:mrp.workcenter,product_id:0
-msgid "Work Center Product"
-msgstr "Produs centru de lucru"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -119,9 +98,11 @@ msgid "For stockable products and consumables"
 msgstr "Pentru produsele stocabile și consumabile"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_stockproduction0
-msgid "To Produce"
-msgstr "De produs"
+#: help:mrp.bom,message_unread:0
+#: help:mrp.production,message_unread:0
+#: help:mrp.production.workcenter.line,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.routing.workcenter,cycle_nbr:0
@@ -133,9 +114,13 @@ msgstr ""
 "operatia specificata in fisa tehnologica."
 
 #. module: mrp
+#: view:product.product:0
+msgid "False"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 #: field:mrp.bom,code:0
-#: view:mrp.production:0
 #: field:mrp.production,name:0
 msgid "Reference"
 msgstr "Referinta"
@@ -151,6 +136,15 @@ msgid "Manufacturing Orders which are currently in production."
 msgstr "Comenzi de fabricatie care sunt in productie in prezent."
 
 #. module: mrp
+#: help:mrp.bom,message_summary:0
+#: help:mrp.production,message_summary:0
+#: help:mrp.production.workcenter.line,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
 #: model:process.transition,name:mrp.process_transition_stockrfq0
 msgid "To Buy"
@@ -160,6 +154,13 @@ msgstr "De cumparat"
 #: model:process.transition,note:mrp.process_transition_purchaseprocure0
 msgid "The system launches automatically a RFQ to the preferred supplier."
 msgstr "Sistemul lanseaza automat o CdC furnizorului preferat."
+
+#. module: mrp
+#: help:mrp.config.settings,group_mrp_properties:0
+msgid ""
+"The selection of the right Bill of Material to use will depend on the  "
+"properties specified on the sale order and the Bill of Material."
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -172,51 +173,28 @@ msgid "Set / Pack"
 msgstr "Set / Pachet"
 
 #. module: mrp
-#: view:mrp.production:0
-#: field:mrp.production,state:0
-msgid "State"
-msgstr "Stare"
-
-#. module: mrp
 #: field:mrp.workcenter,costs_hour:0
 msgid "Cost per hour"
 msgstr "Cost pe ora"
 
 #. module: mrp
-#: model:product.template,name:mrp.product_orange_product_template
-msgid "Orange"
-msgstr "Portocala"
-
-#. module: mrp
-#: model:process.transition,note:mrp.process_transition_servicemts0
+#: model:process.transition,note:mrp.process_transition_stockproduction0
 msgid ""
-"This is used in case of a service without any impact in the system, a "
-"training session for instance."
+"In case the Supply method of the product is Produce, the system creates a "
+"production order."
 msgstr ""
-"Acest lucru este utilizat in cazul unui serviciu, fara nici un impact in "
-"sistem, o sesiune de formare, de exemplu."
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "UOM"
-msgstr "UdeM"
+"In cazul in care Metoda de aprovizionare a produsului este Productie, "
+"sistemul creeaza o comanda de productie."
 
 #. module: mrp
 #: field:change.production.qty,product_qty:0
-#: field:mrp.bom,product_qty:0
-#: field:mrp.production,product_qty:0
-#: field:mrp.production.product.line,product_qty:0
 msgid "Product Qty"
 msgstr "Cantitate produs"
 
 #. module: mrp
-#: help:mrp.workcenter,product_id:0
-msgid ""
-"Fill this product to track easily your production costs in the analytic "
-"accounting."
+#: view:mrp.production:0
+msgid "Unit of Measure"
 msgstr ""
-"Completati acest produs pentru a tine evidenta cu usurinta a costurilor de "
-"producție in contabilitatea analitica."
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_purchaseprocure0
@@ -224,18 +202,15 @@ msgid "For purchased material"
 msgstr "Pentru materiale achizitionate"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.product_form_config_action
-msgid ""
-"Create a product form for everything you buy or sell. Specify a supplier if "
-"the product can be purchased."
-msgstr ""
-"Creeaza un formular al produsului pentru orice cumparati sau vindeti. "
-"Specifica un furnizor daca produsul poate fi achizitionat."
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "Cant. Totala"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.next_id_77
-msgid "Reporting"
-msgstr "Raportare"
+#: code:addons/mrp/mrp.py:648
+#, python-format
+msgid "Cannot cancel manufacturing order!"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle_account_id:0
@@ -249,11 +224,6 @@ msgid "Work Cost"
 msgstr "Costul de lucru"
 
 #. module: mrp
-#: report:bom.structure:0
-msgid "["
-msgstr "["
-
-#. module: mrp
 #: model:process.transition,name:mrp.process_transition_procureserviceproduct0
 msgid "Procurement of services"
 msgstr "Achizitii servicii"
@@ -264,6 +234,27 @@ msgid "Capacity Information"
 msgstr "Capacitatea de informatii"
 
 #. module: mrp
+#: field:mrp.routing,workcenter_lines:0
+msgid "Work Centers"
+msgstr "Centre de lucru"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_routing_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a routing.\n"
+"              </p><p>\n"
+"                Routings allow you to create and manage the manufacturing\n"
+"                operations that should be followed within your work centers "
+"in\n"
+"                order to produce a product.  They are attached to bills of\n"
+"                materials that will define the required raw materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
 msgstr "Produse fabricate"
@@ -274,19 +265,14 @@ msgid "Destination Location"
 msgstr "Locatia Destinatie"
 
 #. module: mrp
-#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: view:mrp.config.settings:0
 msgid "Master Data"
 msgstr "Date Principale"
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockmts0
-msgid ""
-"The system waits for the products to be available in the stock. These "
-"products are typically procured manually or through a minimum stock rule."
+#: field:mrp.config.settings,module_mrp_byproduct:0
+msgid "Produce several products from one manufacturing order"
 msgstr ""
-"Sistemul asteapta ca produsele sa fie disponibile in stoc. Aceste produse "
-"sunt de obicei procurate manual sau prin intermediul unei reguli de stoc "
-"minim."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -294,10 +280,9 @@ msgid "Partner Ref"
 msgstr "Ref Partener"
 
 #. module: mrp
-#: field:mrp.production,origin:0
-#: report:mrp.production.order:0
-msgid "Source Document"
-msgstr "Document sursa"
+#: selection:mrp.workcenter.load,measure_unit:0
+msgid "Amount in hours"
+msgstr "Cantitatea in ore"
 
 #. module: mrp
 #: field:mrp.production,product_lines:0
@@ -310,19 +295,25 @@ msgid "Sets / Phantom"
 msgstr "Seturi / Fictiv"
 
 #. module: mrp
+#: view:mrp.production:0
+#: field:mrp.production,state:0
+msgid "Status"
+msgstr ""
+
+#. module: mrp
 #: help:mrp.bom,position:0
 msgid "Reference to a position in an external plan."
 msgstr "Trimitere la o pozitie intr-un plan extern."
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Incercati sa atribuiti un lot care nu este din acelasi produs"
+#: model:res.groups,name:mrp.group_mrp_routings
+msgid "Manage Routings"
+msgstr ""
 
 #. module: mrp
-#: model:product.template,name:mrp.product_cloth_product_template
-msgid "Cloth"
-msgstr "Panza"
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -335,6 +326,11 @@ msgid "Error ! You cannot create recursive BoM."
 msgstr "Eroare ! Nu puteti crea LdM recursive."
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You must assign a serial number for this product."
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
 msgid "Work Center Usage"
 msgstr "Utilizare Centru de lucru"
@@ -345,9 +341,22 @@ msgid "Procurement of stockable Product"
 msgstr "Achizitii de Produse care pot fi stocate"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Default UOM"
-msgstr "UdeM Implicita"
+#: model:ir.actions.act_window,help:mrp.mrp_production_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a manufacturing order. \n"
+"              </p><p>\n"
+"                A manufacuring order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products.\n"
+"              </p><p>\n"
+"                Manufacturing orders are usually proposed automatically "
+"based\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
+"                stock rule.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
@@ -358,16 +367,25 @@ msgstr "Referinta trebuie sa fie unica per Companie!"
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
 #: report:bom.structure:0
+#: view:mrp.bom:0
 #: field:mrp.product_price,number:0
+#: view:mrp.production:0
 #: report:mrp.production.order:0
 #, python-format
 msgid "Quantity"
 msgstr "Cantitate"
 
 #. module: mrp
-#: field:mrp.production.workcenter.line,hour:0
-msgid "Nbr of hours"
-msgstr "Nr de ore"
+#: help:mrp.workcenter,product_id:0
+msgid ""
+"Fill this product to easily track your production costs in the analytic "
+"accounting."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.workcenter,product_id:0
+msgid "Work Center Product"
+msgstr "Produs centru de lucru"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -384,29 +402,20 @@ msgstr ""
 "cantitatea vanduta si de parametrii produselor."
 
 #. module: mrp
-#: model:process.transition,note:mrp.process_transition_stockproduction0
+#: model:process.transition,note:mrp.process_transition_servicemts0
 msgid ""
-"In case the Supply method of the product is Produce, the system creates a "
-"production order."
+"This is used in case of a service without any impact in the system, a "
+"training session for instance."
 msgstr ""
-"In cazul in care Metoda de aprovizionare a produsului este Productie, "
-"sistemul creeaza o comanda de productie."
+"Acest lucru este utilizat in cazul unui serviciu, fara nici un impact in "
+"sistem, o sesiune de formare, de exemplu."
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_action
-msgid ""
-"The Properties in OpenERP are used to select the right bill of materials for "
-"manufacturing a product when you have different ways of building the same "
-"product. You can assign several properties to each Bill of Materials. When a "
-"sales person creates a sales order, he can relate it to several properties "
-"and OpenERP will automatically select the BoM to use according the needs."
+#: field:mrp.bom,product_qty:0
+#: field:mrp.production,product_qty:0
+#: field:mrp.production.product.line,product_qty:0
+msgid "Product Quantity"
 msgstr ""
-"Proprietatile in OpenERP sunt folosite pentru a selecta lista corecta de "
-"materiale pentru fabricarea unui produs atunci cand aveti moduri diferite de "
-"constructie a aceluiasi produs. Puteti atribui mai multe proprietati "
-"fiecarei Liste de Materiale. Atunci cand un agent de vanzari creeaza o "
-"comanda de vanzare, el o poate asocia mai multor proprietati, iar OpenERP va "
-"selecta automat LdM pe care o va utiliza in functie de nevoi."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -423,26 +432,51 @@ msgid "Working Time"
 msgstr "Program de lucru"
 
 #. module: mrp
+#: help:mrp.production,state:0
+msgid ""
+"When the production order is created the status is set to 'Draft'.\n"
+"                If the order is confirmed the status is set to 'Waiting "
+"Goods'.\n"
+"                If any exceptions are there, the status is set to 'Picking "
+"Exception'.\n"
+"                If the stock is available then the status is set to 'Ready "
+"to Produce'.\n"
+"                When the production gets started then the status is set to "
+"'In Production'.\n"
+"                When the production is over, the status is set to 'Done'."
+msgstr ""
+
+#. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_report_in_out_picking_tree
 msgid "Weekly Stock Value Variation"
 msgstr "Variatia Saptamanala a Valorii Stocului"
 
 #. module: mrp
 #: view:mrp.production:0
-#: field:mrp.production,date_planned_date:0
+#: field:mrp.production,date_planned:0
 #: report:mrp.production.order:0
 msgid "Scheduled Date"
 msgstr "Data programata"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Component Product"
-msgstr "Componenta produs"
+#: code:addons/mrp/procurement.py:113
+#, python-format
+msgid "Manufacturing Order <em>%s</em> created."
+msgstr ""
 
 #. module: mrp
+#: view:mrp.bom:0
 #: report:mrp.production.order:0
 msgid "Bill Of Material"
 msgstr "Lista de Materiale"
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:1068
+#, python-format
+msgid ""
+"Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for "
+"the <em>%s</em>."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.routing,location_id:0
@@ -466,6 +500,12 @@ msgid "Bill of Materials Structure"
 msgstr "Structura Listei de Materiale"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:1043
+#, python-format
+msgid "Manufacturing order has been <b>canceled</b>."
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
 msgstr "Tipul produsului este serviciu"
@@ -474,15 +514,6 @@ msgstr "Tipul produsului este serviciu"
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
 msgstr "Numele companiei trebuie sa fie unic !"
-
-#. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
-msgid ""
-"Define specific property groups that can be assigned to the properties of "
-"your bill of materials."
-msgstr ""
-"Defineste grupuri specifice de proprietati care pot fi atribuite "
-"proprietatilor listei dumneavoastra de materiale."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -500,25 +531,19 @@ msgid "For Services."
 msgstr "Pentru servicii."
 
 #. module: mrp
-#: help:mrp.workcenter,costs_cycle_account_id:0
-#: help:mrp.workcenter,costs_hour_account_id:0
-msgid ""
-"Complete this only if you want automatic analytic accounting entries on "
-"production orders."
-msgstr ""
-"Completati aceasta numai daca doriti inregistrari contabile analitice "
-"automate pentru comenzile de productie."
-
-#. module: mrp
-#: field:mrp.production.workcenter.line,cycle:0
-msgid "Nbr of cycles"
-msgstr "Nr de cicluri"
-
-#. module: mrp
 #: model:process.node,note:mrp.process_node_orderrfq0
 #: model:process.node,note:mrp.process_node_rfq0
 msgid "Request for Quotation."
 msgstr "Cerere pentru Cotatie."
+
+#. module: mrp
+#: view:change.production.qty:0
+#: view:mrp.config.settings:0
+#: view:mrp.product.produce:0
+#: view:mrp.product_price:0
+#: view:mrp.workcenter.load:0
+msgid "or"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_billofmaterialrouting0
@@ -530,30 +555,21 @@ msgstr ""
 "lucru."
 
 #. module: mrp
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Eroare: cod ean invalid"
-
-#. module: mrp
+#: view:mrp.production:0
 #: field:mrp.production,move_created_ids:0
 msgid "Products to Produce"
 msgstr "Produse de Fabricat"
+
+#. module: mrp
+#: view:mrp.config.settings:0
+msgid "Apply"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.routing:0
 #: field:mrp.routing,location_id:0
 msgid "Production Location"
 msgstr "Locatie Productie"
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Change Qty"
-msgstr "Schimba Cant"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.action_configure_workcenter
-msgid "Configure your work centers"
-msgstr "Configureaza centrele dumneavoastra de lucru"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -576,12 +592,6 @@ msgid "Search Production"
 msgstr "Cauta Productia"
 
 #. module: mrp
-#: code:addons/mrp/report/price.py:139
-#, python-format
-msgid "Supplier Price per Uom"
-msgstr "Pret Furnizor pe Udm"
-
-#. module: mrp
 #: help:mrp.routing.workcenter,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
@@ -589,22 +599,28 @@ msgstr ""
 "Ofera ordinea secventei atunci cand afiseaza o lista cu Centrele de Lucru."
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-"Nu puteti muta produse dintr-o sau intr-o locatie de tipul vizualizare."
-
-#. module: mrp
 #: field:mrp.bom,child_complete_ids:0
 msgid "BoM Hierarchy"
 msgstr "Ierarhie LdM"
 
 #. module: mrp
-#: field:mrp.bom,product_uom:0
-#: field:mrp.production,product_uom:0
-#: field:mrp.production.product.line,product_uom:0
-msgid "Product UOM"
-msgstr "UdeM Produs"
+#: model:process.transition,name:mrp.process_transition_stockproduction0
+msgid "To Produce"
+msgstr "De produs"
+
+#. module: mrp
+#: help:mrp.config.settings,module_stock_no_autopicking:0
+msgid ""
+"This module allows an intermediate picking process to provide raw materials "
+"to production orders.\n"
+"                For example to manage production made by your suppliers (sub-"
+"contracting).\n"
+"                To achieve this, set the assembled product which is sub-"
+"contracted to \"No Auto-Picking\"\n"
+"                and put the location of the supplier in the routing of the "
+"assembly operation.\n"
+"                This installs the module stock_no_autopicking."
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.production,state:0
@@ -631,6 +647,12 @@ msgstr ""
 "tehnologica fara sa o stergeti."
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:386
+#, python-format
+msgid "Bill of Material has been <b>created</b> for <em>%s</em> product."
+msgstr ""
+
+#. module: mrp
 #: model:process.transition,name:mrp.process_transition_billofmaterialrouting0
 msgid "Material Routing"
 msgstr "Circuit Materiale"
@@ -650,7 +672,7 @@ msgid "Work Center Load"
 msgstr "Incarcare Centru de Lucru"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:43
+#: code:addons/mrp/procurement.py:44
 #, python-format
 msgid "No BoM defined for this product !"
 msgstr "Nu este definita nicio LdM pentru acest produs !"
@@ -667,7 +689,15 @@ msgid "Stock Move"
 msgstr "Miscare stoc"
 
 #. module: mrp
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
+#. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
+#: view:mrp.config.settings:0
 msgid "Planning"
 msgstr "Planificare"
 
@@ -675,11 +705,6 @@ msgstr "Planificare"
 #: view:mrp.production:0
 msgid "Ready"
 msgstr "Pregatit(a)"
-
-#. module: mrp
-#: model:product.template,name:mrp.product_buttons_product_template
-msgid "Shirt Buttons"
-msgstr "Nasturi camasa"
 
 #. module: mrp
 #: help:mrp.production,routing_id:0
@@ -701,6 +726,20 @@ msgid "Time in hours for doing one cycle."
 msgstr "Timpul in ore pentru efectuarea unui ciclu."
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a component to a bill of material.\n"
+"              </p><p>\n"
+"                Bills of materials components are components and by-"
+"products\n"
+"                used to create master bills of materials.  Use this menu to\n"
+"                search in which BoM a specific component is used.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
@@ -717,13 +756,21 @@ msgid "Master Bill of Materials"
 msgstr "Lista Principala de Materiale"
 
 #. module: mrp
-#: help:mrp.bom,product_uos:0
+#: view:mrp.production:0
+#: report:mrp.production.order:0
+msgid "Work Orders"
+msgstr "Comenzi de lucru"
+
+#. module: mrp
+#: help:mrp.config.settings,module_product_manufacturer:0
 msgid ""
-"Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
-"promotion of stock."
+"This allows you to define the following for a product:\n"
+"                    * Manufacturer\n"
+"                    * Manufacturer Product Name\n"
+"                    * Manufacturer Product Code\n"
+"                    * Product Attributes.\n"
+"                This installs the module product_manufacturer."
 msgstr ""
-"UDV a Produsului (Unitatea de Vanzare) este unitatea de masura pentru "
-"facturarea si promovarea stocului."
 
 #. module: mrp
 #: view:mrp.product_price:0
@@ -738,6 +785,45 @@ msgid "Type"
 msgstr "Tip"
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_group_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a group of properties.\n"
+"              </p><p>\n"
+"                Define specific property groups that can be assigned to "
+"your\n"
+"                bill of materials and sales orders. Properties allows "
+"OpenERP\n"
+"                to automatically select the right bill of materials "
+"according\n"
+"                to properties selected in the sale order by salesperson.\n"
+"              </p><p>\n"
+"                For instance, in the property group \"Warranty\", you an "
+"have\n"
+"                two properties: 1 year warranty, 3 years warranty. "
+"Depending\n"
+"                on the propoerties selected in the sale order, OpenERP will\n"
+"                schedule a production using the matching bill of materials.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a work center.\n"
+"              </p><p>\n"
+"                Work Centers allow you to create and manage manufacturing\n"
+"                units. They consist of workers and/or machines, which are\n"
+"                considered as units for task assignation as well as "
+"capacity\n"
+"                and planning forecast.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: model:process.node,note:mrp.process_node_minimumstockrule0
 msgid "Linked to the 'Minimum stock rule' supplying method."
 msgstr "Legat de metoda de furnizare \"Regula stocului minim\"."
@@ -748,22 +834,16 @@ msgid "Per month"
 msgstr "Pe luna"
 
 #. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:78
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#, python-format
-msgid "Couldn't find bill of material for product"
-msgstr "Lista de materiale pentru produs nu a putut fi găsita"
+#: help:mrp.bom,product_uom:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for the "
+"inventory control"
+msgstr ""
 
 #. module: mrp
 #: report:bom.structure:0
 msgid "Product Name"
 msgstr "Numele Produsului"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:503
-#, python-format
-msgid "Invalid action !"
-msgstr "Actiune nevalida !"
 
 #. module: mrp
 #: help:mrp.bom,product_efficiency:0
@@ -773,8 +853,8 @@ msgstr ""
 "productie."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:734
-#: code:addons/mrp/mrp.py:762
+#: code:addons/mrp/mrp.py:756
+#: code:addons/mrp/mrp.py:784
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
@@ -794,6 +874,19 @@ msgstr "CdC"
 #: model:process.transition,name:mrp.process_transition_producttostockrules0
 msgid "Procurement rule"
 msgstr "Regula de aprovizionare"
+
+#. module: mrp
+#: help:mrp.workcenter,costs_cycle_account_id:0
+#: help:mrp.workcenter,costs_hour_account_id:0
+msgid ""
+"Fill this only if you want automatic analytic accounting entries on "
+"production orders."
+msgstr ""
+
+#. module: mrp
+#: view:mrp.production:0
+msgid "Mark as Started"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -828,22 +921,18 @@ msgid "Manufacturing Orders which are waiting for raw materials."
 msgstr "Comenzi de Fabricatie care asteapta materia prima."
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_workcenter_action
+#: code:addons/mrp/mrp.py:284
+#, python-format
 msgid ""
-"Work Centers allow you to create and manage manufacturing units.  They "
-"consist of workers and/or machines, which are considered as units for "
-"capacity and planning forecast.  Keep in mind that the working time and "
-"resource leave are not taken into account in the time computation of the "
-"work center."
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
 msgstr ""
-"Centrele de Lucru va permit sa creati si sa gestionati unitatile de "
-"fabricatie. Ele constau din muncitori si/sau masini, care sunt considerati/e "
-"drept unitati pentru capacitate si planificare estimare. Nu uitati faptul ca "
-"programul de lucru si concediul resursei nu sunt luate in considerare la "
-"momentul calculului centrului de lucru."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
+#: view:mrp.config.settings:0
+#: view:mrp.production:0
+#: field:procurement.order,production_id:0
 msgid "Manufacturing Order"
 msgstr "Comanda de Productie"
 
@@ -851,6 +940,14 @@ msgstr "Comanda de Productie"
 #: model:process.transition,name:mrp.process_transition_productionprocureproducts0
 msgid "Procurement of raw material"
 msgstr "Achizitia de materii prime"
+
+#. module: mrp
+#: sql_constraint:mrp.bom:0
+msgid ""
+"All product quantities must be greater than 0.\n"
+"You should install the mrp_byproduct module if you want to manage extra "
+"products on BoMs !"
+msgstr ""
 
 #. module: mrp
 #: view:mrp.production:0
@@ -864,10 +961,35 @@ msgid "Ready to Produce"
 msgstr "Pregatit de productie"
 
 #. module: mrp
+#: field:mrp.bom,message_is_follower:0
+#: field:mrp.production,message_is_follower:0
+#: field:mrp.production.workcenter.line,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
 msgid "Date"
 msgstr "Data"
+
+#. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to start a new manufacturing order. \n"
+"              </p><p>\n"
+"                A manufacuring order, based on a bill of materials, will\n"
+"                consume raw materials and produce finished products.\n"
+"              </p><p>\n"
+"                Manufacturing orders are usually proposed automatically "
+"based\n"
+"                on customer requirements or automated rules like the "
+"minimum\n"
+"                stock rule.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,type:0
@@ -875,7 +997,7 @@ msgid "BoM Type"
 msgstr "Tip LdM"
 
 #. module: mrp
-#: code:addons/mrp/procurement.py:45
+#: code:addons/mrp/procurement.py:46
 #, python-format
 msgid ""
 "Procurement '%s' has an exception: 'No BoM defined for this product !'"
@@ -889,15 +1011,9 @@ msgid "Search"
 msgstr "Cauta"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:626
-#, python-format
-msgid "Could not cancel manufacturing order !"
-msgstr "Comanda de fabricatie nu poate fi anulata !"
-
-#. module: mrp
-#: field:report.workcenter.load,cycle:0
-msgid "Nbr of cycle"
-msgstr "Numarul ciclului"
+#: model:process.node,note:mrp.process_node_billofmaterial0
+msgid "Product's structure"
+msgstr "Structura produsului"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_company
@@ -905,7 +1021,7 @@ msgid "Companies"
 msgstr "Companii"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:627
+#: code:addons/mrp/mrp.py:649
 #, python-format
 msgid ""
 "You must first cancel related internal picking attached to this "
@@ -919,17 +1035,6 @@ msgstr ""
 #: model:process.node,name:mrp.process_node_productminimumstockrule0
 msgid "Minimum Stock"
 msgstr "Stoc minim"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:503
-#, python-format
-msgid "Cannot delete a manufacturing order in state '%s'"
-msgstr "Nu se poate sterge o comanda de fabricatie in starea '%s'"
-
-#. module: mrp
-#: model:ir.ui.menu,name:mrp.menus_dash_mrp
-msgid "Dashboard"
-msgstr "Tablou de bord"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:160
@@ -963,14 +1068,13 @@ msgstr "Nr. de Ore"
 
 #. module: mrp
 #: view:mrp.property:0
-#: view:mrp.property.group:0
 msgid "Property Group"
 msgstr "Proprietati Grup"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Qty"
-msgstr "Cant"
+#: field:mrp.config.settings,group_mrp_routings:0
+msgid "Manage routings and work orders "
+msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_production0
@@ -985,18 +1089,13 @@ msgstr "Inactiv(a)"
 
 #. module: mrp
 #: view:change.production.qty:0
+#: view:mrp.config.settings:0
 #: view:mrp.product.produce:0
 #: view:mrp.product_price:0
 #: view:mrp.production:0
 #: view:mrp.workcenter.load:0
 msgid "Cancel"
 msgstr "Anuleaza"
-
-#. module: mrp
-#: code:addons/mrp/wizard/change_production_qty.py:63
-#, python-format
-msgid "Active Id is not found"
-msgstr "Id-ul activ nu este gasit"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicerfq0
@@ -1006,11 +1105,6 @@ msgid ""
 msgstr ""
 "In cazul in care serviciul are o metoda de aprovizionare \"Cumpara\", "
 "aceasta creează o CDC, de exemplu o cerere de subcontractare."
-
-#. module: mrp
-#: field:mrp.production,move_prod_id:0
-msgid "Move product"
-msgstr "Mutare produs"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1028,25 +1122,18 @@ msgid "BOM Name"
 msgstr "Nume LdM"
 
 #. module: mrp
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
+#: model:ir.actions.act_window,name:mrp.mrp_production_action
+#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
 #: view:mrp.production:0
-msgid "Start Production"
-msgstr "Start Productie"
-
-#. module: mrp
-#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
-#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
-msgid "Production Dashboard"
-msgstr "Tablou de bord productie"
-
-#. module: mrp
-#: model:res.groups,name:mrp.group_mrp_manager
-msgid "Manager"
-msgstr "Director"
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Source Loc."
-msgstr "Locatia sursa"
+msgid "Manufacturing Orders"
+msgstr "Comenzi de Fabricatie"
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -1054,18 +1141,24 @@ msgid "Internal Reference"
 msgstr "Referinta Interna"
 
 #. module: mrp
-#: model:process.node,note:mrp.process_node_billofmaterial0
-msgid "Product's structure"
-msgstr "Structura produsului"
+#: field:mrp.production,product_uos_qty:0
+msgid "Product UoS Quantity"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,name:0
 #: report:mrp.production.order:0
 #: field:mrp.production.product.line,name:0
+#: view:mrp.property:0
 #: field:mrp.routing,name:0
 #: field:mrp.routing.workcenter,name:0
 msgid "Name"
 msgstr "Nume"
+
+#. module: mrp
+#: report:mrp.production.order:0
+msgid "Production Order N° :"
+msgstr "Nr Comanda de Productie"
 
 #. module: mrp
 #: field:mrp.product.produce,mode:0
@@ -1073,9 +1166,11 @@ msgid "Mode"
 msgstr "Mod"
 
 #. module: mrp
-#: report:bom.structure:0
-msgid "]"
-msgstr "]"
+#: help:mrp.bom,message_ids:0
+#: help:mrp.production,message_ids:0
+#: help:mrp.production.workcenter.line,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter.load,measure_unit:0
@@ -1083,27 +1178,14 @@ msgid "Amount measuring unit"
 msgstr "Unitate de masurare a cantitatii"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_production_action_planning
+#: help:mrp.config.settings,module_mrp_jit:0
 msgid ""
-"Manufacturing Orders describe the operations that need to be carried out and "
-"the raw materials usage for each production stage. You use specifications "
-"(bills of materials or BoM) to work out the raw material requirements and "
-"the manufacturing orders needed for the finished products. Once the bills of "
-"materials have been defined, OpenERP is capable of automatically deciding on "
-"the manufacturing route depending on the needs of the company."
+"This allows Just In Time computation of procurement orders.\n"
+"                All procurement orders will be processed immediately, which "
+"could in some\n"
+"                cases entail a small performance impact.\n"
+"                This installs the module mrp_jit."
 msgstr ""
-"Comenzile de productie descriu operatiunile care trebuie efectuate si "
-"utilizarea materiilor prime pentru fiecare etapa de productie. Puteti "
-"utiliza specificatiile (listele de materiale sau LdM) pentru a calcula "
-"necesarul de materii prime si comenzile de productie necesare pentru "
-"produsele finite. Odata ce listele de materiale au fost definite, OpenERP "
-"poate sa decida in mod automat ruta de fabricatie in functie de nevoile "
-"companiei."
-
-#. module: mrp
-#: model:ir.actions.todo.category,name:mrp.category_mrp_config
-msgid "MRP Management"
-msgstr "Managementul MRP"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1126,6 +1208,16 @@ msgid "Manufacturing Orders in Progress"
 msgstr "Comenzi de Producție in curs de desfasurare"
 
 #. module: mrp
+#: model:ir.actions.client,name:mrp.action_client_mrp_menu
+msgid "Open MRP Menu"
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_production_action4
+msgid "Manufacturing Orders Waiting Products"
+msgstr "Comenzi de Fabricatie in Asteptarea Produselor."
+
+#. module: mrp
 #: view:mrp.bom:0
 #: view:mrp.production:0
 #: view:mrp.property:0
@@ -1139,6 +1231,13 @@ msgstr "Grupeaza dupa..."
 #, python-format
 msgid "Cycles Cost"
 msgstr "Cost Cicluri"
+
+#. module: mrp
+#: code:addons/mrp/wizard/change_production_qty.py:83
+#: code:addons/mrp/wizard/change_production_qty.py:88
+#, python-format
+msgid "Cannot find bill of material for this product."
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter.load,measure_unit:0
@@ -1170,11 +1269,10 @@ msgid "Analytic Journal"
 msgstr "Jurnal Analitic"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
-#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
-#: field:mrp.routing,workcenter_lines:0
-msgid "Work Centers"
-msgstr "Centre de lucru"
+#: code:addons/mrp/report/price.py:139
+#, python-format
+msgid "Supplier Price per Unit of Measure"
+msgstr ""
 
 #. module: mrp
 #: selection:mrp.workcenter.load,time_unit:0
@@ -1182,27 +1280,21 @@ msgid "Per week"
 msgstr "Pe saptamana"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_routing_action
-msgid ""
-"Routings allow you to create and manage the manufacturing operations that "
-"should be followed within your work centers in order to produce a product. "
-"They are attached to bills of materials that will define the required raw "
-"materials."
+#: field:mrp.bom,message_unread:0
+#: field:mrp.production,message_unread:0
+#: field:mrp.production.workcenter.line,message_unread:0
+msgid "Unread Messages"
 msgstr ""
-"Rutarile va permit sa creati si sa gestionati operatiunile de fabricatie "
-"care ar trebui sa fie urmate in cadrul centrelor de lucru pentru a fabrica "
-"un produs. Acestea sunt anexate la listele de materiale care vor defini "
-"materia prima necesara."
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.product_form_config_action
-msgid "Create or Import Products"
-msgstr "Creeaza sau Importa Produse"
-
-#. module: mrp
-#: field:report.workcenter.load,hour:0
-msgid "Nbr of hour"
-msgstr "Numar de ore"
+#: model:process.transition,note:mrp.process_transition_stockmts0
+msgid ""
+"The system waits for the products to be available in the stock. These "
+"products are typically procured manually or through a minimum stock rule."
+msgstr ""
+"Sistemul asteapta ca produsele sa fie disponibile in stoc. Aceste produse "
+"sunt de obicei procurate manual sau prin intermediul unei reguli de stoc "
+"minim."
 
 #. module: mrp
 #: view:mrp.routing:0
@@ -1233,6 +1325,14 @@ msgid "Select time unit"
 msgstr "Selecteaza unitatea de timp"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.product_supply_method_produce
+#: model:ir.ui.menu,name:mrp.menu_mrp_bom
+#: model:ir.ui.menu,name:mrp.menu_mrp_product_form
+#: view:mrp.config.settings:0
+msgid "Products"
+msgstr ""
+
+#. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center load"
 msgstr "Sarcina Centru de lucru"
@@ -1252,6 +1352,12 @@ msgstr ""
 "Rutarea indica toate Centrele de lucru folosite, pentru cat timp si/sau "
 "cicluri. Daca Rutarea este indicata atunci a treia fila a unei comenzi de "
 "productie (Centre de Lucru) va fi pre-completata automat."
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:521
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_producttostockrules0
@@ -1276,41 +1382,28 @@ msgid "Day by day"
 msgstr "Zi de zi"
 
 #. module: mrp
-#: view:mrp.bom:0
-msgid "Revisions"
-msgstr "Revizii"
-
-#. module: mrp
-#: model:product.template,name:mrp.product_shirt_product_template
-msgid "Shirt"
-msgstr "Camasa"
-
-#. module: mrp
 #: field:mrp.production,priority:0
 msgid "Priority"
 msgstr "Prioritate"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_picking
+#: field:mrp.production,picking_id:0
 msgid "Picking List"
 msgstr "Lista de ridicare"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:1000
-#, python-format
-msgid "Manufacturing order '%s' is scheduled for the %s."
-msgstr "Comanda de fabricatie '%s' este programata pentru  %s."
+#: help:mrp.production,bom_id:0
+msgid ""
+"Bill of Materials allow you to define the list of required raw materials to "
+"make a finished product."
+msgstr ""
 
 #. module: mrp
-#: report:mrp.production.order:0
-msgid "Production Order N° :"
-msgstr "Nr Comanda de Productie"
-
-#. module: mrp
-#: code:addons/mrp/mrp.py:647
+#: code:addons/mrp/mrp.py:374
 #, python-format
-msgid "Manufacturing order '%s' is ready to produce."
-msgstr "Comanda de fabricatie '%s' este gata de productie."
+msgid "%s (copy)"
+msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_product_line
@@ -1329,16 +1422,6 @@ msgid "Security days for each manufacturing operation."
 msgstr "Zile de siguranta pentru fiecare operatiune de fabricatie"
 
 #. module: mrp
-#: model:product.template,name:mrp.product_water_product_template
-msgid "Water"
-msgstr "Apa"
-
-#. module: mrp
-#: view:mrp.bom:0
-msgid "Component Name"
-msgstr "Numele componentei"
-
-#. module: mrp
 #: model:process.node,name:mrp.process_node_mts0
 #: model:process.transition,name:mrp.process_transition_servicemts0
 #: model:process.transition,name:mrp.process_transition_stockmts0
@@ -1351,22 +1434,6 @@ msgid "Order quantity cannot be negative or zero!"
 msgstr "Cantitatea comandata nu poate fi negativa sau zero!"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
-msgid ""
-"Master Bills of Materials allow you to create and manage the list of "
-"necessary raw materials used to make a finished product. OpenERP will use "
-"these BoMs to automatically propose manufacturing orders according to "
-"product needs. You can either create a bill of materials to define specific "
-"production steps or define a single multi-level bill of materials."
-msgstr ""
-"Listele Principale de Materiale va permit sa creati si sa gestionati lista "
-"de materii prime necesare folosite pentru a fabrica un produs finit. OpenERP "
-"va folosi aceste LdM pentru a propune automat comenzi de productie in "
-"functie de nevoile de produse. Aveti posibilitatea fie sa creati o lista de "
-"materiale pentru a defini pasii specifici de productie, fie sa definiti o "
-"singura lista multi-nivel de materiale."
-
-#. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockrfq0
 msgid ""
 "In case the Supply method of the product is Buy, the system creates a "
@@ -1376,9 +1443,35 @@ msgstr ""
 "creeaza o comanda de achizitie."
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_property_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new property.\n"
+"              </p><p>\n"
+"                The Properties in OpenERP are used to select the right bill "
+"of\n"
+"                materials for manufacturing a product when you have "
+"different\n"
+"                ways of building the same product.  You can assign several\n"
+"                properties to each bill of materials.  When a salesperson\n"
+"                creates a sale order, they can relate it to several "
+"properties\n"
+"                and OpenERP will automatically select the BoM to use "
+"according\n"
+"                the needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
 msgid "Procurement"
 msgstr "Aprovizionare"
+
+#. module: mrp
+#: field:mrp.config.settings,module_product_manufacturer:0
+msgid "Define manufacturers on products "
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_view_mrp_product_price_wizard
@@ -1396,11 +1489,6 @@ msgstr "Furnizori componente"
 #: view:mrp.production:0
 msgid "Production Work Centers"
 msgstr "Centre de lucru Productie"
-
-#. module: mrp
-#: view:mrp.production:0
-msgid "Split in production lots"
-msgstr "Imparte in loturi de productie"
 
 #. module: mrp
 #: view:mrp.workcenter:0
@@ -1423,6 +1511,13 @@ msgid "Hour Account"
 msgstr "Cont Ora"
 
 #. module: mrp
+#: field:mrp.bom,product_uom:0
+#: field:mrp.production,product_uom:0
+#: field:mrp.production.product.line,product_uom:0
+msgid "Product Unit of Measure"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Destination Loc."
 msgstr "Locatia destinatie"
@@ -1438,10 +1533,10 @@ msgid "Pending"
 msgstr "In asteptare"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
+#: code:addons/mrp/mrp.py:1053
 #, python-format
-msgid "Couldn't find a bill of material for this product."
-msgstr "Nu a putut fi gasita o lista de materiale pentru acest produs."
+msgid "Manufacturing order is <b>in production</b>."
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1450,14 +1545,29 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: mrp
-#: model:process.node,name:mrp.process_node_procureproducts0
-msgid "Procure Products"
-msgstr "Necesar produse"
+#: help:mrp.config.settings,group_mrp_routings:0
+msgid ""
+"Routings allow you to create and manage the manufacturing operations that "
+"should be followed\n"
+"                within your work centers in order to produce a product. They "
+"are attached to bills of materials\n"
+"                that will define the required raw materials."
+msgstr ""
 
 #. module: mrp
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
 msgstr "Sarcini Centru de lucru"
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_property_action
+#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
+#: view:mrp.bom:0
+#: field:mrp.bom,property_ids:0
+#: view:mrp.property:0
+#: field:procurement.order,property_ids:0
+msgid "Properties"
+msgstr "Proprietati"
 
 #. module: mrp
 #: help:mrp.production,origin:0
@@ -1468,15 +1578,15 @@ msgstr ""
 "productie."
 
 #. module: mrp
-#: sql_constraint:mrp.bom:0
-msgid ""
-"All product quantities must be greater than 0.\n"
-"You should install the mrp_subproduct module if you want to manage extra "
-"products on BoMs !"
+#: code:addons/mrp/mrp.py:1058
+#, python-format
+msgid "Manufacturing order has been <b>done</b>."
 msgstr ""
-"Toate cantitatile de produse trebuie sa fie mai mari decat 0.\n"
-"Trebuie sa instalati modulul mrp_subproduct daca doriti sa gestionati "
-"produse suplimentare in LdM!"
+
+#. module: mrp
+#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
+msgid "'Minimum stock rule' material"
+msgstr "Material ”Regula stocului minim”"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1494,6 +1604,17 @@ msgid "Drives the procurement orders for raw material."
 msgstr "Conduce comenzile de aprovizionare pentru materia prima."
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:1048
+#, python-format
+msgid "Manufacturing order is <b>ready to produce</b>."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production.product.line,product_uos_qty:0
+msgid "Product UOS Quantity"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.workcenter,costs_general_account_id:0
 msgid "General Account"
 msgstr "Cont General"
@@ -1504,14 +1625,26 @@ msgid "SO Number"
 msgstr "Numar SO"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:521
+#, python-format
+msgid "Cannot delete a manufacturing order in state '%s'."
+msgstr ""
+
+#. module: mrp
 #: selection:mrp.production,state:0
 msgid "Done"
 msgstr "Efectuat"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_production_action4
-msgid "Manufacturing Orders Waiting Products"
-msgstr "Comenzi de Fabricatie in Asteptarea Produselor."
+#: view:product.product:0
+msgid "When you sell this product, OpenERP will trigger"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.production,origin:0
+#: report:mrp.production.order:0
+msgid "Source Document"
+msgstr "Document sursa"
 
 #. module: mrp
 #: selection:mrp.production,priority:0
@@ -1529,7 +1662,9 @@ msgid "Manufacturing Orders To Start"
 msgstr "Comenzi de Productie pregatite sa inceapa"
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.mrp_workcenter_action
 #: model:ir.model,name:mrp.model_mrp_workcenter
+#: model:ir.ui.menu,name:mrp.menu_view_resource_search_mrp
 #: field:mrp.production.workcenter.line,workcenter_id:0
 #: field:mrp.routing.workcenter,workcenter_id:0
 #: view:mrp.workcenter:0
@@ -1595,12 +1730,6 @@ msgid "Make to Order"
 msgstr "Face la comanda"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:358
-#, python-format
-msgid "Copy"
-msgstr "Copiaza"
-
-#. module: mrp
 #: help:mrp.workcenter,note:0
 msgid ""
 "Description of the Work Center. Explain here what's a cycle according to "
@@ -1608,11 +1737,6 @@ msgid ""
 msgstr ""
 "Descrierea Centrului de Lucru. Explica aici ce este un ciclu conform acestui "
 "Centru de Lucru."
-
-#. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products"
-msgstr "Produse fabricate"
 
 #. module: mrp
 #: field:mrp.production,date_finished:0
@@ -1661,6 +1785,11 @@ msgid "Approve"
 msgstr "Aproba"
 
 #. module: mrp
+#: view:mrp.config.settings:0
+msgid "Order"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.property.group:0
 msgid "Properties categories"
 msgstr "Categorii proprietati"
@@ -1683,19 +1812,23 @@ msgid "Scheduled Products"
 msgstr "Produse Planificate"
 
 #. module: mrp
-#: view:mrp.production.lot.line:0
-msgid "Production Products Consommation"
-msgstr "Incheierea productiei produselor"
+#: model:res.groups,name:mrp.group_mrp_manager
+msgid "Manager"
+msgstr "Director"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
-#: model:ir.actions.act_window,name:mrp.mrp_production_action
-#: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
-#: view:mrp.production:0
-msgid "Manufacturing Orders"
-msgstr "Comenzi de Fabricatie"
+#: view:mrp.bom:0
+msgid ""
+"When processing a sale order for this product, the delivery order\n"
+"                                will contain the raw materials, instead of "
+"the finished product."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:1039
+#, python-format
+msgid "Manufacturing order has been <b>created</b>."
+msgstr ""
 
 #. module: mrp
 #: help:mrp.product.produce,mode:0
@@ -1712,10 +1845,9 @@ msgstr ""
 "cand este produs totalul cantitatilor comandate."
 
 #. module: mrp
-#: view:mrp.production:0
-#: report:mrp.production.order:0
-msgid "Work Orders"
-msgstr "Comenzi de lucru"
+#: model:ir.ui.menu,name:mrp.menu_mrp_production_order_action
+msgid "Orders Planning"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,costs_cycle:0
@@ -1734,15 +1866,20 @@ msgid "Cancelled"
 msgstr "Anulat(a)"
 
 #. module: mrp
-#: help:mrp.bom,product_uom:0
-msgid ""
-"UoM (Unit of Measure) is the unit of measurement for the inventory control"
+#: view:mrp.production:0
+msgid "(Update)"
 msgstr ""
-"UdM (Unitatea de Masura) este unitatea de măsura pentru controlul "
-"inventarului"
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:734
+#: help:mrp.config.settings,module_mrp_operations:0
+msgid ""
+"This allows to add state, date_start,date_stop in production order operation "
+"lines (in the \"Work Centers\" tab).\n"
+"                This installs the module mrp_operations."
+msgstr ""
+
+#. module: mrp
+#: code:addons/mrp/mrp.py:756
 #, python-format
 msgid ""
 "You are going to consume total %s quantities of \"%s\".\n"
@@ -1772,9 +1909,9 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: mrp
-#: selection:mrp.workcenter.load,measure_unit:0
-msgid "Amount in hours"
-msgstr "Cantitatea in ore"
+#: view:mrp.bom:0
+msgid "Default Unit of Measure"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.workcenter,time_cycle:0
@@ -1796,14 +1933,24 @@ msgid "Automatic procurement rule"
 msgstr "Regula aprovizionarii automate"
 
 #. module: mrp
+#: field:mrp.bom,message_ids:0
+#: field:mrp.production,message_ids:0
+#: field:mrp.production.workcenter.line,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 msgid "Compute Data"
 msgstr "Calculeaza datele"
 
 #. module: mrp
-#: field:mrp.production,product_uos_qty:0
-msgid "Product UoS Qty"
-msgstr "Cant. Produs UdV"
+#: code:addons/mrp/mrp.py:625
+#: code:addons/mrp/wizard/change_production_qty.py:83
+#: code:addons/mrp/wizard/change_production_qty.py:88
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -1817,6 +1964,11 @@ msgstr "Componente"
 #: model:ir.actions.report.xml,name:mrp.report_bom_structure
 msgid "BOM Structure"
 msgstr "Structura LDM"
+
+#. module: mrp
+#: field:mrp.config.settings,module_mrp_jit:0
+msgid "Generate procurement in real time"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,date_stop:0
@@ -1839,10 +1991,20 @@ msgid "Manufacturing Lead Time"
 msgstr "Timpul Total de Fabricare"
 
 #. module: mrp
+#: code:addons/mrp/mrp.py:284
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: mrp
 #: field:mrp.bom,product_uos_qty:0
-#: field:mrp.production.product.line,product_uos_qty:0
 msgid "Product UOS Qty"
 msgstr "Cant. Produs UdV"
+
+#. module: mrp
+#: field:mrp.production,move_prod_id:0
+msgid "Product Move"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.action_report_in_out_picking_tree
@@ -1869,6 +2031,13 @@ msgstr "Eficienta productiei"
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Eroare! Nu puteti crea companii recursive."
+
+#. module: mrp
+#: field:mrp.bom,message_follower_ids:0
+#: field:mrp.production,message_follower_ids:0
+#: field:mrp.production.workcenter.line,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: mrp
 #: help:mrp.bom,active:0
@@ -1900,50 +2069,12 @@ msgid "Recreate Picking"
 msgstr "Recreeaza Ridicarea"
 
 #. module: mrp
-#: help:mrp.bom,type:0
-msgid ""
-"If a sub-product is used in several products, it can be useful to create its "
-"own BoM. Though if you don't want separated production orders for this sub-"
-"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
-"product, it will be sold and shipped as a set of components, instead of "
-"being produced."
-msgstr ""
-"Daca un sub-produs este folosit in mai multe produse, se poate dovedi utila "
-"crearea unei LdM proprii. Desi, daca nu doriti comenzi separate de productie "
-"pentru acest sub-produs, selectati Seteaza / Fictiv ca tip de LdM. Daca o "
-"LdM Fictiva este folosita pentru un produs radacina, acesta va fi vandut si "
-"livrat ca un set de componente, in loc sa fie produs."
-
-#. module: mrp
-#: help:mrp.production,state:0
-msgid ""
-"When the production order is created the state is set to 'Draft'.\n"
-" If the order is confirmed the state is set to 'Waiting Goods'.\n"
-" If any exceptions are there, the state is set to 'Picking Exception'.       "
-"                             \n"
-"If the stock is available then the state is set to 'Ready to Produce'.\n"
-" When the production gets started then the state is set to 'In Production'.\n"
-" When the production is over, the state is set to 'Done'."
-msgstr ""
-"Atunci cand comanda de productie este creata, starea este setata pe "
-"'Ciorna'.\n"
-" Daca comanda este confirmata, starea este setata pe 'Bunuri in asteptare'.\n"
-" Daca exista exceptii, starea este setata pe 'Exceptie Ridicare'.            "
-"                       \n"
-"Dacă stocul este disponibil, atunci starea este setata pe \"Gata de "
-"productie'.\n"
-" Atunci cand se incepe productia produsului, starea este setata pe \"In "
-"productie'.\n"
-" Cand productia este incheiata, starea este setata pe 'Efectuat'."
-
-#. module: mrp
 #: selection:mrp.bom,method:0
 msgid "On Order"
 msgstr "La comanda"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
-#: view:res.company:0
 msgid "Configuration"
 msgstr "Configurare"
 
@@ -1963,12 +2094,14 @@ msgid "Type of period"
 msgstr "Tipul de perioada"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
-msgstr "Cant. Totala"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
 
 #. module: mrp
+#: field:mrp.production.workcenter.line,hour:0
 #: field:mrp.routing.workcenter,hour_nbr:0
+#: field:report.workcenter.load,hour:0
 msgid "Number of Hours"
 msgstr "Numar de Ore"
 
@@ -1993,6 +2126,25 @@ msgid "Assignment from Production or Purchase Order."
 msgstr "Repartizarea din Comanda de Productie sau din Comanda de achizitie."
 
 #. module: mrp
+#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a bill of material. \n"
+"              </p><p>\n"
+"                Bills of Materials allow you to define the list of required "
+"raw\n"
+"                materials used to make a finished product; through a "
+"manufacturing\n"
+"                order or a pack of products.\n"
+"              </p><p>\n"
+"                OpenERP uses these BoMs to automatically propose "
+"manufacturing\n"
+"                orders according to procurement needs.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
 msgid "Parent Routing"
 msgstr "Rutare Principala"
@@ -2003,9 +2155,23 @@ msgid "Time in hours for the setup."
 msgstr "Timpul in ore pentru instalare."
 
 #. module: mrp
-#: model:product.template,name:mrp.product_orangejuice_product_template
-msgid "Orange Juice"
-msgstr "Suc de portocale"
+#: field:mrp.config.settings,module_mrp_repair:0
+msgid "Manage repairs of products "
+msgstr ""
+
+#. module: mrp
+#: help:mrp.config.settings,module_mrp_byproduct:0
+msgid ""
+"You can configure by-products in the bill of material.\n"
+"                Without this module: A + B + C -> D.\n"
+"                With this module: A + B + C -> D + E.\n"
+"                This installs the module mrp_byproduct."
+msgstr ""
+
+#. module: mrp
+#: field:procurement.order,bom_id:0
+msgid "BoM"
+msgstr "LdM"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
@@ -2025,7 +2191,14 @@ msgid "Waiting Goods"
 msgstr "Bunuri in asteptare"
 
 #. module: mrp
+#: code:addons/mrp/report/price.py:139
+#, python-format
+msgid "Cost Price per Unit of Measure"
+msgstr ""
+
+#. module: mrp
 #: field:report.mrp.inout,date:0
+#: view:report.workcenter.load:0
 #: field:report.workcenter.load,name:0
 msgid "Week"
 msgstr "Saptamana"
@@ -2073,23 +2246,22 @@ msgid "BOM Ref"
 msgstr "Ref LdM"
 
 #. module: mrp
-#: model:ir.actions.act_window,help:mrp.mrp_bom_form_action2
-msgid ""
-"Bills of materials components are components and sub-products used to create "
-"master bills of materials. Use this menu to search in which BoM a specific "
-"component is used."
+#: field:mrp.bom,message_comment_ids:0
+#: help:mrp.bom,message_comment_ids:0
+#: field:mrp.production,message_comment_ids:0
+#: help:mrp.production,message_comment_ids:0
+#: field:mrp.production.workcenter.line,message_comment_ids:0
+#: help:mrp.production.workcenter.line,message_comment_ids:0
+msgid "Comments and emails"
 msgstr ""
-"Componenetele listelor de materiale sunt componente șsi sub-produse folosite "
-"pentru a crea listele de materiale principale. Folositi acest meniu pentru a "
-"cauta in care LdM este folosita o anumita componenta."
 
 #. module: mrp
-#: model:product.uom,name:mrp.product_uom_litre
-msgid "Litre"
-msgstr "Litru"
+#: constraint:stock.move:0
+msgid "You cannot move products from or to a location of the type view."
+msgstr ""
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:762
+#: code:addons/mrp/mrp.py:784
 #, python-format
 msgid ""
 "You are going to produce total %s quantities of \"%s\".\n"
@@ -2104,17 +2276,14 @@ msgid "Product type is Stockable or Consumable."
 msgstr "Tipul produsului este Stocabil sau Consumabil."
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:603
-#: code:addons/mrp/wizard/change_production_qty.py:78
-#: code:addons/mrp/wizard/change_production_qty.py:83
-#, python-format
-msgid "Error"
-msgstr "Eroare"
-
-#. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
 msgstr "Productia a inceput"
+
+#. module: mrp
+#: model:process.node,name:mrp.process_node_procureproducts0
+msgid "Procure Products"
+msgstr "Necesar produse"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
@@ -2122,23 +2291,33 @@ msgid "Select Quantity"
 msgstr "Selecteaza Cantitatea"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
 #: model:ir.actions.act_window,name:mrp.mrp_bom_form_action
+#: model:ir.actions.act_window,name:mrp.product_open_bom
 #: model:ir.ui.menu,name:mrp.menu_mrp_bom_form_action
+#: view:mrp.bom:0
+#: view:product.product:0
 #: field:product.product,bom_ids:0
 msgid "Bill of Materials"
 msgstr "Lista de Materiale"
 
 #. module: mrp
-#: model:ir.actions.act_window,name:mrp.mrp_property_action
-#: model:ir.ui.menu,name:mrp.menu_mrp_property_action
-#: view:mrp.bom:0
-#: field:mrp.bom,property_ids:0
-#: view:mrp.property:0
-#: view:procurement.order:0
-#: field:procurement.order,property_ids:0
-msgid "Properties"
-msgstr "Proprietati"
+#: code:addons/mrp/mrp.py:625
+#, python-format
+msgid "Cannot find a bill of material for this product."
+msgstr ""
+
+#. module: mrp
+#: view:product.product:0
+msgid ""
+"using the bill of materials assigned to this product.\n"
+"                        The delivery order will be ready once the production "
+"is done."
+msgstr ""
+
+#. module: mrp
+#: field:mrp.config.settings,module_stock_no_autopicking:0
+msgid "Manage manual picking to fulfill manufacturing orders "
+msgstr ""
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -2152,27 +2331,22 @@ msgid "Productions"
 msgstr "Productii"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_routing
-#: view:mrp.bom:0
-#: field:mrp.bom,routing_id:0
+#: model:ir.model,name:mrp.model_stock_move_split
 #: view:mrp.production:0
-#: field:mrp.production,routing_id:0
-#: view:mrp.routing:0
-#: model:process.node,name:mrp.process_node_routing0
-msgid "Routing"
-msgstr "Rutare"
+msgid "Split in Serial Numbers"
+msgstr ""
 
 #. module: mrp
-#: field:mrp.production,date_planned:0
-msgid "Scheduled date"
-msgstr "Data planificata"
+#: help:mrp.bom,product_uos:0
+msgid ""
+"Product UOS (Unit of Sale) is the unit of measurement for the invoicing and "
+"promotion of stock."
+msgstr ""
+"UDV a Produsului (Unitatea de Vanzare) este unitatea de masura pentru "
+"facturarea si promovarea stocului."
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Trebuie sa atribuiti un lot de productie pentru acest produs"
-
-#. module: mrp
+#: view:mrp.production:0
 #: field:stock.move,production_id:0
 msgid "Production"
 msgstr "Productie"
@@ -2189,19 +2363,9 @@ msgid "Procurements in Exception"
 msgstr "Aprovizionari in Exceptie"
 
 #. module: mrp
-#: model:process.transition,name:mrp.process_transition_minimumstockprocure0
-msgid "'Minimum stock rule' material"
-msgstr "Material ”Regula stocului minim”"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_price
 msgid "Product Price"
 msgstr "Pret Produs"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_stock_move_split
-msgid "Split in Production lots"
-msgstr "Imparte in Loturi de Productie"
 
 #. module: mrp
 #: view:change.production.qty:0
@@ -2215,14 +2379,22 @@ msgid "Change Product Qty"
 msgstr "Schimba Cant Produsului"
 
 #. module: mrp
+#: field:mrp.routing,note:0
+#: field:mrp.routing.workcenter,note:0
+#: field:mrp.workcenter,note:0
+msgid "Description"
+msgstr "Descriere"
+
+#. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
 msgstr "Panou fabricatie"
 
 #. module: mrp
-#: field:mrp.production,date_planned_end:0
-msgid "Scheduled End Date"
-msgstr "Data de finalizare programata"
+#: code:addons/mrp/wizard/change_production_qty.py:68
+#, python-format
+msgid "Active Id not found"
+msgstr ""
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_procureproducts0
@@ -2230,20 +2402,57 @@ msgid "The way to procurement depends on the product type."
 msgstr "Modul de aprovizionare depinde de tipul de produs."
 
 #. module: mrp
+#: model:ir.actions.act_window,name:mrp.open_board_manufacturing
+#: model:ir.ui.menu,name:mrp.menu_board_manufacturing
 #: model:ir.ui.menu,name:mrp.menu_mrp_manufacturing
+#: model:ir.ui.menu,name:mrp.next_id_77
 msgid "Manufacturing"
 msgstr "Fabricatie"
 
 #. module: mrp
-#: view:board.board:0
-msgid "Next Production Orders"
-msgstr "Urmatoarele Comenzi de Productie"
+#: help:mrp.bom,type:0
+msgid ""
+"If a by-product is used in several products, it can be useful to create its "
+"own BoM. Though if you don't want separated production orders for this by-"
+"product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
+"product, it will be sold and shipped as a set of components, instead of "
+"being produced."
+msgstr ""
+
+#. module: mrp
+#: model:ir.actions.act_window,name:mrp.action_mrp_configuration
+#: view:mrp.config.settings:0
+msgid "Configure Manufacturing"
+msgstr ""
+
+#. module: mrp
+#: view:product.product:0
+msgid ""
+"a manufacturing\n"
+"                        order"
+msgstr ""
+
+#. module: mrp
+#: field:mrp.config.settings,group_mrp_properties:0
+msgid "Allow several bill of materials per products using properties"
+msgstr ""
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_property_group_action
 #: model:ir.ui.menu,name:mrp.menu_mrp_property_group_action
 msgid "Property Groups"
 msgstr "Proprietati Grupuri"
+
+#. module: mrp
+#: model:ir.model,name:mrp.model_mrp_routing
+#: view:mrp.bom:0
+#: field:mrp.bom,routing_id:0
+#: view:mrp.production:0
+#: field:mrp.production,routing_id:0
+#: view:mrp.routing:0
+#: model:process.node,name:mrp.process_node_routing0
+msgid "Routing"
+msgstr "Rutare"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_procurestockableproduct0
@@ -2255,17 +2464,16 @@ msgstr ""
 "de aprovizionare creeaza o cerere de oferta, o comanda de productie, ... "
 
 #. module: mrp
-#: code:addons/mrp/mrp.py:874
-#: code:addons/mrp/mrp.py:929
-#: code:addons/mrp/mrp.py:954
-#, python-format
-msgid "PROD: %s"
-msgstr "PROD:%s"
-
-#. module: mrp
 #: help:mrp.workcenter,time_stop:0
 msgid "Time in hours for the cleaning."
 msgstr "Timp in ore pentru curatare."
+
+#. module: mrp
+#: field:mrp.bom,message_summary:0
+#: field:mrp.production,message_summary:0
+#: field:mrp.production.workcenter.line,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_purchaseprocure0
@@ -2325,6 +2533,11 @@ msgid "Gives the sequence order when displaying a list of bills of material."
 msgstr "Da ordinea atunci cand afiseaza o lista cu listele de materiale."
 
 #. module: mrp
+#: model:ir.model,name:mrp.model_mrp_config_settings
+msgid "mrp.config.settings"
+msgstr ""
+
+#. module: mrp
 #: view:mrp.production:0
 #: field:mrp.production,move_lines:0
 #: report:mrp.production.order:0
@@ -2334,23 +2547,38 @@ msgstr "Produse de consumat"
 #~ msgid "Revision"
 #~ msgstr "Revizie"
 
+#~ msgid "Qty"
+#~ msgstr "Cant"
+
+#~ msgid "Production Products"
+#~ msgstr "Produse fabricate"
+
 #~ msgid "BOM"
 #~ msgstr "LDM"
 
 #~ msgid "Author"
 #~ msgstr "Autor"
 
+#~ msgid "Revisions"
+#~ msgstr "Revizii"
+
 #~ msgid "Draft"
 #~ msgstr "Ciornă"
-
-#~ msgid "Description"
-#~ msgstr "Descriere"
 
 #~ msgid "Modification name"
 #~ msgstr "Nume modificare"
 
 #~ msgid "Day"
 #~ msgstr "Zi"
+
+#~ msgid "State"
+#~ msgstr "Stare"
+
+#~ msgid "Reporting"
+#~ msgstr "Raportare"
+
+#~ msgid "["
+#~ msgstr "["
 
 #~ msgid "title"
 #~ msgstr "titlu"
@@ -2364,8 +2592,14 @@ msgstr "Produse de consumat"
 #~ msgid "October"
 #~ msgstr "Octombrie"
 
+#~ msgid "Nbr of hours"
+#~ msgstr "Nr de ore"
+
 #~ msgid "Advanced Routes"
 #~ msgstr "Rute avansate"
+
+#~ msgid "Nbr of cycles"
+#~ msgstr "Nr de cicluri"
 
 #~ msgid "March"
 #~ msgstr "Martie"
@@ -2379,6 +2613,12 @@ msgstr "Produse de consumat"
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtre extinse..."
 
+#~ msgid "Nbr of cycle"
+#~ msgstr "Numarul ciclului"
+
+#~ msgid "Nbr of hour"
+#~ msgstr "Numar de ore"
+
 #~ msgid "Repairs"
 #~ msgstr "Reparații"
 
@@ -2390,9 +2630,6 @@ msgstr "Produse de consumat"
 
 #~ msgid "Current"
 #~ msgstr "Curent"
-
-#~ msgid "BoM"
-#~ msgstr "LdM"
 
 #~ msgid "December"
 #~ msgstr "Decembrie"
@@ -2412,6 +2649,10 @@ msgstr "Produse de consumat"
 #~ msgid "January"
 #~ msgstr "Ianuarie"
 
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Eroare"
+
 #~ msgid "May"
 #~ msgstr "Mai"
 
@@ -2424,6 +2665,9 @@ msgstr "Produse de consumat"
 #~ msgid "Year"
 #~ msgstr "An"
 
+#~ msgid "Dashboard"
+#~ msgstr "Tablou de bord"
+
 #~ msgid "Workcenter Usage"
 #~ msgstr "Utilizarea centrului de lucru"
 
@@ -2435,6 +2679,12 @@ msgstr "Produse de consumat"
 #~ "paralel. În cazul în care acest centru de lucru reprezintă o echipă de 5 "
 #~ "muncitori, capacitatea per ciclu este de 5."
 
+#~ msgid "Production Dashboard"
+#~ msgstr "Tablou de bord productie"
+
+#~ msgid "]"
+#~ msgstr "]"
+
 #~ msgid "Manufacturing Operations"
 #~ msgstr "Operațiuni de fabricație"
 
@@ -2444,6 +2694,9 @@ msgstr "Produse de consumat"
 
 #~ msgid "Work Center Future Load"
 #~ msgstr "Încărcarea viitoare a centrului de lucru"
+
+#~ msgid "Move product"
+#~ msgstr "Mutare produs"
 
 #~ msgid "Product Consumed"
 #~ msgstr "Produs consumat"
@@ -2493,12 +2746,21 @@ msgstr "Produse de consumat"
 #~ msgid "Components Cost of "
 #~ msgstr "Costul componentelor "
 
+#~ msgid "Component Name"
+#~ msgstr "Numele componentei"
+
+#~ msgid "Picking list"
+#~ msgstr "Lista de ridicare"
+
 #~ msgid ""
 #~ "Enhances production orders with readiness states as well as the start date "
 #~ "and end date of execution of the order."
 #~ msgstr ""
 #~ "Măreste comenzile de productie cu stările de disponibilitate, precum si data "
 #~ "de incepere si data de incheiere a executării comenzii."
+
+#~ msgid "UOM"
+#~ msgstr "UdeM"
 
 #~ msgid ""
 #~ "Add more functionalities to the core Manufacturing Application with the "
@@ -2568,8 +2830,14 @@ msgstr "Produse de consumat"
 #~ "fabricație constând din una sau mai multe persoane și/sau mașini care pot fi "
 #~ "considerate drept o unitate pentru estimarea capacitătii și planificare."
 
+#~ msgid "Product UOM"
+#~ msgstr "UdeM Produs"
+
 #~ msgid "Production Analysis"
 #~ msgstr "Analiză producție"
+
+#~ msgid "Production Products Consommation"
+#~ msgstr "Incheierea productiei produselor"
 
 #~ msgid ""
 #~ "This reporting allows you to analyse your manufacturing activities and "
@@ -2726,11 +2994,307 @@ msgstr "Produse de consumat"
 #~ "/ sau cicluri. Dacă fișa tehnologică este indicată, atunci al treilea tab al "
 #~ "unei comenzi de producție (centre de lucru) va fi pre-completat automat."
 
+#~ msgid "Sugar"
+#~ msgstr "Zahar"
+
+#~ msgid "Fluid"
+#~ msgstr "Lichid"
+
+#~ msgid ""
+#~ "Manufacturing Orders are usually proposed automatically by OpenERP based on "
+#~ "the bill of materials and the procurement rules, but you can also create "
+#~ "manufacturing orders manually. OpenERP will handle the consumption of the "
+#~ "raw materials (stock decrease) and the production of the finished products "
+#~ "(stock increase) when the order is processed."
+#~ msgstr ""
+#~ "Comenzile de productie sunt propuse de obicei in mod automat de catre "
+#~ "OpenERP pe baza listei de materiale și a normelor de aprovizionare, dar "
+#~ "puteti crea, de asemenea, comenzi de productie manual. OpenERP va gestiona "
+#~ "consumul de materii prime (scadere stoc) si productia de produse finite "
+#~ "(crestere stoc), atunci cand comanda este procesata."
+
+#, python-format
+#~ msgid "Cost Price per Uom"
+#~ msgstr "Pretul de cost per Udm"
+
+#~ msgid "Orange"
+#~ msgstr "Portocala"
+
+#~ msgid ""
+#~ "Fill this product to track easily your production costs in the analytic "
+#~ "accounting."
+#~ msgstr ""
+#~ "Completati acest produs pentru a tine evidenta cu usurinta a costurilor de "
+#~ "producție in contabilitatea analitica."
+
+#~ msgid ""
+#~ "Create a product form for everything you buy or sell. Specify a supplier if "
+#~ "the product can be purchased."
+#~ msgstr ""
+#~ "Creeaza un formular al produsului pentru orice cumparati sau vindeti. "
+#~ "Specifica un furnizor daca produsul poate fi achizitionat."
+
+#~ msgid "Cloth"
+#~ msgstr "Panza"
+
+#~ msgid "Default UOM"
+#~ msgstr "UdeM Implicita"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Incercati sa atribuiti un lot care nu este din acelasi produs"
+
+#~ msgid "Component Product"
+#~ msgstr "Componenta produs"
+
+#~ msgid ""
+#~ "The Properties in OpenERP are used to select the right bill of materials for "
+#~ "manufacturing a product when you have different ways of building the same "
+#~ "product. You can assign several properties to each Bill of Materials. When a "
+#~ "sales person creates a sales order, he can relate it to several properties "
+#~ "and OpenERP will automatically select the BoM to use according the needs."
+#~ msgstr ""
+#~ "Proprietatile in OpenERP sunt folosite pentru a selecta lista corecta de "
+#~ "materiale pentru fabricarea unui produs atunci cand aveti moduri diferite de "
+#~ "constructie a aceluiasi produs. Puteti atribui mai multe proprietati "
+#~ "fiecarei Liste de Materiale. Atunci cand un agent de vanzari creeaza o "
+#~ "comanda de vanzare, el o poate asocia mai multor proprietati, iar OpenERP va "
+#~ "selecta automat LdM pe care o va utiliza in functie de nevoi."
+
+#~ msgid ""
+#~ "Define specific property groups that can be assigned to the properties of "
+#~ "your bill of materials."
+#~ msgstr ""
+#~ "Defineste grupuri specifice de proprietati care pot fi atribuite "
+#~ "proprietatilor listei dumneavoastra de materiale."
+
 #~ msgid "Modification Date"
 #~ msgstr "Data Modificarii"
+
+#~ msgid ""
+#~ "Complete this only if you want automatic analytic accounting entries on "
+#~ "production orders."
+#~ msgstr ""
+#~ "Completati aceasta numai daca doriti inregistrari contabile analitice "
+#~ "automate pentru comenzile de productie."
+
+#~ msgid "Change Qty"
+#~ msgstr "Schimba Cant"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Eroare: cod ean invalid"
+
+#~ msgid "Configure your work centers"
+#~ msgstr "Configureaza centrele dumneavoastra de lucru"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr ""
+#~ "Nu puteti muta produse dintr-o sau intr-o locatie de tipul vizualizare."
+
+#, python-format
+#~ msgid "Supplier Price per Uom"
+#~ msgstr "Pret Furnizor pe Udm"
+
+#~ msgid "Shirt Buttons"
+#~ msgstr "Nasturi camasa"
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Actiune nevalida !"
+
+#, python-format
+#~ msgid "Couldn't find bill of material for product"
+#~ msgstr "Lista de materiale pentru produs nu a putut fi găsita"
+
+#~ msgid ""
+#~ "Work Centers allow you to create and manage manufacturing units.  They "
+#~ "consist of workers and/or machines, which are considered as units for "
+#~ "capacity and planning forecast.  Keep in mind that the working time and "
+#~ "resource leave are not taken into account in the time computation of the "
+#~ "work center."
+#~ msgstr ""
+#~ "Centrele de Lucru va permit sa creati si sa gestionati unitatile de "
+#~ "fabricatie. Ele constau din muncitori si/sau masini, care sunt considerati/e "
+#~ "drept unitati pentru capacitate si planificare estimare. Nu uitati faptul ca "
+#~ "programul de lucru si concediul resursei nu sunt luate in considerare la "
+#~ "momentul calculului centrului de lucru."
+
+#, python-format
+#~ msgid "Could not cancel manufacturing order !"
+#~ msgstr "Comanda de fabricatie nu poate fi anulata !"
+
+#, python-format
+#~ msgid "Cannot delete a manufacturing order in state '%s'"
+#~ msgstr "Nu se poate sterge o comanda de fabricatie in starea '%s'"
+
+#, python-format
+#~ msgid "Active Id is not found"
+#~ msgstr "Id-ul activ nu este gasit"
+
+#~ msgid "Start Production"
+#~ msgstr "Start Productie"
+
+#~ msgid ""
+#~ "Manufacturing Orders describe the operations that need to be carried out and "
+#~ "the raw materials usage for each production stage. You use specifications "
+#~ "(bills of materials or BoM) to work out the raw material requirements and "
+#~ "the manufacturing orders needed for the finished products. Once the bills of "
+#~ "materials have been defined, OpenERP is capable of automatically deciding on "
+#~ "the manufacturing route depending on the needs of the company."
+#~ msgstr ""
+#~ "Comenzile de productie descriu operatiunile care trebuie efectuate si "
+#~ "utilizarea materiilor prime pentru fiecare etapa de productie. Puteti "
+#~ "utiliza specificatiile (listele de materiale sau LdM) pentru a calcula "
+#~ "necesarul de materii prime si comenzile de productie necesare pentru "
+#~ "produsele finite. Odata ce listele de materiale au fost definite, OpenERP "
+#~ "poate sa decida in mod automat ruta de fabricatie in functie de nevoile "
+#~ "companiei."
+
+#~ msgid "Source Loc."
+#~ msgstr "Locatia sursa"
+
+#~ msgid "MRP Management"
+#~ msgstr "Managementul MRP"
+
+#~ msgid ""
+#~ "Routings allow you to create and manage the manufacturing operations that "
+#~ "should be followed within your work centers in order to produce a product. "
+#~ "They are attached to bills of materials that will define the required raw "
+#~ "materials."
+#~ msgstr ""
+#~ "Rutarile va permit sa creati si sa gestionati operatiunile de fabricatie "
+#~ "care ar trebui sa fie urmate in cadrul centrelor de lucru pentru a fabrica "
+#~ "un produs. Acestea sunt anexate la listele de materiale care vor defini "
+#~ "materia prima necesara."
+
+#~ msgid "Create or Import Products"
+#~ msgstr "Creeaza sau Importa Produse"
+
+#~ msgid "Shirt"
+#~ msgstr "Camasa"
+
+#, python-format
+#~ msgid "Manufacturing order '%s' is scheduled for the %s."
+#~ msgstr "Comanda de fabricatie '%s' este programata pentru  %s."
+
+#, python-format
+#~ msgid "Manufacturing order '%s' is ready to produce."
+#~ msgstr "Comanda de fabricatie '%s' este gata de productie."
+
+#~ msgid "Water"
+#~ msgstr "Apa"
+
+#~ msgid ""
+#~ "Master Bills of Materials allow you to create and manage the list of "
+#~ "necessary raw materials used to make a finished product. OpenERP will use "
+#~ "these BoMs to automatically propose manufacturing orders according to "
+#~ "product needs. You can either create a bill of materials to define specific "
+#~ "production steps or define a single multi-level bill of materials."
+#~ msgstr ""
+#~ "Listele Principale de Materiale va permit sa creati si sa gestionati lista "
+#~ "de materii prime necesare folosite pentru a fabrica un produs finit. OpenERP "
+#~ "va folosi aceste LdM pentru a propune automat comenzi de productie in "
+#~ "functie de nevoile de produse. Aveti posibilitatea fie sa creati o lista de "
+#~ "materiale pentru a defini pasii specifici de productie, fie sa definiti o "
+#~ "singura lista multi-nivel de materiale."
+
+#~ msgid "Split in production lots"
+#~ msgstr "Imparte in loturi de productie"
 
 #~ msgid "Bill of Material Revision"
 #~ msgstr "Revizuire Lista de materiale"
 
+#, python-format
+#~ msgid "Couldn't find a bill of material for this product."
+#~ msgstr "Nu a putut fi gasita o lista de materiale pentru acest produs."
+
+#~ msgid ""
+#~ "All product quantities must be greater than 0.\n"
+#~ "You should install the mrp_subproduct module if you want to manage extra "
+#~ "products on BoMs !"
+#~ msgstr ""
+#~ "Toate cantitatile de produse trebuie sa fie mai mari decat 0.\n"
+#~ "Trebuie sa instalati modulul mrp_subproduct daca doriti sa gestionati "
+#~ "produse suplimentare in LdM!"
+
+#, python-format
+#~ msgid "Copy"
+#~ msgstr "Copiaza"
+
+#~ msgid ""
+#~ "UoM (Unit of Measure) is the unit of measurement for the inventory control"
+#~ msgstr ""
+#~ "UdM (Unitatea de Masura) este unitatea de măsura pentru controlul "
+#~ "inventarului"
+
+#~ msgid "Product UoS Qty"
+#~ msgstr "Cant. Produs UdV"
+
+#~ msgid ""
+#~ "If a sub-product is used in several products, it can be useful to create its "
+#~ "own BoM. Though if you don't want separated production orders for this sub-"
+#~ "product, select Set/Phantom as BoM type. If a Phantom BoM is used for a root "
+#~ "product, it will be sold and shipped as a set of components, instead of "
+#~ "being produced."
+#~ msgstr ""
+#~ "Daca un sub-produs este folosit in mai multe produse, se poate dovedi utila "
+#~ "crearea unei LdM proprii. Desi, daca nu doriti comenzi separate de productie "
+#~ "pentru acest sub-produs, selectati Seteaza / Fictiv ca tip de LdM. Daca o "
+#~ "LdM Fictiva este folosita pentru un produs radacina, acesta va fi vandut si "
+#~ "livrat ca un set de componente, in loc sa fie produs."
+
+#~ msgid ""
+#~ "When the production order is created the state is set to 'Draft'.\n"
+#~ " If the order is confirmed the state is set to 'Waiting Goods'.\n"
+#~ " If any exceptions are there, the state is set to 'Picking Exception'.       "
+#~ "                             \n"
+#~ "If the stock is available then the state is set to 'Ready to Produce'.\n"
+#~ " When the production gets started then the state is set to 'In Production'.\n"
+#~ " When the production is over, the state is set to 'Done'."
+#~ msgstr ""
+#~ "Atunci cand comanda de productie este creata, starea este setata pe "
+#~ "'Ciorna'.\n"
+#~ " Daca comanda este confirmata, starea este setata pe 'Bunuri in asteptare'.\n"
+#~ " Daca exista exceptii, starea este setata pe 'Exceptie Ridicare'.            "
+#~ "                       \n"
+#~ "Dacă stocul este disponibil, atunci starea este setata pe \"Gata de "
+#~ "productie'.\n"
+#~ " Atunci cand se incepe productia produsului, starea este setata pe \"In "
+#~ "productie'.\n"
+#~ " Cand productia este incheiata, starea este setata pe 'Efectuat'."
+
+#~ msgid "Orange Juice"
+#~ msgstr "Suc de portocale"
+
 #~ msgid "BoM Revisions"
 #~ msgstr "Revizuiri LdM"
+
+#~ msgid "Litre"
+#~ msgstr "Litru"
+
+#~ msgid ""
+#~ "Bills of materials components are components and sub-products used to create "
+#~ "master bills of materials. Use this menu to search in which BoM a specific "
+#~ "component is used."
+#~ msgstr ""
+#~ "Componenetele listelor de materiale sunt componente șsi sub-produse folosite "
+#~ "pentru a crea listele de materiale principale. Folositi acest meniu pentru a "
+#~ "cauta in care LdM este folosita o anumita componenta."
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Trebuie sa atribuiti un lot de productie pentru acest produs"
+
+#~ msgid "Scheduled date"
+#~ msgstr "Data planificata"
+
+#~ msgid "Split in Production lots"
+#~ msgstr "Imparte in Loturi de Productie"
+
+#~ msgid "Next Production Orders"
+#~ msgstr "Urmatoarele Comenzi de Productie"
+
+#~ msgid "Scheduled End Date"
+#~ msgstr "Data de finalizare programata"
+
+#, python-format
+#~ msgid "PROD: %s"
+#~ msgstr "PROD:%s"

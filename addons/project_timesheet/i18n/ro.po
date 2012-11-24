@@ -6,62 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:17+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:34+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
-msgid ""
-"You will find here all works made on tasks that you can invoice.\n"
-"In order to invoice the time spent on a project, you must define the\n"
-"pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
-"the project form."
-msgstr ""
-"Aici vetigasi toata munca efectuata la sarcinile pe care care le puteti "
-"factura.\n"
-"Pentru a factura orele petrecute la un proiect, trebuie sa definiti\n"
-"lista de preturi si campul \"Factureaza Munca la Sarcina' din tabul "
-"'Facturare'\n"
-"din formularul proiectului."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:55
-#, python-format
-msgid "No employee defined for user \"%s\". You must create one."
-msgstr ""
-"Nici un angajat definit pentru utilizatorul \"%s\". Trebuie sa creati unul."
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:63
-#, python-format
-msgid ""
-"No journal defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Nici un jurnal definit pentru angajatul asociat acestuia.\n"
-"Completati tab-ul fisei de pontaj din formularul angajatului."
-
-#. module: project_timesheet
-#: model:process.node,name:project_timesheet.process_node_timesheettask0
-msgid "Timesheet task"
-msgstr "Foaie de pontaj sarcina"
+#: view:report.timesheet.task.user:0
+msgid "Tasks by User"
+msgstr "Sarcini dupa Utilizator"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
 msgid "Group by year of date"
 msgstr "Grupeaza dupa data anului"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task Hours in current month"
-msgstr "Ore de activitate in luna curenta"
 
 #. module: project_timesheet
 #: constraint:project.task:0
@@ -76,9 +39,12 @@ msgid "Related Timeline Id"
 msgstr "Id Cronologie corelata"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Tasks by User"
-msgstr "Sarcini dupa Utilizator"
+#: code:addons/project_timesheet/project_timesheet.py:266
+#, python-format
+msgid ""
+"You cannot delete a partner which is assigned to project, but you can "
+"uncheck the active box."
+msgstr ""
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_project_task_work
@@ -86,14 +52,11 @@ msgid "Project Task Work"
 msgstr "Sarcina de lucru Proiect"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:231
+#: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid ""
-"You cannot delete a partner which is assigned to project, we suggest you to "
-"uncheck the active box!"
+"You cannot select a Analytic Account which is in Close or Cancelled state."
 msgstr ""
-"Nu puteti sterge un partener care este atribuit unui proiect, va sugeram sa "
-"debifati casuta activa!"
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -111,9 +74,17 @@ msgid "October"
 msgstr "Octombrie"
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:68
+#: view:project.project:0
+#, python-format
+msgid "Timesheets"
+msgstr ""
+
+#. module: project_timesheet
 #: view:report.timesheet.task.user:0
-msgid "Timesheet/Task hours Report Per Month"
-msgstr "Raport Fisa de pontaj / Ore sarcina per Luna"
+#: field:report.timesheet.task.user,year:0
+msgid "Year"
+msgstr "An"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -123,27 +94,24 @@ msgstr "Care poate fi facturat"
 #. module: project_timesheet
 #: model:ir.actions.act_window,help:project_timesheet.action_account_analytic_overdue
 msgid ""
-"You will find here the contracts related to your customer projects in order "
-"to track the invoicing progress."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a customer contract.\n"
+"              </p><p>\n"
+"                You will find here the contracts related to your customer\n"
+"                projects in order to track the invoicing progress.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Aici veti gasi contractele referitoare la proiectele clientilor d-voastra "
-"pentru a tine evidenta progresului facturarii."
+
+#. module: project_timesheet
+#: view:account.analytic.line:0
+msgid "Analytic Account/Project"
+msgstr ""
 
 #. module: project_timesheet
 #: view:account.analytic.line:0
 msgid "Analytic account/project"
 msgstr "Cont/Proiect analitic"
-
-#. module: project_timesheet
-#: field:report.timesheet.task.user,task_hrs:0
-msgid "Task Hours"
-msgstr "Ore sarcina de lucru"
-
-#. module: project_timesheet
-#: view:report.timesheet.task.user:0
-#: field:report.timesheet.task.user,year:0
-msgid "Year"
-msgstr "An"
 
 #. module: project_timesheet
 #: constraint:project.project:0
@@ -156,6 +124,15 @@ msgstr ""
 #: model:ir.actions.act_window,name:project_timesheet.action_account_analytic_overdue
 msgid "Customer Projects"
 msgstr "Proiectele Clientilor"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:89
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the HR Settings tab of the employee form."
+msgstr ""
 
 #. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_account_analytic_line
@@ -188,15 +165,9 @@ msgid "Error ! You cannot create recursive tasks."
 msgstr "Eroare ! Nu puteti crea sarcini recursive."
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_project_working_hours
-msgid "Timesheet Lines"
-msgstr "Linii Fisa de pontaj"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:231
-#, python-format
-msgid "Invalid action !"
-msgstr "Actiune nevalida !"
+#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
+msgid "Sign in / Sign out by project"
+msgstr "Semnare de Intrare / Iesire dupa proiect"
 
 #. module: project_timesheet
 #: view:project.project:0
@@ -209,9 +180,9 @@ msgid "Contracts to Renew"
 msgstr "Contracte de reinnoit"
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_hr_timesheet_sign_in
-msgid "Sign in / Sign out by project"
-msgstr "Semnare de Intrare / Iesire dupa proiect"
+#: view:project.project:0
+msgid "Hours"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -224,6 +195,7 @@ msgid "Task"
 msgstr "Sarcina"
 
 #. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
 #: model:ir.ui.menu,name:project_timesheet.menu_project_billing_line
 msgid "Invoice Tasks Work"
 msgstr "Factureaza Sarcina de lucru"
@@ -240,6 +212,7 @@ msgid "Error! You cannot assign escalation to the same project!"
 msgstr "Eroare! Nu puteti atribui o avansare aceluiasi proiect!"
 
 #. module: project_timesheet
+#: view:report.timesheet.task.user:0
 #: field:report.timesheet.task.user,name:0
 msgid "Date"
 msgstr "Data"
@@ -255,14 +228,9 @@ msgid "Complete Your Timesheet."
 msgstr "Completati-va Fisa de pontaj."
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task Hours in current year"
-msgstr "Ore sarcina de lucru in anul curent"
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Customer"
-msgstr "Client"
+#: field:report.timesheet.task.user,task_hrs:0
+msgid "Task Hours"
+msgstr "Ore sarcina de lucru"
 
 #. module: project_timesheet
 #: model:process.node,note:project_timesheet.process_node_taskwork0
@@ -275,14 +243,21 @@ msgid "February"
 msgstr "Februarie"
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_project_timesheet_bill_task
-msgid "Bill Tasks Works"
-msgstr "Facturare Sarcini de lucru"
+#: model:ir.actions.act_window,help:project_timesheet.action_project_timesheet_bill_task
+msgid ""
+"<p>\n"
+"                You will find here timesheets and purchases you did for "
+"contracts that can be reinvoiced to the customer.\n"
+"                If you want to record new jobs to invoice, you should use "
+"the timesheet menu instead.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: project_timesheet
-#: field:report.timesheet.task.user,timesheet_hrs:0
-msgid "Timesheet Hours"
-msgstr "Ore Fisa de pontaj"
+#: model:process.node,name:project_timesheet.process_node_timesheettask0
+msgid "Timesheet task"
+msgstr "Foaie de pontaj sarcina"
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_taskencoding0
@@ -310,11 +285,6 @@ msgid "November"
 msgstr "Noiembrie"
 
 #. module: project_timesheet
-#: view:report.timesheet.task.user:0
-msgid "Task hours of last month"
-msgstr "Ore sarcina luna trecuta"
-
-#. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
 msgid "March"
 msgstr "Martie"
@@ -330,9 +300,9 @@ msgid "April"
 msgstr "Aprilie"
 
 #. module: project_timesheet
-#: view:project.project:0
-msgid "Invoicing Data"
-msgstr "Date facturare"
+#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
+msgid "report.timesheet.task.user"
+msgstr "raport.foaie_de_pontaj.utilizator.sarcina"
 
 #. module: project_timesheet
 #: model:process.transition,note:project_timesheet.process_transition_taskencoding0
@@ -341,31 +311,32 @@ msgstr ""
 "Inregistreaza cat de mult timp ati petrecut lucrand la sarcina dumneavoastra"
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:85
+#, python-format
+msgid "Please define employee for user \"%s\". You must create one."
+msgstr ""
+
+#. module: project_timesheet
 #: model:ir.model,name:project_timesheet.model_res_partner
 msgid "Partner"
 msgstr "Partener"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:247
+#: code:addons/project_timesheet/project_timesheet.py:294
 #, python-format
 msgid "Invalid Analytic Account !"
 msgstr "Cont Analitic Nevalid !"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:59
-#, python-format
-msgid ""
-"No product defined on the related employee.\n"
-"Fill in the timesheet tab of the employee form."
-msgstr ""
-"Nici un produs definit pentru angajatul asociat.\n"
-"Completati tab-ul fisei de pontaj din formularul angajatului."
+#: view:report.timesheet.task.user:0
+msgid "Timesheet/Task hours Report Per Month"
+msgstr "Raport Fisa de pontaj / Ore sarcina per Luna"
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:54
-#: code:addons/project_timesheet/project_timesheet.py:58
-#: code:addons/project_timesheet/project_timesheet.py:62
-#: code:addons/project_timesheet/project_timesheet.py:69
+#: code:addons/project_timesheet/project_timesheet.py:84
+#: code:addons/project_timesheet/project_timesheet.py:88
+#: code:addons/project_timesheet/project_timesheet.py:92
+#: code:addons/project_timesheet/project_timesheet.py:99
 #, python-format
 msgid "Bad Configuration !"
 msgstr "Configurare gresita !"
@@ -376,22 +347,33 @@ msgid "Invoicing"
 msgstr "Facturare"
 
 #. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:100
+#, python-format
+msgid ""
+"Please define product and product category property account on the related "
+"employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:60
+#, python-format
+msgid ""
+"<p>Timesheets on this project may be invoiced to %s, according to the terms "
+"defined in the contract.</p>"
+msgstr ""
+
+#. module: project_timesheet
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
 msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 
 #. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:247
-#, python-format
-msgid ""
-"You cannot select a Analytic Account which is in Close or Cancelled state"
-msgstr ""
-"Nu puteti selecta un Cont Analitic care se afla in starea Inchis sau Anulat"
-
-#. module: project_timesheet
+#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
+#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
 #: view:report.timesheet.task.user:0
-msgid " Month-1 "
-msgstr " Luna-1 "
+msgid "Task Hours Per Month"
+msgstr "Ore sarcina per Luna"
 
 #. module: project_timesheet
 #: selection:report.timesheet.task.user,month:0
@@ -414,9 +396,10 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: project_timesheet
-#: model:ir.model,name:project_timesheet.model_report_timesheet_task_user
-msgid "report.timesheet.task.user"
-msgstr "raport.foaie_de_pontaj.utilizator.sarcina"
+#: code:addons/project_timesheet/project_timesheet.py:266
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
 
 #. module: project_timesheet
 #: view:report.timesheet.task.user:0
@@ -425,42 +408,40 @@ msgid "Month"
 msgstr "Luna"
 
 #. module: project_timesheet
-#: model:ir.ui.menu,name:project_timesheet.menu_act_project_management_timesheet_sheet_form
-msgid "My Timesheet"
-msgstr "Fisa mea de pontaj"
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: project_timesheet
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr "Nu puteti crea o linie analitica in vizualizarea contului."
-
-#. module: project_timesheet
-#: view:project.project:0
-msgid "Invoice Task Work"
-msgstr "Factureaza Sarcina de lucru"
-
-#. module: project_timesheet
-#: code:addons/project_timesheet/project_timesheet.py:70
+#: code:addons/project_timesheet/project_timesheet.py:57
 #, python-format
 msgid ""
-"No product and product category property account defined on the related "
-"employee.\n"
-"Fill in the timesheet tab of the employee form."
+"<p class=\"oe_view_nocontent_create\">Record your timesheets for the project "
+"'%s'.</p>"
 msgstr ""
-"Niciun produs si nicio categorie de produse definit(a) pentru angajatul "
-"asociat."
 
 #. module: project_timesheet
-#: model:ir.actions.act_window,name:project_timesheet.action_report_timesheet_task_user
-#: model:ir.ui.menu,name:project_timesheet.menu_timesheet_task_user
-#: view:report.timesheet.task.user:0
-msgid "Task Hours Per Month"
-msgstr "Ore sarcina per Luna"
+#: field:report.timesheet.task.user,timesheet_hrs:0
+msgid "Timesheet Hours"
+msgstr "Ore Fisa de pontaj"
+
+#. module: project_timesheet
+#: code:addons/project_timesheet/project_timesheet.py:93
+#, python-format
+msgid ""
+"Please define journal on the related employee.\n"
+"Fill in the timesheet tab of the employee form."
+msgstr ""
 
 #. module: project_timesheet
 #: model:process.transition,name:project_timesheet.process_transition_filltimesheet0
 msgid "Fill Timesheet"
 msgstr "Completeaza Fisa de pontaj"
+
+#. module: project_timesheet
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Eroare ! Nu puteţi crea membri asociaţi recursiv."
@@ -481,6 +462,9 @@ msgstr "Completeaza Fisa de pontaj"
 #~ msgid "Working Hours"
 #~ msgstr "Program de lucru"
 
+#~ msgid "Customer"
+#~ msgstr "Client"
+
 #~ msgid ""
 #~ "\n"
 #~ "        This module lets you transfer the entries under tasks defined for "
@@ -498,6 +482,12 @@ msgstr "Completeaza Fisa de pontaj"
 #~ "\n"
 #~ "    "
 
+#~ msgid "Invoicing Data"
+#~ msgstr "Date facturare"
+
+#~ msgid " Month-1 "
+#~ msgstr " Luna-1 "
+
 #~ msgid " Month "
 #~ msgstr " Luna "
 
@@ -507,3 +497,95 @@ msgstr "Completeaza Fisa de pontaj"
 #~ msgstr ""
 #~ "Această listă vă arată fiecare sarcină de lucru pe care o puteti factura "
 #~ "clientului. Selectati liniile pentru a genera facturile automat."
+
+#~ msgid "Bill Tasks Works"
+#~ msgstr "Facturare Sarcini de lucru"
+
+#, python-format
+#~ msgid "No employee defined for user \"%s\". You must create one."
+#~ msgstr ""
+#~ "Nici un angajat definit pentru utilizatorul \"%s\". Trebuie sa creati unul."
+
+#~ msgid ""
+#~ "You will find here all works made on tasks that you can invoice.\n"
+#~ "In order to invoice the time spent on a project, you must define the\n"
+#~ "pricelist and the field 'Invoice Task Work' on the tab 'Billing' of\n"
+#~ "the project form."
+#~ msgstr ""
+#~ "Aici vetigasi toata munca efectuata la sarcinile pe care care le puteti "
+#~ "factura.\n"
+#~ "Pentru a factura orele petrecute la un proiect, trebuie sa definiti\n"
+#~ "lista de preturi si campul \"Factureaza Munca la Sarcina' din tabul "
+#~ "'Facturare'\n"
+#~ "din formularul proiectului."
+
+#~ msgid "Task Hours in current month"
+#~ msgstr "Ore de activitate in luna curenta"
+
+#, python-format
+#~ msgid ""
+#~ "No journal defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "Nici un jurnal definit pentru angajatul asociat acestuia.\n"
+#~ "Completati tab-ul fisei de pontaj din formularul angajatului."
+
+#, python-format
+#~ msgid ""
+#~ "You cannot delete a partner which is assigned to project, we suggest you to "
+#~ "uncheck the active box!"
+#~ msgstr ""
+#~ "Nu puteti sterge un partener care este atribuit unui proiect, va sugeram sa "
+#~ "debifati casuta activa!"
+
+#~ msgid ""
+#~ "You will find here the contracts related to your customer projects in order "
+#~ "to track the invoicing progress."
+#~ msgstr ""
+#~ "Aici veti gasi contractele referitoare la proiectele clientilor d-voastra "
+#~ "pentru a tine evidenta progresului facturarii."
+
+#, python-format
+#~ msgid "Invalid action !"
+#~ msgstr "Actiune nevalida !"
+
+#~ msgid "Timesheet Lines"
+#~ msgstr "Linii Fisa de pontaj"
+
+#~ msgid "Task Hours in current year"
+#~ msgstr "Ore sarcina de lucru in anul curent"
+
+#~ msgid "Task hours of last month"
+#~ msgstr "Ore sarcina luna trecuta"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot select a Analytic Account which is in Close or Cancelled state"
+#~ msgstr ""
+#~ "Nu puteti selecta un Cont Analitic care se afla in starea Inchis sau Anulat"
+
+#, python-format
+#~ msgid ""
+#~ "No product defined on the related employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "Nici un produs definit pentru angajatul asociat.\n"
+#~ "Completati tab-ul fisei de pontaj din formularul angajatului."
+
+#~ msgid "My Timesheet"
+#~ msgstr "Fisa mea de pontaj"
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Nu puteti crea o linie analitica in vizualizarea contului."
+
+#, python-format
+#~ msgid ""
+#~ "No product and product category property account defined on the related "
+#~ "employee.\n"
+#~ "Fill in the timesheet tab of the employee form."
+#~ msgstr ""
+#~ "Niciun produs si nicio categorie de produse definit(a) pentru angajatul "
+#~ "asociat."
+
+#~ msgid "Invoice Task Work"
+#~ msgstr "Factureaza Sarcina de lucru"

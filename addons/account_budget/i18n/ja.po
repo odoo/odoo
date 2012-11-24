@@ -7,15 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-06-13 17:16+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:38+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "Select Dates Period"
+msgstr "日付期間の選択"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -105,43 +113,15 @@ msgid "Percentage"
 msgstr "パーセンテージ"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr ""
-
-#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "ステータス"
-
-#. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
-msgstr ""
-"予算は将来の期間における、予想される会社の収入と支出です。予算に基づき、会社はその期間の間にどのくらいのお金を得るのかを注意深く見ることができます。そして"
-"、さまざまな分類に分配する最適な方法を理解することができます。お金がどこに行くのかを追跡し続けることで、お金の使い過ぎの可能性を減らし、財務目標を達成しや"
-"すくします。分析的なアカウントごとに期待される収入を詳細化することで予算を予測します。そして、その期間中に実際にそれを実現することを基本にその展開を監視し"
-"ます。"
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr "予算 %s はアカウントを持っていません。"
-
-#. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "%"
-msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -160,6 +140,11 @@ msgid "Total :"
 msgstr "合計："
 
 #. module: account_budget
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
@@ -167,9 +152,9 @@ msgid "Company"
 msgstr "会社"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "承認"
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr ""
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -238,12 +223,6 @@ msgid "Budget Line"
 msgstr "予算ライン"
 
 #. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-msgid "Lines"
-msgstr "ライン"
-
-#. module: account_budget
 #: report:account.budget:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
@@ -259,10 +238,9 @@ msgid "To Approve Budgets"
 msgstr "予算の承認"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "Error!"
-msgstr "エラー"
+#: view:crossovered.budget:0
+msgid "Duration"
+msgstr ""
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -278,7 +256,6 @@ msgstr "このウィザードは予算を印刷するために使われます。
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
 #: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
@@ -304,10 +281,9 @@ msgid "Approve"
 msgstr "承認"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "開始日"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "承認"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -336,12 +312,10 @@ msgid "Theoretical Amt"
 msgstr "理論的な金額"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
-#: view:account.budget.crossvered.summary.report:0
-#: view:account.budget.report:0
-msgid "Select Dates Period"
-msgstr "日付期間の選択"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "Error!"
+msgstr "エラー"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -359,6 +333,14 @@ msgid "Theoretical Amount"
 msgstr "理論的な金額"
 
 #. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "or"
+msgstr ""
+
+#. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
@@ -368,6 +350,29 @@ msgstr "分析アカウント"
 #: report:account.budget:0
 msgid "Budget :"
 msgstr "予算："
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p>\n"
+"                A budget is a forecast of your company's income and/or "
+"expenses\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -405,9 +410,10 @@ msgid "Cancel"
 msgstr "キャンセル"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "エラー。反復した分析アカウントを作ることはできません"
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "開始日"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -467,6 +473,12 @@ msgstr "ドラフト予算"
 #~ "    3. 最後は会計の分析チャートから利用可能です。それは選択された分析アカウントのために、予算ごとにマスタ予算の広がりを与えます。\n"
 #~ "\n"
 
+#~ msgid "Lines"
+#~ msgstr "ライン"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "エラー。反復した分析アカウントを作ることはできません"
+
 #~ msgid "Budget Management"
 #~ msgstr "予算管理"
 
@@ -474,3 +486,18 @@ msgstr "ドラフト予算"
 #~ "Error! The currency has to be the same as the currency of the selected "
 #~ "company"
 #~ msgstr "エラー。通貨は選択された会社の通貨と同じでなければなりません。"
+
+#~ msgid ""
+#~ "A budget is a forecast of your company's income and expenses expected for a "
+#~ "period in the future. With a budget, a company is able to carefully look at "
+#~ "how much money they are taking in during a given period, and figure out the "
+#~ "best way to divide it among various categories. By keeping track of where "
+#~ "your money goes, you may be less likely to overspend, and more likely to "
+#~ "meet your financial goals. Forecast a budget by detailing the expected "
+#~ "revenue per analytic account and monitor its evolution based on the actuals "
+#~ "realised during that period."
+#~ msgstr ""
+#~ "予算は将来の期間における、予想される会社の収入と支出です。予算に基づき、会社はその期間の間にどのくらいのお金を得るのかを注意深く見ることができます。そして"
+#~ "、さまざまな分類に分配する最適な方法を理解することができます。お金がどこに行くのかを追跡し続けることで、お金の使い過ぎの可能性を減らし、財務目標を達成しや"
+#~ "すくします。分析的なアカウントごとに期待される収入を詳細化することで予算を予測します。そして、その期間中に実際にそれを実現することを基本にその展開を監視し"
+#~ "ます。"

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-09-20 07:32+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-09-21 14:24+0000\n"
 "Last-Translator: ERP Basing <erp@basing.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:470
 #, python-format
 msgid "Delivery Order <em>%s</em> <b>scheduled</b> for %s."
 msgstr ""
@@ -35,21 +35,14 @@ msgid "Delivery Order"
 msgstr "Nalog za dostavo"
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
+#: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
-"If you don't have enough stock available to deliver all at once, do you "
-"accept partial shipments or not?"
+"Allows you to specify different delivery and invoice addresses on a sale "
+"order."
 msgstr ""
-"Če nimate dovolj zalog na voljo za dostavo vsega naenkrat, se strinjate z "
-"delnimi pošiljkami ?"
 
 #. module: sale_stock
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "Metoda Naročnja"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:599
+#: code:addons/sale_stock/sale_stock.py:569
 #, python-format
 msgid "Picking Information ! : "
 msgstr ""
@@ -60,7 +53,7 @@ msgid "Pick List"
 msgstr "Izberi seznam"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:594
+#: code:addons/sale_stock/sale_stock.py:564
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -85,17 +78,11 @@ msgid "Validate"
 msgstr "Potrdi"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:679
+#: code:addons/sale_stock/sale_stock.py:207
 #, python-format
 msgid ""
-"You cannot make an advance on a sales order                          that is "
-"defined as 'Automatic Invoice after delivery'."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "Trgovina"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -115,7 +102,7 @@ msgid ""
 msgstr "Pri vsaki prodaju ustvariti naročilo za dobavo prodajnih artiklov"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:678
+#: code:addons/sale_stock/sale_stock.py:640
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -126,11 +113,17 @@ msgid "Shipping Policy"
 msgstr "Pravilnik odpreme"
 
 #. module: sale_stock
-#: help:sale.order,incoterm:0
+#: code:addons/sale_stock/sale_stock.py:641
+#, python-format
 msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
+"You cannot make an advance on a sales order                      that is "
+"defined as 'Automatic Invoice after delivery'."
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
+msgid "Shop"
+msgstr "Trgovina"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
@@ -143,7 +136,7 @@ msgid "Stock Move"
 msgstr "Prenos zaloge"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -163,7 +156,13 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:647
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:571
+#: code:addons/sale_stock/sale_stock.py:622
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -186,7 +185,6 @@ msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
-#: view:sale.order:0
 msgid "Delivery Orders"
 msgstr ""
 
@@ -206,18 +204,8 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Customer"
-msgstr "Kupec"
-
-#. module: sale_stock
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: sale_stock
-#: field:sale.config.settings,group_invoice_so_lines:0
-msgid "Generate invoices based on the sale order"
 msgstr ""
 
 #. module: sale_stock
@@ -247,24 +235,18 @@ msgid "The default invoicing method is"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:233
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Ni bilo mogoče preklicati prodajnega naročila!"
-
-#. module: sale_stock
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
 msgstr "Čas do Dobave"
 
 #. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Dokument premika straniki"
-
-#. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
 msgstr ""
 
 #. module: sale_stock
@@ -280,14 +262,6 @@ msgstr ""
 #. module: sale_stock
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
-msgstr ""
-
-#. module: sale_stock
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
 msgstr ""
 
 #. module: sale_stock
@@ -310,14 +284,7 @@ msgid "Shipped"
 msgstr "Poslano"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_so_lines:0
-msgid ""
-"To allow your salesman to make invoices for sale order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:260
+#: code:addons/sale_stock/sale_stock.py:240
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "Neveljaven način za test_state"
@@ -340,7 +307,7 @@ msgid "Generate invoices after and based on delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:499
+#: code:addons/sale_stock/sale_stock.py:473
 #, python-format
 msgid "Order <b>delivered</b>."
 msgstr ""
@@ -361,6 +328,13 @@ msgid "Packaging"
 msgstr "Pakiranje"
 
 #. module: sale_stock
+#: help:sale.order,incoterm:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+
+#. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
 msgstr ""
@@ -368,18 +342,6 @@ msgstr ""
 #. module: sale_stock
 #: model:res.groups,name:sale_stock.group_invoice_deli_orders
 msgid "Enable Invoicing Delivery orders"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:689
-#, python-format
-msgid "Advance of %s %%"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:601
-#, python-format
-msgid "Configuration Error !"
 msgstr ""
 
 #. module: sale_stock
@@ -391,6 +353,18 @@ msgstr "Varnostni Dnevi"
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
 msgstr "Nabava prodanega materiala"
+
+#. module: sale_stock
+#: help:sale.order,picking_policy:0
+msgid ""
+"Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:206
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -453,21 +427,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "View Invoice"
-msgstr ""
-
-#. module: sale_stock
 #: sql_constraint:stock.picking:0
 #: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:696
-#: code:addons/sale_stock/sale_stock.py:698
-#, python-format
-msgid "Advance of %s %s"
 msgstr ""
 
 #. module: sale_stock
@@ -483,7 +445,7 @@ msgid "Assign"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:643
+#: code:addons/sale_stock/sale_stock.py:617
 #, python-format
 msgid "Not enough stock ! : "
 msgstr ""
@@ -491,14 +453,9 @@ msgstr ""
 #. module: sale_stock
 #: help:sale.order.line,delay:0
 msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
-msgstr "Število dni od potrditve naročila do odpreme artikla kupcu"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "iz zaloge"
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
+msgstr ""
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -509,9 +466,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr ""
+#: model:process.node,note:sale_stock.process_node_deliveryorder0
+msgid "Document of the move to the customer."
+msgstr "Dokument premika straniki"
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -526,7 +483,7 @@ msgid "Cancel"
 msgstr "Prekliči"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -549,12 +506,6 @@ msgid "Delivered"
 msgstr "Dostavljeno"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:234
-#, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr "Najprej prekličite vse Izbire povezane s tem naročilom"
-
-#. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
 msgid "Create Invoice"
 msgstr "Ustvari račun"
@@ -575,13 +526,13 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Prodaja Predplačilo Računa"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:660
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr "Najprej morate preklicati premik zaloge priloženo k tej prodaji."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:590
+#: code:addons/sale_stock/sale_stock.py:560
 #, python-format
 msgid "(n/a)"
 msgstr ""
@@ -597,25 +548,15 @@ msgid "You try to assign a lot which is not from the same product."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:659
+#: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Deliver"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
 msgstr "Prekliči Dodelitev"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "na nalogu"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
@@ -665,7 +606,7 @@ msgid "Ignore Exception"
 msgstr "Prezri Izjemo"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:639
+#: code:addons/sale_stock/sale_stock.py:613
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -706,3 +647,35 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr ""
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Če nimate dovolj zalog na voljo za dostavo vsega naenkrat, se strinjate z "
+#~ "delnimi pošiljkami ?"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr "Število dni od potrditve naročila do odpreme artikla kupcu"
+
+#~ msgid "on order"
+#~ msgstr "na nalogu"
+
+#~ msgid "Procurement Method"
+#~ msgstr "Metoda Naročnja"
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Ni bilo mogoče preklicati prodajnega naročila!"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr "Najprej prekličite vse Izbire povezane s tem naročilom"
+
+#~ msgid "from stock"
+#~ msgstr "iz zaloge"
+
+#~ msgid "Customer"
+#~ msgstr "Kupec"

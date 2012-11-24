@@ -6,15 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-08-12 05:55+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:38+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -43,11 +48,6 @@ msgid "Automatic No Step Added"
 msgstr "Automàtic pas no afegit"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Paràmetres"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -67,14 +67,14 @@ msgid "Pulled Flows"
 msgstr "Fluxos arrossegats"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Heu d'assignar un lot de producció per a aquest producte"
-
-#. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Ubicació utilitzada com a ubicació destí en proveir"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You must assign a serial number for this product."
+msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -156,25 +156,19 @@ msgid "Dispatch Zone"
 msgstr "Zona d'expedició"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Moviment d'estoc"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr "Fluxos arrossegats"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Companyia"
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Fluxos de logística"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Moviment d'estoc"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -197,6 +191,12 @@ msgstr "Obtenir sota comanda"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Obtenir per estoc"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr ""
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -226,12 +226,6 @@ msgid "Type of Procurement"
 msgstr "Tipus de proveïment"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
-"S'utilitza per saber a quina companyia pertany els albarans i moviments."
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Nom"
@@ -246,7 +240,7 @@ msgstr ""
 
 #. module: stock_location
 #: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
+msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 
 #. module: stock_location
@@ -259,11 +253,6 @@ msgstr "Operació manual"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Producte"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Mètode proveïment"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -288,15 +277,14 @@ msgid "Is the destination location that needs supplying"
 msgstr "És la ubicació destino que necessita subministrament."
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product."
+msgstr ""
+
+#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Productes"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr "Arrossegat des d'una altra ubicació via proveïment %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -340,9 +328,10 @@ msgstr ""
 "regla d'arrossegament %s, via proveïment original %s (#%d)"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Esteu intentant assignar un lot que no és del mateix producte"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Diari"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
@@ -368,14 +357,21 @@ msgid "Getting Goods"
 msgstr "Recepció de mercaderies"
 
 #. module: stock_location
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
+#. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
 msgstr "Tipus d'acció"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Error: Codi EAN no vàlid"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Mètode proveïment"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -401,10 +397,10 @@ msgid "Location Paths"
 msgstr "Rutes d'ubicacions"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Diari"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Companyia"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -436,8 +432,31 @@ msgstr "Facturat"
 #~ msgid "Procurement & Locations"
 #~ msgstr "Abastament & Ubicacions"
 
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Heu d'assignar un lot de producció per a aquest producte"
+
+#~ msgid "Parameters"
+#~ msgstr "Paràmetres"
+
 #~ msgid "Warehouse Locations Paths"
 #~ msgstr "Camins en les ubicacions de magatzem"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Fluxos de logística"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Esteu intentant assignar un lot que no és del mateix producte"
+
+#, python-format
+#~ msgid "Pulled from another location via procurement %d"
+#~ msgstr "Arrossegat des d'una altra ubicació via proveïment %d"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Error: Codi EAN no vàlid"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr ""
+#~ "S'utilitza per saber a quina companyia pertany els albarans i moviments."
 
 #~ msgid ""
 #~ "\n"

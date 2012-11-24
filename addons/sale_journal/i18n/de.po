@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-01-13 18:21+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:13+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:30+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
@@ -22,31 +22,69 @@ msgid "Order Reference must be unique per Company!"
 msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,note:0
-msgid "Note"
-msgstr "Bemerkung"
-
-#. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr "Rechnungstyp"
-
-#. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
-"This invoicing type will be used, by default, for invoicing the current "
-"partner."
-msgstr "Diese Rechnungstyp wird für diesen Partner vorgeschlagen"
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
+"This invoicing type will be used, by default, to invoice the current partner."
+msgstr ""
 
 #. module: sale_journal
 #: view:res.partner:0
 msgid "Sales & Purchases"
 msgstr "Verkauf & Einkauf"
+
+#. module: sale_journal
+#: view:sale.order:0
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
+#: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Rechungsart"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,note:0
+msgid "Note"
+msgstr "Bemerkung"
+
+#. module: sale_journal
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Gruppiert"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Lieferschein"
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Invoicing"
+msgstr "Rechnungserstellung"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
+
+#. module: sale_journal
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Abrechungsmethode"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Aktiv"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -63,26 +101,9 @@ msgid "Notes"
 msgstr "Bemerkungen"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Abrechungsmethode"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Rechungsarten"
-
-#. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
 msgstr "nicht gruppiert"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Gruppiert"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -97,21 +118,32 @@ msgstr ""
 
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "Die Referenz muss je Firma eindeutig sein"
 
 #. module: sale_journal
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: field:stock.picking,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Rechungsart"
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Rechnungstyp"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Aktiv"
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "Error! Sie können keine rekursive assoziierte Mitglieder anlegen."
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Rechungsarten"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -124,14 +156,9 @@ msgid "Sales Order"
 msgstr "Verkaufsauftrag"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Lieferschein"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Rechnungserstellung"
+#: model:ir.model,name:sale_journal.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr ""
 
 #~ msgid "Monthly sales"
 #~ msgstr "Monatliche Umsätze"
@@ -455,3 +482,8 @@ msgstr "Rechnungserstellung"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Die Referenz muss eindeutig sein!"
+
+#~ msgid ""
+#~ "This invoicing type will be used, by default, for invoicing the current "
+#~ "partner."
+#~ msgstr "Diese Rechnungstyp wird für diesen Partner vorgeschlagen"

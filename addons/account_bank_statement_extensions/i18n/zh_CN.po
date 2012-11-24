@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-09 14:55+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -57,6 +57,11 @@ msgid "Cancel selected statement lines"
 msgstr "取消所选的表行"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
 msgstr "RIB/IBAN 无效"
@@ -65,11 +70,6 @@ msgstr "RIB/IBAN 无效"
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "分组..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "状态"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,17 +107,32 @@ msgid "Batch Payment Info"
 msgstr "批量付款信息"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "确认行"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr "不允许删除操作！请到对应的银行单据上对单据行做修改操作。"
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "交易"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -126,7 +141,6 @@ msgstr "类型"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "凭证簿"
@@ -150,17 +164,6 @@ msgstr "取消所选单据行"
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "对方编号"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "交易"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "警告"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -204,16 +207,6 @@ msgstr ""
 "请为 IBAN类型的银行指定 BIC/Swift代码，以便自动付款。"
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "估值日期"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "确认所选的单据行"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr "你确信要取消所选的银行单据行么？"
@@ -237,6 +230,11 @@ msgstr "备注"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "手工"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -274,13 +272,6 @@ msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr "你确定要确认所选银行单据行么？"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr "凭证金额必须和对账单明细上的金额一致"
-
-#. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
 msgid ""
 "Code to identify transactions belonging to the same globalisation level "
@@ -306,6 +297,13 @@ msgstr "银行单据明细"
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
 msgstr "编号"
+
+#. module: account_bank_statement_extensions
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
@@ -350,12 +348,17 @@ msgid "Bank Statement Lines"
 msgstr "银行单据行"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "子批量付款"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "取消"
@@ -374,3 +377,27 @@ msgstr "合计金额"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "全局编号"
+
+#~ msgid "State"
+#~ msgstr "状态"
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr "不允许删除操作！请到对应的银行单据上对单据行做修改操作。"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "警告"
+
+#~ msgid "Valuta Date"
+#~ msgstr "估值日期"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "确认所选的单据行"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "凭证金额必须和对账单明细上的金额一致"

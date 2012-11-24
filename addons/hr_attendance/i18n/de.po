@@ -6,283 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-05-10 18:09+0000\n"
 "Last-Translator: Ferdinand-camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:19+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Zeiterfassung"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Gruppierung..."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Heute"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "März"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"Sie haben sich nicht korrekt abgemeldet. Bitte erfassen Sie Ihre Zeiten nach."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Gesamt Zeitraum:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Begründung"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Ausdruck fehlerhafte Anwesenheit"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr "Das Abmeldedatum muss in der Vergangenheit sein"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Zeiteintrag"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-"Die Funktion der Zeiterfassung ermöglicht auf einfachem Wege durch An- und "
-"Abmelden eine automatische Ermittlung der Anwesenheit von Mitarbeitern. "
-"Diese Funktion ist auch geeignet, um über die Webservices von OpenERP, "
-"externe Zeiterfassungsgeräte anzubinden."
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Begründung für An-/Abmeldung"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Tag"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Anwesend"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
-msgid "Ask for Sign In Out"
-msgstr "Ask for Sign In Out"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Aktionsbegründung"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Ok"
-msgstr "OK"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Definiere Begründungen für An-/Abmeldung"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Anwesenheit nach Monaten"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,name:0
-#: field:hr.sign.in.out.ask,name:0
-msgid "Employees name"
-msgstr "Mitarbeitername"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Anmeldungen / Abmeldungen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "UserError"
-msgstr "BenutzerFehler"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Enddatum"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid "Warning"
-msgstr "Warnung"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "Das Anmeldedatum muss in der Vergangenheit sein"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "Eine Anmeldung muss logischerweise immer auf eine Abmeldung folgen !"
-
-#. module: hr_attendance
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Anwesenheitszeit"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Max. Zeitabw. (Min)"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Druck"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Suche Anwesenheitszeiten"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Anwesenheit je Woche"
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Fehler: Anmeldung (oder Abmeldung) sollte auf Abmeldung ( oder Anmeldung) "
-"erfolgen."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Juli"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Fehlerhafte Anwesenheit"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Anfangsdatum"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Minus Abw."
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign In"
-msgstr "Anmeldung"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Vorgang"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available"
-msgstr "Keine Daten verfügbar"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "September"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Dezember"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Monat"
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Aktionstyp"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) Eine negative Abweichung bedeutet, daß der Mitarbeiter mehr gearbeitet "
-"hat, als angegeben."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Meine Anwesenheiten"
-
-#. module: hr_attendance
-#: help:hr.attendance,action_desc:0
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Begründung für An-/Abmeldung  bei Zusatzstunden"
+"X-Launchpad-Export-Date: 2012-11-24 06:37+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -290,143 +22,33 @@ msgid "Print Monthly Attendance Report"
 msgstr "Druck Anwesenheitszeit des Monats"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out
-msgid "Sign In Sign Out"
-msgstr "Anmeldung Abmeldung"
+#: view:hr.attendance:0
+msgid "Hr Attendance Search"
+msgstr "Suche Anwesenheitszeiten"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
-#: view:hr.sign.in.out:0
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Anwesenheitszeit"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
-msgid "Sign in / Sign out"
-msgstr "Anmelden / Abmelden"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.out.ask"
-msgstr "hr.sign.out.ask"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Druck des wöchentlichen Anwesenheitsreports"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "August"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
 msgstr ""
-"Eine Abmeldung muss logischerweise immer nach einem Anmelde Vorgang erfolgen "
-"!"
 
 #. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Juni"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Druck fehlerhafte Anwesenheit"
-
-#. module: hr_attendance
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "November"
-
-#. module: hr_attendance
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
-"Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Oktober"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Januar"
-
-#. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Anmelden"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Angaben zur Fehlersuche"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Sign-out Entry Must Follow Sign-in."
-msgstr ""
-"Eine Abmeldung (Anmeldung) muss logischerweise immer nach einem Anmelde "
-"(Abmelde) Vorgang erfolgen !"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Fehler Anwesenheitszeit"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Aktion"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid ""
-"If you need your staff to sign in when they arrive at work and sign out "
-"again at the end of the day, OpenERP allows you to manage this with this "
-"tool. If each employee has been linked to a system user, then they can "
-"encode their time with this action button."
-msgstr ""
-"Wenn Sie möchten, dass Ihre Mitarbeiter jeweils zu Beginn und Ende der "
-"Arbeit diese Zeit zur Ermittlung der Anwesenheitszeiten festhalten, können "
-"Sie dieses mit diesem Modul realisieren. Durch die Verbindung eines "
-"Benutzers zu einem Mitarbeiter kann die Anwesenheit einfach durch jeweils "
-"einen Anmelde- und Abmeldevorgang umgesetzt werden."
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Druck Anwesenheitszeit der Woche"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-#: field:hr.sign.in.out.ask,emp_id:0
-msgid "Empoyee ID"
-msgstr "Mitarbeiter ID"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Cancel"
-msgstr "Abbrechen"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -447,9 +69,13 @@ msgid "Print Attendance Report Monthly"
 msgstr "Druck Anwesenheitszeit des Monats"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/report/timesheet.py:122
+#, python-format
+msgid "Attendances by Week"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Abmelden"
 
@@ -460,31 +86,65 @@ msgstr "Zeitabweichung"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+msgid "Group By..."
+msgstr "Gruppierung..."
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "October"
+msgstr "Oktober"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign Out"
+msgstr "Abmeldung"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No records are found for your selection!"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Print"
+msgstr "Druck"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Mitarbeiter"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
-"erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
-"Anwesenheitszeiten."
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-#: field:hr.sign.in.out.ask,last_time:0
-msgid "Your last sign out"
-msgstr "Ihre letzte Abmeldung"
+#: field:hr.attendance.month,month:0
+msgid "Month"
+msgstr "Monat"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
 msgstr "Zeitaufzeichnung"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign In"
+msgstr "Anmeldung"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+#: field:hr.attendance.week,init_date:0
+msgid "Starting Date"
+msgstr "Anfangsdatum"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -495,37 +155,124 @@ msgstr "Anwesenheitszeiten"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Mai"
+msgid "March"
+msgstr "März"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "Your last sign in"
-msgstr "Ihre letzte Anmeldung"
+#: selection:hr.attendance.month,month:0
+msgid "August"
+msgstr "August"
 
 #. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr "Abmeldung"
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid "Warning"
+msgstr "Warnung"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
-msgid ""
-"Sign in / Sign out. In some companies, staff have to sign in when they "
-"arrive at work and sign out again at the end of the day. If each employee "
-"has been linked to a system user, then they can encode their time with this "
-"action button."
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
 msgstr ""
-"Anmelden / Abmelden. In bestimmten Unternehmen ist es erforderlich die "
-"Anwesenheit der Mitarbeiter jeweils zu Beginn und Ende des Arbeitstages "
-"festzuhalten. Wenn ein Mitarbeiter einem Benutzer zugewiesen wurde, kann "
-"eine Erfassung sehr einfach durch diesen Button vorgenommen werden."
 
 #. module: hr_attendance
-#: field:hr.attendance,employee_id:0
-msgid "Employee's Name"
-msgstr "Mitarbeiter Name"
+#: field:hr.employee,attendance_access:0
+msgid "unknown"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
+msgstr "Meine Anwesenheiten"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#, python-format
+msgid "Attendances by Month"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
+msgstr "Anwesenheit je Woche"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Druck fehlerhafte Anwesenheit"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Total period:"
+msgstr "Gesamt Zeitraum:"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Begründung"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Print Attendance Report Error"
+msgstr "Ausdruck fehlerhafte Anwesenheit"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
+msgstr ""
+"Die Funktion der Zeiterfassung ermöglicht auf einfachem Wege durch An- und "
+"Abmelden eine automatische Ermittlung der Anwesenheit von Mitarbeitern. "
+"Diese Funktion ist auch geeignet, um über die Webservices von OpenERP, "
+"externe Zeiterfassungsgeräte anzubinden."
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Today"
+msgstr "Heute"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Zeiteintrag"
+
+#. module: hr_attendance
+#: field:hr.attendance,name:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr "Fehlerhafte Anwesenheit"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,day:0
+msgid "Day"
+msgstr "Tag"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Anwesend"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -538,39 +285,10 @@ msgid "February"
 msgstr "Februar"
 
 #. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Employee attendances"
-msgstr "Mitarbeiter Anwesenheit"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Aktueller Status"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "April"
-msgstr "April"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Bellow this delay, the error is considered to be voluntary"
-msgstr "Diese Differenzen werden als gewollt angesehen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No records found for your selection!"
-msgstr "Keine Einträge gefunden für Ihre Auswahl !"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign in the last time. Please enter the date and time you signed "
-"in."
-msgstr ""
-"Sie haben beim letzten Mal keine Anmeldung eingetragen. Bitte tragen Sie die "
-"Daten Ihrer Anmeldung ein."
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Aktionsbegründung"
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
@@ -578,9 +296,186 @@ msgid "Year"
 msgstr "Jahr"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.in.out.ask"
-msgstr "hr.sign.in.out.ask"
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr "Minus Abw."
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Employee attendances"
+msgstr "Mitarbeiter Anwesenheit"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Define attendance reason"
+msgstr "Definiere Begründungen für An-/Abmeldung"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Anmelden"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Analysis Information"
+msgstr "Angaben zur Fehlersuche"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+msgid "Attendances By Month"
+msgstr "Anwesenheit nach Monaten"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "January"
+msgstr "Januar"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No Data Available !"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "April"
+msgstr "April"
+
+#. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr "Druck des wöchentlichen Anwesenheitsreports"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Attendance Errors"
+msgstr "Fehler Anwesenheitszeit"
+
+#. module: hr_attendance
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Aktion"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Zeiterfassung"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Anmeldungen / Abmeldungen"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "November"
+msgstr "November"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Bellow this delay, the error is considered to be voluntary"
+msgstr "Diese Differenzen werden als gewollt angesehen"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Max. Zeitabw. (Min)"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+#: field:hr.attendance.week,end_date:0
+msgid "Ending Date"
+msgstr "Enddatum"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "September"
+msgstr "September"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Begründung für An-/Abmeldung"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_week
+msgid "Print Week Attendance Report"
+msgstr "Druck Anwesenheitszeit der Woche"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:36
+#, python-format
+msgid "Click to Sign In at %s."
+msgstr ""
+
+#. module: hr_attendance
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Aktionstyp"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "May"
+msgstr "Mai"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid ""
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "December"
+msgstr "Dezember"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Operation"
+msgstr "Vorgang"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) Eine negative Abweichung bedeutet, daß der Mitarbeiter mehr gearbeitet "
+"hat, als angegeben."
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "or"
+msgstr ""
+
+#. module: hr_attendance
+#: help:hr.attendance,action_desc:0
+msgid ""
+"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgstr "Begründung für An-/Abmeldung  bei Zusatzstunden"
 
 #~ msgid "Select a time span"
 #~ msgstr "Wähle eine Zeitspanne"
@@ -640,6 +535,13 @@ msgstr "hr.sign.in.out.ask"
 #~ "Sie haben kein Sign - Out vorgenommen beim letzten Mal. Bitte erfassen Sie "
 #~ "das Datum und die Zeit Ihres Sign-Outs."
 
+#~ msgid "Current state"
+#~ msgstr "Aktueller Status"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "BenutzerFehler"
+
 #~ msgid ""
 #~ "You did not signed in the last time. Please enter the date and time you "
 #~ "signed in."
@@ -668,18 +570,118 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Ungültiger Modulname in der Aktionsdefinition."
 
+#, python-format
+#~ msgid ""
+#~ "You tried to %s with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Sie haben versucht für %s ein Datum vor einem anderen Zeiteintrag zu "
+#~ "erfassen. Kontaktieren Sie Ihren Administrator zur Korrektur der "
+#~ "Anwesenheitszeiten."
+
+#~ msgid ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+#~ msgstr ""
+#~ "Sie haben sich nicht korrekt abgemeldet. Bitte erfassen Sie Ihre Zeiten nach."
+
+#, python-format
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "Das Abmeldedatum muss in der Vergangenheit sein"
+
+#~ msgid "Ok"
+#~ msgstr "OK"
+
+#~ msgid "Employees name"
+#~ msgstr "Mitarbeitername"
+
 #~ msgid "Employee attendance"
 #~ msgstr "Mitarbeiter Anwesenheit"
+
+#, python-format
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "Das Anmeldedatum muss in der Vergangenheit sein"
+
+#, python-format
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "Eine Anmeldung muss logischerweise immer auf eine Abmeldung folgen !"
 
 #~ msgid "You are now ready to sign in or out of the attendance follow up"
 #~ msgstr ""
 #~ "Sie können ab sofort Anmeldungen oder Abmeldungen erfassen und die "
 #~ "entsprechenden Anwesenheitszeiten einsehen und rekapitulieren."
 
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Fehler: Anmeldung (oder Abmeldung) sollte auf Abmeldung ( oder Anmeldung) "
+#~ "erfolgen."
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Keine Daten verfügbar"
+
+#, python-format
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr ""
+#~ "Eine Abmeldung muss logischerweise immer nach einem Anmelde Vorgang erfolgen "
+#~ "!"
+
 #~ msgid "Sign-Out Entry must follow Sign-In."
 #~ msgstr ""
 #~ "Eine Abmeldung (Anmeldung) muss logischerweise immer nach einem Anmelde "
 #~ "(Abmelde) Vorgang erfolgen !"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "Keine Einträge gefunden für Ihre Auswahl !"
+
+#~ msgid "Empoyee ID"
+#~ msgstr "Mitarbeiter ID"
+
+#~ msgid "Your last sign out"
+#~ msgstr "Ihre letzte Abmeldung"
+
+#~ msgid "Your last sign in"
+#~ msgstr "Ihre letzte Anmeldung"
+
+#~ msgid "Employee's Name"
+#~ msgstr "Mitarbeiter Name"
+
+#~ msgid ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+#~ msgstr ""
+#~ "Sie haben beim letzten Mal keine Anmeldung eingetragen. Bitte tragen Sie die "
+#~ "Daten Ihrer Anmeldung ein."
+
+#~ msgid ""
+#~ "If you need your staff to sign in when they arrive at work and sign out "
+#~ "again at the end of the day, OpenERP allows you to manage this with this "
+#~ "tool. If each employee has been linked to a system user, then they can "
+#~ "encode their time with this action button."
+#~ msgstr ""
+#~ "Wenn Sie möchten, dass Ihre Mitarbeiter jeweils zu Beginn und Ende der "
+#~ "Arbeit diese Zeit zur Ermittlung der Anwesenheitszeiten festhalten, können "
+#~ "Sie dieses mit diesem Modul realisieren. Durch die Verbindung eines "
+#~ "Benutzers zu einem Mitarbeiter kann die Anwesenheit einfach durch jeweils "
+#~ "einen Anmelde- und Abmeldevorgang umgesetzt werden."
+
+#~ msgid ""
+#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
+#~ "arrive at work and sign out again at the end of the day. If each employee "
+#~ "has been linked to a system user, then they can encode their time with this "
+#~ "action button."
+#~ msgstr ""
+#~ "Anmelden / Abmelden. In bestimmten Unternehmen ist es erforderlich die "
+#~ "Anwesenheit der Mitarbeiter jeweils zu Beginn und Ende des Arbeitstages "
+#~ "festzuhalten. Wenn ein Mitarbeiter einem Benutzer zugewiesen wurde, kann "
+#~ "eine Erfassung sehr einfach durch diesen Button vorgenommen werden."
+
+#~ msgid "Ask for Sign In Out"
+#~ msgstr "Ask for Sign In Out"
+
+#~ msgid "Sign In Sign Out"
+#~ msgstr "Anmeldung Abmeldung"
 
 #~ msgid "Attendances Of Employees"
 #~ msgstr "Personal Anwesenheitszeiten"
@@ -689,6 +691,10 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Action's type"
 #~ msgstr "Aktionstyp"
+
+#, python-format
+#~ msgid "Sign in / Sign out"
+#~ msgstr "Anmelden / Abmelden"
 
 #~ msgid ""
 #~ "\n"
@@ -711,5 +717,20 @@ msgstr "hr.sign.in.out.ask"
 #~ "Fehler ! Sie können keine Abteilung auswählen, für die dieser Mitarbeiter "
 #~ "die Leitung ausübt."
 
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr ""
+#~ "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
+
+#~ msgid "hr.sign.in.out.ask"
+#~ msgstr "hr.sign.in.out.ask"
+
 #~ msgid "Employee ID"
 #~ msgstr "Mitarbeiter Nr."
+
+#~ msgid "hr.sign.out.ask"
+#~ msgstr "hr.sign.out.ask"
+
+#~ msgid "Sign-out Entry Must Follow Sign-in."
+#~ msgstr ""
+#~ "Eine Abmeldung (Anmeldung) muss logischerweise immer nach einem Anmelde "
+#~ "(Abmelde) Vorgang erfolgen !"

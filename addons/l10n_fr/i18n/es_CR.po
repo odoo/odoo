@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-12-23 09:56+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-02-16 23:03+0000\n"
 "Last-Translator: Carlos Vásquez (CLEARCORP) "
 "<carlos.vasquez@clearcorp.co.cr>\n"
@@ -14,34 +14,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 "Language: \n"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_receivable
-msgid "Receivable"
-msgstr "A recibir"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_equity
-msgid "Equity"
-msgstr "Patrimonio"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_immobilisations
-msgid "Immobilisations"
-msgstr "Inmobilizaciones"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_asset
-msgid "Asset"
-msgstr "Activo"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_income
-msgid "Income"
-msgstr "Ingreso"
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr ""
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
@@ -50,19 +30,14 @@ msgid "Print"
 msgstr "Imprimir"
 
 #. module: l10n_fr
+#: field:l10n.fr.report,line_ids:0
+msgid "Lines"
+msgstr "Líneas"
+
+#. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_bilan_report
 msgid "Account Bilan Report"
 msgstr "Estado de situación patrimonial"
-
-#. module: l10n_fr
-#: model:ir.model,name:l10n_fr.model_l10n_fr_report
-msgid "Report for l10n_fr"
-msgstr "Informe para l10n_fr"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_expense
-msgid "Expense"
-msgstr "Gasto"
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_account_cdr_report
@@ -70,19 +45,9 @@ msgid "Account CDR Report"
 msgstr "Informe cuenta CDR"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_provision
-msgid "Provisions"
-msgstr "Provisiones"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_payable
-msgid "Payable"
-msgstr "A pagar"
-
-#. module: l10n_fr
-#: view:account.cdr.report:0
-msgid "Compte de resultant"
-msgstr "Cuenta de resultado"
+#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_import_export
+msgid "French VAT exemption according to articles 262 I of \"CGI\""
+msgstr ""
 
 #. module: l10n_fr
 #: field:l10n.fr.line,report_id:0
@@ -90,9 +55,9 @@ msgid "Report"
 msgstr "Informe"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_commitment
-msgid "Engagements"
-msgstr "Compromisos"
+#: view:account.cdr.report:0
+msgid "Compte de resultat"
+msgstr ""
 
 #. module: l10n_fr
 #: model:ir.model,name:l10n_fr.model_l10n_fr_line
@@ -103,6 +68,11 @@ msgstr "Líneas informe para l10n_fr"
 #: field:l10n.fr.line,definition:0
 msgid "Definition"
 msgstr "Definición"
+
+#. module: l10n_fr
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
 
 #. module: l10n_fr
 #: field:l10n.fr.line,name:0
@@ -116,24 +86,16 @@ msgid "Compte de resultat Report"
 msgstr "Informe de cuenta de resultados"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stock
-msgid "Stocks"
-msgstr "Stocks"
+#: model:account.fiscal.position.template,note:l10n_fr.fiscal_position_template_intraeub2b
+msgid ""
+"French VAT exemption according to articles 262 ter I (for products) and/or "
+"283-2 (for services) of \"CGI\""
+msgstr ""
 
 #. module: l10n_fr
-#: field:l10n.fr.report,line_ids:0
-msgid "Lines"
-msgstr "Líneas"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cash
-msgid "Cash"
-msgstr "Efectivo"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_special
-msgid "Comptes spéciaux"
-msgstr "Cuentas especiales"
+#: model:ir.model,name:l10n_fr.model_res_company
+msgid "Companies"
+msgstr ""
 
 #. module: l10n_fr
 #: sql_constraint:l10n.fr.report:0
@@ -147,19 +109,14 @@ msgid "Fiscal Year"
 msgstr "Ejercicio fiscal"
 
 #. module: l10n_fr
-#: field:l10n.fr.report,code:0
-msgid "Code"
-msgstr "Código"
+#: model:ir.model,name:l10n_fr.model_l10n_fr_report
+msgid "Report for l10n_fr"
+msgstr "Informe para l10n_fr"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_dettes
-msgid "Dettes long terme"
-msgstr "Deudas a largo plazo"
-
-#. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_view
-msgid "View"
-msgstr "Vista"
+#: field:res.company,siret:0
+msgid "SIRET"
+msgstr ""
 
 #. module: l10n_fr
 #: sql_constraint:l10n.fr.line:0
@@ -167,9 +124,9 @@ msgid "The variable name must be unique !"
 msgstr "¡El nombre de la variable debe ser único!"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_stocks
-msgid "Actif circulant"
-msgstr "Activo circulante"
+#: field:l10n.fr.report,code:0
+msgid "Code"
+msgstr "Código"
 
 #. module: l10n_fr
 #: view:account.bilan.report:0
@@ -178,25 +135,80 @@ msgid "Bilan Report"
 msgstr "Informe balance"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_tax
-msgid "Tax"
-msgstr "Impuesto"
-
-#. module: l10n_fr
 #: view:account.bilan.report:0
 #: view:account.cdr.report:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: l10n_fr
-#: model:account.account.type,name:l10n_fr.account_type_cloture
-msgid "Cloture"
-msgstr "Cierre"
-
-#. module: l10n_fr
 #: field:l10n.fr.line,code:0
 msgid "Variable Name"
 msgstr "Nombre variable"
+
+#. module: l10n_fr
+#: view:account.bilan.report:0
+#: view:account.cdr.report:0
+msgid "or"
+msgstr ""
+
+#. module: l10n_fr
+#: field:res.company,ape:0
+msgid "APE"
+msgstr ""
+
+#~ msgid "Receivable"
+#~ msgstr "A recibir"
+
+#~ msgid "Equity"
+#~ msgstr "Patrimonio"
+
+#~ msgid "Immobilisations"
+#~ msgstr "Inmobilizaciones"
+
+#~ msgid "Asset"
+#~ msgstr "Activo"
+
+#~ msgid "Income"
+#~ msgstr "Ingreso"
+
+#~ msgid "Expense"
+#~ msgstr "Gasto"
+
+#~ msgid "Provisions"
+#~ msgstr "Provisiones"
+
+#~ msgid "Payable"
+#~ msgstr "A pagar"
+
+#~ msgid "Compte de resultant"
+#~ msgstr "Cuenta de resultado"
+
+#~ msgid "Engagements"
+#~ msgstr "Compromisos"
+
+#~ msgid "Stocks"
+#~ msgstr "Stocks"
+
+#~ msgid "Cash"
+#~ msgstr "Efectivo"
+
+#~ msgid "Comptes spéciaux"
+#~ msgstr "Cuentas especiales"
+
+#~ msgid "Dettes long terme"
+#~ msgstr "Deudas a largo plazo"
+
+#~ msgid "View"
+#~ msgstr "Vista"
+
+#~ msgid "Actif circulant"
+#~ msgstr "Activo circulante"
+
+#~ msgid "Tax"
+#~ msgstr "Impuesto"
+
+#~ msgid "Cloture"
+#~ msgstr "Cierre"
 
 #~ msgid "Fiscal year"
 #~ msgstr "Año Fiscal"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-09-20 07:32+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-09-21 14:09+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -25,7 +25,7 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:496
+#: code:addons/sale_stock/sale_stock.py:470
 #, python-format
 msgid "Delivery Order <em>%s</em> <b>scheduled</b> for %s."
 msgstr ""
@@ -36,21 +36,14 @@ msgid "Delivery Order"
 msgstr "Leveringsordre"
 
 #. module: sale_stock
-#: help:sale.order,picking_policy:0
+#: help:sale.config.settings,group_sale_delivery_address:0
 msgid ""
-"If you don't have enough stock available to deliver all at once, do you "
-"accept partial shipments or not?"
+"Allows you to specify different delivery and invoice addresses on a sale "
+"order."
 msgstr ""
-"Dersom du ikke har nok på lager til å levere alt på en gang, kan du "
-"akseptere delleveringer eller ikke?"
 
 #. module: sale_stock
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "Innkjøpsmetode"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:599
+#: code:addons/sale_stock/sale_stock.py:569
 #, python-format
 msgid "Picking Information ! : "
 msgstr "Plukking informasjon "
@@ -61,7 +54,7 @@ msgid "Pick List"
 msgstr "Plukkliste"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:594
+#: code:addons/sale_stock/sale_stock.py:564
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -90,17 +83,11 @@ msgid "Validate"
 msgstr "Valider"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:679
+#: code:addons/sale_stock/sale_stock.py:207
 #, python-format
 msgid ""
-"You cannot make an advance on a sales order                          that is "
-"defined as 'Automatic Invoice after delivery'."
+"You must first cancel all delivery order(s) attached to this sales order."
 msgstr ""
-
-#. module: sale_stock
-#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
-msgid "Shop"
-msgstr "Butikk"
 
 #. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_saleprocurement0
@@ -122,7 +109,7 @@ msgstr ""
 "produktet."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:678
+#: code:addons/sale_stock/sale_stock.py:640
 #, python-format
 msgid "Error!"
 msgstr ""
@@ -133,13 +120,17 @@ msgid "Shipping Policy"
 msgstr "Forsendelsesprinsipp"
 
 #. module: sale_stock
-#: help:sale.order,incoterm:0
+#: code:addons/sale_stock/sale_stock.py:641
+#, python-format
 msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
+"You cannot make an advance on a sales order                      that is "
+"defined as 'Automatic Invoice after delivery'."
 msgstr ""
-"Incoterm, som står for 'International Commercial terms', er en rekke "
-"salgstermer som benyttes i komersielle transaksjoner."
+
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
+msgid "Shop"
+msgstr "Butikk"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleorderprocurement0
@@ -152,7 +143,7 @@ msgid "Stock Move"
 msgstr "Lagerbevegelse"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid "Invalid Action!"
 msgstr ""
@@ -172,7 +163,13 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:647
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:571
+#: code:addons/sale_stock/sale_stock.py:622
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -195,7 +192,6 @@ msgstr "Salgsordre"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking_out
-#: view:sale.order:0
 msgid "Delivery Orders"
 msgstr ""
 
@@ -218,19 +214,9 @@ msgstr ""
 "plukkliste til salgsordren som utvides løpende med tilgjengelige produkter."
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "Customer"
-msgstr "Kunde"
-
-#. module: sale_stock
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Feil ! Du kan ikke lage rekursive firmaer."
-
-#. module: sale_stock
-#: field:sale.config.settings,group_invoice_so_lines:0
-msgid "Generate invoices based on the sale order"
-msgstr ""
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -260,24 +246,18 @@ msgid "The default invoicing method is"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:233
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Kunne ikke kansellere salgsordre!"
-
-#. module: sale_stock
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
 msgstr "Leveringstid"
 
 #. module: sale_stock
-#: model:process.node,note:sale_stock.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Dokument av forsendelsen til kunden."
-
-#. module: sale_stock
 #: view:sale.order:0
 msgid "View Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
 msgstr ""
 
 #. module: sale_stock
@@ -294,17 +274,6 @@ msgstr ""
 #: field:sale.config.settings,module_project_mrp:0
 msgid "Project MRP"
 msgstr ""
-
-#. module: sale_stock
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
-msgstr ""
-"Hvis 'Produsere på bestilling' initieres en anskaffelse når salgsordren "
-"bekreftes, slik at det opprettes en oppgave, bestilling eller "
-"produksjonsordre koblet til denne salgsordrelinjen."
 
 #. module: sale_stock
 #: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
@@ -328,14 +297,7 @@ msgid "Shipped"
 msgstr "Sendt"
 
 #. module: sale_stock
-#: help:sale.config.settings,group_invoice_so_lines:0
-msgid ""
-"To allow your salesman to make invoices for sale order lines using the menu "
-"'Lines to Invoice'."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:260
+#: code:addons/sale_stock/sale_stock.py:240
 #, python-format
 msgid "invalid mode for test_state"
 msgstr "Ugyldig form for test_state"
@@ -358,7 +320,7 @@ msgid "Generate invoices after and based on delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:499
+#: code:addons/sale_stock/sale_stock.py:473
 #, python-format
 msgid "Order <b>delivered</b>."
 msgstr ""
@@ -379,6 +341,13 @@ msgid "Packaging"
 msgstr "Forpakning"
 
 #. module: sale_stock
+#: help:sale.order,incoterm:0
+msgid ""
+"International Commercial Terms are a series of predefined commercial terms "
+"used in international transactions."
+msgstr ""
+
+#. module: sale_stock
 #: field:sale.config.settings,default_picking_policy:0
 msgid "Deliver all at once when all products are available."
 msgstr ""
@@ -389,18 +358,6 @@ msgid "Enable Invoicing Delivery orders"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:689
-#, python-format
-msgid "Advance of %s %%"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:601
-#, python-format
-msgid "Configuration Error !"
-msgstr "Konfigurasjonsfeil!"
-
-#. module: sale_stock
 #: field:res.company,security_lead:0
 msgid "Security Days"
 msgstr "Sikkerhetsdager"
@@ -409,6 +366,18 @@ msgstr "Sikkerhetsdager"
 #: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
 msgid "Procurement of sold material"
 msgstr "Anskaffelse av solgt produkt"
+
+#. module: sale_stock
+#: help:sale.order,picking_policy:0
+msgid ""
+"Pick 'Deliver each product when available' if you allow partial delivery."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:206
+#, python-format
+msgid "Cannot cancel sales order!"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_shop
@@ -473,22 +442,10 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: view:sale.order:0
-msgid "View Invoice"
-msgstr ""
-
-#. module: sale_stock
 #: sql_constraint:stock.picking:0
 #: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "Referanse må være unik pr firma!"
-
-#. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:696
-#: code:addons/sale_stock/sale_stock.py:698
-#, python-format
-msgid "Advance of %s %s"
-msgstr ""
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_saleprocurement0
@@ -504,7 +461,7 @@ msgid "Assign"
 msgstr "Angi"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:643
+#: code:addons/sale_stock/sale_stock.py:617
 #, python-format
 msgid "Not enough stock ! : "
 msgstr "Ikke nok lager!: "
@@ -512,15 +469,9 @@ msgstr "Ikke nok lager!: "
 #. module: sale_stock
 #: help:sale.order.line,delay:0
 msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
+"Number of days between the order confirmation and the shipping of the "
+"products to the customer"
 msgstr ""
-"Antall dager mellom ordrebekreftelse og forsendelse av produktene til kunden"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "fra lager"
 
 #. module: sale_stock
 #: help:sale.config.settings,default_picking_policy:0
@@ -531,9 +482,9 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.config.settings,default_order_policy:0
-msgid "Invoice based on sales orders"
-msgstr ""
+#: model:process.node,note:sale_stock.process_node_deliveryorder0
+msgid "Document of the move to the customer."
+msgstr "Dokument av forsendelsen til kunden."
 
 #. module: sale_stock
 #: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
@@ -548,7 +499,7 @@ msgid "Cancel"
 msgstr "Kanseller"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:164
+#: code:addons/sale_stock/sale_stock.py:161
 #, python-format
 msgid ""
 "In order to delete a confirmed sales order, you must cancel it.\n"
@@ -571,13 +522,6 @@ msgid "Delivered"
 msgstr "Levert"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:234
-#, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
-"Du må først kansellere alle plukkinger knyttet til denne salgsordren."
-
-#. module: sale_stock
 #: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
 msgid "Create Invoice"
 msgstr "Lag faktura"
@@ -598,14 +542,14 @@ msgid "Sales Advance Payment Invoice"
 msgstr "Forskuddsfaktura"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:660
+#: code:addons/sale_stock/sale_stock.py:522
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 "Du må først slette lagerbevegelser knyttet til denne salsgordrelinjen."
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:590
+#: code:addons/sale_stock/sale_stock.py:560
 #, python-format
 msgid "(n/a)"
 msgstr "(n/a)"
@@ -621,25 +565,15 @@ msgid "You try to assign a lot which is not from the same product."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:659
+#: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
-msgstr ""
-
-#. module: sale_stock
-#: view:sale.order:0
-msgid "Deliver"
 msgstr ""
 
 #. module: sale_stock
 #: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
 msgid "Cancel Assignation"
 msgstr "Kanseller avtale"
-
-#. module: sale_stock
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "i ordre"
 
 #. module: sale_stock
 #: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
@@ -689,7 +623,7 @@ msgid "Ignore Exception"
 msgstr "Ignorer avvik"
 
 #. module: sale_stock
-#: code:addons/sale_stock/sale_stock.py:639
+#: code:addons/sale_stock/sale_stock.py:613
 #, python-format
 msgid ""
 "You plan to sell %.2f %s but you only have %.2f %s available !\n"
@@ -732,3 +666,57 @@ msgid ""
 msgstr ""
 "Avhengig av oppsettet av utgående lokasjon vil varebevegelsen fra utgående "
 "logistikk til kunde gjort gjennom en leveringsordre eller automatisk."
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Dersom du ikke har nok på lager til å levere alt på en gang, kan du "
+#~ "akseptere delleveringer eller ikke?"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "Konfigurasjonsfeil!"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr ""
+#~ "Antall dager mellom ordrebekreftelse og forsendelse av produktene til kunden"
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr ""
+#~ "Incoterm, som står for 'International Commercial terms', er en rekke "
+#~ "salgstermer som benyttes i komersielle transaksjoner."
+
+#~ msgid "on order"
+#~ msgstr "i ordre"
+
+#~ msgid "Procurement Method"
+#~ msgstr "Innkjøpsmetode"
+
+#~ msgid ""
+#~ "If 'on order', it triggers a procurement when the sale order is confirmed to "
+#~ "create a task, purchase order or manufacturing order linked to this sale "
+#~ "order line."
+#~ msgstr ""
+#~ "Hvis 'Produsere på bestilling' initieres en anskaffelse når salgsordren "
+#~ "bekreftes, slik at det opprettes en oppgave, bestilling eller "
+#~ "produksjonsordre koblet til denne salgsordrelinjen."
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Kunne ikke kansellere salgsordre!"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr ""
+#~ "Du må først kansellere alle plukkinger knyttet til denne salgsordren."
+
+#~ msgid "from stock"
+#~ msgstr "fra lager"
+
+#~ msgid "Customer"
+#~ msgstr "Kunde"
