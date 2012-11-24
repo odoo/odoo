@@ -6,20 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-03-19 05:53+0000\n"
 "Last-Translator: moelyana <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:12+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:30+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "Jadwalkan tanggal jika sudah tetapra"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -55,17 +63,6 @@ msgid "Owner Account"
 msgstr "Pemilik akun"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"Ketika pesanan ditempatkan status adalah 'Draft'.\n"
-"  Setelah bank dikonfirmasi status diatur ke 'Dikonfirmasi'.\n"
-"  Maka order dibayar status adalah 'Selesai'."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -80,11 +77,6 @@ msgstr ""
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Perusahaan"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "Tanggal yang di pilih"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -127,6 +119,12 @@ msgstr "Tambahkan ke perintah pembayaran"
 #: model:ir.actions.act_window,name:account_payment.action_account_payment_populate_statement
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: account_payment
@@ -203,6 +201,14 @@ msgid "Amount Total"
 msgstr "Jumlah total"
 
 #. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
+
+#. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
@@ -224,10 +230,9 @@ msgid "Structured"
 msgstr "Terstruktur"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "Status"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -241,6 +246,7 @@ msgstr "Informasi Transaksi"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Mode Pembayaran"
 
@@ -263,20 +269,14 @@ msgid ""
 msgstr ""
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "Ada Kesalahan !!!"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Total debit"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "Tanggal Pelaksanaan"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -337,6 +337,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr ""
@@ -389,6 +394,12 @@ msgid "Account Payment Populate Statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "Cara Pembayaran"
@@ -415,15 +426,15 @@ msgid "Draft"
 msgstr "Draft"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Pesan pengganti dari Komunikasi."
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Tidak ada partner didefinisikan pada baris entri"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -448,11 +459,6 @@ msgstr ""
 "diperbaiki."
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "Pengguna"
-
-#. module: account_payment
 #: field:account.payment.populate.statement,lines:0
 msgid "Payment Lines"
 msgstr "Daftar Pembayaran"
@@ -461,11 +467,6 @@ msgstr "Daftar Pembayaran"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Item Jurnal"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -481,10 +482,9 @@ msgid "Search"
 msgstr "Penelusuran"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Order Pembayaran"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -497,9 +497,9 @@ msgid "Total:"
 msgstr "Total:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "Tanggal Pembuatan"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -507,9 +507,9 @@ msgid "ADD"
 msgstr "Tambahkan"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Impor baris pembayaran"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr ""
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -593,23 +593,11 @@ msgid "Information"
 msgstr "Informasi"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr ""
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"Sebuah perintah pembayaran adalah permintaan pembayaran dari perusahaan Anda "
-"untuk membayar Tagihan dari pemasok atau catatan kredit pelanggan. Di sini "
-"Anda dapat mendaftarkan semua perintah pembayaran yang harus dilakukan, "
-"melacak semua perintah pembayaran dan menyebutkan referensi faktur dan mitra "
-"pembayaran harus dilakukan"
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Order Pembayaran"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -630,6 +618,11 @@ msgstr "Jumlah dalam mata uang perusahaan"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "komunikasi 2"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -691,6 +684,11 @@ msgid "Name"
 msgstr "Nama"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Akun Bank"
@@ -712,11 +710,6 @@ msgid "Order"
 msgstr "Pesanan"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Total"
@@ -728,19 +721,35 @@ msgid "Make Payment"
 msgstr "Lakukan Pembayaran"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Mode Pembayaran"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
 msgid "Bank Account for the Payment Mode"
 msgstr ""
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "Ketika pesanan ditempatkan status adalah 'Draft'.\n"
+#~ "  Setelah bank dikonfirmasi status diatur ke 'Dikonfirmasi'.\n"
+#~ "  Maka order dibayar status adalah 'Selesai'."
 
 #~ msgid ""
 #~ "\n"
@@ -755,11 +764,55 @@ msgstr ""
 #~ "* mekanisme dasar untuk mudah plug berbagai pembayaran otomatis.\n"
 #~ "    "
 
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "Jadwalkan tanggal jika sudah tetapra"
+
+#~ msgid "Preferred date"
+#~ msgstr "Tanggal yang di pilih"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Ada Kesalahan !!!"
+
+#~ msgid "Execution date"
+#~ msgstr "Tanggal Pelaksanaan"
+
 #~ msgid "Payment Management"
 #~ msgstr "Manajemen pembayaran"
 
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Tidak ada partner didefinisikan pada baris entri"
+
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Perusahaan harus sama untuk account terkait dan periode."
+
+#~ msgid "User"
+#~ msgstr "Pengguna"
+
+#~ msgid "Creation date"
+#~ msgstr "Tanggal Pembuatan"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Impor baris pembayaran"
+
+#~ msgid "Payment mode"
+#~ msgstr "Mode Pembayaran"
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "Sebuah perintah pembayaran adalah permintaan pembayaran dari perusahaan Anda "
+#~ "untuk membayar Tagihan dari pemasok atau catatan kredit pelanggan. Di sini "
+#~ "Anda dapat mendaftarkan semua perintah pembayaran yang harus dilakukan, "
+#~ "melacak semua perintah pembayaran dan menyebutkan referensi faktur dan mitra "
+#~ "pembayaran harus dilakukan"
 
 #~ msgid "Destination Bank account"
 #~ msgstr "Akun Bank Tujuan"

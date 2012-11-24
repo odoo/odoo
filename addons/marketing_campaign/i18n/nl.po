@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-01-18 20:30+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:31+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:49+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,7 +28,7 @@ msgid "Previous Activity"
 msgstr "Vorige activiteit"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "De huidige stap voor dit item heeft geen email of rapport voorbeeld."
@@ -74,6 +74,11 @@ msgid "Trigger"
 msgstr "Activatie"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Follow-Up"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
 msgstr "# Acties"
@@ -84,18 +89,19 @@ msgid "Campaign Editor"
 msgstr "Campagne bewerker"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: view:marketing.campaign.workitem:0
-msgid "Today"
-msgstr "Vandaag"
-
-#. module: marketing_campaign
 #: view:marketing.campaign:0
 #: selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
 msgstr "In behandeling"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle "
+"of our Gold Partners"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -113,12 +119,26 @@ msgid "Sync mode: only records created after last sync"
 msgstr "Sync mode: alleen records welke zijn aangemaakt na laatste sync"
 
 #. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_2
+#: help:marketing.campaign.activity,condition:0
 msgid ""
-"Hello, We are happy to announce that you now become our Silver Partner."
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
 msgstr ""
-"Hallo, we zijn zeer verheugt om aan te kondigen dat u Silver partner bent "
-"geworden."
+"Python expressioe om te besluiten of de activiteit kan worden uitgevoerd, "
+"anders wordt het verwijderd of geannuleerd. De expressie mag de volgende "
+"[browsable] variabelen gebruiken:\n"
+"   - activity: de campagne activiteit\n"
+"   - workitem: het campagne workitem\n"
+"   - resource: het resource object dat dit campagne item vertegenwoordigt\n"
+"   - transitions: lijst van campagne overgangen die uitgaan van deze "
+"activiteit\n"
+"...- re: Python reguliere expressie module"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -127,25 +147,23 @@ msgid "Set to Draft"
 msgstr "Naar Concept"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "Volgende activiteiten"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-msgid "Synchronization"
-msgstr "Synchronisatie"
-
-#. module: marketing_campaign
-#: sql_constraint:marketing.campaign.transition:0
-msgid "The interval must be positive or zero"
-msgstr "Het interval moet positief of nul zijn"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:148
 #, python-format
-msgid "No preview"
-msgstr "Geen voorbeeld"
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,email_template_id:0
+msgid "The email to send when this activity is activated"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -178,14 +196,6 @@ msgstr "Kies de resource waarop u deze campagne wilt uitvoeren"
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
 msgstr "Laatste synchronisatie"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:214
-#, python-format
-msgid "You can not duplicate a campaign, it's not supported yet."
-msgstr ""
-"Het is niet mogelijk een campagne te dupliceren. Dit wordt nog niet "
-"ondersteund."
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -242,6 +252,11 @@ msgid "Initial start date of this segment."
 msgstr "Initiele startdatum van dit segment."
 
 #. module: marketing_campaign
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,campaign_id:0
 #: view:marketing.campaign:0
@@ -254,9 +269,9 @@ msgid "Campaign"
 msgstr "Campagne"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_3
-msgid "Congratulation! You become our Gold Partner."
-msgstr "Gefeliciteerd! U bent goud partner geworden."
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -268,9 +283,10 @@ msgid "Segment"
 msgstr "Segment"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Cost / Revenue"
-msgstr "Kosten / Opbrengsten"
+#: code:addons/marketing_campaign/marketing_campaign.py:214
+#, python-format
+msgid "You cannot duplicate a campaign, Not supported yet."
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -312,31 +328,9 @@ msgid "Partner"
 msgstr "Relatie"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Transitions"
-msgstr "Overgangen"
-
-#. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
 msgstr "Relaties"
-
-#. module: marketing_campaign
-#: field:marketing.campaign.activity,keep_if_condition_not_met:0
-msgid "Don't delete workitems"
-msgstr "Verwijder geen workitems"
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,state:0
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,state:0
-msgid "State"
-msgstr "Status"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -350,9 +344,14 @@ msgid "New"
 msgstr "Nieuw"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,type:0
-msgid "Type"
-msgstr "Soort"
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "Het interval moet positief of nul zijn"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Email"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -379,9 +378,15 @@ msgid "Run"
 msgstr "Uitvoeren"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "Voorgaande activiteiten"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -404,6 +409,7 @@ msgstr "Foutmelding"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "Campagnes"
 
@@ -413,10 +419,9 @@ msgid "Interval Unit"
 msgstr "Eenheid interval"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
-#, python-format
-msgid "Email Preview"
-msgstr "Email voorbeeld"
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "Land"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -451,21 +456,9 @@ msgid "Hour(s)"
 msgstr "Uur/Uren"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-msgid "    Month-1    "
-msgstr "    Maand-1    "
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
 msgstr "Campagne segment"
-
-#. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
-msgid "Cancel"
-msgstr "Annuleren"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -483,6 +476,7 @@ msgid "Exceptions"
 msgstr "Uitzonderingen"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "Taken"
@@ -493,14 +487,31 @@ msgid "Fixed Cost"
 msgstr "Vaste kosten"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_2
-msgid "Congratulation! You become now our Silver Partner."
-msgstr "Gefeliciteerd! U bent een Silver partner geworden"
-
-#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
 msgstr "Pas gewijzigd"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a marketing campaign.\n"
+"          </p><p>\n"
+"            OpenERP's marketing campaign allows you to automate "
+"communication\n"
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fullfil the campaign.\n"
+"          </p><p>\n"
+"            A campaign can have many activities like sending an email, "
+"printing\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -548,14 +559,11 @@ msgid "Next Activity"
 msgstr "Volgende activiteit"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "Campagne opvolging"
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,email_template_id:0
-msgid "The e-mail to send when this activity is activated"
-msgstr "De e-mail die wordt gestuurd als deze activiteit is geactiveerd"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -573,7 +581,7 @@ msgid "ir.actions.report.xml"
 msgstr "ir.actions.report.xml"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "Campagne statistieken"
 
@@ -635,13 +643,25 @@ msgstr "Concept"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
+msgid "Marketing Campaign Activity"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
 msgid "Preview"
 msgstr "Voorbeeld"
 
 #. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,state:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,state:0
 #: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "Gekoppelde resource"
+#: field:marketing.campaign.workitem,state:0
+msgid "Status"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -666,6 +686,14 @@ msgid ""
 msgstr ""
 "Een activiteit met een signaal kan via een programma worden aangeroepen. "
 "Wees voorzichtig, de taak wordt altijd gemaakt als een signaal wordt gestuurd"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "Te doen"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -694,7 +722,6 @@ msgstr "Nieuw gemaakt"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "Datum"
 
@@ -704,7 +731,6 @@ msgid "November"
 msgstr "November"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "Voorwaarde"
@@ -713,17 +739,6 @@ msgstr "Voorwaarde"
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
 msgstr "Het rapport wordt gegenereerd als de activiteit is geactiveerd"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:148
-#, python-format
-msgid ""
-"The campaign cannot be started: it doesn't have any starting activity. "
-"Modify campaign's activities to mark one as the starting point."
-msgstr ""
-"De campagne kan niet worden gestart. De campagne heeft geen start "
-"activiteit. Pas één van de campagne activiteiten aan en markeer deze als "
-"startactiviteit."
 
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
@@ -782,7 +797,6 @@ msgid "Error"
 msgstr "Fout"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "Actie"
@@ -799,10 +813,10 @@ msgid "Start"
 msgstr "Start"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: view:res.partner:0
-msgid "History"
-msgstr "Geschiedenis"
+#: code:addons/marketing_campaign/marketing_campaign.py:819
+#, python-format
+msgid "No preview"
+msgstr "Geen voorbeeld"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -822,21 +836,6 @@ msgid "How is the destination workitem triggered"
 msgstr "Hoe wordt de bestemming taak geactiveerd"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-msgid ""
-"A marketing campaign is an event or activity that will help you manage and "
-"reach your partners with specific messages. A campaign can have many "
-"activities that will be triggered from a specific situation. One action "
-"could be sending an email template that has previously been created in the "
-"system."
-msgstr ""
-"Een marketing campagne is een gebeurtenis of activiteit die u helpt bij het "
-"beheren en benaderen van uw relaties met specifieke berichten. Een campagne "
-"kan veel activiteiten bevatten die in specifieke situaties worden "
-"geactiveerd. Een actie kan zijn het versturen van een email sjabloon dat "
-"vooraf is gedefinieerd in het systeem."
-
-#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: selection:campaign.analysis,state:0
 #: view:marketing.campaign:0
@@ -853,11 +852,11 @@ msgid "Operation not supported"
 msgstr "Bewerking niet ondersteund"
 
 #. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_3
-msgid "Hello, We are happy to announce that you become our Gold Partner."
-msgstr ""
-"Hallo, we zijn verheugt om aan te kondigen dat u een Gold Partner bent "
-"geworden"
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Cancel"
+msgstr "Annuleren"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -868,28 +867,6 @@ msgstr "Sluiten"
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr "Model van filter moet gelijk zijn aan model van de campagne "
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,condition:0
-msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
-"   - activity: the campaign activity\n"
-"   - workitem: the campaign workitem\n"
-"   - resource: the resource object this campaign item represents\n"
-"   - transitions: list of campaign transitions outgoing from this activity\n"
-"...- re: Python regular expression module"
-msgstr ""
-"Python expressioe om te besluiten of de activiteit kan worden uitgevoerd, "
-"anders wordt het verwijderd of geannuleerd. De expressie mag de volgende "
-"[browsable] variabelen gebruiken:\n"
-"   - activity: de campagne activiteit\n"
-"   - workitem: het campagne workitem\n"
-"   - resource: het resource object dat dit campagne item vertegenwoordigt\n"
-"   - transitions: lijst van campagne overgangen die uitgaan van deze "
-"activiteit\n"
-"...- re: Python reguliere expressie module"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -903,41 +880,28 @@ msgid "Resource ID"
 msgstr "Resource ID"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:136
-#, python-format
-msgid "The campaign cannot be started: there are no activities in it."
-msgstr ""
-"De campagne kan niet worden gestart. De campagne bevat geen activiteiten."
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
 msgstr "Campagne overgang"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:0
-#: selection:marketing.campaign.workitem,state:0
-msgid "To Do"
-msgstr "Te doen"
+#: view:marketing.campaign.segment:0
+msgid "Marketing Campaign Segment"
+msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Campaign Step"
-msgstr "Campagnestap"
-
-#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "Segmenten"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
-msgid "All Segments"
-msgstr "Alle segmenten"
+#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid "Don't Delete Workitems"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -945,25 +909,36 @@ msgid "Incoming Transitions"
 msgstr "Binnenkomende overgangen"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
-msgid "E-mail"
-msgstr "E-mail"
-
-#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
 msgstr "Dag(en)"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
 msgstr "Activiteiten"
 
 #. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr "Met handmatige bevestiging"
+
+#. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
 msgstr "Mei"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,type:0
+msgid "Type"
+msgstr "Soort"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -989,18 +964,20 @@ msgstr ""
 "velden kunnen worden gebruikt."
 
 #. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,total_cost:0
+msgid "Cost"
+msgstr "Kosten"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "Na %(interval_nbr)d %(interval_type)s"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_1
-msgid "Welcome in OpenERP Partner Channel!"
-msgstr "Welkom in het OpenERP partner kanaal!"
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "Marketing campagne"
 
@@ -1042,9 +1019,10 @@ msgid "Sync mode: only records updated after last sync"
 msgstr "Sync mode: alleen records welke zijn bijgewerkt na laatste sync"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,country_id:0
-msgid "Country"
-msgstr "Land"
+#: code:addons/marketing_campaign/marketing_campaign.py:793
+#, python-format
+msgid "Email Preview"
+msgstr "Email voorbeeld"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
@@ -1079,7 +1057,6 @@ msgstr "Modus"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1100,10 +1077,10 @@ msgstr ""
 "ook een criterium toevoegen aan het filter."
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
-#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
-msgid "Campaign Followup"
-msgstr "Campagne opvolging"
+#: code:addons/marketing_campaign/marketing_campaign.py:136
+#, python-format
+msgid "The campaign cannot be started. There are no activities in it."
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -1111,7 +1088,12 @@ msgid "Next Synchronization"
 msgstr "Volgende synchronisatie"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "Filter"
@@ -1138,21 +1120,14 @@ msgid "Variable Cost"
 msgstr "Variabele kosten"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign,mode:0
-msgid "With Manual Confirmation"
-msgstr "Met handmatige bevestiging"
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the OpenERP Partner Channel!"
+msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
-msgid "Cost"
-msgstr "Kosten"
-
-#. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_1
-msgid "Hello, We are very happy to send Welcome message."
-msgstr "Hallo, we zijn verheugt om u een welkom bericht te sturen."
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -1160,17 +1135,44 @@ msgstr "Hallo, we zijn verheugt om u een welkom bericht te sturen."
 msgid "Year"
 msgstr "Jaar"
 
+#~ msgid "Today"
+#~ msgstr "Vandaag"
+
+#~ msgid "Synchronization"
+#~ msgstr "Synchronisatie"
+
 #~ msgid "This Year"
 #~ msgstr "Dit jaar"
 
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Transitions"
+#~ msgstr "Overgangen"
+
+#~ msgid "The e-mail to send when this activity is activated"
+#~ msgstr "De e-mail die wordt gestuurd als deze activiteit is geactiveerd"
+
 #~ msgid "This Month"
 #~ msgstr "Deze maand"
+
+#~ msgid "Related Resource"
+#~ msgstr "Gekoppelde resource"
 
 #~ msgid "Email Templates for Models"
 #~ msgstr "Email sjablonen voor modellen"
 
 #~ msgid "marketing_campaign"
 #~ msgstr "marketing_campaign"
+
+#~ msgid "All Segments"
+#~ msgstr "Alle segmenten"
+
+#~ msgid "Campaign Step"
+#~ msgstr "Campagnestap"
+
+#~ msgid "E-mail"
+#~ msgstr "E-mail"
 
 #, python-format
 #~ msgid "The campaign cannot be marked as done before all segments are done"
@@ -1180,6 +1182,9 @@ msgstr "Jaar"
 #, python-format
 #~ msgid "The campaign cannot be started: there are no activities in it"
 #~ msgstr "De campagne kan niet worden gestart: er zitten geen activiteiten in"
+
+#~ msgid "Campaign Followup"
+#~ msgstr "Campagne opvolging"
 
 #, python-format
 #~ msgid ""
@@ -1196,6 +1201,9 @@ msgstr "Jaar"
 #~ msgstr ""
 #~ "De campagne kan niet worden gestart: de email account mist in email "
 #~ "activiteit '%s'"
+
+#~ msgid "History"
+#~ msgstr "Geschiedenis"
 
 #~ msgid ""
 #~ "The generated workitems will be linked to the partner related to the record. "
@@ -1214,6 +1222,12 @@ msgstr "Jaar"
 #~ msgstr ""
 #~ "Een aanvullend criterium vaststellen om toe te voegen aan het filter bij het "
 #~ "selecteren van nieuwe records om in de campagne in te brengen."
+
+#~ msgid "Don't delete workitems"
+#~ msgstr "Verwijder geen workitems"
+
+#~ msgid "Cost / Revenue"
+#~ msgstr "Kosten / Opbrengsten"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Fout ! U kunt geen recursieve aangesloten leden maken."
@@ -1277,3 +1291,62 @@ msgstr "Jaar"
 #~ msgstr ""
 #~ "De campagne kan niet worden gestart: de email account is niet goedgekeurd in "
 #~ "email activiteit '%s'"
+
+#~ msgid ""
+#~ "A marketing campaign is an event or activity that will help you manage and "
+#~ "reach your partners with specific messages. A campaign can have many "
+#~ "activities that will be triggered from a specific situation. One action "
+#~ "could be sending an email template that has previously been created in the "
+#~ "system."
+#~ msgstr ""
+#~ "Een marketing campagne is een gebeurtenis of activiteit die u helpt bij het "
+#~ "beheren en benaderen van uw relaties met specifieke berichten. Een campagne "
+#~ "kan veel activiteiten bevatten die in specifieke situaties worden "
+#~ "geactiveerd. Een actie kan zijn het versturen van een email sjabloon dat "
+#~ "vooraf is gedefinieerd in het systeem."
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Maand-1    "
+
+#~ msgid "Congratulation! You become our Gold Partner."
+#~ msgstr "Gefeliciteerd! U bent goud partner geworden."
+
+#, python-format
+#~ msgid "The campaign cannot be started: there are no activities in it."
+#~ msgstr ""
+#~ "De campagne kan niet worden gestart. De campagne bevat geen activiteiten."
+
+#, python-format
+#~ msgid "You can not duplicate a campaign, it's not supported yet."
+#~ msgstr ""
+#~ "Het is niet mogelijk een campagne te dupliceren. Dit wordt nog niet "
+#~ "ondersteund."
+
+#, python-format
+#~ msgid ""
+#~ "The campaign cannot be started: it doesn't have any starting activity. "
+#~ "Modify campaign's activities to mark one as the starting point."
+#~ msgstr ""
+#~ "De campagne kan niet worden gestart. De campagne heeft geen start "
+#~ "activiteit. Pas één van de campagne activiteiten aan en markeer deze als "
+#~ "startactiviteit."
+
+#~ msgid "Welcome in OpenERP Partner Channel!"
+#~ msgstr "Welkom in het OpenERP partner kanaal!"
+
+#~ msgid "Hello, We are very happy to send Welcome message."
+#~ msgstr "Hallo, we zijn verheugt om u een welkom bericht te sturen."
+
+#~ msgid "Hello, We are happy to announce that you become our Gold Partner."
+#~ msgstr ""
+#~ "Hallo, we zijn verheugt om aan te kondigen dat u een Gold Partner bent "
+#~ "geworden"
+
+#~ msgid "Congratulation! You become now our Silver Partner."
+#~ msgstr "Gefeliciteerd! U bent een Silver partner geworden"
+
+#~ msgid ""
+#~ "Hello, We are happy to announce that you now become our Silver Partner."
+#~ msgstr ""
+#~ "Hallo, we zijn zeer verheugt om aan te kondigen dat u Silver partner bent "
+#~ "geworden."

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:48+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:03+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: subscription
 #: field:subscription.subscription,doc_source:0
@@ -26,11 +26,6 @@ msgstr "مستند المصدر"
 #: field:subscription.document,model:0
 msgid "Object"
 msgstr "كائن"
-
-#. module: subscription
-#: view:subscription.subscription:0
-msgid "This Week"
-msgstr "هذا الأسبوع"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -46,12 +41,6 @@ msgstr "أول ميعاد"
 #: field:subscription.document.fields,field:0
 msgid "Field"
 msgstr "حقل"
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "State"
-msgstr "الحالة"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription_history
@@ -75,14 +64,15 @@ msgstr "أسابيع"
 
 #. module: subscription
 #: view:subscription.subscription:0
-msgid "Today"
-msgstr "اليوم"
+#: field:subscription.subscription,state:0
+msgid "Status"
+msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:136
-#, python-format
-msgid "Error !"
-msgstr "خطأ !"
+#: model:ir.ui.menu,name:subscription.config_recuuring_event
+#: model:ir.ui.menu,name:subscription.next_id_45
+msgid "Recurring Events"
+msgstr "أحداث المتكررة"
 
 #. module: subscription
 #: model:ir.actions.act_window,name:subscription.action_subscription_form
@@ -157,7 +147,7 @@ msgstr "الاسم"
 #: code:addons/subscription/subscription.py:136
 #, python-format
 msgid "You cannot delete an active subscription !"
-msgstr ""
+msgstr "لا يمكنك حذف الإشتراك النشط"
 
 #. module: subscription
 #: field:subscription.document,field_ids:0
@@ -182,10 +172,10 @@ msgid "Days"
 msgstr "أيام"
 
 #. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
-msgstr "نشط"
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: subscription
 #: field:subscription.subscription,cron_id:0
@@ -194,6 +184,7 @@ msgstr "وظيفة دورية"
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:0
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
 msgstr "الإشتراك"
@@ -208,12 +199,6 @@ msgstr "شريك"
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
 msgstr "جدولة الذي يعمل على الاشتراك"
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
-msgstr "أحداث المتكررة"
 
 #. module: subscription
 #: view:subscription.subscription:0
@@ -284,7 +269,6 @@ msgid "Subscription Document Fields"
 msgstr ""
 
 #. module: subscription
-#: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr "تم"
@@ -307,6 +291,25 @@ msgstr "القيمة الافتراضية"
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
 msgstr ""
+
+#. module: subscription
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
+msgstr "نشط"
+
+#~ msgid "State"
+#~ msgstr "الحالة"
+
+#~ msgid "This Week"
+#~ msgstr "هذا الأسبوع"
+
+#~ msgid "Today"
+#~ msgstr "اليوم"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "خطأ !"
 
 #~ msgid "Sale Order"
 #~ msgstr "طلب بيع"

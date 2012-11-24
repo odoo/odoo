@@ -6,56 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-12-20 10:55+0000\n"
 "Last-Translator: Rui Franco (multibase.pt) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:16+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:34+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Ano  "
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Criar Menu"
+#: view:board.create:0
+msgid "Create"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informação do Menu"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr ""
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Últimas Conexões"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
-msgstr "Sessão criada no mês passado"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Painel Administrativo"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Grupo por..."
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
-msgstr "Sessão criada no ano atual"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -63,296 +66,116 @@ msgid "Board"
 msgstr "Quadro"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Nome do Menu"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr "Actividade global da semana"
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Título"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr "# de entradas"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Mês"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr "Sessão criada no mês atual"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr "Atividade mensal, por documento"
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
-msgstr "Análise da Configuração"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Definição do Painel"
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Março"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Agosto"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
-msgstr "Conexões utilizador"
-
-#. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Data da Criação"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Log Análise"
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Objeto"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Junho"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Vista de Ações"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr "Log Relatório"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Por favor Insira a(s) Vista(s) do Painel !"
+msgid "Add to Dashboard"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Julho"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Dia"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Criar Menu para o Painel"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Fevereiro"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Outubro"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
-msgstr "Linha de tabela"
-
-#. module: board
-#: field:board.menu.create,menu_parent_id:0
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Menu Ascendente"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Mês-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Janeiro"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr "Utilizadores"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Novembro"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr ""
-"Dá a ordem de sequência                         ao exibir uma lista de "
-"linhas de bordo."
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "Abril"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Painel"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Erro do Utilizador!"
+msgid "Change Layout.."
+msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Ação"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
+msgstr ""
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Posição"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Modelo"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
-msgstr "Página Inicial"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
-msgstr "Actividades mais recentes"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Esquerda"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Vista de Quadro"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Direita"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Largura"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Mês   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Sequência"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Setembro"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Dezembro"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Criar Menu"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Altura"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Criar Menu de Quadro"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Maio"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "Ano"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Cancelar"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Painel de Vista"
+#: view:board.create:0
+msgid "or"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
 
 #~ msgid "Author"
 #~ msgstr "Autor"
 
 #~ msgid "Note"
 #~ msgstr "Nota"
+
+#~ msgid "Width"
+#~ msgstr "Largura"
+
+#~ msgid "Title"
+#~ msgstr "Título"
 
 #~ msgid "Date"
 #~ msgstr "Data"
@@ -366,14 +189,36 @@ msgstr "Painel de Vista"
 #~ msgid "Notes"
 #~ msgstr "Notas"
 
+#~ msgid "Dashboard"
+#~ msgstr "Painel"
+
+#~ msgid "Position"
+#~ msgstr "Posição"
+
 #~ msgid "Note type"
 #~ msgstr "Tipo de nota"
+
+#~ msgid "Left"
+#~ msgstr "Esquerda"
+
+#~ msgid "Right"
+#~ msgstr "Direita"
+
+#~ msgid "Sequence"
+#~ msgstr "Sequência"
+
+#~ msgid "Height"
+#~ msgstr "Altura"
 
 #~ msgid "Subject"
 #~ msgstr "Assunto"
 
 #~ msgid "Dashboard main module"
 #~ msgstr "Módulo Principal do Painel"
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Erro do Utilizador!"
 
 #~ msgid "Base module for all dashboards."
 #~ msgstr "Módulo base para todos os painéis."
@@ -399,17 +244,175 @@ msgstr "Painel de Vista"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Nome de modelo inválido na definição da acção."
 
+#~ msgid "Dashboard Definition"
+#~ msgstr "Definição do Painel"
+
 #~ msgid "Publish a note"
 #~ msgstr "Publicar uma nota"
+
+#~ msgid "Menu Information"
+#~ msgstr "Informação do Menu"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML Inválido para a Arquitectura de Vista !"
 
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr "Por favor Insira a(s) Vista(s) do Painel !"
+
 #~ msgid "Open Dashboard"
 #~ msgstr "Abrir Painel"
+
+#~ msgid "Menu Name"
+#~ msgstr "Nome do Menu"
+
+#~ msgid "Board View"
+#~ msgstr "Vista de Quadro"
+
+#~ msgid "Create Menu"
+#~ msgstr "Criar Menu"
 
 #~ msgid "Dashboards"
 #~ msgstr "Paineis"
 
+#~ msgid "Create Board Menu"
+#~ msgstr "Criar Menu de Quadro"
+
+#~ msgid "Dashboard View"
+#~ msgstr "Painel de Vista"
+
+#~ msgid "  Year  "
+#~ msgstr "  Ano  "
+
+#~ msgid "Month"
+#~ msgstr "Mês"
+
+#~ msgid "Day"
+#~ msgstr "Dia"
+
+#~ msgid "July"
+#~ msgstr "Julho"
+
+#~ msgid "June"
+#~ msgstr "Junho"
+
+#~ msgid "March"
+#~ msgstr "Março"
+
+#~ msgid "August"
+#~ msgstr "Agosto"
+
+#~ msgid "November"
+#~ msgstr "Novembro"
+
+#~ msgid "January"
+#~ msgstr "Janeiro"
+
+#~ msgid "October"
+#~ msgstr "Outubro"
+
+#~ msgid "February"
+#~ msgstr "Fevereiro"
+
+#~ msgid "April"
+#~ msgstr "Abril"
+
+#~ msgid "Model"
+#~ msgstr "Modelo"
+
+#~ msgid "Action"
+#~ msgstr "Ação"
+
+#~ msgid "September"
+#~ msgstr "Setembro"
+
+#~ msgid "Year"
+#~ msgstr "Ano"
+
+#~ msgid "May"
+#~ msgstr "Maio"
+
+#~ msgid "Object"
+#~ msgstr "Objeto"
+
+#~ msgid "   Month   "
+#~ msgstr "   Mês   "
+
+#~ msgid "December"
+#~ msgstr "Dezembro"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtros avançados"
+
+#~ msgid "Monthly Activity per Document"
+#~ msgstr "Atividade mensal, por documento"
+
+#~ msgid "Menu Create"
+#~ msgstr "Criar Menu"
+
+#~ msgid "Latest Connections"
+#~ msgstr "Últimas Conexões"
+
+#~ msgid "Administration Dashboard"
+#~ msgstr "Painel Administrativo"
+
+#~ msgid "Weekly Global Activity"
+#~ msgstr "Actividade global da semana"
+
+#~ msgid "# of Entries"
+#~ msgstr "# de entradas"
+
+#~ msgid "Log Analysis"
+#~ msgstr "Log Análise"
+
+#~ msgid "User Connections"
+#~ msgstr "Conexões utilizador"
+
+#~ msgid "Log Report"
+#~ msgstr "Log Relatório"
+
+#~ msgid "Board Line"
+#~ msgstr "Linha de tabela"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Mês-1    "
+
+#~ msgid ""
+#~ "Gives the sequence order                         when displaying a list of "
+#~ "board lines."
+#~ msgstr ""
+#~ "Dá a ordem de sequência                         ao exibir uma lista de "
+#~ "linhas de bordo."
+
+#~ msgid "Latest Activities"
+#~ msgstr "Actividades mais recentes"
+
+#~ msgid "Log created in last month"
+#~ msgstr "Sessão criada no mês passado"
+
+#~ msgid "Home Page"
+#~ msgstr "Página Inicial"
+
+#~ msgid "Users"
+#~ msgstr "Utilizadores"
+
+#~ msgid "Configuration Overview"
+#~ msgstr "Análise da Configuração"
+
+#~ msgid "Log created in current year"
+#~ msgstr "Sessão criada no ano atual"
+
+#~ msgid "Group By..."
+#~ msgstr "Grupo por..."
+
+#~ msgid "Log created in current month"
+#~ msgstr "Sessão criada no mês atual"
+
+#~ msgid "Creation Date"
+#~ msgstr "Data da Criação"
+
+#~ msgid "Action Views"
+#~ msgstr "Vista de Ações"
+
+#~ msgid "Create Menu For Dashboard"
+#~ msgstr "Criar Menu para o Painel"

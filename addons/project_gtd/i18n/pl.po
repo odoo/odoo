@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-01-14 08:32+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:33+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -57,9 +57,10 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Następne"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "Ta ramka nie ma ramki podrzędnej !"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -79,6 +80,11 @@ msgid "Today"
 msgstr "Dzisiaj"
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
 msgstr "Długotrwałe"
@@ -94,8 +100,9 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Ramka"
 
@@ -103,12 +110,6 @@ msgstr "Ramka"
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
 msgstr "Wstaw do ramki"
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Błąd !"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
@@ -126,11 +127,6 @@ msgstr "Błąd ! Nie możesz tworzyć rekurencyjnych zadań."
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
 msgstr "W tym tygodniu"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "_Anuluj"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -201,6 +197,12 @@ msgid "project.gtd.timebox"
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -214,20 +216,20 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Kontekst"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Ta ramka nie ma ramki podrzędnej !"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Wybór zadań"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
+#: view:project.task:0
+msgid "Display"
 msgstr ""
 
 #. module: project_gtd
@@ -236,7 +238,8 @@ msgid "Office"
 msgstr "Biuro"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Numeracja"
 
@@ -261,11 +264,6 @@ msgid "Timebox Definition"
 msgstr "Definicja ramki czasowej"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Wybór zadań"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "Skrzynka odbiorcza"
@@ -279,6 +277,11 @@ msgstr "Pobierz z ramki"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "Kontekst wykonywania zadania"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr "Anuluj"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -303,9 +306,9 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "Poprzednie"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -367,9 +370,6 @@ msgstr "Poprzednie"
 #~ msgid "Weekly"
 #~ msgstr "Co tydzień"
 
-#~ msgid "Cancel"
-#~ msgstr "Anuluj"
-
 #~ msgid "My Deadlines"
 #~ msgstr "Moje terminy"
 
@@ -407,5 +407,18 @@ msgstr "Poprzednie"
 #~ msgid "Getting Things Done"
 #~ msgstr "GTD - planowanie osobiste"
 
+#~ msgid "_Cancel"
+#~ msgstr "_Anuluj"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Błąd !"
+
 #~ msgid "This Month"
 #~ msgstr "W tym miesiącu"
+
+#~ msgid "Next"
+#~ msgstr "Następne"
+
+#~ msgid "Previous"
+#~ msgstr "Poprzednie"

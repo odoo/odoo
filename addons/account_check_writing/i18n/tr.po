@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-10 21:18+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -23,23 +23,7 @@ msgid "Check on Top"
 msgstr "Çek üstte"
 
 #. module: account_check_writing
-#: model:ir.actions.act_window,help:account_check_writing.action_write_check
-msgid ""
-"The check payment form allows you to track the payment you do to your "
-"suppliers specially by check. When you select a supplier, the payment method "
-"and an amount for the payment, OpenERP will propose to reconcile your "
-"payment with the open supplier invoices or bills.You can print the check"
-msgstr ""
-"Çek ödeme formu, tedarikçilerinize özellikle çek ile yaptığınız ödemeleriniz "
-"izlemenizi sağlar. Bir tedarikçi, ödeme yöntemi ve ödenecek tutar "
-"seçtiğinizde, OpenERP, size açık faturalar ya da fişlerinizin ödemeniz ile "
-"uzlaştırılmasını önerecektir. Çeki yazdırabilirsiniz."
-
-#. module: account_check_writing
 #: view:account.voucher:0
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
 msgid "Print Check"
 msgstr "Çek Basımı"
 
@@ -112,9 +96,21 @@ msgid "Original Amount"
 msgstr "İlk Tutar"
 
 #. module: account_check_writing
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Yapılandırma"
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you "
+"do\n"
+"                to your suppliers using checks. When you select a supplier, "
+"the\n"
+"                payment method and an amount for the payment, OpenERP will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_check_writing
 #: field:account.voucher,allow_check:0
@@ -134,6 +130,11 @@ msgid "Use Preprinted Check"
 msgstr "Basılı çek kullan"
 
 #. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
+msgid "Print Check (Bottom)"
+msgstr ""
+
+#. module: account_check_writing
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
 msgstr "Şirket adı tekil olmalı !"
@@ -146,28 +147,32 @@ msgid "Due Date"
 msgstr "Vade Tarihi"
 
 #. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
-
-#. module: account_check_writing
-#: view:res.company:0
-msgid "Default Check Layout"
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
+msgid "Print Check (Middle)"
 msgstr ""
 
 #. module: account_check_writing
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
-"Yapılandırma hatası! Seçilen döviz kuru öntanımlı hesaplarla aynı olmalı."
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Şirketler"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
 #: report:account.print.check.middle:0
 msgid "Balance Due"
 msgstr "Borç Bakiyesi"
+
+#. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
+msgid "Print Check (Top)"
+msgstr ""
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -205,6 +210,26 @@ msgstr "Açık Bakiye"
 #: field:res.company,check_layout:0
 msgid "Choose Check layout"
 msgstr "Çek düzenini seç"
+
+#~ msgid "Configuration"
+#~ msgstr "Yapılandırma"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Yapılandırma hatası! Seçilen döviz kuru öntanımlı hesaplarla aynı olmalı."
+
+#~ msgid ""
+#~ "The check payment form allows you to track the payment you do to your "
+#~ "suppliers specially by check. When you select a supplier, the payment method "
+#~ "and an amount for the payment, OpenERP will propose to reconcile your "
+#~ "payment with the open supplier invoices or bills.You can print the check"
+#~ msgstr ""
+#~ "Çek ödeme formu, tedarikçilerinize özellikle çek ile yaptığınız ödemeleriniz "
+#~ "izlemenizi sağlar. Bir tedarikçi, ödeme yöntemi ve ödenecek tutar "
+#~ "seçtiğinizde, OpenERP, size açık faturalar ya da fişlerinizin ödemeniz ile "
+#~ "uzlaştırılmasını önerecektir. Çeki yazdırabilirsiniz."
 
 #~ msgid "Default Check layout"
 #~ msgstr "Varsayıla çek düzeni"

@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-01-30 20:40+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:38+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -34,19 +33,10 @@ msgid "From"
 msgstr "Kezdő dátum"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
+#: help:product.product,total_cost:0
 msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
-"Az eladási katalógus árak és a kimenő számlákban lévő mennyiségek "
-"szorzatának összege"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Standard price"
-msgstr ""
-"Tényleges árbevétel - tényleges elábé/értékesítés elszámolt közvetlen "
-"önköltsége"
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -57,6 +47,11 @@ msgstr "Záró dátum"
 #: field:product.product,date_to:0
 msgid "To Date"
 msgstr "Záró dátum"
+
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,date_from:0
@@ -79,6 +74,11 @@ msgstr "Átlagos egységár"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Termék"
+
+#. module: product_margin
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -112,13 +112,6 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Összes mennyiség a bejövő számlákban"
 
 #. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-msgstr ""
-"A bekerülési értékek és a bejövő számlákban lévő mennyiségek szorzatának "
-"összege"
-
-#. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
 msgstr "Elvárt árbevétel - számított beszerzési érték"
@@ -130,10 +123,22 @@ msgid "# Invoiced"
 msgstr "Számlázott mennyiség"
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
+#. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Tényleges beszerzési érték"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -146,26 +151,20 @@ msgid "#Purchased"
 msgstr "Beszerzett mennyiség"
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr "A kimenő számlákban lévő árak és mennyiségek szorzatának összege"
-
-#. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Elvárt árrés * 100 / Elvárt árbevétel"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
-msgid "Avg. Price in Customer Invoices)"
-msgstr "Átlagár a kimenő számlákban"
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
+#: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
-msgstr "A bejövő számlákban lévő árak és mennyiségek szorzatának összege "
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -188,6 +187,12 @@ msgstr "Összes árrés"
 #: field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Árbevétel különbözet"
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -245,11 +250,6 @@ msgid "General Information"
 msgstr "Általános információ"
 
 #. module: product_margin
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Hiba: Érvénytelen vonalkód"
-
-#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Beszerzési különbözet"
@@ -280,9 +280,44 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Összes mennyiség a kimenő számlákban"
 
 #. module: product_margin
+#: view:product.margin:0
+msgid "or"
+msgstr ""
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Termékárrés"
 
 #~ msgid "Margins in Product"
 #~ msgstr "Termék árrései"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Hiba: Érvénytelen vonalkód"
+
+#~ msgid ""
+#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+#~ msgstr ""
+#~ "Az eladási katalógus árak és a kimenő számlákban lévő mennyiségek "
+#~ "szorzatának összege"
+
+#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
+#~ msgstr ""
+#~ "A bekerülési értékek és a bejövő számlákban lévő mennyiségek szorzatának "
+#~ "összege"
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
+#~ msgstr "A bejövő számlákban lévő árak és mennyiségek szorzatának összege "
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
+#~ msgstr "A kimenő számlákban lévő árak és mennyiségek szorzatának összege"
+
+#~ msgid "Avg. Price in Customer Invoices)"
+#~ msgstr "Átlagár a kimenő számlákban"
+
+#~ msgid "Turnorder - Standard price"
+#~ msgstr ""
+#~ "Tényleges árbevétel - tényleges elábé/értékesítés elszámolt közvetlen "
+#~ "önköltsége"

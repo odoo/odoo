@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-05-10 17:53+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:27+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:45+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -48,13 +48,9 @@ msgid "Resources Leaves"
 msgstr "Odsustva resursa"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Radno vrijeme"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Dan u tjednu"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -71,6 +67,11 @@ msgstr "Grupiraj po..."
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Nedelja"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr "Faktor efikasnosti"
 
 #. module: resource
 #: view:resource.resource:0
@@ -95,14 +96,15 @@ msgid "Make sure the Working time has been configured with proper week days!"
 msgstr ""
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
-msgstr "Voditelj radne grupe"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
-msgstr "Radno vrijeme počinje od"
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Pretraži radno vrijeme"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
@@ -130,24 +132,9 @@ msgid "Friday"
 msgstr "petak"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "Dan u tjednu"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr "Radno vrijeme će završiti u"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr "Početni datum"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "Pretraži radno vrijeme"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -171,9 +158,14 @@ msgid "Search Working Period Leaves"
 msgstr ""
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
-msgstr "Faktor efikasnosti"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
+msgstr "Voditelj radne grupe"
 
 #. module: resource
 #: field:resource.calendar.leaves,date_to:0
@@ -194,7 +186,6 @@ msgid "Resource"
 msgstr "Resurs"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -203,15 +194,30 @@ msgid "Name"
 msgstr "Naziv"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Srijeda"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Radno vrijeme"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
 msgstr ""
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Srijeda"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -279,17 +285,9 @@ msgid "Work to"
 msgstr "Radi do"
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
-msgstr ""
-"Ovo polje prikazuje efikasnost svakog resursa u izvršavanju zadataka. Npr. "
-"resurs se ostavi sam na 5 dana, sa 5 dodjeljenih zadataka. Predefinirano se "
-"prikazuje opterećenje od 100%, ali ako stavimo efikasnost od 200%, tada je "
-"njegovo opterećenje samo 50%."
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Detalj posla"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -297,9 +295,13 @@ msgid "Tuesday"
 msgstr "Utorak"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
-msgstr "Radno vrijeme"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -341,9 +343,9 @@ msgid "Human"
 msgstr "Čovjek"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "Detalj posla"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -351,24 +353,45 @@ msgid "Start Date"
 msgstr "Početni datum"
 
 #. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr " (kopija)"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "Subota"
 
+#~ msgid "Working time will start from"
+#~ msgstr "Radno vrijeme počinje od"
+
 #~ msgid "Day of week"
 #~ msgstr "Dan u tjednu"
 
+#~ msgid "Working time will end at"
+#~ msgstr "Radno vrijeme će završiti u"
+
 #~ msgid "Workgroup manager"
 #~ msgstr "Voditelj radne grupe"
+
+#~ msgid "Starting date"
+#~ msgstr "Početni datum"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+#~ "show a load of 100% for this phase by default, but if we put a efficency of "
+#~ "200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Ovo polje prikazuje efikasnost svakog resursa u izvršavanju zadataka. Npr. "
+#~ "resurs se ostavi sam na 5 dana, sa 5 dodjeljenih zadataka. Predefinirano se "
+#~ "prikazuje opterećenje od 100%, ali ako stavimo efikasnost od 200%, tada je "
+#~ "njegovo opterećenje samo 50%."
+
+#~ msgid "Working time"
+#~ msgstr "Radno vrijeme"
 
 #~ msgid "General Information"
 #~ msgstr "Opći podaci"
 
 #~ msgid "Efficiency factor"
 #~ msgstr "Faktor efikasnosti"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopija)"

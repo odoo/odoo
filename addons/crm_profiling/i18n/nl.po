@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 18:26+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:36+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Vragenlijst"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "Beschikbare antwoorden"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -115,11 +121,6 @@ msgid "Use a questionnaire"
 msgstr "Gebruik een vragenlijst"
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr "_Annuleren"
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr "Vragen / Antwoorden"
@@ -143,14 +144,14 @@ msgstr ""
 "Als niet aangevinkt, worden de onderstaande criteria genegeerd"
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "Fout! U kunt geen recursieve profielschetsen maken."
-
-#. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
 msgstr "Gebruik de profileringsregels"
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr ""
 
 #. module: crm_profiling
 #: constraint:res.partner:0
@@ -159,15 +160,14 @@ msgstr ""
 "Fout! Het is niet mogelijk om recursieve geassocieerde leden te maken"
 
 #. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
-msgstr "Beschikbare antwoorden"
-
-#. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Ingesloten antwoorden"
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -208,6 +208,11 @@ msgstr "Vragenlijst"
 msgid "Save Data"
 msgstr "Gegevens opslaan"
 
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr ""
+
 #~ msgid "Avalaible answers"
 #~ msgstr "Beschikbare antwoorden"
 
@@ -224,6 +229,9 @@ msgstr "Gegevens opslaan"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "Fout! U kunt geen recursieve profielschetsen maken."
 
 #~ msgid ""
 #~ "Check this box if you want to use this tab as part of the segmentation rule. "
@@ -275,3 +283,6 @@ msgstr "Gegevens opslaan"
 #~ "    * Let op: deze module is niet compatibel met de module segmentatie, "
 #~ "omdat het dezelfde is die is hernoemd.\n"
 #~ "    "
+
+#~ msgid "_Cancel"
+#~ msgstr "_Annuleren"

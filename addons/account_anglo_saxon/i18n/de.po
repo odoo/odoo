@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-13 19:22+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:24+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:42+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
@@ -22,9 +22,9 @@ msgid "Order Reference must be unique per Company!"
 msgstr "Die Bestellreferenz muss je Firma eindeutig sein"
 
 #. module: account_anglo_saxon
-#: view:product.category:0
-msgid " Accounting Property"
-msgstr " Finanzkonten Einstellungen"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
@@ -49,10 +49,9 @@ msgstr "ungültige BBA Kommunikations Stuktur"
 #. module: account_anglo_saxon
 #: constraint:product.template:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
 msgstr ""
-"Fehler: Die Standard Mengeneinheit (ME) sowie die Mengeneinheit (ME) bei der "
-"Beschaffung muss in derselben Kategorie sein."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -86,11 +85,6 @@ msgid "Picking List"
 msgstr "Pack Auftrag"
 
 #. module: account_anglo_saxon
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Die Rechnungsnummer muss je Firma eindeutig sein"
-
-#. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
 #: help:product.template,property_account_creditor_price_difference:0
 msgid ""
@@ -100,6 +94,9 @@ msgstr ""
 "Dieses Konto wird genutzt, um Unterschiede zwischen Einkaufs- und "
 "Verkaufspreis der Rechnung und Durchschnittspreisen zum Zeitpunkt des "
 "Warenzu- oder Warenabgangs als Preisdifferenz zu buchen."
+
+#~ msgid " Accounting Property"
+#~ msgstr " Finanzkonten Einstellungen"
 
 #~ msgid ""
 #~ "This module will support the Anglo-Saxons accounting methodology by \n"
@@ -173,6 +170,12 @@ msgstr ""
 #~ "    wird. Dieses Interimskonto wird dann erst bei der Rechnungsbuchung "
 #~ "entweder gegen Debitor (Kundenrechnung)oder Kreditor (Lieferantenrechnung) "
 #~ "mitsamt Preisdifferenz ausgeglichen."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Fehler: Die Standard Mengeneinheit (ME) sowie die Mengeneinheit (ME) bei der "
+#~ "Beschaffung muss in derselben Kategorie sein."
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "Fehler! Sie können keine rekursiven Kategorien definieren."

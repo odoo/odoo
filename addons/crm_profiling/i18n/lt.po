@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:24+0000\n"
 "Last-Translator: Donatas Stonys Blue Whale SEO <donatelonow@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:36+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Klausimų sąrašas"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "Galimi atsakymai"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -114,11 +120,6 @@ msgid "Use a questionnaire"
 msgstr "Naudoti anketą"
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr "Atšaukti"
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr "Klausimai / atsakymai"
@@ -143,14 +144,14 @@ msgstr ""
 "pažymėta, žemesnis kriterijus bus ignoruotas"
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "Klaida! Negalite kurti rekursinių profilių."
-
-#. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
 msgstr "Naudoti profiliavimo taisykles"
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr ""
 
 #. module: crm_profiling
 #: constraint:res.partner:0
@@ -158,15 +159,14 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Klaida! Jūs negalite sukurti rekursinių susijusių vartotojų."
 
 #. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
-msgstr "Galimi atsakymai"
-
-#. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Įeinantys atsakymai"
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -207,6 +207,11 @@ msgstr "Anketa"
 msgid "Save Data"
 msgstr "Išsaugoti duomenis"
 
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr ""
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -217,6 +222,9 @@ msgstr "Išsaugoti duomenis"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Netinkamas XML peržiūros architektūrai!"
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "Klaida! Negalite kurti rekursinių profilių."
 
 #~ msgid "Avalaible answers"
 #~ msgstr "Galimi atsakymai"
@@ -230,3 +238,6 @@ msgstr "Išsaugoti duomenis"
 
 #~ msgid "Using a questionnaire"
 #~ msgstr "Naudotis anketa"
+
+#~ msgid "_Cancel"
+#~ msgstr "Atšaukti"

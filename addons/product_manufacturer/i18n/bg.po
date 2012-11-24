@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-02-10 23:42+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:26+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:43+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: product_manufacturer
 #: field:product.product,manufacturer_pref:0
@@ -50,20 +50,27 @@ msgid "Attribute"
 msgstr "Атрибут"
 
 #. module: product_manufacturer
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: product_manufacturer
 #: field:product.manufacturer.attribute,value:0
 msgid "Value"
 msgstr "Стойност"
-
-#. module: product_manufacturer
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Грешка: Невалиден европейски баркод"
 
 #. module: product_manufacturer
 #: view:product.product:0
 #: field:product.product,attribute_ids:0
 msgid "Attributes"
 msgstr "Атрибути"
+
+#. module: product_manufacturer
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
 
 #. module: product_manufacturer
 #: field:product.product,manufacturer_pname:0
@@ -75,6 +82,9 @@ msgstr "Име на производител"
 #: field:product.product,manufacturer:0
 msgid "Manufacturer"
 msgstr "Производител"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Грешка: Невалиден европейски баркод"
 
 #~ msgid "A module that add manufacturers and attributes on the product form"
 #~ msgstr "Модул, който добавя производители и атрибути във формата на продукта"

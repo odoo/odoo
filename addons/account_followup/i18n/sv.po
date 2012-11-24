@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-11-11 15:21+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_followup
-#: view:account_followup.followup:0
-msgid "Search Followup"
-msgstr "Sök uppföljningar"
+"X-Launchpad-Export-Date: 2012-11-24 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -33,17 +28,9 @@ msgid "Follow-up Message"
 msgstr "Uppföljningsmeddelande"
 
 #. module: account_followup
-#: view:account_followup.followup:0
-#: field:account_followup.followup,followup_line:0
+#: field:account.followup.print,followup_id:0
 msgid "Follow-Up"
 msgstr "Uppföljning"
-
-#. module: account_followup
-#: help:account.followup.print.all,test_print:0
-msgid ""
-"Check if you want to print followups without changing followups level."
-msgstr ""
-"Kryssa om du vill skriva ut uppföljning utan att skifta uppföljningsnivå."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -104,27 +91,33 @@ msgid "Email Subject"
 msgstr "E-postrubrik"
 
 #. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_followup_stat
-msgid ""
-"Follow up on the reminders sent over to your partners for unpaid invoices."
+#: view:account_followup.followup.line:0
+msgid "Follow-up Steps"
 msgstr ""
-"Följ upp påminnelser skickade till dina kunder för icke betalda fakturor."
+
+#. module: account_followup
+#: field:account_followup.followup.line,start:0
+msgid "Type of Term"
+msgstr "Typ av villkor"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: view:account_followup.followup.line:0
 msgid "Legend"
-msgstr "Legend"
+msgstr "Teckenförklaring"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Follow up Entries with period in current year"
-msgstr "Följ upp transaktioner med period i innevarande år"
+#: field:account.followup.print.all,email_body:0
+msgid "Email Body"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
-msgid "Ok"
-msgstr "Ok"
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
+#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
+msgid "Send Follow-Ups"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -140,12 +133,6 @@ msgstr "Fel kredit eller debitvärde i bokföringsposterna !"
 #: selection:account_followup.followup.line,start:0
 msgid "Net Days"
 msgstr "Nettodagar"
-
-#. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
-#: model:ir.ui.menu,name:account_followup.account_followup_menu
-msgid "Follow-Ups"
-msgstr "Uppföljningar"
 
 #. module: account_followup
 #: view:account_followup.stat.by.partner:0
@@ -172,7 +159,8 @@ msgid "%(heading)s: Move line header"
 msgstr "%(heading)s: transaktionsrubrik"
 
 #. module: account_followup
-#: field:account.followup.print,followup_id:0
+#: view:account_followup.followup:0
+#: field:account_followup.followup,followup_line:0
 msgid "Follow-up"
 msgstr "Uppföljning"
 
@@ -199,15 +187,10 @@ msgid "Partners"
 msgstr "Företag"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:142
+#: code:addons/account_followup/wizard/account_followup_print.py:144
 #, python-format
 msgid "Invoices Reminder"
 msgstr "Fakturapåminnelser"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup
-msgid "Account Follow Up"
-msgstr "Kontouppföljning"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -225,26 +208,24 @@ msgid "%(user_signature)s: User name"
 msgstr "%(user_signature)er: Användarnamn"
 
 #. module: account_followup
+#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
+msgid "Follow-up Report"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.stat,debit:0
 msgid "Debit"
 msgstr "Debet"
 
 #. module: account_followup
-#: view:account.followup.print:0
-msgid ""
-"This feature allows you to send reminders to partners with pending invoices. "
-"You can send them the default message for unpaid invoices or manually enter "
-"a message should you need to remind them of a specific information."
+#: model:ir.model,name:account_followup.model_account_followup_stat
+msgid "Follow-up Statistics"
 msgstr ""
-"Denna funktion gör att du kan skicka påminnelser till partner med väntande "
-"fakturor. Du kan skicka dem standardmeddelandet för obetalda fakturor eller "
-"manuellt skriva in ett meddelande om du skulle behöva påminna dem om en "
-"specifik information."
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Ref"
-msgstr "Ref"
+#: model:ir.model,name:account_followup.model_account_followup_followup_line
+msgid "Follow-up Criteria"
+msgstr ""
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
@@ -252,26 +233,52 @@ msgid "Gives the sequence order when displaying a list of follow-up lines."
 msgstr "Ger ordningsföljen vid visning av uppföljningsrader."
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,email_body:0
-msgid "Email body"
-msgstr "E-postmeddelande"
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
+#: view:account_followup.stat:0
 msgid "Follow-up Level"
 msgstr "Uppföljningsnivå"
 
 #. module: account_followup
 #: field:account_followup.stat,date_followup:0
-#: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest followup"
 msgstr "Senaste uppföljningen"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-msgid "Select Partners to Remind"
-msgstr "Välj partner att påminna"
+#: model:ir.model,name:account_followup.model_account_followup_print
+#: model:ir.model,name:account_followup.model_account_followup_print_all
+msgid "Print Follow-up & Send Mail to Customers"
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:292
+#, python-format
+msgid ""
+"\n"
+"\n"
+"Email sent to following Partners successfully. !\n"
+"\n"
+"%s"
+msgstr ""
+
+#. module: account_followup
+#: report:account_followup.followup.print:0
+msgid "Li."
+msgstr "AB"
+
+#. module: account_followup
+#: field:account.followup.print.all,email_conf:0
+msgid "Send Email Confirmation"
+msgstr ""
+
+#. module: account_followup
+#: field:account_followup.stat.by.partner,date_followup:0
+msgid "Latest follow-up"
+msgstr ""
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -318,18 +325,14 @@ msgid "Printed Message"
 msgstr "Utskrivet meddelande"
 
 #. module: account_followup
-#: view:account.followup.print:0
-#: view:account.followup.print.all:0
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print
-#: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
-#: model:ir.ui.menu,name:account_followup.account_followup_print_menu
-msgid "Send followups"
-msgstr "Skicka uppföljningar"
-
-#. module: account_followup
 #: view:account_followup.stat.by.partner:0
 msgid "Partner to Remind"
 msgstr "Partner att påminna"
+
+#. module: account_followup
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -338,16 +341,9 @@ msgid "Follow Ups"
 msgstr "Uppföljning"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:296
-#, python-format
-msgid ""
-"All E-mails have been successfully sent to Partners:.\n"
-"\n"
-"%s"
+#: model:ir.model,name:account_followup.model_account_followup_followup
+msgid "Account Follow-up"
 msgstr ""
-"All e-post är skickat till företagen:\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -374,9 +370,9 @@ msgid "Send Mails"
 msgstr "Skicka mail"
 
 #. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
-msgid "Followup Statistics by Partner"
-msgstr "Uppföljning statistik per partner"
+#: view:account_followup.followup:0
+msgid "Search Follow-up"
+msgstr ""
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -384,25 +380,29 @@ msgid "Message"
 msgstr "Meddelande"
 
 #. module: account_followup
+#: view:account.followup.print:0
+#: view:account.followup.print.all:0
+msgid "or"
+msgstr ""
+
+#. module: account_followup
 #: field:account_followup.stat,blocked:0
 msgid "Blocked"
 msgstr "Blockerad"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:299
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
+
+#. module: account_followup
+#: code:addons/account_followup/wizard/account_followup_print.py:291
 #, python-format
 msgid ""
-"\n"
-"\n"
-"E-Mail sent to following Partners successfully. !\n"
+"Email not sent to following Partners, Email not available !\n"
 "\n"
 "%s"
 msgstr ""
-"\n"
-"\n"
-"E-post skickat till följande företag !\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -433,14 +433,14 @@ msgid "Print Follow Ups"
 msgstr "Skriv ut uppföljning"
 
 #. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-up Entries with period in current year"
+msgstr ""
+
+#. module: account_followup
 #: field:account.move.line,followup_date:0
 msgid "Latest Follow-up"
 msgstr "Senaste uppföljning"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_stat
-msgid "Followup Statistics"
-msgstr "Uppföljning statistik"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -448,19 +448,21 @@ msgid "%(user_signature)s: User Name"
 msgstr "%(user_signature)s: Användarnamn"
 
 #. module: account_followup
+#: help:account.followup.print.all,test_print:0
+msgid ""
+"Check if you want to print follow-ups without changing follow-ups level."
+msgstr ""
+
+#. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
 msgstr "Journalrader"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "Du kan inte skapa transaktioner på rubrikkonton."
-
-#. module: account_followup
-#: field:account.followup.print.all,email_conf:0
-msgid "Send email confirmation"
-msgstr "Skicka bekräftelse epost"
+#: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
+#: model:ir.ui.menu,name:account_followup.account_followup_menu
+msgid "Follow-ups"
+msgstr ""
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -483,10 +485,13 @@ msgid "Companies"
 msgstr "Företag"
 
 #. module: account_followup
-#: view:account.followup.print.all:0
-#: field:account.followup.print.all,summary:0
-msgid "Summary"
-msgstr "Summering"
+#: code:addons/account_followup/wizard/account_followup_print.py:289
+#, python-format
+msgid ""
+"All Emails have been successfully sent to Partners:.\n"
+"\n"
+"%s"
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -505,8 +510,8 @@ msgstr "%(partner_name)s: Partnernamn"
 
 #. module: account_followup
 #: view:account_followup.stat:0
-msgid "Follow-Up lines"
-msgstr "Uppföljningsrader"
+msgid "Latest Follow-up Date"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -521,15 +526,22 @@ msgid "Balance"
 msgstr "Balans"
 
 #. module: account_followup
-#: field:account_followup.followup.line,start:0
-msgid "Type of Term"
-msgstr "Typ av villkor"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_print
-#: model:ir.model,name:account_followup.model_account_followup_print_all
-msgid "Print Followup & Send Mail to Customers"
-msgstr "Skriv ut uppföljning och skicka e-post till kunder"
+#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define follow-up levels and their related "
+"messages.\n"
+"              </p><p>\n"
+"                For each step, specify the message and the day of delay. "
+"Use\n"
+"                the legend to know the using code to adapt the email content "
+"to\n"
+"                the good context (good name, good date) and you can manage "
+"the\n"
+"                multi language of messages.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
@@ -538,22 +550,12 @@ msgid "Last move"
 msgstr "Senast åtgärd"
 
 #. module: account_followup
-#: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
-msgid "Followup Report"
-msgstr "Uppföljningsrapport"
-
-#. module: account_followup
-#: view:account_followup.followup.line:0
-msgid "Follow-Up Steps"
-msgstr "Uppföljningssteg"
-
-#. module: account_followup
 #: field:account_followup.stat,period_id:0
 msgid "Period"
 msgstr "Period"
 
 #. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:307
+#: code:addons/account_followup/wizard/account_followup_print.py:300
 #, python-format
 msgid "Followup Summary"
 msgstr "Uppföljningssammanfattning"
@@ -575,45 +577,9 @@ msgid "Max Follow Up Level"
 msgstr "Maximal uppföljningsnivå"
 
 #. module: account_followup
-#: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
-msgid "Review Invoicing Follow-Ups"
-msgstr "Granska inkommande uppföljningar"
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "Bolaget måste överenstämma för alla konton och perioder."
-
-#. module: account_followup
-#: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
-msgid ""
-"Define follow up levels and their related messages and delay. For each step, "
-"specify the message and the day of delay. Use the legend to know the using "
-"code to adapt the email content to the good context (good name, good date) "
-"and you can manage the multi language of messages."
-msgstr ""
-"Definiera uppföljningsnivåer och tillhörande meddelanden och förseningar. "
-"För varje steg anger meddelandet och dagen för förseningen. Använd "
-"teckenförklaringen för att se användingsomrpdet för koden och att den "
-"anpassar bra till  sammanhanget (bra namn, bra datum) och du kan hantera "
-"flera språk av meddelanden."
-
-#. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
 msgstr "Skuldobjekt"
-
-#. module: account_followup
-#: code:addons/account_followup/wizard/account_followup_print.py:298
-#, python-format
-msgid ""
-"E-Mail not sent to following Partners, E-mail not available !\n"
-"\n"
-"%s"
-msgstr ""
-"E-post inte skickat till följande företag, e-postadress saknas!\n"
-"\n"
-"%s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -632,20 +598,15 @@ msgid "Including journal entries marked as a litigation"
 msgstr "Inkluderade verifikat märkta som tvistiga"
 
 #. module: account_followup
-#: view:account_followup.stat:0
-msgid "Followup Level"
-msgstr "Uppföljningsnivå"
-
-#. module: account_followup
 #: field:account_followup.followup,description:0
 #: report:account_followup.followup.print:0
 msgid "Description"
 msgstr "Beskrivning"
 
 #. module: account_followup
-#: constraint:account_followup.followup:0
-msgid "Only One Followup by Company."
-msgstr "Endast en uppföljning per bolag."
+#: report:account_followup.followup.print:0
+msgid "Ref"
+msgstr "Ref"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -656,6 +617,11 @@ msgstr "Nuvarande bokföringsår"
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr "Företagstransaktioner"
+
+#. module: account_followup
+#: view:account_followup.stat:0
+msgid "Follow-up lines"
+msgstr ""
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -696,9 +662,9 @@ msgid "First move"
 msgstr "Första steget"
 
 #. module: account_followup
-#: report:account_followup.followup.print:0
-msgid "Li."
-msgstr "AB"
+#: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
+msgid "Follow-up Statistics by Partner"
+msgstr ""
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -711,9 +677,20 @@ msgid "Days of delay"
 msgstr "Dagar förfallet"
 
 #. module: account_followup
+#: view:account.followup.print.all:0
+#: field:account.followup.print.all,summary:0
+msgid "Summary"
+msgstr "Summering"
+
+#. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
 msgstr "Dokument: kundkontoutdrag"
+
+#. module: account_followup
+#: view:account.followup.print:0
+msgid "Send follow-ups"
+msgstr ""
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -754,11 +731,6 @@ msgstr ""
 " Vänliga hälsningar,\n"
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Du kan inte skapa transaktioner på ett stängt konto"
-
-#. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(line)s: Ledger Posting lines"
 msgstr "%(line)s: huvudboksposter"
@@ -788,16 +760,6 @@ msgstr "Testutskrift"
 msgid "%(partner_name)s: Partner name"
 msgstr "%(partner_name)s: Partnernamn"
 
-#. module: account_followup
-#: view:account_followup.stat:0
-msgid "Latest Followup Date"
-msgstr "Senast datum för uppföljning"
-
-#. module: account_followup
-#: model:ir.model,name:account_followup.model_account_followup_followup_line
-msgid "Follow-Up Criteria"
-msgstr "Uppföljningskriteria"
-
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -806,9 +768,15 @@ msgstr "Uppföljningskriteria"
 #~ msgid "Accounting follow-ups management"
 #~ msgstr "Accounting follow-ups management"
 
+#~ msgid "Search Followup"
+#~ msgstr "Sök uppföljningar"
+
 #, python-format
 #~ msgid "Follwoup Summary"
 #~ msgstr "Uppföljningssammanfattning"
+
+#~ msgid "Email body"
+#~ msgstr "E-postmeddelande"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Ogiltig XML för Vy-arkitektur!"
@@ -825,8 +793,29 @@ msgstr "Uppföljningskriteria"
 #~ msgid "Paid"
 #~ msgstr "Betalad"
 
+#~ msgid "Select Partners to Remind"
+#~ msgstr "Välj partner att påminna"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#~ msgid "Follow-Ups"
+#~ msgstr "Uppföljningar"
+
+#~ msgid "Send followups"
+#~ msgstr "Skicka uppföljningar"
+
+#~ msgid "Account Follow Up"
+#~ msgstr "Kontouppföljning"
+
 #~ msgid "Balance:"
 #~ msgstr "Balans:"
+
+#~ msgid "Followup Statistics"
+#~ msgstr "Uppföljning statistik"
+
+#~ msgid "Send email confirmation"
+#~ msgstr "Skicka bekräftelse epost"
 
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Du kan inte skapa transaktioner för ett avslutat konto."
@@ -843,6 +832,9 @@ msgstr "Uppföljningskriteria"
 #~ "E-mail skickades till följande partners!\n"
 #~ "\n"
 
+#~ msgid "Followup Statistics by Partner"
+#~ msgstr "Uppföljning statistik per partner"
+
 #, python-format
 #~ msgid ""
 #~ "All E-mails have been successfully sent to Partners:.\n"
@@ -857,6 +849,9 @@ msgstr "Uppföljningskriteria"
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Företaget måste vara samma för relaterade konton och perioden."
 
+#~ msgid "Followup Report"
+#~ msgstr "Uppföljningsrapport"
+
 #, python-format
 #~ msgid ""
 #~ "E-Mail not sent to following Partners, Email not available !\n"
@@ -864,6 +859,108 @@ msgstr "Uppföljningskriteria"
 #~ msgstr ""
 #~ "Email skickades inte till följande partners, email inte tillgängligt !\n"
 #~ "\n"
+
+#~ msgid ""
+#~ "Follow up on the reminders sent over to your partners for unpaid invoices."
+#~ msgstr ""
+#~ "Följ upp påminnelser skickade till dina kunder för icke betalda fakturor."
+
+#~ msgid "Follow up Entries with period in current year"
+#~ msgstr "Följ upp transaktioner med period i innevarande år"
+
+#~ msgid ""
+#~ "This feature allows you to send reminders to partners with pending invoices. "
+#~ "You can send them the default message for unpaid invoices or manually enter "
+#~ "a message should you need to remind them of a specific information."
+#~ msgstr ""
+#~ "Denna funktion gör att du kan skicka påminnelser till partner med väntande "
+#~ "fakturor. Du kan skicka dem standardmeddelandet för obetalda fakturor eller "
+#~ "manuellt skriva in ett meddelande om du skulle behöva påminna dem om en "
+#~ "specifik information."
+
+#~ msgid ""
+#~ "Check if you want to print followups without changing followups level."
+#~ msgstr ""
+#~ "Kryssa om du vill skriva ut uppföljning utan att skifta uppföljningsnivå."
+
+#, python-format
+#~ msgid ""
+#~ "All E-mails have been successfully sent to Partners:.\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "All e-post är skickat till företagen:\n"
+#~ "\n"
+#~ "%s"
+
+#, python-format
+#~ msgid ""
+#~ "\n"
+#~ "\n"
+#~ "E-Mail sent to following Partners successfully. !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "\n"
+#~ "\n"
+#~ "E-post skickat till följande företag !\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid "Follow-Up Steps"
+#~ msgstr "Uppföljningssteg"
+
+#~ msgid "Print Followup & Send Mail to Customers"
+#~ msgstr "Skriv ut uppföljning och skicka e-post till kunder"
+
+#~ msgid "Follow-Up lines"
+#~ msgstr "Uppföljningsrader"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Du kan inte skapa transaktioner på rubrikkonton."
+
+#~ msgid "Review Invoicing Follow-Ups"
+#~ msgstr "Granska inkommande uppföljningar"
+
+#, python-format
+#~ msgid ""
+#~ "E-Mail not sent to following Partners, E-mail not available !\n"
+#~ "\n"
+#~ "%s"
+#~ msgstr ""
+#~ "E-post inte skickat till följande företag, e-postadress saknas!\n"
+#~ "\n"
+#~ "%s"
+
+#~ msgid ""
+#~ "Define follow up levels and their related messages and delay. For each step, "
+#~ "specify the message and the day of delay. Use the legend to know the using "
+#~ "code to adapt the email content to the good context (good name, good date) "
+#~ "and you can manage the multi language of messages."
+#~ msgstr ""
+#~ "Definiera uppföljningsnivåer och tillhörande meddelanden och förseningar. "
+#~ "För varje steg anger meddelandet och dagen för förseningen. Använd "
+#~ "teckenförklaringen för att se användingsomrpdet för koden och att den "
+#~ "anpassar bra till  sammanhanget (bra namn, bra datum) och du kan hantera "
+#~ "flera språk av meddelanden."
+
+#~ msgid "Only One Followup by Company."
+#~ msgstr "Endast en uppföljning per bolag."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Bolaget måste överenstämma för alla konton och perioder."
+
+#~ msgid "Followup Level"
+#~ msgstr "Uppföljningsnivå"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Du kan inte skapa transaktioner på ett stängt konto"
+
+#~ msgid "Latest Followup Date"
+#~ msgstr "Senast datum för uppföljning"
+
+#~ msgid "Follow-Up Criteria"
+#~ msgstr "Uppföljningskriteria"
 
 #~ msgid ""
 #~ "\n"

@@ -6,18 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-05-10 18:01+0000\n"
 "Last-Translator: Ferdinand-camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:32+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:50+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_long_term
+#: field:account.analytic.account,use_phases:0
 #: model:ir.actions.act_window,name:project_long_term.act_project_phases
+#: view:project.project:0
 msgid "Phases"
 msgstr "Phasen"
 
@@ -59,14 +61,10 @@ msgid "In Progress Phases"
 msgstr "Fortschritts Phasen"
 
 #. module: project_long_term
-#: view:project.phase:0
-msgid "Displaying Settings"
-msgstr "Anzeigekonfiguration"
-
-#. module: project_long_term
-#: field:project.compute.phases,target_project:0
-msgid "Schedule"
-msgstr "Zeitplanung"
+#: code:addons/project_long_term/wizard/project_compute_phases.py:48
+#, python-format
+msgid "Please specify a project to schedule."
+msgstr "Bitte wählen Si eine Projekt für die  Planung"
 
 #. module: project_long_term
 #: constraint:project.task:0
@@ -123,11 +121,6 @@ msgid "Previous Phases"
 msgstr "Vorherige Phase"
 
 #. module: project_long_term
-#: help:project.phase,product_uom:0
-msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
-msgstr "ME (Mengeneinheit) entspr. Einheit für die Dauer"
-
-#. module: project_long_term
 #: model:ir.actions.act_window,name:project_long_term.act_resouce_allocation
 #: model:ir.ui.menu,name:project_long_term.menu_resouce_allocation
 #: view:project.phase:0
@@ -172,6 +165,11 @@ msgid "Ending Date"
 msgstr "Ende Datum"
 
 #. module: project_long_term
+#: model:ir.model,name:project_long_term.model_account_analytic_account
+msgid "Analytic Account"
+msgstr ""
+
+#. module: project_long_term
 #: field:project.phase,constraint_date_end:0
 msgid "Deadline"
 msgstr "Frist"
@@ -182,33 +180,20 @@ msgid "Compute All My Projects"
 msgstr "Berechne alle meine Projekte"
 
 #. module: project_long_term
-#: view:project.compute.phases:0
-#: view:project.compute.tasks:0
-msgid "_Cancel"
-msgstr "Abbrechen"
-
-#. module: project_long_term
-#: code:addons/project_long_term/project_long_term.py:141
-#, python-format
-msgid " (copy)"
-msgstr " (Kopie)"
-
-#. module: project_long_term
 #: view:project.user.allocation:0
 msgid "Project User Allocation"
 msgstr "Projekt Benutzer Zuteilung"
-
-#. module: project_long_term
-#: view:project.phase:0
-#: field:project.phase,state:0
-msgid "State"
-msgstr "Status"
 
 #. module: project_long_term
 #: view:project.compute.phases:0
 #: view:project.compute.tasks:0
 msgid "C_ompute"
 msgstr "Berechne"
+
+#. module: project_long_term
+#: view:project.phase:0
+msgid "Pending Phases"
+msgstr "unerledigte Phasen"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -222,14 +207,30 @@ msgid "Computed based on related tasks"
 msgstr "Berechnet aufgrund zugeordneter Aufgaben"
 
 #. module: project_long_term
-#: field:project.phase,product_uom:0
-msgid "Duration UoM"
-msgstr "Dauer ME"
+#: code:addons/project_long_term/project_long_term.py:141
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: project_long_term
 #: field:project.phase,constraint_date_start:0
 msgid "Minimum Start Date"
 msgstr "Frühestes Startdatum"
+
+#. module: project_long_term
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,state:0
+msgid ""
+"If the phase is created the status 'Draft'.\n"
+" If the phase is started, the status becomes 'In Progress'.\n"
+" If review is needed the phase is in 'Pending' status.                       "
+"           \n"
+" If the phase is over, the status is set to 'Done'."
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.ui.menu,name:project_long_term.menu_pm_users_project1
@@ -248,7 +249,7 @@ msgid "Starting Date"
 msgstr "Start Datum"
 
 #. module: project_long_term
-#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+#: view:project.phase:0
 msgid "Related Tasks"
 msgstr "Verknüpfte Aufgaben"
 
@@ -256,12 +257,6 @@ msgstr "Verknüpfte Aufgaben"
 #: view:project.phase:0
 msgid "New Phases"
 msgstr "Neue Phasen"
-
-#. module: project_long_term
-#: code:addons/project_long_term/wizard/project_compute_phases.py:48
-#, python-format
-msgid "Please specify a project to schedule."
-msgstr "Bitte wählen Si eine Projekt für die  Planung"
 
 #. module: project_long_term
 #: help:project.phase,constraint_date_start:0
@@ -272,6 +267,17 @@ msgstr "erzwinge Phasenbeginn nach diesem Datum"
 #: field:project.phase,task_ids:0
 msgid "Project Tasks"
 msgstr "Projekt Aufgaben"
+
+#. module: project_long_term
+#: model:ir.actions.act_window,name:project_long_term.project_phase_task_list
+msgid "Tasks"
+msgstr ""
+
+#. module: project_long_term
+#: help:project.phase,user_ids:0
+msgid ""
+"The resources on the project can be computed automatically by the scheduler."
+msgstr ""
 
 #. module: project_long_term
 #: help:project.phase,date_start:0
@@ -304,17 +310,15 @@ msgid "Start Date"
 msgstr "Start Datum"
 
 #. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
+msgid "or"
+msgstr ""
+
+#. module: project_long_term
 #: help:project.phase,constraint_date_end:0
 msgid "force the phase to finish before this date"
 msgstr "erzwinge Ende der Periode vor"
-
-#. module: project_long_term
-#: help:project.phase,user_ids:0
-msgid ""
-"The ressources on the project can be computed automatically by the scheduler"
-msgstr ""
-"Die Ressourcen  des Projektes können automatisch durch den Planungsprozess "
-"berechnet werden"
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -322,9 +326,9 @@ msgid "Draft"
 msgstr "Entwurf"
 
 #. module: project_long_term
-#: view:project.phase:0
-msgid "Pending Phases"
-msgstr "unerledigte Phasen"
+#: field:project.phase,product_uom:0
+msgid "Duration Unit of Measure"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -333,15 +337,32 @@ msgid "Pending"
 msgstr "Unerledigt"
 
 #. module: project_long_term
+#: view:project.phase:0
+#: field:project.phase,state:0
+msgid "Status"
+msgstr ""
+
+#. module: project_long_term
 #: view:project.user.allocation:0
 #: field:project.user.allocation,user_id:0
 msgid "User"
 msgstr "Benutzer"
 
 #. module: project_long_term
+#: help:project.phase,product_uom:0
+msgid ""
+"Unit of Measure (Unit of Measure) is the unit of measurement for Duration"
+msgstr ""
+
+#. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_tasks
 msgid "Project Compute Tasks"
 msgstr "Berechnung Aufgaben f. Projekt"
+
+#. module: project_long_term
+#: field:project.compute.phases,target_project:0
+msgid "Action"
+msgstr ""
 
 #. module: project_long_term
 #: view:project.phase:0
@@ -370,6 +391,8 @@ msgid "Done"
 msgstr "Erledigt"
 
 #. module: project_long_term
+#: view:project.compute.phases:0
+#: view:project.compute.tasks:0
 #: view:project.phase:0
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -418,24 +441,15 @@ msgid "Users"
 msgstr "Benutzer"
 
 #. module: project_long_term
+#: help:account.analytic.account,use_phases:0
+msgid "Check this field if you plan to use phase-based scheduling"
+msgstr ""
+
+#. module: project_long_term
+#: view:project.project:0
 #: view:project.user.allocation:0
 msgid "Phase"
 msgstr "Phase"
-
-#. module: project_long_term
-#: help:project.phase,state:0
-msgid ""
-"If the phase is created the state 'Draft'.\n"
-" If the phase is started, the state becomes 'In Progress'.\n"
-" If review is needed the phase is in 'Pending' state.                        "
-"          \n"
-" If the phase is over, the states is set to 'Done'."
-msgstr ""
-"Durch Erstellung einer Phase ist diese zunächst im Status 'Entwurf'.\n"
-" Durch Start der Phase wechselt der Status zu 'In Bearbeitung'.\n"
-" Falls eine Überarbeitung oder Prüfung erforderlich ist, kann in den Status "
-"'Im Wartezustand' gewechselt werden.\n"
-"Wenn die Phase beendet ist, wird der Status auf 'Erledigt' geändert."
 
 #. module: project_long_term
 #: field:project.phase,date_end:0
@@ -454,6 +468,7 @@ msgid "Tasks Details"
 msgstr "Aufgabendetails"
 
 #. module: project_long_term
+#: view:project.phase:0
 #: field:project.phase,duration:0
 msgid "Duration"
 msgstr "Dauer"
@@ -482,6 +497,11 @@ msgstr ""
 "Plane Phasen aller oder ausgewählter Projekte. Danach öffnet sich eine Gantt "
 "Ansicht\n"
 "               "
+
+#. module: project_long_term
+#: field:project.project,phase_count:0
+msgid "Open Phases"
+msgstr ""
 
 #. module: project_long_term
 #: model:ir.model,name:project_long_term.model_project_compute_phases
@@ -516,7 +536,6 @@ msgid "By default in days"
 msgstr "Gem. Standard in Tagen"
 
 #. module: project_long_term
-#: view:project.phase:0
 #: field:project.phase,user_force_ids:0
 msgid "Force Assigned Users"
 msgstr "Erzwinge zugeteilte Benutzer"
@@ -529,8 +548,14 @@ msgstr "Terminierung"
 #~ msgid "Compute Scheduling of Phases"
 #~ msgstr "Berechne Projektphasen"
 
+#~ msgid "Schedule"
+#~ msgstr "Zeitplanung"
+
 #~ msgid "Resource Allocations"
 #~ msgstr "Zuweisung Ressourcen"
+
+#~ msgid "UoM (Unit of Measure) is the unit of measurement for Duration"
+#~ msgstr "ME (Mengeneinheit) entspr. Einheit für die Dauer"
 
 #~ msgid "Planning"
 #~ msgstr "Planung"
@@ -540,6 +565,12 @@ msgstr "Terminierung"
 
 #~ msgid "Dates"
 #~ msgstr "Daten"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#~ msgid "Duration UoM"
+#~ msgstr "Dauer ME"
 
 #~ msgid "Compute Task Scheduling"
 #~ msgstr "Berechne Terminierung für Aufgaben"
@@ -574,6 +605,9 @@ msgstr "Terminierung"
 #~ msgid "Long Term Project Management"
 #~ msgstr "Management von Langzeit Projekten"
 
+#~ msgid "_Cancel"
+#~ msgstr "Abbrechen"
+
 #~ msgid "_Ok"
 #~ msgstr "OK"
 
@@ -582,8 +616,25 @@ msgstr "Terminierung"
 #~ msgstr ""
 #~ "Bitte spezifizieren Sie ein Projekt für die automatische Terminierung"
 
+#~ msgid ""
+#~ "If the phase is created the state 'Draft'.\n"
+#~ " If the phase is started, the state becomes 'In Progress'.\n"
+#~ " If review is needed the phase is in 'Pending' state.                        "
+#~ "          \n"
+#~ " If the phase is over, the states is set to 'Done'."
+#~ msgstr ""
+#~ "Durch Erstellung einer Phase ist diese zunächst im Status 'Entwurf'.\n"
+#~ " Durch Start der Phase wechselt der Status zu 'In Bearbeitung'.\n"
+#~ " Falls eine Überarbeitung oder Prüfung erforderlich ist, kann in den Status "
+#~ "'Im Wartezustand' gewechselt werden.\n"
+#~ "Wenn die Phase beendet ist, wird der Status auf 'Erledigt' geändert."
+
 #~ msgid "Resources Allocation"
 #~ msgstr "Ressourcenaufteilung"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (Kopie)"
 
 #~ msgid "Availability"
 #~ msgstr "Verfügbarkeit"
@@ -648,3 +699,12 @@ msgstr "Terminierung"
 #~ "langfristigen Planung und Aufteilung verfügbarer Personalressourcen. "
 #~ "Konvertieren Sie die Phasen in konkrete Aufgabenlisten, wenn Sie die "
 #~ "Bearbeitung der Phasen eröffnen."
+
+#~ msgid ""
+#~ "The ressources on the project can be computed automatically by the scheduler"
+#~ msgstr ""
+#~ "Die Ressourcen  des Projektes können automatisch durch den Planungsprozess "
+#~ "berechnet werden"
+
+#~ msgid "Displaying Settings"
+#~ msgstr "Anzeigekonfiguration"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-06-10 02:57+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-24 06:33+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -58,9 +58,10 @@ msgid "Pending Tasks"
 msgstr "保留中タスク"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "次へ"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "この子にタイムボックスがありません。"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -75,6 +76,11 @@ msgstr ""
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
 msgstr "本日"
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
@@ -92,8 +98,9 @@ msgid "Pending"
 msgstr "保留中"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "タイムボックス"
 
@@ -101,12 +108,6 @@ msgstr "タイムボックス"
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
 msgstr "タイムボックスに設定"
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "エラー"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
@@ -124,11 +125,6 @@ msgstr "エラー。再帰的なタスクを作成することはできません
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
 msgstr "今週"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "キャンセル"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -199,6 +195,12 @@ msgid "project.gtd.timebox"
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -212,21 +214,21 @@ msgstr "進行中とドラフトのタスク"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "コンテキスト"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "この子にタイムボックスがありません。"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "タスクの選択"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
-msgstr "OK"
+#: view:project.task:0
+msgid "Display"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -234,7 +236,8 @@ msgid "Office"
 msgstr "会社"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "順序"
 
@@ -259,11 +262,6 @@ msgid "Timebox Definition"
 msgstr "タイムボックスの定義"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "タスクの選択"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "受信箱"
@@ -277,6 +275,11 @@ msgstr "タイムボックスを取得"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "ユーザがタスクを実行すべきコンテキストの場所"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -299,6 +302,22 @@ msgid "For reopening the tasks"
 msgstr "タスクの再開"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "前へ"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
+
+#~ msgid "Next"
+#~ msgstr "次へ"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "エラー"
+
+#~ msgid "_Cancel"
+#~ msgstr "キャンセル"
+
+#~ msgid "_Ok"
+#~ msgstr "OK"
+
+#~ msgid "Previous"
+#~ msgstr "前へ"
