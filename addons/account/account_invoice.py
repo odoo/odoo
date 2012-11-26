@@ -958,9 +958,14 @@ class account_invoice(osv.osv):
             })
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
-            part = inv.partner_id.id
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context=ctx)),iml)
+            #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+            #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+            part = inv.partner_id
+            if part.parent_id and not part.is_company:
+                part = part.parent_id
+
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 

@@ -55,13 +55,13 @@ res_partner()
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-    def onchange_partner_id(self, cr, uid, ids, part):
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
         warning = {}
         title = False
         message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, part)
+        partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         if partner.sale_warn != 'no-message':
             if partner.sale_warn == 'block':
                 raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.sale_warn_msg)
@@ -72,7 +72,7 @@ class sale_order(osv.osv):
                     'message': message,
             }
 
-        result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)
+        result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
