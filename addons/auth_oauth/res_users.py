@@ -47,21 +47,21 @@ class res_users(osv.Model):
 
     def _auth_oauth_signin(self, cr, uid, provider, validation, params, context=None):
         """ retrieve and sign in the user corresponding to provider and validated access token
-            :param provider: oauth provider id
+            :param provider: oauth provider id (int)
             :param validation: result of validation of access token (dict)
             :param params: oauth parameters (dict)
-            :return: login or None
+            :return: user login (str)
 
             This method can be overridden to add alternative signin methods.
         """
         oauth_uid = validation['user_id']
         user_ids = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
-        if user_ids:
-            assert len(user_ids) == 1
-            user = self.browse(cr, uid, user_ids[0], context=context)
-            user.write({'oauth_access_token': access_token})
-            return user.login
-        return None
+        if not user_ids:
+            raise openerp.exceptions.AccessDenied()
+        assert len(user_ids) == 1
+        user = self.browse(cr, uid, user_ids[0], context=context)
+        user.write({'oauth_access_token': params['access_token']})
+        return user.login
 
     def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
