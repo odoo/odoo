@@ -6,20 +6,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:19+0000\n"
 "Last-Translator: Adriano Prado <adrianojprado@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
 msgstr "Lista de Perguntas"
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
+msgstr "Respostas Disponíveis"
 
 #. module: crm_profiling
 #: model:ir.actions.act_window,help:crm_profiling.open_questionnaires
@@ -115,11 +121,6 @@ msgid "Use a questionnaire"
 msgstr "Utilize um questionário"
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr "_Cancelar"
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr "Perguntas / Respostas"
@@ -143,14 +144,14 @@ msgstr ""
 "segmentação. Se não for marcada, os critérios abaixo serão ignoradas"
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
-msgstr "Erro! Você não pode criar perfis recursivos."
-
-#. module: crm_profiling
 #: field:crm.segmentation,profiling_active:0
 msgid "Use The Profiling Rules"
 msgstr "Use as Regras de Criação de Perfil"
+
+#. module: crm_profiling
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
+msgstr ""
 
 #. module: crm_profiling
 #: constraint:res.partner:0
@@ -158,15 +159,14 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Erro! Você não pode criar membros associados recursivamente."
 
 #. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
-msgstr "Respostas Disponíveis"
-
-#. module: crm_profiling
 #: field:crm.segmentation,answer_yes:0
 msgid "Included Answers"
 msgstr "Respostas Incluídas"
+
+#. module: crm_profiling
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: crm_profiling
 #: view:crm_profiling.question:0
@@ -207,6 +207,11 @@ msgstr "Questionário"
 msgid "Save Data"
 msgstr "Salvar Dados"
 
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
+msgstr ""
+
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
@@ -218,6 +223,9 @@ msgstr "Salvar Dados"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "XML inválido para Arquitetura da View"
+
+#~ msgid "Error ! You can not create recursive profiles."
+#~ msgstr "Erro! Você não pode criar perfis recursivos."
 
 #~ msgid ""
 #~ "Check this box if you want to use this tab as part of the segmentation rule. "
@@ -276,3 +284,6 @@ msgstr "Salvar Dados"
 #~ "    * Nota: este módulo não é compatível com o módulo de segmentação, já que "
 #~ "é o mesmo que foi renomeado\n"
 #~ "    "
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"

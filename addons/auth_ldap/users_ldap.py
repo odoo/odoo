@@ -212,10 +212,10 @@ class CompanyLDAP(osv.osv):
                   "used to query the directory.")),
         'ldap_filter': fields.char('LDAP filter', size=256, required=True),
         'ldap_base': fields.char('LDAP base', size=64, required=True),
-        'user': fields.many2one('res.users', 'Model User',
-            help="Model used for user creation"),
+        'user': fields.many2one('res.users', 'Template User',
+            help="User to copy when creating new users"),
         'create_user': fields.boolean('Create user',
-            help="Create the user if not in database"),
+            help="Automatically create local user accounts for new users authenticating via LDAP"),
         'ldap_tls': fields.boolean('Use TLS',
             help="Request secure TLS/SSL encryption when connecting to the LDAP server. "
                  "This option requires a server with STARTTLS enabled, "

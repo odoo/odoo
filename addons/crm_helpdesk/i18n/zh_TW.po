@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-08-30 10:12+0000\n"
 "Last-Translator: Bonnie Duan <bonnie.duan@cenoq.com>\n"
 "Language-Team: Cenoq Corp.\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:32+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:28+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_close:0
@@ -28,15 +28,21 @@ msgid "# of Cases"
 msgstr "# 業務量"
 
 #. module: crm_helpdesk
+#: code:addons/crm_helpdesk/crm_helpdesk.py:152
+#, python-format
+msgid "Case has been <b>created</b>."
+msgstr ""
+
+#. module: crm_helpdesk
 #: view:crm.helpdesk:0
 #: view:crm.helpdesk.report:0
 msgid "Group By..."
 msgstr "分類方式..."
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Today"
-msgstr "今日"
+#: help:crm.helpdesk,email_from:0
+msgid "Destination email for email gateway"
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -44,9 +50,9 @@ msgid "March"
 msgstr "3月"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in current year"
-msgstr "本年發生的服務需求"
+#: field:crm.helpdesk,message_unread:0
+msgid "Unread Messages"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,company_id:0
@@ -61,6 +67,11 @@ msgid "Watchers Emails"
 msgstr "視察者的電子郵件"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: crm_helpdesk
 #: selection:crm.helpdesk,priority:0
 #: selection:crm.helpdesk.report,priority:0
 msgid "Highest"
@@ -71,11 +82,6 @@ msgstr "最高"
 #: field:crm.helpdesk.report,day:0
 msgid "Day"
 msgstr "日"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Add Internal Note"
-msgstr "加入內部備註"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -104,6 +110,11 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: crm_helpdesk
+#: help:crm.helpdesk,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: crm_helpdesk
 #: model:ir.actions.act_window,name:crm_helpdesk.action_report_crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_report_crm_helpdesks_tree
 msgid "Helpdesk Analysis"
@@ -124,6 +135,13 @@ msgstr "關聯"
 #: field:crm.helpdesk,date_action_next:0
 msgid "Next Action"
 msgstr "下一動作"
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -154,19 +172,17 @@ msgid "Section"
 msgstr "劃分"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk:0
+#: field:crm.helpdesk,priority:0
 #: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in last month"
-msgstr "上個月發生的客服需求"
+#: field:crm.helpdesk.report,priority:0
+msgid "Priority"
+msgstr "優先級"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Send New Email"
-msgstr "發送新的電子郵件"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Helpdesk requests during last 7 days"
-msgstr "之前7天內的客服需求"
+#: field:crm.helpdesk,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -204,7 +220,6 @@ msgid "# Mails"
 msgstr "郵件"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
 #: view:crm.helpdesk.report:0
 msgid "My Sales Team(s)"
 msgstr "我的銷售團隊"
@@ -219,13 +234,6 @@ msgstr "建立日期"
 #: view:crm.helpdesk:0
 msgid "Reset to Draft"
 msgstr "重設為草稿"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: selection:crm.helpdesk,state:0
-#: selection:crm.helpdesk.report,state:0
-msgid "Pending"
-msgstr "待處理"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -256,11 +264,6 @@ msgstr "新的客服需求"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "History Information"
-msgstr "日誌資訊"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
 msgid "Dates"
 msgstr "日期"
 
@@ -270,10 +273,17 @@ msgid "Month of helpdesk requests"
 msgstr "客服需求月份"
 
 #. module: crm_helpdesk
-#: code:addons/crm_helpdesk/crm_helpdesk.py:101
+#: code:addons/crm_helpdesk/crm_helpdesk.py:109
 #, python-format
 msgid "No Subject"
 msgstr "無主題"
+
+#. module: crm_helpdesk
+#: view:crm.helpdesk:0
+msgid ""
+"Helpdesk requests that are assigned to me or to one of the sale teams I "
+"manage"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -291,19 +301,14 @@ msgid "Year of helpdesk requests"
 msgstr "服務需求的年份"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "References"
-msgstr "關聯"
-
-#. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "September"
 msgstr "9月"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication"
-msgstr "溝通"
+#: selection:crm.helpdesk.report,month:0
+msgid "December"
+msgstr "12月"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
@@ -312,24 +317,14 @@ msgid "Month"
 msgstr "月份"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Escalate"
-msgstr "提升"
-
-#. module: crm_helpdesk
 #: field:crm.helpdesk,write_date:0
 msgid "Update Date"
 msgstr "更新日期"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Helpdesk requests occurred in current month"
-msgstr "當月發生的客服需求"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Salesman"
-msgstr "業務員"
+#: view:crm.helpdesk:0
+msgid "Query"
+msgstr "提問"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,ref2:0
@@ -397,18 +392,18 @@ msgstr "已結束"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Reply"
-msgstr "回覆"
+#: selection:crm.helpdesk,state:0
+#: selection:crm.helpdesk.report,state:0
+msgid "Pending"
+msgstr "待處理"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "7 Days"
-msgstr "7天"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Communication & History"
-msgstr "溝通&日誌"
+#: field:crm.helpdesk,state:0
+#: view:crm.helpdesk.report:0
+#: field:crm.helpdesk.report,state:0
+msgid "Status"
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -423,8 +418,8 @@ msgstr "普通"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Global CC"
-msgstr "完整副本"
+msgid "Escalate"
+msgstr "提升"
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -432,9 +427,37 @@ msgid "June"
 msgstr "6月"
 
 #. module: crm_helpdesk
+#: field:crm.helpdesk,id:0
+msgid "ID"
+msgstr "ID"
+
+#. module: crm_helpdesk
+#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new request. \n"
+"              </p><p>\n"
+"                Helpdesk and Support allow you to track your interventions.\n"
+"              </p><p>\n"
+"                Use the OpenERP Issues system to manage your support\n"
+"                activities. Issues can be connected to the email gateway: "
+"new\n"
+"                emails may create issues, each of them automatically gets "
+"the\n"
+"                history of the conversation with the customer.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk,planned_revenue:0
 msgid "Planned Revenue"
 msgstr "計劃收入"
+
+#. module: crm_helpdesk
+#: field:crm.helpdesk,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk.report,user_id:0
@@ -462,9 +485,17 @@ msgid "Helpdesk Requests"
 msgstr "客服需求"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-msgid "Search"
-msgstr "搜索"
+#: field:crm.helpdesk,message_comment_ids:0
+#: help:crm.helpdesk,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: crm_helpdesk
+#: help:crm.helpdesk,section_id:0
+msgid ""
+"Responsible sales team. Define Responsible user and Email account for mail "
+"gateway."
+msgstr ""
 
 #. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
@@ -477,9 +508,9 @@ msgid "January"
 msgstr "1月"
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,email_from:0
-msgid "These people will receive email."
-msgstr "這些人將收到電子郵件。"
+#: field:crm.helpdesk,message_summary:0
+msgid "Summary"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -489,34 +520,13 @@ msgstr "日期"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "History"
-msgstr "日誌"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,priority:0
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,priority:0
-msgid "Priority"
-msgstr "優先級"
-
-#. module: crm_helpdesk
-#: field:crm.helpdesk,partner_address_id:0
-msgid "Partner Contact"
-msgstr "業務夥伴聯絡人"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
 msgid "Misc"
 msgstr "雜項"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-#: field:crm.helpdesk,state:0
 #: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,state:0
-msgid "State"
-msgstr "狀態"
+msgid "My Company"
+msgstr ""
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -525,25 +535,13 @@ msgstr "一般"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Send Reminder"
-msgstr "傳送提醒"
-
-#. module: crm_helpdesk
-#: help:crm.helpdesk,section_id:0
-msgid ""
-"Sales team to which Case belongs to.                                 Define "
-"Responsible user and Email account for mail gateway."
-msgstr "屬於此種情況下，銷售團隊。定義負責用戶和電子郵件帳戶的郵件網關。"
+msgid "References"
+msgstr "關聯"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
-msgid "Done"
-msgstr "完成"
-
-#. module: crm_helpdesk
-#: selection:crm.helpdesk.report,month:0
-msgid "December"
-msgstr "12月"
+msgid "Communication"
+msgstr "溝通"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -591,6 +589,11 @@ msgid "Responsible"
 msgstr "負責人"
 
 #. module: crm_helpdesk
+#: view:crm.helpdesk.report:0
+msgid "Search"
+msgstr "搜索"
+
+#. module: crm_helpdesk
 #: field:crm.helpdesk.report,delay_expected:0
 msgid "Overpassed Deadline"
 msgstr "超過截止日期"
@@ -624,22 +627,6 @@ msgid ""
 msgstr "為所有的支持請求排序指定具體標準如：處理時間，請求回覆的次數，發送的郵件，成本."
 
 #. module: crm_helpdesk
-#: help:crm.helpdesk,state:0
-msgid ""
-"The state is set to 'Draft', when a case is created.                         "
-"         \n"
-"If the case is in progress the state is set to 'Open'.                       "
-"           \n"
-"When the case is over, the state is set to 'Done'.                           "
-"       \n"
-"If the case needs to be reviewed then the state is set to 'Pending'."
-msgstr ""
-"當一個業務建立時狀態設為'草稿'\n"
-"如果業務正在處理狀態設為'開啟'\n"
-"當業務結束狀態設為'完成'\n"
-"如果業務需要審查狀態設為'待處理'"
-
-#. module: crm_helpdesk
 #: selection:crm.helpdesk.report,month:0
 msgid "February"
 msgstr "2月"
@@ -651,8 +638,9 @@ msgstr "名稱"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk.report:0
-msgid "Month-1"
-msgstr "上月"
+#: field:crm.helpdesk.report,name:0
+msgid "Year"
+msgstr "年"
 
 #. module: crm_helpdesk
 #: model:ir.ui.menu,name:crm_helpdesk.menu_help_support_main
@@ -670,14 +658,21 @@ msgid "My Case(s)"
 msgstr "我的業務"
 
 #. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Query"
-msgstr "提問"
+#: help:crm.helpdesk,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                        "
+"          \n"
+"If the case is in progress the status is set to 'Open'.                      "
+"            \n"
+"When the case is over, the status is set to 'Done'.                          "
+"        \n"
+"If the case needs to be reviewed then the status is set to 'Pending'."
+msgstr ""
 
 #. module: crm_helpdesk
-#: field:crm.helpdesk,id:0
-msgid "ID"
-msgstr "ID"
+#: help:crm.helpdesk,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
 
 #. module: crm_helpdesk
 #: model:ir.actions.act_window,help:crm_helpdesk.crm_helpdesk_categ_action
@@ -685,11 +680,6 @@ msgid ""
 "Create and manage helpdesk categories to better manage and classify your "
 "support requests."
 msgstr "建立和管理客服類型去更好管理和分類你的需求協助"
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk:0
-msgid "Todays's Helpdesk Requests"
-msgstr "今天的客服需求"
 
 #. module: crm_helpdesk
 #: view:crm.helpdesk:0
@@ -720,25 +710,104 @@ msgid "Last Action"
 msgstr "最近動作"
 
 #. module: crm_helpdesk
-#: model:ir.actions.act_window,help:crm_helpdesk.crm_case_helpdesk_act111
-msgid ""
-"Helpdesk and Support allow you to track your interventions. Select a "
-"customer, add notes and categorize interventions with partners if necessary. "
-"You can also assign a priority level. Use the OpenERP Issues system to "
-"manage your support activities. Issues can be connected to the email "
-"gateway: new emails may create issues, each of them automatically gets the "
-"history of the conversation with the customer."
+#: view:crm.helpdesk:0
+msgid "Assigned to Me or My Sales Team(s)"
 msgstr ""
-"客服和協助使你可以去追蹤.如果需要選擇一個客戶增加備註和類型這業務夥伴.你可以分配一優先級用系統問題模塊來管理的的支持活動.問題能鏈接郵件閘道.新的郵件可"
-"能建立新的問題,它們能自動寫入於客戶溝通的日誌."
-
-#. module: crm_helpdesk
-#: view:crm.helpdesk.report:0
-#: field:crm.helpdesk.report,name:0
-msgid "Year"
-msgstr "年"
 
 #. module: crm_helpdesk
 #: field:crm.helpdesk,duration:0
 msgid "Duration"
 msgstr "持續時間"
+
+#~ msgid "Today"
+#~ msgstr "今日"
+
+#~ msgid "Helpdesk requests occurred in current year"
+#~ msgstr "本年發生的服務需求"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "加入內部備註"
+
+#~ msgid "Helpdesk requests occurred in last month"
+#~ msgstr "上個月發生的客服需求"
+
+#~ msgid "Send New Email"
+#~ msgstr "發送新的電子郵件"
+
+#~ msgid "Helpdesk requests during last 7 days"
+#~ msgstr "之前7天內的客服需求"
+
+#~ msgid "History Information"
+#~ msgstr "日誌資訊"
+
+#~ msgid "Helpdesk requests occurred in current month"
+#~ msgstr "當月發生的客服需求"
+
+#~ msgid "Salesman"
+#~ msgstr "業務員"
+
+#~ msgid "Reply"
+#~ msgstr "回覆"
+
+#~ msgid "7 Days"
+#~ msgstr "7天"
+
+#~ msgid "Communication & History"
+#~ msgstr "溝通&日誌"
+
+#~ msgid "Global CC"
+#~ msgstr "完整副本"
+
+#~ msgid "These people will receive email."
+#~ msgstr "這些人將收到電子郵件。"
+
+#~ msgid "History"
+#~ msgstr "日誌"
+
+#~ msgid "Partner Contact"
+#~ msgstr "業務夥伴聯絡人"
+
+#~ msgid "State"
+#~ msgstr "狀態"
+
+#~ msgid "Send Reminder"
+#~ msgstr "傳送提醒"
+
+#~ msgid "Done"
+#~ msgstr "完成"
+
+#~ msgid "Month-1"
+#~ msgstr "上月"
+
+#~ msgid "Todays's Helpdesk Requests"
+#~ msgstr "今天的客服需求"
+
+#~ msgid ""
+#~ "Helpdesk and Support allow you to track your interventions. Select a "
+#~ "customer, add notes and categorize interventions with partners if necessary. "
+#~ "You can also assign a priority level. Use the OpenERP Issues system to "
+#~ "manage your support activities. Issues can be connected to the email "
+#~ "gateway: new emails may create issues, each of them automatically gets the "
+#~ "history of the conversation with the customer."
+#~ msgstr ""
+#~ "客服和協助使你可以去追蹤.如果需要選擇一個客戶增加備註和類型這業務夥伴.你可以分配一優先級用系統問題模塊來管理的的支持活動.問題能鏈接郵件閘道.新的郵件可"
+#~ "能建立新的問題,它們能自動寫入於客戶溝通的日誌."
+
+#~ msgid ""
+#~ "Sales team to which Case belongs to.                                 Define "
+#~ "Responsible user and Email account for mail gateway."
+#~ msgstr "屬於此種情況下，銷售團隊。定義負責用戶和電子郵件帳戶的郵件網關。"
+
+#~ msgid ""
+#~ "The state is set to 'Draft', when a case is created.                         "
+#~ "         \n"
+#~ "If the case is in progress the state is set to 'Open'.                       "
+#~ "           \n"
+#~ "When the case is over, the state is set to 'Done'.                           "
+#~ "       \n"
+#~ "If the case needs to be reviewed then the state is set to 'Pending'."
+#~ msgstr ""
+#~ "當一個業務建立時狀態設為'草稿'\n"
+#~ "如果業務正在處理狀態設為'開啟'\n"
+#~ "當業務結束狀態設為'完成'\n"
+#~ "如果業務需要審查狀態設為'待處理'"

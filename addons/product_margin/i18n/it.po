@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-01-14 10:12+0000\n"
 "Last-Translator: Lorenzo Battistini - Agile BG - Domsense "
 "<lorenzo.battistini@agilebg.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -34,17 +34,10 @@ msgid "From"
 msgstr "Da"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
+#: help:product.product,total_cost:0
 msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
-"Somma delle moltiplicazioni del prezzo di vendita di Listino per quantità "
-"delle Fatture a Clienti"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Standard price"
-msgstr "Ricambio - prezzo standard"
 
 #. module: product_margin
 #: field:product.margin,to_date:0
@@ -55,6 +48,11 @@ msgstr "A"
 #: field:product.product,date_to:0
 msgid "To Date"
 msgstr "Alla data"
+
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,date_from:0
@@ -77,6 +75,11 @@ msgstr "Prezzo unitario medio"
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
 msgstr "Prodotto"
+
+#. module: product_margin
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: product_margin
 #: view:product.product:0
@@ -110,13 +113,6 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Somma della quantità nelle fatture fornitori"
 
 #. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-msgstr ""
-"Somma della moltiplicazione del prezzo di costo e la quantità delle fatture "
-"di acquisto."
-
-#. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
 msgstr "Vendita attesa - Costo normale"
@@ -128,10 +124,22 @@ msgid "# Invoiced"
 msgstr "# Fatturato"
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
+#. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Costo totale"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -144,30 +152,20 @@ msgid "#Purchased"
 msgstr "#Acquistato"
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr ""
-"Somma della moltiplicazione del prezzo netto e la quantità nelle Fatture di "
-"Vendita"
-
-#. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Margine atteso * 100 / vendita attesa"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
-msgid "Avg. Price in Customer Invoices)"
-msgstr "Prezzo medio nelle fatture clienti)"
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
+#: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
 msgstr ""
-"Somma della moltiplicazione di prezzi netti di vendita e quantità delle "
-"Fatture di acquisto. "
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -190,6 +188,12 @@ msgstr "Margine totale"
 #: field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Intervallo vendite"
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -247,11 +251,6 @@ msgid "General Information"
 msgstr "Informazioni generali"
 
 #. module: product_margin
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Errore: Codice EAN non valido"
-
-#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Margine di acquisto"
@@ -282,6 +281,11 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Somma della quantità nelle fatture clienti"
 
 #. module: product_margin
+#: view:product.margin:0
+msgid "or"
+msgstr ""
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr "Margine prodotto"
@@ -298,6 +302,9 @@ msgstr "Margine prodotto"
 #~ msgid "Excepted Sale - Normal Cost"
 #~ msgstr "Vendita attesa - costo normale"
 
+#~ msgid "Avg. Price in Customer Invoices)"
+#~ msgstr "Prezzo medio nelle fatture clienti)"
+
 #~ msgid "Select "
 #~ msgstr "Seleziona "
 
@@ -307,8 +314,37 @@ msgstr "Margine prodotto"
 #~ msgid "View Stock of Products"
 #~ msgstr "Visualizza giacenza prodotti"
 
+#~ msgid ""
+#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+#~ msgstr ""
+#~ "Somma delle moltiplicazioni del prezzo di vendita di Listino per quantità "
+#~ "delle Fatture a Clienti"
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
+#~ msgstr ""
+#~ "Somma della moltiplicazione di prezzi netti di vendita e quantità delle "
+#~ "Fatture di acquisto. "
+
+#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
+#~ msgstr ""
+#~ "Somma della moltiplicazione del prezzo di costo e la quantità delle fatture "
+#~ "di acquisto."
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
+#~ msgstr ""
+#~ "Somma della moltiplicazione del prezzo netto e la quantità nelle Fatture di "
+#~ "Vendita"
+
 #~ msgid "Turnorder - Total Cost"
 #~ msgstr "Rotazione - Costo Totale"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Errore: Codice EAN non valido"
+
+#~ msgid "Turnorder - Standard price"
+#~ msgstr "Ricambio - prezzo standard"
 
 #~ msgid ""
 #~ "\n"

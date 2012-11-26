@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-11-25 19:04+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:28+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:24+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -26,26 +26,37 @@ msgstr ""
 "устгахгүй нуух боломжийг олгоно."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Шаардлагууд"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.source:0
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
-msgid "Sources of Applicants"
-msgstr "Горилогчдын Сурвалж"
+#: view:hr.applicant:0
+msgid "Application Summary"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,delay_open:0
-msgid "Avg. Delay to Open"
-msgstr "Нээх дундаж хугацаа"
+#: view:hr.applicant:0
+msgid "Start Interview"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,nbr:0
-msgid "# of Cases"
-msgstr "Тохиолдлын дугаар"
+#: view:hr.applicant:0
+msgid "Mobile:"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,fold:0
+msgid ""
+"This stage is not visible, for example in status bar or kanban view, when "
+"there are no records in that stage to display."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
+msgid "Graduate"
+msgstr "Бакалавр"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -53,18 +64,15 @@ msgid "Group By..."
 msgstr "Бүлэглэвэл"
 
 #. module: hr_recruitment
-#: field:hr.applicant,user_email:0
-msgid "User Email"
-msgstr "Хэрэглэгчийн Имэйл"
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
 msgstr "Дараах үйлдэл болон огноогоор шүүж харах"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Хэлтэс"
 
@@ -89,18 +97,27 @@ msgid "Pending Jobs"
 msgstr "Хүлээгдэж байгаа ажлууд"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Компани"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-msgid "No"
-msgstr "Үгүй"
+#: view:hr.recruitment.source:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+msgid "Sources of Applicants"
+msgstr "Горилогчдын Сурвалж"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:424
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Энэ горилогчид Өргөдөл гаргасан Ажлыг нь тодорхойлох ёстой."
@@ -116,45 +133,59 @@ msgid "Close job request"
 msgstr "Ажлын байрын хүсэлтийг хаах эсэх"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new job applicant.\n"
+"              </p><p>\n"
+"                OpenERP helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, "
+"etc.\n"
+"              </p><p>\n"
+"                If you setup the email gateway, applicants and their "
+"attached\n"
+"                CV are created automatically when an email is sent to\n"
+"                jobs@yourcompany.com. If you install the document "
+"management\n"
+"                modules, all resumes are indexed automatically, so that you "
+"can\n"
+"                easily search through their content.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+msgid "Applications"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,day_open:0
 msgid "Days to Open"
 msgstr "Нээлттэй байх өдрийн тоо"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,note:0
-msgid "Goals"
-msgstr "Зорилго"
+#: field:hr.applicant,emp_id:0
+msgid "employee"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,partner_address_id:0
-msgid "Partner Contact Name"
-msgstr "Харилцагчийн холбоо барих хаяг"
+#: field:hr.config.settings,fetchmail_applicants:0
+msgid "Create applicants from an incoming email account"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 view:hr.recruitment.partner.create:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
-msgid "Create Partner"
-msgstr "Харилцагч бүртгэх"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Өдөр"
 
 #. module: hr_recruitment
-#: field:hr.applicant,reference:0
-msgid "Refered By"
-msgstr "Зөвлөсөн нь"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Contract Data"
-msgstr "Гэрээний мэдээлэл"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Add Internal Note"
-msgstr "Дотоод тэмдэглэл нэмэх"
+#: view:hr.recruitment.partner.create:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
+msgid "Create Contact"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -172,11 +203,6 @@ msgid "Mobile"
 msgstr "Гар утас"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Notes"
-msgstr "Тэмдэглэлүүд"
-
-#. module: hr_recruitment
 #: field:hr.applicant,message_ids:0
 msgid "Messages"
 msgstr "Э-мэйл зурвас"
@@ -187,19 +213,34 @@ msgid "Next Actions"
 msgstr "Дараагийн үйлдэл"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
-msgid "Expected Salary"
-msgstr "Хүсэж байгаа цалин"
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr "Докторын зэрэг"
+
+#. module: hr_recruitment
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "Горилсон ажлын байр"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
-msgid "Graduate"
-msgstr "Бакалавр"
+#: help:hr.recruitment.stage,department_id:0
+msgid ""
+"Stages of the recruitment process may be different per department. If this "
+"stage is common to all departments, keep this field empty."
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
@@ -207,7 +248,12 @@ msgid "Color Index"
 msgstr "Өнгөний Индекс"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
+msgid "Meetings"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Горилогчийн төлөв"
@@ -237,7 +283,14 @@ msgid "Recruitment"
 msgstr "Хүний нөөцийн бүрдүүлэлт"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: help:hr.applicant,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:424
 #, python-format
 msgid "Warning!"
 msgstr "Анхааруулга!"
@@ -249,8 +302,8 @@ msgstr "Санал болгож байгаа цалин"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Change Color"
-msgstr "Өнгө Өөрчлөх"
+msgid "Edit..."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -258,34 +311,23 @@ msgid "Avg Proposed Salary"
 msgstr "Санал болгож буй дундаж цалин"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Боломжит хоног"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,department_id:0
-msgid ""
-"Stages of the recruitment process may be different per department. If this "
-"stage is common to all departments, keep tempy this field."
-msgstr ""
-"Ажилтан авах процессын үеүүд нь хэлтэс хэлтсээр ялгаатай байж болно. Хэрэв "
-"энэ үе нь бүх хэлтэст ерөнхий бол энэ талбарыг хоосон үлдээнэ."
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
+msgid "Proposed Salary"
+msgstr "Санал болгосон цалин"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Previous"
-msgstr "Өмнөх"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
-msgid "Source of Applicants"
-msgstr "Горилогчийн Сурвалж"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
+#: code:addons/hr_recruitment/hr_recruitment.py:482
 #, python-format
-msgid "Phone Call"
-msgstr "Утасны дуудлага"
+msgid "Applicant has been set <b>in progress</b>."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
@@ -298,15 +340,9 @@ msgid "Recruitments Statistics"
 msgstr "Хүний нөөцийн бүрдүүлэлтийн үзүүлэлтүүд"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:476
-#, python-format
-msgid "Changed Stage to: %s"
-msgstr "Өөрчлөгдөх шат: %s"
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Hire"
-msgstr "Хөлс"
+msgid "Print interview report"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -314,34 +350,28 @@ msgid "Hired employees"
 msgstr "Цалинт ажилтан"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Next"
-msgstr "Дараагийн"
-
-#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Description"
 msgstr "Ажлын байрны тодорхойлолт"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,source_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
 msgid "Source"
 msgstr "Эх үүсвэр"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Send New Email"
-msgstr "Э-мэйл шинээр илгээх"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
+#: code:addons/hr_recruitment/hr_recruitment.py:504
 #, python-format
-msgid "A partner is already defined on this job request."
-msgstr "Энэ ажлын байрын хүсэлтэд харилцагч хэдийн тодорхойлогджээ."
+msgid "Applicant has been set as <b>new</b>."
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Шинэ"
 
@@ -351,9 +381,18 @@ msgid "Email"
 msgstr "Э-мэйл"
 
 #. module: hr_recruitment
-#: field:hr.applicant,availability:0
-msgid "Availability (Days)"
-msgstr "Боломжтой (Өдөр)"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Define here your stages of the recruitment process, for "
+"example:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -366,29 +405,26 @@ msgid "Next Action"
 msgstr "Дараагийн үйлдэл"
 
 #. module: hr_recruitment
+#: help:hr.job,alias_id:0
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "Сайн"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
-#, python-format
-msgid "Error !"
-msgstr "Алдаа !"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
-msgid ""
-"Define here your stages of the recruitment process, for example: "
-"qualification call, first interview, second interview, refused, hired."
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "Mark read"
 msgstr ""
-"Define here your stages of the recruitment process, for example: "
-"qualification call, first interview, second interview, refused, hired."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Үүсгэсэн огноо"
@@ -400,12 +436,8 @@ msgid "Create Employee"
 msgstr "Ажилчин үүсгэх"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,deadline:0
-msgid "Planned Date"
-msgstr "Төлөвлөсөн огноо"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Үнэлгээ"
@@ -421,17 +453,18 @@ msgid "Print Interview"
 msgstr "Ярилцлагын хэвлэх"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Үе шат"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
-msgid "Pending"
-msgstr "Хүлээгдсэн"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "2 дахь ярилцлага"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
@@ -439,19 +472,15 @@ msgid "Recruitment / Applicants Stages"
 msgstr "Ажилтан авах / Өргөдөл Гаргагчийн Үеүүд"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
-msgid "Doctoral Degree"
-msgstr "Докторын зэрэг"
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
+msgid "Expected Salary"
+msgstr "Хүсэж байгаа цалин"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "July"
 msgstr "7 сар"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Subject"
-msgstr "Нэр чиглэл"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
@@ -460,36 +489,14 @@ msgstr "Бусад э-мэйл"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Горилогчид"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "History Information"
-msgstr "Түүх"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Dates"
-msgstr "Огноо"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
-msgid ""
-" Check if the following stages are matching your recruitment process. Don't "
-"forget to specify the department if your recruitment process is different "
-"according to the job position."
-msgstr ""
-" Ажилтан авах процесс танайхтай таарч байгаа эсэхийг хянана уу. Ажилтан авах "
-"процесс тань ажлын байруудаар ялгаатай байдаг бол хэлтсийг зааж өгөхөө "
-"мартаж болохгүйг анхаарна уу."
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "    Month-1    "
-msgstr "    Сар-1    "
+#: code:addons/hr_recruitment/hr_recruitment.py:342
+#, python-format
+msgid "No Subject"
+msgstr "Гарчиг үгүй"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp:0
@@ -507,7 +514,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Үе шатын жагсаалтыг харуулахдаа дараалал олгоно."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0
 msgid "Contact"
 msgstr "Харилцах хаяг"
 
@@ -517,12 +524,7 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr "Өргөдөл гаргагчийн хүсч буй цалин болон нэмэлт хангамжууд"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Qualification"
-msgstr "Боловсрол"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Харилцагч"
@@ -531,11 +533,6 @@ msgstr "Харилцагч"
 #: selection:hr.recruitment.report,month:0
 msgid "March"
 msgstr "3 сар"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
-msgid "Stage of Recruitment"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн үе шат"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
@@ -560,9 +557,9 @@ msgid "In progress"
 msgstr "Эхэлсэн"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
-msgstr "Хүний нөөцийн бүрдүүлэлтийн шатуудыг харах"
+#: view:hr.applicant:0
+msgid "Hire & Create Employee"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -575,6 +572,11 @@ msgid "Probability"
 msgstr "Магадлал"
 
 #. module: hr_recruitment
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "September"
 msgstr "9 сар"
@@ -585,34 +587,36 @@ msgid "December"
 msgstr "12 сар"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Recruitment performed in current year"
-msgstr "Энэ жил явагдсан ажилтан авсан тохиолдлууд"
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
+#, python-format
+msgid "A contact is already defined on this job request."
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
+msgid "Category of applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
-msgid "Recruitment during last month"
-msgstr "Сүүлийн сарын хүний нөөцийн бүрдүүлэлт"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Сар"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Unassigned Recruitments"
-msgstr "Тодорхойгүй хүний нөөцийн бүрдүүлэлт"
+msgid "Answer related job question"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Job Info"
-msgstr "Ажлын байрны мэдээлэл"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Эхний ярилцлага"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Боловсролын түвшин"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -625,14 +629,16 @@ msgid "Yes"
 msgstr "Тийм"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
-msgid "Proposed Salary"
-msgstr "Санал болгосон цалин"
+#: view:hr.applicant:0
+#: field:hr.applicant,name:0
+msgid "Subject"
+msgstr "Нэр чиглэл"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule Meeting"
-msgstr "Уулзалт төлөвлөх"
+#: view:hired.employee:0
+#: view:hr.recruitment.partner.create:0
+msgid "or"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -640,9 +646,9 @@ msgid "Search Jobs"
 msgstr "Ажлын байр хайх"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,category_id:0
-msgid "Category"
-msgstr "Тохиолдлын ангилал"
+#: view:hr.applicant:0
+msgid "Schedule Meeting"
+msgstr "Уулзалт төлөвлөх"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
@@ -656,9 +662,9 @@ msgid "Very Good"
 msgstr "Онц"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "# Cases"
-msgstr "Тохиолдлын дугаар"
+#: field:hr.applicant,user_email:0
+msgid "User Email"
+msgstr "Хэрэглэгчийн Имэйл"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
@@ -671,14 +677,9 @@ msgid "Group By ..."
 msgstr "Бүлэглэх ..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-msgid "In Progress"
-msgstr "Эхэлсэн"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Reset to New"
-msgstr "Шинэ болгох"
+#: view:hired.employee:0
+msgid "No"
+msgstr "Үгүй"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected:0
@@ -706,7 +707,8 @@ msgid "Degrees"
 msgstr "Цол"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Хаагдсан"
 
@@ -714,11 +716,6 @@ msgstr "Хаагдсан"
 #: view:hr.recruitment.stage:0
 msgid "Stage Definition"
 msgstr "Үе шатыг тодорхойлох"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Answer"
-msgstr "Хариу"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
@@ -732,24 +729,24 @@ msgstr "Байгууллагаар ангилсан санал болгосон 
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Meeting"
-msgstr "Уулзалт"
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "Pending"
+msgstr "Хүлээгдсэн"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:347
-#, python-format
-msgid "No Subject"
-msgstr "Гарчиг үгүй"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Төлөв"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Communication & History"
-msgstr "Харилцаа болон Түүх"
+msgid "Schedule interview with this applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -757,8 +754,10 @@ msgid "August"
 msgstr "8 сар"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
@@ -770,19 +769,29 @@ msgid "Phone"
 msgstr "Утас"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Global CC"
-msgstr "Нийтлэг э-мэйлүүд"
-
-#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "June"
 msgstr "6 сар"
 
 #. module: hr_recruitment
+#: help:hr.applicant,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,day_close:0
 msgid "Days to Close"
 msgstr "Хаагдах өдөр"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
@@ -801,14 +810,23 @@ msgid "Active"
 msgstr "Идэвхтэй"
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "November"
-msgstr "11 сар"
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,nbr:0
+msgid "# of Applications"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Extended Filters..."
-msgstr "Өргөтгөсөн хайлт..."
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Don't forget to specify the department if your recruitment "
+"process\n"
+"            is different according to the job position.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -816,21 +834,20 @@ msgid "Response"
 msgstr "Хариулт"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,department_id:0
-msgid "Specific to a Department"
-msgstr "Хэлтэст Тухайлсан"
+#: field:hr.applicant,message_comment_ids:0
+#: help:hr.applicant,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop_avg:0
-msgid "Avg Salary Proposed"
-msgstr "Санал болгосон дундаж цалин"
+#: selection:hr.recruitment.report,month:0
+msgid "October"
+msgstr "10 сар"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.job2phonecall:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_phonecall
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_job2phonecall
-msgid "Schedule Phone Call"
-msgstr "Утасны дуудлагыг төлөвлөх"
+#: field:hr.config.settings,module_document_ftp:0
+msgid "Allow the automatic indexation of resumes"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -838,35 +855,47 @@ msgid "Proposed Salary Extra"
 msgstr "Санал болгосон хамгийн их цалин"
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_hired
+msgid "Employee Hired"
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
 msgstr "1 сар"
 
 #. module: hr_recruitment
-#: help:hr.applicant,email_from:0
-msgid "These people will receive email."
-msgstr "Эдгээр хүмүүс э-мэйл хүлээж авна"
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "A contact is already existing with the same name."
+msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Not Good"
-msgstr "Сайн биш"
+#: code:addons/hr_recruitment/hr_recruitment.py:495
+#, python-format
+msgid "Applicant has been <b>hired</b>."
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: view:hr.applicant:0
+msgid "Contact:"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Огноо"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.job2phonecall:0
-msgid "Phone Call Description"
-msgstr "Утасны дуудлагын тайлбар"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.partner.create:0
-msgid "Are you sure you want to create a partner based on this job request ?"
-msgstr "Энэ ажлын байрны хүсэлтийн дагуу харилцагч үүсгэх нь баттай юу ?"
+#: field:hr.applicant,survey:0
+msgid "Survey"
+msgstr "Судалгаа"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -874,33 +903,14 @@ msgid "Would you like to create an employee ?"
 msgstr "Ажилтан үүсгэх үү?"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
-msgid ""
-"From this menu you can track applicants in the recruitment process and "
-"manage all operations: meetings, interviews, phone calls, etc. If you setup "
-"the email gateway, applicants and their attached CV are created "
-"automatically when an email is sent to jobs@yourcompany.com. If you install "
-"the document management modules, all documents (CV and motivation letters) "
-"are indexed automatically, so that you can easily search through their "
-"content."
-msgstr ""
-"Энэ менюгээс ажилтан авах процесс дахь өргөдөл гаргагчдийг хянаж хөтлөх "
-"болон уулзалт, ярилцлага, утасны дуудлага гэх мэт бүх ажлыг менеж хийх "
-"боломжтой. Хэрэв имэйл үүдийг тохируулсан бол jobs@yourcompany.com-руу "
-"илгээсэн өргөдөл гаргагчийн имэйл, хавсаргасан анкет зэрэг нь автоматаар "
-"горилогчийн жагсаалтад нэмэгдэнэ. Хэрэв баримтын менежментийн модулийг "
-"суулгасан бол бүх баримтууд (Анкет, CV, идэвхжүүлэлтийн захиа) зэрэг нь "
-"индекслэгдэж хадгалагддаг тул агуулгаар нь хайлт хийх боломж бүрдэнэ."
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "History"
-msgstr "Түүх"
+msgid "Degree:"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
-msgid "Recruitment performed in current month"
-msgstr "Энэ сард ажилтан авсан тохиолдлууд"
+msgid "Extended Filters..."
+msgstr "Өргөтгөсөн хайлт..."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
@@ -914,20 +924,20 @@ msgstr ""
 "хэлтсийг зааж өгөхөө мартаж болохгүй."
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Харилцагчийн холбоо барих хаяг"
+#: view:hr.config.settings:0
+msgid "Configure"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:492
+#, python-format
+msgid "Applicant has been <b>hired</b> and created as an employee."
+msgstr ""
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "Санал болгосон хөдөлмөрийн гэрээ"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,state:0 view:hr.recruitment.report:0
-#: field:hr.recruitment.report,state:0
-msgid "State"
-msgstr "Төлөв"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_website_company
@@ -940,31 +950,41 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Цол үл давхцах байх ёстой!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "Он"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Цуцлах"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_job_categ_action
-msgid "Applicant Categories"
-msgstr "Горилогчийн ангилал"
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,state:0
-msgid "Open"
-msgstr "Нээлттэй"
+#: view:hr.recruitment.partner.create:0
+msgid "Are you sure you want to create a contact based on this job request ?"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
-#, python-format
-msgid "A partner is already existing with the same name."
-msgstr "Ижил нэртэй харилцагч системд аль хэдийн байна."
+#: help:hr.config.settings,fetchmail_applicants:0
+msgid ""
+"Allow applicants to send their job application to an email address "
+"(jobs@mycompany.com),\n"
+"                and create automatically application documents in the system."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "In Progress"
+msgstr "Эхэлсэн"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -977,7 +997,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Боловсролын түвшинг харах үедээ тэдгээрт дарааллыг олгодог"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Хариуцагч"
@@ -1000,9 +1021,14 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "October"
-msgstr "10 сар"
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+msgid "New Applicant"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
+msgid "Stage of Recruitment"
+msgstr "Хүний нөөцийн бүрдүүлэлтийн үе шат"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1010,14 +1036,20 @@ msgid "Cases By Stage and Estimates"
 msgstr "Үе шат ба тооцооллоор ангилсан тохиолдлууд"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Reply"
-msgstr "Хариулах"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Горилогчийн Сурвалж"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Ярилцлага"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr "Хүний нөөцийн бүрдүүлэлтийн шатуудыг харах"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
@@ -1025,9 +1057,25 @@ msgid "Source Name"
 msgstr "Сурвалжийн Нэр"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:476
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Day(s)"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,description:0
 msgid "Description"
 msgstr "Тайлбар"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Unassigned Recruitments"
+msgstr "Тодорхойгүй хүний нөөцийн бүрдүүлэлт"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1045,22 +1093,44 @@ msgid "Word of Mouth"
 msgstr "Амны Үг"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,fold:0
+msgid "Hide in views if empty"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.config.settings,module_document_ftp:0
+msgid ""
+"Manage your CV's and motivation letter related to all applicants.\n"
+"                This installs the module document_ftp. This will install the "
+"knowledge management  module in order to allow you to search using specific "
+"keywords through  the content of all documents (PDF, .DOCx...)"
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Татгалзсан"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:414
-#, python-format
-msgid "Applicant '%s' is being hired."
-msgstr "'%s' горилогчийг ажилд авлаа."
-
-#. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "Ажилд орсон"
+
+#. module: hr_recruitment
+#: field:hr.applicant,reference:0
+msgid "Referred By"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Departement:"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1069,9 +1139,14 @@ msgid "On Average"
 msgstr "Дундажаар"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Боловсролын түвшин"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Эхний ярилцлага"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop_avg:0
+msgid "Avg. Proposed Salary"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1084,20 +1159,32 @@ msgid "February"
 msgstr "2 сар"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Not Good"
+msgstr "Сайн биш"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Нэр"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Edit"
-msgstr "Засах"
+#: selection:hr.recruitment.report,month:0
+msgid "November"
+msgstr "11 сар"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "2 дахь ярилцлага"
+#: field:hr.recruitment.report,salary_exp_avg:0
+msgid "Avg. Expected Salary"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Avg Expected Salary"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
@@ -1105,9 +1192,19 @@ msgid "Create Partner from job application"
 msgstr "Хүний нөөцийн бүрдүүлэлтийн хүсэлтээс харилцагч үүсгэх"
 
 #. module: hr_recruitment
+#: help:hr.applicant,email_from:0
+msgid "These people will receive email."
+msgstr "Эдгээр хүмүүс э-мэйл хүлээж авна"
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "April"
 msgstr "4 сар"
+
+#. module: hr_recruitment
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "Mark unread"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1115,14 +1212,24 @@ msgid "Pending recruitment"
 msgstr "Хүлээгдэж байгаа хүний нөөц бүрдүүлэлт"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Contract"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
 msgid "Monster"
 msgstr "Monster"
 
 #. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job
-msgid "Job Positions"
-msgstr "Ажлын байрууд"
+#: field:hr.recruitment.stage,department_id:0
+msgid "Specific to a Department"
+msgstr "Хэлтэст Тухайлсан"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -1141,20 +1248,35 @@ msgid "Sequence"
 msgstr "Дараалал"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:490
+#, python-format
+msgid "New employee joined the company %s."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
 msgstr "Баклавр"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,user_id:0
-msgid "Assign To"
-msgstr "Хариуцуулсан хэрэглэгч"
+#: model:ir.model,name:hr_recruitment.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:407
+#: code:addons/hr_recruitment/hr_recruitment.py:508
 #, python-format
-msgid "The job request '%s' has been set 'in progress'."
-msgstr "'%s' ажлын байрны хүсэлт нь 'Эхэлсэн' төлөвт шилжлээ."
+msgid "Applicant has been <b>created</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,state:0
+msgid ""
+"The related status for the stage. The status of your document will "
+"automatically change according to the selected stage. Example, a stage is "
+"related to the status 'Close', when your document reach this stage, it will "
+"be automatically closed."
+msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
@@ -1163,14 +1285,44 @@ msgstr "Байгууллагын санал болгосон цалин боло
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "Төслийн даалгаврыг хаах хүртэл өдрийн тоо"
 
 #. module: hr_recruitment
-#: field:hr.applicant,survey:0
-msgid "Survey"
-msgstr "Судалгаа"
+#: selection:hr.recruitment.report,state:0
+msgid "Open"
+msgstr "Нээлттэй"
+
+#. module: hr_recruitment
+#: view:board.board:0
+msgid "Applications to be Processed"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Schedule Interview"
+msgstr ""
+
+#~ msgid "# of Cases"
+#~ msgstr "Тохиолдлын дугаар"
+
+#~ msgid "Avg. Delay to Open"
+#~ msgstr "Нээх дундаж хугацаа"
+
+#~ msgid "Create Partner"
+#~ msgstr "Харилцагч бүртгэх"
+
+#~ msgid "Goals"
+#~ msgstr "Зорилго"
+
+#~ msgid "Contract Data"
+#~ msgstr "Гэрээний мэдээлэл"
+
+#~ msgid "Partner Contact Name"
+#~ msgstr "Харилцагчийн холбоо барих хаяг"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Дотоод тэмдэглэл нэмэх"
 
 #~ msgid "Junior Developer"
 #~ msgstr "Туслах хөгжүүлэгч"
@@ -1178,8 +1330,53 @@ msgstr "Судалгаа"
 #~ msgid "Initial Jobs Demand"
 #~ msgstr "Ажлын байрны эхний хэрэгцээ"
 
+#~ msgid "Partner Contact"
+#~ msgstr "Харилцагчийн холбоо барих хаяг"
+
 #~ msgid "Reference"
 #~ msgstr "Хамааралын лавлагаа"
+
+#~ msgid "Notes"
+#~ msgstr "Тэмдэглэлүүд"
+
+#, python-format
+#~ msgid "Phone Call"
+#~ msgstr "Утасны дуудлага"
+
+#~ msgid "Previous"
+#~ msgstr "Өмнөх"
+
+#, python-format
+#~ msgid "A partner is already defined on this job request."
+#~ msgstr "Энэ ажлын байрын хүсэлтэд харилцагч хэдийн тодорхойлогджээ."
+
+#~ msgid "Send New Email"
+#~ msgstr "Э-мэйл шинээр илгээх"
+
+#~ msgid "Next"
+#~ msgstr "Дараагийн"
+
+#~ msgid "Planned Date"
+#~ msgstr "Төлөвлөсөн огноо"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Алдаа !"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Сар-1    "
+
+#~ msgid "Dates"
+#~ msgstr "Огноо"
+
+#~ msgid "History Information"
+#~ msgstr "Түүх"
+
+#~ msgid "Qualification"
+#~ msgstr "Боловсрол"
+
+#~ msgid "Job Info"
+#~ msgstr "Ажлын байрны мэдээлэл"
 
 #~ msgid "HR - Recruitement"
 #~ msgstr "ХН - Хүний нөөцийн бүрдүүлэлт"
@@ -1187,14 +1384,54 @@ msgstr "Судалгаа"
 #~ msgid "Salesman"
 #~ msgstr "Борлуулагч"
 
+#~ msgid "Category"
+#~ msgstr "Тохиолдлын ангилал"
+
+#~ msgid "# Cases"
+#~ msgstr "Тохиолдлын дугаар"
+
+#~ msgid "Reset to New"
+#~ msgstr "Шинэ болгох"
+
+#~ msgid "Answer"
+#~ msgstr "Хариу"
+
+#~ msgid "Global CC"
+#~ msgstr "Нийтлэг э-мэйлүүд"
+
+#~ msgid "Meeting"
+#~ msgstr "Уулзалт"
+
 #~ msgid "Refused by Company"
 #~ msgstr "Компаниас татгалзсан"
 
 #~ msgid "Licenced"
 #~ msgstr "Лицензтэй"
 
+#~ msgid "History"
+#~ msgstr "Түүх"
+
+#~ msgid "Are you sure you want to create a partner based on this job request ?"
+#~ msgstr "Энэ ажлын байрны хүсэлтийн дагуу харилцагч үүсгэх нь баттай юу ?"
+
 #~ msgid "Attachments"
 #~ msgstr "Хавсралтууд"
+
+#~ msgid "Schedule Phone Call"
+#~ msgstr "Утасны дуудлагыг төлөвлөх"
+
+#~ msgid "Phone Call Description"
+#~ msgstr "Утасны дуудлагын тайлбар"
+
+#~ msgid "Avg Salary Proposed"
+#~ msgstr "Санал болгосон дундаж цалин"
+
+#, python-format
+#~ msgid "A partner is already existing with the same name."
+#~ msgstr "Ижил нэртэй харилцагч системд аль хэдийн байна."
+
+#~ msgid "State"
+#~ msgstr "Төлөв"
 
 #~ msgid "Current"
 #~ msgstr "Одоогийн"
@@ -1202,11 +1439,28 @@ msgstr "Судалгаа"
 #~ msgid "Details"
 #~ msgstr "Дэлгэрэнгүй"
 
+#~ msgid "Reply"
+#~ msgstr "Хариулах"
+
+#, python-format
+#~ msgid "Applicant '%s' is being hired."
+#~ msgstr "'%s' горилогчийг ажилд авлаа."
+
 #~ msgid "Refused by Employee"
 #~ msgstr "Ажилтан татгалзсан"
 
+#, python-format
+#~ msgid "The job request '%s' has been set 'in progress'."
+#~ msgstr "'%s' ажлын байрны хүсэлт нь 'Эхэлсэн' төлөвт шилжлээ."
+
+#~ msgid "Assign To"
+#~ msgstr "Хариуцуулсан хэрэглэгч"
+
 #~ msgid "HR Department"
 #~ msgstr "ХН хэлтэс"
+
+#~ msgid "Availability (Days)"
+#~ msgstr "Боломжтой (Өдөр)"
 
 #~ msgid " > Bac +5"
 #~ msgstr " > Bac +5"
@@ -1234,3 +1488,77 @@ msgstr "Судалгаа"
 #~ "олгоно. Бас баримтын менежментийн системтэй уялдан\n"
 #~ "өргөдөл, анкетыг хадгалах, түүнээс хайх боломжтой.\n"
 #~ "    "
+
+#~ msgid "Hire"
+#~ msgstr "Хөлс"
+
+#~ msgid "Change Color"
+#~ msgstr "Өнгө Өөрчлөх"
+
+#, python-format
+#~ msgid "Changed Stage to: %s"
+#~ msgstr "Өөрчлөгдөх шат: %s"
+
+#~ msgid "Recruitment during last month"
+#~ msgstr "Сүүлийн сарын хүний нөөцийн бүрдүүлэлт"
+
+#~ msgid "Communication & History"
+#~ msgstr "Харилцаа болон Түүх"
+
+#~ msgid "Edit"
+#~ msgstr "Засах"
+
+#~ msgid "Job Positions"
+#~ msgstr "Ажлын байрууд"
+
+#~ msgid "Refered By"
+#~ msgstr "Зөвлөсөн нь"
+
+#~ msgid ""
+#~ "Define here your stages of the recruitment process, for example: "
+#~ "qualification call, first interview, second interview, refused, hired."
+#~ msgstr ""
+#~ "Define here your stages of the recruitment process, for example: "
+#~ "qualification call, first interview, second interview, refused, hired."
+
+#~ msgid ""
+#~ "Stages of the recruitment process may be different per department. If this "
+#~ "stage is common to all departments, keep tempy this field."
+#~ msgstr ""
+#~ "Ажилтан авах процессын үеүүд нь хэлтэс хэлтсээр ялгаатай байж болно. Хэрэв "
+#~ "энэ үе нь бүх хэлтэст ерөнхий бол энэ талбарыг хоосон үлдээнэ."
+
+#~ msgid ""
+#~ "From this menu you can track applicants in the recruitment process and "
+#~ "manage all operations: meetings, interviews, phone calls, etc. If you setup "
+#~ "the email gateway, applicants and their attached CV are created "
+#~ "automatically when an email is sent to jobs@yourcompany.com. If you install "
+#~ "the document management modules, all documents (CV and motivation letters) "
+#~ "are indexed automatically, so that you can easily search through their "
+#~ "content."
+#~ msgstr ""
+#~ "Энэ менюгээс ажилтан авах процесс дахь өргөдөл гаргагчдийг хянаж хөтлөх "
+#~ "болон уулзалт, ярилцлага, утасны дуудлага гэх мэт бүх ажлыг менеж хийх "
+#~ "боломжтой. Хэрэв имэйл үүдийг тохируулсан бол jobs@yourcompany.com-руу "
+#~ "илгээсэн өргөдөл гаргагчийн имэйл, хавсаргасан анкет зэрэг нь автоматаар "
+#~ "горилогчийн жагсаалтад нэмэгдэнэ. Хэрэв баримтын менежментийн модулийг "
+#~ "суулгасан бол бүх баримтууд (Анкет, CV, идэвхжүүлэлтийн захиа) зэрэг нь "
+#~ "индекслэгдэж хадгалагддаг тул агуулгаар нь хайлт хийх боломж бүрдэнэ."
+
+#~ msgid "Recruitment performed in current month"
+#~ msgstr "Энэ сард ажилтан авсан тохиолдлууд"
+
+#~ msgid "Recruitment performed in current year"
+#~ msgstr "Энэ жил явагдсан ажилтан авсан тохиолдлууд"
+
+#~ msgid ""
+#~ " Check if the following stages are matching your recruitment process. Don't "
+#~ "forget to specify the department if your recruitment process is different "
+#~ "according to the job position."
+#~ msgstr ""
+#~ " Ажилтан авах процесс танайхтай таарч байгаа эсэхийг хянана уу. Ажилтан авах "
+#~ "процесс тань ажлын байруудаар ялгаатай байдаг бол хэлтсийг зааж өгөхөө "
+#~ "мартаж болохгүйг анхаарна уу."
+
+#~ msgid "Applicant Categories"
+#~ msgstr "Горилогчийн ангилал"
