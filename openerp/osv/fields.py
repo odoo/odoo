@@ -234,6 +234,8 @@ class html(text):
     _type = 'html'
     _symbol_c = '%s'
     def _symbol_f(x):
+        if x is None or x == False:
+            return None
         return html_sanitize(x)
         
     _symbol_set = (_symbol_c, _symbol_f)

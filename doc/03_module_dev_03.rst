@@ -1,3 +1,5 @@
+.. _module-dev-views:
+
 Views and Events
 ================
 
@@ -45,26 +47,26 @@ The field disposition in a form view always follows the same principle. Fields a
     * Fields are placed on the screen from left to right, and from top to bottom, according to the order in which they are declared in the view.
     * Every screen is divided into 4 columns, each column being able to contain either a label, or an "edition" field. As every edition field is preceded (by default) by a label with its name, there will be two fields (and their respective labels) on each line of the screen. The green and red zones on the screen-shot below, illustrate those 4 columns. They designate respectively the labels and their corresponding fields. 
 
-.. figure::  images/sale_order.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/sale_order.png
+..    :scale: 50
+..    :align: center
 
 
 Views also support more advanced placement options:
 
     * A view field can use several columns. For example, on the screen-shot below, the zone in the blue frame is, in fact, the only field of a "one to many". We will come back later on this note, but let's note that it uses the whole width of the screen and not only one column. 
 
-      .. figure::  images/sale_order_sale_order_lines.png
-        :scale: 50
-        :align: center
+      .. .. figure::  images/sale_order_sale_order_lines.png
+      ..   :scale: 50
+      ..   :align: center
 
     * We can also make the opposite operation: take a columns group and divide it in as many columns as desired. The surrounded green zones of the screen above are good examples. Precisely, the green framework up and on the right side takes the place of two columns, but contains 4 columns. 
 
 As we can see below in the purple zone of the screen, there is also a way to distribute the fields of an object on different tabs.
 
-.. figure::  images/sale_order_notebook.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/sale_order_notebook.png
+..    :scale: 50
+..    :align: center
 
 On Change
 +++++++++
@@ -129,9 +131,9 @@ Tree views
 
 These views are used when we work in list mode (in order to visualize several resources at once) and in the search screen. These views are simpler than the form views and thus have less options.
 
-.. figure::  images/tree_view.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/tree_view.png
+..    :scale: 50
+..    :align: center
 
 Search views
 --------------
@@ -140,9 +142,9 @@ Search views are a new feature of OpenERP supported as of version 6.0
 It creates a customized search panel, and is declared quite similarly to a form view,
 except that the view type and root element change to ``search`` instead of ``form``.
 
-.. image:: images/search.png
-   :scale: 50
-   :align: center
+.. .. image:: images/search.png
+..    :scale: 50
+..    :align: center
 
 Following is the list of new elements and features supported in search views.
 
@@ -300,9 +302,9 @@ combining them with AND/OR operators. It is also possible to save any search con
 of all currently applied domain and context values) as a personal filter, which can be recalled
 at any time. Filters can also be turned into Shortcuts directly available in the User's homepage.
 
-.. image:: images/filter.png
-   :scale: 50
-   :align: center
+.. .. image:: images/filter.png
+..    :scale: 50
+..    :align: center
 
 
 In above screenshot we filter Partner where Salesman = Demo user and Country = Belgium,
@@ -440,15 +442,15 @@ Screenshots
 
 Month Calendar:
 
-.. figure::  images/calendar_month.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/calendar_month.png
+..     :scale: 50%
+..     :align: center
 
 Week Calendar:
     
-.. figure::  images/calendar_week.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/calendar_week.png
+..     :scale: 50%
+..     :align: center
 
 
 Gantt Views
@@ -556,9 +558,9 @@ end time can be changed by dragging right end of a bar.
 Screenshots
 +++++++++++
     
-.. figure::  images/gantt.png
-    :scale: 50%
-    :align: center
+.. .. figure::  images/gantt.png
+..     :scale: 50%
+..     :align: center
 
 
 Design Elements
@@ -1337,9 +1339,9 @@ The *view_id* method works very well for menus/actions, but how can you specify 
 field, for example? When you have a one2many field, two views are used, a tree view (**in blue**), and a form view when
 you click on the add button (**in red**).
 
-.. figure::  images/one2many_views.png
-    :scale: 70%
-    :align: center
+.. .. figure::  images/one2many_views.png
+..     :scale: 70%
+..     :align: center
 
 When you add a one2many field in a form view, you do something like this :
 

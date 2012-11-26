@@ -1,3 +1,5 @@
+.. _module-dev-structure:
+
 Module structure
 ================
 
@@ -124,11 +126,11 @@ But it is dangerous to write or read directly in the PostgreSQL database, as
 you will shortcut important steps like constraints checking or workflow
 modification.
 
-.. figure::  images/pom_3_0_3.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/pom_3_0_3.png
+..    :scale: 50
+..    :align: center
 
-   *The Physical Objects Model of [OpenERP version 3.0.3]*
+..    *The Physical Objects Model of [OpenERP version 3.0.3]*
 
 
 XML Files
@@ -311,9 +313,9 @@ When you open an invoice, here is the chain of operations followed by the client
     * The client asks (with XML-RPC) to the server what views are defined for the invoice object and what are the data it must show.
     * The client displays the form according to the view
 
-.. figure::  images/arch_view_use.png
-   :scale: 50
-   :align: center
+.. .. figure::  images/arch_view_use.png
+..    :scale: 50
+..    :align: center
 
 To develop new objects
 //////////////////////
@@ -342,9 +344,9 @@ The workflows describe these interactions with graphs. One or several workflows 
 
 Below is an example workflow used for sale orders. It must generate invoices and shipments according to certain conditions.
 
-.. figure::  images/arch_workflow_sale.png
-   :scale: 85
-   :align: center
+.. .. figure::  images/arch_workflow_sale.png
+..    :scale: 85
+..    :align: center
 
 
 In this graph, the nodes represent the actions to be done:
