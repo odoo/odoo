@@ -475,6 +475,9 @@ class crm_lead(base_stage, format_address, osv.osv):
             elif field._type == 'many2one':
                 if lead[field_name]:
                     value = lead[field_name].name_get()[0][1]
+            elif field._type == 'many2many':
+                if lead[field_name]:
+                    value = lead[field_name][0].name_get()[0][1]
             else:
                 value = lead[field_name]
 
