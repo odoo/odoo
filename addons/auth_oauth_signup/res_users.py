@@ -20,15 +20,10 @@
 ##############################################################################
 
 import logging
-
-import urllib
-import urlparse
-import urllib2
 import simplejson
 
 import openerp
 from openerp.osv import osv, fields
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
