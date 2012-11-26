@@ -45,13 +45,7 @@ openerp.account.quickadd = function (instance) {
                 self.current_period = result['period_id'];
                 self.current_journal = result['journal_id'];
             });
-            
             return tmp;
-        },
-        load_view: function(context) {
-            debugger;
-            this.$el.parent().addClass("oe_view_manager_view_list");
-            return this._super.apply(this, arguments);
         },
         do_search: function(domain, context, group_by) {
             var self = this;
