@@ -708,8 +708,11 @@ openerp.web.pyeval = function (instance) {
         context = _.extend(instance.web.pyeval.context(), context || {});
         context['context'] = py.dict.fromJSON(context);
 
+        //noinspection FallthroughInSwitchStatementJS
         switch(type) {
+        case 'context': object = [object];
         case 'contexts': return eval_contexts(object, context);
+        case 'domain': object = [object];
         case 'domains': return eval_domains(object, context);
         case 'groupbys': return eval_groupbys(object, context);
         }
