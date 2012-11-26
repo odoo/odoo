@@ -60,8 +60,7 @@ Example: Product: this product is deprecated, do not purchase more than 5.
             This gives the profitability by calculating the difference between the Unit Price and Cost Price.
             This installs the module sale_margin."""),
         'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
-            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
-            and perform batch operations on journals.
+            help="""Allows you to categorize your sales and deliveries (picking lists) between different journals, and perform batch operations on journals.
             This installs the module sale_journal."""),
         'module_analytic_user_function': fields.boolean("One employee can have different roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.

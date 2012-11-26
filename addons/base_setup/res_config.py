@@ -61,18 +61,17 @@ class sale_config_settings(osv.osv_memory):
             help="""When you create a new contact (person or company), you will be able to load all the data from LinkedIn (photos, address, etc)."""),
         'module_crm': fields.boolean('CRM'),
         'module_plugin_thunderbird': fields.boolean('Enable Thunderbird plug-in',
-            help="""The plugin allows you archive email and its attachments to the selected
-                OpenERP objects. You can select a partner, or a lead and
-                attach the selected mail as a .eml file in
-                the attachment of a selected record. You can create documents for CRM Lead,
-                Partner from the selected emails.
-                This installs the module plugin_thunderbird."""),
+            help="""The plugin allows you archive email and its attachments to the selected OpenERP objects.
+            You can select a partner, or a lead and attach the selected mail as a .eml file in
+            the attachment of a selected record. You can create documents for CRM Lead,
+            Partner from the selected emails.
+            This installs the module plugin_thunderbird."""),
         'module_plugin_outlook': fields.boolean('Enable Outlook plug-in',
             help="""The Outlook plugin allows you to select an object that you would like to add
-                to your email and its attachments from MS Outlook. You can select a partner,
-                or a lead object and archive a selected
-                email into an OpenERP mail message with attachments.
-                This installs the module plugin_outlook."""),
+            to your email and its attachments from MS Outlook. You can select a partner,
+            or a lead object and archive a selected
+            email into an OpenERP mail message with attachments.
+            This installs the module plugin_outlook."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
