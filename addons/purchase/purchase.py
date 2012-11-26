@@ -401,7 +401,6 @@ class purchase_order(osv.osv):
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
         })
-        wf_service = netsvc.LocalService("workflow")
         return {
             'type': 'ir.actions.act_window',
             'view_type': 'form',
