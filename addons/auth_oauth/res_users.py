@@ -45,6 +45,24 @@ class res_users(osv.Model):
             validation.update(data)
         return validation
 
+    def _auth_oauth_signin(self, cr, uid, provider, validation, params, context=None):
+        """ retrieve and sign in the user corresponding to provider and validated access token
+            :param provider: oauth provider id
+            :param validation: result of validation of access token (dict)
+            :param params: oauth parameters (dict)
+            :return: login or None
+
+            This method can be overridden to add alternative signin methods.
+        """
+        oauth_uid = validation['user_id']
+        user_ids = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
+        if user_ids:
+            assert len(user_ids) == 1
+            user = self.browse(cr, uid, user_ids[0], context=context)
+            user.write({'oauth_access_token': access_token})
+            return user.login
+        return None
+
     def auth_oauth(self, cr, uid, provider, params, context=None):
         # Advice by Google (to avoid Confused Deputy Problem)
         # if validation.audience != OUR_CLIENT_ID:
@@ -53,39 +71,15 @@ class res_users(osv.Model):
         #   continue with the process
         access_token = params.get('access_token')
         validation = self._auth_oauth_validate(cr, uid, provider, access_token)
-        # required
-        oauth_uid = validation['user_id']
-        if not oauth_uid:
+        # required check
+        if not validation.get('user_id'):
             raise openerp.exceptions.AccessDenied()
-        email = validation.get('email', 'provider_%d_user_%d' % (provider, oauth_uid))
-        login = email
-        # optional
-        name = validation.get('name', email)
-        res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
-        if res:
-            assert len(res) == 1
-            user = self.browse(cr, uid, res[0], context=context)
-            login = user.login
-            user.write({'oauth_access_token': access_token})
-        else:
-            # New user if signup module available
-            if not hasattr(self, '_signup_create_user'):
-                raise openerp.exceptions.AccessDenied()
-
-            new_user = {
-                'name': name,
-                'login': login,
-                'user_email': email,
-                'oauth_provider_id': provider,
-                'oauth_uid': oauth_uid,
-                'oauth_access_token': access_token,
-                'active': True,
-            }
-            # TODO pass signup token to allow attach new user to right partner
-            self._signup_create_user(cr, uid, new_user)
-
-        credentials = (cr.dbname, login, access_token)
-        return credentials
+        # retrieve and sign in user
+        login = self._auth_oauth_signin(cr, uid, provider, validation, params, context=context)
+        if not login:
+            raise openerp.exceptions.AccessDenied()
+        # return user credentials
+        return (cr.dbname, login, access_token)
 
     def check_credentials(self, cr, uid, password):
         try:
