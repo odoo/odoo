@@ -100,7 +100,6 @@ openerp.auth_signup = function(instance) {
                     name: name,
                     login: login,
                     password: password,
-                    //state: $.param(this.params)
                 };
                 
                 var self = this,
