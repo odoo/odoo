@@ -30,6 +30,7 @@ openerp.web_chat = function(instance) {
         init: function(parent) {
             this._super(parent);
             this.shown = false;
+            this.set("right_offset", 0);
         },
         start: function() {
             var self = this;
@@ -57,14 +58,21 @@ openerp.web_chat = function(instance) {
             this.$el.css("bottom", 0);
         },
         switch_display: function() {
+            var fct =  _.bind(function() {
+                this.set("right_offset", $(window).width() - this.$el.offset().left);
+            }, this);
+            var opt = {
+                step: fct,
+                complete: fct,
+            };
             if (this.shown) {
                 this.$el.animate({
                     right: -this.$el.outerWidth(),
-                });
+                }, opt);
             } else {
                 this.$el.animate({
                     right: 0,
-                });
+                }, opt);
             }
             this.shown = ! this.shown;
         },
