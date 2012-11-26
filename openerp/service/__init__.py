@@ -129,7 +129,8 @@ def start_services_workers():
 
 def _reexec():
     """reexecute openerp-server process with (nearly) the same arguments"""
-    # TODO check if parent is a NT service
+    if openerp.tools.osutil.is_running_as_nt_service():
+        os._exit(1)
     strip_args = ['-d', '-u']
     a = sys.argv[:]
     args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
