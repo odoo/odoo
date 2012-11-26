@@ -35,7 +35,7 @@ More recommendations related to the specific case of the OpenERP Web Client:
 
 * Use QWeb templates for html rendering.
 
-* All css classes should have the prefix *oe-* .
+* All css classes should have the prefix *oe_* .
 
 * Functions that call rpc() should return a deferred, even if it calls it indirectly. So a function that calls a function that calls a function that calls rpc() should return a deferred too.
 
