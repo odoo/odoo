@@ -190,6 +190,7 @@ class purchase_order(osv.osv):
         'invoiced': fields.function(_invoiced, string='Invoice Received', type='boolean', help="It indicates that an invoice has been paid"),
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoice_method': fields.selection([('manual','Based on Purchase Order lines'),('order','Based on generated draft invoice'),('picking','Based on incoming shipments')], 'Invoicing Control', required=True,
+            readonly=True, states={'draft':[('readonly',False)], 'sent':[('readonly',False)]},
             help="Based on Purchase Order lines: place individual lines in 'Invoice Control > Based on P.O. lines' from where you can selectively create an invoice.\n" \
                 "Based on generated invoice: create a draft invoice you can validate later.\n" \
                 "Bases on incoming shipments: let you create an invoice when receptions are validated."
@@ -411,6 +412,20 @@ class purchase_order(osv.osv):
             'target': 'new',
             'context': ctx,
         }
+
+    def print_quotation(self, cr, uid, ids, context=None):
+        '''
+        This function prints the request for quotation and mark it as sent, so that we can see more easily the next step of the workflow
+        '''
+        assert len(ids) == 1, 'This option should only be used for a single id at a time'
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.order', ids[0], 'send_rfq', cr)
+        datas = {
+                 'model': 'purchase.order',
+                 'ids': ids,
+                 'form': self.read(cr, uid, ids[0], context=context),
+        }
+        return {'type': 'ir.actions.report.xml', 'report_name': 'purchase.quotation', 'datas': datas, 'nodestroy': True}
 
     #TODO: implement messages system
     def wkf_confirm_order(self, cr, uid, ids, context=None):
@@ -1166,5 +1181,14 @@ class product_template(osv.osv):
     }
 
 product_template()
+
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('default_model') == 'purchase.order' and context.get('default_res_id'):
+            wf_service = netsvc.LocalService("workflow")
+            wf_service.trg_validate(uid, 'purchase.order', context['default_res_id'], 'send_rfq', cr)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
