@@ -5155,6 +5155,10 @@ class BaseModel(object):
     # for backward compatibility
     resolve_o2m_commands_to_record_dicts = resolve_2many_commands
 
+    def _register_hook(self, cr):
+        """ This method is called right after the registry is filled """
+        pass
+
 # keep this import here, at top it will cause dependency cycle errors
 import expression
 
