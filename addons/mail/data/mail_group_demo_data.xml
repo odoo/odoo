@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Discussion groups, done in 2 steps to remove creator from followers -->
+        <record model="mail.group" id="group_best_sales_practices">
+            <field name="name">Best Sales Practices</field>
+            <field name="description">Discussion about best sales practices and deals.</field>
+        </record>
+        <record model="mail.group" id="group_best_sales_practices">
+            <field name="message_follower_ids" eval="[(6, 0, [ref('base.partner_demo')])]"/>
+        </record>
+        <record model="mail.group" id="group_board">
+            <field name="name">Board meetings</field>
+            <field name="description">Board meetings, budgets, strategic plans</field>
+        </record>
+        <record model="mail.group" id="group_board">
+            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
+        </record>
+        <record model="mail.group" id="group_rd">
+            <field name="name">R&amp;D</field>
+            <field name="description">Research and development discussion group</field>
+        </record>
+        <record model="mail.group" id="group_hr_policies">
+            <field name="name">HR Policies</field>
+            <field name="description">Company cars, holidays and other advantages</field>
+        </record>
+        <record model="mail.group" id="group_rd">
+            <field name="message_follower_ids" eval="[(6, 0, [])]"/>
+        </record>
+        <record model="mail.group" id="group_support">
+            <field name="name">Support</field>
+            <field name="description">Support team</field>
+        </record>
+
+        <!-- Best sales practices messages -->
+        <record id="msg_group_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>Selling a training session and selling the products after the training session is more efficient than directly selling a pack with the training session and the products.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=5)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>I noted I can not manage efficiently my pipeline when I have more than 50 opportunities in the qualification stage.</p><p>Any advice on this? How do you organize your activities with more than 50 opportunities?</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=4)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>When I have too much opportunities in the pipe, I start communicating with prospects more by email than phonecalls.</p><p>I send an email to create a sense of emergency, like <i>"can I call you this week about our quote?"</i> and I call only those that answer this email.</p><p>You can use the email template feature of OpenERP to automate email composition.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="parent_id" ref="msg_group_1_2"/>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_group_1_4" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_best_sales_practices"/>
+            <field name="body"><![CDATA[<p>When you sell a tablet PC, don't forget to propose a docking station with it. I offer 20% on the docking stating (not the tablet) and I have a 70% success rate with this combo.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo'), ref('base.user_root')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=2)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Pushed to all employees -->
+        <record id="msg_empl_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_hr_policies"/>
+            <field name="body"><![CDATA[<p>Your monthly meal vouchers arrived. You can get them at the HR's office.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_hr_policies"/>
+            <field name="body"><![CDATA[<p>Oh, I had forgotten. This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=57)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_hr_policies"/>
+            <field name="body"><![CDATA[<p>Thanks! Could you please remind me where is Christine's office, if I may ask? I'm new here!</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=34)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+        <record id="msg_empl_1_3" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_hr_policies"/>
+            <field name="body"><![CDATA[<p>Building B3, second floor on the right :-).</p>]]></field>
+            <field name="parent_id" ref="msg_empl_1"/>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Board messages -->
+        <record id="msg_board_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_board"/>
+            <field name="body"><![CDATA[
+<p>
+    Dear Board Members,
+</p>
+<p>
+    The main events of the month of October are:
+</p>
+<p>
+    <b>Sales:</b>
+</p>
+<ul>
+    <li>Invoicing is respectively of 442k€ for our European company (66% of the budget) and $404k for the U.S. office (75% of the budget). Despite these numbers that are far bellow our initial expectations, the growth of the month of October is 51% compared to last year.</li>
+    <li>The month of September having been better than our initial forecasts, the consolidated yearly revenue is only of $20k bellow our forecast made during the board of September.</li>
+    <li>The consolidated forecast for the end of the year is $6.749k, which is a growth of 76% compared to last year and an achievement of 87% of the budget.</li>
+    <li>The recruitment of new resellers has been very good, especially in Europe, where we signed 30 new resellers this month.</li>
+</ul>
+<p>
+    <b>Finance :</b>
+</p>
+<ul>
+    <li>The profit and loss has been negatively impacted this month by revenues that are far beyond the budget and charges that are 15% above the budget. The main extra we had in our charges this month is due to the provisioning of the salaries for the holidays period, $50k.</li>
+    <li>We also got the payment of our long awaited subsidies, the cash level has increased of 300K€ which gives a current balance of 963 K€ without including the straight loan of 350 K€.</li>
+    <li>The aged customer balance has been similar to the one of the last month with a small decrease of the DSO. We have recruited a new accountant assistant for the credit collection. She is mostly doing phone calls for all invoices that are due since 30 days, so we should get improvements of the DSO in November. The sum of the invoicing on which we have a risk in the aged customer balance is 100K€.</li>
+</ul>
+<p>
+    <b>Resellers and Customers:</b>
+</p>
+<ul>
+    <li>The total number of resellers is 429, across 87 countries.</li>
+    <li>The total number of installations of our software increased to 37K, against 33K for the month of September but we still did not reached the highest level we reached during this year (44K in march and may)</li>
+    <li>We have passed the 10000th customer in production with 10271 customers at the end of October. The paying customer ratio is 6,6%.</li>
+</ul>
+<p>
+    <b>Launch of the new release:</b>
+</p>
+<p>
+    We are working actively on the new release which is scheduled for the end of November.
+</p>
+<ul>
+    <li>We will publish the release note this week</li>
+    <li>The whole sales team will be trained on the new version this Friday</li>
+    <li>We will do a public announce to our resellers the 21th of November. We plan to show them: a description of the new features, the new distribution strategy, the new pricing and the communication plan.</li>
+</ul>
+<br/>
+<p>
+    Nicolas, can you book a meeting room for our meeting of Friday 2pm?
+</p>
+<p>
+    Regards.
+</p>
+]]></field>
+            <field name="type">comment</field>
+            <field name="parent_id" ref="msg_group_1_2"/>
+            <field name="subtype_id" ref="mt_comment"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="vote_user_ids" eval="[(6, 0, [ref('base.user_demo')])]"/>
+            <field name="date" eval="(DateTime.today() - timedelta(days=3)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+        <!-- Whole Company messages -->
+        <record id="msg_whole_1_1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="body"><![CDATA[
+<p>
+    Great news!<br/>
+    Our company has received the Deloitte Fast 50 award.  We are the fastest
+    growing company of the country, with a growth of 1549% over the past 5
+    years. You can get more information <a href="http://www.openerp.com/node/1244/2012/10">on our blog</a>.
+</p>
+]]></field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="date" eval="(DateTime.today() - timedelta(minutes=22)).strftime('%Y-%m-%d %H:%M')"/>
+        </record>
+
+    </data>
+</openerp>
+
+

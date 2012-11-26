@@ -324,12 +324,14 @@ Andrew</field>
 
         <record id="crm_case_15" model="crm.lead">
             <field name="type">opportunity</field>
-            <field name="name">Plan to buy a Laptop</field>
-            <field eval="2570" name="planned_revenue"/>
+            <field name="name">Plan to buy RedHat servers</field>
+            <field eval="35000" name="planned_revenue"/>
             <field eval="30.0" name="probability"/>
-            <field name="street">12 rue Albert Einstein</field>
-            <field name="country_id" ref="base.tr"/>
-            <field name="city">Istanbul</field>
+            <field name="street">69 rue de Chimay</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="city">Wavre</field>
+            <field name="email_from">virginie@agrolait.com</field>
+            <field name="partner_id" ref="base.res_partner_2"/>
             <field name="type_id" ref="type_lead8"/>
             <field name="categ_ids" eval="[(6, 0, [categ_oppor1])]"/>
             <field name="priority">1</field>
@@ -337,7 +339,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Call to ask system requirement</field>
             <field name="section_id" ref="crm_case_section_3"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
         </record>
@@ -372,6 +374,8 @@ Andrew</field>
             <field eval="100" name="planned_revenue"/>
             <field eval="35.0" name="probability"/>
             <field name="contact_name">Oliver Passot</field>
+            <field name="email_from">olivier.passo@balmer.inc.sa</field>
+            <field name="phone">+32 469 12 45 78</field>
             <field name="partner_name">BalmerInc S.A.</field>
             <field name="street">Rue des Palais 51, bte 33</field>
             <field name="country_id" ref="base.be"/>
@@ -391,14 +395,16 @@ Andrew</field>
 
         <record id="crm_case_18" model="crm.lead">
             <field name="type">opportunity</field>
-            <field name="name">Student's training plan in your Organization</field>
+            <field name="name">Trainee's training plan in your Organization</field>
             <field eval="35000" name="planned_revenue"/>
             <field eval="25.0" name="probability"/>
             <field name="contact_name">Leland Martinez</field>
-            <field name="partner_name">Toronto University</field>
-            <field name="street">2488 Queens Bay</field>
-            <field name="country_id" ref="base.ca"/>
-            <field name="city">Toronto</field>
+            <field name="email_from">info@deltapc.com</field>
+            <field name="partner_name">Delta PC</field>
+            <field name="city">Fremont</field>
+            <field name="street">3661 Station Street</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="partner_id" ref="base.res_partner_4"/>
             <field name="type_id" ref="type_lead8"/>
             <field name="categ_ids" eval="[(6, 0, [categ_oppor4,categ_oppor6])]"/>
             <field name="priority">4</field>
@@ -406,7 +412,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-4')" name="date_action"/>
             <field name="title_action">Call to define real needs about training</field>
             <field name="section_id" ref="crm_case_section_2"/>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="1" name="active"/>
         </record>
@@ -567,77 +573,127 @@ Andrew</field>
             <field eval="1" name="active"/>
         </record>
 
-        <!-- Some messages linked to the previous opportunity -->
-        <record id="message_email0" model="mail.message">
-            <field name="subject">Plan to buy a Laptop</field>
+        <!-- Unsubscribe Admin from case15, subscribe Demo -->
+        <record id="crm_case_15" model="crm.lead">
+            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
+        </record>
+        <record id="crm_case_17" model="crm.lead">
+            <field name="message_follower_ids" eval="[(3, ref('base.partner_root')), (4, ref('base.partner_demo'))]"/>
+        </record>
+        <record id="crm_case_18" model="crm.lead">
+            <field name="message_follower_ids" eval="[(4, ref('base.partner_demo'))]"/>
+        </record>
+        <!-- Some messages linked to the previous opportunities -->
+        <record id="msg_case15_attach1" model="ir.attachment">
+            <field name="datas">bWlncmF0aW9uIHRlc3Q=</field>
+            <field name="datas_fname">YourCompany2012.doc</field>
+            <field name="name">YourCompany2012.doc</field>
+        </record>
+        <record id="msg_case15_1" model="mail.message">
+            <field name="subject">Plan to buy RedHat servers</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="body">&lt;![CDATA[Email0 inquiry]]&gt;&lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to buy a new laptop having latest technologies and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;Can you please send me product catalogue?&lt;/font&gt;&lt;/div&gt;</field>
+            <field name="body"><![CDATA[<div>
+            <p>Hello,</p>
+            <p>I am interested in your company's products and I plan to buy a new laptop having latest technologies as well as an affordable price.</p>
+            <p>Could you please send me the product catalog?</p>]]></field>
             <field name="type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="author_id" eval="False"/>
         </record>
-        <record id="message_note0" model="mail.message">
-            <field name="subject">Re: Plan to buy a Laptop</field>
+        <record id="msg_case15_1_1" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
             <field name="type">comment</field>
-            <field name="body">Dear Customer,
-Thanks for showing interest in our products.
-We have attached the catalogue,
-We would like to know your interests, so let us know when we can call you for more details.
-
-Regards</field>
-            <field name="parent_id" ref="message_email0"/>
-            <field name="author_id" ref="base.partner_root"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="body"><![CDATA[<p>Dear customer,<br/>
+            Thanks for showing interest in our products! As requested, I send to you our products catalog.<br />
+            To be able to finely tune the solution, we would like to know precise needs. This way we wil be able to help you choosing the right infrastructure according to your requirements.<br/>
+            Best regards,</p>]]></field>
+            <field name="parent_id" ref="msg_case15_1"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="attachment_ids" eval="[(6, 0, [ref('msg_case15_attach1')])]"/>
         </record>
-        <record id="message_note0_comment0" model="mail.message">
-            <field name="subject">Re: Plan to buy a Laptop</field>
+        <record id="msg_case15_1_2" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="type">comment</field>
-            <field name="body">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
-            <field name="parent_id" ref="message_note0"/>
+            <field name="body"><![CDATA[<p>Thanks for the information!<br />I asked a precise specification to our technical expert. Here is what we precisely need:</p>
+            <ul>
+                <li>weekly backups, every Monday</li>
+                <li>backup time is not a blocking point for us, as we are closed all Monday, leaving time enough to perform the backup</li>
+                <li>reliability is very important; we need redundant servers and rollback capacity</li>
+                <li>a total capacity of about 2 TB</li>
+            </ul>
+            <p>Best regards,</p>]]></field>
+            <field name="type">email</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="parent_id" ref="msg_case15_1"/>
+            <field name="email_from">virginie@agrolait.fr</field>
+            <field name="author_id" eval="False"/>
+        </record>
+        <record id="msg_case15_1_3" model="mail.message">
+            <field name="subject">Re: Plan to buy RedHat servers</field>
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_15"/>
+            <field name="body"><![CDATA[<p>Hello</p>
+            <p>After our phonecall and discussion with our technical experts, here is the offer of YourCompany. We believe it will meet every requirement you had in mind. Please feel free to contact me for any detail or technical detail that is not clear enough for you.</p>
+            <p>Notice that as agreed on phone, we offer you a <b>10% discount on the hardware</b>!</p>
+            <p>Best regards,</p>]]></field>
+            <field name="type">email</field>
+            <field name="parent_id" ref="msg_case15_1"/>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
-        <record id="message_note0_comment1" model="mail.message">
-            <field name="subject">Re: Plan to buy a Laptop</field>
+        <record id="msg_case17_1" model="mail.message">
+            <field name="subject">Catalog to send</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
+            <field name="res_id" ref="crm_case_17"/>
+            <field name="body"><![CDATA[<p>They just want pricing information about our services. I think sending our catalog should be sufficient.</p>]]></field>
             <field name="type">comment</field>
-            <field name="body">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
-            <field name="parent_id" ref="message_note0"/>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="author_id" ref="base.partner_demo"/>
         </record>
-        <record id="message_email1" model="mail.message">
-            <field name="subject">Re: Plan to buy a Laptop</field>
+        <record id="msg_case18_1" model="mail.message">
+            <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
-            <field name="res_id" ref="crm_case_15"/>
-            <field name="body">Yes, its open till 10:00 PM, you are welcome!</field>
-            <field name="type">email</field>
-            <field name="author_id" ref="base.partner_root"/>
+            <field name="res_id" ref="crm_case_18"/>
+            <field name="body"><![CDATA[<p>Hello!<br />
+            I am Leland Martinez, from the Delta PC. Maybe you remember, we talked a bit last month at this international conference.<br />
+            We would like to attend a training, but we are not quite sure about what we can ask. Maybe we should meet and talk about that?<br />
+            Best regards,</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="author_id" ref="base.res_partner_4"/>
+            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root')])]"/>
         </record>
-        <record id="message_email_12" model="mail.message">
+        <record id="msg_case18_2" model="mail.message">
+            <field name="model">crm.lead</field>
+            <field name="res_id" ref="crm_case_18"/>
+            <field name="body"><![CDATA[<p>It seems very interesting. As you say, first of all we will have to define precisely what the training will be about, and your precise needs.</p>]]></field>
+            <field name="type">comment</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
+            <field name="parent_id" ref="msg_case18_1"/>
+            <field name="author_id" ref="base.partner_demo"/>
+            <field name="favorite_user_ids" eval="[(6, 0, [ref('base.user_root')])]"/>
+        </record>
+        <record id="msg_case1_1" model="mail.message">
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_1"/>
-            <field name="body">Hello,
-I am Jason from Le Club SARL.
-I am intertested to attend a training organized in your company.
-Can you send me the details ?</field>
+            <field name="body"><![CDATA[<p>Hello,<br />
+            I am Jason from Le Club SARL. I am interested to attend a training organized in your company.<br />
+            Can you send me the details ?</p>]]></field>
             <field name="type">email</field>
         </record>
-        <record id="message_email_13" model="mail.message">
+        <record id="msg_case2_1" model="mail.message">
             <field name="subject">Need Details</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_2"/>
-            <field name="body">Want to know features and benifits to use the new software.</field>
+            <field name="body">Want to know features and benefits to use the new software.</field>
             <field name="type">comment</field>
         </record>
-
-        <!-- Call Function to set the opportunities as Unread -->
-        <function model="crm.lead" name="message_mark_as_unread"
-            eval="[ ref('crm_case_15'), ref('crm_case_16'),
-                    ref('crm_case_23'), ref('crm_case_19')], {}"
-        />
 
     </data>
 </openerp>

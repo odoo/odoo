@@ -213,7 +213,7 @@
                                 <field name="company_id"
                                     groups="base.group_multi_company"
                                     widget="selection" colspan="2"/>
-                                <field name="type_id" widget="selection"/>
+                                <field name="type_id"/>
                                 <field name="channel_id" widget="selection"/>
                                 <field name="referred"/>
                                 <field name="state" groups="base.group_no_one"/>
@@ -319,7 +319,7 @@
                                     <div>
                                         <b><field name="name"/></b>
                                         <t t-if="record.planned_revenue.raw_value">
-                                            - <b><t t-esc="Math.round(record.planned_revenue.value)"/>
+                                            - <b><t t-esc="record.planned_revenue.value"/>
                                             <field name="company_currency"/></b>
                                         </t>
                                     </div>
@@ -424,9 +424,10 @@
                             <h1><field name="name"/></h1>
                             <label for="planned_revenue" class="oe_edit_only"/>
                             <h2>
-                                <field name="planned_revenue" class="oe_inline"/>
-                                <field name="company_currency" class="oe_inline" groups="base.group_multi_currency"/> at
-                                <field name="probability" class="oe_inline" widget="integer"/>%% success rate
+                                <field name="company_currency" invisible="1"/>
+                                <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                <span class="oe_grey"> at </span>
+                                <field name="probability" class="oe_inline" widget="integer"/>%%
                             </h2>
                         </div>
                         <group>
@@ -454,7 +455,8 @@
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
+                                        attrs="{'invisible': [('section_id', '=', False)]}"/>
                                 </div>
                             </group>
                             <group>
@@ -498,7 +500,7 @@
                                 </group>
 
                                 <group string="Categorization">
-                                    <field name="type_id" widget="selection"/>
+                                    <field name="type_id" />
                                     <field name="channel_id" widget="selection"/>
                                 </group>
                                 <group string="Mailings">
