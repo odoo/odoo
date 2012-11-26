@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2009-10-22 14:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -28,34 +28,14 @@ msgid "Information"
 msgstr "Informācija"
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Pārbaudes laiks"
-
-#. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Medicīniskā Pārbaude"
-
-#. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr ""
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Pašreizējais"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -66,11 +46,6 @@ msgstr "Grupēt pēc..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Nodaļa"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -86,16 +61,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -104,13 +70,8 @@ msgid "Contracts"
 msgstr "Līgumi"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
+#: field:hr.employee,children:0
+msgid "Number of Children"
 msgstr ""
 
 #. module: hr_contract
@@ -124,24 +85,13 @@ msgid "Job"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
 msgstr ""
 
 #. module: hr_contract
@@ -151,8 +101,8 @@ msgid "Contract Types"
 msgstr ""
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#: view:hr.employee:0
+msgid "Medical Exam"
 msgstr ""
 
 #. module: hr_contract
@@ -188,6 +138,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -210,18 +161,18 @@ msgid "Working Schedule"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
+msgstr ""
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
 msgstr ""
 
 #. module: hr_contract
@@ -235,13 +186,18 @@ msgid "Start Date"
 msgstr ""
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
@@ -251,7 +207,17 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 msgid "Duration"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
 msgstr ""
 
 #. module: hr_contract
@@ -260,11 +226,20 @@ msgid "Medical Examination Date"
 msgstr ""
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr ""
+
+#~ msgid "Current"
+#~ msgstr "Pašreizējais"
+
+#~ msgid "Medical Examination"
+#~ msgstr "Medicīniskā Pārbaude"
+
+#~ msgid "Trial Period"
+#~ msgstr "Pārbaudes laiks"

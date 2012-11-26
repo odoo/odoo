@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:53+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:21+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -22,15 +22,10 @@ msgid "Parent Directory"
 msgstr "Ana Dizin"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "Klasör adında özel karakterler var!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Ad alanı"
 
 #. module: document
 #: view:board.board:0
@@ -41,6 +36,11 @@ msgstr "Döküman Paneli"
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
 msgstr "İşlem Düğümü"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -78,20 +78,14 @@ msgid "Files"
 msgstr "Dosyalar"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Aylık Dosyalar"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "Mime Türü"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Mart"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr "unvan"
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -131,18 +125,13 @@ msgstr ""
 "olarak 'res_id', 'res_model' i kullan"
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Bu Yıl"
-
-#. module: document
 #: field:document.storage,path:0
 msgid "Path"
 msgstr "Yol"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Klasör adı eşsiz olmalı !"
@@ -153,6 +142,7 @@ msgid "Filter on my documents"
 msgstr "Dökümanlarımdaki filtreler"
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "İndekslenen İçerik"
@@ -167,13 +157,9 @@ msgstr ""
 "kaynağ sahip olanlar bulunacaktır."
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr "Bilgi Yönetimi"
-
-#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Dizinler"
@@ -184,8 +170,8 @@ msgid "Files details by Users"
 msgstr "Kullanıcıya göre dosya ayrıntıları"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Hata!"
@@ -218,14 +204,27 @@ msgstr "Bilgi Birikimi Uygulama Ayarları"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Paydaş"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Kullanıcıya göre Dosyalar"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "İlgili Belgeler"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -233,11 +232,9 @@ msgid "Document directory"
 msgstr "Belge Dizini"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "ValidateError"
 msgstr "DoğrulamaHatası"
@@ -249,16 +246,10 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Belgeler"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Hata! Yinelenen Dizinler oluşturamazsınız."
 
 #. module: document
 #: view:document.directory:0
@@ -275,7 +266,6 @@ msgstr "Kaynak model"
 #: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Dosya Boyutu"
 
@@ -286,12 +276,24 @@ msgid "Content Type"
 msgstr "İçerik Türü"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Tür"
+
+#. module: document
+#: code:addons/document/document.py:194
+#: code:addons/document/document_directory.py:234
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -311,9 +313,14 @@ msgstr ""
 "(domain) kullanın."
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Paydaş başına Dosya"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Ad alanı"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -338,15 +345,8 @@ msgstr "Rapor"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Temmuz"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "Belge Paneli"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -354,22 +354,12 @@ msgid "Extension"
 msgstr "Uzantı"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "Oluşturulma"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Sanal Dosyalar"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Değiştirilmiş"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document_storage.py:635
 #, python-format
 msgid "Error at doc write!"
 msgstr "Belge yazımında hata !"
@@ -412,10 +402,15 @@ msgid "Last Modification User"
 msgstr "Son Değiştiren Kullanıcı"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "İlgili Belgeler"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -440,7 +435,6 @@ msgid "All users files"
 msgstr "Tüm kullanıcıların Dosyaları"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -448,14 +442,8 @@ msgstr "Aya göre Dosya Boyutu"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "Aralık"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Resim"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -463,9 +451,10 @@ msgid "Static Directory"
 msgstr "Statik Dizin"
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr "Alt öğeler"
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Ay"
 
 #. module: document
 #: view:document.directory:0
@@ -479,13 +468,17 @@ msgid ""
 msgstr "Eğer işaretlenmediyse, ortam kapalı durumdadır ve içeriği görülmez"
 
 #. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
 #: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Sahibi"
 
@@ -507,6 +500,11 @@ msgid "Date Created"
 msgstr "Oluşturulma Tarihi"
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Kaynak Kimliği"
+
+#. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
 "Check this field if you want that the name of the file to contain the record "
@@ -515,6 +513,17 @@ msgid ""
 msgstr ""
 "Dosya adının kayıt adını içermesini istiyorsanız bu alanı işaretleyin.\n"
 "Eğer ayarlandıysa, dizin kaynak olandan olmalı."
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_reports_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: document
+#: view:document.storage:0
+msgid "Document Storage"
+msgstr ""
 
 #. module: document
 #: view:document.configuration:0
@@ -526,11 +535,6 @@ msgstr "Klasörleri Ayarla"
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr "Kayıt Adı İçerilsin"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Ek"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -561,10 +565,21 @@ msgstr ""
 "eklenir."
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Ağustos"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -573,15 +588,8 @@ msgstr "Dizin kendisinin anası olamaz!"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Haziran"
-
-#. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Kullanıcı"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -596,12 +604,10 @@ msgstr "Etkin"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "Kasım"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Veri"
@@ -625,7 +631,6 @@ msgstr "Tanım"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Ekim"
 
@@ -641,29 +646,8 @@ msgstr "Veritabanı"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Ocak"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Bağlı olduğu"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached to"
-msgstr "Ekli Olduğu"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "Kontrol paneli"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Kullanıcıya göre Dosyalar"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -671,7 +655,8 @@ msgid "Read Only"
 msgstr "Salt Okunur"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
+#: view:process.node:0
 msgid "Document Directory"
 msgstr "Dökümanlar Klasörü"
 
@@ -681,15 +666,15 @@ msgid "The directory name must be unique !"
 msgstr "Dizin adı eşsiz olmalı"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Oluşturan"
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Dizi"
 
 #. module: document
 #: view:document.configuration:0
@@ -714,7 +699,6 @@ msgstr "Aya göre Dosyalar"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Eylül"
 
@@ -724,24 +708,14 @@ msgid "Prefix"
 msgstr "Önek"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
-msgstr "Son İşleme Zamanı"
+#: field:document.directory,child_ids:0
+msgid "Children"
+msgstr "Alt öğeler"
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Dosya Adı"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Kaynak Kimliği"
+#: view:board.board:0
+msgid "Files by user"
+msgstr ""
 
 #. module: document
 #: selection:document.storage,type:0
@@ -749,21 +723,9 @@ msgid "External file storage"
 msgstr "Dış dosya saklama"
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr "Utanç Duvarı"
-
-#. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
 msgstr "Dosya saklamak için, saklama için kök yoldur."
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Paydaşa göre Dosya Ayrıntıları"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -781,28 +743,12 @@ msgid "Parent Model"
 msgstr "Ana Model"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Kullanıcıya göre dosyalar"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
-msgstr "Bu ayın Dosyaları"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Raporlama"
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
+msgstr ""
+"Alanın adı. \"dctx_\" önekinin burada yazılanın ekleneceğine dikkat edin."
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -811,7 +757,6 @@ msgstr "Ağaç Yapısı"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Mayıs"
 
@@ -819,20 +764,6 @@ msgstr "Mayıs"
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
 msgstr "Tüm Kullancı dosyaları"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr "Bir aydan beri dosya eklemeyen kullanıcılar"
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
-"Belge havuzu bütün eklere, postalar, proje belgeleri, faturalar, vb. gibi, "
-"erişmenizi sağlar."
 
 #. module: document
 #: view:document.directory:0
@@ -845,9 +776,9 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Yeni Dosyalar"
+#: view:report.document.user:0
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -855,24 +786,12 @@ msgid "Static"
 msgstr "Durağan"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Paydaşa göre Dosyalar"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
-msgstr "İndekslenmiş İçerik - Deneysel"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Month"
-msgstr "Bu Ay"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Notlar"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
+msgstr ""
+"Bu gruplar, alt dizinlere değil de sadece kendi gruplarını tanımlamalıdırlar."
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -895,23 +814,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Şubat"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Kullanıcıya göre İstatistikler"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
-"Alanın adı. \"dctx_\" önekinin burada yazılanın ekleneceğine dikkat edin."
 
 #. module: document
 #: field:document.directory,name:0
@@ -936,22 +840,19 @@ msgstr "Ayarlandıysa, ortam salt okunurdur"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Nisan"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Dosya Sayısı"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
-msgstr "(Kopya)"
+#: view:document.storage:0
+msgid "Search Document Storage"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -961,22 +862,16 @@ msgid ""
 msgstr "Bu dizine ve dosyalarına, yalnızca bu grubun üyeleri erişebilirler."
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
-"Bu gruplar, alt dizinlere değil de sadece kendi gruplarını tanımlamalıdırlar."
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "Mime Türü"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr "Bütün Ayların Dosyaları"
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Dizi"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -984,11 +879,9 @@ msgid "Content Name"
 msgstr "İçerik Adı"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "Dosya adı eşsiz olmalı !"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Dosya Adı"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -996,9 +889,9 @@ msgid "Internal File storage"
 msgstr "İç Dosya saklama"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr "Dizin ana ya da saklama dizini olmalıdır"
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -1007,13 +900,7 @@ msgid "Directories' Structure"
 msgstr "Dizinlerin Yapısı"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Kaynak Türüne göre Dosyalar"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Yıl"
 
@@ -1026,14 +913,12 @@ msgid "Storage Media"
 msgstr "Saklama Ortamı"
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr "Dosya saklama Ara"
-
-#. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Belge Türü"
+
+#~ msgid "Notes"
+#~ msgstr "Notlar"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
@@ -1083,11 +968,36 @@ msgstr "Belge Türü"
 #~ msgid "Cancel"
 #~ msgstr "İptal"
 
+#~ msgid "Files per Month"
+#~ msgstr "Aylık Dosyalar"
+
+#~ msgid "Reporting"
+#~ msgstr "Raporlama"
+
+#~ msgid "This Month"
+#~ msgstr "Bu Ay"
+
+#~ msgid "User"
+#~ msgstr "Kullanıcı"
+
+#~ msgid "This Year"
+#~ msgstr "Bu Yıl"
+
 #~ msgid "Project"
 #~ msgstr "Proje"
 
+#~ msgid "Created"
+#~ msgstr "Oluşturulma"
+
+#~ msgid "Attachment"
+#~ msgstr "Ek"
+
 #~ msgid "Product"
 #~ msgstr "Ürün"
+
+#, python-format
+#~ msgid "(copy)"
+#~ msgstr "(Kopya)"
 
 #~ msgid "Sale Order"
 #~ msgstr "Satış Siparişi"
@@ -1095,11 +1005,29 @@ msgstr "Belge Türü"
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Otomatik Klasör Yapılandırması"
 
+#~ msgid "title"
+#~ msgstr "unvan"
+
+#~ msgid "Files by Users"
+#~ msgstr "Kullanıcıya göre Dosyalar"
+
 #~ msgid "Auto directory configuration for Products."
 #~ msgstr "Ürünler için otomatik dizin yapılandırması"
 
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Hata! Yinelenen Dizinler oluşturamazsınız."
+
 #~ msgid "Configure Resource Directory"
 #~ msgstr "Kaynak Dizini Yapılandırması"
+
+#~ msgid "Files Per Partner"
+#~ msgstr "Paydaş başına Dosya"
+
+#~ msgid "Document Dashboard"
+#~ msgstr "Belge Paneli"
+
+#~ msgid "Modified"
+#~ msgstr "Değiştirilmiş"
 
 #~ msgid "Files by Partner"
 #~ msgstr "Paydaşa göre Dosyalar"
@@ -1141,22 +1069,90 @@ msgstr "Belge Türü"
 #~ "    - Bu modül kurulduktan sonra PDF ler artık bu veritabanında saklanmaz,\n"
 #~ "      ama /server/bin/filestore gibi kök tamponda saklanır.\n"
 
+#~ msgid "Image"
+#~ msgstr "Resim"
+
 #~ msgid "Auto Configure Directory"
 #~ msgstr "Dizini Otomatik Yapılandır"
+
+#~ msgid "Related to"
+#~ msgstr "Bağlı olduğu"
 
 #~ msgid "Integrated Document Management System"
 #~ msgstr "Entegre Edilen BelgeYönetim Sistemi"
 
+#~ msgid "Dashboard"
+#~ msgstr "Kontrol paneli"
+
 #~ msgid "Choose the following Resouces to auto directory configuration."
 #~ msgstr "Aşağıdaki kaynakları otomatik dizin yapılandırması için seçin."
 
+#~ msgid "Files By Users"
+#~ msgstr "Kullanıcıya göre Dosyalar"
+
 #~ msgid "Attached To"
 #~ msgstr "Ekli Olduğu"
+
+#~ msgid "Last Posted Time"
+#~ msgstr "Son İşleme Zamanı"
+
+#~ msgid "Wall of Shame"
+#~ msgstr "Utanç Duvarı"
+
+#~ msgid "Files details by Partners"
+#~ msgstr "Paydaşa göre Dosya Ayrıntıları"
+
+#~ msgid "Users that did not inserted documents since one month"
+#~ msgstr "Bir aydan beri dosya eklemeyen kullanıcılar"
+
+#~ msgid "Files by users"
+#~ msgstr "Kullanıcıya göre dosyalar"
+
+#~ msgid "Files By Partner"
+#~ msgstr "Paydaşa göre Dosyalar"
+
+#~ msgid "New Files"
+#~ msgstr "Yeni Dosyalar"
+
+#~ msgid ""
+#~ "The Documents repository gives you access to all attachments, such as mails, "
+#~ "project documents, invoices etc."
+#~ msgstr ""
+#~ "Belge havuzu bütün eklere, postalar, proje belgeleri, faturalar, vb. gibi, "
+#~ "erişmenizi sağlar."
+
+#~ msgid "Statistics by User"
+#~ msgstr "Kullanıcıya göre İstatistikler"
 
 #~ msgid ""
 #~ "Auto directory configuration for Sale Orders and Quotation with report."
 #~ msgstr ""
 #~ "Bu rapordaki Satış Siparişleri ve Tekliflerin otomatik dizin yapılandırması."
 
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "Dosya adı eşsiz olmalı !"
+
+#~ msgid "Files by Resource Type"
+#~ msgstr "Kaynak Türüne göre Dosyalar"
+
+#~ msgid "Directory must have a parent or a storage"
+#~ msgstr "Dizin ana ya da saklama dizini olmalıdır"
+
+#~ msgid "Search Document storage"
+#~ msgstr "Dosya saklama Ara"
+
 #~ msgid "Auto directory configuration for Projects."
 #~ msgstr "Projelerin Otomatik Dizin yapılandırması"
+
+#~ msgid "Knowledge Management"
+#~ msgstr "Bilgi Yönetimi"
+
+#~ msgid "Indexed Content - experimental"
+#~ msgstr "İndekslenmiş İçerik - Deneysel"
+
+#~ msgid "This Months Files"
+#~ msgstr "Bu ayın Dosyaları"
+
+#~ msgid "All Months Files"
+#~ msgstr "Bütün Ayların Dosyaları"
