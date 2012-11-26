@@ -1657,7 +1657,7 @@ openerp.mail = function (session) {
          */
         do_searchview_search: function (domains, contexts, groupbys) {
             var self = this;
-            instance.web.pyeval.eval_domains_and_contexts({
+            session.web.pyeval.eval_domains_and_contexts({
                 domains: domains || [],
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
