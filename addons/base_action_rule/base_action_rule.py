@@ -23,6 +23,7 @@ from datetime import datetime
 from datetime import timedelta
 import re
 import time
+from openerp import SUPERUSER_ID
 
 from osv import fields, osv, orm
 from tools.translate import _
@@ -54,7 +55,7 @@ class base_action_rule(osv.osv):
 
     def state_get(self, cr, uid, context=None):
         """ Get State """
-        return [('', '')]
+        return [('', ''), ('na','N/A (No previous state)')]
 
     def priority_get(self, cr, uid, context=None):
         """ Get Priority """
@@ -86,8 +87,8 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'Status', size=16),
-        'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
+        'trg_state_from': fields.selection(_state_get, 'and previously was', size=16),
+        'trg_state_to': fields.selection(_state_get, 'Status changes to', size=16),
 
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
         'act_state': fields.selection(_state_get, 'Set State to', size=16),
@@ -162,29 +163,30 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             return True
         return wrapper
 
-    def _register_hook(self, cr, uid, ids, context=None):
+    def _register_hook(self, cr):
         """
         Wrap every `create` and `write` methods of the models specified by
         the rules (given by `ids`).
         """
-        for action_rule in self.browse(cr, uid, ids, context=context):
+        ids = self.search(cr,SUPERUSER_ID,[])
+        for action_rule in self.browse(cr, SUPERUSER_ID, ids, context=None):
             model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
             if not hasattr(obj_pool, 'base_action_ruled'):
-                obj_pool.create = self._create(obj_pool.create, model, context=context)
-                obj_pool.write = self._write(obj_pool.write, model, context=context)
+                obj_pool.create = self._create(obj_pool.create, model, context=None)
+                obj_pool.write = self._write(obj_pool.write, model, context=None)
                 obj_pool.base_action_ruled = True
 
         return True
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        self._register_hook(cr, uid, [res_id], context=context)
+        self._register_hook(cr)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook(cr, uid, ids, context=context)
+        self._register_hook(cr)
         return True
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -278,11 +280,14 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         if old_records != None:
             for record in old_records:
                 state_from = record.state
+        else:
+            state_from = "na"
         #if we have an action that check the status
-        if action.trg_state_from:
-            ok = ok and action.trg_state_from==state_to
         if action.trg_state_to:
-            ok = state_from!=state_to
+            if action.trg_state_from:
+                ok = ok and action.trg_state_from==state_from
+            else:
+                ok = state_from!=state_to
             ok = ok and action.trg_state_to==state_to
         reg_name = action.regex_name
         result_name = True
