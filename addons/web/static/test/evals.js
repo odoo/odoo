@@ -502,6 +502,41 @@ openerp.testing.section('eval.edc.nonliterals', {
             ]);
         });
     });
+    test('horror from the deep', {asserts: 1}, function (instance) {
+        var cs = [
+            {"__ref": "compound_context",
+                "__contexts": [
+                    {"__ref": "context", "__debug": "{'k': 'foo,' + str(context.get('test_key', False))}"},
+                    {"__ref": "compound_context",
+                        "__contexts": [
+                            {"lang": "en_US", "tz": false, "uid": 1},
+                            {"lang": "en_US", "tz": false, "uid": 1,
+                                "active_model": "sale.order", "default_type": "out",
+                                "show_address": 1, "contact_display": "partner_address",
+                                "active_ids": [9], "active_id": 9},
+                            {}
+                        ], "__eval_context": null },
+                    {"active_id": 8, "active_ids": [8],
+                        "active_model": "stock.picking.out"},
+                    {"__ref": "context", "__debug": "{'default_ref': 'stock.picking.out,'+str(context.get('active_id', False))}", "__id": "54d6ad1d6c45"}
+                ], "__eval_context": null}
+        ];
+        return instance.edc([], cs).then(function (result) {
+            deepEqual(result.context, {
+                k: 'foo,False',
+                lang: 'en_US',
+                tz: false,
+                uid: 1,
+                active_model: 'stock.picking.out',
+                active_id: 8,
+                active_ids: [8],
+                default_type: 'out',
+                show_address: 1,
+                contact_display: 'partner_address',
+                default_ref: 'stock.picking.out,8'
+            });
+        });
+    });
 });
 openerp.testing.section('eval.contexts', {
     dependencies: ['web.coresetup']
