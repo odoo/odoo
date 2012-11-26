@@ -139,13 +139,13 @@
                         <group>
                             <field name="partner_id" required="1" invisible="context.get('line_type', False)" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'invoice_currency':currency_id, 'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}"  string="Supplier"/>
                             <field name="currency_id" invisible="1"/>
-                            <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)" class="oe_inline" widget='monetary' options='{"currency_field": "currency_id"}'/>
                             <field name="journal_id"
                                 domain="[('type','in',['bank', 'cash'])]"
                                 invisible="context.get('line_type', False)"
                                 widget="selection"
                                 on_change="onchange_journal(journal_id, line_dr_ids, False, partner_id, date, amount, type, company_id, context)"
                                 string="Payment Method"/>
+                            <field name="amount" invisible="context.get('line_type', False)" on_change="onchange_amount(amount, payment_rate, partner_id, journal_id, currency_id, type, date, payment_rate_currency_id, company_id, context)" class="oe_inline" widget='monetary' options='{"currency_field": "currency_id"}'/>                                
                         </group>
                         <group>
                             <field name="date" invisible="context.get('line_type', False)" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id, context)"/>
