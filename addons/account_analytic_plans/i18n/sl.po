@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-10-30 13:13+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:12+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -64,12 +64,6 @@ msgid "Analytic Plan Line"
 msgstr "Vrstica analitičnega načrta"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
-#, python-format
-msgid "User Error"
-msgstr "Napaka uporabnika"
-
-#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
 msgstr ""
@@ -90,8 +84,17 @@ msgid "Account2 Id"
 msgstr ""
 
 #. module: account_analytic_plans
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Konto ID"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -100,12 +103,9 @@ msgid "Amount"
 msgstr "Znesek"
 
 #. module: account_analytic_plans
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
-"Konfiguracijska napaka! Izbrano valuto je potrebno deliti z privzetimi konti."
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Oznaka"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -128,19 +128,15 @@ msgid "Bank Statement Line"
 msgstr "Postavka bančnega izpiska"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
-msgid "Define your Analytic Plans"
-msgstr ""
-
-#. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
 msgstr "Napačna BBA struktura !"
 
 #. module: account_analytic_plans
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Dnevnik in obdobje knjiženja morata pripadati istemu podjetju."
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "There is no analytic plan defined."
+msgstr ""
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -190,16 +186,15 @@ msgid "Percentage"
 msgstr "Delež"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
-msgid "A model having this name and code already exists !"
+msgid "There are no analytic lines related to account %s."
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "No analytic plan defined !"
-msgstr ""
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analitični konto"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -234,11 +229,14 @@ msgid "Analytic Plan Lines"
 msgstr "Vrstice analitičnega načrta"
 
 #. module: account_analytic_plans
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr "Znesek mora biti enak kot na vrstici dokumenta"
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr "Dnevnik in obdobje knjiženja morata pripadati istemu podjetju."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -261,19 +259,24 @@ msgid "Currency"
 msgstr "Valuta"
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,date1:0
-msgid "Start Date"
-msgstr "Začetni datum"
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Konto ID"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
 msgstr "Konto5 ID"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -291,10 +294,10 @@ msgid "To Date"
 msgstr "Do datuma"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
-msgid "You have to define an analytic journal on the '%s' journal!"
+msgid "You have to define an analytic journal on the '%s' journal."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -353,21 +356,8 @@ msgid "Root account of this plan."
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "Error"
-msgstr "Napaka"
-
-#. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
-msgstr ""
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -376,9 +366,8 @@ msgid "Quantity"
 msgstr "Količina"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#, python-format
-msgid "Please put a name and a code before saving the model !"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -387,16 +376,11 @@ msgid "Print Crossovered Analytic"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Ni analitičnega dnevnika!"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analitični konto"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -407,11 +391,6 @@ msgstr "Bančni izpisek"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Konto3 ID"
-
-#. module: account_analytic_plans
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr "Knjižene na zbirni konto ni dovoljeno."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -430,19 +409,14 @@ msgid "Account4 Id"
 msgstr "Konto4 ID"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "Podjetje mora biti enako za povezan konto in obdobje."
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#, python-format
+msgid "The total should be between %s and %s."
+msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
-#, python-format
-msgid "The Total Should be Between %s and %s"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -467,11 +441,6 @@ msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
-msgid "%"
-msgstr "%"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -492,9 +461,11 @@ msgid "Journal"
 msgstr "Dnevnik"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Oznaka"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
@@ -512,21 +483,32 @@ msgid "Distribution Models"
 msgstr ""
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
-msgid ""
-"To setup a multiple analytic plans environment, you must define the root "
-"analytic accounts for each plan set. Then, you must attach a plan set to "
-"your account journals."
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
 msgstr ""
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Konto je zaprt."
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
+#, python-format
+msgid "User Error!"
+msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#, python-format
+msgid "Please put a name and a code before saving the model."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "Začetni datum"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -540,10 +522,16 @@ msgid "The name of the journal must be unique per company !"
 msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "or"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
-msgid "Value Error"
-msgstr "Napaka v vrednosti"
+msgid "A model with this name and code already exists."
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -559,6 +547,10 @@ msgstr "Napaka v vrednosti"
 #~ msgid "to"
 #~ msgstr "v"
 
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Napaka"
+
 #~ msgid "Period from"
 #~ msgstr "Obdobje od"
 
@@ -567,6 +559,10 @@ msgstr "Napaka v vrednosti"
 
 #~ msgid "OK"
 #~ msgstr "V redu"
+
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Napaka v vrednosti"
 
 #~ msgid "Analytic Account Ref."
 #~ msgstr "Sklic analitičnega konta"
@@ -579,3 +575,30 @@ msgstr "Napaka v vrednosti"
 
 #~ msgid "Create Model"
 #~ msgstr "Izdelaj model"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Konfiguracijska napaka! Izbrano valuto je potrebno deliti z privzetimi konti."
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "Napaka uporabnika"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "Znesek mora biti enak kot na vrstici dokumenta"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Podjetje mora biti enako za povezan konto in obdobje."
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Knjižene na zbirni konto ni dovoljeno."
+
+#~ msgid "%"
+#~ msgstr "%"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Konto je zaprt."

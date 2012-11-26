@@ -6,50 +6,66 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-23 22:01+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 05:51+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:141
+#: view:res.partner:0
+msgid "Check Validity"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:147
 #, python-format
 msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
-"Bu VAT numarası geçerli değil gibi gözüküyor.\n"
+"Bu KDV numarası geçerli değil gibi gözüküyor.\n"
 "Not: Beklenen biçim %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "Şirket adı tekil olmalı !"
+msgstr "Firma adı eşsiz olmalı !"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr "Hata ! kendini çağıran ilişkili üyeler oluşturamazsınız."
+msgstr "Hata ! Özyinelemeli ilişkili üyeler oluşturamazsınız."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr "VIES VAT Kontrolü"
+msgstr "VIES KDV Kontrolü"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr "Şirketler"
+msgstr "Firmalar"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Hata! özyinelemeli şirketler oluşturamazsınız."
+msgstr "Hata! Özyinelemeli firmalar oluşturamazsınız."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:111
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -57,12 +73,13 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
-"Cari Hesap KDV ye tabi ise işaretleyin. KDV beyannamelerinde kullanılacak."
+"Paydaş KDV ne tabi ise bu kutuyu işaretleyin. KDV beyannamelerinde "
+"kullanılacaktır."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr "Cari"
+msgstr "Paydaş"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -70,13 +87,13 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
-"Eğer seçilirse, Carinin VAT numarası basit biçim onayı yerine Avrupa Birliği "
-"VIES servisinden kontrol edilecek."
+"Eğer işaretlenirse, Paydaşın KDV numarası basit biçim onayı yerine Avrupa "
+"Birliği VIES servisinden kontrol edilecek."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr "KDV Mali Hesap Durumu"
+msgstr "KDV Yasal Bildirimi"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
