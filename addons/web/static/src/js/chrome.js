@@ -67,9 +67,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         @param {Widget} parent
         @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
             dictionary can contain the following keys:
-            - buttons: The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button label,
-                value = click handler) or a list of dictionaries (each element in the dictionary is send to the corresponding
-                method of a jQuery element targeting the <button> tag).
+            - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
+                label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
+                corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
+                in OpenERP must be personalized in some way (button in red, link instead of button, ...) and this
+                feature does not allow that kind of personalization.
             - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
         @param {jQuery object} content Some content to replace this.$el .
     */
@@ -102,9 +104,9 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.on("closing", this, this._closing);
         this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
     },
-    _get_options: function(options) {
+    _get_options: function() {
         var self = this;
-        var o = _.extend({}, this.dialog_options, options || {});
+        var o = _.extend({}, this.dialog_options);
         var sizes = {
             width: $(window.top).width(),
             height: $(window.top).height(),
@@ -143,12 +145,11 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Opens the popup. Inits the dialog if it is not already inited.
 
-        @param {dictionary} options Additional options, see the options param in init().
         @return this
     */
-    open: function(options) {
+    open: function() {
         if (!this.dialog_inited) {
-            this.init_dialog(options);
+            this.init_dialog();
         }
         this.$el.dialog('open');
         this.$el.dialog("widget").append(this.$buttons);
@@ -173,11 +174,10 @@ instance.web.Dialog = instance.web.Widget.extend({
     /**
         Initializes the popup.
 
-        @param {dictionary} options Additional options, see the options param in init().
         @return The result returned by start().
     */
-    init_dialog: function(options) {
-        var options = this._get_options(options);
+    init_dialog: function() {
+        var options = this._get_options();
         if (options.buttons) {
             this._add_buttons(options.buttons);
             delete(options.buttons);
