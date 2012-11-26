@@ -7,14 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-10-30 16:29+0000\n"
+"PO-Revision-Date: 2012-11-25 10:11+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:54+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
+
+#. module: sale_stock
+#: constraint:stock.move:0
+msgid "You cannot move products from or to a location of the type view."
+msgstr "你不能从视图类型的库位移动"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -399,11 +404,6 @@ msgid ""
 msgstr "你可以根据销售订单或送货单生成发票。"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr "你能移动从（到）这种类型视图的库位"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Orders Statistics"
 msgstr "销售订单统计"
@@ -646,70 +646,3 @@ msgid ""
 "output area and the customer is done through the Delivery Order manually or "
 "automatically."
 msgstr "根据出库库位的设置，出库和客户之间的库存调拨是通过送货单手工或自动完成的。"
-
-#~ msgid ""
-#~ "If you don't have enough stock available to deliver all at once, do you "
-#~ "accept partial shipments or not?"
-#~ msgstr "如果库存不够一次全部交货，你是否接受部分交货？"
-
-#, python-format
-#~ msgid "Configuration Error !"
-#~ msgstr "设置错误!"
-
-#~ msgid ""
-#~ "Number of days between the order confirmation the shipping of the products "
-#~ "to the customer"
-#~ msgstr "从订单确认到开始运送货物给客户之间的天数"
-
-#~ msgid ""
-#~ "Incoterm which stands for 'International Commercial terms' implies its a "
-#~ "series of sales terms which are used in the commercial transaction."
-#~ msgstr "国际贸易术语包含一系列用于贸易事务的术语。"
-
-#~ msgid "on order"
-#~ msgstr "来自订单"
-
-#~ msgid "Procurement Method"
-#~ msgstr "引起需求的方式"
-
-#~ msgid ""
-#~ "If 'on order', it triggers a procurement when the sale order is confirmed to "
-#~ "create a task, purchase order or manufacturing order linked to this sale "
-#~ "order line."
-#~ msgstr "如果是“来自订单”，当销售订单确认后它会触发一个需求，销售订单的明细会关联出采购订单或生产单。"
-
-#, python-format
-#~ msgid "Could not cancel sales order !"
-#~ msgstr "不能取消销售订单 ！"
-
-#, python-format
-#~ msgid "You must first cancel all picking attached to this sales order."
-#~ msgstr "你必须先取消销售订单上的所有装箱单。"
-
-#~ msgid "from stock"
-#~ msgstr "来自库存"
-
-#~ msgid "Customer"
-#~ msgstr "客户"
-
-#~ msgid "Deliver"
-#~ msgstr "送货"
-
-#~ msgid "Generate invoices based on the sale order"
-#~ msgstr "基于销售单生成发票"
-
-#~ msgid "View Invoice"
-#~ msgstr "查看发票"
-
-#, python-format
-#~ msgid "Advance of %s %%"
-#~ msgstr "%s %% 的预付款"
-
-#~ msgid ""
-#~ "To allow your salesman to make invoices for sale order lines using the menu "
-#~ "'Lines to Invoice'."
-#~ msgstr "允许销售员 使用菜单“逐行开票”  根据销售单明细逐行开发票"
-
-#, python-format
-#~ msgid "Advance of %s %s"
-#~ msgstr "%s %s 的预付款"

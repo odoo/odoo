@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-01-22 14:40+0000\n"
+"PO-Revision-Date: 2012-11-25 13:01+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:47+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_claim
@@ -23,6 +23,8 @@ msgid ""
 "This stage is not visible, for example in status bar or kanban view, when "
 "there are no records in that stage to display."
 msgstr ""
+"Deze fase is niet zichtbaar, in bijvoorbeeld de statusbalk of kanban "
+"weergave, wanneer er geen records in deze fase zijn om weer te geven."
 
 #. module: crm_claim
 #: field:crm.claim.report,nbr:0
@@ -46,11 +48,13 @@ msgid ""
 "Allows you to configure your incoming mail server, and create claims from "
 "incoming emails."
 msgstr ""
+"Geeft u de mogelijkheid om uw inkomende mailserver in te stellen en klachten "
+"aan te maken van binnenkomende e-mails."
 
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_crm_claim_stage
 msgid "Claim stages"
-msgstr ""
+msgstr "Klacht fases"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -65,7 +69,7 @@ msgstr "Vertraging tot sluiting"
 #. module: crm_claim
 #: field:crm.claim,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ongelezen berichten"
 
 #. module: crm_claim
 #: field:crm.claim,resolution:0
@@ -91,6 +95,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een nieuwe klachtencategorie aan te maken\n"
+"              </p><p>\n"
+"                Maak klachten categorieën aan om uw klachten beter te "
+"classificeren\n"
+"                en te beheersen. Bijvoorbeeld: preventieve actie of "
+"correctieve actie.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -100,7 +113,7 @@ msgstr "# Klacht"
 #. module: crm_claim
 #: field:crm.claim.stage,name:0
 msgid "Stage Name"
-msgstr ""
+msgstr "Naam fase"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.action_report_crm_claim
@@ -114,7 +127,7 @@ msgstr ""
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Verkoper"
 
 #. module: crm_claim
 #: selection:crm.claim,priority:0
@@ -158,7 +171,7 @@ msgstr "Preventief"
 #. module: crm_claim
 #: help:crm.claim,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #. module: crm_claim
 #: field:crm.claim.report,date_closed:0
@@ -168,7 +181,7 @@ msgstr "Sluitdatum"
 #. module: crm_claim
 #: view:res.partner:0
 msgid "False"
-msgstr ""
+msgstr "Onwaar"
 
 #. module: crm_claim
 #: field:crm.claim,ref:0
@@ -191,6 +204,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
+"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
+"ingevoegd."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -249,12 +265,12 @@ msgstr "Prioriteit"
 #. module: crm_claim
 #: field:crm.claim.stage,fold:0
 msgid "Hide in Views when Empty"
-msgstr ""
+msgstr "Verbergen in weergave indien leeg"
 
 #. module: crm_claim
 #: field:crm.claim,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Volgers"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -268,7 +284,7 @@ msgstr "Nieuw"
 #. module: crm_claim
 #: field:crm.claim.stage,section_ids:0
 msgid "Sections"
-msgstr ""
+msgstr "Secties"
 
 #. module: crm_claim
 #: field:crm.claim,email_from:0
@@ -304,7 +320,7 @@ msgstr "Klacht onderwerp"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim3
 msgid "Rejected"
-msgstr ""
+msgstr "Afgewezen"
 
 #. module: crm_claim
 #: field:crm.claim,date_action_next:0
@@ -315,7 +331,7 @@ msgstr "Volgende actie datum"
 #: code:addons/crm_claim/crm_claim.py:243
 #, python-format
 msgid "Claim has been <b>created</b>."
-msgstr ""
+msgstr "Klacht is <b>aangemaakt</b>."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -349,13 +365,13 @@ msgstr "Data"
 #. module: crm_claim
 #: help:crm.claim,email_from:0
 msgid "Destination email for email gateway."
-msgstr ""
+msgstr "bestemming e-mail voor de e-mail gateway"
 
 #. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:199
 #, python-format
 msgid "No Subject"
-msgstr ""
+msgstr "Geen onderwerp"
 
 #. module: crm_claim
 #: help:crm.claim.stage,state:0
@@ -365,11 +381,15 @@ msgid ""
 "is related to the status 'Close', when your document reaches this stage, it "
 "will be automatically have the 'closed' status."
 msgstr ""
+"De status van een fase. De status van uw document wordt automatisch "
+"aangepast overeenkomstig de gekozen fase. Bijvoorbeeld, als een fase is "
+"gerelateerd aan status 'Sluiten', dan krijgt het automatisch de status "
+"'Gesloten'  wanneer uw document deze fase bereikt."
 
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Settle"
-msgstr ""
+msgstr "Regelen"
 
 #. module: crm_claim
 #: model:ir.ui.menu,name:crm_claim.menu_claim_stage_view
@@ -395,7 +415,7 @@ msgstr "CRM Klachtenrapport"
 #. module: crm_claim
 #: view:sale.config.settings:0
 msgid "Configure"
-msgstr ""
+msgstr "Instellen"
 
 #. module: crm_claim
 #: model:crm.case.resource.type,name:crm_claim.type_claim1
@@ -441,6 +461,9 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each "
 "sales team. It will not assign this stage to existing teams."
 msgstr ""
+"Indien u dit veld aanvinkt, wordt deze fase automatisch voorgesteld bij "
+"ieder verkoopteam. Het zal deze fase niet toewijzen aan bestaande "
+"verkoopteams."
 
 #. module: crm_claim
 #: field:crm.claim,categ_id:0
@@ -497,7 +520,7 @@ msgstr "Gesloten"
 #. module: crm_claim
 #: view:crm.claim:0
 msgid "Reject"
-msgstr ""
+msgstr "Afwijzen"
 
 #. module: crm_claim
 #: view:res.partner:0
@@ -507,7 +530,7 @@ msgstr "Relatie claim"
 #. module: crm_claim
 #: view:crm.claim.stage:0
 msgid "Claim Stage"
-msgstr ""
+msgstr "Klacht fase"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -525,7 +548,7 @@ msgstr "In afwachting"
 #: field:crm.claim.report,state:0
 #: field:crm.claim.stage,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -541,7 +564,7 @@ msgstr "Normaal"
 #. module: crm_claim
 #: help:crm.claim.stage,sequence:0
 msgid "Used to order stages. Lower is better."
-msgstr ""
+msgstr "Wordt gebruikt om fases te sorteren. Lager is beter."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -561,7 +584,7 @@ msgstr "Telefoon"
 #. module: crm_claim
 #: field:crm.claim,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Is een volger"
 
 #. module: crm_claim
 #: field:crm.claim.report,user_id:0
@@ -583,6 +606,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een nieuwe fase te maken voor het verwerken van "
+"klachten.\n"
+"              </p><p>\n"
+"                U kunt een klachtenfase maken zodat u de fase van iedere "
+"klacht\n"
+"                in het systeem kan categoriseren. De fases "
+"vertegenwoordigen\n"
+"                de stappen die moeten worden doorlopen voor het behandelen "
+"van\n"
+"                de klacht.\n"
+"              </p>\n"
+"            "
 
 #. module: crm_claim
 #: help:crm.claim,state:0
@@ -593,6 +629,10 @@ msgid ""
 "the case needs to be reviewed then the status is                       set "
 "to 'Pending'."
 msgstr ""
+"De status is ingesteld op 'Concept' wanneer de klacht wordt aangemaakt. Als "
+"de klacht in behandeling is, is de status ingesteld op 'Open'. wanneer de "
+"klacht is afgewerkt, wordt de status ingesteld op 'Gereed'. Indien de klacht "
+"moet worden gecontroleerd, wordt de status op ingesteld op 'In afwachting'."
 
 #. module: crm_claim
 #: field:crm.claim,active:0
@@ -613,7 +653,7 @@ msgstr "Uitgebreide filters..."
 #: field:crm.claim,message_comment_ids:0
 #: help:crm.claim,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Opmerkingen en e-mails."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -626,6 +666,8 @@ msgid ""
 "Responsible sales team. Define Responsible user and Email account for mail "
 "gateway."
 msgstr ""
+"Verantwoordelijk verkoopteam. definieer verantwoordelijke gebruiker en e-"
+"mail account voor de mail gateway."
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -646,7 +688,7 @@ msgstr "Klachtdatum"
 #. module: crm_claim
 #: field:crm.claim,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,name:crm_claim.crm_claim_categ_action
@@ -656,7 +698,7 @@ msgstr "Klachtcategoriën"
 #. module: crm_claim
 #: field:crm.claim.stage,case_default:0
 msgid "Common to All Teams"
-msgstr ""
+msgstr "Algemeen voor alle teams"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -695,7 +737,7 @@ msgstr "Klacht"
 #. module: crm_claim
 #: view:crm.claim.report:0
 msgid "My Company"
-msgstr ""
+msgstr "Mijn bedrijf"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -751,7 +793,7 @@ msgstr "Niet toegewezen klachten"
 #: code:addons/crm_claim/crm_claim.py:247
 #, python-format
 msgid "Claim has been <b>refused</b>."
-msgstr ""
+msgstr "Klacht is <b>afgewezen</>"
 
 #. module: crm_claim
 #: field:crm.claim,cause:0
@@ -792,7 +834,7 @@ msgstr "Acties tot oplossing"
 #. module: crm_claim
 #: field:crm.claim.stage,case_refused:0
 msgid "Refused stage"
-msgstr ""
+msgstr "Afgewezen klacht"
 
 #. module: crm_claim
 #: model:ir.actions.act_window,help:crm_claim.crm_case_categ_claim0
@@ -822,7 +864,7 @@ msgstr "Aanmaakdatum"
 #: code:addons/crm_claim/crm_claim.py:253
 #, python-format
 msgid "Stage changed to <b>%s</b>."
-msgstr ""
+msgstr "Fase veranderd in <b>%s</b>."
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -837,7 +879,7 @@ msgstr "Februari"
 #. module: crm_claim
 #: model:ir.model,name:crm_claim.model_sale_config_settings
 msgid "sale.config.settings"
-msgstr ""
+msgstr "sale.config.settings"
 
 #. module: crm_claim
 #: view:crm.claim.report:0
@@ -863,12 +905,12 @@ msgstr "Mijn klacht(en)"
 #. module: crm_claim
 #: model:crm.claim.stage,name:crm_claim.stage_claim2
 msgid "Settled"
-msgstr ""
+msgstr "Geregeld"
 
 #. module: crm_claim
 #: help:crm.claim,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Berichten en communicatie historie"
 
 #. module: crm_claim
 #: constraint:res.partner:0
@@ -879,12 +921,12 @@ msgstr ""
 #. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
-msgstr ""
+msgstr "Maak een klacht van een inkomende mail"
 
 #. module: crm_claim
 #: field:crm.claim.stage,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Reeks"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -906,7 +948,7 @@ msgstr "Verkoopteam"
 #. module: crm_claim
 #: constraint:res.partner:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout: Ongeldige EAN-code"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -919,11 +961,13 @@ msgid ""
 "Link between stages and sales teams. When set, this limitate the current "
 "stage to the selected sales teams."
 msgstr ""
+"Koppeling tussen fases en verkoopteams. Wanneer aangevinkt wordt deze fase "
+"beperkt tot de geselecteerde verkoopteams."
 
 #. module: crm_claim
 #: help:crm.claim.stage,case_refused:0
 msgid "Refused stages are specific stages for done."
-msgstr ""
+msgstr "Gewijgerde fases zijn specifieke fases voor de status gereed."
 
 #~ msgid "Partner Contact"
 #~ msgstr "Contactpersoon relatie"

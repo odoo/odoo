@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 18:13+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-11-25 13:04+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:39+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
@@ -40,7 +40,7 @@ msgstr "Proces knooppunt"
 #. module: document
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage."
-msgstr ""
+msgstr "Directory moet een bovenliggende map hebben of een opslag."
 
 #. module: document
 #: view:document.directory:0
@@ -226,6 +226,13 @@ msgid ""
 "          </p>\n"
 "        "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Klik hier om een document aan te maken.\n"
+"          </p><p>\n"
+"            De documentopslag geeft u toegang tot al uw bijlagen, zoals\n"
+"            e-mails, project documenten, facturen, etc.\n"
+"          </p>\n"
+"        "
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -279,7 +286,7 @@ msgstr "Soort inhoud"
 #. module: document
 #: view:ir.attachment:0
 msgid "Modification"
-msgstr ""
+msgstr "Wijziging"
 
 #. module: document
 #: view:document.directory:0
@@ -294,7 +301,7 @@ msgstr "Soort"
 #: code:addons/document/document_directory.py:234
 #, python-format
 msgid "%s (copy)"
-msgstr ""
+msgstr "%s (kopie)"
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -315,7 +322,7 @@ msgstr ""
 #. module: document
 #: constraint:document.directory:0
 msgid "Error! You cannot create recursive directories."
-msgstr ""
+msgstr "Fout! Het is niet toegestaan recursieve directoires aan te maken"
 
 #. module: document
 #: field:document.directory,resource_field:0
@@ -405,12 +412,12 @@ msgstr "Laatste wijziging door gebruiker"
 #: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
 #: view:report.document.user:0
 msgid "Files by User"
-msgstr ""
+msgstr "Bestanden per gebruiker"
 
 #. module: document
 #: view:ir.attachment:0
 msgid "on"
-msgstr ""
+msgstr "op"
 
 #. module: document
 #: field:document.directory,domain:0
@@ -472,7 +479,7 @@ msgstr ""
 #. module: document
 #: field:report.document.user,user:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: document
 #: view:document.directory:0
@@ -521,12 +528,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:document.open_board_document_manager
 #: model:ir.ui.menu,name:document.menu_reports_document
 msgid "Knowledge"
-msgstr ""
+msgstr "Kennis"
 
 #. module: document
 #: view:document.storage:0
 msgid "Document Storage"
-msgstr ""
+msgstr "Document opslag"
 
 #. module: document
 #: view:document.configuration:0
@@ -572,7 +579,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:6
 #, python-format
 msgid "Attachment(s)"
-msgstr ""
+msgstr "Bijlage(n)"
 
 #. module: document
 #: selection:report.document.user,month:0
@@ -582,7 +589,7 @@ msgstr "Augustus"
 #. module: document
 #: view:ir.attachment:0
 msgid "My Document(s)"
-msgstr ""
+msgstr "Mijn document(en)"
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -672,7 +679,7 @@ msgstr "De mapnaam moet uniek zijn!"
 #. module: document
 #: view:ir.attachment:0
 msgid "Attachments"
-msgstr ""
+msgstr "Bijlagen"
 
 #. module: document
 #: field:document.directory,create_uid:0
@@ -719,7 +726,7 @@ msgstr "Dochters"
 #. module: document
 #: view:board.board:0
 msgid "Files by user"
-msgstr ""
+msgstr "Bestanden per gebruiker"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -784,7 +791,7 @@ msgstr "ir.attachment"
 #. module: document
 #: view:report.document.user:0
 msgid "Users File"
-msgstr ""
+msgstr "Gebruijers bestand"
 
 #. module: document
 #: view:document.directory:0
@@ -860,7 +867,7 @@ msgstr "# bestanden"
 #. module: document
 #: view:document.storage:0
 msgid "Search Document Storage"
-msgstr ""
+msgstr "Zoek in document opslag"
 
 #. module: document
 #: view:document.directory:0
@@ -875,7 +882,7 @@ msgstr ""
 #: code:addons/document/static/src/js/document.js:17
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: document
 #: field:document.directory.content,sequence:0
@@ -1250,6 +1257,3 @@ msgstr "Soort document"
 
 #~ msgid "Reporting"
 #~ msgstr "Rapportages"
-
-#~ msgid "Attached to"
-#~ msgstr "Gekoppeld aan"

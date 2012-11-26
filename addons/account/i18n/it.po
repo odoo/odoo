@@ -7,14 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-06-20 16:27+0000\n"
-"Last-Translator: Lorenzo Battistini - Agile BG - Domsense "
-"<lorenzo.battistini@agilebg.com>\n"
+"PO-Revision-Date: 2012-11-25 23:52+0000\n"
+"Last-Translator: Sergio Corato <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:18+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:41+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: account
@@ -109,6 +108,8 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Errore!\n"
+"Non è possibile creare un modello di conto ricorsivo."
 
 #. module: account
 #. openerp-web
@@ -200,6 +201,9 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
+"E' necessario impostare il 'Giornale di chiusura' per questo Anno Fiscale "
+"che è creato dopo aver generato le scritture di apertura con 'Crea le "
+"scritture di apertura\"."
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -309,7 +313,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Numero successivo nota di credito"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -356,6 +360,17 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click per creare un nota di credito cliente. \n"
+"              </p><p>\n"
+"                Una nota di credito è un documento che storna completamente\n"
+"                o parzialmente una fattura.\n"
+"              </p><p>\n"
+"                Invece di creare manualmente una nota di credito cliente,\n"
+"                è possibile crearla direttamente dalla relativa fattura "
+"cliente.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -1032,7 +1047,7 @@ msgstr "Valori"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,delay_to_pay:0
 msgid "Avg. Delay To Pay"
-msgstr "Ritardo medio di pagamento"
+msgstr "Dilazione media di pagamento"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_chart
@@ -1679,7 +1694,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice.refund:0
 msgid "Credit Note"
-msgstr ""
+msgstr "Nota di credito"
 
 #. module: account
 #: view:account.config.settings:0
@@ -2541,7 +2556,7 @@ msgstr "Gennaio"
 #. module: account
 #: view:account.entries.report:0
 msgid "This F.Year"
-msgstr "Questo anno fisc."
+msgstr "Anno Fisc.Corrente"
 
 #. module: account
 #: view:account.tax.chart:0
@@ -9326,7 +9341,7 @@ msgstr ""
 #: model:account.account.type,name:account.data_account_type_expense
 #: model:account.financial.report,name:account.account_financial_report_expense0
 msgid "Expense"
-msgstr "Uscita"
+msgstr "Costo"
 
 #. module: account
 #: help:account.chart,fiscalyear:0
@@ -11062,6 +11077,8 @@ msgstr "Manualmente"
 msgid ""
 "This is a field only used for internal purpose and shouldn't be displayed"
 msgstr ""
+"Questo campo è utilizzato solo per scopi interni e non dovrebbe essere "
+"visualizzato"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -13896,9 +13913,6 @@ msgstr ""
 #~ msgid "Generate Your Chart of Accounts from a Chart Template"
 #~ msgstr "Genera un Piano dei Conti da un Template di Piano dei Conti"
 
-#~ msgid "Configure your Chart of Accounts"
-#~ msgstr "Installa un Piano dei Conti"
-
 #~ msgid ""
 #~ "Configuration error! The currency chosen should be shared by the default "
 #~ "accounts too."
@@ -13914,14 +13928,6 @@ msgstr ""
 #~ msgid ""
 #~ "You have to provide an account for the write off/exchange difference entry !"
 #~ msgstr "Occorre fornire un conto su cui registrare la differenza di cambio!"
-
-#, python-format
-#~ msgid ""
-#~ "This account does not allow reconciliation! You should update the account "
-#~ "definition to change this."
-#~ msgstr ""
-#~ "In questo conto il parametro riconciliazione non è abilitato! Occorre "
-#~ "aggiornare le proprietà del conto abilitando il parametro."
 
 #~ msgid ""
 #~ "Check this box if you don't want any VAT related to this Tax Code to appear "
@@ -13999,9 +14005,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Non è possibile cancellare una fattura in stato aperto o pagato. È "
 #~ "preferibile eseguire un rimborso."
-
-#~ msgid "The description must be unique per company!"
-#~ msgstr "La descrizione azienda deve essere univoca!"
 
 #~ msgid "This months' Sales by type"
 #~ msgstr "Vendite per tipo di questo mese"
@@ -14262,9 +14265,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Non è stato definito un anno fiscale per questa data!\n"
 #~ "Occorre crearne uno dal menu Configurazioni in Contabilità"
-
-#~ msgid "Entry Date"
-#~ msgstr "Data di Registrazione"
 
 #, python-format
 #~ msgid "Current currency is not configured properly !"
