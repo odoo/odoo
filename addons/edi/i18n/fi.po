@@ -7,25 +7,29 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-09 10:00+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:35+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: edi
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr "Valuuttakoodin pitää olla uniikki yrityskohtaisesti!"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:67
+#, python-format
+msgid "Reason:"
+msgstr ""
 
 #. module: edi
-#: model:ir.model,name:edi.model_res_partner_address
-msgid "Partner Addresses"
-msgstr "Kumppanien osoitteet"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:60
+#, python-format
+msgid "The document has been successfully imported!"
+msgstr ""
 
 #. module: edi
 #: sql_constraint:res.company:0
@@ -38,14 +42,11 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr "Virhe! Rekursiivisen kumppanin luonti ei ole sallittu."
 
 #. module: edi
-#: field:edi.document,name:0
-msgid "EDI token"
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:65
+#, python-format
+msgid "Sorry, the document could not be imported."
 msgstr ""
-
-#. module: edi
-#: help:edi.document,name:0
-msgid "Unique identifier for retrieving an EDI document."
-msgstr "Uniikki tunniste EDI dokumentin noutamiseksi."
 
 #. module: edi
 #: constraint:res.company:0
@@ -58,9 +59,14 @@ msgid "Companies"
 msgstr "Yritykset"
 
 #. module: edi
-#: sql_constraint:edi.document:0
-msgid "EDI Tokens must be unique!"
-msgstr "EDI tunnisteiden tulee olla uniikkeja!"
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: edi
+#: sql_constraint:res.currency:0
+msgid "The currency code must be unique per company!"
+msgstr "Valuuttakoodin pitää olla uniikki yrityskohtaisesti!"
 
 #. module: edi
 #: model:ir.model,name:edi.model_res_currency
@@ -68,7 +74,20 @@ msgid "Currency"
 msgstr "Valuutta"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:153
+#. openerp-web
+#: code:addons/edi/static/src/js/edi.js:71
+#, python-format
+msgid "Document Import Notification"
+msgstr ""
+
+#. module: edi
+#: code:addons/edi/models/edi.py:130
+#, python-format
+msgid "Missing application."
+msgstr ""
+
+#. module: edi
+#: code:addons/edi/models/edi.py:131
 #, python-format
 msgid ""
 "The document you are trying to import requires the OpenERP `%s` application. "
@@ -77,17 +96,7 @@ msgid ""
 msgstr ""
 
 #. module: edi
-#: help:edi.document,document:0
-msgid "EDI document content"
-msgstr "EDI dokumentin sisältö"
-
-#. module: edi
-#: model:ir.model,name:edi.model_edi_document
-msgid "EDI Document"
-msgstr "EDI dokumentti"
-
-#. module: edi
-#: code:addons/edi/models/edi.py:48
+#: code:addons/edi/models/edi.py:47
 #, python-format
 msgid "'%s' is an invalid external ID"
 msgstr "'%s' on virheellinen ulkoinen ID"
@@ -98,290 +107,160 @@ msgid "Partner"
 msgstr "Kumppani"
 
 #. module: edi
-#: code:addons/edi/models/edi.py:152
-#, python-format
-msgid "Missing Application"
-msgstr "Puuttuva applikaatio"
+#: constraint:res.currency:0
+msgid ""
+"Error! You cannot define a rounding factor for the company's main currency "
+"that is smaller than the decimal precision of 'Account'."
+msgstr ""
 
 #. module: edi
-#: field:edi.document,document:0
-msgid "Document"
-msgstr "Dokumentti"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:23
-msgid "View/Print"
-msgstr "Katso/Tulosta"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:28
-msgid "Import this document"
-msgstr "Tuo tämä dokumentti"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:33
-msgid "Import it into an existing OpenERP instance"
-msgstr "Tuo olemassaolevaan OpenERP instassiin"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:36
-msgid "OpenERP instance address:"
-msgstr "OpenERP instanssin osoite:"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:39
-msgid "Import"
-msgstr "Tuo"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:44
-msgid "Import it into a new OpenERP Online instance"
-msgstr "Tuo uuteen OpenERP Online instassiin"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:47
-msgid "Create my new OpenERP instance"
-msgstr "Luo oma uusi OpenERP instanssi"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:52
-msgid "Import into another application"
-msgstr "Tuo toiseen ohjelmistoon"
-
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:54
-msgid ""
-"OpenERP's Electronic Data Interchange documents are based on a generic and "
-"language\n"
-"                            independent"
+#: model:ir.model,name:edi.model_edi_edi
+msgid "EDI Subsystem"
 msgstr ""
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
-msgid "JSON"
-msgstr ""
+#~ msgid "Description"
+#~ msgstr "Kuvaus"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:56
-msgid ""
-"serialization of the document's attribute.\n"
-"                            It is usually very quick and straightforward to "
-"create a small plug-in for your preferred\n"
-"                            application that will be capable of importing "
-"any OpenERP EDI document.\n"
-"                            You can find out more details about how to do "
-"this and what the content of OpenERP EDI documents\n"
-"                            is like in the"
-msgstr ""
+#~ msgid "Partner Addresses"
+#~ msgstr "Kumppanien osoitteet"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:60
-msgid "OpenERP documentation"
-msgstr "OpenERP dokumentaatio"
+#~ msgid "EDI Tokens must be unique!"
+#~ msgstr "EDI tunnisteiden tulee olla uniikkeja!"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:61
-msgid "To get started immediately,"
-msgstr "Aloittaaksesi heti"
+#~ msgid "Unique identifier for retrieving an EDI document."
+#~ msgstr "Uniikki tunniste EDI dokumentin noutamiseksi."
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:62
-msgid "see is all it takes to use this EDI document in Python"
-msgstr "katso itä vaaditaan tämän dokumentin käsittelyyn Pythonissa"
+#~ msgid "Import it into an existing OpenERP instance"
+#~ msgstr "Tuo olemassaolevaan OpenERP instassiin"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:70
-msgid "You can download the raw EDI document here:"
-msgstr "Voit ladata raakamuotoisen EDI dokumentin täältä:"
+#~ msgid "Import this document"
+#~ msgstr "Tuo tämä dokumentti"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:73
-msgid "Download"
-msgstr "Lataa"
+#~ msgid "View/Print"
+#~ msgstr "Katso/Tulosta"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
-msgid "Powered by"
-msgstr ""
+#~ msgid "Document"
+#~ msgstr "Dokumentti"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi.xml:87
-msgid "OpenERP"
-msgstr "OpenERP"
+#~ msgid "OpenERP instance address:"
+#~ msgstr "OpenERP instanssin osoite:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:34
-msgid "Invoice"
-msgstr "Lasku"
+#~ msgid "EDI document content"
+#~ msgstr "EDI dokumentin sisältö"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:37
-msgid "Description"
-msgstr "Kuvaus"
+#~ msgid "EDI Document"
+#~ msgstr "EDI dokumentti"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:38
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:41
-msgid "Date"
-msgstr "Päivämäärä"
+#, python-format
+#~ msgid "Missing Application"
+#~ msgstr "Puuttuva applikaatio"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:39
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:40
-msgid "Your Reference"
-msgstr "Viitteenne"
+#~ msgid "Create my new OpenERP instance"
+#~ msgstr "Luo oma uusi OpenERP instanssi"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:50
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:57
-msgid "Product Description"
-msgstr "Tuotteen kuvaus"
+#~ msgid "Import it into a new OpenERP Online instance"
+#~ msgstr "Tuo uuteen OpenERP Online instassiin"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:51
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:58
-msgid "Quantity"
-msgstr "Määrä"
+#~ msgid "Import"
+#~ msgstr "Tuo"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:52
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:59
-msgid "Unit Price"
-msgstr "Yksikköhinta"
+#~ msgid "Import into another application"
+#~ msgstr "Tuo toiseen ohjelmistoon"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:53
-msgid "Discount"
-msgstr "Alennus"
+#~ msgid "see is all it takes to use this EDI document in Python"
+#~ msgstr "katso itä vaaditaan tämän dokumentin käsittelyyn Pythonissa"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:54
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:61
-msgid "Price"
-msgstr "Hinta"
+#~ msgid "OpenERP documentation"
+#~ msgstr "OpenERP dokumentaatio"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:72
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:81
-msgid "Net Total:"
-msgstr "Yhteensä netto:"
+#~ msgid "To get started immediately,"
+#~ msgstr "Aloittaaksesi heti"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:83
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:92
-msgid "Taxes:"
-msgstr "Verot:"
+#~ msgid "Invoice"
+#~ msgstr "Lasku"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:94
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:103
-msgid "Total:"
-msgstr "Yhteensä:"
+#~ msgid "Date"
+#~ msgstr "Päivämäärä"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:106
-msgid "Tax"
-msgstr "Vero"
+#~ msgid "Quantity"
+#~ msgstr "Määrä"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:107
-msgid "Base Amount"
-msgstr "Alkuperäinen määrä"
+#~ msgid "Product Description"
+#~ msgstr "Tuotteen kuvaus"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:108
-msgid "Amount"
-msgstr "Määrä"
+#~ msgid "Unit Price"
+#~ msgstr "Yksikköhinta"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:121
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:113
-msgid "Notes:"
-msgstr "Muistiinpanot:"
+#~ msgid "Your Reference"
+#~ msgstr "Viitteenne"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:129
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:121
-msgid "Pay Online"
-msgstr "Maksa verkossa"
+#~ msgid "You can download the raw EDI document here:"
+#~ msgstr "Voit ladata raakamuotoisen EDI dokumentin täältä:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:133
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:125
-msgid "Paypal"
-msgstr "PayPal"
+#~ msgid "Download"
+#~ msgstr "Lataa"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:135
-msgid ""
-"You may directly pay this invoice online via Paypal's secure payment gateway:"
-msgstr ""
-"Voit maksaa tämän laskun suoraan PayPal'in turvallisessa verkkomaksussa:"
+#~ msgid "OpenERP"
+#~ msgstr "OpenERP"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:145
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:137
-msgid "Bank Wire Transfer"
-msgstr "Pankkisiirto"
+#~ msgid "Pay Online"
+#~ msgstr "Maksa verkossa"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:147
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:139
-msgid "Please transfer"
-msgstr "Ole hyvä ja siirrä"
+#~ msgid "Discount"
+#~ msgstr "Alennus"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:148
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:140
-msgid "to"
-msgstr "vastaanottaja"
+#~ msgid "Net Total:"
+#~ msgstr "Yhteensä netto:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:149
-msgid ""
-"(postal address on the invoice header)\n"
-"                     using one of the following bank accounts. Be sure to "
-"mention the invoice\n"
-"                     reference"
-msgstr ""
+#~ msgid "Taxes:"
+#~ msgstr "Verot:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_account.xml:151
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:143
-msgid "on the transfer:"
-msgstr "siirrossa:"
+#~ msgid "Amount"
+#~ msgstr "Määrä"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:36
-msgid "Order"
-msgstr "Tilaus"
+#~ msgid "Notes:"
+#~ msgstr "Muistiinpanot:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:42
-msgid "Salesman"
-msgstr "Myyjä"
+#~ msgid "Tax"
+#~ msgstr "Vero"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:43
-msgid "Payment terms"
-msgstr "Maksuehdot"
+#~ msgid "Total:"
+#~ msgstr "Yhteensä:"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:60
-msgid "Discount(%)"
-msgstr "Alennus (%)"
+#~ msgid "Order"
+#~ msgstr "Tilaus"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:127
-msgid ""
-"You may directly pay this order online via Paypal's secure payment gateway:"
-msgstr ""
+#~ msgid "Salesman"
+#~ msgstr "Myyjä"
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/edi/static/src/xml/edi_sale_purchase.xml:141
-msgid ""
-"(postal address on the order header)\n"
-"                     using one of the following bank accounts. Be sure to "
-"mention the document\n"
-"                     reference"
-msgstr ""
+#~ msgid "on the transfer:"
+#~ msgstr "siirrossa:"
+
+#~ msgid "Payment terms"
+#~ msgstr "Maksuehdot"
+
+#~ msgid "Please transfer"
+#~ msgstr "Ole hyvä ja siirrä"
+
+#~ msgid "to"
+#~ msgstr "vastaanottaja"
+
+#~ msgid ""
+#~ "You may directly pay this invoice online via Paypal's secure payment gateway:"
+#~ msgstr ""
+#~ "Voit maksaa tämän laskun suoraan PayPal'in turvallisessa verkkomaksussa:"
+
+#~ msgid "Bank Wire Transfer"
+#~ msgstr "Pankkisiirto"
+
+#~ msgid "Paypal"
+#~ msgstr "PayPal"
+
+#~ msgid "Price"
+#~ msgstr "Hinta"
+
+#~ msgid "Discount(%)"
+#~ msgstr "Alennus (%)"
+
+#~ msgid "Base Amount"
+#~ msgstr "Alkuperäinen määrä"

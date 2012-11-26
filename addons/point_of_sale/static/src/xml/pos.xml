@@ -31,8 +31,19 @@
                 </div>
             </div>
             <div class="loader">
-                <img src="/point_of_sale/static/src/img/loader.gif" />
             </div>
+            &lt;!--[if IE]&gt;
+            <div class='not-supported-browser'>
+                <div class='message'>
+                    <img src='/point_of_sale/static/src/img/pos_screenshot.jpg' />
+                    <p>
+                        The Point of Sale is not supported by Microsoft Internet Explorer. Please use
+                        a modern browser like <a href="http://www.mozilla.org/firefox/" target="_blank">Mozilla Firefox</a> 
+                        or <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>. 
+                    </p>
+                </div>
+            </div>
+            &lt;![endif]--&gt;
         </div>
     </t>
 
@@ -352,6 +363,14 @@
         </div>
     </t>
 
+    <t t-name="ErrorNegativePricePopupWidget">
+        <div class="modal-dialog">
+            <div class="popup popup-help">
+                <p class="message">Your order has to be validated by a cashier.</p>
+            </div>
+        </div>
+    </t>
+
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
@@ -438,6 +457,7 @@
                 <ul>
                     <li><input type="text" class="weight"></input></li>
                     <li class="button set_weight">Set Weight</li>
+                    <li class="button reset_weight">Reset</li>
                 </ul>
 
                 <p class="category">Barcode Scanner</p>
@@ -529,7 +549,7 @@
 
     <t t-name="OrderButtonWidget">
         <li class="order-selector-button">
-            <button class="select-order"><t t-esc="widget.order.get('creationDate').toString('t')"/></button>
+            <button class="select-order"><t t-esc="(widget.order.get_client() ? widget.order.get_client_name()+' : ':'') + widget.order.get('creationDate').toString('t')"/></button>
         </li>
     </t>
 

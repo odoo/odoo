@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-11-24 02:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -51,33 +51,38 @@ msgid "Select Algorithm to generate the Structured Communication on Outgoing Inv
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:114
-#: code:addons/l10n_be_invoice_bba/invoice.py:140
+#: code:addons/l10n_be_invoice_bba/invoice.py:109
+#: code:addons/l10n_be_invoice_bba/invoice.py:135
 #, python-format
 msgid "The daily maximum of outgoing invoices with an automatically generated BBA Structured Communications has been exceeded!\n"
 "Please create manually a unique BBA Structured Communication."
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:155
+#: code:addons/l10n_be_invoice_bba/invoice.py:150
 #, python-format
 msgid "Error!"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:126
+#: code:addons/l10n_be_invoice_bba/invoice.py:121
 #, python-format
 msgid "The Partner should have a 3-7 digit Reference Number for the generation of BBA Structured Communications!\n"
 "Please correct the Partner record."
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:113
-#: code:addons/l10n_be_invoice_bba/invoice.py:125
-#: code:addons/l10n_be_invoice_bba/invoice.py:139
-#: code:addons/l10n_be_invoice_bba/invoice.py:167
-#: code:addons/l10n_be_invoice_bba/invoice.py:177
-#: code:addons/l10n_be_invoice_bba/invoice.py:202
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: l10n_be_invoice_bba
+#: code:addons/l10n_be_invoice_bba/invoice.py:108
+#: code:addons/l10n_be_invoice_bba/invoice.py:120
+#: code:addons/l10n_be_invoice_bba/invoice.py:134
+#: code:addons/l10n_be_invoice_bba/invoice.py:162
+#: code:addons/l10n_be_invoice_bba/invoice.py:172
+#: code:addons/l10n_be_invoice_bba/invoice.py:197
 #, python-format
 msgid "Warning!"
 msgstr ""
@@ -93,8 +98,8 @@ msgid "Communication Type"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:178
-#: code:addons/l10n_be_invoice_bba/invoice.py:203
+#: code:addons/l10n_be_invoice_bba/invoice.py:173
+#: code:addons/l10n_be_invoice_bba/invoice.py:198
 #, python-format
 msgid "The BBA Structured Communication has already been used!\n"
 "Please create manually a unique BBA Structured Communication."
@@ -111,7 +116,7 @@ msgid "Partner"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:156
+#: code:addons/l10n_be_invoice_bba/invoice.py:151
 #, python-format
 msgid "Unsupported Structured Communication Type Algorithm '%s' !\n"
 "Please contact your OpenERP support channel."
@@ -123,7 +128,7 @@ msgid "Communication Algorithm"
 msgstr ""
 
 #. module: l10n_be_invoice_bba
-#: code:addons/l10n_be_invoice_bba/invoice.py:168
+#: code:addons/l10n_be_invoice_bba/invoice.py:163
 #, python-format
 msgid "Empty BBA Structured Communication!\n"
 "Please fill in a unique BBA Structured Communication."

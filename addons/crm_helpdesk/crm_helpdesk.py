@@ -133,7 +133,7 @@ class crm_helpdesk(base_state, base_stage, osv.osv):
         }
         for line in msg['body'].split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()

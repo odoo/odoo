@@ -34,7 +34,6 @@ class Controller(openerp.addons.web.http.Controller):
     def retrieve(self, req, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
-        user_info = None
         with registry.cursor() as cr:
             res_partner = registry.get('res.partner')
             user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
@@ -43,10 +42,13 @@ class Controller(openerp.addons.web.http.Controller):
     @openerp.addons.web.http.jsonrequest
     def signup(self, req, dbname, token, name, login, password):
         """ sign up a user (new or existing)"""
+        values = {'name': name, 'login': login, 'password': password}
+        return self._signup_with_values(req, dbname, token, values)
+
+    def _signup_with_values(self, req, dbname, token, values):
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             res_users = registry.get('res.users')
-            values = {'name': name, 'login': login, 'password': password}
             try:
                 res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
             except SignupError, e:

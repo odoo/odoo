@@ -7,28 +7,47 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 18:17+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Portuguese <pt@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:32+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:28+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_action_rule
-#: help:base.action.rule,act_mail_to_user:0
-msgid ""
-"Check this if you want the rule to send an email to the responsible person."
+#: field:base.action.rule,act_followers:0
+msgid "Set Followers"
 msgstr ""
-"Marque esta opção se quiser que a regra envie um e-mail para a pessoa "
-"responsável."
 
 #. module: base_action_rule
-#: field:base.action.rule,act_remind_partner:0
-msgid "Remind Partner"
-msgstr "Alertar Parceiro"
+#: view:base.action.rule:0
+msgid ""
+"The rule uses the AND operator. The model must match all non-empty fields so "
+"that the rule executes the action  described in the 'Actions' tab."
+msgstr ""
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_base_action_rule
+msgid "Action Rules"
+msgstr "Regras de ação"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_user_id:0
+msgid "Responsible"
+msgstr "Responsável"
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_ir_actions_server
+msgid "ir.actions.server"
+msgstr ""
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Note"
+msgstr "Nota"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_partner_categ_id:0
@@ -36,144 +55,39 @@ msgid "Partner Category"
 msgstr "Categoria de Parceiros"
 
 #. module: base_action_rule
-#: field:base.action.rule,act_mail_to_watchers:0
-msgid "Mail to Watchers (CC)"
-msgstr "E-mail para Vigilantes(CC)"
-
-#. module: base_action_rule
-#: field:base.action.rule,trg_state_to:0
-msgid "Button Pressed"
-msgstr "Botão Pressionado"
-
-#. module: base_action_rule
-#: field:base.action.rule,model_id:0
-msgid "Object"
-msgstr "Objeto"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_mail_to_email:0
-msgid "Mail to these Emails"
-msgstr "Enviar mensagem para estes endereços"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_state:0
-msgid "Set State to"
-msgstr "Alterar o estado para"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_email_from:0
-msgid "Email From"
-msgstr "Email de"
-
-#. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Email Body"
-msgstr "Conteúdo da mensagem"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Days"
-msgstr "Dias"
-
-#. module: base_action_rule
-#: field:base.action.rule,last_run:0
-msgid "Last Run"
-msgstr "Última Execução"
-
-#. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:328
-#, python-format
-msgid "Error!"
-msgstr "Erro !"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_reply_to:0
-msgid "Reply-To"
-msgstr "Responder- Para"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_email_cc:0
 msgid ""
-"These people will receive a copy of the future communication between partner "
-"and users by email"
+"Server Actions to be Triggered (eg. Email Reminder, Call Object Method, "
+"etc...)"
 msgstr ""
-"Essas pessoas receberão uma cópia da comunicação futura entre parceiros e "
-"utilizadores por e-mail"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Minutes"
-msgstr "Minutos"
+#: field:base.action.rule,trg_date_range:0
+msgid "Delay after trigger date"
+msgstr "Atraso após a data de limite"
 
 #. module: base_action_rule
-#: field:base.action.rule,name:0
-msgid "Rule Name"
-msgstr "Nome da Regra"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_partner:0
+#: help:base.action.rule,active:0
 msgid ""
-"Check this if you want the rule to send a reminder by email to the partner."
+"If the active field is set to False, it will allow you to hide the rule "
+"without removing it."
 msgstr ""
-"Marque esta opção se quiser que a regra envie um lembrete por e-mail para o "
-"parceiro."
+"Se o campo ativo é definido como Falso, ele permitirá que se oculte a regra "
+"sem a remover."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Conditions on Model Partner"
-msgstr "Condições de Parceiro Modelo"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Deadline"
-msgstr "Prazo Limite"
-
-#. module: base_action_rule
-#: field:base.action.rule,trg_partner_id:0
-msgid "Partner"
-msgstr "Parceiro"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_subject)s = Object subject"
-msgstr "%(object_subject)s = Sujeito Objeto"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Email Reminders"
-msgstr "Lembretes por correio eletrónico"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Special Keywords to be Used in the Body"
-msgstr "Palavras chave especiais a serem usadas no conteúdo"
+msgid "Conditions"
+msgstr "Condições"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
-msgid "State"
-msgstr "Estado"
-
-#. module: base_action_rule
-#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
-msgid ""
-"Use automated actions to automatically trigger actions for various screens. "
-"Example: a lead created by a specific user may be automatically set to a "
-"specific sales team, or an opportunity which still has status pending after "
-"14 days might trigger an automatic reminder email."
+msgid "Status"
 msgstr ""
-"Use acções automatizadas para disparar automaticamente as ações para telas "
-"diferentes. Exemplo: uma liderança criada por um utilizador específico pode "
-"ser definida automaticamente para uma equipa de vendas específica, ou uma "
-"oportunidade que ainda tem status pendente após 14 dias pode desencadear um "
-"e-mail lembrete automático."
-
-#. module: base_action_rule
-#: help:base.action.rule,act_mail_to_email:0
-msgid "Email-id of the persons whom mail is to be sent"
-msgstr "Email o ID das pessoas a quem o correio deve ser enviado"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+#: field:ir.actions.server,action_rule_id:0
 msgid "Action Rule"
 msgstr "Regra de ação"
 
@@ -183,9 +97,14 @@ msgid "Fields to Change"
 msgstr "Campos a mudar"
 
 #. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Creation Date"
-msgstr "Data de criação"
+#: field:base.action.rule,trg_state_to:0
+msgid "Button Pressed"
+msgstr "Botão Pressionado"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Conditions on Status"
+msgstr ""
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -198,19 +117,42 @@ msgid "Hours"
 msgstr "Horas"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_id)s = Object ID"
-msgstr "%(object_id)s = Objeto ID"
+#: field:base.action.rule,act_state:0
+msgid "Set State to"
+msgstr "Alterar o estado para"
+
+#. module: base_action_rule
+#: help:base.action.rule,server_action_ids:0
+msgid ""
+"Define Server actions.\n"
+"eg:Email Reminders, Call Object Service, etc.."
+msgstr ""
+
+#. module: base_action_rule
+#: help:base.action.rule,trg_date_range:0
+msgid ""
+"Delay After Trigger Date,specifies you can put a negative number. If you "
+"need a delay before the trigger date, like sending a reminder 15 minutes "
+"before a meeting."
+msgstr ""
+"Após atraso Data de Limite, especifica que pode colocar um número negativo. "
+"Se precisar de um atraso antes da data limite, como o envio de um lembrete "
+"15 minutos antes de uma reunião."
+
+#. module: base_action_rule
+#: model:ir.model,name:base_action_rule.model_ir_cron
+msgid "ir.cron"
+msgstr "ir.cron"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Date"
+msgstr "Data"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
 msgstr "Após atraso Data Gatilho"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_remind_attach:0
-msgid "Remind with Attachment"
-msgstr "Relembre com o Anexo"
 
 #. module: base_action_rule
 #: constraint:ir.cron:0
@@ -228,32 +170,80 @@ msgid "None"
 msgstr "Nenhum"
 
 #. module: base_action_rule
-#: help:base.action.rule,act_email_to:0
-msgid ""
-"Use a python expression to specify the right field on which one than we will "
-"use for the 'To' field of the header"
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Months"
+msgstr "Meses"
+
+#. module: base_action_rule
+#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
+#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
+msgid "Automated Actions"
+msgstr "Ações Automáticas"
+
+#. module: base_action_rule
+#: field:base.action.rule,model_id:0
+msgid "Related Document Model"
 msgstr ""
-"Usar uma expressão python para especificar o campo certo em que um de nós "
-"irá utilizar para o campo \"Para\" do cabeçalho"
+
+#. module: base_action_rule
+#: help:base.action.rule,sequence:0
+msgid "Gives the sequence order when displaying a list of rules."
+msgstr "Dá a ordem da sequência ao exibir uma lista de regras."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "%(object_user_phone)s = Responsible phone"
-msgstr "%(object_user_phone)s = Telefone responsável"
+msgid "Conditions on Model Fields"
+msgstr "Condições em campos Modelo"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid ""
-"The rule uses the AND operator. The model must match all non-empty fields so "
-"that the rule executes the action described in the 'Actions' tab."
-msgstr ""
-"A regra usa o operador AND. O modelo deve corresponder a todos os campos não-"
-"vazios, para que a regra execute a ação descrita na aba 'Ações'."
+#: field:base.action.rule,server_action_ids:0
+msgid "Server Action"
+msgstr "Ação do servidor"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Days"
+msgstr "Dias"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_range_type:0
 msgid "Delay type"
 msgstr "Tipo de atraso"
+
+#. module: base_action_rule
+#: field:base.action.rule,filter_id:0
+msgid "Filter"
+msgstr "Filtro"
+
+#. module: base_action_rule
+#: field:base.action.rule,active:0
+msgid "Active"
+msgstr "Ativo"
+
+#. module: base_action_rule
+#: field:base.action.rule,regex_name:0
+msgid "Regex on Resource Name"
+msgstr "Regex em Nome do Recurso"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_type:0
+msgid "Last Modified Date"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,model:0
+msgid "Model"
+msgstr ""
+
+#. module: base_action_rule
+#: field:base.action.rule,last_run:0
+msgid "Last Run"
+msgstr "Última Execução"
+
+#. module: base_action_rule
+#: selection:base.action.rule,trg_date_range_type:0
+msgid "Minutes"
+msgstr "Minutos"
 
 #. module: base_action_rule
 #: help:base.action.rule,regex_name:0
@@ -269,226 +259,14 @@ msgstr ""
 "Nota: Esta busca é sensível a maiúsculas e minúsculas."
 
 #. module: base_action_rule
-#: field:base.action.rule,act_method:0
-msgid "Call Object Method"
-msgstr "Chamar o método do objeto"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_email_to:0
-msgid "Email To"
-msgstr "Email Para"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_mail_to_watchers:0
-msgid ""
-"Check this if you want the rule to mark CC(mail to any other person defined "
-"in actions)."
-msgstr ""
-"Marque esta opção se quiser que a regra para marcar CC (e-mail para qualquer "
-"outra pessoa definida em ações)."
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(partner)s = Partner name"
-msgstr "%(partner)s = Nome Parceiro"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Note"
-msgstr "Nota"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_email_from:0
-msgid ""
-"Use a python expression to specify the right field on which one than we will "
-"use for the 'From' field of the header"
-msgstr ""
-"Usar uma expressão python para especificar o campo certo em que um de nós "
-"irá utilizar para o campo 'De' do cabeçalho"
-
-#. module: base_action_rule
-#: field:base.action.rule,trg_date_range:0
-msgid "Delay after trigger date"
-msgstr "Atraso após a data de limite"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions"
-msgstr "Condições"
-
-#. module: base_action_rule
-#: help:base.action.rule,trg_date_range:0
-msgid ""
-"Delay After Trigger Date,specifies you can put a negative number. If you "
-"need a delay before the trigger date, like sending a reminder 15 minutes "
-"before a meeting."
-msgstr ""
-"Após atraso Data de Limite, especifica que pode colocar um número negativo. "
-"Se precisar de um atraso antes da data limite, como o envio de um lembrete "
-"15 minutos antes de uma reunião."
-
-#. module: base_action_rule
-#: field:base.action.rule,active:0
-msgid "Active"
-msgstr "Ativo"
-
-#. module: base_action_rule
-#: code:addons/base_action_rule/base_action_rule.py:329
-#, python-format
-msgid "No Email ID Found for your Company address!"
-msgstr ""
-
-#. module: base_action_rule
-#: field:base.action.rule,act_remind_user:0
-msgid "Remind Responsible"
-msgstr "Lembrar Responsável"
-
-#. module: base_action_rule
-#: help:base.action.rule,sequence:0
-msgid "Gives the sequence order when displaying a list of rules."
-msgstr "Dá a ordem da sequência ao exibir uma lista de regras."
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_range_type:0
-msgid "Months"
-msgstr "Meses"
-
-#. module: base_action_rule
-#: field:base.action.rule,filter_id:0
-msgid "Filter"
-msgstr "Filtro"
-
-#. module: base_action_rule
-#: selection:base.action.rule,trg_date_type:0
-msgid "Date"
-msgstr "Data"
-
-#. module: base_action_rule
-#: help:base.action.rule,server_action_id:0
-msgid ""
-"Describes the action name.\n"
-"eg:on which object which action to be taken on basis of which condition"
-msgstr ""
-"Descreve o nome da ação. \n"
-" eg: em qual objeto, que ação a ser tomada com base em qual condição"
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_ir_cron
-msgid "ir.cron"
-msgstr "ir.cron"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_description)s = Object description"
-msgstr "%(object_description)s = Descrição Objeto"
-
-#. module: base_action_rule
-#: constraint:base.action.rule:0
-msgid "Error: The mail is not well formated"
-msgstr "Erro: A mensagem não está bem formatada"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Email Actions"
-msgstr "Ações Email"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Email Information"
-msgstr "Informação Email"
-
-#. module: base_action_rule
-#: model:ir.model,name:base_action_rule.model_base_action_rule
-msgid "Action Rules"
-msgstr "Regras de ação"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_mail_body:0
-msgid "Content of mail"
-msgstr "Conteúdo da mensagem"
-
-#. module: base_action_rule
-#: field:base.action.rule,trg_user_id:0
-msgid "Responsible"
-msgstr "Responsável"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(partner_email)s = Partner Email"
-msgstr "%(partner_email)s = Parceiro Email"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_date)s = Creation date"
-msgstr "%(object_date)s = Criação data"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_user_email)s = Responsible Email"
-msgstr "%(object_user_email)s = Email Responsável"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_mail_body:0
-msgid "Mail body"
-msgstr "Corpo da mensagem"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_user:0
-msgid ""
-"Check this if you want the rule to send a reminder by email to the user."
-msgstr ""
-"Marque esta opção se quiser que a regra para enviar um lembrete por e-mail "
-"para o utilizador."
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Server Action to be Triggered"
-msgstr "Ação de servidor para ser acionado"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_mail_to_user:0
-msgid "Mail to Responsible"
-msgstr "Email para Responsável"
-
-#. module: base_action_rule
-#: field:base.action.rule,act_email_cc:0
-msgid "Add Watchers (Cc)"
-msgstr "Adicionar visualizadores (Cc)"
-
-#. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on Model Fields"
-msgstr "Condições em campos Modelo"
-
-#. module: base_action_rule
-#: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
-#: model:ir.ui.menu,name:base_action_rule.menu_base_action_rule_form
-msgid "Automated Actions"
-msgstr "Ações Automáticas"
-
-#. module: base_action_rule
-#: field:base.action.rule,server_action_id:0
-msgid "Server Action"
-msgstr "Ação do servidor"
-
-#. module: base_action_rule
-#: field:base.action.rule,regex_name:0
-msgid "Regex on Resource Name"
-msgstr "Regex em Nome do Recurso"
-
-#. module: base_action_rule
-#: help:base.action.rule,act_remind_attach:0
-msgid ""
-"Check this if you want that all documents attached to the object be attached "
-"to the reminder email sent."
-msgstr ""
-"Marque esta opção se quiser que todos os documentos anexados ao objeto sejam "
-"anexados ao email de lembrete enviado."
-
-#. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Timing"
 msgstr "Condições de sincronismo"
+
+#. module: base_action_rule
+#: field:base.action.rule,name:0
+msgid "Rule Name"
+msgstr "Nome da Regra"
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -497,22 +275,35 @@ msgstr "Sequência"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
+msgid "Conditions on Model Partner"
+msgstr "Condições de Parceiro Modelo"
+
+#. module: base_action_rule
+#: view:base.action.rule:0
 msgid "Actions"
 msgstr "Ações"
 
 #. module: base_action_rule
-#: help:base.action.rule,active:0
+#: model:ir.actions.act_window,help:base_action_rule.base_action_rule_act
 msgid ""
-"If the active field is set to False, it will allow you to hide the rule "
-"without removing it."
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to setup a new automated action rule. \n"
+"              </p><p>\n"
+"                Use automated actions to automatically trigger actions for\n"
+"                various screens. Example: a lead created by a specific user "
+"may\n"
+"                be automatically set to a specific sales team, or an\n"
+"                opportunity which still has status pending after 14 days "
+"might\n"
+"                trigger an automatic reminder email.\n"
+"              </p>\n"
+"            "
 msgstr ""
-"Se o campo ativo é definido como Falso, ele permitirá que se oculte a regra "
-"sem a remover."
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "%(object_user)s = Responsible name"
-msgstr "%(object_user)s = Nome Responsável"
+#: selection:base.action.rule,trg_date_type:0
+msgid "Creation Date"
+msgstr "Data de criação"
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -520,22 +311,211 @@ msgid "Create Date"
 msgstr "Data de criação"
 
 #. module: base_action_rule
-#: view:base.action.rule:0
-msgid "Conditions on States"
-msgstr "Condições para os Estados"
+#: selection:base.action.rule,trg_date_type:0
+msgid "Deadline"
+msgstr "Prazo Limite"
+
+#. module: base_action_rule
+#: field:base.action.rule,trg_partner_id:0
+msgid "Partner"
+msgstr "Parceiro"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Data Limite"
 
+#. module: base_action_rule
+#: view:base.action.rule:0
+msgid "Server Actions"
+msgstr ""
+
+#~ msgid "Object"
+#~ msgstr "Objeto"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#~ msgid "Email Body"
+#~ msgstr "Conteúdo da mensagem"
+
+#~ msgid "Email Reminders"
+#~ msgstr "Lembretes por correio eletrónico"
+
+#~ msgid "Content of mail"
+#~ msgstr "Conteúdo da mensagem"
+
+#~ msgid "Error: The mail is not well formated"
+#~ msgstr "Erro: A mensagem não está bem formatada"
+
+#~ msgid "Mail body"
+#~ msgstr "Corpo da mensagem"
+
+#~ msgid "Mail to these Emails"
+#~ msgstr "Enviar mensagem para estes endereços"
+
+#~ msgid "Call Object Method"
+#~ msgstr "Chamar o método do objeto"
+
+#~ msgid "Mail to Watchers (CC)"
+#~ msgstr "E-mail para Vigilantes(CC)"
+
+#~ msgid "Email From"
+#~ msgstr "Email de"
+
+#~ msgid "Reply-To"
+#~ msgstr "Responder- Para"
+
+#~ msgid ""
+#~ "These people will receive a copy of the future communication between partner "
+#~ "and users by email"
+#~ msgstr ""
+#~ "Essas pessoas receberão uma cópia da comunicação futura entre parceiros e "
+#~ "utilizadores por e-mail"
+
+#~ msgid ""
+#~ "Check this if you want the rule to send a reminder by email to the partner."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que a regra envie um lembrete por e-mail para o "
+#~ "parceiro."
+
 #~ msgid "Special Keywords to Be Used in The Body"
 #~ msgstr "Palavras-chave especial para ser usado no corpo"
+
+#~ msgid "Email-id of the persons whom mail is to be sent"
+#~ msgstr "Email o ID das pessoas a quem o correio deve ser enviado"
+
+#~ msgid "Remind with Attachment"
+#~ msgstr "Relembre com o Anexo"
+
+#~ msgid ""
+#~ "Use a python expression to specify the right field on which one than we will "
+#~ "use for the 'To' field of the header"
+#~ msgstr ""
+#~ "Usar uma expressão python para especificar o campo certo em que um de nós "
+#~ "irá utilizar para o campo \"Para\" do cabeçalho"
+
+#~ msgid "%(object_user_phone)s = Responsible phone"
+#~ msgstr "%(object_user_phone)s = Telefone responsável"
+
+#~ msgid "Email To"
+#~ msgstr "Email Para"
+
+#~ msgid "%(partner)s = Partner name"
+#~ msgstr "%(partner)s = Nome Parceiro"
+
+#~ msgid ""
+#~ "Use a python expression to specify the right field on which one than we will "
+#~ "use for the 'From' field of the header"
+#~ msgstr ""
+#~ "Usar uma expressão python para especificar o campo certo em que um de nós "
+#~ "irá utilizar para o campo 'De' do cabeçalho"
 
 #, python-format
 #~ msgid "No E-Mail ID Found for your Company address!"
 #~ msgstr "Nenhum ID de e-mail encontrado para o endereço da empresa!"
 
+#~ msgid "Remind Responsible"
+#~ msgstr "Lembrar Responsável"
+
 #~ msgid "This module allows to implement action rules for any object."
 #~ msgstr ""
 #~ "Este módulo permite a aplicação das regras de acção para qualquer objecto."
+
+#~ msgid "Email Information"
+#~ msgstr "Informação Email"
+
+#~ msgid "%(partner_email)s = Partner Email"
+#~ msgstr "%(partner_email)s = Parceiro Email"
+
+#~ msgid "%(object_date)s = Creation date"
+#~ msgstr "%(object_date)s = Criação data"
+
+#~ msgid "%(object_user_email)s = Responsible Email"
+#~ msgstr "%(object_user_email)s = Email Responsável"
+
+#~ msgid ""
+#~ "Check this if you want the rule to send a reminder by email to the user."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que a regra para enviar um lembrete por e-mail "
+#~ "para o utilizador."
+
+#~ msgid "Mail to Responsible"
+#~ msgstr "Email para Responsável"
+
+#~ msgid "%(object_user)s = Responsible name"
+#~ msgstr "%(object_user)s = Nome Responsável"
+
+#~ msgid "Conditions on States"
+#~ msgstr "Condições para os Estados"
+
+#~ msgid ""
+#~ "Check this if you want the rule to send an email to the responsible person."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que a regra envie um e-mail para a pessoa "
+#~ "responsável."
+
+#~ msgid "Remind Partner"
+#~ msgstr "Alertar Parceiro"
+
+#, python-format
+#~ msgid "Error!"
+#~ msgstr "Erro !"
+
+#~ msgid "%(object_subject)s = Object subject"
+#~ msgstr "%(object_subject)s = Sujeito Objeto"
+
+#~ msgid ""
+#~ "Use automated actions to automatically trigger actions for various screens. "
+#~ "Example: a lead created by a specific user may be automatically set to a "
+#~ "specific sales team, or an opportunity which still has status pending after "
+#~ "14 days might trigger an automatic reminder email."
+#~ msgstr ""
+#~ "Use acções automatizadas para disparar automaticamente as ações para telas "
+#~ "diferentes. Exemplo: uma liderança criada por um utilizador específico pode "
+#~ "ser definida automaticamente para uma equipa de vendas específica, ou uma "
+#~ "oportunidade que ainda tem status pendente após 14 dias pode desencadear um "
+#~ "e-mail lembrete automático."
+
+#~ msgid "%(object_id)s = Object ID"
+#~ msgstr "%(object_id)s = Objeto ID"
+
+#~ msgid ""
+#~ "The rule uses the AND operator. The model must match all non-empty fields so "
+#~ "that the rule executes the action described in the 'Actions' tab."
+#~ msgstr ""
+#~ "A regra usa o operador AND. O modelo deve corresponder a todos os campos não-"
+#~ "vazios, para que a regra execute a ação descrita na aba 'Ações'."
+
+#~ msgid ""
+#~ "Check this if you want the rule to mark CC(mail to any other person defined "
+#~ "in actions)."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que a regra para marcar CC (e-mail para qualquer "
+#~ "outra pessoa definida em ações)."
+
+#~ msgid ""
+#~ "Describes the action name.\n"
+#~ "eg:on which object which action to be taken on basis of which condition"
+#~ msgstr ""
+#~ "Descreve o nome da ação. \n"
+#~ " eg: em qual objeto, que ação a ser tomada com base em qual condição"
+
+#~ msgid "%(object_description)s = Object description"
+#~ msgstr "%(object_description)s = Descrição Objeto"
+
+#~ msgid "Email Actions"
+#~ msgstr "Ações Email"
+
+#~ msgid "Server Action to be Triggered"
+#~ msgstr "Ação de servidor para ser acionado"
+
+#~ msgid "Add Watchers (Cc)"
+#~ msgstr "Adicionar visualizadores (Cc)"
+
+#~ msgid ""
+#~ "Check this if you want that all documents attached to the object be attached "
+#~ "to the reminder email sent."
+#~ msgstr ""
+#~ "Marque esta opção se quiser que todos os documentos anexados ao objeto sejam "
+#~ "anexados ao email de lembrete enviado."
