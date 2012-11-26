@@ -127,6 +127,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment == 0:
+             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         cr.execute("""
             ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
