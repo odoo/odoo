@@ -22,10 +22,11 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         var self = this;
         this.fields_view = fields_view_get;
         this.$el.addClass(this.fields_view.arch.attrs['class']);
-        return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).then(function(fields_get) {
-            self.fields = fields_get.fields;
-            self.has_been_loaded.resolve();
-        });
+        return new instance.web.Model(this.dataset.model)
+            .call('fields_get').then(function (fields) {
+                self.fields = fields;
+                self.has_been_loaded.resolve();
+            });
     },
     do_search: function (domains, contexts, group_bys) {
         var self = this;
