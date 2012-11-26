@@ -784,9 +784,9 @@ class product_packaging(osv.osv):
         'height': fields.float('Height', help='The height of the package'),
         'width': fields.float('Width', help='The width of the package'),
         'length': fields.float('Length', help='The length of the package'),
-        'product_uom_width': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration",),
-        'product_uom_length': fields.many2one('product.uom', 'Unit of Measure', readonly="1",required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration",),
-        'product_uom_height': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration",),
+        'product_uom_width': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for width",),
+        'product_uom_length': fields.many2one('product.uom', 'Unit of Measure', readonly="1",required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Length",),
+        'product_uom_height': fields.many2one('product.uom', 'Unit of Measure',readonly="1", required=True, help="Unit of Measure (Unit of Measure) is the unit of measurement for Height",),
     }
 
 

@@ -66,7 +66,7 @@ class stock_picking(osv.osv):
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
-        'product_uom_weight': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Duration",),
+        'product_uom_weight': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
