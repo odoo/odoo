@@ -41,8 +41,9 @@ class account_check_write(osv.osv_memory):
         if voucher_ids:
             checks = voucher_obj.browse(cr, uid, voucher_ids, context=context)
             for check in checks:
-                voucher_obj.write(cr, uid, [check.id], {'number': str(number)}, context=context)
-                number += 1
+                if not check.number:
+                    voucher_obj.write(cr, uid, [check.id], {'number': str(number)}, context=context)
+                    number += 1
 
         check_layout_report = {
             'top' : 'account.print.check.top',
