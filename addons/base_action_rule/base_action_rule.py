@@ -169,7 +169,22 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         the rules (given by `ids`).
         """
         ids = self.search(cr,SUPERUSER_ID,[])
-        for action_rule in self.browse(cr, SUPERUSER_ID, ids, context=None):
+        return self._register_hook_(cr,SUPERUSER_ID,ids,context=None)
+        #for action_rule in self.browse(cr, SUPERUSER_ID, ids, context=None):
+        #    model = action_rule.model_id.model
+        #    obj_pool = self.pool.get(model)
+        #    if not hasattr(obj_pool, 'base_action_ruled'):
+        #        obj_pool.create = self._create(obj_pool.create, model, context=None)
+        #        obj_pool.write = self._write(obj_pool.write, model, context=None)
+        #        obj_pool.base_action_ruled = True
+        #return True
+
+    def _register_hook_(self, cr, uid, ids, context=None):
+        """
+        Wrap every `create` and `write` methods of the models specified by
+        the rules (given by `ids`).
+        """
+        for action_rule in self.browse(cr, uid, ids, context=context):
             model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
             if not hasattr(obj_pool, 'base_action_ruled'):
@@ -181,12 +196,12 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
 
     def create(self, cr, uid, vals, context=None):
         res_id = super(base_action_rule, self).create(cr, uid, vals, context=context)
-        self._register_hook(cr)
+        self._register_hook_(cr, uid, res_id,context=context)
         return res_id
 
     def write(self, cr, uid, ids, vals, context=None):
         super(base_action_rule, self).write(cr, uid, ids, vals, context=context)
-        self._register_hook(cr)
+        self._register_hook_(cr, uid, ids, context=context)
         return True
 
     def _check(self, cr, uid, automatic=False, use_new_cursor=False, \
@@ -195,7 +210,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         This Function is call by scheduler.
         """
         rule_ids = self.search(cr, uid, [], context=context)
-        self._register_hook(cr)
+        self._register_hook_(cr, uid, rule_ids, context=context)
         if context is None:
             context = {}
         for rule in self.browse(cr, uid, rule_ids, context=context):
