@@ -84,9 +84,9 @@
         <record model="ir.ui.view" id="product_normal_form_view">
             <field name="name">Membership Products</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="account.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <page string="Information" position="after">
+                <xpath expr="//notebook/page[@string='Accounting']" position="after">
                     <page string="Membership">
                         <group col="1">
                             <group>
@@ -98,7 +98,7 @@
                             </group>
                         </group>
                     </page>
-                </page>
+                </xpath>
             </field>
         </record>
 
