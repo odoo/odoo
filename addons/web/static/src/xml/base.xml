@@ -315,26 +315,32 @@
 
 <t t-name="ChangePassword">
     <form name="change_password_form" method="POST">
+      <div class="oe_form">
         <table align="center">
             <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
                            minlength="1" autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
+            <td class="oe_form_group_cell"><input type="password" name="new_password"
                        minlength="1"/></td>
             </tr>
             <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+                <td colspan="2" align="right">
+                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <span class="oe_fade oe_form_button"> or </span>
+                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
+                </td>
             </tr>
         </table>
+      </div>
     </form>
 </t>
 
@@ -501,8 +507,11 @@
 </t>
 <t t-name="ViewManagerDebug">
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
-    <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
-    <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <t t-if="view_manager.active_view === 'form'">
+        <option value="perm_read">View Log (perm_read)</option>
+        <option value="toggle_layout_outline">Toggle Form Layout Outline</option>
+        <option value="set_defaults">Set Defaults</option>
+    </t>
     <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
@@ -1303,6 +1312,11 @@
             </tr>
             <tr style="width:100%">
                 <td style="width:100%">
+                    <div class="oe_popup_list_pager"></div>
+                </td>
+            </tr>
+            <tr style="width:100%">
+                <td style="width:100%">
                     <div class="oe_popup_list" style="width:100%"></div>
                 </td>
             </tr>
@@ -1589,10 +1603,10 @@
     <span/>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" class="field_integer" step="1"/>
+    <input type="number" class="field_integer" value = "0" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" class="field_float" step="0.01"/>
+    <input type="number" class="field_float" value = "0.0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
     <select>

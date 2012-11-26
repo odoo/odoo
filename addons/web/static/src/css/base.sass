@@ -1121,47 +1121,6 @@ $sheet-padding: 16px
             .oe_view_manager_buttons
                 white-space: nowrap
         // }}}
-        // ViewManager.pager {{{
-        .oe_view_manager_pager
-            line-height: 26px
-            .oe_list_pager_single_page .oe_pager_group
-                display: none
-        .oe_pager_value
-            float: left
-            margin-right: 8px
-        ul.oe_pager_group
-            padding: 0
-            margin: 0
-        .oe_pager_group
-            float: left
-            height: 24px
-            line-height: 24px
-            display: inline-block
-            border: 1px solid #ababab
-            cursor: pointer
-            @include radius(5px)
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0
-                margin: 0
-                list-style-type: none
-                float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                padding: 0 8px
-                &:hover
-                    text-decoration: none
-            .active
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                a
-                    color: #fff
-                    text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        // }}}
         // ViewManager.switches {{{
         .oe_view_manager_switch
             padding: 0
@@ -1202,6 +1161,47 @@ $sheet-padding: 16px
             .oe_vm_switch_diagram:after
                 content: "f"
         // }}}
+    // List pager {{{
+    .oe_list_pager
+        line-height: 26px
+    .oe_pager_value
+        float: left
+        margin-right: 8px
+    ul.oe_pager_group
+        padding: 0
+        margin: 0
+    .oe_pager_group
+        float: left
+        height: 24px
+        line-height: 24px
+        display: inline-block
+        border: 1px solid #ababab
+        cursor: pointer
+        @include radius(5px)
+        li
+            height: 24px
+            line-height: 24px
+            padding: 0
+            margin: 0
+            list-style-type: none
+            float: left
+            border-right: 1px solid #ababab
+            &:last-child
+                border: none
+        a
+            color: #4c4c4c
+            padding: 0 8px
+            &:hover
+                text-decoration: none
+        .active
+            background: #999
+            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+            a
+                color: #fff
+                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+    .oe_list_pager.oe_list_pager_single_page .oe_pager_group
+        display: none
+    // }}}
     // ViewManager application {{{
     .oe_view_manager_current
         height: 100%
@@ -1222,9 +1222,11 @@ $sheet-padding: 16px
         > .oe_view_manager_header
             display: none
     // }}}
-    // Viewmanager popup {{{
+    // FormPopup {{{
     .oe_popup_form > .oe_formview > .oe_form_pager
         display: none !important
+    .oe_popup_list_pager
+        float: right
     // }}}
     // SearchView {{{
     .oe_searchview
@@ -1471,6 +1473,7 @@ $sheet-padding: 16px
                     list-style: none
                     padding: 0
                 li
+                    cursor: pointer
                     position: relative
                     list-style: none
                     margin: 0
@@ -1533,13 +1536,20 @@ $sheet-padding: 16px
         font-size: 125%
         max-width: 700px
         .oe_view_nocontent_create
-            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0
             margin-top: 0
             padding-top: 35px
-            min-height: 28px
             color: #4c4c4c
+            &:before
+                content: ""
+                display: inline-block
+                position: absolute
+                width: 70px
+                height: 80px
+                margin-left: -70px
+                margin-top: -50px
+                background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 0px 0px
         > p
-            padding-left: 95px
+            padding-left: 78px
         .oe_empty_custom_dashboard
             background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0
             margin-top: -15px

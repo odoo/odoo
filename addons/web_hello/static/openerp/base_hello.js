@@ -16,7 +16,7 @@ instance.web.SearchView = instance.web.SearchView.extend({
 instance.web.Login = instance.web.Login.extend({
     start: function() {
         console.log('Hello there');
-        this._super.apply(this,arguments);
+        return this._super.apply(this,arguments);
     }
 });
 
