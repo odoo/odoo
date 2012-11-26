@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-24 02:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -28,11 +28,6 @@ msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
-msgid "This Week"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
 msgid "Search Subscription"
 msgstr ""
 
@@ -44,12 +39,6 @@ msgstr ""
 #. module: subscription
 #: field:subscription.document.fields,field:0
 msgid "Field"
-msgstr ""
-
-#. module: subscription
-#: view:subscription.subscription:0
-#: field:subscription.subscription,state:0
-msgid "State"
 msgstr ""
 
 #. module: subscription
@@ -74,13 +63,14 @@ msgstr ""
 
 #. module: subscription
 #: view:subscription.subscription:0
-msgid "Today"
+#: field:subscription.subscription,state:0
+msgid "Status"
 msgstr ""
 
 #. module: subscription
-#: code:addons/subscription/subscription.py:136
-#, python-format
-msgid "Error !"
+#: model:ir.ui.menu,name:subscription.config_recuuring_event
+#: model:ir.ui.menu,name:subscription.next_id_45
+msgid "Recurring Events"
 msgstr ""
 
 #. module: subscription
@@ -177,9 +167,9 @@ msgid "Days"
 msgstr ""
 
 #. module: subscription
-#: field:subscription.document,active:0
-#: field:subscription.subscription,active:0
-msgid "Active"
+#: code:addons/subscription/subscription.py:136
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: subscription
@@ -189,6 +179,7 @@ msgstr ""
 
 #. module: subscription
 #: model:ir.model,name:subscription.model_subscription_subscription
+#: view:subscription.subscription:0
 #: field:subscription.subscription.history,subscription_id:0
 msgid "Subscription"
 msgstr ""
@@ -202,12 +193,6 @@ msgstr ""
 #. module: subscription
 #: help:subscription.subscription,cron_id:0
 msgid "Scheduler which runs on subscription"
-msgstr ""
-
-#. module: subscription
-#: model:ir.ui.menu,name:subscription.config_recuuring_event
-#: model:ir.ui.menu,name:subscription.next_id_45
-msgid "Recurring Events"
 msgstr ""
 
 #. module: subscription
@@ -276,7 +261,6 @@ msgid "Subscription Document Fields"
 msgstr ""
 
 #. module: subscription
-#: view:subscription.subscription:0
 #: selection:subscription.subscription,state:0
 msgid "Done"
 msgstr ""
@@ -297,5 +281,11 @@ msgstr ""
 #: view:subscription.subscription:0
 #: field:subscription.subscription,doc_lines:0
 msgid "Documents created"
+msgstr ""
+
+#. module: subscription
+#: field:subscription.document,active:0
+#: field:subscription.subscription,active:0
+msgid "Active"
 msgstr ""
 

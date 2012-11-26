@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-11-24 02:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: multi_company
-#: model:res.company,overdue_msg:multi_company.res_company_odoo
-#: model:res.company,overdue_msg:multi_company.res_company_oerp_be
-#: model:res.company,overdue_msg:multi_company.res_company_oerp_editor
-#: model:res.company,overdue_msg:multi_company.res_company_oerp_in
-#: model:res.company,overdue_msg:multi_company.res_company_oerp_us
+#: model:res.company,follow_up_msg:multi_company.res_company_odoo
+#: model:res.company,follow_up_msg:multi_company.res_company_oerp_be
+#: model:res.company,follow_up_msg:multi_company.res_company_oerp_editor
+#: model:res.company,follow_up_msg:multi_company.res_company_oerp_in
+#: model:res.company,follow_up_msg:multi_company.res_company_oerp_us
 msgid "\n"
 "Date: %(date)s\n"
 "\n"
@@ -43,8 +43,19 @@ msgid "Odoo Offers"
 msgstr ""
 
 #. module: multi_company
-#: view:multi_company.default:0
-msgid "Returning"
+#: model:res.company,overdue_msg:multi_company.res_company_odoo
+#: model:res.company,overdue_msg:multi_company.res_company_oerp_be
+#: model:res.company,overdue_msg:multi_company.res_company_oerp_editor
+#: model:res.company,overdue_msg:multi_company.res_company_oerp_in
+#: model:res.company,overdue_msg:multi_company.res_company_oerp_us
+msgid "Dear Sir/Madam,\n"
+"\n"
+"Our records indicate that some payments on your account are still due. Please find details below.\n"
+"If the amount has already been paid, please disregard this notice. Otherwise, please forward us the total amount stated below.\n"
+"If you have any queries regarding your account, Please contact us.\n"
+"\n"
+"Thank you in advance for your cooperation.\n"
+"Best Regards,"
 msgstr ""
 
 #. module: multi_company
@@ -59,18 +70,7 @@ msgstr ""
 
 #. module: multi_company
 #: model:ir.actions.act_window,name:multi_company.action_inventory_form
-#: model:ir.ui.menu,name:multi_company.menu_action_inventory_form
 msgid "Default Company per Object"
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Matching"
-msgstr ""
-
-#. module: multi_company
-#: view:multi_company.default:0
-msgid "Condition"
 msgstr ""
 
 #. module: multi_company

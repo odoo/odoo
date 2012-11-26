@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-09-08 18:59+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:28+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:23+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: fetchmail
 #: selection:fetchmail.server,state:0
@@ -53,6 +53,11 @@ msgid "Keep Attachments"
 msgstr "Hold Vedlegg"
 
 #. module: fetchmail
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr "SSL/TLS"
+
+#. module: fetchmail
 #: help:fetchmail.server,original:0
 msgid ""
 "Whether a full original copy of each email should be kept for referenceand "
@@ -62,16 +67,6 @@ msgstr ""
 "Om en full original kopi av hver e-post bør holdes for referenceand festet "
 "til hver bearbeidet melding. Dette vil vanligvis doble størrelsen på "
 "meldingen database."
-
-#. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr "Tjener prioritet."
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "State"
-msgstr "Stat"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -90,9 +85,9 @@ msgid "Incoming Mail Servers"
 msgstr "Innkommende Mail Tjenere."
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
-msgstr "Port"
+#: view:fetchmail.server:0
+msgid "Server type IMAP."
+msgstr "Tjener type IMAP."
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -105,9 +100,9 @@ msgid "Local Server"
 msgstr "Lokal tjener."
 
 #. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
-msgstr "Brukernavn:"
+#: field:fetchmail.server,state:0
+msgid "Status"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model,name:fetchmail.model_fetchmail_server
@@ -125,9 +120,9 @@ msgid "SSL"
 msgstr "SSL"
 
 #. module: fetchmail
-#: model:ir.model,name:fetchmail.model_mail_message
-msgid "Email Message"
-msgstr "E-post Melding."
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
+msgstr ""
 
 #. module: fetchmail
 #: field:fetchmail.server,date:0
@@ -154,14 +149,9 @@ msgid "Keep Original"
 msgstr "Hold Original"
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
-#, python-format
-msgid ""
-"Here is what we got instead:\n"
-" %s"
+#: view:fetchmail.server:0
+msgid "Advanced Options"
 msgstr ""
-"Her er hva vi fikk i stedet:\n"
-"  % s"
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -181,14 +171,14 @@ msgid "Connection test failed!"
 msgstr "Tilkoblingen var mislykket!"
 
 #. module: fetchmail
+#: field:fetchmail.server,user:0
+msgid "Username"
+msgstr "Brukernavn:"
+
+#. module: fetchmail
 #: help:fetchmail.server,server:0
 msgid "Hostname or IP of the mail server"
 msgstr "Vertsnavn eller IP for e-postserveren."
-
-#. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
-msgstr "Tjener type IMAP."
 
 #. module: fetchmail
 #: field:fetchmail.server,name:0
@@ -196,9 +186,12 @@ msgid "Name"
 msgstr "Navn"
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
-msgstr "SSL/TLS"
+#: code:addons/fetchmail/fetchmail.py:155
+#, python-format
+msgid ""
+"Here is what we got instead:\n"
+" %s."
+msgstr ""
 
 #. module: fetchmail
 #: view:fetchmail.server:0
@@ -211,7 +204,7 @@ msgid "Server Action"
 msgstr "Tjenerhandling"
 
 #. module: fetchmail
-#: field:mail.message,fetchmail_server_id:0
+#: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
 msgstr "Inngående E-post tjener."
 
@@ -241,9 +234,14 @@ msgstr ""
 "blir fratatt eventuelle vedlegg før de behandles."
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
 msgstr ""
+
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
+msgstr "Tjener prioritet."
 
 #. module: fetchmail
 #: selection:fetchmail.server,type:0
@@ -327,9 +325,26 @@ msgid "POP Server"
 msgstr "POP tjener."
 
 #. module: fetchmail
-#: view:mail.message:0
-msgid "Mail Server"
-msgstr "E-posttjener"
+#: field:fetchmail.server,port:0
+msgid "Port"
+msgstr "Port"
+
+#~ msgid "State"
+#~ msgstr "Stat"
+
+#~ msgid "Email Message"
+#~ msgstr "E-post Melding."
+
+#, python-format
+#~ msgid ""
+#~ "Here is what we got instead:\n"
+#~ " %s"
+#~ msgstr ""
+#~ "Her er hva vi fikk i stedet:\n"
+#~ "  % s"
 
 #~ msgid "Advanced options"
 #~ msgstr "Avanserte alternativer"
+
+#~ msgid "Mail Server"
+#~ msgstr "E-posttjener"

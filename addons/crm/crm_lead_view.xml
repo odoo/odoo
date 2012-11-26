@@ -414,9 +414,10 @@
                             <h1><field name="name"/></h1>
                             <label for="planned_revenue" class="oe_edit_only"/>
                             <h2>
-                                <field name="planned_revenue" class="oe_inline"/>
-                                <field name="company_currency" class="oe_inline" groups="base.group_multi_currency"/> at
-                                <field name="probability" class="oe_inline" widget="integer"/>%% success rate
+                                <field name="company_currency" invisible="1"/>
+                                <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                <span class="oe_grey"> at </span>
+                                <field name="probability" class="oe_inline" widget="integer"/>%%
                             </h2>
                         </div>
                         <group>
@@ -444,7 +445,8 @@
                                 <label for="section_id"/>
                                 <div>
                                     <field name="section_id" widget="selection"/>
-                                    <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
+                                    <button name="case_escalate" string="Escalate" type="object" class="oe_link"
+                                        attrs="{'invisible': [('section_id', '=', False)]}"/>
                                 </div>
                             </group>
                             <group>

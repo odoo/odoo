@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-25 00:15+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:24+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr "Sipariş Referansı Her Şirket İçin Tekil Olmalı!"
+msgstr "Sipariş Referansı her Firma için eşsiz olmalı!"
 
 #. module: account_anglo_saxon
-#: view:product.category:0
-msgid " Accounting Property"
-msgstr " Muhasebe Özellikleri"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Fatura Numarası her Firmada eşsiz olmalı!"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
@@ -35,12 +35,12 @@ msgstr "Ürün Kategorisi"
 #. module: account_anglo_saxon
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr "Referans her şirket için tekil olmalı!"
+msgstr "Referans her firma için eşsiz olmalı!"
 
 #. module: account_anglo_saxon
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr "Birbirinin alt kategorisi olan kategoriler oluşturamazsınız."
+msgstr "Hata! Özyinelenen kategoriler oluşturamazsınız."
 
 #. module: account_anglo_saxon
 #: constraint:account.invoice:0
@@ -50,14 +50,14 @@ msgstr "Geçersiz BBA Yapılı İletişim !"
 #. module: account_anglo_saxon
 #: constraint:product.template:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
 msgstr ""
-"Hata: Varsayılan ölçü birimi ile satış ölçü birimi aynı kategoride bulunmalı."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Fatura Kalemi"
+msgstr "Fatura Öğesi"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_purchase_order
@@ -86,11 +86,6 @@ msgid "Picking List"
 msgstr "Toplama Listesi"
 
 #. module: account_anglo_saxon
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
-
-#. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
 #: help:product.template,property_account_creditor_price_difference:0
 msgid ""
@@ -105,6 +100,9 @@ msgstr ""
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Sipariş referansı eşsiz olmalı !"
+
+#~ msgid " Accounting Property"
+#~ msgstr " Muhasebe Özellikleri"
 
 #~ msgid "Stock Accounting for Anglo Saxon countries"
 #~ msgstr "Anglo Saxon ülkeleri için Stok Muhasebesi"
@@ -127,3 +125,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Bu modül, Anglo-Saxon muhasebe yöntemini stok işlemleri yoluyla muhasebe \n"
 #~ "    mantığını değştirerek destekleyecektir."
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Hata: Varsayılan ölçü birimi ile satınalma ölçü birimi aynı kategoride "
+#~ "bulunmalı."
