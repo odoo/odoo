@@ -296,7 +296,7 @@ class mail_thread(osv.AbstractModel):
             if f._type == 'many2one':
                 if not isinstance(v, browse_record):
                     v = self.pool[f._obj].browse(cr, SUPERUSER_ID, v)
-                return v.name_get()[0][1]
+                return v
             if f._type == 'selection':
                 # TODO get translated value
                 pass
@@ -327,17 +327,20 @@ class mail_thread(osv.AbstractModel):
 
         for record, changed_fields in changes.items():
             # TODO tpl changed_fields
+            subtype = False
             chg = []
             for f in changed_fields:
                 ci = tracked[f]
                 from_ = convert_for_display(record[f], ci.column)
                 to = convert_for_display(values[f], ci.column)
-                chg.append((_t(ci), from_, to))
+                if to.__hasattr__('subtype'):
+                    subtype = to.subtype
+                chg.append((_t(ci), from_.name_get()[0][1], to.name_get()[0][1]))
 
             message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
                                                                         changes=chg)
 
-            record.message_post(message)
+            record.message_post(message,subtype=subtype)
 
         return result
 

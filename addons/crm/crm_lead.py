@@ -382,7 +382,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 0.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 0.0}, new_stage_id=stage_id, context=context)
-        self.case_mark_lost_send_note(cr, uid, ids, context=context)
         return True
 
     def case_mark_won(self, cr, uid, ids, context=None):
@@ -391,7 +390,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage_id = self.stage_find(cr, uid, [lead], lead.section_id.id or False, [('probability', '=', 100.0)], context=context)
             if stage_id:
                 self.case_set(cr, uid, [lead.id], values_to_update={'probability': 100.0}, new_stage_id=stage_id, context=context)
-        self.case_mark_won_send_note(cr, uid, ids, context=context)
         return True
 
     def set_priority(self, cr, uid, ids, priority):
@@ -843,11 +841,6 @@ class crm_lead(base_stage, format_address, osv.osv):
     # OpenChatter methods and notifications
     # ----------------------------------------
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), subtype="mt_crm_stage", context=context)
-
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
             lead = self.browse(cr, uid, [lead], context=context)[0]
@@ -858,14 +851,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             message = _("%s has been <b>created</b>.") % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=message, context=context)
         return True
-
-    def case_mark_lost_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>lost</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_lost", context=context)
-
-    def case_mark_won_send_note(self, cr, uid, ids, context=None):
-        message = _("Opportunity has been <b>won</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_crm_won", context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]
