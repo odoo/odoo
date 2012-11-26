@@ -1,5 +1,8 @@
-import test_ir_values, test_base
+import test_base, test_expression, test_search, test_ir_values
 
 checks = [
-    test_ir_values, test_base
+    test_base,
+    test_expression,
+    test_search,
+    test_ir_values,
 ]

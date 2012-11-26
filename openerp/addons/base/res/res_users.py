@@ -122,7 +122,6 @@ class res_users(osv.osv):
     }
     _name = "res.users"
     _description = 'Users'
-    _order = 'login'
 
     def _set_new_password(self, cr, uid, id, name, value, args, context=None):
         if value is False:
@@ -250,16 +249,6 @@ class res_users(osv.osv):
         'groups_id': _get_group,
         'image': lambda self, cr, uid, ctx={}: self.pool.get('res.partner')._get_default_image(cr, uid, False, ctx, colorize=True),
     }
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        """ Override of res.users fields_view_get.
-            - if the view is specified: resume with normal behavior
-            - else: the default view is overrided and redirected to the partner
-              view
-        """
-        if not view_id and view_type == 'form':
-            return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
-        return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
@@ -409,10 +398,10 @@ class res_users(osv.osv):
                 # prevent/delay login in that case. It will also have been logged
                 # as a SQL error, if anyone cares.
                 try:
-                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", (user_id,))
+                    cr.execute("SELECT id FROM res_users WHERE id=%s FOR UPDATE NOWAIT", (user_id,), log_exceptions=False)
                     cr.execute("UPDATE res_users SET login_date = now() AT TIME ZONE 'UTC' WHERE id=%s", (user_id,))
-                except Exception, e:
-                    _logger.exception("Failed to update last_login for db:%s login:%s", db, login)
+                except Exception:
+                    _logger.debug("Failed to update last_login for db:%s login:%s", db, login, exc_info=True)
         except openerp.exceptions.AccessDenied:
             _logger.info("Login failed for db:%s login:%s", db, login)
             user_id = False

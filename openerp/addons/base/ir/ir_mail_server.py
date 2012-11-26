@@ -197,7 +197,7 @@ class ir_mail_server(osv.osv):
             logpiper = WriteToLogger(_logger)
             smtplib.stderr = logpiper
             smtplib.stdout = logpiper
-        return super(ir_mail_server, self).__init__(*args,**kwargs)
+        super(ir_mail_server, self).__init__(*args,**kwargs)
 
     def name_get(self, cr, uid, ids, context=None):
         return [(a["id"], "(%s)" % (a['name'])) for a in self.read(cr, uid, ids, ['name'], context=context)]

@@ -109,6 +109,8 @@ def assert_constructor(loader, node):
 
 def record_constructor(loader, node):
     kwargs = loader.construct_mapping(node)
+    assert "model" in kwargs, "'model' argument is required for !record"
+    assert "id" in kwargs, "'id' argument is required for !record"
     return Record(**kwargs)
 
 def python_constructor(loader, node):

@@ -286,8 +286,11 @@ class YamlInterpreter(object):
         model = self.get_model(record.model)
 
         view_id = record.view
-        if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, self.module, record.view)[1]
+        if view_id and (view_id is not True) and isinstance(view_id, basestring):
+            module = self.module
+            if '.' in view_id:
+                module, view_id = view_id.split('.',1)
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, module, view_id)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
@@ -378,7 +381,11 @@ class YamlInterpreter(object):
                 return False
             return val
 
-        view = view_info and etree.fromstring(view_info['arch'].encode('utf-8')) or False
+        if view_info:
+            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            view = arch if len(arch) else False
+        else:
+            view = False
         fields = fields or {}
         if view is not False:
             fg = view_info['fields']

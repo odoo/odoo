@@ -106,7 +106,7 @@ class ir_model(osv.osv):
     }
 
     _defaults = {
-        'model': lambda *a: 'x_',
+        'model': 'x_',
         'state': lambda self,cr,uid,ctx=None: (ctx and ctx.get('manual',False)) and 'manual' or 'base',
     }
 
@@ -878,11 +878,18 @@ class ir_model_data(osv.osv):
             id = False
         return id
 
+    def clear_caches(self):
+        """ Clears all orm caches on the object's methods
+
+        :returns: itself
+        """
+        self._get_id.clear_cache(self)
+        self.get_object_reference.clear_cache(self)
+        return self
 
     def unlink(self, cr, uid, ids, context=None):
         """ Regular unlink method, but make sure to clear the caches. """
-        self._get_id.clear_cache(self)
-        self.get_object_reference.clear_cache(self)
+        self.clear_caches()
         return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
 
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
