@@ -21,7 +21,7 @@
 
         <!-- Project Read/Unread actions -->
         <record id="actions_server_project_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Project : Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_project"/>
@@ -39,7 +39,7 @@
         </record>
 
         <record id="actions_server_project_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Project : Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_project"/>
@@ -344,7 +344,7 @@
 
         <!-- Task Read/Unread actions -->
         <record id="actions_server_project_task_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Project task : Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_task"/>
@@ -362,7 +362,7 @@
         </record>
 
         <record id="actions_server_project_task_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Project task : Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_task"/>
