@@ -1,9 +1,6 @@
-import copy
 import xml.etree.ElementTree
-import mock
 
 import unittest2
-import simplejson
 
 import openerp.addons.web.controllers.main
 from .. import nonliterals, session as s
@@ -46,20 +43,14 @@ class DomainsAndContextsTest(unittest2.TestCase):
         )
 
     def test_retrieve_nonliteral_domain(self):
-        session = mock.Mock(spec=s.OpenERPSession)
-        session.domains_store = {}
         domain_string = ("[('month','=',(datetime.date.today() - "
                          "datetime.timedelta(365/12)).strftime('%%m'))]")
         e = xml.etree.ElementTree.Element(
             'field', domain=domain_string)
 
-        self.view.parse_domains_and_contexts(e, session)
+        self.view.parse_domains_and_contexts(e, None)
 
         self.assertIsInstance(e.get('domain'), nonliterals.Domain)
-        self.assertEqual(
-            nonliterals.Domain(
-                session, key=e.get('domain').key).get_domain_string(),
-            domain_string)
 
     def test_convert_literal_context(self):
         e = xml.etree.ElementTree.Element(
@@ -89,20 +80,14 @@ class DomainsAndContextsTest(unittest2.TestCase):
         )
 
     def test_retrieve_nonliteral_context(self):
-        session = mock.Mock(spec=s.OpenERPSession)
-        session.contexts_store = {}
         context_string = ("{'month': (datetime.date.today() - "
                          "datetime.timedelta(365/12)).strftime('%%m')}")
         e = xml.etree.ElementTree.Element(
             'field', context=context_string)
 
-        self.view.parse_domains_and_contexts(e, session)
+        self.view.parse_domains_and_contexts(e, None)
 
         self.assertIsInstance(e.get('context'), nonliterals.Context)
-        self.assertEqual(
-            nonliterals.Context(
-                session, key=e.get('context').key).get_context_string(),
-            context_string)
 
 class AttrsNormalizationTest(unittest2.TestCase):
     def setUp(self):

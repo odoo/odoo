@@ -878,7 +878,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                             nested: true,
                         }
                     };
-                    this.session.get_file({ url: '/web/report', data: {action: JSON.stringify(action)}, complete: instance.web.unblockUI });
+                    this.session.get_file({
+                        url: '/web/report',
+                        data: {action: JSON.stringify(action)},
+                        complete: instance.web.unblockUI
+                    });
                 }
                 break;
             default:
@@ -1074,7 +1078,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
             }, context);
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: additional_context
+                context: instance.web.pyeval.eval(
+                    'context', additional_context)
             }).done(function(result) {
                 result.context = _.extend(result.context || {},
                     additional_context);
@@ -1126,7 +1131,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
         }
     },
     on_attachment_delete: function(e) {
-        var self = this;
         e.preventDefault();
         e.stopPropagation();
         var self = this;
@@ -1171,7 +1175,8 @@ instance.web.View = instance.web.Widget.extend({
                 "view_id": this.view_id,
                 "view_type": this.view_type,
                 toolbar: !!this.options.$sidebar,
-                context: this.dataset.get_context(context)
+                context: instance.web.pyeval.eval(
+                    'context', this.dataset.get_context(context))
             });
         }
         return view_loaded.then(function(r) {
@@ -1262,7 +1267,11 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args).done(handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).done(handler);
+            return this.rpc('/web/action/load', {
+                action_id: action_data.name,
+                context: instance.web.pyeval.eval('context', context),
+                do_not_eval: true
+            }).done(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).done(handler);
         }

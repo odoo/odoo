@@ -100,7 +100,7 @@ class WebRequest(object):
         # Determine self.lang
         lang = self.params.get('lang', None)
         if lang is None:
-            lang = self.session.eval_context(self.context).get('lang')
+            lang = self.context.get('lang')
         if lang is None:
             lang = self.httprequest.cookies.get('lang')
         if lang is None:
@@ -402,8 +402,10 @@ def session_context(request, session_store, session_lock, sid):
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
                     if stored and isinstance(v, session.OpenERPSession):
-                        v.contexts_store.update(stored.contexts_store)
-                        v.domains_store.update(stored.domains_store)
+                        if hasattr(v, 'contexts_store'):
+                            del v.contexts_store
+                        if hasattr(v, 'domains_store'):
+                            del v.domains_store
                         if not hasattr(v, 'jsonp_requests'):
                             v.jsonp_requests = {}
                         v.jsonp_requests.update(getattr(

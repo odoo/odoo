@@ -81,8 +81,6 @@ class OpenERPSession(object):
         self._password = False
         self._suicide = False
         self.context = {}
-        self.contexts_store = {}
-        self.domains_store = {}
         self.jsonp_requests = {}     # FIXME use a LRU
         
     def send(self, service_name, method, *args):
@@ -221,50 +219,5 @@ class OpenERPSession(object):
             d.update(context)
         d['context'] = d
         return d
-
-    def eval_context(self, context_to_eval, context=None):
-        """ Evaluates the provided context_to_eval in the context (haha) of
-        the context. Also merges the evaluated context with the session's context.
-
-        :param context_to_eval: a context to evaluate. Must be a dict or a
-                                non-literal context. If it's a dict, will be
-                                returned as-is
-        :type context_to_eval: openerpweb.nonliterals.Context
-        :returns: the evaluated context
-        :rtype: dict
-
-        :raises: ``TypeError`` if ``context_to_eval`` is neither a dict nor
-                 a Context
-        """
-        ctx = dict(
-            self.base_eval_context,
-            **(context or {}))
-        
-        # adding the context of the session to send to the openerp server
-        ccontext = nonliterals.CompoundContext(self.context, context_to_eval or {})
-        ccontext.session = self
-        return ccontext.evaluate(ctx)
-
-    def eval_domain(self, domain, context=None):
-        """ Evaluates the provided domain using the provided context
-        (merged with the session's evaluation context)
-
-        :param domain: an OpenERP domain as a list or as a
-                       :class:`openerpweb.nonliterals.Domain` instance
-
-                       In the second case, it will be evaluated and returned.
-        :type domain: openerpweb.nonliterals.Domain
-        :param dict context: the context to use in the evaluation, if any.
-        :returns: the evaluated domain
-        :rtype: list
-
-        :raises: ``TypeError`` if ``domain`` is neither a list nor a Domain
-        """
-        if isinstance(domain, list):
-            return domain
-
-        cdomain = nonliterals.CompoundDomain(domain)
-        cdomain.session = self
-        return cdomain.evaluate(context or {})
 
 # vim:et:ts=4:sw=4:
