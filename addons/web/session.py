@@ -10,8 +10,6 @@ import xmlrpclib
 
 import openerp
 
-import nonliterals
-
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------

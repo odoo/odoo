@@ -11,7 +11,7 @@ from mako.template import Template
 from openerp.modules import module
 
 from .main import module_topological_sort
-from .. import http, nonliterals
+from .. import http
 
 NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
 <html>

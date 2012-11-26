@@ -30,7 +30,6 @@ except ImportError:
 import openerp
 
 from .. import http
-from .. import nonliterals
 openerpweb = http
 
 #----------------------------------------------------------
@@ -441,39 +440,6 @@ def fix_view_modes(action):
     ]
 
     return action
-
-def parse_domain(domain, session):
-    """ Parses an arbitrary string containing a domain, transforms it
-    to either a literal domain or a :class:`nonliterals.Domain`
-
-    :param domain: the domain to parse, if the domain is not a string it
-                   is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.OpenERPSession
-    """
-    if not isinstance(domain, basestring):
-        return domain
-    try:
-        return ast.literal_eval(domain)
-    except ValueError:
-        # not a literal
-        return nonliterals.Domain(session, domain)
-
-def parse_context(context, session):
-    """ Parses an arbitrary string containing a context, transforms it
-    to either a literal context or a :class:`nonliterals.Context`
-
-    :param context: the context to parse, if the context is not a string it
-           is assumed to be a literal domain and is returned as-is
-    :param session: Current OpenERP session
-    :type session: openerpweb.OpenERPSession
-    """
-    if not isinstance(context, basestring):
-        return context
-    try:
-        return ast.literal_eval(context)
-    except ValueError:
-        return nonliterals.Context(session, context)
 
 def _local_web_translations(trans_file):
     messages = []
@@ -970,8 +936,8 @@ class Menu(openerpweb.Controller):
 
         menu_domain = [('parent_id', '=', False)]
         if user_menu_id:
-            domain_string = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'],
-                                                                  req.context)[0]['domain']
+            domain_string = s.model('ir.actions.act_window').read(
+                [user_menu_id[0]], ['domain'],req.context)[0]['domain']
             if domain_string:
                 menu_domain = ast.literal_eval(domain_string)
 
@@ -1176,8 +1142,6 @@ class View(openerpweb.Controller):
         fvg = Model.fields_view_get(view_id, view_type, req.context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(req.session, fvg, req.context, transform, (view_type == 'kanban'))
-        if toolbar and transform:
-            self.process_toolbar(req, fvg['toolbar'])
         return fvg
 
     def process_view(self, session, fvg, context, transform, preserve_whitespaces=False):
@@ -1194,12 +1158,8 @@ class View(openerpweb.Controller):
             arch = fvg['arch']
         fvg['arch_string'] = arch
 
-        if transform:
-            evaluation_context = session.evaluation_context(context or {})
-            xml = self.transform_view(arch, session, evaluation_context)
-        else:
-            xml = ElementTree.fromstring(arch)
-        fvg['arch'] = xml2json_from_elementtree(xml, preserve_whitespaces)
+        fvg['arch'] = xml2json_from_elementtree(
+            ElementTree.fromstring(arch), preserve_whitespaces)
 
         if 'id' in fvg['fields']:
             # Special case for id's
@@ -1208,29 +1168,8 @@ class View(openerpweb.Controller):
             id_field['type'] = 'id'
 
         for field in fvg['fields'].itervalues():
-            if field.get('views'):
-                for view in field["views"].itervalues():
-                    self.process_view(session, view, None, transform)
-            if field.get('domain'):
-                field["domain"] = parse_domain(field["domain"], session)
-            if field.get('context'):
-                field["context"] = parse_context(field["context"], session)
-
-    def process_toolbar(self, req, toolbar):
-        """
-        The toolbar is a mapping of section_key: [action_descriptor]
-
-        We need to clean all those actions in order to ensure correct
-        round-tripping
-        """
-        for actions in toolbar.itervalues():
-            for action in actions:
-                if 'context' in action:
-                    action['context'] = parse_context(
-                        action['context'], req.session)
-                if 'domain' in action:
-                    action['domain'] = parse_domain(
-                        action['domain'], req.session)
+            for view in field.get("views", {}).itervalues():
+                self.process_view(session, view, None, transform)
 
     @openerpweb.jsonrequest
     def add_custom(self, req, view_id, arch):
@@ -1254,40 +1193,6 @@ class View(openerpweb.Controller):
                 CustomView.unlink([vcustom[0]], req.context)
             return {'result': True}
         return {'result': False}
-
-    def transform_view(self, view_string, session, context=None):
-        # transform nodes on the fly via iterparse, instead of
-        # doing it statically on the parsing result
-        parser = ElementTree.iterparse(StringIO(view_string), events=("start",))
-        root = None
-        for event, elem in parser:
-            if event == "start":
-                if root is None:
-                    root = elem
-                self.parse_domains_and_contexts(elem, session)
-        return root
-
-    def parse_domains_and_contexts(self, elem, session):
-        """ Converts domains and contexts from the view into Python objects,
-        either literals if they can be parsed by literal_eval or a special
-        placeholder object if the domain or context refers to free variables.
-
-        :param elem: the current node being parsed
-        :type param: xml.etree.ElementTree.Element
-        :param session: OpenERP session object, used to store and retrieve
-                        non-literal objects
-        :type session: openerpweb.openerpweb.OpenERPSession
-        """
-        for el in ['domain', 'filter_domain']:
-            domain = elem.get(el, '').strip()
-            if domain:
-                elem.set(el, parse_domain(domain, session))
-                elem.set(el + '_string', domain)
-        for el in ['context', 'default_get']:
-            context_string = elem.get(el, '').strip()
-            if context_string:
-                elem.set(el, parse_context(context_string, session))
-                elem.set(el + '_string', context_string)
 
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):
@@ -1488,7 +1393,7 @@ class Action(openerpweb.Controller):
             ctx.update(req.context)
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
-                value = clean_action(req, action[0], do_not_eval)
+                value = clean_action(req, action[0])
         return value
 
     @openerpweb.jsonrequest

@@ -44,7 +44,8 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             view_id: this.view_id,
             view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
-            context: this.dataset.get_context()
+            context: instance.web.pyeval.eval(
+                    'context', this.dataset.get_context())
         }).done(this.on_loaded);
     },
     /**
@@ -227,8 +228,9 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         return this.rpc('/web/treeview/action', {
             id: id,
             model: this.dataset.model,
-            context: new instance.web.CompoundContext(
-                this.dataset.get_context(), local_context)
+            context: instance.web.pyeval.eval(
+                'context', new instance.web.CompoundContext(
+                    this.dataset.get_context(), local_context))
         }).then(function (actions) {
             if (!actions.length) { return; }
             var action = actions[0][2];

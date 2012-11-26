@@ -265,6 +265,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 return self.do_action(result, options);
             });
         }
+
+        // Ensure context & domain are evaluated and can be manipulated/used
+        if (action.context) {
+            action.context = instance.web.pyeval.eval(
+                'context', action.context);
+        }
+        if (action.domain) {
+            action.domain = instance.web.pyeval.eval(
+                'domain', action.domain);
+        }
+
         if (!action.type) {
             console.error("No type for action", action);
             return $.Deferred().reject();
@@ -1081,7 +1092,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 context: instance.web.pyeval.eval(
                     'context', additional_context)
             }).done(function(result) {
-                result.context = _.extend(result.context || {},
+                result.context = new instance.web.CompoundContext(
+                    result.context,
                     additional_context);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
