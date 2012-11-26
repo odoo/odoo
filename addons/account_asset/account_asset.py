@@ -42,7 +42,7 @@ class account_asset_category(osv.osv):
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
-        'method_number': fields.integer('Number of Depreciations'),
+        'method_number': fields.integer('Number of Depreciations', help="The number of depreciations needed to depreciate your asset"),
         'method_period': fields.integer('Period Length', help="State here the time between 2 depreciations, in months", required=True),
         'method_progress_factor': fields.float('Degressive Factor'),
         'method_time': fields.selection([('number','Number of Depreciations'),('end','Ending Date')], 'Time Method', required=True,
@@ -253,7 +253,7 @@ class account_asset_asset(osv.osv):
         'method': fields.selection([('linear','Linear'),('degressive','Degressive')], 'Computation Method', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="Choose the method to use to compute the amount of depreciation lines.\n"\
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Residual Value * Degressive Factor"),
-        'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
+        'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="The number of depreciations needed to depreciate your asset"),
         'method_period': fields.integer('Number of Months in a Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="The amount of time between two depreciations, in months"),
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
