@@ -131,12 +131,13 @@ def ustr(value, hint_encoding='utf-8', errors='strict'):
         upstream and should be tried first to decode ``value``.
     :param str error: optional `errors` flag to pass to the unicode
         built-in to indicate how illegal character values should be
-        treated when converting a string: 'strict', 'ignore' or 'replace'.
+        treated when converting a string: 'strict', 'ignore' or 'replace'
+        (see ``unicode()`` constructor).
         Passing anything other than 'strict' means that the first
         encoding tried will be used, even if it's not the correct
-        one to use, so be careful! Ignore if value is not a string/unicode.
-    :rtype: unicode
+        one to use, so be careful! Ignored if value is not a string/unicode.
     :raise: UnicodeError if value cannot be coerced to unicode
+    :return: unicode string representing the given value
     """
     if isinstance(value, Exception):
         return exception_to_unicode(value)
