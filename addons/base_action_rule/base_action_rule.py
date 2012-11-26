@@ -170,28 +170,24 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         """
         ids = self.search(cr,SUPERUSER_ID,[])
         return self._register_hook_(cr,SUPERUSER_ID,ids,context=None)
-        #for action_rule in self.browse(cr, SUPERUSER_ID, ids, context=None):
-        #    model = action_rule.model_id.model
-        #    obj_pool = self.pool.get(model)
-        #    if not hasattr(obj_pool, 'base_action_ruled'):
-        #        obj_pool.create = self._create(obj_pool.create, model, context=None)
-        #        obj_pool.write = self._write(obj_pool.write, model, context=None)
-        #        obj_pool.base_action_ruled = True
-        #return True
 
     def _register_hook_(self, cr, uid, ids, context=None):
         """
         Wrap every `create` and `write` methods of the models specified by
         the rules (given by `ids`).
         """
-        for action_rule in self.browse(cr, uid, ids, context=context):
+        reg_ids = []
+        if not isinstance(ids, list):
+            reg_ids.append(ids)
+        else:
+            reg_ids.extend(ids)
+        for action_rule in self.browse(cr, uid, reg_ids, context=context):
             model = action_rule.model_id.model
             obj_pool = self.pool.get(model)
             if not hasattr(obj_pool, 'base_action_ruled'):
                 obj_pool.create = self._create(obj_pool.create, model, context=None)
                 obj_pool.write = self._write(obj_pool.write, model, context=None)
                 obj_pool.base_action_ruled = True
-
         return True
 
     def create(self, cr, uid, vals, context=None):
