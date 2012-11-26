@@ -6,11 +6,11 @@
             <field name="model">sale.order.line.make.invoice</field>
             <field name="arch" type="xml">
              <form string="Create invoices" version="7.0">
-                <header>
+                <footer>
                     <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
+                </footer>
                 <separator string="Do you really want to create the invoice(s)?" />
             </form>
             </field>
