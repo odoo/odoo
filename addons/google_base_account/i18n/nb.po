@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-09-07 19:23+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: google_base_account
 #: field:res.users,gmail_user:0
 msgid "Username"
 msgstr "Brukernavn:"
+
+#. module: google_base_account
+#: view:res.users:0
+msgid "Synchronization"
+msgstr ""
 
 #. module: google_base_account
 #: model:ir.actions.act_window,name:google_base_account.act_google_login_form
@@ -34,9 +39,15 @@ msgid "Google Contacts Import Error!"
 msgstr "Google kontakter Import Feil!"
 
 #. module: google_base_account
-#: view:res.users:0
-msgid " Synchronization "
-msgstr " Synkronisering "
+#: model:ir.model,name:google_base_account.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: google_base_account
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Det valgte firmaet er ikke i listen over tillatte firmaer for denne brukeren"
 
 #. module: google_base_account
 #: sql_constraint:res.users:0
@@ -44,20 +55,14 @@ msgid "You can not have two users with the same login !"
 msgstr "Du kan ikke ha to brukere med samme login!"
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Error"
-msgstr "Feil"
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr ""
 
 #. module: google_base_account
 #: view:google.login:0
 msgid "Google login"
 msgstr "Google Logg Inn."
-
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_res_users
-msgid "res.users"
-msgstr "res.Brukere."
 
 #. module: google_base_account
 #: field:google.login,password:0
@@ -66,8 +71,14 @@ msgstr "Google passord."
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Cancel"
-msgstr "_Avbryt"
+msgid "or"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: google_base_account
 #: view:res.users:0
@@ -75,9 +86,15 @@ msgid "Google Account"
 msgstr "Google-konto"
 
 #. module: google_base_account
-#: field:google.login,user:0
-msgid "Google Username"
-msgstr "Google Brukernavn."
+#: constraint:res.users:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Authentication failed. Check the user and password."
+msgstr ""
 
 #. module: google_base_account
 #: code:addons/google_base_account/wizard/google_login.py:29
@@ -96,14 +113,13 @@ msgstr "Google kontakt"
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Login"
-msgstr "_Logg inn"
+msgid "Cancel"
+msgstr ""
 
 #. module: google_base_account
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Det valgte firmaet er ikke i listen over tillatte firmaer for denne brukeren"
+#: field:google.login,user:0
+msgid "Google Username"
+msgstr "Google Brukernavn."
 
 #. module: google_base_account
 #: field:res.users,gmail_password:0
@@ -111,12 +127,26 @@ msgid "Password"
 msgstr "Passord:"
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Authentication fail check the user and password !"
-msgstr "Autentisering mislykkes sjekk brukernavn og passord!"
-
-#. module: google_base_account
 #: view:google.login:0
-msgid "ex: user@gmail.com"
-msgstr "Ex:Bruker@gmail.com"
+msgid "_Login"
+msgstr "_Logg inn"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Feil"
+
+#~ msgid " Synchronization "
+#~ msgstr " Synkronisering "
+
+#~ msgid "_Cancel"
+#~ msgstr "_Avbryt"
+
+#~ msgid "res.users"
+#~ msgstr "res.Brukere."
+
+#~ msgid "ex: user@gmail.com"
+#~ msgstr "Ex:Bruker@gmail.com"
+
+#, python-format
+#~ msgid "Authentication fail check the user and password !"
+#~ msgstr "Autentisering mislykkes sjekk brukernavn og passord!"

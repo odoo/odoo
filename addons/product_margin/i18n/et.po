@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-11-09 19:13+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: product_margin
 #: view:product.product:0
@@ -33,14 +33,9 @@ msgid "From"
 msgstr "Alates"
 
 #. module: product_margin
-#: help:product.product,sale_expected:0
+#: help:product.product,total_cost:0
 msgid ""
-"Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
-msgstr "Hinnakirja hinna ja koguse korrutise summa müügiarvetel"
-
-#. module: product_margin
-#: help:product.product,total_margin:0
-msgid "Turnorder - Standard price"
+"Sum of Multiplication of Invoice price and quantity of Supplier Invoices "
 msgstr ""
 
 #. module: product_margin
@@ -52,6 +47,11 @@ msgstr "Kuni"
 #: field:product.product,date_to:0
 msgid "To Date"
 msgstr "Kuupäevani"
+
+#. module: product_margin
+#: help:product.product,total_margin:0
+msgid "Turnover - Standard price"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,date_from:0
@@ -73,6 +73,11 @@ msgstr "Keskmine ühiku hind"
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
 msgid "Product"
+msgstr ""
+
+#. module: product_margin
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
 msgstr ""
 
 #. module: product_margin
@@ -107,11 +112,6 @@ msgid "Sum of Quantity in Supplier Invoices"
 msgstr "Koguste summa ostuarvetes"
 
 #. module: product_margin
-#: help:product.product,normal_cost:0
-msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
-msgstr "Omahinna ja koguse korrutise summa ostuarvetel"
-
-#. module: product_margin
 #: help:product.product,expected_margin:0
 msgid "Expected Sale - Normal Cost"
 msgstr ""
@@ -123,10 +123,22 @@ msgid "# Invoiced"
 msgstr "Arveldatud"
 
 #. module: product_margin
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+
+#. module: product_margin
 #: view:product.product:0
 #: field:product.product,total_cost:0
 msgid "Total Cost"
 msgstr "Üldmaksumus"
+
+#. module: product_margin
+#: help:product.product,normal_cost:0
+msgid "Sum of Multiplication of Cost price and quantity of Supplier Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,expected_margin:0
@@ -139,26 +151,20 @@ msgid "#Purchased"
 msgstr "Ostetud"
 
 #. module: product_margin
-#: help:product.product,turnover:0
-msgid ""
-"Sum of Multification of Invoice price and quantity of Customer Invoices"
-msgstr "Arveldatud hinna ja koguse korrutise summa müügiarvetel"
-
-#. module: product_margin
 #: help:product.product,expected_margin_rate:0
 msgid "Expected margin * 100 / Expected Sale"
 msgstr "Oodatav marginaal * 100 / Oodatav müük"
 
 #. module: product_margin
 #: help:product.product,sale_avg_price:0
-msgid "Avg. Price in Customer Invoices)"
-msgstr "Keskmine hind müügiarvetes"
+msgid "Avg. Price in Customer Invoices."
+msgstr ""
 
 #. module: product_margin
-#: help:product.product,total_cost:0
+#: help:product.product,sale_expected:0
 msgid ""
-"Sum of Multification of Invoice price and quantity of Supplier Invoices "
-msgstr "Arveldatud hinna ja koguse korrutise summa ostuarvetel "
+"Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.margin,invoice_state:0
@@ -181,6 +187,12 @@ msgstr "Kogu marginaal"
 #: field:product.product,sales_gap:0
 msgid "Sales Gap"
 msgstr "Müükide vahe"
+
+#. module: product_margin
+#: help:product.product,turnover:0
+msgid ""
+"Sum of Multiplication of Invoice price and quantity of Customer Invoices"
+msgstr ""
 
 #. module: product_margin
 #: field:product.product,normal_cost:0
@@ -238,11 +250,6 @@ msgid "General Information"
 msgstr ""
 
 #. module: product_margin
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: product_margin
 #: field:product.product,purchase_gap:0
 msgid "Purchase Gap"
 msgstr "Ostude vahe"
@@ -273,6 +280,11 @@ msgid "Sum of Quantity in Customer Invoices"
 msgstr "Koguste summa müügiarvetes"
 
 #. module: product_margin
+#: view:product.margin:0
+msgid "or"
+msgstr ""
+
+#. module: product_margin
 #: model:ir.model,name:product_margin.model_product_margin
 msgid "Product Margin"
 msgstr ""
@@ -286,6 +298,17 @@ msgstr ""
 #~ msgid "Margins in Product"
 #~ msgstr "Marginaalid tootes"
 
+#~ msgid ""
+#~ "Sum of Multification of Sale Catalog price and quantity of Customer Invoices"
+#~ msgstr "Hinnakirja hinna ja koguse korrutise summa müügiarvetel"
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Supplier Invoices "
+#~ msgstr "Arveldatud hinna ja koguse korrutise summa ostuarvetel "
+
+#~ msgid "Sum of Multification of Cost price and quantity of Supplier Invoices"
+#~ msgstr "Omahinna ja koguse korrutise summa ostuarvetel"
+
 #~ msgid "Excepted Sale - Turn Over"
 #~ msgstr "Oodatav müük - Käive"
 
@@ -294,6 +317,13 @@ msgstr ""
 
 #~ msgid "Select "
 #~ msgstr "Valige "
+
+#~ msgid "Avg. Price in Customer Invoices)"
+#~ msgstr "Keskmine hind müügiarvetes"
+
+#~ msgid ""
+#~ "Sum of Multification of Invoice price and quantity of Customer Invoices"
+#~ msgstr "Arveldatud hinna ja koguse korrutise summa müügiarvetel"
 
 #~ msgid "Turnorder - Total Cost"
 #~ msgstr "Käive - Üldmaksumus"

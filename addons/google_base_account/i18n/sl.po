@@ -7,19 +7,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-06-13 22:19+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Slovenian <sl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: google_base_account
 #: field:res.users,gmail_user:0
 msgid "Username"
+msgstr ""
+
+#. module: google_base_account
+#: view:res.users:0
+msgid "Synchronization"
 msgstr ""
 
 #. module: google_base_account
@@ -34,8 +39,13 @@ msgid "Google Contacts Import Error!"
 msgstr ""
 
 #. module: google_base_account
-#: view:res.users:0
-msgid " Synchronization "
+#: model:ir.model,name:google_base_account.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: google_base_account
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
 #. module: google_base_account
@@ -44,19 +54,13 @@ msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Error"
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: google_base_account
 #: view:google.login:0
 msgid "Google login"
-msgstr ""
-
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_res_users
-msgid "res.users"
 msgstr ""
 
 #. module: google_base_account
@@ -66,7 +70,13 @@ msgstr ""
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Cancel"
+msgid "or"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Error!"
 msgstr ""
 
 #. module: google_base_account
@@ -75,8 +85,14 @@ msgid "Google Account"
 msgstr ""
 
 #. module: google_base_account
-#: field:google.login,user:0
-msgid "Google Username"
+#: constraint:res.users:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Authentication failed. Check the user and password."
 msgstr ""
 
 #. module: google_base_account
@@ -94,12 +110,12 @@ msgstr ""
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Login"
+msgid "Cancel"
 msgstr ""
 
 #. module: google_base_account
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: field:google.login,user:0
+msgid "Google Username"
 msgstr ""
 
 #. module: google_base_account
@@ -108,12 +124,6 @@ msgid "Password"
 msgstr ""
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Authentication fail check the user and password !"
-msgstr ""
-
-#. module: google_base_account
 #: view:google.login:0
-msgid "ex: user@gmail.com"
+msgid "_Login"
 msgstr ""
