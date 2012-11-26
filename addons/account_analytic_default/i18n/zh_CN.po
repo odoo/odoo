@@ -6,23 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-08 03:53+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"select a partner which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytical account)"
-msgstr "给合作伙伴指定一个辅助核算项用于分析"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -32,24 +24,14 @@ msgid "Analytic Rules"
 msgstr "分析规则"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,analytic_id:0
-msgid "Analytical Account"
-msgstr "辅助核算项"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Current"
-msgstr "当前的"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
 msgstr "分组..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytical Account"
-msgstr "分析帐户的默认结束日期"
+msgid "Default end date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -62,17 +44,12 @@ msgid "Conditions"
 msgstr "条件"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: help:account.analytic.default,partner_id:0
 msgid ""
-"select a company which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytical account)"
-msgstr "给公司指定一个辅助核算项用于分析"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytical Account"
-msgstr "辅助核算项的默认开始日期"
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytic account)"
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -103,15 +80,17 @@ msgid "Entries"
 msgstr "条目"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "结束日期"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"select a user which will use analytical account specified in analytic default"
-msgstr "选择一个用户指定的默认辅助核算项"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -126,22 +105,23 @@ msgid "Reference must be unique per Company!"
 msgstr "编号必须在公司内唯一！"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Analytical defaults whose end date is greater than today or None"
-msgstr "默认分析科目的截止日期大于今天或为空"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"select a product which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytical account)"
-msgstr "给指定产品指定一个辅助核算项用于分析.（如创建新的发票或销售订单，如果我们选择这个产品，它会自动采取此辅助核算项）"
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "序列"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -153,6 +133,11 @@ msgstr "发票行"
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "辅助核算项"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -200,6 +185,36 @@ msgstr "销售订单明细"
 #~ msgid "Account Analytic Default"
 #~ msgstr "默认的科目辅助核算"
 
+#~ msgid "Current"
+#~ msgstr "当前的"
+
+#~ msgid "Default end date for this Analytical Account"
+#~ msgstr "分析帐户的默认结束日期"
+
+#~ msgid ""
+#~ "select a partner which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "partner, it will automatically take this as an analytical account)"
+#~ msgstr "给合作伙伴指定一个辅助核算项用于分析"
+
+#~ msgid "Analytical Account"
+#~ msgstr "辅助核算项"
+
+#~ msgid ""
+#~ "select a company which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "company, it will automatically take this as an analytical account)"
+#~ msgstr "给公司指定一个辅助核算项用于分析"
+
+#~ msgid ""
+#~ "select a product which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "product, it will automatically take this as an analytical account)"
+#~ msgstr "给指定产品指定一个辅助核算项用于分析.（如创建新的发票或销售订单，如果我们选择这个产品，它会自动采取此辅助核算项）"
+
+#~ msgid "Default start date for this Analytical Account"
+#~ msgstr "辅助核算项的默认开始日期"
+
 #~ msgid ""
 #~ "\n"
 #~ "Allows to automatically select analytic accounts based on criterions:\n"
@@ -218,3 +233,10 @@ msgstr "销售订单明细"
 #~ "  *公司\n"
 #~ "  *日期\n"
 #~ "    "
+
+#~ msgid ""
+#~ "select a user which will use analytical account specified in analytic default"
+#~ msgstr "选择一个用户指定的默认辅助核算项"
+
+#~ msgid "Analytical defaults whose end date is greater than today or None"
+#~ msgstr "默认分析科目的截止日期大于今天或为空"

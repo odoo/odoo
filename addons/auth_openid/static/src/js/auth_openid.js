@@ -5,42 +5,44 @@ var QWeb = instance.web.qweb;
 
 instance.web.Login = instance.web.Login.extend({
     start: function() {
-        this._super.apply(this, arguments);
         var self = this;
-
-        this._default_error_message = this.$el.find('.oe_login_error_message').text();
-
-        this.$openid_selected_button = $();
-        this.$openid_selected_input = $();
-        this.$openid_selected_provider = null;
-
-
-        var openIdProvider = null;
-        if (this.has_local_storage && this.remember_credentials) {
-            openIdProvider = localStorage.getItem('openid-provider');
-        }
-
-        if (openIdProvider) {
-            $openid_selected_provider = openIdProvider;
-            this.do_openid_select('a[href="#' + openIdProvider + '"]', openIdProvider, true);
-
-            if (this.has_local_storage && this.remember_credentials) {
-                this.$openid_selected_input.find('input').val(localStorage.getItem('openid-login'));
+        var d = self._super.apply(this, arguments).done(function() {
+    
+            self._default_error_message = self.$el.find('.oe_login_error_message').text();
+    
+            self.$openid_selected_button = $();
+            self.$openid_selected_input = $();
+            self.$openid_selected_provider = null;
+    
+    
+            var openIdProvider = null;
+            if (self.has_local_storage && self.remember_credentials) {
+                openIdProvider = localStorage.getItem('openid-provider');
             }
-        }
-        else {
-            this.do_openid_select('a[data-url=""]', 'login,password', true);
-        }
-
-        this.$el.find('a[data-url]').click(function (event) {
-            event.preventDefault();
-            var selected_oidh = $(this).attr('href').substr(1);
-            if (selected_oidh != self.$openid_selected_provider) {
-                self.do_openid_select(this, selected_oidh);
+    
+            if (openIdProvider) {
+                $openid_selected_provider = openIdProvider;
+                self.do_openid_select('a[href="#' + openIdProvider + '"]', openIdProvider, true);
+    
+                if (self.has_local_storage && self.remember_credentials) {
+                    self.$openid_selected_input.find('input').val(localStorage.getItem('openid-login'));
+                }
             }
+            else {
+                self.do_openid_select('a[data-url=""]', 'login,password', true);
+            }
+    
+            self.$el.find('a[data-url]').click(function (event) {
+                event.preventDefault();
+                var selected_oidh = $(this).attr('href').substr(1);
+                if (selected_oidh != self.$openid_selected_provider) {
+                    self.do_openid_select(this, selected_oidh);
+                }
+            });
+    
+            self._check_error();
         });
-
-        this._check_error();
+        return d;
     },
 
 
@@ -69,7 +71,7 @@ instance.web.Login = instance.web.Login.extend({
     _check_error: function() {
         var self = this;
         if (this.params.loginerror !== undefined) {
-            this.rpc('/auth_openid/login/status', {}).then(function(result) {
+            this.rpc('/auth_openid/login/status', {}).done(function(result) {
                 if (_.contains(['success', 'failure'], result.status) && result.message) {
                     self.do_warn('Invalid OpenID Login', result.message);
                 }
@@ -106,7 +108,7 @@ instance.web.Login = instance.web.Login.extend({
 
     do_openid_login: function(db, openid_url) {
         var self = this;
-        this.rpc('/auth_openid/login/verify', {'db': db, 'url': openid_url}).then(function(result) {
+        this.rpc('/auth_openid/login/verify', {'db': db, 'url': openid_url}).done(function(result) {
             if (result.error) {
                 self.do_warn(result.title, result.error);
                 return;

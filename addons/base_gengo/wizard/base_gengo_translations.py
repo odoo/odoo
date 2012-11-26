@@ -19,19 +19,24 @@
 #
 ##############################################################################
 
-from osv import osv, fields
-from tools.translate import _
+import logging
 import re
+import time
+
+from openerp.osv import osv, fields
+from openerp import tools
+from openerp.tools.translate import _
+
+_logger = logging.getLogger(__name__)
+
 try:
     from mygengo import MyGengo
 except ImportError:
-    raise osv.except_osv(_('Gengo ImportError'), _('Please install mygengo lib from http://pypi.python.org/pypi/mygengo'))
-
-import logging
-import tools
-import time
-
-_logger = logging.getLogger(__name__)
+    _logger.warning('Gengo library not found, Gengo features disabled. If you plan to use it, please install the mygengo library from http://pypi.python.org/pypi/mygengo')
+    class MyGengo(object):
+        def __init__(self, *args, **kwargs):
+            # no context for translations - so don't bother
+            raise ImportError('Gengo library not found, please install mygengo from http://pypi.python.org/pypi/mygengo')
 
 GENGO_DEFAULT_LIMIT = 20
 
@@ -48,7 +53,7 @@ class base_gengo_translations(osv.osv_memory):
     _name = 'base.gengo.translations'
     _columns = {
         'restart_send_job': fields.boolean("Restart Sending Job"),
-        'lang_id': fields.many2one('res.lang', 'Language', help="Leave empty if you don't want to restrict the request to a single language"),
+        'lang_id': fields.many2one('res.lang', 'Language', required=True),
     }
 
     def gengo_authentication(self, cr, uid, context=None):
@@ -62,21 +67,19 @@ class base_gengo_translations(osv.osv_memory):
             by the cron) or in a dialog box (if requested by the user), thus it's important to return it 
             translated.
         '''
-
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
-            return (False, _("Invalid Gengo configuration. Gengo authentication `Public Key` or `Private Key` is missing. Complete Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
+            return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
         try:
             gengo = MyGengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
                 private_key=user.company_id.gengo_private_key.encode('ascii'),
-                sandbox=True,
             )
             gengo.getAccountStats()
-
             return (True, gengo)
         except Exception, e:
-            return (False, _("Gengo Connection Error\n%s") %e)
+            _logger.exception('Gengo connection failed')
+            return (False, _("Gengo connection failed with this message:\n``%s``") % e)
 
     def do_check_schedular(self, cr, uid, xml_id, name, fn, context=None):
         """
@@ -87,7 +90,7 @@ class base_gengo_translations(osv.osv_memory):
         cron_vals.update({'name': name, "function": fn})
         try:
             res = []
-            model, res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_gengo', xml_id)
+            _, res = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base_gengo', xml_id)
             cron_pool.write(cr, uid, [res], cron_vals, context=context)
         except:
             #the cron job was not found, probably deleted previously, so we create it again using default values
@@ -108,7 +111,7 @@ class base_gengo_translations(osv.osv_memory):
             supported_langs = self.pool.get('ir.translation')._get_all_supported_languages(cr, uid, context=context)
             language = self.pool.get('ir.translation')._get_gengo_corresponding_language(wizard.lang_id.code)
             if language not in supported_langs:
-                raise osv.except_osv(_("Warning"), _('This language is not supported by the  Gengo translation services.'))
+                raise osv.except_osv(_("Warning"), _('This language is not supported by the Gengo translation services.'))
 
             #send immediately a new request for the selected language (if any)
             ctx = context.copy()
@@ -207,8 +210,6 @@ class base_gengo_translations(osv.osv_memory):
         Send a request to Gengo with all the term_ids in a different job, get the response and update the terms in
         database accordingly.
         """
-
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         flag, gengo = self.gengo_authentication(cr, uid, context=context)
         if flag:
             request = self.pack_jobs_request(cr, uid, term_ids, context=context)

@@ -35,7 +35,7 @@
         <record id="project_tt_specification" model="project.task.type">
             <field name="sequence">2</field>
             <field name="name">Specification</field>
-            <field name="state">draft</field>
+            <field name="state">pending</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_design" model="project.task.type">
@@ -44,37 +44,31 @@
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_negotiation" model="project.task.type">
-            <field name="sequence">3</field>
-            <field name="name">Negotiation</field>
-            <field name="state">pending</field>
-            <field name="case_default" eval="False"/>
-            <field name="fold" eval="True"/>
-        </record>
         <record id="project_tt_development" model="project.task.type">
-            <field name="sequence">4</field>
+            <field name="sequence">3</field>
             <field name="name">Development</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_testing" model="project.task.type">
-            <field name="sequence">5</field>
+            <field name="sequence">4</field>
             <field name="name">Testing</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">6</field>
+            <field name="sequence">5</field>
             <field name="name">Merge</field>
             <field name="state">open</field>
             <field name="case_default" eval="False"/>
             <field name="fold" eval="True"/>
         </record>
         <record id="project_tt_deployment" model="project.task.type">
-            <field name="sequence">7</field>
+            <field name="sequence">6</field>
             <field name="name">Done</field>
             <field name="state">done</field>
             <field name="case_default" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
         <record id="project_tt_cancel" model="project.task.type">
             <field name="sequence">7</field>
@@ -125,11 +119,11 @@
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Project Management application installed!</field>
-            <field name="body">Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.
-
-You can manage todo lists on tasks by installing the "Todo Lists" application, supporting the Getting Things Done (GTD) methodology.
-You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</field>
+            <field name="body"><![CDATA[<p>Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.</p>
+<p>You can manage todo lists on tasks by installing the <i>Todo Lists</i> application, supporting the Getting Things Done (GTD) methodology.</p>
+<p>You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</p>]]></field>
         </record>
     </data>
 </openerp>

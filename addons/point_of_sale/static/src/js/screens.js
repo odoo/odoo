@@ -198,10 +198,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // - if there's a user with a matching ean, put it as the active 'client' and return true
         // - else : return false. 
         barcode_client_action: function(ean){
-            var users = this.pos.get('user_list');
-            for(var i = 0, len = users.length; i < len; i++){
-                if(users[i].ean13 === ean.ean){
-                    this.pos.get('selectedOrder').set_client(users[i]);
+            var partners = this.pos.get('partner_list');
+            for(var i = 0, len = partners.length; i < len; i++){
+                if(partners[i].ean13 === ean.ean){
+                    this.pos.get('selectedOrder').set_client(partners[i]);
                     this.pos_widget.username.refresh();
                     this.pos.proxy.scan_item_success(ean);
                     return true;
@@ -430,6 +430,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         template:'ErrorSessionPopupWidget',
     });
 
+    module.ErrorNegativePricePopupWidget = module.ErrorPopupWidget.extend({
+        template:'ErrorNegativePricePopupWidget',
+    });
+
     module.ScaleInviteScreenWidget = module.ScreenWidget.extend({
         template:'ScaleInviteScreenWidget',
 
@@ -463,6 +467,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         close: function(){
             this._super();
             clearInterval(this.intervalID);
+            this.pos.proxy.weighting_end();
         },
     });
 
@@ -557,7 +562,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 setTimeout(function(){
                     var def = job.fun();
                     if(def){
-                        def.then(run); 
+                        def.done(run);
                     }else{
                         run();
                     }
@@ -581,21 +586,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         };
     };
 
-    /*
-    module.BasicPaymentScreen = module.ScreenWidget.extend({
-        queue: new JobQueue(),
-        start_payment_transaction: function(){
-        },
-        update_payment_transaction: function(){
-        },
-        cancel_payment_transaction: function(){
-        },
-        show: function(){
-            this._super();
-        },
-    });
-    */
-
     module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
         template:'ClientPaymentScreenWidget',
 
@@ -615,7 +605,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 var def = new $.Deferred();
                 console.log("START");
                 self.pos.proxy.payment_request(self.pos.get('selectedOrder').getDueLeft())
-                    .then(function(ack){
+                    .done(function(ack){
                         if(ack === 'ok'){
                             self.queue.schedule(self.update);
                         }else if(ack.indexOf('error') === 0){
@@ -638,7 +628,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return def.resolve();
                 }
                 self.pos.proxy.payment_status()
-                    .then(function(status){
+                    .done(function(status){
                         if(status.status === 'paid'){
 
                             var currentOrder = self.pos.get('selectedOrder');
@@ -684,8 +674,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 console.log("CANCEL_END");
                 return (new $.Deferred()).resolve();
             }
-
-            this.queue.schedule(this.start);
+            
+            if(this.pos.get('selectedOrder').getDueLeft() <= 0){
+                this.pos_widget.screen_selector.show_popup('error-negative-price');
+            }else{
+                this.queue.schedule(this.start);
+            }
 
             this.add_action_button({
                     label: 'back',
@@ -899,7 +893,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.updatePaymentSummary();
-            this.$('.paymentline-amout input').last().focus();
         },
         close: function(){
             this._super();
@@ -941,9 +934,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
             var x = new module.PaymentlineWidget(null, {
                     payment_line: newPaymentLine
-                });
-            x.on('delete_payment_line', self, self.deleteLine);
+            });
+            x.on('delete_payment_line', self, function(r) {
+                self.deleteLine(r);
+            });
             x.appendTo(this.$('#paymentlines'));
+            this.$('.paymentline-amount input:last').focus();
         },
         renderElement: function() {
             this._super();
@@ -973,6 +969,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             if(this.pos_widget.action_bar){
                 this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
             }
+            this.$('.paymentline-amount input:last').focus();
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {

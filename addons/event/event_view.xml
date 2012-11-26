@@ -14,7 +14,7 @@
         <menuitem name="Events"
             id="event_main_menu"
             groups="base.group_user"
-            sequence="80"/>
+            sequence="115"/>
         <menuitem name="Events Organization" id="base.menu_event_main" parent="event_main_menu"/>
 
         <!-- EVENTS  -->
@@ -205,7 +205,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
                     </div>
                 </form>
             </field>
@@ -473,7 +473,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
                     </div>
                 </form>
             </field>
@@ -510,7 +510,7 @@
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
                 <search string="Event Registration">
-                    <field name="name" string="Participant" filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
+                    <field name="name" string="Participant" filter_domain="['|','|',('name','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
@@ -519,6 +519,7 @@
                     <filter icon="terp-personal" string="My Registrations" help="My Registrations" domain="[('user_id','=',uid)]"/>
                     <field name="event_id"/>
                     <field name="user_id"/>
+                    <field name="partner_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Responsible"  icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

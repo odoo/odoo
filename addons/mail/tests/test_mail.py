@@ -21,8 +21,8 @@
 
 import tools
 
-from openerp.tests import common
-from openerp.tools.html_sanitize import html_sanitize
+from openerp.addons.mail.tests import test_mail_mockup
+from openerp.tools.mail import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -84,43 +84,11 @@ Sylvie
 """
 
 
-class TestMailMockups(common.TransactionCase):
-
-    def _mock_smtp_gateway(self, *args, **kwargs):
-        return True
-
-    def _init_mock_build_email(self):
-        self._build_email_args_list = []
-        self._build_email_kwargs_list = []
-
-    def _mock_build_email(self, *args, **kwargs):
-        """ Mock build_email to be able to test its values. Store them into
-            some internal variable for latter processing. """
-        self._build_email_args_list.append(args)
-        self._build_email_kwargs_list.append(kwargs)
-        return self._build_email(*args, **kwargs)
-
-    def setUp(self):
-        super(TestMailMockups, self).setUp()
-        # Install mock SMTP gateway
-        self._init_mock_build_email()
-        self._build_email = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self._send_email = self.registry('ir.mail_server').send_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
-
-    def tearDown(self):
-        # Remove mocks
-        self.registry('ir.mail_server').build_email = self._build_email
-        self.registry('ir.mail_server').send_email = self._send_email
-        super(TestMailMockups, self).tearDown()
-
-
-class test_mail(TestMailMockups):
+class test_mail(test_mail_mockup.TestMailMockups):
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
-        body = tools.append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner')
+        body = tools.append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner', plaintext=False)
         return body
 
     def setUp(self):
@@ -375,10 +343,10 @@ class test_mail(TestMailMockups):
         _subject = 'Pigs'
         _mail_subject = '%s posted on %s' % (user_admin.name, group_pigs.name)
         _body1 = 'Pigs rules'
-        _mail_body1 = 'Pigs rules\n<pre>Admin</pre>\n'
-        _mail_bodyalt1 = 'Pigs rules\nAdmin'
+        _mail_body1 = 'Pigs rules\n<div><p>Admin</p></div>\n'
+        _mail_bodyalt1 = 'Pigs rules\nAdmin\n'
         _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = html_sanitize('<html>Pigs rules\n<pre>Admin</pre>\n</html>')
+        _mail_body2 = html_sanitize('<html>Pigs rules\n<div><p>Admin</p></div>\n</html>')
         _mail_bodyalt2 = 'Pigs rules\nAdmin'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
@@ -399,7 +367,7 @@ class test_mail(TestMailMockups):
         # Test: sent_email: email send by server: correct subject, body, body_alternative
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
-            self.assertEqual(sent_email['body'], _mail_body1 + '\n<pre>Bert Tartopoils</pre>\n', 'sent_email body incorrect')
+            self.assertEqual(sent_email['body'], _mail_body1 + '\nBert Tartopoils\n', 'sent_email body incorrect')
             # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
             # depending if you have installed beautiful soup.
             self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
@@ -469,9 +437,8 @@ class test_mail(TestMailMockups):
 
         # Mail data
         _subject = 'Pigs'
-        _body_text = 'Pigs rules'
-        _msg_reply = 'Re: Pigs'
-        _msg_body = '<pre>Pigs rules</pre>'
+        _body = 'Pigs <b>rule</b>'
+        _reply_subject = 'Re: Pigs'
         _attachments = [
             {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
             {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
@@ -494,8 +461,9 @@ class test_mail(TestMailMockups):
 
         # 1. Comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
-            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+            {'subject': _subject, 'body': _body, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id,
+             'default_content_subtype': 'plaintext'})
         compose = mail_compose.browse(cr, uid, compose_id)
         # Test: mail.compose.message: composition_mode, model, res_id
         self.assertEqual(compose.composition_mode,  'comment', 'mail.compose.message incorrect composition_mode')
@@ -507,8 +475,8 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
         # Test: mail.message: subject, body inside pre
-        self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
-        self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
+        self.assertEqual(message.subject,  _subject, 'mail.message incorrect subject')
+        self.assertEqual(message.body, _body, 'mail.message incorrect body')
         # Test: mail.message: notified_partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
         msg_pids = [partner.id for partner in message.notified_partner_ids]
         test_pids = [p_b_id, p_c_id, p_d_id]
@@ -526,33 +494,28 @@ class test_mail(TestMailMockups):
             {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
             {'default_composition_mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'default_parent_id': message.id})
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: model, res_id, parent_id, content_subtype
+        # Test: model, res_id, parent_id
         self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
         self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
         # Test: mail.message: subject as Re:.., body in html, parent_id
-        self.assertEqual(compose.subject, _msg_reply, 'mail.message incorrect subject')
+        self.assertEqual(compose.subject, _reply_subject, 'mail.message incorrect subject')
         # self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
         self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in compose.attachment_ids:
-            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
             self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test, 'mail.message attachment name / data incorrect')
-
+       
         # ----------------------------------------
         # CASE3: mass_mail on Pigs and Bird
         # ----------------------------------------
 
         # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': '${object.description}', 'content_subtype': 'html'},
+            {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': False,
                 'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: content_subtype is html
-        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
 
         # 2. Post the comment, get created message for each group
         mail_compose.send_mail(cr, uid, [compose_id],
@@ -576,7 +539,7 @@ class test_mail(TestMailMockups):
         cr, uid, user_admin, group_pigs = self.cr, self.uid, self.user_admin, self.group_pigs
         pigs_domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)]
 
-        # Data: create a discussion in Pigs (2 messages, one with 2 and one with 3 answers)
+        # Data: create a discussion in Pigs (3 threads, with respectively 0, 4 and 4 answers)
         msg_id0 = self.group_pigs.message_post(body='0', subtype='mt_comment')
         msg_id1 = self.group_pigs.message_post(body='1', subtype='mt_comment')
         msg_id2 = self.group_pigs.message_post(body='2', subtype='mt_comment')
@@ -588,7 +551,8 @@ class test_mail(TestMailMockups):
         msg_id8 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
         msg_id9 = self.group_pigs.message_post(body='1-1-1', subtype='mt_comment', parent_id=msg_id3)
         msg_id10 = self.group_pigs.message_post(body='2-1-1', subtype='mt_comment', parent_id=msg_id4)
-        msg_ids = [msg_id0, msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8, msg_id9, msg_id10]
+        msg_ids = [msg_id10, msg_id9, msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0]
+        ordered_msg_ids = [msg_id2, msg_id4, msg_id6, msg_id8, msg_id10, msg_id1, msg_id3, msg_id5, msg_id7, msg_id9, msg_id0]
 
         # Test: read some specific ids
         read_msg_list = self.mail_message.message_read(cr, uid, ids=msg_ids[2:4], domain=[('body', 'like', 'dummy')])
@@ -601,7 +565,8 @@ class test_mail(TestMailMockups):
         self.assertEqual(msg_ids, read_msg_ids, 'message_read flat with domain on Pigs should equal all messages of Pigs')
         read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=200, thread_level=1)
         read_msg_ids = [msg.get('id') for msg in read_msg_list]
-        self.assertEqual(msg_ids, read_msg_ids, 'message_read threaded with domain on Pigs should equal all messages of Pigs')
+        self.assertEqual(ordered_msg_ids, read_msg_ids,
+            'message_read threaded with domain on Pigs should equal all messages of Pigs, and sort them with newer thread first, last message last in thread')
 
         # ----------------------------------------
         # CASE1: message_read with domain, threaded
@@ -611,6 +576,8 @@ class test_mail(TestMailMockups):
         # Do: read last message, threaded
         read_msg_list = self.mail_message.message_read(cr, uid, domain=pigs_domain, limit=1, thread_level=1)
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # TDE TODO: test expandables order
+        type_list = map(lambda item: item.get('type'), read_msg_list)
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
         self.assertEqual(len(read_msg_list), 4, 'message_read on last Pigs message should return 2 messages and 2 expandables')
         self.assertEqual(set([msg_id2, msg_id10]), set(read_msg_ids), 'message_read on the last Pigs message should also get its parent')
@@ -618,7 +585,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -630,12 +597,20 @@ class test_mail(TestMailMockups):
         self.assertIn(('id', 'child_of', msg_id2), domain, 'new messages expandable domain should contain a child_of condition')
         self.assertIn(('id', '>=', msg_id4), domain, 'new messages expandable domain should contain an id greater than condition')
         self.assertIn(('id', '<=', msg_id8), domain, 'new messages expandable domain should contain an id less than condition')
-        self.assertEqual(new_msg_exp.get('parent_id'), msg_id2, 'new messages expandable should have ancestor_id set to the thread header')
-        # Do: message_read with domain, thread_level=0, parent_id=msg_id2 (should be imposed by JS)
-        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=200, thread_level=0, parent_id=msg_id2)
+        self.assertEqual(new_msg_exp.get('parent_id'), msg_id2, 'new messages expandable should have parent_id set to the thread header')
+        # Do: message_read with domain, thread_level=0, parent_id=msg_id2 (should be imposed by JS), 2 messages
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=2, thread_level=0, parent_id=msg_id2)
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
-        # Test: other message in thread have been fetch
-        self.assertEqual(set([msg_id4, msg_id6, msg_id8]), set(read_msg_ids), 'message_read in Pigs thread should return all the previous messages')
+        new_msg_exp = [msg for msg in read_msg_list if msg.get('type') == 'expandable'][0]
+        # Test: structure content, 2 messages and 1 thread expandable
+        self.assertEqual(len(read_msg_list), 3, 'message_read in Pigs thread should return 2 messages and 1 expandables')
+        self.assertEqual(set([msg_id6, msg_id8]), set(read_msg_ids), 'message_read in Pigs thread should return 2 more previous messages in thread')
+        # Do: read the last message
+        read_msg_list = self.mail_message.message_read(cr, uid, domain=new_msg_exp.get('domain'), limit=2, thread_level=0, parent_id=msg_id2)
+        read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
+        # Test: structure content, 1 message
+        self.assertEqual(len(read_msg_list), 1, 'message_read in Pigs thread should return 1 message')
+        self.assertEqual(set([msg_id4]), set(read_msg_ids), 'message_read in Pigs thread should return the last message in thread')
 
         # Do: fetch a new thread, domain from expandable
         self.assertIsNotNone(new_threads_exp, 'message_read on last Pigs message should have returned a new threads expandable')
@@ -643,7 +618,7 @@ class test_mail(TestMailMockups):
         # Test: expandable, conditions in domain
         for condition in pigs_domain:
             self.assertIn(condition, domain, 'new threads expandable domain should contain the message_read domain parameter')
-        self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an ancestor_id')
+        self.assertFalse(new_threads_exp.get('parent_id'), 'new threads expandable should not have an parent_id')
         # Do: message_read with domain, thread_level=1 (should be imposed by JS)
         read_msg_list = self.mail_message.message_read(cr, uid, domain=domain, limit=1, thread_level=1)
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
@@ -654,7 +629,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
             elif msg.get('type') == 'expandable':
                 new_msg_exp = msg
@@ -701,7 +676,7 @@ class test_mail(TestMailMockups):
         # Data: get expandables
         new_threads_exp, new_msg_exp = None, None
         for msg in read_msg_list:
-            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('id') == -1:
+            if msg.get('type') == 'expandable' and msg.get('nb_messages') == -1 and msg.get('max_limit'):
                 new_threads_exp = msg
 
         # Do: fetch new messages, domain from expandable
@@ -715,7 +690,7 @@ class test_mail(TestMailMockups):
         read_msg_ids = [msg.get('id') for msg in read_msg_list if msg.get('type') != 'expandable']
         # Test: structure content, ancestor is added to the read messages, ordered by id, ancestor is set, 2 expandables
         self.assertEqual(len(read_msg_list), 9, 'message_read on Pigs should return 9 messages and 0 expandable')
-        self.assertEqual([msg_id0, msg_id1, msg_id2, msg_id3, msg_id4, msg_id5, msg_id6, msg_id7, msg_id8], read_msg_ids,
+        self.assertEqual([msg_id8, msg_id7, msg_id6, msg_id5, msg_id4, msg_id3, msg_id2, msg_id1, msg_id0], read_msg_ids,
             'message_read, More on flat, should return all remaning messages')
 
     def test_40_needaction(self):

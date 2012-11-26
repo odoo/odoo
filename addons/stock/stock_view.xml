@@ -6,7 +6,7 @@
         <menuitem name="Warehouse"
             id="menu_stock_root"
             groups="group_stock_manager,group_stock_user"
-            sequence="50"/>
+            sequence="70"/>
 
         <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2"/>
@@ -114,7 +114,7 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
-                        <button name="%(action_view_stock_fill_inventory)d" string="Fill Inventory" type="action" />
+                        <button name="%(action_view_stock_fill_inventory)d" string="Fill Inventory" states="draft,confirm" type="action" />
                     </div>
                     <group>
                         <group>
@@ -126,7 +126,7 @@
                         </group>
                     </group>
                     <notebook>
-                    <page string="General Informations">
+                    <page string="General Information">
                         <field name="inventory_line_id">
                             <tree string="Products" editable="bottom">
                                 <field domain="[('usage','=','internal')]" name="location_id" groups="stock.group_locations"/>
@@ -283,10 +283,11 @@
             <field name="model">stock.tracking</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
-                <tree colors="grey:not active" string="Packs">
+                <tree colors="grey:active == False" string="Packs">
                     <field name="name"/>
                     <field name="serial"/>
                     <field name="date"/>
+                    <field name="active" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -913,7 +914,7 @@
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
                             <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                            <field name="message_ids" widget="mail_thread"/>
                         </div>
                     </xpath>
                 </data>
@@ -1039,7 +1040,7 @@
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
                             <field name="message_follower_ids" widget="mail_followers"/>
-                            <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                            <field name="message_ids" widget="mail_thread"/>
                         </div>
                     </xpath>
                 </data>
@@ -1234,7 +1235,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
-                            <field name="picking_id"/>
+                            <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="create_date" groups="base.group_no_one"/>

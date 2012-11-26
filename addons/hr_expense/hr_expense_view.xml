@@ -85,7 +85,7 @@
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="line_ids" context="{'currency_id': currency_id}">
+                            <field name="line_ids" context="{'currency_id': currency_id, 'default_analytic_account': context.get('analytic_account')}">
                                 <form string="Expense Lines" version="7.0">
                                     <group>
                                         <group>
@@ -195,7 +195,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <div name="options" position="inside">
-                    <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>
+                    <field name="hr_expense_ok"/>
                     <label for="hr_expense_ok"/>
                 </div>
             </field>
@@ -211,8 +211,7 @@
             <field name="search_view_id" ref="product.product_search_form_view"/>
         </record>
 
-        <menuitem id="menu_product_hr_config_expense" name="Expenses" parent="hr.menu_hr_configuration"/>
-        <menuitem id="menu_hr_product" name="Products" parent="menu_product_hr_config_expense" action="hr_expense_product"/>
+        <menuitem id="menu_hr_product" name="Types of Expenses" parent="hr.menu_hr_configuration" action="hr_expense_product"/>
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
         <menuitem action="expense_all" id="menu_expense_all" name="Expenses" parent="next_id_49"/>
 

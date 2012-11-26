@@ -6,7 +6,7 @@
         <menuitem name="Project"
             id="base.menu_main_pm"
             groups="group_project_manager,group_project_user"
-            sequence="90"/>
+            sequence="40"/>
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
@@ -164,7 +164,7 @@
             <field name="model">project.project</field>
             <field name="arch" type="xml">
                 <search string="Search Project">
-                    <field name="complete_name" string="Project Name"/>
+                    <field name="name" string="Project Name"/>
                     <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
@@ -392,7 +392,7 @@
                         <button name="do_draft" string="Draft" type="object"
                                 states="cancel,done"/>
                         -->
-                        <button name="%(action_project_task_reevaluate)d" string="Reactivate" type="action"
+                        <button name="project_task_reevaluate" string="Reactivate" type="object"
                                 states="cancelled,done" context="{'button_reactivate':True}" groups="base.group_user"/>
                         <button name="action_close" string="Done" type="object"
                                 states="draft,open,pending" groups="base.group_user"/>

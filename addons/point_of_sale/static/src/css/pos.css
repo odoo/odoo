@@ -7,7 +7,7 @@
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
-    font-family: "Lucida Grande", Helvetica, Verdana, Arial;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     color: #555555;
     font-size: 12px;
     position: absolute;
@@ -15,6 +15,7 @@
     top: 0;
     width: 100%;
     height: 100%;
+    text-shadow: none;
     -webkit-user-select: none;
        -moz-user-select: none;
             user-select: none;
@@ -61,11 +62,6 @@
     height:100%;
     z-index: 999;
     text-align: center;
-}
-.point-of-sale .loader img{
-    position:absolute;
-    top:50%;
-    left:50%;
 }
 
 /*  ********* Generic element styling  ********* */
@@ -805,11 +801,24 @@
     #receipt-screen {
         text-align: left;
     }
+    .pos-actionbar {
+        display: none !important;
+    }
     .pos-sale-ticket {
         margin: 0;
     }
     .debug-widget{
         display: none !important;
+    }
+    .point-of-sale *{
+        text-shadow: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+    .point-of-sale .pos-sale-ticket{
+        margin-left: auto !important;
+        margin-right: auto !important;
+        border: solid 1px black !important;
     }
 }
 
@@ -947,7 +956,7 @@
 }
 
 .point-of-sale .order{
-    background: #F00;
+    background: white;
     background: -webkit-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
     background:    -moz-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
     background:     -ms-linear-gradient(0deg,rgba(245,245,245,1),rgba(255,255,255,1), rgba(245,245,245,1));
@@ -1386,3 +1395,25 @@
     border-radius: 4px;
 }
 
+/*  ********* Unsupported Browser Page ********* */
+
+.point-of-sale .not-supported-browser{
+    position: absolute;
+    z-index: 100000;
+    top: 0; bottom: 0; left: 0; right: 0;
+    background: #2C2C2C;
+}
+.point-of-sale .not-supported-browser .message{
+    width:600px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color: #d3d3d3;
+    font-size: 14px;
+}
+.point-of-sale .not-supported-browser img{
+    border-collapse: separate;
+    box-shadow: 0px 3px 38px rgba(0,0,0,0.3);
+    border-radius: 3px;
+}

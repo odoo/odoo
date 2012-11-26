@@ -1,5 +1,19 @@
 <?xml version="1.0"?>
 <openerp>
+    <data noupdate="1">
+
+        <record id="action_client_marketing_menu" model="ir.actions.client">
+            <field name="name">Open Marketing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.marketing_menu')}"/>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_marketing_menu"/>
+            <field name="state">open</field>
+        </record>
+
+    </data>
     <data>
 
     <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
@@ -270,7 +284,7 @@
                         <field name="signal" groups="base.group_no_one"/>
                         <field name="start"/>
                         <field name="object_id" invisible="1"/>
-                        <field name="campaign_id" invisible="1"/>
+                        <field name="campaign_id" invisible="1" required="0"/>
                     </group>
                     <group>
                         <field name="variable_cost"/>
