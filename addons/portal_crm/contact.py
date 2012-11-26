@@ -95,7 +95,6 @@ class crm_contact_us(osv.TransientModel):
         it is quite complicated to set proper rights for this object.
         Therefore, user SUPERUSER_ID will perform the creation.
         """
-        print values
         values['contact_name'] = values['partner_name']
         crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
 

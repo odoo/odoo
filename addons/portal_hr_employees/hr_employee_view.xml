@@ -8,8 +8,9 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='active']" position="before">
+                <xpath expr="//field[@name='user_id']" position="after">
                     <field name="visibility"/>
+                    <field name="public_info" String="Public Notes" placeholder="Here you can write information about you to be shown in the portal..." attrs='{"invisible":[("visibility", "=", "private")]}'/>
                 </xpath>
             </field>
         </record>
@@ -17,7 +18,7 @@
         <!-- a kanban view of the employees to the portal's contact page -->
         <record id="portal_hr_employees_view" model="ir.ui.view">
             <field name="name">portal_hr_employees_view</field>
-            <field name="model">crm.team</field>
+            <field name="model">portal_crm.crm_contact_us</field>
             <field name="arch" type="xml">
                 <form string="Our Team" version="7.0">
                     <field name="employee_ids" widget="many2many_kanban">
@@ -31,13 +32,14 @@
                                     </div>
                                     <div class="oe_employee_details">
                                         <h4>
-                                            <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                            <field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t>
                                         </h4>
                                         <ul>
                                             <li t-if="record.job_id.raw_value"><field name="job_id"/></li>
                                             <li t-if="record.work_phone.raw_value">Tel: <field name="work_phone"/></li>
                                             <li t-if="record.mobile_phone.raw_value">Mobile: <field name="mobile_phone"/></li>
                                             <li t-if="record.work_email.raw_value"><a t-attf-href="mailto:#{record.work_email.value}"><field name="work_email"/></a></li>
+                                            <li t-if="record.public_info.raw_value"><field name="public_info"/></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -51,15 +53,24 @@
 
         <record id="action_team" model="ir.actions.act_window">
             <field name="name">Meet the team</field>
-            <field name="res_model">crm.team</field>
+            <field name="res_model">portal_crm.crm_contact_us</field>
             <field name="view_id" ref="portal_hr_employees_view"/>
             <field name="view_mode">form</field>
+            <field name="view_type">tree</field>
             <field name="target">inline</field>
-            <field name="help">Here you can see our employees' public profile, if any.</field>
         </record>
 
-        <menuitem name="Meet the team" id="portal_company_team"
-            parent="portal.portal_company" action="action_team" sequence="50"/>
+        <record id="crm_contact_us" model="ir.ui.view">
+            <field name="name">crm_contact_us</field>
+            <field name="model">portal_crm.crm_contact_us</field>
+            <field name="inherit_id" ref="portal_crm.contact_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='oe_portal_crm_team']" position="inside">
+                    <a href="#action=portal_hr_employees.action_team">Meet the team</a>
+                </xpath>
+            </field>
+        </record>
 
+        
     </data>
 </openerp>
