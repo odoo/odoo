@@ -467,6 +467,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         close: function(){
             this._super();
             clearInterval(this.intervalID);
+            this.pos.proxy.weighting_end();
         },
     });
 
@@ -584,21 +585,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             queue = [];
         };
     };
-
-    /*
-    module.BasicPaymentScreen = module.ScreenWidget.extend({
-        queue: new JobQueue(),
-        start_payment_transaction: function(){
-        },
-        update_payment_transaction: function(){
-        },
-        cancel_payment_transaction: function(){
-        },
-        show: function(){
-            this._super();
-        },
-    });
-    */
 
     module.ClientPaymentScreenWidget =  module.ScreenWidget.extend({
         template:'ClientPaymentScreenWidget',

@@ -6,19 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2009-09-16 02:28+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: crm_profiling
 #: view:crm_profiling.questionnaire:0
 msgid "Questions List"
+msgstr ""
+
+#. module: crm_profiling
+#: view:crm_profiling.question:0
+#: field:crm_profiling.question,answers_ids:0
+msgid "Avalaible Answers"
 msgstr ""
 
 #. module: crm_profiling
@@ -110,11 +116,6 @@ msgid "Use a questionnaire"
 msgstr ""
 
 #. module: crm_profiling
-#: view:open.questionnaire:0
-msgid "_Cancel"
-msgstr ""
-
-#. module: crm_profiling
 #: field:open.questionnaire,question_ans_ids:0
 msgid "Question / Answers"
 msgstr ""
@@ -136,13 +137,13 @@ msgid ""
 msgstr ""
 
 #. module: crm_profiling
-#: constraint:crm.segmentation:0
-msgid "Error ! You can not create recursive profiles."
+#: field:crm.segmentation,profiling_active:0
+msgid "Use The Profiling Rules"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm.segmentation,profiling_active:0
-msgid "Use The Profiling Rules"
+#: constraint:crm.segmentation:0
+msgid "Error ! You cannot create recursive profiles."
 msgstr ""
 
 #. module: crm_profiling
@@ -151,14 +152,13 @@ msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: crm_profiling
-#: view:crm_profiling.question:0
-#: field:crm_profiling.question,answers_ids:0
-msgid "Avalaible Answers"
+#: field:crm.segmentation,answer_yes:0
+msgid "Included Answers"
 msgstr ""
 
 #. module: crm_profiling
-#: field:crm.segmentation,answer_yes:0
-msgid "Included Answers"
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: crm_profiling
@@ -198,6 +198,11 @@ msgstr ""
 #. module: crm_profiling
 #: view:open.questionnaire:0
 msgid "Save Data"
+msgstr ""
+
+#. module: crm_profiling
+#: view:open.questionnaire:0
+msgid "or"
 msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"

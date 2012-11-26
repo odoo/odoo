@@ -163,43 +163,39 @@ class res_users(osv.Model):
             - create a new user (no token), or
             - create a user for a partner (with token, but no user for partner), or
             - change the password of a user (with token, and existing user).
-            :param values: a dictionary with field values
+            :param values: a dictionary with field values that are written on user
             :param token: signup token (optional)
             :return: (dbname, login, password) for the signed up user
         """
-        assert values.get('login') and values.get('password')
-        result = (cr.dbname, values['login'], values['password'])
-
         if token:
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
-            partner = res_partner._signup_retrieve_partner(cr, uid, token,
-                                        check_validity=True, raise_exception=True, context=None)
+            partner = res_partner._signup_retrieve_partner(
+                            cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_expiration': False})
-            if partner.user_ids:
-                # user exists, modify its password
-                partner.user_ids[0].write({'password': values['password']})
+
+            partner_user = partner.user_ids and partner.user_ids[0] or False
+            if partner_user:
+                # user exists, modify it according to values
+                values.pop('login', None)
+                values.pop('name', None)
+                partner_user.write(values)
+                return (cr.dbname, partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
-                self._signup_create_user(cr, uid, {
+                values.update({
                     'name': partner.name,
-                    'login': values['login'],
-                    'password': values['password'],
-                    'email': values['login'],
                     'partner_id': partner.id,
-                }, context=context)
-            return result
+                    'email': values.get('email') or values.get('login'),
+                })
+                self._signup_create_user(cr, uid, values, context=context)
+        else:
+            # no token, sign up an external user
+            values['email'] = values.get('email') or values.get('login')
+            self._signup_create_user(cr, uid, values, context=context)
 
-        # sign up an external user
-        assert values.get('name'), 'Signup: no name given for new user'
-        self._signup_create_user(cr, uid, {
-            'name': values['name'],
-            'login': values['login'],
-            'password': values['password'],
-            'email': values['login'],
-        }, context=context)
-        return result
+        return (cr.dbname, values.get('login'), values.get('password'))
 
     def _signup_create_user(self, cr, uid, values, context=None):
         """ create a new user from the template user """
@@ -211,6 +207,9 @@ class res_users(osv.Model):
         if 'partner_id' not in values:
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
                 raise SignupError('Signup is not allowed for uninvited users')
+
+        assert values.get('login'), "Signup: no login given for new user"
+        assert values.get('partner_id') or values.get('name'), "Signup: no name or partner given for new user"
 
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
