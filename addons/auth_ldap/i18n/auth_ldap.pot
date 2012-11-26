@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* users_ldap
+#	* auth_ldap
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-24 02:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,153 +15,164 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. module: users_ldap
+#. module: auth_ldap
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
+#: field:res.company.ldap,user:0
+msgid "Template User"
+msgstr ""
+
+#. module: auth_ldap
 #: help:res.company.ldap,ldap_tls:0
 msgid "Request secure TLS/SSL encryption when connecting to the LDAP server. This option requires a server with STARTTLS enabled, otherwise all authentication attempts will fail."
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: view:res.company:0
 #: view:res.company.ldap:0
 msgid "LDAP Configuration"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_binddn:0
 msgid "LDAP binddn"
 msgstr ""
 
-#. module: users_ldap
-#: help:res.company.ldap,create_user:0
-msgid "Create the user if not in database"
-msgstr ""
-
-#. module: users_ldap
-#: help:res.company.ldap,user:0
-msgid "Model used for user creation"
-msgstr ""
-
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,company:0
 msgid "Company"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_server:0
 msgid "LDAP Server address"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_server_port:0
 msgid "LDAP Server port"
 msgstr ""
 
-#. module: users_ldap
-#: help:res.company.ldap,ldap_binddn:0
-msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+#. module: auth_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Automatically create local user accounts for new users authenticating via LDAP"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_base:0
 msgid "LDAP base"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: view:res.company.ldap:0
 msgid "User Information"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
 msgstr ""
 
-#. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company
-msgid "Companies"
-msgstr ""
-
-#. module: users_ldap
-#: view:res.company.ldap:0
-msgid "Process Parameter"
-msgstr ""
-
-#. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_company_ldap
-msgid "res.company.ldap"
-msgstr ""
-
-#. module: users_ldap
-#: field:res.company.ldap,ldap_tls:0
-msgid "Use TLS"
-msgstr ""
-
-#. module: users_ldap
-#: field:res.company.ldap,sequence:0
-msgid "Sequence"
-msgstr ""
-
-#. module: users_ldap
-#: view:res.company.ldap:0
-msgid "Login Information"
-msgstr ""
-
-#. module: users_ldap
-#: view:res.company.ldap:0
-msgid "Server Information"
-msgstr ""
-
-#. module: users_ldap
-#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
-msgid "Setup your LDAP Server"
-msgstr ""
-
-#. module: users_ldap
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: users_ldap
-#: field:res.company,ldaps:0
-msgid "LDAP Parameters"
-msgstr ""
-
-#. module: users_ldap
-#: help:res.company.ldap,ldap_password:0
-msgid "The password of the user account on the LDAP server that is used to query the directory."
-msgstr ""
-
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_password:0
 msgid "LDAP password"
 msgstr ""
 
-#. module: users_ldap
-#: field:res.company.ldap,user:0
-msgid "Model User"
+#. module: auth_ldap
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
 msgstr ""
 
-#. module: users_ldap
-#: model:ir.model,name:users_ldap.model_res_users
-msgid "res.users"
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr ""
+
+#. module: auth_ldap
+#: help:res.company.ldap,user:0
+msgid "User to copy when creating new users"
+msgstr ""
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr ""
+
+#. module: auth_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr ""
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr ""
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr ""
+
+#. module: auth_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr ""
+
+#. module: auth_ldap
+#: view:res.company:0
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr ""
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid "The password of the user account on the LDAP server that is used to query the directory."
+msgstr ""
+
+#. module: auth_ldap
+#: constraint:res.users:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid "The user account on the LDAP server that is used to query the directory. Leave empty to connect anonymously."
+msgstr ""
+
+#. module: auth_ldap
 #: field:res.company.ldap,ldap_filter:0
 msgid "LDAP filter"
 msgstr ""
 
-#. module: users_ldap
+#. module: auth_ldap
 #: field:res.company.ldap,create_user:0
 msgid "Create user"
 msgstr ""
