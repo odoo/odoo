@@ -130,6 +130,9 @@ def html_email_clean(html):
         dest += source[idx:]
         return dest
 
+    if not html:
+        return html
+
     html = ustr(html)
 
     # 1. <br[ /]> -> \n, because otherwise the tree is obfuscated
