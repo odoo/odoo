@@ -8,12 +8,20 @@ openerp.auth_signup = function(instance) {
             var d = this._super();
 
             // to switch between the signup and regular login form
-            this.$('a.oe_signup_signup').click(function() {
+            this.$('a.oe_signup_signup').click(function(ev) {
+                if (ev) {
+                    ev.preventDefault();
+                }
                 self.$el.addClass("oe_login_signup");
+                return false;
             });
-            this.$('a.oe_signup_back').click(function() {
+            this.$('a.oe_signup_back').click(function(ev) {
+                if (ev) {
+                    ev.preventDefault();
+                }
                 self.$el.removeClass("oe_login_signup");
                 delete self.params.token;
+                return false;
             });
 
             // if there is an error message in params, show it then forget it
@@ -33,7 +41,7 @@ openerp.auth_signup = function(instance) {
         on_token_loaded: function(result) {
             // select the right the database
             this.selected_db = result.db;
-            this.on_db_loaded({db_list: [result.db]});
+            this.on_db_loaded([result.db]);
             if (result.token) {
                 // switch to signup mode, set user name and login
                 this.$el.addClass("oe_login_signup");
@@ -72,16 +80,16 @@ openerp.auth_signup = function(instance) {
                     this.do_warn("Login", "No database selected !");
                     return false;
                 } else if (!name) {
-                    this.do_warn("Login", "Please enter a name.")
+                    this.do_warn("Login", "Please enter a name.");
                     return false;
                 } else if (!login) {
-                    this.do_warn("Login", "Please enter a username.")
+                    this.do_warn("Login", "Please enter a username.");
                     return false;
                 } else if (!password || !confirm_password) {
-                    this.do_warn("Login", "Please enter a password and confirm it.")
+                    this.do_warn("Login", "Please enter a password and confirm it.");
                     return false;
                 } else if (password !== confirm_password) {
-                    this.do_warn("Login", "Passwords do not match; please retype them.")
+                    this.do_warn("Login", "Passwords do not match; please retype them.");
                     return false;
                 }
                 var params = {
@@ -90,10 +98,19 @@ openerp.auth_signup = function(instance) {
                     name: name,
                     login: login,
                     password: password,
-                    state: $.param(this.params)
+                    //state: $.param(this.params)
                 };
-                var url = "/auth_signup/signup?" + $.param(params);
-                window.location = url;
+                
+                var self = this,
+                    super_ = this._super;
+                this.rpc('/auth_signup/signup', params)
+                    .done(function(result) {
+                        if (result.error) {
+                            self.show_error(result.error);
+                        } else {
+                            super_.apply(self, [ev]);
+                        }
+                    });
             } else {
                 // regular login
                 this._super(ev);

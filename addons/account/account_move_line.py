@@ -208,7 +208,7 @@ class account_move_line(osv.osv):
             if type(period_id) == str:
                 ids = period_obj.search(cr, uid, [('name', 'ilike', period_id)])
                 context.update({
-                    'period_id': ids[0]
+                    'period_id': ids and ids[0] or False
                 })
         return context
 
@@ -582,7 +582,7 @@ class account_move_line(osv.osv):
         lines = self.browse(cr, uid, ids, context=context)
         for l in lines:
             if l.account_id.type == 'view':
-                raise osv.except_osv(_('Error!'), _('You cannot create journal items on “View” type account %s %s.') % (l.account_id.code, l.account_id.name))
+                return False
         return True
 
     def _check_no_closed(self, cr, uid, ids, context=None):
@@ -615,7 +615,7 @@ class account_move_line(osv.osv):
 
     def _check_currency_and_amount(self, cr, uid, ids, context=None):
         for l in self.browse(cr, uid, ids, context=context):
-            if (l.currency_id and not l.amount_currency) or (not l.currency_id and l.amount_currency):
+            if (l.amount_currency and not l.currency_id):
                 return False
         return True
 
@@ -640,7 +640,7 @@ class account_move_line(osv.osv):
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
         (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
         (_check_currency_amount, 'The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit.', ['amount_currency']),
-        (_check_currency_company, "You can't provide a secondary currency if the same than the company one." , ['currency_id']),
+        (_check_currency_company, "You cannot provide a secondary currency if it is the same than the company one." , ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -939,7 +939,7 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+            if partner_id and not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
                 partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
@@ -997,7 +997,7 @@ class account_move_line(osv.osv):
         if context is None:
             context = {}
         result = super(account_move_line, self).fields_view_get(cr, uid, view_id, view_type, context=context, toolbar=toolbar, submenu=submenu)
-        if view_type != 'tree':
+        if (view_type != 'tree') or view_id:
             #Remove the toolbar from the form view
             if view_type == 'form':
                 if result.get('toolbar', False):
@@ -1126,7 +1126,7 @@ class account_move_line(osv.osv):
                                 'has been confirmed.') % res[2])
         return res
 
-    def _remove_move_reconcile(self, cr, uid, move_ids=None, opening_reconcile=False, context=None):
+    def _remove_move_reconcile(self, cr, uid, move_ids=None, opening_reconciliation=False, context=None):
         # Function remove move rencocile ids related with moves
         obj_move_line = self.pool.get('account.move.line')
         obj_move_rec = self.pool.get('account.move.reconcile')
@@ -1141,8 +1141,8 @@ class account_move_line(osv.osv):
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
         if unlink_ids:
-            if opening_reconcile:
-                obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconcile':False})
+            if opening_reconciliation:
+                obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
         return True
 

@@ -541,10 +541,18 @@ class account_account(osv.osv):
                 return False
         return True
 
+    def _check_company_account(self, cr, uid, ids, context=None):
+        for account in self.browse(cr, uid, ids, context=context):
+            if account.parent_id:
+                if account.company_id != account.parent_id.company_id:
+                    return False
+        return True
+
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive accounts.', ['parent_id']),
         (_check_type, 'Configuration Error!\nYou cannot define children to an account with internal type different of "View".', ['type']),
         (_check_account_type, 'Configuration Error!\nYou cannot select an account type with a deferral method different of "Unreconciled" for accounts with internal type "Payable/Receivable".', ['user_type','type']),
+        (_check_company_account, 'Error!\nYou cannot create an account which has parent account of different company.', ['parent_id']),
     ]
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -633,7 +641,7 @@ class account_account(osv.osv):
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
-        group_dest = ['consolidation','view']
+        restricted_groups = ['consolidation','view']
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
             old_type = account.type
@@ -641,10 +649,10 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type which contains journal items!"))
-                # Forbid to change an account type for group_dest if move are on it (or his children)
-                if (new_type in group_dest):
-                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account for '%s' type as it contains journal items!") % (new_type,))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
+                # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
+                if (new_type in restricted_groups):
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
 
         return True
 
@@ -654,8 +662,8 @@ class account_account(osv.osv):
     def _check_allow_code_change(self, cr, uid, ids, context=None):
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
-            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])])
-            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])], context=context)
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
                 raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
         return True
 
@@ -1313,14 +1321,6 @@ class account_move(osv.osv):
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
     }
 
-    def _check_fiscal_year(self, cursor, user, ids):
-        for move in self.browse(cursor, user, ids):
-            date_start = move.period_id.fiscalyear_id.date_start
-            date_stop = move.period_id.fiscalyear_id.date_stop
-            if move.date < date_start or move.date > date_stop:
-                return False
-        return True
-
     def _check_centralisation(self, cursor, user, ids, context=None):
         for move in self.browse(cursor, user, ids, context=context):
             if move.journal_id.centralisation:
@@ -1336,9 +1336,6 @@ class account_move(osv.osv):
         (_check_centralisation,
             'You cannot create more than one move per period on a centralized journal.',
             ['journal_id']),
-        (_check_fiscal_year,
-            'You cannot create entries with date not in the fiscal year of the chosen period',
-            ['line_id','']),
     ]
 
     def post(self, cr, uid, ids, context=None):
@@ -1488,7 +1485,7 @@ class account_move(osv.osv):
             for line in move.line_id:
                 if line.invoice:
                     raise osv.except_osv(_('User Error!'),
-                            _("Move cannot be deleted if linked to an invoice: %s : Move ID:%s.") % \
+                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
                                     (line.invoice.number,move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
@@ -1698,18 +1695,17 @@ class account_move_reconcile(osv.osv):
         'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
-        'opening_reconcile': fields.boolean('Opening entries reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
+        'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
         'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
-        'opening_reconcile': 0,
     }
     
-    # You cannot unlink a reconciliation if it is a opening_reconcile one,
+    # You cannot unlink a reconciliation if it is a opening_reconciliation one,
     # you should use the generate opening entries wizard for that
     def unlink(self, cr, uid, ids, context=None):
-        for move_rec in self.browse(cr, uid, ids):
-            if move_rec.opening_reconcile:
+        for move_rec in self.browse(cr, uid, ids, context=context):
+            if move_rec.opening_reconciliation:
                 raise osv.except_osv(_('Error!'), _('You cannot unreconcile journal items if they has been generated by the \
                                                         opening/closing fiscal year process.'))
         return super(account_move_reconcile, self).unlink(cr, uid, ids, context=context)
@@ -1719,7 +1715,7 @@ class account_move_reconcile(osv.osv):
     def _check_same_partner(self, cr, uid, ids, context=None):
         for reconcile in self.browse(cr, uid, ids, context=context):
             move_lines = []
-            if not reconcile.opening_reconcile:
+            if not reconcile.opening_reconciliation:
                 if reconcile.line_id:
                     first_partner = reconcile.line_id[0].partner_id.id
                     move_lines = reconcile.line_id
@@ -1731,7 +1727,7 @@ class account_move_reconcile(osv.osv):
         return True
 
     _constraints = [
-        (_check_same_partner, 'You can only reconcile moves where the partner (we mean ID) is the same or empty on all entries.', ['line_id']),
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
     ]
     
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):

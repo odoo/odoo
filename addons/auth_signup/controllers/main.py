@@ -20,11 +20,10 @@
 ##############################################################################
 import logging
 
-import werkzeug
-
 import openerp
 from openerp.modules.registry import RegistryManager
-from openerp.addons.web.controllers.main import login_and_redirect
+
+from ..res_users import SignupError
 
 _logger = logging.getLogger(__name__)
 
@@ -35,28 +34,23 @@ class Controller(openerp.addons.web.http.Controller):
     def retrieve(self, req, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
-        user_info = None
         with registry.cursor() as cr:
             res_partner = registry.get('res.partner')
             user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
         return user_info
 
-    @openerp.addons.web.http.httprequest
-    def signup(self, req, dbname, token, name, login, password, state=''):
-        """ sign up a user (new or existing), and log it in """
-        url = '/'
+    @openerp.addons.web.http.jsonrequest
+    def signup(self, req, dbname, token, name, login, password):
+        """ sign up a user (new or existing)"""
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
+            res_users = registry.get('res.users')
+            values = {'name': name, 'login': login, 'password': password}
             try:
-                res_users = registry.get('res.users')
-                values = {'name': name, 'login': login, 'password': password}
-                credentials = res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
-                cr.commit()
-                return login_and_redirect(req, *credentials, redirect_url='/#%s'%state)
-            except Exception as e:
-                # signup error
-                _logger.exception('error when signup')
-                url = "/#action=login&error_message=%s" % werkzeug.urls.url_quote(e.message)
-        return werkzeug.utils.redirect(url)
+                res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
+            except SignupError, e:
+                return {'error': openerp.tools.exception_to_unicode(e)}
+            cr.commit()
+        return {}
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:

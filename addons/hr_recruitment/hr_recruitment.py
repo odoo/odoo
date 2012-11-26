@@ -235,7 +235,6 @@ class hr_applicant(base_stage, osv.Model):
         'email_from': lambda s, cr, uid, c: s._get_default_email(cr, uid, c),
         'stage_id': lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c),
         'department_id': lambda s, cr, uid, c: s._get_default_department_id(cr, uid, c),
-        'priority': lambda *a: '',
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'hr.applicant', context=c),
         'color': 0,
     }
@@ -258,6 +257,17 @@ class hr_applicant(base_stage, osv.Model):
         stage_ids = obj_recru_stage.search(cr, uid, ['|',('department_id','=',department_id),('department_id','=',False)], context=context)
         stage_id = stage_ids and stage_ids[0] or False
         return {'value': {'stage_id': stage_id}}
+
+    def onchange_partner_id(self, cr, uid, ids, partner_id, context=None):
+        data = {'partner_phone': False,
+                'partner_mobile': False,
+                'email_from': False}
+        if partner_id:
+            addr = self.pool.get('res.partner').browse(cr, uid, partner_id, context)
+            data.update({'partner_phone': addr.phone,
+                        'partner_mobile': addr.mobile,
+                        'email_from': addr.email})
+        return {'value': data}
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
@@ -346,7 +356,8 @@ class hr_applicant(base_stage, osv.Model):
         """
         if isinstance(ids, (str, int, long)):
             ids = [ids]
-        if update_vals is None: vals = {}
+        if update_vals is None:
+            update_vals = {}
 
         update_vals.update({
             'description': msg.get('body'),
@@ -363,12 +374,12 @@ class hr_applicant(base_stage, osv.Model):
         }
         for line in msg.get('body', '').split('\n'):
             line = line.strip()
-            res = tools.misc.command_re.match(line)
+            res = tools.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
 
-        return super(hr_applicant, self).message_update(cr, uids, ids, update_vals=update_vals, context=context)
+        return super(hr_applicant, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(hr_applicant, self).create(cr, uid, vals, context=context)
@@ -410,7 +421,7 @@ class hr_applicant(base_stage, osv.Model):
                 self.write(cr, uid, [applicant.id], {'emp_id': emp_id}, context=context)
                 self.case_close(cr, uid, [applicant.id], context)
             else:
-                raise osv.except_osv(_('Warning!'),_('You must define Applied Job for this applicant.'))
+                raise osv.except_osv(_('Warning!'), _('You must define Applied Job for this applicant.'))
 
         action_model, action_id = model_data.get_object_reference(cr, uid, 'hr', 'open_view_employee_list')
         dict_act_window = act_window.read(cr, uid, action_id, [])
@@ -423,13 +434,13 @@ class hr_applicant(base_stage, osv.Model):
         """Overrides cancel for crm_case for setting probability
         """
         res = super(hr_applicant, self).case_cancel(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
+        self.write(cr, uid, ids, {'probability': 0.0})
         return res
 
     def case_pending(self, cr, uid, ids, context=None):
         """Marks case as pending"""
         res = super(hr_applicant, self).case_pending(cr, uid, ids, context)
-        self.write(cr, uid, ids, {'probability' : 0.0})
+        self.write(cr, uid, ids, {'probability': 0.0})
         return res
 
     def case_reset(self, cr, uid, ids, context=None):
@@ -442,7 +453,7 @@ class hr_applicant(base_stage, osv.Model):
     def set_priority(self, cr, uid, ids, priority, *args):
         """Set applicant priority
         """
-        return self.write(cr, uid, ids, {'priority' : priority})
+        return self.write(cr, uid, ids, {'priority': priority})
 
     def set_high_priority(self, cr, uid, ids, *args):
         """Set applicant priority to high
@@ -465,7 +476,7 @@ class hr_applicant(base_stage, osv.Model):
         return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
-		return 'Applicant'
+        return 'Applicant'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been set <b>in progress</b>.")

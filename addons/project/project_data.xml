@@ -86,37 +86,37 @@
 
         <!-- mail: subtypes -->
         <record id="mt_project_new" model="mail.message.subtype">
-            <field name="name">New Task</field>
+            <field name="name">New</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
         </record>
         <record id="mt_project_closed" model="mail.message.subtype">
-            <field name="name">Task Closed</field>
+            <field name="name">Closed</field>
             <field name="res_model">project.project</field>
         </record>
         <record id="mt_project_canceled" model="mail.message.subtype">
-            <field name="name">Task Canceled</field>
-            <field name="res_model">project.task</field>
+            <field name="name">Canceled</field>
+            <field name="res_model">project.project</field>
         </record>
         <record id="mt_project_stage" model="mail.message.subtype">
-            <field name="name">Task Stage Changed</field>
-            <field name="res_model">project.task</field>
+            <field name="name">Stage Changed</field>
+            <field name="res_model">project.project</field>
         </record>
 
         <record id="mt_task_new" model="mail.message.subtype">
-            <field name="name">New Task</field>
+            <field name="name">New</field>
             <field name="res_model">project.task</field>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
-            <field name="name">Task Closed</field>
+            <field name="name">Closed</field>
             <field name="res_model">project.task</field>
         </record>
         <record id="mt_task_canceled" model="mail.message.subtype">
-            <field name="name">Task canceled</field>
+            <field name="name">Canceled</field>
             <field name="res_model">project.task</field>
         </record>
         <record id="mt_task_change" model="mail.message.subtype">
-            <field name="name">Task Stage Changed</field>
+            <field name="name">Stage Changed</field>
             <field name="res_model">project.task</field>
         </record>
 
@@ -125,11 +125,11 @@
             <field name="model">mail.group</field>
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="type">notification</field>
+            <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Project Management application installed!</field>
-            <field name="body">Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.
-
-You can manage todo lists on tasks by installing the "Todo Lists" application, supporting the Getting Things Done (GTD) methodology.
-You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</field>
+            <field name="body"><![CDATA[<p>Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.</p>
+<p>You can manage todo lists on tasks by installing the <i>Todo Lists</i> application, supporting the Getting Things Done (GTD) methodology.</p>
+<p>You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</p>]]></field>
         </record>
     </data>
 </openerp>

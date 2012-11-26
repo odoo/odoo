@@ -98,6 +98,10 @@ class account_analytic_account(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
         res = []
+        if not ids:
+            return res
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         for id in ids:
             elmt = self.browse(cr, uid, id, context=context)
             res.append((id, self._get_one_full_name(elmt)))
@@ -180,7 +184,7 @@ class account_analytic_account(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
-        'date_start': fields.date('Date Start'),
+        'date_start': fields.date('Start Date'),
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
@@ -305,7 +309,10 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
+            message = _("Contract <b>created</b>.")
+            if obj.partner_id:
+                message = _("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name,)
+            self.message_post(cr, uid, [obj.id], body=message,
                 subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()
@@ -320,7 +327,7 @@ class account_analytic_line(osv.osv):
         'date': fields.date('Date', required=True, select=True),
         'amount': fields.float('Amount', required=True, help='Calculated by multiplying the quantity and the price given in the Product\'s cost price. Always expressed in the company main currency.', digits_compute=dp.get_precision('Account')),
         'unit_amount': fields.float('Quantity', help='Specifies the amount of quantity to count.'),
-        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='cascade', select=True, domain=[('type','<>','view')]),
+        'account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, ondelete='restrict', select=True, domain=[('type','<>','view')]),
         'user_id': fields.many2one('res.users', 'User'),
         'company_id': fields.related('account_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
 
