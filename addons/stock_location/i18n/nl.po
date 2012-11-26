@@ -6,15 +6,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-18 11:54+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-25 21:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:20+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: stock_location
+#: help:product.pulled.flow,company_id:0
+msgid "Is used to know to which company the pickings and moves belong."
+msgstr ""
+"Wordt gebruikt om te weten bij welk bedrijf de regels en mutaties behoren."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -43,11 +49,6 @@ msgid "Automatic No Step Added"
 msgstr "Automatisch, geen stap toegevoegd"
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Parameters"
-msgstr "Parameters"
-
-#. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
 #: field:stock.location.path,location_from_id:0
 msgid "Source Location"
@@ -67,14 +68,14 @@ msgid "Pulled Flows"
 msgstr "Pulled Flows"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "U moet een productie partij toewijzen voor dit product"
-
-#. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "Locatie gebruikt door bestemmingslocatie om te leveren"
+
+#. module: stock_location
+#: constraint:stock.move:0
+msgid "You must assign a serial number for this product."
+msgstr "U dient een productie partij toe te wijzen voor dit product."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -157,25 +158,19 @@ msgid "Dispatch Zone"
 msgstr "Leveringsgebied"
 
 #. module: stock_location
-#: model:ir.model,name:stock_location.model_stock_move
-msgid "Stock Move"
-msgstr "Voorraadmutatie"
-
-#. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
 msgstr "Pulled flows"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "Bedrijf"
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr "Fout! Einddatum kan niet voor de begindatum liggen."
 
 #. module: stock_location
-#: view:product.product:0
-msgid "Logistics Flows"
-msgstr "Logistieke bewegingen"
+#: model:ir.model,name:stock_location.model_stock_move
+msgid "Stock Move"
+msgstr "Voorraadmutatie"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
@@ -198,6 +193,12 @@ msgstr "Maak op bestelling"
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
 msgstr "Maak op voorraad"
+
+#. module: stock_location
+#: code:addons/stock_location/procurement_pull.py:118
+#, python-format
+msgid "Pulled from another location."
+msgstr "Pulled van een andere locatie."
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -228,13 +229,6 @@ msgid "Type of Procurement"
 msgstr "Verwervingswijze"
 
 #. module: stock_location
-#: help:product.pulled.flow,company_id:0
-msgid "Is used to know to which company belong packings and moves"
-msgstr ""
-"Wordt gebruikt om te bepalen in welk bedrijf de mutaties en verplaatsingen "
-"horen."
-
-#. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
 msgstr "Naam"
@@ -248,10 +242,10 @@ msgstr ""
 
 #. module: stock_location
 #: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
+msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 "Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
-"type 'aanzicht'."
+"type 'weergave'"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -263,11 +257,6 @@ msgstr "Handmatige verwerking"
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
 msgstr "Product"
-
-#. module: stock_location
-#: field:product.pulled.flow,procure_method:0
-msgid "Procure Method"
-msgstr "Verwervingsmethode"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -292,15 +281,15 @@ msgid "Is the destination location that needs supplying"
 msgstr "Is de bestemmingslocatie dat bevoorraad moet worden."
 
 #. module: stock_location
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product."
+msgstr ""
+"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
+
+#. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
 msgstr "Producten"
-
-#. module: stock_location
-#: code:addons/stock_location/procurement_pull.py:118
-#, python-format
-msgid "Pulled from another location via procurement %d"
-msgstr "Pulled  van andere locatie via verwerving %d"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -344,10 +333,10 @@ msgstr ""
 "regel %s, via originele verwerving %s (#%d)"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
-"U probeert een partij toe te wijzen die niet van hetzelfde product is."
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "Dagboek"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
@@ -373,14 +362,23 @@ msgid "Getting Goods"
 msgstr "Goederen ontvangen"
 
 #. module: stock_location
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr ""
+"U gebruikte een verkeerde \"EAN13 Barcode\" referentie. Hiervoor in de "
+"plaats kunt u de interne referentie gebruiken."
+
+#. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
 msgstr "Actiesoort"
 
 #. module: stock_location
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fout: Ongeldige EAN-code"
+#: field:product.pulled.flow,procure_method:0
+msgid "Procure Method"
+msgstr "Verwervingsmethode"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -408,10 +406,10 @@ msgid "Location Paths"
 msgstr "Locatiepaden"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "Dagboek"
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "Bedrijf"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
@@ -441,3 +439,33 @@ msgstr "Gefactureerd"
 
 #~ msgid "Procurement & Locations"
 #~ msgstr "Leveringen & voorraadlocaties"
+
+#~ msgid "Parameters"
+#~ msgstr "Parameters"
+
+#~ msgid "Logistics Flows"
+#~ msgstr "Logistieke bewegingen"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fout: Ongeldige EAN-code"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr ""
+#~ "Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+#~ "type 'aanzicht'."
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr ""
+#~ "U probeert een partij toe te wijzen die niet van hetzelfde product is."
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "U moet een productie partij toewijzen voor dit product"
+
+#~ msgid "Is used to know to which company belong packings and moves"
+#~ msgstr ""
+#~ "Wordt gebruikt om te bepalen in welk bedrijf de mutaties en verplaatsingen "
+#~ "horen."
+
+#, python-format
+#~ msgid "Pulled from another location via procurement %d"
+#~ msgstr "Pulled  van andere locatie via verwerving %d"

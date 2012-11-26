@@ -7,20 +7,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-12-22 08:47+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:12+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "Төлөвлөсөн огноо"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -56,17 +64,6 @@ msgid "Owner Account"
 msgstr "Эзэмшигчийн мэдээлэл"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"Төлбөрийн баримт үүсэхдээ 'Ноорог' төлөвтэй байна.\n"
-" Банк баталгаажуулсан дараа төлөв нь 'Батлагдсан' төлөвтэй болдог.\n"
-" Улмаар төлбөр төлөлт бүртгэгдэхэд төлөв нь 'Дууссан' болно."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -81,11 +78,6 @@ msgstr ""
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "Компани"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "Төлбөрийн огноо"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -129,6 +121,12 @@ msgstr "_Төлбөрийн баримт руу нэмэх"
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
 msgstr "Төлбөрийн Суурин Тайлан"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -206,6 +204,14 @@ msgid "Amount Total"
 msgstr "Бүгд дүн"
 
 #. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
+
+#. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
@@ -227,10 +233,9 @@ msgid "Structured"
 msgstr "Бүтэцтэй"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "Төлөв"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -244,6 +249,7 @@ msgstr "Гүйлгээний мэдээлэл"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "Төлбөрийн горим"
 
@@ -269,20 +275,14 @@ msgstr ""
 "огноогоор гүйцэтгэгдэнэ."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "Алдаа !"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "Нийт дебит"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "Биелсэн огноо"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -343,6 +343,11 @@ msgid "Partner"
 msgstr "Харилцагч"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "Банкны тайлан тэнцлийн мөр"
@@ -397,6 +402,12 @@ msgid "Account Payment Populate Statement"
 msgstr "Бүртгэл Төлбөрийн Суурин Тайлан"
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "Төлбөрийн горим"
@@ -423,15 +434,15 @@ msgid "Draft"
 msgstr "Ноорог"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "Залгамжлагчтай холбоотой мэдээлэл"
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "Оролтын мөрд харилцагч тодорхойлогдоогүй байна."
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -454,11 +465,6 @@ msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr "Сонгох огноо тогтмол байх бол огноог заана."
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "Хэрэглэгч"
-
-#. module: account_payment
 #: field:account.payment.populate.statement,lines:0
 msgid "Payment Lines"
 msgstr "Төлбөрийн мөрүүд"
@@ -467,11 +473,6 @@ msgstr "Төлбөрийн мөрүүд"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "Журналын бичилт"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "Харагдац төрлийн данс дээр журналын зүйлийг үүсгэх боломжгүй."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -486,10 +487,9 @@ msgid "Search"
 msgstr "Хайх"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "Төлбөрийн баримт"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -502,9 +502,9 @@ msgid "Total:"
 msgstr "Нийт:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "Үүссэн огноо"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -512,9 +512,9 @@ msgid "ADD"
 msgstr "ADD"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "Төлөлтүүдийг импортлох"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "Төлбөрийг нутагшуулах"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -598,22 +598,11 @@ msgid "Information"
 msgstr "Мэдээлэл"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr ""
-"Үүний холбогдох хугацааны муж болон дансанд компани нь ижил байх ёстой."
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"Төлбөрийн захиалга гэдэг нь манай компаниас төлбөр төлөхийг шаардсан "
-"нийлүүлэгчийн нэхэмжлэл эсвэл захиалагчийн өгсөн зээлийг хэлнэ. Энд та "
-"өөрийн төлөх ёстой бүх төлбөрийг бүртгэнэ."
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "Төлбөрийн баримт"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -634,6 +623,11 @@ msgstr "Дүн харилцагчийн валютаар"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "Дагалдах баримт"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -694,6 +688,11 @@ msgid "Name"
 msgstr "Нэр"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "Банкны данс"
@@ -715,11 +714,6 @@ msgid "Order"
 msgstr "Даалгавар"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Хаагдсан данс дээр журналын бичилтийг үүсгэх боломжгүй."
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "Нийт"
@@ -731,14 +725,21 @@ msgid "Make Payment"
 msgstr "Төлбөр Хийх"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "Төлбөрийн горим"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "Төлбөрийг нутагшуулах"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -747,6 +748,9 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 
 #~ msgid "Suitable bank types"
 #~ msgstr "Тохирох банкны төрлүүд"
+
+#~ msgid "State"
+#~ msgstr "Төлөв"
 
 #~ msgid "Payment Management"
 #~ msgstr "Төлбөрийн менежмент"
@@ -757,8 +761,17 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн XML алдаатай!"
 
+#~ msgid "Creation date"
+#~ msgstr "Үүссэн огноо"
+
 #~ msgid "Date"
 #~ msgstr "Огноо"
+
+#~ msgid "Import payment lines"
+#~ msgstr "Төлөлтүүдийг импортлох"
+
+#~ msgid "User"
+#~ msgstr "Хэрэглэгч"
 
 #~ msgid "Code"
 #~ msgstr "Код"
@@ -784,6 +797,9 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 #~ msgid "Payment type"
 #~ msgstr "Төлбөрийн төрөл"
 
+#~ msgid "Payment mode"
+#~ msgstr "Төлбөрийн горим"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Үйлдлийн тодорхойлолтод буруу моделийн нэр байна."
 
@@ -808,6 +824,9 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 #~ msgid "Populate Statement with Payment lines"
 #~ msgstr "Тайланг төлөлтөөр дүүргэх"
 
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "Төлөвлөсөн огноо"
+
 #~ msgid "Draft Payment Order"
 #~ msgstr "Ноорог төлбөрийн баримт"
 
@@ -817,8 +836,51 @@ msgstr "Төлбөрийн горимд тохирох банкны данс"
 #~ msgid "Reference:"
 #~ msgstr "Баримтын дугаар"
 
+#~ msgid "Preferred date"
+#~ msgstr "Төлбөрийн огноо"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Алдаа !"
+
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Хаагдсан дансан дээр шилжих мөр үүсгэж болохгүй."
 
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "Оролтын мөрд харилцагч тодорхойлогдоогүй байна."
+
 #~ msgid "You can not create move line on view account."
 #~ msgstr "Дансны харагдац дээр шилжих мөр үүсгэж болохгүй."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Харагдац төрлийн данс дээр журналын зүйлийг үүсгэх боломжгүй."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr ""
+#~ "Үүний холбогдох хугацааны муж болон дансанд компани нь ижил байх ёстой."
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "Төлбөрийн захиалга гэдэг нь манай компаниас төлбөр төлөхийг шаардсан "
+#~ "нийлүүлэгчийн нэхэмжлэл эсвэл захиалагчийн өгсөн зээлийг хэлнэ. Энд та "
+#~ "өөрийн төлөх ёстой бүх төлбөрийг бүртгэнэ."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Хаагдсан данс дээр журналын бичилтийг үүсгэх боломжгүй."
+
+#~ msgid "Execution date"
+#~ msgstr "Биелсэн огноо"
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "Төлбөрийн баримт үүсэхдээ 'Ноорог' төлөвтэй байна.\n"
+#~ " Банк баталгаажуулсан дараа төлөв нь 'Батлагдсан' төлөвтэй болдог.\n"
+#~ " Улмаар төлбөр төлөлт бүртгэгдэхэд төлөв нь 'Дууссан' болно."
