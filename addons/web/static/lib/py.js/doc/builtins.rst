@@ -46,6 +46,8 @@ Supported Python builtins
 
 .. class:: py.dict()
 
+.. function:: py.len(object)
+
 .. function:: py.isinstance(object, type)
 
 .. function:: py.issubclass(type, other_type)
