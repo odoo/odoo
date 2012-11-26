@@ -195,7 +195,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         This Function is call by scheduler.
         """
         rule_ids = self.search(cr, uid, [], context=context)
-        self._register_hook(cr, uid, rule_ids, context=context)
+        self._register_hook(cr)
         if context is None:
             context = {}
         for rule in self.browse(cr, uid, rule_ids, context=context):
