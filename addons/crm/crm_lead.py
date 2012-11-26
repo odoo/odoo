@@ -410,14 +410,26 @@ class crm_lead(base_stage, format_address, osv.osv):
         return self.set_priority(cr, uid, ids, '3')
 
     def _merge_data(self, cr, uid, ids, oldest, fields, context=None):
-        # prepare opportunity data into dictionary for merging
+        """
+        Prepare lead/opp data into a dictionary for merging.  Different types
+        of fields are processed in different ways:
+        - text: all the values are concatenated
+        - m2m and o2m: those fields aren't processed
+        - m2o: the first not null value prevails (the other are dropped)
+        - any other type of field: same as m2o
+
+        :param list ids: list of ids of the leads to process
+        :param list fields: list of leads' fields to process
+        :return dict data: contains the merged values
+        """
         opportunities = self.browse(cr, uid, ids, context=context)
+
         def _get_first_not_null(attr):
             if hasattr(oldest, attr):
                 return getattr(oldest, attr)
-            for opportunity in opportunities:
-                if hasattr(opportunity, attr):
-                    return getattr(opportunity, attr)
+            for opp in opportunities:
+                if hasattr(opp, attr):
+                    return getattr(opp, attr)
             return False
 
         def _get_first_not_null_id(attr):
@@ -425,8 +437,23 @@ class crm_lead(base_stage, format_address, osv.osv):
             return res and res.id or False
 
         def _concat_all(attr):
-            return ', '.join(filter(lambda x: x, [getattr(opportunity, attr) or '' for opportunity in opportunities if hasattr(opportunity, attr)]))
+            return ', '.join(filter(lambda x: x, [getattr(opp, attr) or '' for opp in opportunities if hasattr(opp, attr)]))
 
+        def _get_type():
+            """
+            If at least one of the element to merge is an opp, the resulting
+            new element will be an opp.  Otherwise it will be a lead.
+
+            :return string type: the type of the final element
+            """
+            type = 'lead'
+            for opp in opportunities:
+                if ('opportunity' in [opp.type, type]):
+                    return 'opportunity'
+
+            return type
+
+        # Process the fields' values
         data = {}
         for field_name in fields:
             field_info = self._all_columns.get(field_name)
@@ -441,6 +468,10 @@ class crm_lead(base_stage, format_address, osv.osv):
                 data[field_name] = _concat_all(field_name)  #not lost
             else:
                 data[field_name] = _get_first_not_null(field_name)  #not lost
+
+        # Define the resulting type ('lead' or 'opportunity')
+        data['type'] = _get_type()
+
         return data
 
     def _merge_find_oldest(self, cr, uid, ids, context=None):
@@ -548,15 +579,15 @@ class crm_lead(base_stage, format_address, osv.osv):
         - merge leads together = 1 new lead
         - merge at least 1 opp with anything else (lead or opp) = 1 new opp
 
-        :param ids: list of leads/opportunities ids to merge
+        :param list ids: leads/opportunities ids to merge
         :return int id: id of the resulting lead/opp
         """
         if context is None: context = {}
 
-        lead_ids = context.get('lead_ids', [])
-
         if len(ids) <= 1:
             raise osv.except_osv(_('Warning!'),_('Please select more than one element (lead or opportunity) from the list view.'))
+
+        lead_ids = context.get('lead_ids', [])
 
         ctx_opportunities = self.browse(cr, uid, lead_ids, context=context)
         opportunities = self.browse(cr, uid, ids, context=context)
