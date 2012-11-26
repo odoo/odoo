@@ -281,7 +281,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             for record in old_records:
                 state_from = record.state
         else:
-            state_from = "na"
+            state_from = "na" #it means that there was no state before (creation for example)
         #if we have an action that check the status
         if action.trg_state_to:
             if action.trg_state_from:
