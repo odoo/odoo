@@ -22,7 +22,8 @@
 {
     'name': 'Reset Password',
     'description': """
-Allow users to reset their password from the login page.
+Allows the administrator to send a reset password e-mail through the user form.
+Users will then be able to choose their password following the onscreen instructions.
 ========================================================
 """,
     'author': 'OpenERP SA',
