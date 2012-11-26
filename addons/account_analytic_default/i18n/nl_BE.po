@@ -6,26 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-07-27 12:58+0000\n"
 "Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"select a partner which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytical account)"
-msgstr ""
-"Kies een relatie die de standaard voorgestelde analytische rekening gebruikt "
-"(vb. maak een nieuwe verkoopfactuur of verkooporder voor deze relatie; de "
-"analytische rekening wordt nu voorgesteld)."
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -35,24 +24,14 @@ msgid "Analytic Rules"
 msgstr "Analytische regels"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,analytic_id:0
-msgid "Analytical Account"
-msgstr "Analytische rekening"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Current"
-msgstr "Huidig"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
 msgstr "Groeperen op..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytical Account"
-msgstr "Standaard einddatum voor deze analytische rekening"
+msgid "Default end date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -65,20 +44,12 @@ msgid "Conditions"
 msgstr "Voorwaarden"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: help:account.analytic.default,partner_id:0
 msgid ""
-"select a company which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytical account)"
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytic account)"
 msgstr ""
-"Kies een bedrijf dat de standaard voorgestelde analytische rekening gebruikt "
-"(vb. maak een nieuwe verkoopfactuur of verkooporder voor dit bedrijf; de "
-"analytische rekening wordt nu voorgesteld)."
-
-#. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytical Account"
-msgstr "Standaard begindatum voor deze analytische rekening"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -109,17 +80,17 @@ msgid "Entries"
 msgstr "Boekingen"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Einddatum"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"select a user which will use analytical account specified in analytic default"
-msgstr ""
-"Kies een gebruiker die de standaard voorgestelde analytische rekening "
-"gebruikt."
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -134,27 +105,23 @@ msgid "Reference must be unique per Company!"
 msgstr "De referentie moet uniek zijn per bedrijf."
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Analytical defaults whose end date is greater than today or None"
-msgstr ""
-"Analytische standaardwaarden waarvoor de einddatum groter is dan vandaag of "
-"zonder einddatum."
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"select a product which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytical account)"
-msgstr ""
-"Kies een product dat de standaard voorgestelde analytische rekening gebruikt "
-"(vb. maak een nieuwe verkoopfactuur of verkooporder met dit product; de "
-"analytische rekening wordt nu voorgesteld)."
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Volgorde"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -166,6 +133,11 @@ msgstr "Factuurlijn"
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Analytische rekening"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -199,3 +171,53 @@ msgstr "Verkooporderlijn"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "De objectnaam moet beginnen met x_ en mag geen speciale karakters bevatten !"
+
+#~ msgid "Analytical Account"
+#~ msgstr "Analytische rekening"
+
+#~ msgid "Current"
+#~ msgstr "Huidig"
+
+#~ msgid ""
+#~ "select a partner which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "partner, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Kies een relatie die de standaard voorgestelde analytische rekening gebruikt "
+#~ "(vb. maak een nieuwe verkoopfactuur of verkooporder voor deze relatie; de "
+#~ "analytische rekening wordt nu voorgesteld)."
+
+#~ msgid "Default end date for this Analytical Account"
+#~ msgstr "Standaard einddatum voor deze analytische rekening"
+
+#~ msgid "Default start date for this Analytical Account"
+#~ msgstr "Standaard begindatum voor deze analytische rekening"
+
+#~ msgid ""
+#~ "select a company which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "company, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Kies een bedrijf dat de standaard voorgestelde analytische rekening gebruikt "
+#~ "(vb. maak een nieuwe verkoopfactuur of verkooporder voor dit bedrijf; de "
+#~ "analytische rekening wordt nu voorgesteld)."
+
+#~ msgid ""
+#~ "select a user which will use analytical account specified in analytic default"
+#~ msgstr ""
+#~ "Kies een gebruiker die de standaard voorgestelde analytische rekening "
+#~ "gebruikt."
+
+#~ msgid "Analytical defaults whose end date is greater than today or None"
+#~ msgstr ""
+#~ "Analytische standaardwaarden waarvoor de einddatum groter is dan vandaag of "
+#~ "zonder einddatum."
+
+#~ msgid ""
+#~ "select a product which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "product, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "Kies een product dat de standaard voorgestelde analytische rekening gebruikt "
+#~ "(vb. maak een nieuwe verkoopfactuur of verkooporder met dit product; de "
+#~ "analytische rekening wordt nu voorgesteld)."

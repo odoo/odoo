@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-08-28 14:30+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:35+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -24,7 +24,8 @@ msgstr "Eiendeler i utkastet og åpen stater"
 
 #. module: account_asset
 #: field:account.asset.category,method_end:0
-#: field:account.asset.history,method_end:0 field:asset.modify,method_end:0
+#: field:account.asset.history,method_end:0
+#: field:asset.modify,method_end:0
 msgid "Ending date"
 msgstr "Slutt dato"
 
@@ -54,16 +55,19 @@ msgid "Gross Amount"
 msgstr "bruttobeløp"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,name:0
+#: view:account.asset.asset:0
 #: field:account.asset.depreciation.line,asset_id:0
-#: field:account.asset.history,asset_id:0 field:account.move.line,asset_id:0
-#: view:asset.asset.report:0 field:asset.asset.report,asset_id:0
+#: field:account.asset.history,asset_id:0
+#: field:account.move.line,asset_id:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,asset_id:0
 #: model:ir.model,name:account_asset.model_account_asset_asset
 msgid "Asset"
 msgstr "Eiendel"
 
 #. module: account_asset
-#: help:account.asset.asset,prorata:0 help:account.asset.category,prorata:0
+#: help:account.asset.asset,prorata:0
+#: help:account.asset.category,prorata:0
 msgid ""
 "Indicates that the first depreciation entry for this asset have to be done "
 "from the purchase date instead of the first January"
@@ -72,13 +76,15 @@ msgstr ""
 "fra kjøpsdato i stedet for første januar"
 
 #. module: account_asset
-#: field:account.asset.history,name:0
-msgid "History name"
-msgstr "Historie navn"
+#: selection:account.asset.asset,method:0
+#: selection:account.asset.category,method:0
+msgid "Linear"
+msgstr "Lineær"
 
 #. module: account_asset
 #: field:account.asset.asset,company_id:0
-#: field:account.asset.category,company_id:0 view:asset.asset.report:0
+#: field:account.asset.category,company_id:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,company_id:0
 msgid "Company"
 msgstr "Firma"
@@ -89,7 +95,8 @@ msgid "Modify"
 msgstr "Modifiser"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Running"
 msgstr "Løper"
@@ -125,15 +132,7 @@ msgid "Asset Categories"
 msgstr "Eiendel kategorier"
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid ""
-"This wizard will post the depreciation lines of running assets that belong "
-"to the selected period."
-msgstr ""
-"Denne veiviseren vil legge inn avskrivning linjer som kjører eiendeler som "
-"tilhører den valgte perioden."
-
-#. module: account_asset
+#: view:account.asset.asset:0
 #: field:account.asset.asset,account_move_line_ids:0
 #: field:account.move.line,entry_ids:0
 #: model:ir.actions.act_window,name:account_asset.act_entries_open
@@ -153,14 +152,15 @@ msgstr "det er mengden du har tenkt å ha du ikke kan avskrive."
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,depreciation_date:0
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_date:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,depreciation_date:0
 msgid "Depreciation Date"
 msgstr "Avskrivninger  Dato"
 
 #. module: account_asset
-#: field:account.asset.category,account_asset_id:0
-msgid "Asset Account"
-msgstr "Eiendel Konto"
+#: constraint:account.asset.asset:0
+msgid "Error ! You cannot create recursive assets."
+msgstr ""
 
 #. module: account_asset
 #: field:asset.asset.report,posted_value:0
@@ -168,7 +168,8 @@ msgid "Posted Amount"
 msgstr "Skrevet Beløp"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.asset.report:0
+#: view:account.asset.asset:0
+#: view:asset.asset.report:0
 #: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_action_account_asset_asset_form
 #: model:ir.ui.menu,name:account_asset.menu_finance_assets
@@ -182,8 +183,11 @@ msgid "Depreciation Account"
 msgstr "avskrivnings konto"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0 view:asset.modify:0 field:asset.modify,note:0
+#: view:account.asset.asset:0
+#: view:account.asset.category:0
+#: view:account.asset.history:0
+#: view:asset.modify:0
+#: field:asset.modify,note:0
 msgid "Notes"
 msgstr "Notater"
 
@@ -198,9 +202,15 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Feil kredit eller debet beløp i regnskaps oppføringen !"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,nbr:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
 msgstr "Ant. Avskrivninger linjer"
+
+#. module: account_asset
+#: field:account.asset.asset,method_period:0
+msgid "Number of Months in a Period"
+msgstr ""
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -237,12 +247,6 @@ msgid "Compute Assets"
 msgstr "Beregn Eiendeler"
 
 #. module: account_asset
-#: field:account.asset.depreciation.line,sequence:0
-msgid "Sequence of the depreciation"
-msgstr "Sekvens av svekkelsen"
-
-#. module: account_asset
-#: field:account.asset.asset,method_period:0
 #: field:account.asset.category,method_period:0
 #: field:account.asset.history,method_period:0
 #: field:asset.modify,method_period:0
@@ -250,7 +254,8 @@ msgid "Period Length"
 msgstr "Periode lengde"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 view:asset.asset.report:0
+#: selection:account.asset.asset,state:0
+#: view:asset.asset.report:0
 #: selection:asset.asset.report,state:0
 msgid "Draft"
 msgstr "Kladd"
@@ -266,9 +271,19 @@ msgid "Calculates Depreciation within specified interval"
 msgstr "Beregner Avskrivninger innen angitt intervall"
 
 #. module: account_asset
+#: field:account.asset.asset,active:0
+msgid "Active"
+msgstr "Aktiv"
+
+#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Change Duration"
 msgstr "Endre Varighet"
+
+#. module: account_asset
+#: view:account.asset.category:0
+msgid "Analytic Information"
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.category,account_analytic_id:0
@@ -276,7 +291,8 @@ msgid "Analytic account"
 msgstr "Analytisk konto"
 
 #. module: account_asset
-#: field:account.asset.asset,method:0 field:account.asset.category,method:0
+#: field:account.asset.asset,method:0
+#: field:account.asset.category,method:0
 msgid "Computation Method"
 msgstr "Beregningsmetoden"
 
@@ -309,24 +325,18 @@ msgstr ""
 "utover."
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_value:0
-msgid "Gross value "
-msgstr "Bruttoverdi "
-
-#. module: account_asset
-#: constraint:account.asset.asset:0
-msgid "Error ! You can not create recursive assets."
-msgstr "Feil! Du kan ikke lage rekrusive eiendeler."
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"Datoen for din bilagsregistrering ikke er i den definerte perioden! Du bør "
+"endre datoen eller fjerne denne begrensningen fra tidsskriftet."
 
 #. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Tiden i måneden mellom to avskrivninger"
-
-#. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,name:0
-msgid "Year"
-msgstr "År"
 
 #. module: account_asset
 #: view:asset.modify:0
@@ -336,39 +346,27 @@ msgid "Modify Asset"
 msgstr "Endre eiendel"
 
 #. module: account_asset
-#: view:account.asset.asset:0
-msgid "Other Information"
-msgstr "Annen informasjon"
-
-#. module: account_asset
 #: field:account.asset.asset,salvage_value:0
 msgid "Salvage Value"
 msgstr "Restverdi"
 
 #. module: account_asset
-#: field:account.invoice.line,asset_category_id:0 view:asset.asset.report:0
+#: field:account.asset.asset,category_id:0
+#: view:account.asset.category:0
+#: field:account.invoice.line,asset_category_id:0
+#: view:asset.asset.report:0
 msgid "Asset Category"
 msgstr "Eiendel kategori"
 
 #. module: account_asset
 #: view:account.asset.asset:0
-msgid "Set to Close"
-msgstr "Satt til Lukk."
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_compute
-msgid "Compute assets"
-msgstr "Beregn eiendeler"
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_modify
-msgid "Modify asset"
-msgstr "Endre eiendel."
-
-#. module: account_asset
-#: view:account.asset.asset:0
 msgid "Assets in closed state"
 msgstr "Eiendeler i lukket tilstand"
+
+#. module: account_asset
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.asset,parent_id:0
@@ -382,14 +380,9 @@ msgid "Asset history"
 msgstr "Eiendel historie"
 
 #. module: account_asset
-#: view:asset.asset.report:0
-msgid "Assets purchased in current year"
-msgstr "Eiendeler som er kjøpt i inneværende år"
-
-#. module: account_asset
-#: field:account.asset.asset,state:0 field:asset.asset.report,state:0
-msgid "State"
-msgstr "Stat"
+#: view:account.asset.category:0
+msgid "Search Asset Category"
+msgstr "Søk eiendel Kategori"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_account_invoice_line
@@ -406,11 +399,6 @@ msgstr ""
 "Den valgte kontoen av dine Bilagsregistrering blir tvunget for å gi en "
 "sekundær valuta. Du bør fjerne den sekundære valuta på konto eller velg en "
 "flervaluta syn på tidsskriftet."
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Month"
-msgstr "Måned"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -435,32 +423,26 @@ msgid "Time Method"
 msgstr "tid Metode"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Analytic Information"
-msgstr ""
-
-#. module: account_asset
+#: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
-msgid "Asset Durations to Modify"
+msgid "or"
 msgstr ""
 
 #. module: account_asset
 #: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
+msgid "You cannot create journal items on closed account."
 msgstr ""
-"Datoen for din bilagsregistrering ikke er i den definerte perioden! Du bør "
-"endre datoen eller fjerne denne begrensningen fra tidsskriftet."
 
 #. module: account_asset
-#: field:account.asset.asset,note:0 field:account.asset.category,note:0
+#: field:account.asset.asset,note:0
+#: field:account.asset.category,note:0
 #: field:account.asset.history,note:0
 msgid "Note"
 msgstr "Notat"
 
 #. module: account_asset
-#: help:account.asset.asset,method:0 help:account.asset.category,method:0
+#: help:account.asset.asset,method:0
+#: help:account.asset.category,method:0
 msgid ""
 "Choose the method to use to compute the amount of depreciation lines.\n"
 "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n"
@@ -499,25 +481,31 @@ msgid "Closed"
 msgstr "Lukket"
 
 #. module: account_asset
+#: help:account.asset.asset,state:0
+msgid ""
+"When an asset is created, the status is 'Draft'.\n"
+"If the asset is confirmed, the status goes in 'Running' and the depreciation "
+"lines can be posted in the accounting.\n"
+"You can manually close an asset when the depreciation is over. If the last "
+"line of depreciation is posted, the asset automatically goes in that status."
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,state:0
+#: field:asset.asset.report,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.asset,partner_id:0
 #: field:asset.asset.report,partner_id:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: account_asset
-#: view:asset.asset.report:0 field:asset.asset.report,depreciation_value:0
-msgid "Amount of Depreciation Lines"
-msgstr "Størrelsen på avskrivningene linjer"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 msgid "Posted depreciation lines"
 msgstr "Postet avskrivninger linjer"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "Selskapet må være den samme for tilhørende konto og periode"
 
 #. module: account_asset
 #: field:account.asset.asset,child_ids:0
@@ -541,28 +529,24 @@ msgstr "Dato"
 
 #. module: account_asset
 #: view:asset.asset.report:0
-msgid "Assets purchased in current month"
-msgstr "Eiendeler som er kjøpt i inneværende måned"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "Du kan ikke lage journalregistreringer på konto av typen vis"
-
-#. module: account_asset
-#: view:asset.asset.report:0
 msgid "Extended Filters..."
 msgstr "Utvidet Filtere ..."
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:asset.depreciation.confirmation.wizard:0
+#: view:account.asset.asset:0
+#: view:asset.depreciation.confirmation.wizard:0
 msgid "Compute"
 msgstr "Beregn"
 
 #. module: account_asset
-#: view:account.asset.category:0
-msgid "Search Asset Category"
-msgstr "Søk eiendel Kategori"
+#: view:account.asset.history:0
+msgid "Asset History"
+msgstr ""
+
+#. module: account_asset
+#: field:asset.asset.report,name:0
+msgid "Year"
+msgstr "År"
 
 #. module: account_asset
 #: model:ir.model,name:account_asset.model_asset_depreciation_confirmation_wizard
@@ -570,14 +554,9 @@ msgid "asset.depreciation.confirmation.wizard"
 msgstr "eiendel.avskrivninger.bekreftelse.veiviseren"
 
 #. module: account_asset
-#: field:account.asset.asset,active:0
-msgid "Active"
-msgstr "Aktiv"
-
-#. module: account_asset
-#: model:ir.actions.wizard,name:account_asset.wizard_asset_close
-msgid "Close asset"
-msgstr "Lukket eiendel"
+#: field:account.asset.category,account_asset_id:0
+msgid "Asset Account"
+msgstr "Eiendel Konto"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,parent_state:0
@@ -590,7 +569,8 @@ msgid "Depreciation Name"
 msgstr "Avskrivninger Navn"
 
 #. module: account_asset
-#: view:account.asset.asset:0 field:account.asset.asset,history_ids:0
+#: view:account.asset.asset:0
+#: field:account.asset.asset,history_ids:0
 msgid "History"
 msgstr "Historie"
 
@@ -610,13 +590,9 @@ msgid "General"
 msgstr "Genrelt"
 
 #. module: account_asset
-#: field:account.asset.asset,prorata:0 field:account.asset.category,prorata:0
+#: field:account.asset.asset,prorata:0
+#: field:account.asset.category,prorata:0
 msgid "Prorata Temporis"
-msgstr ""
-
-#. module: account_asset
-#: view:account.asset.category:0
-msgid "Accounting Information"
 msgstr ""
 
 #. module: account_asset
@@ -625,27 +601,35 @@ msgid "Invoice"
 msgstr "Faktura"
 
 #. module: account_asset
-#: model:ir.actions.act_window,name:account_asset.action_account_asset_asset_form_normal
-msgid "Review Asset Categories"
-msgstr "Gjennomgå eiendel kategorier"
+#: view:account.asset.asset:0
+msgid "Set to Close"
+msgstr "Satt til Lukk."
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0 view:asset.modify:0
+#: view:asset.depreciation.confirmation.wizard:0
+#: view:asset.modify:0
 msgid "Cancel"
 msgstr "Avbryt"
 
 #. module: account_asset
-#: selection:account.asset.asset,state:0 selection:asset.asset.report,state:0
+#: selection:account.asset.asset,state:0
+#: selection:asset.asset.report,state:0
 msgid "Close"
 msgstr "Lukke"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
+#: view:account.asset.category:0
 msgid "Depreciation Method"
 msgstr "Avskrivningsmetode"
 
 #. module: account_asset
-#: field:account.asset.asset,purchase_date:0 view:asset.asset.report:0
+#: view:asset.modify:0
+msgid "Asset Durations to Modify"
+msgstr ""
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_date:0
+#: view:asset.asset.report:0
 #: field:asset.asset.report,purchase_date:0
 msgid "Purchase Date"
 msgstr "Kjøpsdato"
@@ -676,13 +660,17 @@ msgid "Amount to Depreciate"
 msgstr "Beløp å avskrive"
 
 #. module: account_asset
+#: field:account.asset.asset,name:0
+msgid "Asset Name"
+msgstr ""
+
+#. module: account_asset
 #: field:account.asset.category,open_asset:0
 msgid "Skip Draft State"
 msgstr "Hopp over Utkast stat"
 
 #. module: account_asset
-#: view:account.asset.asset:0 view:account.asset.category:0
-#: view:account.asset.history:0
+#: view:account.asset.category:0
 msgid "Depreciation Dates"
 msgstr "Avskrivninger datoer"
 
@@ -697,36 +685,49 @@ msgid "Journal"
 msgstr "Journal"
 
 #. module: account_asset
+#: field:account.asset.history,name:0
+msgid "History name"
+msgstr "Historie navn"
+
+#. module: account_asset
 #: field:account.asset.depreciation.line,depreciated_value:0
 msgid "Amount Already Depreciated"
 msgstr "Beløp Allerede Avskrives"
 
 #. module: account_asset
 #: field:account.asset.depreciation.line,move_check:0
-#: view:asset.asset.report:0 field:asset.asset.report,move_check:0
+#: view:asset.asset.report:0
+#: field:asset.asset.report,move_check:0
 msgid "Posted"
 msgstr "Lagt inn"
 
 #. module: account_asset
-#: help:account.asset.asset,state:0
+#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
 msgid ""
-"When an asset is created, the state is 'Draft'.\n"
-"If the asset is confirmed, the state goes in 'Running' and the depreciation "
-"lines can be posted in the accounting.\n"
-"You can manually close an asset when the depreciation is over. If the last "
-"line of depreciation is posted, the asset automatically goes in that state."
+"<p>\n"
+"            From this report, you can have an overview on all depreciation. "
+"The\n"
+"            tool search can also be used to personalise your Assets reports "
+"and\n"
+"            so, match this analysis to your needs;\n"
+"          </p>\n"
+"        "
 msgstr ""
-"Når en eiendel er opprettet, er staten \"Kladd\".\n"
-"Dersom eiendelen er bekreftet, går staten i 'Running' og avskrivninger "
-"linjer kan bli lagt i regnskapssystemet.\n"
-"Du kan manuelt lukke et aktivum når avskrivningen er over. Hvis den siste "
-"linjen av avskrivninger er lagt ut, går eiendelen automatisk i den "
-"tilstanden."
+
+#. module: account_asset
+#: field:account.asset.asset,purchase_value:0
+msgid "Gross Value"
+msgstr ""
 
 #. module: account_asset
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Navn"
+
+#. module: account_asset
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -743,23 +744,12 @@ msgid "Set to Draft"
 msgstr "Sett som utkast"
 
 #. module: account_asset
-#: selection:account.asset.asset,method:0
-#: selection:account.asset.category,method:0
-msgid "Linear"
-msgstr "Lineær"
-
-#. module: account_asset
-#: view:asset.asset.report:0
-msgid "Month-1"
-msgstr "Måned-1"
-
-#. module: account_asset
 #: model:ir.model,name:account_asset.model_account_asset_depreciation_line
 msgid "Asset depreciation line"
 msgstr "Eiendel avskrinings linje"
 
 #. module: account_asset
-#: field:account.asset.asset,category_id:0 view:account.asset.category:0
+#: view:account.asset.category:0
 #: field:asset.asset.report,asset_category_id:0
 #: model:ir.model,name:account_asset.model_account_asset_category
 msgid "Asset category"
@@ -767,8 +757,9 @@ msgstr "Eiendel kategori"
 
 #. module: account_asset
 #: view:asset.asset.report:0
-msgid "Assets purchased in last month"
-msgstr "Eiendeler som er kjøpt i forrige måned."
+#: field:asset.asset.report,depreciation_value:0
+msgid "Amount of Depreciation Lines"
+msgstr "Størrelsen på avskrivningene linjer"
 
 #. module: account_asset
 #: code:addons/account_asset/wizard/wizard_asset_compute.py:49
@@ -777,20 +768,9 @@ msgid "Created Asset Moves"
 msgstr "Opprettet eiendel trekk."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "Du kan ikke lage journal elementer på en lukket konto."
-
-#. module: account_asset
-#: model:ir.actions.act_window,help:account_asset.action_asset_asset_report
-msgid ""
-"From this report, you can have an overview on all depreciation. The tool "
-"search can also be used to personalise your Assets reports and so, match "
-"this analysis to your needs;"
+#: field:account.asset.depreciation.line,sequence:0
+msgid "Sequence"
 msgstr ""
-"Fra denne rapporten, kan du ha en oversikt over alle avskrivninger. "
-"Verktøyet søk kan også brukes til å tilpasse dine eiendeler rapporter og så "
-"matche denne analysen til dine behov;"
 
 #. module: account_asset
 #: help:account.asset.category,method_period:0
@@ -814,11 +794,6 @@ msgid "Create Move"
 msgstr ""
 
 #. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Post Depreciation Lines"
-msgstr "Innlegg Avskrivninger linjer"
-
-#. module: account_asset
 #: view:account.asset.asset:0
 msgid "Confirm Asset"
 msgstr "Bekreft eiendel"
@@ -829,11 +804,95 @@ msgstr "Bekreft eiendel"
 msgid "Asset Hierarchy"
 msgstr "Eiendel Hierarki."
 
+#~ msgid ""
+#~ "This wizard will post the depreciation lines of running assets that belong "
+#~ "to the selected period."
+#~ msgstr ""
+#~ "Denne veiviseren vil legge inn avskrivning linjer som kjører eiendeler som "
+#~ "tilhører den valgte perioden."
+
+#~ msgid "Sequence of the depreciation"
+#~ msgstr "Sekvens av svekkelsen"
+
+#~ msgid "Gross value "
+#~ msgstr "Bruttoverdi "
+
+#~ msgid "Error ! You can not create recursive assets."
+#~ msgstr "Feil! Du kan ikke lage rekrusive eiendeler."
+
+#~ msgid "Modify asset"
+#~ msgstr "Endre eiendel."
+
+#~ msgid "Other Information"
+#~ msgstr "Annen informasjon"
+
+#~ msgid "Compute assets"
+#~ msgstr "Beregn eiendeler"
+
+#~ msgid "Month"
+#~ msgstr "Måned"
+
+#~ msgid "Assets purchased in current year"
+#~ msgstr "Eiendeler som er kjøpt i inneværende år"
+
+#~ msgid "State"
+#~ msgstr "Stat"
+
 #~ msgid "Asset durations to modify"
 #~ msgstr "Eiendel lengder å endre"
 
 #~ msgid "Analytic information"
 #~ msgstr "analytisk informasjon"
 
+#~ msgid "Assets purchased in current month"
+#~ msgstr "Eiendeler som er kjøpt i inneværende måned"
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Du kan ikke lage journalregistreringer på konto av typen vis"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "Selskapet må være den samme for tilhørende konto og periode"
+
+#~ msgid "Close asset"
+#~ msgstr "Lukket eiendel"
+
 #~ msgid "Accounting information"
 #~ msgstr "Regnskapsopplysninger"
+
+#~ msgid "Review Asset Categories"
+#~ msgstr "Gjennomgå eiendel kategorier"
+
+#~ msgid ""
+#~ "When an asset is created, the state is 'Draft'.\n"
+#~ "If the asset is confirmed, the state goes in 'Running' and the depreciation "
+#~ "lines can be posted in the accounting.\n"
+#~ "You can manually close an asset when the depreciation is over. If the last "
+#~ "line of depreciation is posted, the asset automatically goes in that state."
+#~ msgstr ""
+#~ "Når en eiendel er opprettet, er staten \"Kladd\".\n"
+#~ "Dersom eiendelen er bekreftet, går staten i 'Running' og avskrivninger "
+#~ "linjer kan bli lagt i regnskapssystemet.\n"
+#~ "Du kan manuelt lukke et aktivum når avskrivningen er over. Hvis den siste "
+#~ "linjen av avskrivninger er lagt ut, går eiendelen automatisk i den "
+#~ "tilstanden."
+
+#~ msgid "Month-1"
+#~ msgstr "Måned-1"
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Du kan ikke lage journal elementer på en lukket konto."
+
+#~ msgid "Assets purchased in last month"
+#~ msgstr "Eiendeler som er kjøpt i forrige måned."
+
+#~ msgid ""
+#~ "From this report, you can have an overview on all depreciation. The tool "
+#~ "search can also be used to personalise your Assets reports and so, match "
+#~ "this analysis to your needs;"
+#~ msgstr ""
+#~ "Fra denne rapporten, kan du ha en oversikt over alle avskrivninger. "
+#~ "Verktøyet søk kan også brukes til å tilpasse dine eiendeler rapporter og så "
+#~ "matche denne analysen til dine behov;"
+
+#~ msgid "Post Depreciation Lines"
+#~ msgstr "Innlegg Avskrivninger linjer"

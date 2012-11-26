@@ -79,10 +79,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //the client is starting to weight
         weighting_start: function(){
             if(!this.weighting){
-                this.weight = 0;
                 this.weighting = true;
-                this.bypass_proxy = false;
-                return this.message('weighting_start');
+                if(!this.bypass_proxy){
+                    this.weight = 0;
+                    return this.message('weighting_start');
+                }
             }
         },
 
@@ -104,18 +105,25 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        // sets a custom weight, ignoring the proxy returned value until the next weighting_end 
+        // sets a custom weight, ignoring the proxy returned value. 
         debug_set_weight: function(kg){
             this.bypass_proxy = true;
             this.weight = kg;
         },
 
+        // resets the custom weight and re-enable listening to the proxy for weight values
+        debug_reset_weight: function(){
+            this.bypass_proxy = false;
+            this.weight = 0;
+        },
+
         // the client has finished weighting products
         weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.bypass_proxy = false;
-            return this.message('weighting_end');
+            if(!this.bypass_proxy){
+                this.weight = 0;
+                this.weighting = false;
+                this.message('weighting_end');
+            }
         },
 
         // the pos asks the client to pay 'price' units
