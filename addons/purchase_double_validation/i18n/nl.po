@@ -7,74 +7,74 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-01-28 13:55+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-25 21:17+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:34+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "Purchase Application Configuration"
-msgstr "Inkoop applicatie configuratie"
+#: model:ir.model,name:purchase_double_validation.model_purchase_config_settings
+msgid "purchase.config.settings"
+msgstr "purchase.config.settings"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "Define minimum amount after which puchase is needed to be validated."
-msgstr "Minimum bedrag definiëren waarboven een inkoop moet worden bevestigd"
+#: view:purchase.order:0
+msgid "Purchase orders which are not approved yet."
+msgstr "Inkooporders welke nog niet zijn goedgekeurd"
 
 #. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "title"
-msgstr "titel"
-
-#. module: purchase_double_validation
-#: field:purchase.double.validation.installer,config_logo:0
-msgid "Image"
-msgstr "Afbeelding"
-
-#. module: purchase_double_validation
-#: model:ir.actions.act_window,name:purchase_double_validation.action_config_purchase_limit_amount
-#: view:purchase.double.validation.installer:0
-msgid "Configure Limit Amount for Purchase"
-msgstr "Limietbedrag voor inkoop configureren"
+#: field:purchase.config.settings,limit_amount:0
+msgid "limit to require a second approval"
+msgstr ""
 
 #. module: purchase_double_validation
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase_double_validation.purchase_waiting
-msgid "Purchase Order Waiting Approval"
-msgstr "Goed te keuren inkooporders"
-
-#. module: purchase_double_validation
-#: view:purchase.double.validation.installer:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: purchase_double_validation
-#: help:purchase.double.validation.installer,limit_amount:0
-msgid "Maximum amount after which validation of purchase is required."
+msgid "Purchase Orders Waiting Approval"
 msgstr ""
-"Minimum bedrag waarboven bevestiging van de inkoop moet plaatsvinden."
 
 #. module: purchase_double_validation
-#: model:ir.model,name:purchase_double_validation.model_purchase_double_validation_installer
-msgid "purchase.double.validation.installer"
-msgstr "purchase.double.validation.installer"
+#: view:purchase.order:0
+msgid "To Approve"
+msgstr "Goed te keuren"
 
 #. module: purchase_double_validation
-#: field:purchase.double.validation.installer,limit_amount:0
-msgid "Maximum Purchase Amount"
-msgstr "Maximum inkoopbedrag"
+#: help:purchase.config.settings,limit_amount:0
+msgid "Amount after which validation of purchase is required."
+msgstr ""
+
+#~ msgid "Configure Limit Amount for Purchase"
+#~ msgstr "Limietbedrag voor inkoop configureren"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#~ msgid "Maximum amount after which validation of purchase is required."
+#~ msgstr ""
+#~ "Minimum bedrag waarboven bevestiging van de inkoop moet plaatsvinden."
+
+#~ msgid "Purchase Application Configuration"
+#~ msgstr "Inkoop applicatie configuratie"
+
+#~ msgid "title"
+#~ msgstr "titel"
 
 #~ msgid "purchase_double_validation"
 #~ msgstr "purchase_double_validation"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Configuratievoortgang"
+
+#~ msgid "Define minimum amount after which puchase is needed to be validated."
+#~ msgstr "Minimum bedrag definiëren waarboven een inkoop moet worden bevestigd"
+
+#~ msgid "Image"
+#~ msgstr "Afbeelding"
 
 #~ msgid ""
 #~ "\n"
@@ -86,3 +86,12 @@ msgstr "Maximum inkoopbedrag"
 #~ "\tDeze module verandert de inkoop workflow om inkopen boven een door de "
 #~ "configuratie assistent ingesteld minimum bedrag te laten bevestigen\n"
 #~ "    "
+
+#~ msgid "purchase.double.validation.installer"
+#~ msgstr "purchase.double.validation.installer"
+
+#~ msgid "Maximum Purchase Amount"
+#~ msgstr "Maximum inkoopbedrag"
+
+#~ msgid "Purchase Order Waiting Approval"
+#~ msgstr "Goed te keuren inkooporders"

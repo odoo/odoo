@@ -32,9 +32,11 @@ openerp.auth_signup = function(instance) {
 
             // in case of a signup, retrieve the user information from the token
             if (self.params.db && self.params.token) {
-                d = self.rpc("/auth_signup/retrieve", {dbname: self.params.db, token: self.params.token})
+                d.done(function() {
+                    self.rpc("/auth_signup/retrieve", {dbname: self.params.db, token: self.params.token})
                         .done(self.on_token_loaded)
-                        .fail(self.on_token_failed);
+                        .fail(self.on_token_failed)
+                });
             }
             return d;
         },
@@ -98,7 +100,6 @@ openerp.auth_signup = function(instance) {
                     name: name,
                     login: login,
                     password: password,
-                    //state: $.param(this.params)
                 };
                 
                 var self = this,

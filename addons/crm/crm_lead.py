@@ -238,7 +238,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         'color': fields.integer('Color Index'),
         'partner_address_name': fields.related('partner_id', 'name', type='char', string='Partner Contact Name', readonly=True),
         'partner_address_email': fields.related('partner_id', 'email', type='char', string='Partner Contact Email', readonly=True),
-        'company_currency': fields.related('company_id', 'currency_id', 'symbol', type='char', string='Company Currency', readonly=True),
+        'company_currency': fields.related('company_id', 'currency_id', type='many2one', string='Currency', readonly=True, relation="res.currency"),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'user_login': fields.related('user_id', 'login', type='char', string='User Login', readonly=True),
 
