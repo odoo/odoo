@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-10 03:32+0000\n"
-"Last-Translator: ccdos <Unknown>\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:59+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 05:52+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: base_setup
-#: field:user.preferences.config,menu_tips:0
-msgid "Display Tips"
-msgstr "显示提示"
+#: view:sale.config.settings:0
+msgid "Emails Integration"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -27,14 +27,33 @@ msgid "Guest"
 msgstr "访客"
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_product_installer
-msgid "product.installer"
-msgstr "product.installer"
+#: view:sale.config.settings:0
+msgid "Contacts"
+msgstr ""
 
 #. module: base_setup
-#: selection:product.installer,customers:0
-msgid "Create"
-msgstr "新建"
+#: model:ir.model,name:base_setup.model_base_config_settings
+msgid "base.config.settings"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_oauth:0
+msgid ""
+"Use external authentication providers, sign in with google, facebook, ..."
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid ""
+"OpenERP allows to automatically create leads (or others documents)\n"
+"                            from incoming emails. You can automatically "
+"synchronize emails with OpenERP\n"
+"                            using regular POP/IMAP accounts, using a direct "
+"email integration script for your\n"
+"                            email server, or by manually pushing emails to "
+"OpenERP using specific\n"
+"                            plugins for your preferred email application."
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -42,21 +61,26 @@ msgid "Member"
 msgstr "会员"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,sync_google_contact:0
-msgid "Sync Google Contact"
-msgstr "同步Google联系人"
+#: view:base.config.settings:0
+msgid "Portal access"
+msgstr ""
 
 #. module: base_setup
-#: help:user.preferences.config,context_tz:0
-msgid ""
-"Set default for new user's timezone, used to perform timezone conversions "
-"between the server and the client."
-msgstr "为新用户设置默认时区, 以在服务端和客户端之间进行时区的转换."
+#: view:base.config.settings:0
+msgid "Authentication"
+msgstr ""
 
 #. module: base_setup
-#: selection:product.installer,customers:0
-msgid "Import"
-msgstr "导入"
+#: view:sale.config.settings:0
+msgid "Quotations and Sales Orders"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: model:ir.actions.act_window,name:base_setup.action_general_configuration
+#: model:ir.ui.menu,name:base_setup.menu_general_configuration
+msgid "General Settings"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -64,27 +88,14 @@ msgid "Donor"
 msgstr "捐助者"
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_base_setup_company
-msgid "Set Company Header and Footer"
-msgstr "设置公司报表的页眉和页脚"
+#: view:base.config.settings:0
+msgid "Email"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,help:base_setup.action_base_setup_company
-msgid ""
-"Fill in your company data (address, logo, bank accounts) so that it's "
-"printed on your reports. You can click on the button 'Preview Header' in "
-"order to check the header/footer of PDF documents."
-msgstr "填写您公司的信息(地址, 标识, 开户行账号), 以显示于您的报表上. 您可以点击\"预览页头\"按钮 以检查PDF文档的页头页脚."
-
-#. module: base_setup
-#: field:product.installer,customers:0
-msgid "Customers"
-msgstr "客户"
-
-#. module: base_setup
-#: selection:user.preferences.config,view:0
-msgid "Extended"
-msgstr "扩展"
+#: field:sale.config.settings,module_crm:0
+msgid "CRM"
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -92,56 +103,59 @@ msgid "Patient"
 msgstr "病人"
 
 #. module: base_setup
-#: model:ir.actions.act_window,help:base_setup.action_import_create_installer
-msgid ""
-"Create or Import Customers  and their contacts manually from this form or "
-"you can import your existing partners by CSV spreadsheet from \"Import "
-"Data\" wizard"
-msgstr "从本表单手工创建或者导入客户及其联系方式, 您也可以使用\"导入数据\"向导, 从您已有的CSV格式表格中导入."
+#: field:base.config.settings,module_base_import:0
+msgid "Allow users to import data from CSV files"
+msgstr ""
 
 #. module: base_setup
-#: view:user.preferences.config:0
-msgid "Define Users's Preferences"
-msgstr "定制用户偏好"
+#: field:base.config.settings,module_multi_company:0
+msgid "Manage multiple companies"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_user_preferences_config_form
-msgid "Define default users preferences"
-msgstr "定制默认用户偏好"
+#: help:base.config.settings,module_portal:0
+msgid "Give access your customers and suppliers to their documents."
+msgstr ""
 
 #. module: base_setup
-#: help:migrade.application.installer.modules,import_saleforce:0
-msgid "For Import Saleforce"
-msgstr "导入 Saleforce"
+#: view:sale.config.settings:0
+msgid "On Mail Client"
+msgstr ""
 
 #. module: base_setup
-#: help:migrade.application.installer.modules,quickbooks_ippids:0
-msgid "For Quickbooks Ippids"
-msgstr "导入Quickbooks Ippids"
+#: field:sale.config.settings,module_web_linkedin:0
+msgid "Get contacts automatically from linkedIn"
+msgstr ""
 
 #. module: base_setup
-#: help:user.preferences.config,view:0
-msgid ""
-"If you use OpenERP for the first time we strongly advise you to select the "
-"simplified interface, which has less features but is easier. You can always "
-"switch later from the user preferences."
-msgstr "如果您是第一次使用 OpenERP 的话我们强烈建议您选择简化界面，虽然功能较少但更加容易使用。您随时能够在用户首选项中切换。"
+#: field:sale.config.settings,module_plugin_thunderbird:0
+msgid "Enable Thunderbird plug-in"
+msgstr ""
 
 #. module: base_setup
 #: view:base.setup.terminology:0
-#: view:user.preferences.config:0
 msgid "res_config_contents"
 msgstr "res_config_contents"
 
 #. module: base_setup
-#: field:user.preferences.config,view:0
-msgid "Interface"
-msgstr "界面"
+#: view:sale.config.settings:0
+msgid "Customer Features"
+msgstr ""
 
 #. module: base_setup
-#: model:ir.model,name:base_setup.model_migrade_application_installer_modules
-msgid "migrade.application.installer.modules"
-msgstr "Copy text \t migrade.application.installer.modules"
+#: view:base.config.settings:0
+msgid "Import / Export"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "Sale Features"
+msgstr ""
+
+#. module: base_setup
+#: field:sale.config.settings,module_plugin_outlook:0
+msgid "Enable Outlook plug-in"
+msgstr ""
 
 #. module: base_setup
 #: view:base.setup.terminology:0
@@ -156,32 +170,41 @@ msgid "Tenant"
 msgstr "承租人"
 
 #. module: base_setup
+#: help:base.config.settings,module_share:0
+msgid "Share or embbed any screen of openerp."
+msgstr ""
+
+#. module: base_setup
 #: selection:base.setup.terminology,partner:0
 msgid "Customer"
 msgstr "客户"
 
 #. module: base_setup
-#: field:user.preferences.config,context_lang:0
-msgid "Language"
-msgstr "语言"
-
-#. module: base_setup
-#: help:user.preferences.config,context_lang:0
+#: help:sale.config.settings,module_web_linkedin:0
 msgid ""
-"Sets default language for the all user interface, when UI translations are "
-"available. If you want to Add new Language, you can add it from 'Load an "
-"Official Translation' wizard  from 'Administration' menu."
+"When you create a new contact (person or company), you will be able to load "
+"all the data from LinkedIn (photos, address, etc)."
 msgstr ""
-"当用户界面翻译可用时, 为所有的用户界面设置默认语言。如果你要增加新的语言， 可以从 'Administration'菜单的“Load an "
-"Official Translation”向导增加"
 
 #. module: base_setup
-#: view:user.preferences.config:0
+#: help:base.config.settings,module_multi_company:0
 msgid ""
-"This will set the default preferences for new users and update all existing "
-"ones. Afterwards, users are free to change those values on their own user "
-"preference form."
-msgstr "这将设置新用户的默认首选项，并更新所有现有的。此后，用户可以在他们自己的\"用户偏好\"表单随意更改自己的值。"
+"Work in multi-company environments, with appropriate security access between "
+"companies.\n"
+"                This installs the module multi_company."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid ""
+"You will find more options in your company details: address for the header "
+"and footer, overdue payments texts, etc."
+msgstr ""
+
+#. module: base_setup
+#: model:ir.model,name:base_setup.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
 
 #. module: base_setup
 #: field:base.setup.terminology,partner:0
@@ -189,9 +212,9 @@ msgid "How do you call a Customer"
 msgstr "你如何称呼您的客户"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,quickbooks_ippids:0
-msgid "Quickbooks Ippids"
-msgstr "Quickbooks Ippids"
+#: model:ir.model,name:base_setup.model_base_setup_terminology
+msgid "base.setup.terminology"
+msgstr "base.setup.terminology"
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -199,73 +222,21 @@ msgid "Client"
 msgstr "客户"
 
 #. module: base_setup
-#: field:migrade.application.installer.modules,import_saleforce:0
-msgid "Import Saleforce"
-msgstr "导入 Saleforce"
+#: help:base.config.settings,module_auth_anonymous:0
+msgid "Enable the public part of openerp, openerp becomes a public website."
+msgstr ""
 
 #. module: base_setup
-#: field:user.preferences.config,context_tz:0
-msgid "Timezone"
-msgstr "时区"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
-msgid "Use another word to say \"Customer\""
-msgstr "称呼客户的另一种方式"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_base_setup_terminology
-msgid "base.setup.terminology"
-msgstr "base.setup.terminology"
-
-#. module: base_setup
-#: help:user.preferences.config,menu_tips:0
+#: help:sale.config.settings,module_plugin_thunderbird:0
 msgid ""
-"Check out this box if you want to always display tips on each menu action"
-msgstr "如果您希望总是在每个菜单动作上显示提示信息，请选中此框"
-
-#. module: base_setup
-#: field:base.setup.terminology,config_logo:0
-#: field:migrade.application.installer.modules,config_logo:0
-#: field:product.installer,config_logo:0
-#: field:user.preferences.config,config_logo:0
-msgid "Image"
-msgstr "图片"
-
-#. module: base_setup
-#: model:ir.model,name:base_setup.model_user_preferences_config
-msgid "user.preferences.config"
-msgstr "user.preferences.config"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_config_access_other_user
-msgid "Create Additional Users"
-msgstr "新建用户"
-
-#. module: base_setup
-#: model:ir.actions.act_window,name:base_setup.action_import_create_installer
-msgid "Create or Import Customers"
-msgstr "创建或者导入客户"
-
-#. module: base_setup
-#: field:migrade.application.installer.modules,import_sugarcrm:0
-msgid "Import Sugarcrm"
-msgstr "导入 Sugarcrm"
-
-#. module: base_setup
-#: help:product.installer,customers:0
-msgid "Import or create customers"
-msgstr "导入或者创建客户"
-
-#. module: base_setup
-#: selection:user.preferences.config,view:0
-msgid "Simplified"
-msgstr "简化界面"
-
-#. module: base_setup
-#: help:migrade.application.installer.modules,import_sugarcrm:0
-msgid "For Import Sugarcrm"
-msgstr "导入 Sugarcrm"
+"The plugin allows you archive email and its attachments to the selected\n"
+"                OpenERP objects. You can select a partner, or a lead and\n"
+"                attach the selected mail as a .eml file in\n"
+"                the attachment of a selected record. You can create "
+"documents for CRM Lead,\n"
+"                Partner from the selected emails.\n"
+"                This installs the module plugin_thunderbird."
+msgstr ""
 
 #. module: base_setup
 #: selection:base.setup.terminology,partner:0
@@ -273,14 +244,85 @@ msgid "Partner"
 msgstr "业务伙伴"
 
 #. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_partner_terminology_config_form
+msgid "Use another word to say \"Customer\""
+msgstr "称呼客户的另一种方式"
+
+#. module: base_setup
+#: model:ir.actions.act_window,name:base_setup.action_sale_config
+#: view:sale.config.settings:0
+msgid "Configure Sales"
+msgstr ""
+
+#. module: base_setup
+#: help:sale.config.settings,module_plugin_outlook:0
+msgid ""
+"The Outlook plugin allows you to select an object that you would like to "
+"add\n"
+"                to your email and its attachments from MS Outlook. You can "
+"select a partner,\n"
+"                or a lead object and archive a selected\n"
+"                email into an OpenERP mail message with attachments.\n"
+"                This installs the module plugin_outlook."
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Options"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_portal:0
+msgid "Activate the customer/supplier portal"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_share:0
+msgid "Allow documents sharing"
+msgstr ""
+
+#. module: base_setup
+#: field:base.config.settings,module_auth_anonymous:0
+msgid "Activate the public portal"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Configure outgoing email servers"
+msgstr ""
+
+#. module: base_setup
+#: view:sale.config.settings:0
+msgid "Social Network Integration"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: base_setup
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "Apply"
+msgstr ""
+
+#. module: base_setup
 #: view:base.setup.terminology:0
 msgid "Specify Your Terminology"
 msgstr "指定贵公司所用的术语"
 
 #. module: base_setup
-#: help:migrade.application.installer.modules,sync_google_contact:0
-msgid "For Sync Google Contact"
-msgstr "同步google 客户"
+#: view:base.config.settings:0
+#: view:sale.config.settings:0
+msgid "or"
+msgstr ""
+
+#. module: base_setup
+#: view:base.config.settings:0
+msgid "Configure your company data"
+msgstr ""
 
 #~ msgid "Report Header"
 #~ msgstr "报表页眉"
@@ -320,9 +362,6 @@ msgstr "同步google 客户"
 
 #~ msgid "Install"
 #~ msgstr "安装"
-
-#~ msgid "Cancel"
-#~ msgstr "取消"
 
 #~ msgid "Report Footer 2"
 #~ msgstr "报表页脚 2"
@@ -439,6 +478,9 @@ msgstr "同步google 客户"
 
 #~ msgid "Information about your new database"
 #~ msgstr "您的新数据库信息"
+
+#~ msgid "Image"
+#~ msgstr "图片"
 
 #~ msgid "New Database"
 #~ msgstr "新数据库"
@@ -658,3 +700,122 @@ msgstr "同步google 客户"
 
 #~ msgid "Manufacturing"
 #~ msgstr "生产"
+
+#~ msgid "Display Tips"
+#~ msgstr "显示提示"
+
+#~ msgid ""
+#~ "Set default for new user's timezone, used to perform timezone conversions "
+#~ "between the server and the client."
+#~ msgstr "为新用户设置默认时区, 以在服务端和客户端之间进行时区的转换."
+
+#~ msgid "Import"
+#~ msgstr "导入"
+
+#~ msgid "Sync Google Contact"
+#~ msgstr "同步Google联系人"
+
+#~ msgid "Define Users's Preferences"
+#~ msgstr "定制用户偏好"
+
+#~ msgid ""
+#~ "Create or Import Customers  and their contacts manually from this form or "
+#~ "you can import your existing partners by CSV spreadsheet from \"Import "
+#~ "Data\" wizard"
+#~ msgstr "从本表单手工创建或者导入客户及其联系方式, 您也可以使用\"导入数据\"向导, 从您已有的CSV格式表格中导入."
+
+#~ msgid "Define default users preferences"
+#~ msgstr "定制默认用户偏好"
+
+#~ msgid "Extended"
+#~ msgstr "扩展"
+
+#~ msgid ""
+#~ "Fill in your company data (address, logo, bank accounts) so that it's "
+#~ "printed on your reports. You can click on the button 'Preview Header' in "
+#~ "order to check the header/footer of PDF documents."
+#~ msgstr "填写您公司的信息(地址, 标识, 开户行账号), 以显示于您的报表上. 您可以点击\"预览页头\"按钮 以检查PDF文档的页头页脚."
+
+#~ msgid ""
+#~ "Sets default language for the all user interface, when UI translations are "
+#~ "available. If you want to Add new Language, you can add it from 'Load an "
+#~ "Official Translation' wizard  from 'Administration' menu."
+#~ msgstr ""
+#~ "当用户界面翻译可用时, 为所有的用户界面设置默认语言。如果你要增加新的语言， 可以从 'Administration'菜单的“Load an "
+#~ "Official Translation”向导增加"
+
+#~ msgid ""
+#~ "This will set the default preferences for new users and update all existing "
+#~ "ones. Afterwards, users are free to change those values on their own user "
+#~ "preference form."
+#~ msgstr "这将设置新用户的默认首选项，并更新所有现有的。此后，用户可以在他们自己的\"用户偏好\"表单随意更改自己的值。"
+
+#~ msgid "For Import Sugarcrm"
+#~ msgstr "导入 Sugarcrm"
+
+#~ msgid "Import or create customers"
+#~ msgstr "导入或者创建客户"
+
+#~ msgid "Import Sugarcrm"
+#~ msgstr "导入 Sugarcrm"
+
+#~ msgid "Create or Import Customers"
+#~ msgstr "创建或者导入客户"
+
+#~ msgid "For Sync Google Contact"
+#~ msgstr "同步google 客户"
+
+#~ msgid "Create"
+#~ msgstr "新建"
+
+#~ msgid "product.installer"
+#~ msgstr "product.installer"
+
+#~ msgid "Set Company Header and Footer"
+#~ msgstr "设置公司报表的页眉和页脚"
+
+#~ msgid "For Import Saleforce"
+#~ msgstr "导入 Saleforce"
+
+#~ msgid ""
+#~ "If you use OpenERP for the first time we strongly advise you to select the "
+#~ "simplified interface, which has less features but is easier. You can always "
+#~ "switch later from the user preferences."
+#~ msgstr "如果您是第一次使用 OpenERP 的话我们强烈建议您选择简化界面，虽然功能较少但更加容易使用。您随时能够在用户首选项中切换。"
+
+#~ msgid "For Quickbooks Ippids"
+#~ msgstr "导入Quickbooks Ippids"
+
+#~ msgid "Customers"
+#~ msgstr "客户"
+
+#~ msgid "migrade.application.installer.modules"
+#~ msgstr "Copy text \t migrade.application.installer.modules"
+
+#~ msgid "Interface"
+#~ msgstr "界面"
+
+#~ msgid "Language"
+#~ msgstr "语言"
+
+#~ msgid "Quickbooks Ippids"
+#~ msgstr "Quickbooks Ippids"
+
+#~ msgid "user.preferences.config"
+#~ msgstr "user.preferences.config"
+
+#~ msgid ""
+#~ "Check out this box if you want to always display tips on each menu action"
+#~ msgstr "如果您希望总是在每个菜单动作上显示提示信息，请选中此框"
+
+#~ msgid "Create Additional Users"
+#~ msgstr "新建用户"
+
+#~ msgid "Timezone"
+#~ msgstr "时区"
+
+#~ msgid "Import Saleforce"
+#~ msgstr "导入 Saleforce"
+
+#~ msgid "Simplified"
+#~ msgstr "简化界面"

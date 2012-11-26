@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-09 15:02+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -37,7 +37,7 @@ msgstr "Sammler.ID"
 #. module: account_bank_statement_extensions
 #: selection:account.bank.statement.line.global,type:0
 msgid "CODA"
-msgstr ""
+msgstr "CODA"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,parent_id:0
@@ -57,6 +57,11 @@ msgid "Cancel selected statement lines"
 msgstr "Storniere ausgewählte Buchungszeilen"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
 msgstr "Der Bankauszug oder die Kontonummer sind falsch."
@@ -65,11 +70,6 @@ msgstr "Der Bankauszug oder die Kontonummer sind falsch."
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "Gruppiert nach..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "Status"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,19 +107,32 @@ msgid "Batch Payment Info"
 msgstr "Batch Zahlungs Info"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "Bestätige Zeilen"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr ""
-"Löschen nicht erlaubt!. Bitte gehen Sie zum zugehörigen bankauszug und "
-"verändern oder löschen Sie diese Zeile dort."
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "Transaktionen"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -128,7 +141,6 @@ msgstr "Typ"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "Journal"
@@ -152,17 +164,6 @@ msgstr "Lösche ausgewählte Zeilen"
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "Gegenkonto Nummer"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "Transaktionen"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "Warnung"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -207,16 +208,6 @@ msgstr ""
 "zahlen zu können."
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "Valuta Datum"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "Bestätige gewählte Zeilen"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr "Wollen Sie die ausgewählten Bankbuchungszeilen wirklich stornieren?"
@@ -240,6 +231,11 @@ msgstr "Notizen"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "Manuell"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -277,13 +273,6 @@ msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr "Wollen Sie die gewählten Buchungszeilen wirklich bestätigen?"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr "Der Betrag am Beleg muss mit dem Betrag in der Zeile übereinstimmen"
-
-#. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
 msgid ""
 "Code to identify transactions belonging to the same globalisation level "
@@ -311,6 +300,13 @@ msgstr "Bankauszug Buchungen"
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
 msgstr "Code"
+
+#. module: account_bank_statement_extensions
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
@@ -356,12 +352,17 @@ msgid "Bank Statement Lines"
 msgstr "Buchungszeilen"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "Anhängende Überweisungs-Stapel"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -380,3 +381,29 @@ msgstr "Gesamtbetrag"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "Sammler ID"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr ""
+#~ "Löschen nicht erlaubt!. Bitte gehen Sie zum zugehörigen bankauszug und "
+#~ "verändern oder löschen Sie diese Zeile dort."
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Warnung"
+
+#~ msgid "Valuta Date"
+#~ msgstr "Valuta Datum"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "Bestätige gewählte Zeilen"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "Der Betrag am Beleg muss mit dem Betrag in der Zeile übereinstimmen"
