@@ -399,7 +399,7 @@ class purchase_order(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
-            })
+        })
         wf_service = netsvc.LocalService("workflow")
         return {
             'type': 'ir.actions.act_window',
