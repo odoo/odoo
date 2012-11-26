@@ -173,6 +173,9 @@ class TestCleaner(unittest2.TestCase):
         new_html = html_email_clean(TEXT_TPL)
         self.assertNotIn('quote', new_html, 'html_email_cleaner did not remove correctly plaintext quotes')
 
+        # Test5: False boolean for text must return empty string
+        new_html = html_email_clean(False)
+        self.assertEqual(new_html, False, 'html_email_cleaner did change a False in an other value.')
 
 class TestHtmlTools(unittest2.TestCase):
     """ Test some of our generic utility functions about html """
