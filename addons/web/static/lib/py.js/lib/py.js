@@ -758,7 +758,7 @@ var py = {};
             if (value === placeholder) {
                 this._value = 0; return;
             }
-            if (py.PYisInstance(value, py.float)) {
+            if (py.PY_isInstance(value, py.float)) {
                 this._value = value._value;
             }
             if (py.PY_isInstance(value, py.object) && '__float__' in value) {
