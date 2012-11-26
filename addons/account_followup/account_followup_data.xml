@@ -11,7 +11,7 @@
 		 <record id="email_template_account_followup_level0" model="email.template">
             <field name="name">Follow-up of overdue invoices level 0</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payments Follow-up</field>
+            <field name="subject">${object.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -95,7 +95,7 @@ ${mel[aml.id]}
 		 <record id="email_template_account_followup_level1" model="email.template">
             <field name="name">Follow-up of overdue invoices level 1</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payments Follow-up</field>
+            <field name="subject">${object.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -180,7 +180,7 @@ ${mel[aml.id]}
         <record id="email_template_account_followup_level2" model="email.template">
             <field name="name">Follow-up of overdue invoices level 2</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payments Follow-up</field>
+            <field name="subject">${object.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -265,7 +265,7 @@ ${mel[aml.id]}
 		 <record id="email_template_account_followup_default" model="email.template">
             <field name="name">Default follow-up of overdue invoices</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payments Follow-up</field>
+            <field name="subject">${object.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>

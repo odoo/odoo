@@ -317,7 +317,7 @@ class res_partner(osv.osv):
         'payment_next_action':fields.text('Next Action',
                                     help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
         'payment_next_action_date':fields.date('Next Action Date',
-                                    help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), # next action date
+                                    help="This is when further follow-up is needed.  The date will have been set to the current date if the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
         'unreconciled_aml_ids':fields.one2many('account.move.line', 'partner_id', domain=['&', ('reconcile_id', '=', False), '&', 
                             ('account_id.active','=', True), '&', ('account_id.type', '=', 'receivable'), ('state', '!=', 'draft')]), 
         'latest_followup_date':fields.function(_get_latest, method=True, type='date', string="Latest Follow-up Date", 
@@ -337,7 +337,7 @@ class res_partner(osv.osv):
         'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', 
                                         string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
                                         store=False),
-        'payment_amount_due':fields.related('credit', type='float', string="Total amount due"), 
+        'payment_amount_due':fields.related('credit', type='float', string="Total amount due", readonly=True),
         }
 
 res_partner()
