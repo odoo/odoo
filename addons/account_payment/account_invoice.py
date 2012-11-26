@@ -33,8 +33,10 @@ class Invoice(osv.osv):
     def action_cancel(self, cr, uid, ids, context=None):
         payment_line_obj = self.pool.get('payment.line')
         for inv in self.browse(cr, uid, ids, context=context):
-            inv_mv_lines = [x.id for x in inv.move_id.line_id]
-            pl_line_ids = payment_line_obj.search(cr, uid, [('move_line_id','in',inv_mv_lines)], context=context)
+            pl_line_ids = False
+            if inv.move_id and inv.move_id.line_id:
+                inv_mv_lines = [x.id for x in inv.move_id.line_id]
+                pl_line_ids = payment_line_obj.search(cr, uid, [('move_line_id','in',inv_mv_lines)], context=context)
             if pl_line_ids:
                 pay_line = payment_line_obj.browse(cr, uid, pl_line_ids, context=context)
                 payment_order_name = ','.join(map(lambda x: x.order_id.reference, pay_line))
