@@ -194,7 +194,13 @@ class crm_case_categ(osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team'),
         'object_id': fields.many2one('ir.model', 'Object Name'),
     }
-
+    
+    def default_get(self, cr, uid, fields, context=None):
+        res = {}
+        model_id = self.pool.get('ir.model').search(cr, uid, [('model', '=', context.get('object_name'))])
+        res['object_id'] = model_id
+        return res
+        
     def _find_object_id(self, cr, uid, context=None):
         """Finds id for case object"""
         object_id = context and context.get('object_id', False) or False
