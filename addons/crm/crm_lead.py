@@ -448,7 +448,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             """
             type = 'lead'
             for opp in opportunities:
-                if ('opportunity' in [opp.type, type]):
+                if (opp.type == 'opportunity'):
                     return 'opportunity'
 
             return type
