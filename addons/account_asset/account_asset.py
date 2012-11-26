@@ -223,10 +223,9 @@ class account_asset_asset(osv.osv):
                 val['currency_id'] = company.currency_id.id
         return {'value': val}
     
-    def onchange_value_residual(self, cr, uid, ids, purchase_value, salvage_value=False, context=None):
+    def onchange_value_residual(self, cr, uid, ids, purchase_value, salvage_value, context=None):
         val = {}
-        asset = self.browse(cr, uid, ids, context=context)
-        for i in asset:
+        for asset in self.browse(cr, uid, ids, context=context):
             if purchase_value:
                 val['value_residual'] = purchase_value - salvage_value
             if salvage_value:
