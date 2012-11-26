@@ -22,10 +22,10 @@ from osv import fields, osv
 
 class account_check_write(osv.osv_memory):
     _name = 'account.check.write'
-    _description = 'Take input as sequence and print report'
+    _description = 'Assign Check Number'
 
     _columns = {
-        'check_number': fields.char('Check Number', required=True, help="This is the Check Number"),
+        'check_number': fields.char('Check Number', required=True, help="The Check Number."),
     }
 
     _defaults = {
