@@ -23,7 +23,6 @@ import codecs
 import csv
 import fnmatch
 import inspect
-import itertools
 import locale
 import os
 import openerp.pooler as pooler
@@ -512,7 +511,7 @@ def trans_parse_rml(de):
 
 def trans_parse_view(de):
     res = []
-    if de.text and de.text.strip():
+    if not isinstance(de, SKIPPED_ELEMENT_TYPES) and de.text and de.text.strip():
         res.append(de.text.strip().encode("utf8"))
     if de.tail and de.tail.strip():
         res.append(de.tail.strip().encode("utf8"))
@@ -618,7 +617,12 @@ def trans_generate(lang, modules, cr):
     _to_translate = []
     def push_translation(module, type, name, id, source, comments=None):
         tuple = (module, source, name, id, type, comments or [])
-        if source and tuple not in _to_translate:
+        # empty and one-letter terms are ignored, they probably are not meant to be
+        # translated, and would be very hard to translate anyway.
+        if not source or len(source.strip()) <= 1:
+            _logger.debug("Ignoring empty or 1-letter source term: %r", tuple)
+            return
+        if tuple not in _to_translate:
             _to_translate.append(tuple)
 
     def encode(s):
@@ -841,6 +845,8 @@ def trans_generate(lang, modules, cr):
                                                                  keywords=extract_keywords):
                     push_translation(module, trans_type, display_path, lineno,
                                      encode(message), comments + extra_comments)
+            except Exception:
+                _logger.exception("Failed to extract terms from %s", fabsolutepath)
             finally:
                 src_file.close()
 
@@ -856,7 +862,7 @@ def trans_generate(lang, modules, cr):
                 for fname in fnmatch.filter(files, '*.js'):
                     babel_extract_terms(fname, path, root, 'javascript',
                                         extra_comments=[WEB_TRANSLATION_COMMENT],
-                                        extract_keywords={'_t': None})
+                                        extract_keywords={'_t': None, '_lt': None})
             # QWeb template files
             if fnmatch.fnmatch(root, '*/static/src/xml*'):
                 for fname in fnmatch.filter(files, '*.xml'):
