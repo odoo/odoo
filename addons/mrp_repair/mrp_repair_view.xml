@@ -47,7 +47,7 @@
                             <field name="product_id" on_change="onchange_product_id(product_id)" domain="[('type','!=','service')]"/>
                             <field name="partner_id" on_change="onchange_partner_id(partner_id,address_id)" attrs="{'required':[('invoice_method','!=','none')]}"/>
                             <field name="address_id"  attrs="{'readonly':[('deliver_bool','=', False)]}" groups="sale.group_delivery_invoice_address"/>
-                            <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id}"/>
+                            <field name="move_id" on_change="onchange_move_id(product_id, move_id)" context="{'default_product_id':product_id,'form_view_ref': 'stock.view_move_form'}"/>
                             <field name="location_id" attrs="{'readonly':[('deliver_bool','=', False)], 'required':[('deliver_bool','=', True)]}" groups="stock.group_locations"/>
                             <field name="prodlot_id" on_change="onchange_lot_id(prodlot_id,product_id)" groups="stock.group_production_lot" string="Serial Number"/>
                         </group>
