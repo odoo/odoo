@@ -238,9 +238,6 @@ openerp_mail_followers = function(session, mail) {
                     checklist.push(parseInt($(record).data('id')));
                 }
             });
-            if (!checklist.length) {
-                return self.do_unfollow();
-            }
             var context = new session.web.CompoundContext(this.build_context(), {});
             return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], this.message_is_follower ? checklist : undefined, context])
                 .then(this.proxy('read_value'));
