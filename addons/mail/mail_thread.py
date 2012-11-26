@@ -291,16 +291,19 @@ class mail_thread(osv.AbstractModel):
             return v
 
         def convert_for_display(v, f):
+            subtype = False
             if not v:
                 return false_value(f)
             if f._type == 'many2one':
                 if not isinstance(v, browse_record):
                     v = self.pool[f._obj].browse(cr, SUPERUSER_ID, v)
-                return v
+                    if v.__hasattr__('subtype'):
+                        subtype = v.subtype
+                return (v.name_get()[0][1],subtype)
             if f._type == 'selection':
                 # TODO get translated value
                 pass
-            return v
+            return (v,subtype)
 
         tracked = dict((n, f) for n, f in self._all_columns.items() if getattr(f.column, 'tracked', False))
         to_log = [k for k in values if k in tracked]
@@ -327,20 +330,17 @@ class mail_thread(osv.AbstractModel):
 
         for record, changed_fields in changes.items():
             # TODO tpl changed_fields
-            subtype = False
             chg = []
             for f in changed_fields:
                 ci = tracked[f]
-                from_ = convert_for_display(record[f], ci.column)
+                from_ = convert_for_display(record[f], ci.column)[0]
                 to = convert_for_display(values[f], ci.column)
-                if to.__hasattr__('subtype'):
-                    subtype = to.subtype
-                chg.append((_t(ci), from_.name_get()[0][1], to.name_get()[0][1]))
+                chg.append((_t(ci), from_, to[0]))
 
             message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
                                                                         changes=chg)
 
-            record.message_post(message,subtype=subtype)
+            record.message_post(message,subtype=to[1])
 
         return result
 
