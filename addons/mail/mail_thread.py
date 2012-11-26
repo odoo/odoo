@@ -79,7 +79,7 @@ class mail_thread(osv.AbstractModel):
         # search for unread messages, directly in SQL to improve performances
         cr.execute("""  SELECT m.res_id FROM mail_message m
                         RIGHT JOIN mail_notification n
-                        ON (n.message_id = m.id AND n.partner_id = %s AND n.read = False)
+                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
                         WHERE m.model = %s AND m.res_id in %s""",
                     (user_pid, self._name, tuple(ids),))
         msg_ids = [result[0] for result in cr.fetchall()]
@@ -767,13 +767,19 @@ class mail_thread(osv.AbstractModel):
         # 3. Post-processing
         # HACK TDE FIXME: Chatter: attachments linked to the document (not done JS-side), load the message
         if attachment_ids:
+            # TDE FIXME (?): when posting a private message, we use mail.thread as a model
+            # However, attaching doc to mail.thread is not possible, mail.thread does not have any table
+            model = self._name
+            if model == 'mail.thread':
+                model = False
             filtered_attachment_ids = ir_attachment.search(cr, SUPERUSER_ID, [
                 ('res_model', '=', 'mail.compose.message'),
                 ('res_id', '=', 0),
                 ('create_uid', '=', uid),
                 ('id', 'in', attachment_ids)], context=context)
             if filtered_attachment_ids:
-                ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': self._name, 'res_id': thread_id}, context=context)
+                if thread_id and model:
+                    ir_attachment.write(cr, SUPERUSER_ID, attachment_ids, {'res_model': model, 'res_id': thread_id}, context=context)
                 mail_message.write(cr, SUPERUSER_ID, [new_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]}, context=context)
 
         return new_message_id

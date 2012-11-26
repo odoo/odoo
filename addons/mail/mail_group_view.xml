@@ -6,6 +6,17 @@
             <field name="name">Discussion Group</field>
             <field name="tag">mail.wall</field>
             <field name="res_model">mail.message</field>
+            <field name="context">{
+              'search_default_message_unread': True
+            }</field>
+            <field name="params">{
+                'read_action': 'read'
+            }</field>
+            <field name="help" type="html">
+                <p>
+                    No message in this group.
+                </p>
+            </field>
         </record>
 
         <!-- Group Kanban View  !-->
@@ -72,13 +83,24 @@
                             <field name="description" placeholder="Topics discussed in this group..."/>
                         </div>
                         <div class="oe_clear"/>
-                        <group col="1">
+                        <group>
                             <group class="oe_edit_only">
-                                <field name="public" class="oe_inline"/>
-                                <field name="group_public_id" class="oe_inline"
+                                <field name="public"/>
+                                <field name="group_public_id"
                                     attrs="{'invisible': [('public','&lt;&gt;','groups')], 'required': [('public','=','groups')]}"
                                     />
-                                <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
+                                <field name="group_ids" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','public')]}">
+                                    This group is visible by everyone,
+                                    including your customers if you installed
+                                    the portal module.
+                                </div>
+                                <div class="oe_grey" attrs="{'invisible': [('public','&lt;&gt;','private')]}">
+                                    Only the invited followers can read the
+                                    discussions on this group.
+                                </div>
                             </group>
                         </group>
                     </sheet>
