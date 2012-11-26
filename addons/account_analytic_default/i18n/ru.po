@@ -6,27 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-08-17 10:54+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,partner_id:0
-msgid ""
-"select a partner which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"partner, it will automatically take this as an analytical account)"
-msgstr ""
-"выбор партнера, который будет использовать счет аналитики, указанный в "
-"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
-"продажу, если вы выберете этого партнера, он будет автоматически "
-"использовать это как счет аналитики)"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -36,24 +24,14 @@ msgid "Analytic Rules"
 msgstr "Правила аналитики"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,analytic_id:0
-msgid "Analytical Account"
-msgstr "Аналитический счет"
-
-#. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Current"
-msgstr "Текущий"
-
-#. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
 msgstr "Группировать по ..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
-msgid "Default end date for this Analytical Account"
-msgstr "Дата окончания по умолчанию для счета аналитики"
+msgid "Default end date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
@@ -66,21 +44,12 @@ msgid "Conditions"
 msgstr "Условия"
 
 #. module: account_analytic_default
-#: help:account.analytic.default,company_id:0
+#: help:account.analytic.default,partner_id:0
 msgid ""
-"select a company which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"company, it will automatically take this as an analytical account)"
+"Select a partner which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"partner, it will automatically take this as an analytic account)"
 msgstr ""
-"выбор компанию, которая будет использовать счет аналитики, указанный в "
-"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
-"продажу, если вы выберете эту компанию, она будет автоматически использовать "
-"это как счет аналитики)"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,date_start:0
-msgid "Default start date for this Analytical Account"
-msgstr "Дата начала по умолчанию для счета аналитики"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -111,17 +80,17 @@ msgid "Entries"
 msgstr "Проводки"
 
 #. module: account_analytic_default
+#: help:account.analytic.default,product_id:0
+msgid ""
+"Select a product which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"product, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
 msgstr "Дата окончания"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,user_id:0
-msgid ""
-"select a user which will use analytical account specified in analytic default"
-msgstr ""
-"выберите пользователя, который будет использовать счет аналитики, указанный "
-"в аналитике по умолчанию"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -136,27 +105,23 @@ msgid "Reference must be unique per Company!"
 msgstr "Ссылка должна быть уникальна для каждой компании!"
 
 #. module: account_analytic_default
-#: view:account.analytic.default:0
-msgid "Analytical defaults whose end date is greater than today or None"
-msgstr ""
-"Аналитика по умолчанию с датой окончания большей чем сегодня или без даты"
-
-#. module: account_analytic_default
-#: help:account.analytic.default,product_id:0
-msgid ""
-"select a product which will use analytical account specified in analytic "
-"default (eg. create new cutomer invoice or Sale order if we select this "
-"product, it will automatically take this as an analytical account)"
-msgstr ""
-"выбор товара, который будет использовать счет аналитики, указанный в "
-"аналитике по умолчанию (при создании нового счет заказчику или заказа на "
-"продажу, если вы выберете этот товар, он будет автоматически использовать "
-"это как счет аналитики)"
-
-#. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
 msgid "Sequence"
 msgstr "Последовательность"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,company_id:0
+msgid ""
+"Select a company which will use analytic account specified in analytic "
+"default (e.g. create new customer invoice or Sale order if we select this "
+"company, it will automatically take this as an analytic account)"
+msgstr ""
+
+#. module: account_analytic_default
+#: help:account.analytic.default,user_id:0
+msgid ""
+"Select a user which will use analytic account specified in analytic default."
+msgstr ""
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
@@ -168,6 +133,11 @@ msgstr "Позиция счета"
 #: field:account.analytic.default,analytic_id:0
 msgid "Analytic Account"
 msgstr "Счет аналитического учета"
+
+#. module: account_analytic_default
+#: help:account.analytic.default,date_start:0
+msgid "Default start date for this Analytic Account."
+msgstr ""
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -217,6 +187,24 @@ msgstr "Позиция заказа на продажу"
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Недопустимое имя модели в определении действия"
 
+#~ msgid "Current"
+#~ msgstr "Текущий"
+
+#~ msgid "Analytical Account"
+#~ msgstr "Аналитический счет"
+
+#~ msgid "Default start date for this Analytical Account"
+#~ msgstr "Дата начала по умолчанию для счета аналитики"
+
+#~ msgid "Default end date for this Analytical Account"
+#~ msgstr "Дата окончания по умолчанию для счета аналитики"
+
+#~ msgid ""
+#~ "select a user which will use analytical account specified in analytic default"
+#~ msgstr ""
+#~ "выберите пользователя, который будет использовать счет аналитики, указанный "
+#~ "в аналитике по умолчанию"
+
 #~ msgid ""
 #~ "\n"
 #~ "Allows to automatically select analytic accounts based on criterions:\n"
@@ -235,3 +223,37 @@ msgstr "Позиция заказа на продажу"
 #~ "* Компания\n"
 #~ "* Дата\n"
 #~ "    "
+
+#~ msgid ""
+#~ "select a partner which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "partner, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "выбор партнера, который будет использовать счет аналитики, указанный в "
+#~ "аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+#~ "продажу, если вы выберете этого партнера, он будет автоматически "
+#~ "использовать это как счет аналитики)"
+
+#~ msgid ""
+#~ "select a company which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "company, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "выбор компанию, которая будет использовать счет аналитики, указанный в "
+#~ "аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+#~ "продажу, если вы выберете эту компанию, она будет автоматически использовать "
+#~ "это как счет аналитики)"
+
+#~ msgid ""
+#~ "select a product which will use analytical account specified in analytic "
+#~ "default (eg. create new cutomer invoice or Sale order if we select this "
+#~ "product, it will automatically take this as an analytical account)"
+#~ msgstr ""
+#~ "выбор товара, который будет использовать счет аналитики, указанный в "
+#~ "аналитике по умолчанию (при создании нового счет заказчику или заказа на "
+#~ "продажу, если вы выберете этот товар, он будет автоматически использовать "
+#~ "это как счет аналитики)"
+
+#~ msgid "Analytical defaults whose end date is greater than today or None"
+#~ msgstr ""
+#~ "Аналитика по умолчанию с датой окончания большей чем сегодня или без даты"

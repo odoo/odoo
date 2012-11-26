@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-01-16 14:06+0000\n"
 "Last-Translator: Rafael Sales - http://www.tompast.com.br <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -57,9 +57,10 @@ msgid "Pending Tasks"
 msgstr "Tarefas Pendentes"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "Próximo"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "Nenhum timebox filho deste aqui!"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -78,6 +79,11 @@ msgid "Today"
 msgstr "Hoje"
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
 msgstr "Longo Prazo"
@@ -93,8 +99,9 @@ msgid "Pending"
 msgstr "Pendente"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "Período de tempo"
 
@@ -102,12 +109,6 @@ msgstr "Período de tempo"
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
 msgstr "Definir um período"
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "Erro!"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
@@ -125,11 +126,6 @@ msgstr "Erro! Você não pode criar tarefas recursivas."
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
 msgstr "Esta Semana"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "_Cancelar"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -200,6 +196,12 @@ msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -213,21 +215,21 @@ msgstr "Tarefas em Andamento e Provisórias"
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "Contexto"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "Nenhum timebox filho deste aqui!"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "Seleção de tarefas"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
-msgstr "_Ok"
+#: view:project.task:0
+msgid "Display"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -235,7 +237,8 @@ msgid "Office"
 msgstr "Escritório"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "Sequencia"
 
@@ -260,11 +263,6 @@ msgid "Timebox Definition"
 msgstr "Definição do período"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "Seleção de tarefas"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "Caixa de Entrada"
@@ -278,6 +276,11 @@ msgstr "Pegando do período"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "Local aonde o usuário deve executar a tarefa"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr "Cancelar"
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -302,9 +305,9 @@ msgid "For reopening the tasks"
 msgstr "Para reabrir as tarefas"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "Anterior"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -421,9 +424,6 @@ msgstr "Anterior"
 #~ msgid "Getting Things Done"
 #~ msgstr "Pegando coisas feitas(GTD)"
 
-#~ msgid "Cancel"
-#~ msgstr "Cancelar"
-
 #~ msgid "Planned Hours"
 #~ msgstr "Horas planejadas"
 
@@ -435,3 +435,19 @@ msgstr "Anterior"
 
 #~ msgid "Getting Things Done - Time Management Module"
 #~ msgstr "Pegando coisas feitas - Módulo de administração de tempo"
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"
+
+#~ msgid "Previous"
+#~ msgstr "Anterior"
+
+#~ msgid "Next"
+#~ msgstr "Próximo"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Erro!"
+
+#~ msgid "_Ok"
+#~ msgstr "_Ok"
