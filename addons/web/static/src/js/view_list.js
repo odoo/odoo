@@ -23,6 +23,9 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         'action_buttons': true,
     },
     view_type: 'tree',
+    events: {
+        'click thead th.oe_sortable[data-id]': 'sort_by_column'
+    },
     /**
      * Core class for list-type displays.
      *
@@ -262,21 +265,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 'selected', [selection.ids, selection.records]);
         });
 
-        // Sorting columns
-        this.$el.find('thead').delegate('th.oe_sortable[data-id]', 'click', function (e) {
-            e.stopPropagation();
-            var $this = $(this);
-            self.dataset.sort($this.data('id'));
-            if($this.hasClass("sortdown") || $this.hasClass("sortup"))  {
-                $this.toggleClass("sortdown").toggleClass("sortup");
-            } else {
-                $this.toggleClass("sortdown");
-            }
-            $this.siblings('.oe_sortable').removeClass("sortup sortdown");
-
-            self.reload_content();
-        });
-
         // Add button
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
@@ -357,6 +345,19 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.$el.hide();
         }
         this.trigger('list_view_loaded', data, this.grouped);
+    },
+    sort_by_column: function (e) {
+        e.stopPropagation();
+        var $column = $(e.currentTarget);
+        this.dataset.sort($column.data('id'));
+        if($column.hasClass("sortdown") || $column.hasClass("sortup"))  {
+            $column.toggleClass("sortup sortdown");
+        } else {
+            $column.addClass("sortdown");
+        }
+        $column.siblings('.oe_sortable').removeClass("sortup sortdown");
+
+        this.reload_content();
     },
     /**
      * Configures the ListView pager based on the provided dataset's information
