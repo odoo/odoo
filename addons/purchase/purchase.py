@@ -393,12 +393,14 @@ class purchase_order(osv.osv):
             compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
         except ValueError:
             compose_form_id = False 
+        
         ctx = dict(context)
         ctx.update({
             'default_model': 'purchase.order',
             'default_res_id': ids[0],
-            'default_use_template': True,
+            'default_use_template': bool(template_id),
             'default_template_id': template_id,
+            'default_composition_mode': 'comment',
         })
         wf_service = netsvc.LocalService("workflow")
         return {
