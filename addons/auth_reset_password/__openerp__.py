@@ -22,9 +22,8 @@
 {
     'name': 'Reset Password',
     'description': """
-Allows the administrator to send a reset password e-mail through the user form.
-Users will then be able to choose their password following the onscreen instructions.
-========================================================
+Allows the administrator to send a reset password e-mail through the user form. Users will then be able to choose their password following the onscreen instructions.
+=====================================================================================================================================================================
 """,
     'author': 'OpenERP SA',
     'version': '1.0',
