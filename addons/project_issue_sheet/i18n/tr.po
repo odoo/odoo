@@ -7,25 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-01-25 17:31+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:29+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
-
-#. module: project_issue_sheet
-#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
-msgid "Analytic Line"
-msgstr ""
+"X-Launchpad-Export-Date: 2012-11-25 06:25+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_issue_sheet
 #: code:addons/project_issue_sheet/project_issue_sheet.py:57
 #, python-format
-msgid "The Analytic Account is in pending !"
+msgid "The Analytic Account is pending !"
+msgstr ""
+
+#. module: project_issue_sheet
+#: model:ir.model,name:project_issue_sheet.model_account_analytic_line
+msgid "Analytic Line"
 msgstr ""
 
 #. module: project_issue_sheet
@@ -37,6 +37,16 @@ msgstr ""
 #: model:ir.model,name:project_issue_sheet.model_hr_analytic_timesheet
 msgid "Timesheet Line"
 msgstr "Mesai Kartı Satırı"
+
+#. module: project_issue_sheet
+#: view:project.issue:0
+msgid "on_change_project(project_id)"
+msgstr ""
+
+#. module: project_issue_sheet
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !"
+msgstr ""
 
 #. module: project_issue_sheet
 #: code:addons/project_issue_sheet/project_issue_sheet.py:57
@@ -62,16 +72,11 @@ msgid "Timesheets"
 msgstr "Mesai Kartları"
 
 #. module: project_issue_sheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
 msgstr ""
 
 #. module: project_issue_sheet
 #: field:hr.analytic.timesheet,issue_id:0
 msgid "Issue"
-msgstr ""
-
-#. module: project_issue_sheet
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
 msgstr ""
