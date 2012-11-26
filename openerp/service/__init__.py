@@ -129,6 +129,7 @@ def start_services_workers():
 
 def _reexec():
     """reexecute openerp-server process with (nearly) the same arguments"""
+    # TODO check if parent is a NT service
     strip_args = ['-d', '-u']
     a = sys.argv[:]
     args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
@@ -141,9 +142,12 @@ def restart_server():
         os.kill(pid, signal.SIGHUP)
     else:
         if os.name == 'nt':
-            # TODO check if parent is a service
-            stop_services()
-            _reexec()
+            def reborn():
+                stop_services()
+                _reexec()
+
+            # run in a thread to let the current thread return response to the caller.
+            threading.Thread(target=reborn).start()
         else:
             openerp.phoenix = True
             os.kill(os.getpid(), signal.SIGINT)
