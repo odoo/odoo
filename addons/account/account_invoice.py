@@ -457,7 +457,7 @@ class account_invoice(osv.osv):
             invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:
-                if p.property_account_receivable.company_id.id != company_id and p.property_account_payable.company_id.id != company_id:
+                if p.property_account_receivable.company_id != company_id and p.property_account_payable.company_id != company_id:
                     property_obj = self.pool.get('ir.property')
                     rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
                     pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
