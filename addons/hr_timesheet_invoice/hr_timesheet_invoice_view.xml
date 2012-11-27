@@ -127,31 +127,6 @@
             </field>
         </record>
 
-        <!-- Menus -->
-        <record id="action_hr_analytic_timesheet_open_tree" model="ir.actions.act_window">
-            <field name="name">Invoice Tasks Work</field>
-            <field name="res_model">account.analytic.line</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="domain">[]</field>
-            <field name="context">{'search_default_to_invoice': 1}</field>
-            <field name="search_view_id" ref="account.view_account_analytic_line_filter"/>            
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to add some tasks work to be invoiced.
-              </p><p>
-                This list shows every task you can invoice to the customer.
-                Select the lines and invoice from the '<i>more...</i>' contextual
-                menu to generate invoices automatically.
-              </p>
-            </field>
-        </record>
-        <menuitem
-            action="action_hr_analytic_timesheet_open_tree"
-            id="menu_hr_analytic_timesheet_tree"
-            parent="account.menu_finance_periodical_processing_billing"
-            sequence="1"/>
-
         <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.search</field>
             <field name="model">hr_timesheet_invoice.factor</field>

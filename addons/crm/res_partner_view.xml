@@ -15,20 +15,6 @@
                 </field>
         </record>
 
-        <record id="view_partners_form_crm3" model="ir.ui.view">
-                <field name="name">view.res.partner.search.crm.inherited3</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_res_partner_filter"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <xpath expr="//group[@string='Group By...']" position="after">
-                        <group string="Display">
-                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
-                        </group>
-                    </xpath>
-                </field>
-        </record>
-
         <!-- open meetings related to given partner -->
         <record id="crm_meeting_partner" model="ir.actions.act_window">
             <field name="name">Meetings</field>
