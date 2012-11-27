@@ -1068,8 +1068,9 @@ class account_invoice(osv.osv):
                 self.message_post(cr, uid, [inv_id], body=message, context=context)
         return True
 
-    def action_cancel(self, cr, uid, ids, *args):
-        context = {} # TODO: Use context from arguments
+    def action_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         account_move_obj = self.pool.get('account.move')
         invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
         move_ids = [] # ones that we will need to remove
