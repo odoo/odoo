@@ -500,24 +500,21 @@ class expression(object):
             working_table = table  # The table containing the field (the name provided in the left operand)
             field_path = left.split('.', 1)
 
-            # 1 Handle inherits fields: replace by a join
-            #   - Search for the working_table and extract the field
+            # 1 Extract field
+            #   - Try to directly extract the field
+            #   - Handle inherits fields: replace by a join, find the final new
+            #     working table and extract the field
 
-            field = None
+            field = working_table._columns.get(field_path[0])
             if field_path[0] in table._inherit_fields:
-                while True:
-                    field = working_table._columns.get(field_path[0])
-                    if field:
-                        self.leaf_to_table[i] = working_table
-                        break
+                while not field:
                     next_table = working_table.pool.get(working_table._inherit_fields[field_path[0]][0])
                     if not self._has_table_alias(next_table._table):
                         self.joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
                         self._add_table_alias(next_table._table, next_table)
                     working_table = next_table
-            # Or (try to) directly extract the field.
-            else:
-                field = working_table._columns.get(field_path[0])
+                    field = working_table._columns.get(field_path[0])
+                self.leaf_to_table[i] = working_table
 
             # 2 Field not found
             #   - ('id', 'child_of', ids) and continue the processing OR
