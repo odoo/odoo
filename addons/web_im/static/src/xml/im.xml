@@ -4,14 +4,18 @@
 <templates xml:space="preserve">
     <t t-name="InstantMessaging">
         <div class="oe_im">
-            <input class="oe_im_input" type="text"/>
+            <div class="oe_im_frame_header">
+                <span class="oe_e oe_im_search_icon">ô</span>
+                <input class="oe_im_searchbox" t-att-placeholder="_t('Search users...')"/>
+                <span class="oe_e oe_im_search_clear">[</span>
+            </div>
             <div class="oe_im_users"></div>
             <div class="oe_im_content"></div>
         </div>
     </t>
     <t t-name="ImTopButton">
-        <div title='Display im' class="oe_topbar_item oe_topbar_imbutton">
-            <button></button>
+        <div t-att-title='_t("Display Instant Messaging")' class="oe_topbar_item oe_topbar_imbutton">
+            <span class="oe_e">+</span>
         </div>
     </t>
     <t t-name="ImUser">

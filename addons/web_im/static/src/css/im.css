@@ -6,9 +6,49 @@
     border-left: 1px solid #AEB9BD;
 }
 
-.openerp .oe_topbar_imbutton{
-    
+.openerp .oe_topbar_imbutton {
+    cursor: pointer;
 }
+
+/* search stuff */
+.openerp .oe_im_frame_header {
+  background: #dedede;
+  background: -moz-linear-gradient(#fcfcfc, #dedede);
+  background: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
+  border-bottom: 1px solid border-color !important;
+  padding: 5px;
+}
+.openerp .oe_im_frame_header .oe_im_searchbox {
+  width: 168px;
+  padding: 1px 21px 1px 19px;
+  font-size: 13px;
+  -moz-border-radius: 13px;
+  -webkit-border-radius: 13px;
+  border-radius: 13px;
+}
+.openerp .oe_im_frame_header .oe_im_search_icon {
+  position: absolute;
+  color: #888;
+  top: 2px;
+  left: 9px;
+  font-size: 28px;
+  font-family: "entypoRegular" !important;
+  font-weight: 300 !important;
+}
+.openerp .oe_im_frame_header .oe_im_search_clear {
+  display: none;
+  position: absolute;
+  right: 11px;
+  top: 4px;
+  font-size: 26px;
+  color: #b6b6b6;
+  cursor: pointer;
+}
+.openerp .oe_im_frame_header .oe_im_search_clear:hover {
+  color: #888;
+}
+
+
 
 .openerp .oe_im_conversation {
     position: fixed;

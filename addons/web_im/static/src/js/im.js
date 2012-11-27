@@ -21,7 +21,7 @@ openerp.web_im = function(instance) {
     instance.web_im.ImTopButton = instance.web.Widget.extend({
         template:'ImTopButton',
         events: {
-            "click button": "clicked",
+            "click .oe_e": "clicked",
         },
         clicked: function() {
             this.trigger("clicked");
@@ -31,18 +31,22 @@ openerp.web_im = function(instance) {
     instance.web_im.InstantMessaging = instance.web.Widget.extend({
         template: "InstantMessaging",
         events: {
-            "keydown .oe_im_input": "search_users",
+            "keydown .oe_im_searchbox": "input_change",
+            "keyup .oe_im_searchbox": "input_change",
+            "change .oe_im_searchbox": "input_change",
         },
         init: function(parent) {
             this._super(parent);
             this.shown = false;
             this.set("right_offset", 0);
+            this.set("current_search", "");
             this.last = null;
             this.users = [];
             this.c_manager = new instance.web_im.ConversationManager(this);
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
             }, this));
+            this.user_search_dm = new instance.web.DropMisordered();
         },
         start: function() {
             this.$el.css("right", -this.$el.outerWidth());
@@ -51,7 +55,8 @@ openerp.web_im = function(instance) {
             this.calc_box();
 
             this.poll();
-            this.search_users();
+            this.on("change:current_search", this, this.search_changed);
+            this.search_changed();
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
@@ -60,13 +65,15 @@ openerp.web_im = function(instance) {
             this.$el.css("top", top);
             this.$el.css("bottom", 0);
         },
-        search_users: function(e) {
-            if(e && e.which !== 13) {
-                return;
-            }
+        input_change: function() {
+            this.set("current_search", this.$(".oe_im_searchbox").val());
+        },
+        search_changed: function(e) {
             var users = new instance.web.Model("res.users");
             var self = this;
-            return users.query(["name"]).filter([["name", "ilike", this.$(".oe_im_input").val()]]).limit(USERS_LIMIT).all().then(function(result) {
+            return this.user_search_dm.add(users.query(["name"])
+                    .filter([["name", "ilike", this.get("current_search")]])
+                    .limit(USERS_LIMIT).all()).then(function(result) {
                 self.$(".oe_im_input").val("");
                 _.each(self.users, function(user) {
                     user.destroy();
