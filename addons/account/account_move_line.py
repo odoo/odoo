@@ -476,7 +476,7 @@ class account_move_line(osv.osv):
             context or {}
         period_obj = self.pool.get('account.period')
         dt = time.strftime('%Y-%m-%d')
-        if ('journal_id' in context) and ('period_id' in context):
+        if context.get('journal_id') and context.get('period_id'):
             cr.execute('SELECT date FROM account_move_line ' \
                     'WHERE journal_id = %s AND period_id = %s ' \
                     'ORDER BY id DESC limit 1',
