@@ -371,28 +371,56 @@ class expression(object):
             :attr dict leaf_to_table: used to store the table to use for the
                 sql generation, according to the domain leaf.
                 structure: { [leaf index]: table object }
-            :attr set table_aliases: set of aliases.
+            :attr set table_aliases: set of aliases. Previously this attribute
+                was a set of table objects; now that joins generation is included
+                into the expression parsing, it holds aliases, and a mapping
+                exist linking aliases to tables.
+            :attr dict table_aliases_mapping: mapping alias -> table object
             :attr list joins: list of join conditions, such as (res_country_state."id" = res_partner."state_id")
             :attr root_table: root table, set by parse()
         """
         self.has_unaccent = openerp.modules.registry.RegistryManager.get(cr.dbname).has_unaccent
         self.leaf_to_table = {}
         self.table_aliases = set()
+        self.table_aliases_mapping = {}
         self.joins = []
         self.root_table = None
         # assign self.__exp with the normalized, parsed domain.
         self.parse(cr, uid, distribute_not(normalize(exp)), table, context)
 
-    # TODO used only for osv_memory
-    @property
-    def exp(self):
-        return self.__exp[:]
+    # TDE note: this seems not to be used anymore, commenting
+    # # TODO used only for osv_memory
+    # @property
+    # def exp(self):
+    #     return self.__exp[:]
+
+    def _has_table_alias(self, alias):
+        return alias in self.table_aliases
+
+    def _get_table_from_alias(self, alias):
+        return self.table_aliases_mapping.get(alias)
+
+    def _get_full_alias(self, alias):
+        if not self._get_table_from_alias(alias):
+            return False
+        return '%s as %s' % (self._get_table_from_alias(alias)._table, alias)
+
+    def _add_table_alias(self, alias, table):
+        if not self._has_table_alias(alias):
+            self.table_aliases.add(alias)
+            self.table_aliases_mapping[alias] = table
+        else:
+            raise ValueError("Already existing alias %s for table %s, trying to set it for table %s" % (alias, self._get_table_from_alias(alias)._table, table._table))
+
+    def get_tables(self):
+        """ Returns the list of tables for SQL queries, like select from ... """
+        return ['"%s"' % item for item in self.table_aliases]
 
     def parse(self, cr, uid, exp, table, context):
         """ transform the leaves of the expression """
         self.__exp = exp
         self.root_table = table
-        self.table_aliases.add(table)
+        self._add_table_alias(table._table, table)
 
         def child_of_domain(left, ids, left_model, parent=None, prefix=''):
             """Returns a domain implementing the child_of operator for [(left,child_of,ids)],
@@ -460,9 +488,9 @@ class expression(object):
                         self.leaf_to_table[i] = working_table
                         break
                     next_table = working_table.pool.get(working_table._inherit_fields[field_path[0]][0])
-                    if next_table not in self.table_aliases:
+                    if not self._has_table_alias(next_table._table):
                         self.joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
-                        self.table_aliases.add(next_table)
+                        self._add_table_alias(next_table._table, next_table)
                     working_table = next_table
             # Or (try to) directly extract the field.
             else:
@@ -835,8 +863,5 @@ class expression(object):
         if joins:
             query = '(%s) AND %s' % (joins, query)
         return (query, flatten(params))
-
-    def get_tables(self):
-        return ['"%s"' % t._table for t in self.table_aliases]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
