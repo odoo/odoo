@@ -1227,6 +1227,7 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <search string="Search Journal Items">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('ref','ilike',self)]" string="Move"/>
                     <field name="date"/>
                     <filter icon="terp-document-new" string="Unbalanced" domain="[('state','=','draft')]" help="Unbalanced Journal Items"/>
                     <separator/>
@@ -1717,8 +1718,8 @@
             <field name="search_view_id" ref="view_model_search"/>
         </record>
         <menuitem
-            action="action_model_form" id="menu_action_model_form" sequence="5"
-            parent="account.menu_configuration_misc"/>
+            action="action_model_form" name="Models" id="menu_action_model_form" sequence="5"
+            parent="account.menu_finance_recurrent_entries"/>
 
         <!--
             # Payment Terms
@@ -2064,7 +2065,7 @@
         <menuitem
             id="account_template_folder"
             name="Templates"
-            parent="menu_finance_accounting"
+            parent="account_account_menu"
             groups="account.group_account_manager"/>
         <menuitem
             id="account_template_taxes"
@@ -2083,28 +2084,23 @@
             <field name="model">account.account.template</field>
             <field name="arch" type="xml">
                 <form string="Account Template" version="7.0">
-                    <notebook>
-                        <page string="General Information">
-                            <group col="4">
-                                <field name="name"/>
-                                <field name="code"/>
-                                <newline/>
-                                <field name="parent_id"/>
-                                <field name="shortcut"/>
-                                <field name="type"/>
-                                <field name="user_type"/>
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="code"/>
+                        <newline/>
+                        <field name="parent_id"/>
+                        <field name="shortcut"/>
+                        <field name="type"/>
+                        <field name="user_type"/>
 
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="reconcile"/>
-                                <field name="chart_template_id"/>
-                            </group>
-                            <separator string="Default Taxes"/>
-                            <field name="tax_ids"/>
-                        </page>
-                        <page string="Notes">
-                            <field name="note"/>
-                        </page>
-                    </notebook>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
+                        <field name="reconcile"/>
+                        <field name="chart_template_id"/>
+                    </group>
+                    <separator string="Default Taxes"/>
+                    <field name="tax_ids"/>
+                    <separator string="Notes"/>
+                    <field name="note" placeholder="Internal notes..."/>
                 </form>
             </field>
         </record>

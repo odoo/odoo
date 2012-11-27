@@ -6,16 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-10 17:40+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:21+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: document
 #: field:document.directory,parent_id:0
@@ -23,15 +22,10 @@ msgid "Parent Directory"
 msgstr "Főkönyvtár"
 
 #. module: document
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "Directory name contains special characters!"
 msgstr "A könyvtár neve speciális karaktereket tartalmaz!"
-
-#. module: document
-#: field:document.directory,resource_field:0
-msgid "Name field"
-msgstr "Név mező"
 
 #. module: document
 #: view:board.board:0
@@ -42,6 +36,11 @@ msgstr ""
 #: model:ir.model,name:document.model_process_node
 msgid "Process Node"
 msgstr "Folyamat csomópont"
+
+#. module: document
+#: sql_constraint:document.directory:0
+msgid "Directory must have a parent or a storage."
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -78,20 +77,14 @@ msgid "Files"
 msgstr "Fájlok"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files per Month"
-msgstr "Fájlok/Hónap"
+#: field:document.directory.content.type,mimetype:0
+msgid "Mime Type"
+msgstr "MIME-típus"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "March"
 msgstr "Március"
-
-#. module: document
-#: view:document.configuration:0
-msgid "title"
-msgstr ""
 
 #. module: document
 #: field:document.directory.dctx,expr:0
@@ -128,18 +121,13 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:report.document.user:0
-msgid "This Year"
-msgstr "Tárgyév"
-
-#. module: document
 #: field:document.storage,path:0
 msgid "Path"
 msgstr "Útvonal"
 
 #. module: document
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
 #, python-format
 msgid "Directory name must be unique!"
 msgstr "Könyvtár nevének egyedinek kell lennie!"
@@ -150,6 +138,7 @@ msgid "Filter on my documents"
 msgstr ""
 
 #. module: document
+#: view:ir.attachment:0
 #: field:ir.attachment,index_content:0
 msgid "Indexed Content"
 msgstr "Kereshető tartalom"
@@ -162,13 +151,9 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: model:ir.actions.todo.category,name:document.category_knowledge_mgmt_config
-msgid "Knowledge Management"
-msgstr ""
-
-#. module: document
 #: view:document.directory:0
 #: field:document.storage,dir_ids:0
+#: model:ir.actions.act_window,name:document.action_document_directory_form
 #: model:ir.ui.menu,name:document.menu_document_directories
 msgid "Directories"
 msgstr "Könyvtárak"
@@ -179,8 +164,8 @@ msgid "Files details by Users"
 msgstr "Fájl részletek felhasználók szerint"
 
 #. module: document
-#: code:addons/document/document_storage.py:573
-#: code:addons/document/document_storage.py:601
+#: code:addons/document/document_storage.py:569
+#: code:addons/document/document_storage.py:597
 #, python-format
 msgid "Error!"
 msgstr "Hiba!"
@@ -213,14 +198,27 @@ msgstr "Tudáskezelő programok beállítása"
 #. module: document
 #: view:ir.attachment:0
 #: field:ir.attachment,partner_id:0
-#: field:report.files.partner,partner:0
 msgid "Partner"
 msgstr "Partner"
 
 #. module: document
-#: view:board.board:0
-msgid "Files by Users"
-msgstr "Fájlok felhasználók szerint"
+#: model:ir.actions.act_window,name:document.act_res_partner_document
+#: model:ir.actions.act_window,name:document.zoom_directory
+msgid "Related Documents"
+msgstr "Kapcsolódó dokumentumok"
+
+#. module: document
+#: model:ir.actions.act_window,help:document.action_document_file_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a new document. \n"
+"          </p><p>\n"
+"            The Documents repository gives you access to all attachments, "
+"such\n"
+"            as mails, project documents, invoices etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: document
 #: field:process.node,directory_id:0
@@ -228,11 +226,9 @@ msgid "Document directory"
 msgstr "Dokumentumkönyvtár"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#: code:addons/document/document_directory.py:266
-#: code:addons/document/document_directory.py:271
-#: code:addons/document/document_directory.py:276
+#: code:addons/document/document_directory.py:263
+#: code:addons/document/document_directory.py:268
+#: code:addons/document/document_directory.py:273
 #, python-format
 msgid "ValidateError"
 msgstr "Érvényesítési hiba"
@@ -244,16 +240,10 @@ msgstr "ir.actions.report.xml"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_file_form
-#: view:ir.attachment:0
 #: model:ir.ui.menu,name:document.menu_document_doc
 #: model:ir.ui.menu,name:document.menu_document_files
 msgid "Documents"
 msgstr "Dokumentumok"
-
-#. module: document
-#: constraint:document.directory:0
-msgid "Error! You can not create recursive Directories."
-msgstr "Hiba! Nem hozhat létre körkörös mappahivatkozást."
 
 #. module: document
 #: view:document.directory:0
@@ -270,7 +260,6 @@ msgstr "Erőforrás modell"
 #: field:ir.attachment,file_size:0
 #: field:report.document.file,file_size:0
 #: field:report.document.user,file_size:0
-#: field:report.files.partner,file_size:0
 msgid "File Size"
 msgstr "Fájlméret"
 
@@ -281,12 +270,24 @@ msgid "Content Type"
 msgstr "Tartalomtípus"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Modification"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,type:0
 #: view:document.storage:0
 #: field:document.storage,type:0
 msgid "Type"
 msgstr "Típus"
+
+#. module: document
+#: code:addons/document/document.py:194
+#: code:addons/document/document_directory.py:234
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: document
 #: help:document.directory,ressource_type_id:0
@@ -302,9 +303,14 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_view_files_by_partner
-msgid "Files Per Partner"
-msgstr "Fájlok/Partner"
+#: constraint:document.directory:0
+msgid "Error! You cannot create recursive directories."
+msgstr ""
+
+#. module: document
+#: field:document.directory,resource_field:0
+msgid "Name field"
+msgstr "Név mező"
 
 #. module: document
 #: field:document.directory,dctx_ids:0
@@ -329,15 +335,8 @@ msgstr "Jelentés"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "July"
 msgstr "Július"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager
-#: model:ir.ui.menu,name:document.menu_reports_document_manager
-msgid "Document Dashboard"
-msgstr "Dokumentum vezérlőpult"
 
 #. module: document
 #: field:document.directory.content.type,code:0
@@ -345,22 +344,12 @@ msgid "Extension"
 msgstr "Kiterjesztés"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Created"
-msgstr "Létrehozva"
-
-#. module: document
 #: field:document.directory,content_ids:0
 msgid "Virtual Files"
 msgstr "Virtuális fájlok"
 
 #. module: document
-#: view:ir.attachment:0
-msgid "Modified"
-msgstr "Módosítva"
-
-#. module: document
-#: code:addons/document/document_storage.py:639
+#: code:addons/document/document_storage.py:635
 #, python-format
 msgid "Error at doc write!"
 msgstr ""
@@ -401,10 +390,15 @@ msgid "Last Modification User"
 msgstr ""
 
 #. module: document
-#: model:ir.actions.act_window,name:document.act_res_partner_document
-#: model:ir.actions.act_window,name:document.zoom_directory
-msgid "Related Documents"
-msgstr "Kapcsolódó dokumentumok"
+#: model:ir.actions.act_window,name:document.action_view_files_by_user_graph
+#: view:report.document.user:0
+msgid "Files by User"
+msgstr ""
+
+#. module: document
+#: view:ir.attachment:0
+msgid "on"
+msgstr ""
 
 #. module: document
 #: field:document.directory,domain:0
@@ -429,7 +423,6 @@ msgid "All users files"
 msgstr "Összes felhasználói fájl"
 
 #. module: document
-#: view:board.board:0
 #: model:ir.actions.act_window,name:document.action_view_size_month
 #: view:report.document.file:0
 msgid "File Size by Month"
@@ -437,14 +430,8 @@ msgstr "Fájlméretek hónapok szerint"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "December"
 msgstr "December"
-
-#. module: document
-#: field:document.configuration,config_logo:0
-msgid "Image"
-msgstr "Kép"
 
 #. module: document
 #: selection:document.directory,type:0
@@ -452,9 +439,10 @@ msgid "Static Directory"
 msgstr ""
 
 #. module: document
-#: field:document.directory,child_ids:0
-msgid "Children"
-msgstr ""
+#: field:report.document.file,month:0
+#: field:report.document.user,month:0
+msgid "Month"
+msgstr "Hónap"
 
 #. module: document
 #: view:document.directory:0
@@ -468,13 +456,17 @@ msgid ""
 msgstr ""
 
 #. module: document
+#: field:report.document.user,user:0
+msgid "unknown"
+msgstr ""
+
+#. module: document
 #: view:document.directory:0
 #: field:document.directory,user_id:0
 #: field:document.storage,user_id:0
 #: view:ir.attachment:0
 #: field:ir.attachment,user_id:0
 #: field:report.document.user,user_id:0
-#: field:report.document.wall,user_id:0
 msgid "Owner"
 msgstr "Tulajdonos"
 
@@ -496,11 +488,27 @@ msgid "Date Created"
 msgstr "Létrehozás dátuma"
 
 #. module: document
+#: field:document.directory,ressource_id:0
+msgid "Resource ID"
+msgstr "Erőforrás ID"
+
+#. module: document
 #: help:document.directory.content,include_name:0
 msgid ""
 "Check this field if you want that the name of the file to contain the record "
 "name.\n"
 "If set, the directory will have to be a resource one."
+msgstr ""
+
+#. module: document
+#: model:ir.actions.act_window,name:document.open_board_document_manager
+#: model:ir.ui.menu,name:document.menu_reports_document
+msgid "Knowledge"
+msgstr ""
+
+#. module: document
+#: view:document.storage:0
+msgid "Document Storage"
 msgstr ""
 
 #. module: document
@@ -513,11 +521,6 @@ msgstr ""
 #: field:document.directory.content,include_name:0
 msgid "Include Record Name"
 msgstr ""
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attachment"
-msgstr "Melléklet"
 
 #. module: document
 #: field:ir.actions.report.xml,model_id:0
@@ -544,10 +547,21 @@ msgid ""
 msgstr ""
 
 #. module: document
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:6
+#, python-format
+msgid "Attachment(s)"
+msgstr ""
+
+#. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "August"
 msgstr "Augusztus"
+
+#. module: document
+#: view:ir.attachment:0
+msgid "My Document(s)"
+msgstr ""
 
 #. module: document
 #: sql_constraint:document.directory:0
@@ -556,15 +570,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "June"
 msgstr "Június"
-
-#. module: document
-#: field:report.document.user,user:0
-#: field:report.document.wall,user:0
-msgid "User"
-msgstr "Felhasználó"
 
 #. module: document
 #: field:document.directory,group_ids:0
@@ -579,12 +586,10 @@ msgstr "Aktív"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "November"
 msgstr "November"
 
 #. module: document
-#: view:ir.attachment:0
 #: field:ir.attachment,db_datas:0
 msgid "Data"
 msgstr "Adat"
@@ -605,7 +610,6 @@ msgstr "Meghatározás"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "October"
 msgstr "Október"
 
@@ -621,29 +625,8 @@ msgstr "Adatbázis"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "January"
 msgstr "Január"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Related to"
-msgstr "Kapcsolatos"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Attached to"
-msgstr "Csatolva ehhez"
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reports_document
-msgid "Dashboard"
-msgstr "Vezérlőpult"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.action_view_user_graph
-msgid "Files By Users"
-msgstr "Fájlok felhasználók szerint"
 
 #. module: document
 #: field:document.storage,readonly:0
@@ -651,7 +634,8 @@ msgid "Read Only"
 msgstr "Csak olvasható"
 
 #. module: document
-#: model:ir.actions.act_window,name:document.action_document_directory_form
+#: view:document.directory:0
+#: view:process.node:0
 msgid "Document Directory"
 msgstr ""
 
@@ -661,15 +645,15 @@ msgid "The directory name must be unique !"
 msgstr "A könyvtár nevének egyedinek kell lennie !"
 
 #. module: document
+#: view:ir.attachment:0
+msgid "Attachments"
+msgstr ""
+
+#. module: document
 #: field:document.directory,create_uid:0
 #: field:document.storage,create_uid:0
 msgid "Creator"
 msgstr "Létrehozta"
-
-#. module: document
-#: field:document.directory.content,sequence:0
-msgid "Sequence"
-msgstr "Sorszám"
 
 #. module: document
 #: view:document.configuration:0
@@ -689,7 +673,6 @@ msgstr "Fájlok hónap szerint"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "September"
 msgstr "Szeptember"
 
@@ -699,24 +682,14 @@ msgid "Prefix"
 msgstr "Előtag"
 
 #. module: document
-#: field:report.document.wall,last:0
-msgid "Last Posted Time"
+#: field:document.directory,child_ids:0
+msgid "Children"
 msgstr ""
 
 #. module: document
-#: field:report.document.user,datas_fname:0
-msgid "File Name"
-msgstr "Fájl neve"
-
-#. module: document
-#: view:document.configuration:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: document
-#: field:document.directory,ressource_id:0
-msgid "Resource ID"
-msgstr "Erőforrás ID"
+#: view:board.board:0
+msgid "Files by user"
+msgstr ""
 
 #. module: document
 #: selection:document.storage,type:0
@@ -724,21 +697,9 @@ msgid "External file storage"
 msgstr ""
 
 #. module: document
-#: view:board.board:0
-#: model:ir.actions.act_window,name:document.action_view_wall
-#: view:report.document.wall:0
-msgid "Wall of Shame"
-msgstr ""
-
-#. module: document
 #: help:document.storage,path:0
 msgid "For file storage, the root path of the storage"
 msgstr ""
-
-#. module: document
-#: model:ir.model,name:document.model_report_files_partner
-msgid "Files details by Partners"
-msgstr "Fájlrészletek partnerek szerint"
 
 #. module: document
 #: field:document.directory.dctx,field:0
@@ -756,28 +717,11 @@ msgid "Parent Model"
 msgstr "Forrásmodell"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by users"
-msgstr "Fájlok felhasználók szerint"
-
-#. module: document
-#: field:report.document.file,month:0
-#: field:report.document.user,month:0
-#: field:report.document.wall,month:0
-#: field:report.document.wall,name:0
-#: field:report.files.partner,month:0
-msgid "Month"
-msgstr "Hónap"
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Months Files"
+#: help:document.directory.dctx,field:0
+msgid ""
+"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
+"what is typed here."
 msgstr ""
-
-#. module: document
-#: model:ir.ui.menu,name:document.menu_reporting
-msgid "Reporting"
-msgstr "Jelentés"
 
 #. module: document
 #: field:document.directory,ressource_tree:0
@@ -786,7 +730,6 @@ msgstr "Fastruktúra"
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "May"
 msgstr "Május"
 
@@ -794,18 +737,6 @@ msgstr "Május"
 #: model:ir.actions.act_window,name:document.action_view_all_document_tree1
 msgid "All Users files"
 msgstr "Minden felhasználói fájl"
-
-#. module: document
-#: model:ir.model,name:document.model_report_document_wall
-msgid "Users that did not inserted documents since one month"
-msgstr ""
-
-#. module: document
-#: model:ir.actions.act_window,help:document.action_document_file_form
-msgid ""
-"The Documents repository gives you access to all attachments, such as mails, "
-"project documents, invoices etc."
-msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -818,9 +749,9 @@ msgid "ir.attachment"
 msgstr "ir.attachment"
 
 #. module: document
-#: view:board.board:0
-msgid "New Files"
-msgstr "Új fájlok"
+#: view:report.document.user:0
+msgid "Users File"
+msgstr ""
 
 #. module: document
 #: view:document.directory:0
@@ -828,24 +759,11 @@ msgid "Static"
 msgstr "Statikus"
 
 #. module: document
-#: view:report.files.partner:0
-msgid "Files By Partner"
-msgstr "Fájlok partner szerint"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Indexed Content - experimental"
+#: view:document.directory:0
+msgid ""
+"These groups, however, do NOT apply to children directories, which must "
+"define their own groups."
 msgstr ""
-
-#. module: document
-#: view:report.document.user:0
-msgid "This Month"
-msgstr "Tárgyhó"
-
-#. module: document
-#: view:ir.attachment:0
-msgid "Notes"
-msgstr "Jegyzetek"
 
 #. module: document
 #: model:ir.model,name:document.model_document_configuration
@@ -864,22 +782,8 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "February"
 msgstr "Február"
-
-#. module: document
-#: model:ir.actions.act_window,name:document.open_board_document_manager1
-#: model:ir.ui.menu,name:document.menu_reports_document_manager1
-msgid "Statistics by User"
-msgstr "Statisztika felhasználók szerint"
-
-#. module: document
-#: help:document.directory.dctx,field:0
-msgid ""
-"The name of the field. Note that the prefix \"dctx_\" will be prepended to "
-"what is typed here."
-msgstr ""
 
 #. module: document
 #: field:document.directory,name:0
@@ -904,21 +808,18 @@ msgstr ""
 
 #. module: document
 #: selection:report.document.user,month:0
-#: selection:report.files.partner,month:0
 msgid "April"
 msgstr "Április"
 
 #. module: document
 #: field:report.document.file,nbr:0
 #: field:report.document.user,nbr:0
-#: field:report.files.partner,nbr:0
 msgid "# of Files"
 msgstr "Fájlok száma"
 
 #. module: document
-#: code:addons/document/document.py:209
-#, python-format
-msgid "(copy)"
+#: view:document.storage:0
+msgid "Search Document Storage"
 msgstr ""
 
 #. module: document
@@ -929,21 +830,16 @@ msgid ""
 msgstr ""
 
 #. module: document
-#: view:document.directory:0
-msgid ""
-"These groups, however, do NOT apply to children directories, which must "
-"define their own groups."
+#. openerp-web
+#: code:addons/document/static/src/js/document.js:17
+#, python-format
+msgid "%s (%s)"
 msgstr ""
 
 #. module: document
-#: field:document.directory.content.type,mimetype:0
-msgid "Mime Type"
-msgstr "MIME-típus"
-
-#. module: document
-#: view:report.document.user:0
-msgid "All Months Files"
-msgstr ""
+#: field:document.directory.content,sequence:0
+msgid "Sequence"
+msgstr "Sorszám"
 
 #. module: document
 #: field:document.directory.content,name:0
@@ -951,11 +847,9 @@ msgid "Content Name"
 msgstr "Kapcsolat neve"
 
 #. module: document
-#: code:addons/document/document.py:220
-#: code:addons/document/document.py:299
-#, python-format
-msgid "File name must be unique!"
-msgstr "Fájl nevének egyedinek kell lennie!"
+#: field:report.document.user,datas_fname:0
+msgid "File Name"
+msgstr "Fájl neve"
 
 #. module: document
 #: selection:document.storage,type:0
@@ -963,9 +857,9 @@ msgid "Internal File storage"
 msgstr "Belső fájl tárolása"
 
 #. module: document
-#: sql_constraint:document.directory:0
-msgid "Directory must have a parent or a storage"
-msgstr ""
+#: view:document.configuration:0
+msgid "res_config_contents"
+msgstr "res_config_contents"
 
 #. module: document
 #: model:ir.actions.act_window,name:document.action_document_directory_tree
@@ -974,13 +868,7 @@ msgid "Directories' Structure"
 msgstr "Könyvtárak szerkezete"
 
 #. module: document
-#: view:report.document.user:0
-msgid "Files by Resource Type"
-msgstr "Fájlok forrástípusok szerint"
-
-#. module: document
 #: field:report.document.user,name:0
-#: field:report.files.partner,name:0
 msgid "Year"
 msgstr "Év"
 
@@ -993,35 +881,103 @@ msgid "Storage Media"
 msgstr ""
 
 #. module: document
-#: view:document.storage:0
-msgid "Search Document storage"
-msgstr ""
-
-#. module: document
 #: field:document.directory.content,extension:0
 msgid "Document Type"
 msgstr "Dokumentumtípus"
 
+#~ msgid "Notes"
+#~ msgstr "Jegyzetek"
+
+#~ msgid "Attachment"
+#~ msgstr "Melléklet"
+
 #~ msgid "Attached To"
 #~ msgstr "Csatolva ehhez"
+
+#~ msgid "This Year"
+#~ msgstr "Tárgyév"
+
+#~ msgid "Files per Month"
+#~ msgstr "Fájlok/Hónap"
 
 #~ msgid "Project"
 #~ msgstr "Projekt"
 
+#~ msgid "Files Per Partner"
+#~ msgstr "Fájlok/Partner"
+
+#~ msgid "Error! You can not create recursive Directories."
+#~ msgstr "Hiba! Nem hozhat létre körkörös mappahivatkozást."
+
+#~ msgid "Document Dashboard"
+#~ msgstr "Dokumentum vezérlőpult"
+
+#~ msgid "Modified"
+#~ msgstr "Módosítva"
+
 #~ msgid "Files by Partner"
 #~ msgstr "Fájlok partnerek szerint"
+
+#~ msgid "Image"
+#~ msgstr "Kép"
+
+#~ msgid "User"
+#~ msgstr "Felhasználó"
+
+#~ msgid "Dashboard"
+#~ msgstr "Vezérlőpult"
+
+#~ msgid "Files By Users"
+#~ msgstr "Fájlok felhasználók szerint"
+
+#~ msgid "Related to"
+#~ msgstr "Kapcsolatos"
 
 #~ msgid "Integrated Document Management System"
 #~ msgstr "Integrált dokumentum-irányító rendszer"
 
+#~ msgid "Files by users"
+#~ msgstr "Fájlok felhasználók szerint"
+
+#~ msgid "Files details by Partners"
+#~ msgstr "Fájlrészletek partnerek szerint"
+
+#~ msgid "New Files"
+#~ msgstr "Új fájlok"
+
 #~ msgid "Product"
 #~ msgstr "Termék"
+
+#~ msgid "Reporting"
+#~ msgstr "Jelentés"
+
+#~ msgid "Files By Partner"
+#~ msgstr "Fájlok partner szerint"
+
+#~ msgid "This Month"
+#~ msgstr "Tárgyhó"
+
+#~ msgid "Statistics by User"
+#~ msgstr "Statisztika felhasználók szerint"
+
+#, python-format
+#~ msgid "File name must be unique!"
+#~ msgstr "Fájl nevének egyedinek kell lennie!"
+
+#~ msgid "Files by Resource Type"
+#~ msgstr "Fájlok forrástípusok szerint"
 
 #~ msgid "Auto Directory Configuration"
 #~ msgstr "Automatikus könyvtárbeállítás"
 
 #~ msgid "Sale Order"
 #~ msgstr "Vevői megrendelés"
+
+#~ msgid "Files by Users"
+#~ msgstr "Fájlok felhasználók szerint"
+
+#~ msgid "Created"
+#~ msgstr "Létrehozva"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Beállítás előrehaladása"
