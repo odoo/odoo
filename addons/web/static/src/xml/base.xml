@@ -71,9 +71,9 @@
                 </div>
                 <ul>
                     <li>Username</li>
-                    <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
+                    <li><input name="login" type="text" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
                     <li>Password</li>
-                    <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
+                    <li><input name="password" type="password" t-att-value="widget.selected_password || ''"/></li>
                     <li><button name="submit">Log in</button></li>
                 </ul>
             </form>
@@ -97,7 +97,6 @@
         </t>
     </select>
 </t>
-
 
 <t t-name="DatabaseManager">
     <div class="oe_view_manager_view_form">
