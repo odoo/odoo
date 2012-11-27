@@ -24,6 +24,8 @@ import openerp.tools.config
 import openerp.modules.registry
 from osv import osv, fields
 
+WATCHER_TIMER = 60
+POLL_TIMER = 30
 
 if openerp.tools.config.options["gevent"]:
     import gevent
@@ -59,7 +61,7 @@ if openerp.tools.config.options["gevent"]:
                         try:
                             c.execute("listen received_message;")
                             c.commit();
-                            if select.select([conn], [], [], 60) == ([],[],[]):
+                            if select.select([conn], [], [], WATCHER_TIMER) == ([],[],[]):
                                 pass
                             else:
                                 conn.poll()
@@ -99,7 +101,7 @@ class ImportController(openerp.addons.web.http.Controller):
             last = res["last"]
             num += 1
             print "waiting"
-            Watcher.get_watcher(res["dbname"]).stop(30)
+            Watcher.get_watcher(res["dbname"]).stop(POLL_TIMER)
 
 
 class im_message(osv.osv):

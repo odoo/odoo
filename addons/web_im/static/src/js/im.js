@@ -1,6 +1,9 @@
 
 openerp.web_im = function(instance) {
 
+    var USERS_LIMIT = 20;
+    var ERROR_DELAY = 5000;
+
     instance.web.UserMenu.include({
         do_update: function(){
             var self = this;
@@ -59,7 +62,7 @@ openerp.web_im = function(instance) {
             }
             var users = new instance.web.Model("res.users");
             var self = this;
-            return users.query(["name"]).filter([["name", "ilike", this.$(".oe_im_input").val()]]).limit(20).all().then(function(result) {
+            return users.query(["name"]).filter([["name", "ilike", this.$(".oe_im_input").val()]]).limit(USERS_LIMIT).all().then(function(result) {
                 self.$(".oe_im_input").val("");
                 _.each(self.users, function(user) {
                     user.destroy();
@@ -105,7 +108,7 @@ openerp.web_im = function(instance) {
                 self.poll();
             }, function(unused, e) {
                 e.preventDefault();
-                setTimeout(_.bind(self.poll, self), 5000);
+                setTimeout(_.bind(self.poll, self), ERROR_DELAY);
             });
         },
         activate_user: function(user_rec) {
