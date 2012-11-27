@@ -195,7 +195,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_timesheets': fields.boolean('Use Timesheets', help="Check this field if this project manages timesheets"),
+        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
