@@ -733,6 +733,18 @@ class crm_lead(base_stage, format_address, osv.osv):
         return partner_ids
 
     def allocate_salesman(self, cr, uid, ids, user_ids, team_id=False, context=None):
+        """
+        Assign salesmen and salesteam to a batch of leads.  If there are more
+        leads than salesmen, these salesmen will be assigned in round-robin.
+        E.g.: 4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6).  They
+        will be assigned as followed: L1 - S1, L2 - S2, L3 - S3, L4 - S4,
+        L5 - S1, L6 - S2.
+
+        :param list ids: leads/opportunities ids to process
+        :param list user_ids: salesmen to assign
+        :param int team_id: salesteam to assign
+        :return bool
+        """
         index = 0
         for lead_id in ids:
             value = {}
@@ -747,7 +759,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def schedule_phonecall(self, cr, uid, ids, schedule_time, call_summary, desc, phone, contact_name, user_id=False, section_id=False, categ_id=False, action='schedule', context=None):
         """
-        action :('schedule','Schedule a call'), ('log','Log a call')
+        :param string action: ('schedule','Schedule a call'), ('log','Log a call')
         """
         phonecall = self.pool.get('crm.phonecall')
         model_data = self.pool.get('ir.model.data')
