@@ -10,8 +10,10 @@ commands = {}
 class CommandType(type):
     def __init__(cls, name, bases, attrs):
         super(CommandType, cls).__init__(name, bases, attrs)
-        name = cls.__name__.lower()
-        commands[name] = cls
+        name = getattr(cls, name, cls.__name__.lower())
+        cls.name = name
+        if name != 'command':
+            commands[name] = cls
 
 class Command(object):
     """Subclass this class to define new openerp subcommands """
@@ -19,6 +21,12 @@ class Command(object):
 
     def run(self, args):
         pass
+
+class Help(Command):
+    def run(self, args):
+        print "Available commands:\n"
+        for k, v in commands.items():
+            print "    %s" % k
 
 import server
 
