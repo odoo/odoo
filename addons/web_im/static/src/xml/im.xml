@@ -20,7 +20,10 @@
     </t>
     <t t-name="ImUser">
         <div class="oe_im_user">
-            <t t-esc="widget.user_rec.name"/>
+            <span class="oe_im_user_clip">
+                <img t-att-src='_s + "/web_im/static/src/img/avatar/avatar.jpeg"' class="oe_im_user_avatar"/>
+            </span>
+            <span class="oe_im_user_name"><t t-esc="widget.user_rec.name"/></span>
         </div>
     </t>
     <t t-name="Conversation">
