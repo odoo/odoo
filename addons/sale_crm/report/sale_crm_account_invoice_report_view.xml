@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+    <!-- Update account invoice !-->
+    <record model="ir.ui.view" id="account_invoice_report_tree">
+        <field name="name">account.invoice.report.tree</field>
+        <field name="model">account.invoice.report</field>
+        <field name="inherit_id" ref="account.view_account_invoice_report_tree"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="section_id"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</data>
+</openerp>
