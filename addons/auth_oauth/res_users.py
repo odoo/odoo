@@ -51,6 +51,7 @@ class res_users(osv.Model):
             :param validation: result of validation of access token (dict)
             :param params: oauth parameters (dict)
             :return: user login (str)
+            :raise: openerp.exceptions.AccessDenied if signin failed
 
             This method can be overridden to add alternative signin methods.
         """
