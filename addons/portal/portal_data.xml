@@ -18,7 +18,7 @@
                     ('res_id', '=', ref('company_news_feed'))
                 ],
                 'context':{
-                    'search_default_message_unread': True,
+                    'search_default_message_unread': False,
                     'default_model': 'mail.group',
                     'default_res_id': ref('company_news_feed'),
                 },
@@ -49,7 +49,7 @@
                     ('res_id', '=', ref('company_jobs'))
                 ],
                 'context':{
-                    'search_default_message_unread': True,
+                    'search_default_message_unread': False,
                     'default_model': 'mail.group',
                     'default_res_id': ref('company_jobs'),
                 },
