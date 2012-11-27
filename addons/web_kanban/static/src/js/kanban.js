@@ -649,6 +649,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         }).then(function(records) {
             self.view.dataset.ids = self.view.dataset.ids.concat(ids);
             self.do_add_records(records);
+            self.compute_cards_auto_height();
             return records;
         });
     },
