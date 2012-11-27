@@ -362,11 +362,24 @@ class expression(object):
     """
 
     def __init__(self, cr, uid, exp, table, context):
+        """ Initialize expression object and automatically parse the expression
+            right after initialization.
+
+            :param exp: expression (using domain ('foo', '=', 'bar' format))
+            :param table: root table object
+
+            :attr dict leaf_to_table: used to store the table to use for the
+                sql generation, according to the domain leaf.
+                structure: { [leaf index]: table object }
+            :attr set table_aliases: set of aliases.
+            :attr list joins: list of join conditions, such as (res_country_state."id" = res_partner."state_id")
+            :attr root_table: root table, set by parse()
+        """
         self.has_unaccent = openerp.modules.registry.RegistryManager.get(cr.dbname).has_unaccent
-        self.__field_tables = {}  # used to store the table to use for the sql generation. key = index of the leaf
-        self.__all_tables = set()
-        self.__joins = []
-        self.__main_table = None # 'root' table. set by parse()
+        self.leaf_to_table = {}
+        self.table_aliases = set()
+        self.joins = []
+        self.root_table = None
         # assign self.__exp with the normalized, parsed domain.
         self.parse(cr, uid, distribute_not(normalize(exp)), table, context)
 
@@ -378,8 +391,8 @@ class expression(object):
     def parse(self, cr, uid, exp, table, context):
         """ transform the leaves of the expression """
         self.__exp = exp
-        self.__main_table = table
-        self.__all_tables.add(table)
+        self.root_table = table
+        self.table_aliases.add(table)
 
         def child_of_domain(left, ids, left_model, parent=None, prefix=''):
             """Returns a domain implementing the child_of operator for [(left,child_of,ids)],
@@ -419,7 +432,7 @@ class expression(object):
             return list(value)
 
         i = -1
-        while i + 1<len(self.__exp):
+        while i + 1 < len(self.__exp):
             i += 1
             e = self.__exp[i]
             if is_operator(e) or e == TRUE_LEAF or e == FALSE_LEAF:
@@ -434,7 +447,7 @@ class expression(object):
             self.__exp[i] = e
             left, operator, right = e
 
-            working_table = table # The table containing the field (the name provided in the left operand)
+            working_table = table  # The table containing the field (the name provided in the left operand)
             field_path = left.split('.', 1)
 
             # If the field is _inherits'd, search for the working_table,
@@ -444,12 +457,12 @@ class expression(object):
                 while True:
                     field = working_table._columns.get(field_path[0])
                     if field:
-                        self.__field_tables[i] = working_table
+                        self.leaf_to_table[i] = working_table
                         break
                     next_table = working_table.pool.get(working_table._inherit_fields[field_path[0]][0])
-                    if next_table not in self.__all_tables:
-                        self.__joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
-                        self.__all_tables.add(next_table)
+                    if next_table not in self.table_aliases:
+                        self.joins.append('%s."%s"=%s."%s"' % (next_table._table, 'id', working_table._table, working_table._inherits[next_table._name]))
+                        self.table_aliases.add(next_table)
                     working_table = next_table
             # Or (try to) directly extract the field.
             else:
@@ -459,7 +472,7 @@ class expression(object):
                 if left == 'id' and operator == 'child_of':
                     ids2 = to_ids(right, table)
                     dom = child_of_domain(left, ids2, working_table)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
                 else:
                     # field could not be found in model columns, it's probably invalid, unless
                     # it's one of the _log_access special fields
@@ -476,7 +489,7 @@ class expression(object):
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                    right1 = table.search(cr, uid, [(field_path[0],'in', right)], context=dict(context, active_test=False))
+                    right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=dict(context, active_test=False))
                     self.__exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):
@@ -516,7 +529,7 @@ class expression(object):
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
 
                 else:
                     call_null = True
@@ -532,7 +545,7 @@ class expression(object):
                             else:
                                 ids2 = right
                         if not ids2:
-                            if operator in ['like','ilike','in','=']:
+                            if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null = False
                                 self.__exp[i] = FALSE_LEAF
@@ -573,12 +586,12 @@ class expression(object):
                             else:
                                 res_ids = right
                         if not res_ids:
-                            if operator in ['like','ilike','in','=']:
+                            if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null_m2m = False
                                 self.__exp[i] = FALSE_LEAF
                             else:
-                                operator = 'in' # operator changed because ids are directly related to main object
+                                operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
                             m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
@@ -595,7 +608,7 @@ class expression(object):
                         dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i+1:]
+                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
                 else:
                     def _get_expression(field_obj, cr, uid, left, right, operator, context=None):
                         if context is None:
@@ -603,24 +616,24 @@ class expression(object):
                         c = context.copy()
                         c['active_test'] = False
                         #Special treatment to ill-formed domains
-                        operator = ( operator in ['<','>','<=','>='] ) and 'in' or operator
+                        operator = (operator in ['<', '>', '<=', '>=']) and 'in' or operator
 
-                        dict_op = {'not in':'!=','in':'=','=':'in','!=':'not in'}
+                        dict_op = {'not in': '!=', 'in': '=', '=': 'in', '!=': 'not in'}
                         if isinstance(right, tuple):
                             right = list(right)
-                        if (not isinstance(right, list)) and operator in ['not in','in']:
+                        if (not isinstance(right, list)) and operator in ['not in', 'in']:
                             operator = dict_op[operator]
-                        elif isinstance(right, list) and operator in ['!=','=']: #for domain (FIELD,'=',['value1','value2'])
+                        elif isinstance(right, list) and operator in ['!=', '=']:  # for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
                         res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
-                            res_ids.append(False) # TODO this should not be appended if False was in 'right'
+                            res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return (left, 'in', res_ids)
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
-                            right and isinstance(right, (tuple,list)) and all(isinstance(item, basestring) for item in right):
+                            right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
                         self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
-                    else: 
+                    else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         pass
 
@@ -640,7 +653,7 @@ class expression(object):
 
                 if field.translate:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
-                    sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+                    sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     if need_wildcard:
                         right = '%%%s%%' % right
 
@@ -651,13 +664,13 @@ class expression(object):
                              '     AND type = %s'
                     instr = ' %s'
                     #Covering in,not in operators with operands (%s,%s) ,etc.
-                    if sql_operator in ['in','not in']:
+                    if sql_operator in ['in', 'not in']:
                         instr = ','.join(['%s'] * len(right))
-                        subselect += '     AND value ' + sql_operator +  ' ' +" (" + instr + ")"   \
+                        subselect += '     AND value ' + sql_operator + ' ' + " (" + instr + ")"   \
                              ') UNION ('                \
                              '  SELECT id'              \
                              '    FROM "' + working_table._table + '"'       \
-                             '   WHERE "' + left + '" ' + sql_operator + ' ' +" (" + instr + "))"
+                             '   WHERE "' + left + '" ' + sql_operator + ' ' + " (" + instr + "))"
                     else:
                         subselect += '     AND value ' + sql_operator + instr +   \
                              ') UNION ('                \
@@ -729,11 +742,11 @@ class expression(object):
                 elif not check_nulls and operator == 'not in':
                     query = '(%s OR %s."%s" IS NULL)' % (query, table._table, left)
                 elif check_nulls and operator == 'not in':
-                    query = '(%s AND %s."%s" IS NOT NULL)' % (query, table._table, left) # needed only for TRUE.
-            else: # Must not happen
+                    query = '(%s AND %s."%s" IS NOT NULL)' % (query, table._table, left)  # needed only for TRUE.
+            else:  # Must not happen
                 raise ValueError("Invalid domain term %r" % (leaf,))
 
-        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '='):
+        elif right == False and (left in table._columns) and table._columns[left]._type == "boolean" and (operator == '='):
             query = '(%s."%s" IS NULL or %s."%s" = false )' % (table._table, left, table._table, left)
             params = []
 
@@ -741,7 +754,7 @@ class expression(object):
             query = '%s."%s" IS NULL ' % (table._table, left)
             params = []
 
-        elif right == False and (left in table._columns) and table._columns[left]._type=="boolean" and (operator == '!='):
+        elif right == False and (left in table._columns) and table._columns[left]._type == "boolean" and (operator == '!='):
             query = '(%s."%s" IS NOT NULL and %s."%s" != false)' % (table._table, left, table._table, left)
             params = []
 
@@ -764,7 +777,7 @@ class expression(object):
 
         else:
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
-            sql_operator = {'=like':'like','=ilike':'ilike'}.get(operator,operator)
+            sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
 
             if left in table._columns:
                 format = need_wildcard and '%s' or table._columns[left]._symbol_set[0]
@@ -775,7 +788,7 @@ class expression(object):
             elif left in MAGIC_COLUMNS:
                     query = "(%s.\"%s\" %s %%s)" % (table._table, left, sql_operator)
                     params = right
-            else: # Must not happen
+            else:  # Must not happen
                 raise ValueError("Invalid field %r in domain term %r" % (left, leaf))
 
             add_null = False
@@ -798,14 +811,13 @@ class expression(object):
             params = [params]
         return (query, params)
 
-
     def to_sql(self):
         stack = []
         params = []
         # Process the domain from right to left, using a stack, to generate a SQL expression.
         for i, e in reverse_enumerate(self.__exp):
             if is_leaf(e, internal=True):
-                table = self.__field_tables.get(i, self.__main_table)
+                table = self.leaf_to_table.get(i, self.root_table)
                 q, p = self.__leaf_to_sql(e, table)
                 params.insert(0, p)
                 stack.append(q)
@@ -819,13 +831,12 @@ class expression(object):
 
         assert len(stack) == 1
         query = stack[0]
-        joins = ' AND '.join(self.__joins)
+        joins = ' AND '.join(self.joins)
         if joins:
             query = '(%s) AND %s' % (joins, query)
         return (query, flatten(params))
 
     def get_tables(self):
-        return ['"%s"' % t._table for t in self.__all_tables]
+        return ['"%s"' % t._table for t in self.table_aliases]
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
