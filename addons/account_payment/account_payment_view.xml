@@ -15,24 +15,14 @@
         </record>
 
         <record model="ir.ui.view" id="view_move_line_tree_wiz">
-            <field name="name">account.move.line.tree</field>
+            <field name="name">account.move.line.tree.wiz</field>
             <field name="model">account.move.line</field>
-            <field name="priority" eval="1"/>
+            <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
                 <tree string="Account Entry Line">
-                    <field name="partner_id"/>
-                    <field name="ref"/>
-                    <field name="name"/>
-                    <field name="journal_id"/>
-                    <field name="account_id"/>
-                    <field name="date_maturity"/>
-                    <field name="date"/>
-                    <field name="debit" sum="Total debit"/>
-                    <field name="credit" sum="Total credit"/>
-                    <field name="amount_to_pay"/>
-                    <field name="amount_currency" groups="base.group_multi_currency"/>
-                    <field name="currency_id" groups="base.group_multi_currency"/>
-                    <field name="period_id" invisible="1"/>
+                    <field name="reconcile" position="after">
+                        <field name="amount_to_pay"/>
+                    </field>
                 </tree>
             </field>
         </record>
