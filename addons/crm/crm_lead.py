@@ -732,7 +732,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             partner_ids[lead.id] = partner_id
         return partner_ids
 
-    def allocate_salesman(self, cr, uid, ids, user_ids, team_id=False, context=None):
+    def allocate_salesman(self, cr, uid, ids, user_ids=None, team_id=False, context=None):
         """
         Assign salesmen and salesteam to a batch of leads.  If there are more
         leads than salesmen, these salesmen will be assigned in round-robin.
@@ -745,14 +745,18 @@ class crm_lead(base_stage, format_address, osv.osv):
         :param int team_id: salesteam to assign
         :return bool
         """
+        if user_ids is None:
+            user_ids = []
         index = 0
+
         for lead_id in ids:
             value = {}
             if team_id:
                 value['section_id'] = team_id
-            if index < len(user_ids):
+            if user_ids:
                 value['user_id'] = user_ids[index]
-                index += 1
+                # Cycle through user_ids
+                index = index+1 if (index < len(user_ids)-1) else 0
             if value:
                 self.write(cr, uid, [lead_id], value, context=context)
         return True

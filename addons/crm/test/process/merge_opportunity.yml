@@ -15,7 +15,6 @@
 -
   !python {model: crm.lead}: |
     merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_2"))])
-    assert merge_id, 'Fail to create Merge opportunity'
-    merge_data = self.browse(cr, uid, merge_id)[0]
-    assert merge_data.type == 'opportunity', 'Merged opportunity type didn\'t change'
-    assert merge_data.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch'
+    assert merge_id, 'Fail to create merge opportunity wizard'
+    merge_result = self.browse(cr, uid, merge_id)[0]
+    assert merge_result.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch'
