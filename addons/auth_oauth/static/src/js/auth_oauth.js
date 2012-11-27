@@ -40,7 +40,7 @@ openerp.auth_oauth = function(instance) {
             if (instance.session.debug) {
                 return_url += '?debug';
             }
-            var state = this._oauth_state();
+            var state = this._oauth_state(provider);
             var params = {
                 response_type: 'token',
                 client_id: provider.client_id,
