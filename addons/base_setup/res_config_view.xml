@@ -106,13 +106,14 @@
                         </group>
                     </div>
                     <div name="customer feature">
-                        <separator string="Quotations and Sales Orders"/>
+                        <field name="module_sale" invisible="1"/>
+                        <separator string="Quotations and Sales Orders" attrs="{'invisible': [('module_sale','=',False)]}"/>
                         <group name="Customer">
-                            <label for="id" string="Customer Features"/>
+                            <label for="id" string="Customer Features" attrs="{'invisible': [('module_sale','=',False)]}"/>
                             <div name="Customer Features"/>
                         </group>
                         <group name="Sale">
-                            <label for="id" string="Sale Features"/>
+                            <label for="id" string="Sale Features" attrs="{'invisible': [('module_sale','=',False)]}"/>
                             <div name="Sale Features"/>
                         </group>
                     </div>
