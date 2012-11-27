@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-08 08:55+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: German <de@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:27+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:22+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -23,9 +23,24 @@ msgid "Child Accounts"
 msgstr "untergeordnete Konten"
 
 #. module: analytic
-#: field:account.analytic.account,name:0
-msgid "Account Name"
-msgstr "Kontenbezeichnung"
+#: selection:account.analytic.account,state:0
+msgid "In Progress"
+msgstr ""
+
+#. module: analytic
+#: model:mail.message.subtype,name:analytic.mt_account_status
+msgid "Status Change"
+msgstr ""
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "Vorlage"
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "End Date"
+msgstr ""
 
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
@@ -33,14 +48,40 @@ msgid "Specifies the amount of quantity to count."
 msgstr "Definiert die zu zählende Menge"
 
 #. module: analytic
-#: field:account.analytic.account,state:0
-msgid "State"
-msgstr "Status"
+#: view:account.analytic.account:0
+msgid ""
+"Once the end date of the contract is\n"
+"                                        passed or the maximum number of "
+"service\n"
+"                                        units (e.g. support contract) is\n"
+"                                        reached, the account manager is "
+"notified \n"
+"                                        by email to renew the contract with "
+"the\n"
+"                                        customer."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,user_id:0
+#: code:addons/analytic/analytic.py:215
+#, python-format
+msgid "Contract: "
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,manager_id:0
 msgid "Account Manager"
 msgstr "Verantw. Mitarbeiter"
+
+#. module: analytic
+#: field:account.analytic.account,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:312
+#, python-format
+msgid "Contract <b>created</b>."
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -53,56 +94,25 @@ msgid "Debit"
 msgstr "Soll"
 
 #. module: analytic
-#: help:account.analytic.account,state:0
-msgid ""
-"* When an account is created its in 'Draft' state.                           "
-"       \n"
-"* If any associated partner is there, it can be in 'Open' state.             "
-"                     \n"
-"* If any pending balance is there it can be in 'Pending'.                    "
-"               \n"
-"* And finally when all the transactions are over, it can be in 'Close' "
-"state.                                   \n"
-"* The project can be in either if the states 'Template' and 'Running'.\n"
-" If it is template then we can make projects based on the template projects. "
-"If its in 'Running' state it is a normal project.                            "
-"     \n"
-" If it is to be reviewed then the state is 'Pending'.\n"
-" When the project is completed the state is set to 'Done'."
-msgstr ""
-"* Durch die Erstellung eines Analytischen Kontos ist der Zustand zunächst "
-"\"Entwurf\".\n"
-"* Durch z.B. die Zuweisung eines Partners ändert sich der Zustand auf "
-"\"Offen\" .\n"
-"* Durch einen nicht ausgeglichenen Saldo, könnte der Zustand \"In "
-"Wartestellung\" zugewiesen sein.\n"
-"* Durch abschliessende Buchung von Transaktionen, kann der Status auf "
-"\"Beendet\" geändert werden.\n"
-"* Ein Projekt kann sowohl einen Zustand \"Vorlage\" oder \"Offen\" "
-"auslösen.\n"
-" Bei Status \"Vorlage\" kann aus einer solchen Projektvorlage ein neues "
-"Projekt abgeleitet werden.\n"
-" Im Zustand \"Offen\" handelt es sich um ein normales Projekt.\n"
-"\n"
-" Wenn ein vorhandenes Projekt überarbeitet werden muss, wechselt der Status "
-"auf \"In Wartestellung\".\n"
-" Bei Projektbeendigung wird der Status des Kontos auch auf \"Beendet\" "
-"geändert."
-
-#. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
 msgstr "Neu"
 
 #. module: analytic
-#: field:account.analytic.account,type:0
-msgid "Account Type"
-msgstr "Kontotyp"
+#: field:account.analytic.account,user_id:0
+msgid "Project Manager"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Pending"
-msgstr "In Wartestellung"
+#: field:account.analytic.account,state:0
+msgid "Status"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:254
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
@@ -116,9 +126,19 @@ msgid "Description"
 msgstr "Buchungstext"
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "Normal"
-msgstr "Normal"
+#: field:account.analytic.account,name:0
+msgid "Account/Contract Name"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,company_id:0
@@ -127,7 +147,24 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:138
+#: view:account.analytic.account:0
+msgid "Renewal"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.account,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid ""
+"Sets the higher limit of time to work on the contract, based on the "
+"timesheet. (for instance, number of hours in a limited support contract.)"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:151
 #, python-format
 msgid ""
 "If you set a company, the currency selected has to be the same as it's "
@@ -141,6 +178,11 @@ msgstr ""
 "Sie können die Definition des Unternehmen für Sicheten entfernen.\n"
 "Damit können Sie verschiedene Firmen mit verschiedenen Währungen "
 "konsolidieren."
+
+#. module: analytic
+#: field:account.analytic.account,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -158,25 +200,28 @@ msgid "Date"
 msgstr "Datum"
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Template"
-msgstr "Vorlage"
-
-#. module: analytic
-#: field:account.analytic.account,quantity:0
-#: field:account.analytic.line,unit_amount:0
-msgid "Quantity"
-msgstr "Menge"
-
-#. module: analytic
-#: help:account.analytic.line,amount:0
+#: help:account.analytic.account,type:0
 msgid ""
-"Calculated by multiplying the quantity and the price given in the Product's "
-"cost price. Always expressed in the company main currency."
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account.\n"
+"The type 'Analytic account' stands for usual accounts that you only want to "
+"use in accounting.\n"
+"If you select Contract or Project, it offers you the possibility to manage "
+"the validity and the invoicing options for this account.\n"
+"The special type 'Template of Contract' allows you to define a template with "
+"default data that you can reuse easily."
 msgstr ""
-"Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
-"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der Standard "
-"Währung des Unternehmens."
+
+#. module: analytic
+#: field:account.analytic.account,message_comment_ids:0
+#: help:account.analytic.account,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Customer"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
@@ -184,9 +229,35 @@ msgid "Account Hierarchy"
 msgstr "Kontenhierarchie"
 
 #. module: analytic
-#: help:account.analytic.account,quantity_max:0
-msgid "Sets the higher limit of time to work on the contract."
-msgstr "Erhöht den Zeitrahmen für diesen Kontrakt"
+#: field:account.analytic.account,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
+
+#. module: analytic
+#: view:account.analytic.account:0
+msgid "Contract Information"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,template_id:0
+#: selection:account.analytic.account,type:0
+msgid "Template of Contract"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Prepaid Service Units"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -199,14 +270,15 @@ msgid "Amount"
 msgstr "Betrag"
 
 #. module: analytic
-#: field:account.analytic.account,contact_id:0
-msgid "Contact"
-msgstr "Ansprechpartner"
+#: code:addons/analytic/analytic.py:314
+#, python-format
+msgid "Contract for <em>%s</em> has been <b>created</b>."
+msgstr ""
 
 #. module: analytic
-#: field:account.analytic.account,code:0
-msgid "Code/Reference"
-msgstr "Code/Referenz"
+#: view:account.analytic.account:0
+msgid "Terms and Conditions"
+msgstr ""
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -214,10 +286,9 @@ msgid "Cancelled"
 msgstr "Abgebrochen"
 
 #. module: analytic
-#: code:addons/analytic/analytic.py:138
-#, python-format
-msgid "Error !"
-msgstr "Fehler !"
+#: selection:account.analytic.account,type:0
+msgid "Analytic View"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -225,18 +296,20 @@ msgid "Balance"
 msgstr "Saldo"
 
 #. module: analytic
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
+#: help:account.analytic.account,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: analytic
-#: help:account.analytic.account,type:0
-msgid ""
-"If you select the View Type, it means you won't allow to create journal "
-"entries using that account."
+#: selection:account.analytic.account,state:0
+msgid "To Renew"
 msgstr ""
-"Wenn Sie als Kontotyp Ansicht wählen, bedeutet dieses, daß Sie keine "
-"Buchungen auf diesem Konto ausführen können."
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "Menge"
 
 #. module: analytic
 #: field:account.analytic.account,date:0
@@ -244,9 +317,15 @@ msgid "Date End"
 msgstr "Ende Datum"
 
 #. module: analytic
-#: field:account.analytic.account,quantity_max:0
-msgid "Maximum Time"
-msgstr "Maximale Zeit"
+#: field:account.analytic.account,code:0
+msgid "Reference"
+msgstr ""
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:151
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
@@ -254,11 +333,18 @@ msgid "Analytic Accounting"
 msgstr "Analytische Konten"
 
 #. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Contract or Project"
+msgstr ""
+
+#. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
 msgstr "Vollständige Kontobezeichnung"
 
 #. module: analytic
+#: view:account.analytic.account:0
+#: selection:account.analytic.account,type:0
 #: field:account.analytic.line,account_id:0
 #: model:ir.model,name:analytic.model_account_analytic_account
 msgid "Analytic Account"
@@ -270,46 +356,69 @@ msgid "Currency"
 msgstr "Währung"
 
 #. module: analytic
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr "Für Sichten dürfen keine Analysezeilen erzeugt werden"
+#: help:account.analytic.account,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,type:0
-msgid "View"
-msgstr "Ansicht"
-
-#. module: analytic
-#: field:account.analytic.account,partner_id:0
-msgid "Partner"
-msgstr "Partner"
+#: field:account.analytic.account,type:0
+msgid "Type of Account"
+msgstr ""
 
 #. module: analytic
 #: field:account.analytic.account,date_start:0
-msgid "Date Start"
-msgstr "Startdatum"
+msgid "Start Date"
+msgstr ""
 
 #. module: analytic
-#: selection:account.analytic.account,state:0
-msgid "Open"
-msgstr "Offen"
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr ""
+"Berechnet durch Multiplikation von Menge und Herstellungskosten bzw. "
+"Anschaffungskosten des Produkts. Die Angabe erfolgt immer in der Standard "
+"Währung des Unternehmens."
 
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
 msgstr "Analytische Buchungen"
 
+#~ msgid "Account Name"
+#~ msgstr "Kontenbezeichnung"
+
+#~ msgid "State"
+#~ msgstr "Status"
+
 #~ msgid "Draft"
 #~ msgstr "Entwurf"
 
+#~ msgid "Contact"
+#~ msgstr "Ansprechpartner"
+
 #~ msgid "Maximum Quantity"
 #~ msgstr "Max. Menge"
+
+#~ msgid "View"
+#~ msgstr "Ansicht"
 
 #~ msgid "Account currency"
 #~ msgstr "Währung des Kontos"
 
 #~ msgid "Account Code"
 #~ msgstr "Kontonummer"
+
+#~ msgid "Date Start"
+#~ msgstr "Startdatum"
+
+#~ msgid "Normal"
+#~ msgstr "Normal"
+
+#~ msgid "Open"
+#~ msgstr "Offen"
 
 #~ msgid ""
 #~ "Module for defining analytic accounting object.\n"
@@ -318,10 +427,80 @@ msgstr "Analytische Buchungen"
 #~ "Anwendung für die Definition von Analytischen Konten.\n"
 #~ "    "
 
+#~ msgid "Account Type"
+#~ msgstr "Kontotyp"
+
+#~ msgid "Pending"
+#~ msgstr "In Wartestellung"
+
 #~ msgid "Sets the higher limit of quantity of hours."
 #~ msgstr "Definiere Obergrenze der Stunden"
+
+#~ msgid ""
+#~ "If you select the View Type, it means you won't allow to create journal "
+#~ "entries using that account."
+#~ msgstr ""
+#~ "Wenn Sie als Kontotyp Ansicht wählen, bedeutet dieses, daß Sie keine "
+#~ "Buchungen auf diesem Konto ausführen können."
+
+#~ msgid "Partner"
+#~ msgstr "Partner"
+
+#~ msgid ""
+#~ "* When an account is created its in 'Draft' state.                           "
+#~ "       \n"
+#~ "* If any associated partner is there, it can be in 'Open' state.             "
+#~ "                     \n"
+#~ "* If any pending balance is there it can be in 'Pending'.                    "
+#~ "               \n"
+#~ "* And finally when all the transactions are over, it can be in 'Close' "
+#~ "state.                                   \n"
+#~ "* The project can be in either if the states 'Template' and 'Running'.\n"
+#~ " If it is template then we can make projects based on the template projects. "
+#~ "If its in 'Running' state it is a normal project.                            "
+#~ "     \n"
+#~ " If it is to be reviewed then the state is 'Pending'.\n"
+#~ " When the project is completed the state is set to 'Done'."
+#~ msgstr ""
+#~ "* Durch die Erstellung eines Analytischen Kontos ist der Zustand zunächst "
+#~ "\"Entwurf\".\n"
+#~ "* Durch z.B. die Zuweisung eines Partners ändert sich der Zustand auf "
+#~ "\"Offen\" .\n"
+#~ "* Durch einen nicht ausgeglichenen Saldo, könnte der Zustand \"In "
+#~ "Wartestellung\" zugewiesen sein.\n"
+#~ "* Durch abschliessende Buchung von Transaktionen, kann der Status auf "
+#~ "\"Beendet\" geändert werden.\n"
+#~ "* Ein Projekt kann sowohl einen Zustand \"Vorlage\" oder \"Offen\" "
+#~ "auslösen.\n"
+#~ " Bei Status \"Vorlage\" kann aus einer solchen Projektvorlage ein neues "
+#~ "Projekt abgeleitet werden.\n"
+#~ " Im Zustand \"Offen\" handelt es sich um ein normales Projekt.\n"
+#~ "\n"
+#~ " Wenn ein vorhandenes Projekt überarbeitet werden muss, wechselt der Status "
+#~ "auf \"In Wartestellung\".\n"
+#~ " Bei Projektbeendigung wird der Status des Kontos auch auf \"Beendet\" "
+#~ "geändert."
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "Fehler ! Sie können keine rekursiven Analytische Konten definieren."
 
 #~ msgid ""
 #~ "Error! The currency has to be the same as the currency of the selected "
 #~ "company"
 #~ msgstr "Fehler! Die Währung muss der Währung der gewählten Firma entsprechen"
+
+#~ msgid "Code/Reference"
+#~ msgstr "Code/Referenz"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Fehler !"
+
+#~ msgid "Maximum Time"
+#~ msgstr "Maximale Zeit"
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Für Sichten dürfen keine Analysezeilen erzeugt werden"
+
+#~ msgid "Sets the higher limit of time to work on the contract."
+#~ msgstr "Erhöht den Zeitrahmen für diesen Kontrakt"

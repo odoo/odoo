@@ -32,6 +32,18 @@
             </div>
             <div class="loader">
             </div>
+            &lt;!--[if IE]&gt;
+            <div class='not-supported-browser'>
+                <div class='message'>
+                    <img src='/point_of_sale/static/src/img/pos_screenshot.jpg' />
+                    <p>
+                        The Point of Sale is not supported by Microsoft Internet Explorer. Please use
+                        a modern browser like <a href="http://www.mozilla.org/firefox/" target="_blank">Mozilla Firefox</a> 
+                        or <a href="http://www.google.com/chrome" target="_blank">Google Chrome</a>. 
+                    </p>
+                </div>
+            </div>
+            &lt;![endif]--&gt;
         </div>
     </t>
 
@@ -73,7 +85,7 @@
             <button class="input-button number-char">7</button>
             <button class="input-button number-char">8</button>
             <button class="input-button number-char">9</button>
-            <button class="mode-button" data-mode='list_price'>Price</button>
+            <button class="mode-button" data-mode='price'>Price</button>
             <br />
             <button class="input-button" id="numpad-minus" >+/-</button>
             <button class="input-button number-char">0</button>
@@ -375,12 +387,12 @@
                     <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))"/>
                         </span>
                     </t>
                     <t t-if="widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))+'/Kg'"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))+'/Kg'"/>
                         </span>
                     </t>
                 </div>
@@ -445,6 +457,7 @@
                 <ul>
                     <li><input type="text" class="weight"></input></li>
                     <li class="button set_weight">Set Weight</li>
+                    <li class="button reset_weight">Reset</li>
                 </ul>
 
                 <p class="category">Barcode Scanner</p>
@@ -497,7 +510,7 @@
                         </em>
                         <t t-esc="widget.model.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_list_price())" />
+                        <t t-esc="widget.format_currency(widget.model.get_price())" />
                         /
                         <t t-esc="widget.model.get_unit().name" />
                     </li>
@@ -571,7 +584,7 @@
                         <t t-esc="order.get_quantity().toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_list_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        <t t-esc="widget.format_currency(order.get_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
                     </td>
                 </tr>
             </table>

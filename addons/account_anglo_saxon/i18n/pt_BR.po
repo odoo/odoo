@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-01-23 19:32+0000\n"
 "Last-Translator: Emerson <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:24+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
@@ -23,9 +23,9 @@ msgid "Order Reference must be unique per Company!"
 msgstr "A Referência do Pedido deve ser única por Empresa!"
 
 #. module: account_anglo_saxon
-#: view:product.category:0
-msgid " Accounting Property"
-msgstr " Propriedade para Contabilidade"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "O Número da Fatura deve ser único por Empresa!"
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_product_category
@@ -50,9 +50,9 @@ msgstr "Comunicação estruturada BBA inválida !"
 #. module: account_anglo_saxon
 #: constraint:product.template:0
 msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
 msgstr ""
-"Erro: A UdM padrão e a UdM de compra precisam estar na mesma categoria."
 
 #. module: account_anglo_saxon
 #: model:ir.model,name:account_anglo_saxon.model_account_invoice_line
@@ -84,11 +84,6 @@ msgstr "Fatura"
 #: model:ir.model,name:account_anglo_saxon.model_stock_picking
 msgid "Picking List"
 msgstr "Lista de Separação"
-
-#. module: account_anglo_saxon
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "O Número da Fatura deve ser único por Empresa!"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -140,3 +135,11 @@ msgstr ""
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Referência de Pedido deve ser única !"
+
+#~ msgid " Accounting Property"
+#~ msgstr " Propriedade para Contabilidade"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Erro: A UdM padrão e a UdM de compra precisam estar na mesma categoria."

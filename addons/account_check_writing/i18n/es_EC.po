@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-10-18 19:01+0000\n"
 "Last-Translator: Cristian Salamea (Gnuthink) <ovnicraft@gmail.com>\n"
 "Language-Team: Spanish (Ecuador) <es_EC@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -23,22 +23,7 @@ msgid "Check on Top"
 msgstr "Cheque on Top"
 
 #. module: account_check_writing
-#: model:ir.actions.act_window,help:account_check_writing.action_write_check
-msgid ""
-"The check payment form allows you to track the payment you do to your "
-"suppliers specially by check. When you select a supplier, the payment method "
-"and an amount for the payment, OpenERP will propose to reconcile your "
-"payment with the open supplier invoices or bills.You can print the check"
-msgstr ""
-"El pago de cheques permite rastrear el pago a sus proveedores. Cuando "
-"selecciona un proveedor, el método de pago y monto, OpenERP propondrá "
-"conciliarlo con tu factura, y podrá imprimir el cheque."
-
-#. module: account_check_writing
 #: view:account.voucher:0
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
-#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
 msgid "Print Check"
 msgstr "Imprimir Cheque"
 
@@ -111,9 +96,21 @@ msgid "Original Amount"
 msgstr "Monto Inicial"
 
 #. module: account_check_writing
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Configuración"
+#: model:ir.actions.act_window,help:account_check_writing.action_write_check
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a new check. \n"
+"              </p><p>\n"
+"                The check payment form allows you to track the payment you "
+"do\n"
+"                to your suppliers using checks. When you select a supplier, "
+"the\n"
+"                payment method and an amount for the payment, OpenERP will\n"
+"                propose to reconcile your payment with the open supplier\n"
+"                invoices or bills.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_check_writing
 #: field:account.voucher,allow_check:0
@@ -133,6 +130,11 @@ msgid "Use Preprinted Check"
 msgstr "Usar cheque preimpreso"
 
 #. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
+msgid "Print Check (Bottom)"
+msgstr ""
+
+#. module: account_check_writing
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
 msgstr "¡El nombre de la compañía debe ser único!"
@@ -145,29 +147,32 @@ msgid "Due Date"
 msgstr "Fecha de vencimiento"
 
 #. module: account_check_writing
-#: model:ir.model,name:account_check_writing.model_res_company
-msgid "Companies"
-msgstr "Compañias"
-
-#. module: account_check_writing
-#: view:res.company:0
-msgid "Default Check Layout"
-msgstr "Formato por Defecto"
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
+msgid "Print Check (Middle)"
+msgstr ""
 
 #. module: account_check_writing
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
-"Error de Configuración! La moneda seleccionada debe ser compartida por las "
-"cuentas por defecto tambíen"
+
+#. module: account_check_writing
+#: model:ir.model,name:account_check_writing.model_res_company
+msgid "Companies"
+msgstr "Compañias"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
 #: report:account.print.check.middle:0
 msgid "Balance Due"
 msgstr "Saldo Deudor"
+
+#. module: account_check_writing
+#: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
+msgid "Print Check (Top)"
+msgstr ""
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -206,5 +211,25 @@ msgstr "Saldo Inicial"
 msgid "Choose Check layout"
 msgstr "Elegir diseño de cheque"
 
+#~ msgid ""
+#~ "The check payment form allows you to track the payment you do to your "
+#~ "suppliers specially by check. When you select a supplier, the payment method "
+#~ "and an amount for the payment, OpenERP will propose to reconcile your "
+#~ "payment with the open supplier invoices or bills.You can print the check"
+#~ msgstr ""
+#~ "El pago de cheques permite rastrear el pago a sus proveedores. Cuando "
+#~ "selecciona un proveedor, el método de pago y monto, OpenERP propondrá "
+#~ "conciliarlo con tu factura, y podrá imprimir el cheque."
+
+#~ msgid "Configuration"
+#~ msgstr "Configuración"
+
 #~ msgid "Default Check layout"
 #~ msgstr "Diseño de cheque por defecto"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Error de Configuración! La moneda seleccionada debe ser compartida por las "
+#~ "cuentas por defecto tambíen"
