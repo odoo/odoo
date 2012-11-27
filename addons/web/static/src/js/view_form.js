@@ -2538,7 +2538,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     initialize_content: function() {
         var self = this;
         this.$textarea = this.$el.find('textarea');
-        this.default_height = this.$textarea.css('height',0);
+        this.default_height = this.$textarea.css('height');
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
                 self.internal_set_value(instance.web.parse_value(self.$textarea.val(), self));
