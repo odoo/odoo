@@ -73,10 +73,6 @@ openerp.web_im = function(instance) {
                 });
             });
         },
-        send_message: function(user_rec, mes) {
-            var model = new instance.web.Model("im.message");
-            model.call("post", [mes], {context: new instance.web.CompoundContext()});
-        },
         switch_display: function() {
             var fct =  _.bind(function() {
                 this.set("right_offset", $(window).width() - this.$el.offset().left);
@@ -156,7 +152,8 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this.im.send_message(this.user_rec, mes);
+            var model = new instance.web.Model("im.message");
+            model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
         },
     });
 

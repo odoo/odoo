@@ -106,21 +106,23 @@ class im_message(osv.osv):
     _name = 'im.message'
     _columns = {
         'message': fields.char(string="Message", size=200, required=True),
+        'from': fields.many2one("res.users", "From", required= True, ondelete='cascade'),
+        'to': fields.many2one("res.users", "From", required=True, select=True, ondelete='cascade'),
     }
     
     def get_messages(self, cr, uid, last=None, context=None):
         if not last:
-            tmp = self.search(cr, uid, [], order="id desc", limit=1, context=context)
-            last = tmp[0] if len(tmp) else 0
-        res = self.search(cr, uid, [['id', '>', last]], order="id", context=context)
+            tmp = self.search(cr, uid, [['to', '=', uid]], order="id desc", limit=1, context=context)
+            last = tmp[0] if len(tmp) >= 1 else -1
+        res = self.search(cr, uid, [['id', '>', last], ['to', '=', uid]], order="id", context=context)
         res = self.read(cr, uid, res, ["id", "message"], context=context)
         lst = [x["message"] for x in res]
         if len(lst) > 0:
             last = res[-1]["id"]
         return {"res": lst, "last": last, "dbname": cr.dbname}
 
-    def post(self, cr, uid, message, context=None):
-        self.create(cr, uid, {"message": message}, context=context)
+    def post(self, cr, uid, message, to_user_id, context=None):
+        self.create(cr, uid, {"message": message, 'from': uid, 'to': to_user_id}, context=context)
         cr.commit()
         cr.execute("notify received_message")
         cr.commit()
