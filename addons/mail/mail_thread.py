@@ -88,7 +88,7 @@ class mail_thread(osv.AbstractModel):
 
         for thread in self.browse(cr, uid, ids, context=context):
             cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
+            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_ids), len(thread.message_follower_ids))
 
         return res
 
@@ -198,10 +198,6 @@ class mail_thread(osv.AbstractModel):
         'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
                 fnct_search=_search_followers, type='many2many',
                 obj='res.partner', string='Followers', multi='_get_followers'),
-        'message_comment_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
-            string='Comments and emails',
-            help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
             string='Messages',
@@ -243,7 +239,6 @@ class mail_thread(osv.AbstractModel):
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['message_ids'] = []
-        default['message_comment_ids'] = []
         default['message_follower_ids'] = []
         return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
 
