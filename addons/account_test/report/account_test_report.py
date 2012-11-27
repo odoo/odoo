@@ -43,16 +43,6 @@ class report_assert_account(report_sxw.rml_parse):
         def group(lst, col):
             return dict((k, [v for v in itr]) for k, itr in groupby(sorted(lst, key=lambda x: x[col]), itemgetter(col)))
 
-        #TODO what is this method used for, name unclear and doesn't seem to be used
-        def sort_by_intified_num(a, b):
-            if a is None:
-                return -1
-            elif b is None:
-                return 1
-            else:
-                #if a is not None and b is not None:
-                return cmp(int(a), int(b))
-
         def reconciled_inv():
             reconciled_inv_ids = self.pool.get('account.invoice').search(self.cr, self.uid, [('reconciled','=',True)])
             return reconciled_inv_ids
@@ -86,12 +76,8 @@ class report_assert_account(report_sxw.rml_parse):
 
         if not isinstance(result, (tuple, list, set)):
             result = [result]
-
         if not result:
             result = [_('The test was passed successfully')]
-        #TODO: not sure this condition is needed, it is only a subcategory of the final else
-        elif all([isinstance(x, dict) for x in result]):
-            result = [', '.join(["%s: %s" % (k, v) for k, v in order_columns(rec, column_order)]) for rec in result]
         else:
             def _format(a):
                 if isinstance(a, dict):

@@ -3,9 +3,9 @@
 <data>
 
     <record model="accounting.assert.test" id="account_test_demo_01">
-      <!-- TODO : change name and desc -->
-        <field name="name">Test 1</field>
-        <field name="desc">Test 1</field>
+        <field name="sequence">11</field>
+        <field name="name">Test 11: Consistency check between Account Move and Account Move Line</field>
+        <field name="desc">Checks id of 'account_move' = move_id of 'account_move_line', and state of 'account_move_line' is valid, and having sum(debit-credit) != 0</field>
         <field name="domain_exec"></field>
         <field name="code_exec"><![CDATA[sql="""SELECT
     sum(debit) as sum_debit,

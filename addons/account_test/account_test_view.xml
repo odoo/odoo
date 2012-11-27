@@ -38,10 +38,16 @@
                                     <field colspan="4" name="code_exec" nolabel="1"/>
                                 </group>
                                 <group string="Code Help">
-                                    <!--TODO : better explanation on how to write those test, especially on variable result that must be present or
-                                    we won't see the result of the tests good or bad, give detail on function that can be used, like 
-                                    'group(a,b)' 'reconciled_inv()' 'get_parent(a)' 'now()' ... -->
                                     <pre>
+You can write a query in order to create Consistency Test and you will get the result of the test 
+in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test 
+and print the report from Print button in header area.
+
+You can also use the following functions:
+
+get_parent(acc_id) : return parent id of analytic account(acc_id)
+reconciled_inv() : returns ids of records which are reconciled
+    
 Example: 
 sql = 'select id, name, ref, date from account_move_line where account_id in 
 (select id from account_account where type = 'view')'

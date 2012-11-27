@@ -22,8 +22,7 @@ if res[0]['balance']!=0.0 and res[0]['balance'] is not None:
     <record model="accounting.assert.test" id="account_test_02">
         <field name="sequence">2</field>
         <field name="name">Test 2: Opening a fiscal year</field>
-        <!--TODO : bad description of the test, does not really match what the SQL querry does, should adapt description name -->
-        <field name="desc">Check if the balance of the new opened fiscal year matches with last year's balance</field>
+        <field name="desc">Displays the debit and credit amount, of closed and newly created fiscal year, if the balance of current and newly created fiscal year mismatch</field>
         <field name="code_exec"><![CDATA[result = []
 cr.execute("select coalesce(sum(debit),0) as debit_new_fyear,coalesce(sum(credit),0) as credit_new_fyear from account_move_line where period_id in (select id from account_period where state='draft' and special order by id desc limit 1);")
 rec =  cr.dictfetchall()
