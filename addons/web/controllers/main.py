@@ -1035,6 +1035,10 @@ class Menu(openerpweb.Controller):
         return {'data': self.do_load(req)}
 
     @openerpweb.jsonrequest
+    def load_needaction(self, req, menu_ids):
+        return {'data': self.do_load_needaction(req, menu_ids)}
+
+    @openerpweb.jsonrequest
     def get_user_roots(self, req):
         return self.do_get_user_roots(req)
 
@@ -1071,13 +1075,13 @@ class Menu(openerpweb.Controller):
         context = req.session.eval_context(req.context)
         Menus = req.session.model('ir.ui.menu')
 
-        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled', 'needaction_counter'], context)
-        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children' : menu_roots}
+        menu_roots = Menus.read(self.do_get_user_roots(req), ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled'], context)
+        menu_root = {'id': False, 'name': 'root', 'parent_id': [-1, ''], 'children': menu_roots}
 
         # menus are loaded fully unlike a regular tree view, cause there are a
         # limited number of items (752 when all 6.1 addons are installed)
         menu_ids = Menus.search([], 0, False, False, context)
-        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled', 'needaction_counter'], context)
+        menu_items = Menus.read(menu_ids, ['name', 'sequence', 'parent_id', 'action', 'needaction_enabled'], context)
         # adds roots at the end of the sequence, so that they will overwrite
         # equivalent menu items from full menu read when put into id:item
         # mapping, resulting in children being correctly set on the roots.
@@ -1100,6 +1104,23 @@ class Menu(openerpweb.Controller):
                 key=operator.itemgetter('sequence'))
 
         return menu_root
+
+    def do_load_needaction(self, req, menu_ids=False):
+        """ Loads needaction counters for all or some specific menu ids.
+
+            :param req: A request object, with an OpenERP session attribute
+            :type req: < session -> OpenERPSession >
+            :return: the menu root
+            :rtype: dict('children': menu_nodes)
+        """
+        context = req.session.eval_context(req.context)
+        Menus = req.session.model('ir.ui.menu')
+
+        if menu_ids == False:
+            menu_ids = Menus.search([('needaction_enabled', '=', True)], context=context)
+
+        menu_needaction_data = Menus.get_needaction_data(menu_ids, context)
+        return menu_needaction_data
 
     @openerpweb.jsonrequest
     def action(self, req, menu_id):

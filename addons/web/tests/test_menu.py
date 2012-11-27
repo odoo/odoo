@@ -43,7 +43,7 @@ class LoadTest(unittest2.TestCase):
             [], 0, False, False, self.request.session.eval_context())
         self.MockMenus.read.assert_called_with(
             [], ['name', 'sequence', 'parent_id',
-                 'action', 'needaction_enabled', 'needaction_counter'],
+                 'action', 'needaction_enabled'],
             self.request.session.eval_context())
 
         self.assertListEqual(
@@ -62,7 +62,7 @@ class LoadTest(unittest2.TestCase):
 
         self.MockMenus.read.assert_called_with(
             [1, 2, 3], ['name', 'sequence', 'parent_id',
-                        'action', 'needaction_enabled', 'needaction_counter'],
+                        'action', 'needaction_enabled'],
             self.request.session.eval_context())
 
         self.assertEqual(

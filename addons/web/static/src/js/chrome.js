@@ -835,6 +835,21 @@ instance.web.Menu =  instance.web.Widget.extend({
         }
         this.trigger('menu_loaded', data);
         this.has_been_loaded.resolve();
+        // Now launch the fetch of needaction counters, asynchronous
+        this.rpc("web/menu/load_needaction", {menu_ids: false}).done(function(r) {
+            self.on_needaction_loaded(r);
+        });
+    },
+    on_needaction_loaded: function(data) {
+        var self = this;
+        this.needaction_data = data;
+        _.each(this.needaction_data.data, function (item, menu_id) {
+            var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
+            $item.remove('oe_menu_counter');
+            if (item.needaction_counter && item.needaction_counter > 0) {
+                $item.append('<div class="oe_tag oe_tag_dark oe_menu_counter">' + item.needaction_counter + '</div>');
+            }
+        });
     },
     limit_entries: function() {
         var maximum_visible_links = this.maximum_visible_links;
