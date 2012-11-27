@@ -62,11 +62,7 @@ class account_analytic_line(osv.osv):
         if data is None:
             data = {}
 
-        account_ids = {}
-        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
-            account_ids[line.account_id.id] = True
-
-        account_ids = account_ids.keys() #data['accounts']
+        account_ids = [line.account_id.id for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context)]
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
