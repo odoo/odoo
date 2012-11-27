@@ -457,6 +457,7 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def _mail_body(self, cr, uid, lead, fields, title=False, context=None):
         body = []
+        str = ""
         if title:
             body.append("%s\n" % (title))
         for field_name in fields:
@@ -472,16 +473,20 @@ class crm_lead(base_stage, format_address, osv.osv):
                 else:
                     key = field.selection
                 value = dict(key).get(lead[field_name], lead[field_name])
+                body.append("%s: %s" % (field.string, value or ''))
             elif field._type == 'many2one':
                 if lead[field_name]:
                     value = lead[field_name].name_get()[0][1]
+                    body.append("%s: %s" % (field.string, value or ''))
             elif field._type == 'many2many':
                 if lead[field_name]:
-                    value = lead[field_name][0].name_get()[0][1]
+                    for val in lead[field_name]:
+                        field_value = val.name_get()[0][1]
+                        str += field_value + ","
+                    body.append("%s: %s" % (field.string, str or ''))
             else:
                 value = lead[field_name]
-
-            body.append("%s: %s" % (field.string, value or ''))
+                body.append("%s: %s" % (field.string, value or ''))
         return "\n".join(body + ['---'])
 
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
