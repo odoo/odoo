@@ -932,10 +932,7 @@ class mrp_production(osv.osv):
 
         # Take next Sequence number of shipment base on type
 
-        seq_name = 'stock.picking'
-        if pick_type in ('out', 'in'):
-            seq_name += pick_type
-        pick_name = ir_sequence.get(cr, uid, seq_name)
+        pick_name = ir_sequence.get(cr, uid, 'stock.picking')
         picking_id = stock_picking.create(cr, uid, {
             'name': pick_name,
             'origin': (production.origin or '').split(':')[0] + ':' + production.name,
