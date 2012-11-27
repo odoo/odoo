@@ -21,6 +21,7 @@
 
 from osv import osv
 
+
 class ir_needaction_mixin(osv.AbstractModel):
     '''Mixin class for objects using the need action feature.
 
@@ -60,4 +61,4 @@ class ir_needaction_mixin(osv.AbstractModel):
         dom = self._needaction_domain_get(cr, uid, context=context)
         if not dom:
             return 0
-        return self.search(cr, uid, (domain or []) +dom, context=context, count=True)
+        return self.search(cr, uid, (domain or []) + dom, limit=100, context=context, count=True)
