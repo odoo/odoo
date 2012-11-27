@@ -10,9 +10,9 @@
                     <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>
                     <label for="event_ok"/>
                 </div>
-                <field name='default_code' position='before'>
+                <div name='ean' position="after">
                     <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}"/>
-                </field>
+                </div>
              </field>
         </record>
 
