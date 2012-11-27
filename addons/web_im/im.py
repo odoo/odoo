@@ -105,15 +105,13 @@ class ImportController(openerp.addons.web.http.Controller):
 class im_message(osv.osv):
     _name = 'im.message'
     _columns = {
-        'message': fields.char(string="Message", size=200),
+        'message': fields.char(string="Message", size=200, required=True),
     }
     
     def get_messages(self, cr, uid, last=None, context=None):
         if not last:
-            tmp = self.search(cr, uid, [], context=context)
-            last = 0
-            for i in tmp:
-                last = i if i > last else last
+            tmp = self.search(cr, uid, [], order="id desc", limit=1, context=context)
+            last = tmp[0] if len(tmp) else 0
         res = self.search(cr, uid, [['id', '>', last]], order="id", context=context)
         res = self.read(cr, uid, res, ["id", "message"], context=context)
         lst = [x["message"] for x in res]
