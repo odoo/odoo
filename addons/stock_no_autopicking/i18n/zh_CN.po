@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-05-03 15:11+0000\n"
-"Last-Translator: openerp-china.black-jack <onetimespeed@gmail.com>\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-23 16:02+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:18+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:14+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: stock_no_autopicking
 #: model:ir.model,name:stock_no_autopicking.model_product_product
@@ -27,6 +27,11 @@ msgid "Manufacturing Order"
 msgstr "生产单"
 
 #. module: stock_no_autopicking
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: stock_no_autopicking
 #: field:product.product,auto_pick:0
 msgid "Auto Picking"
 msgstr "自动创建装箱单"
@@ -37,18 +42,20 @@ msgid "Auto picking for raw materials of production orders."
 msgstr "生产单原料自动创建的装箱单"
 
 #. module: stock_no_autopicking
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "错误：无效的(EAN)条码"
-
-#. module: stock_no_autopicking
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "编号必须在公司内唯一！"
 
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
+msgstr "订单数量不能是负数或者0！"
+
+#. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
 msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
@@ -59,6 +66,9 @@ msgstr ""
 
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "订单数量不能为0或者负数!"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "错误：无效的(EAN)条码"
 
 #~ msgid ""
 #~ "\n"
