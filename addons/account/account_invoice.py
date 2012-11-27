@@ -391,29 +391,34 @@ class account_invoice(osv.osv):
         '''
         This function opens a window to compose an email, with the edi invoice template message loaded by default
         '''
-        mod_obj = self.pool.get('ir.model.data')
-        template = mod_obj.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')
-        template_id = template and template[1] or False
-        res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
-        res_id = res and res[1] or False
+        assert len(ids) == 1, 'This option should only be used for a single id at a time.'
+        ir_model_data = self.pool.get('ir.model.data')
+        try:
+            template_id = ir_model_data.get_object_reference(cr, uid, 'account', 'email_template_edi_invoice')[1]
+        except ValueError:
+            template_id = False
+        try:
+            compose_form_id = ir_model_data.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')[1]
+        except ValueError:
+            compose_form_id = False 
         ctx = dict(context)
         ctx.update({
             'default_model': 'account.invoice',
             'default_res_id': ids[0],
-            'default_use_template': True,
+            'default_use_template': bool(template_id),
             'default_template_id': template_id,
             'default_composition_mode': 'comment',
+            'mark_invoice_as_sent': True,
             })
         return {
+            'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(res_id, 'form')],
-            'view_id': res_id,
-            'type': 'ir.actions.act_window',
+            'views': [(compose_form_id, 'form')],
+            'view_id': compose_form_id,
             'target': 'new',
             'context': ctx,
-            'nodestroy': True,
         }
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -452,7 +457,7 @@ class account_invoice(osv.osv):
             invoice_addr_id = res['invoice']
             p = self.pool.get('res.partner').browse(cr, uid, partner_id)
             if company_id:
-                if p.property_account_receivable.company_id.id != company_id and p.property_account_payable.company_id.id != company_id:
+                if (p.property_account_receivable.company_id and (p.property_account_receivable.company_id.id != company_id)) and (p.property_account_payable.company_id and (p.property_account_payable.company_id.id != company_id)):
                     property_obj = self.pool.get('ir.property')
                     rec_pro_id = property_obj.search(cr,uid,[('name','=','property_account_receivable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
                     pay_pro_id = property_obj.search(cr,uid,[('name','=','property_account_payable'),('res_id','=','res.partner,'+str(partner_id)+''),('company_id','=',company_id)])
@@ -953,9 +958,14 @@ class account_invoice(osv.osv):
             })
 
             date = inv.date_invoice or time.strftime('%Y-%m-%d')
-            part = inv.partner_id.id
 
-            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part, date, context=ctx)),iml)
+            #if the chosen partner is not a company and has a parent company, use the parent for the journal entries 
+            #because you want to invoice 'Agrolait, accounting department' but the journal items are for 'Agrolait'
+            part = inv.partner_id
+            if part.parent_id and not part.is_company:
+                part = part.parent_id
+
+            line = map(lambda x:(0,0,self.line_get_convert(cr, uid, x, part.id, date, context=ctx)),iml)
 
             line = self.group_lines(cr, uid, iml, line, inv)
 
@@ -1726,8 +1736,6 @@ class account_invoice_tax(osv.osv):
             })
         return res
 
-account_invoice_tax()
-
 
 class res_partner(osv.osv):
     """ Inherits partner and adds invoice information in the partner form """
@@ -1741,16 +1749,14 @@ class res_partner(osv.osv):
         default.update({'invoice_ids' : []})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
-res_partner()
 
-class mail_message(osv.osv):
-    _name = 'mail.message'
-    _inherit = 'mail.message'
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'account.invoice':
-            self.pool.get('account.invoice').write(cr, uid, [message.res_id], {'sent':True}, context=context)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('default_model') == 'account.invoice' and context.get('default_res_id') and context.get('mark_invoice_as_sent'):
+            self.pool.get('account.invoice').write(cr, uid, [context['default_res_id']], {'sent': True}, context=context)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
 
-mail_message()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

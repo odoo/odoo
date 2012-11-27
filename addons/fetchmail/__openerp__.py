@@ -23,7 +23,7 @@
 {
     'name' : 'Email Gateway',
     'version' : '1.0',
-    'depends' : ['base', 'mail'],
+    'depends' : ['mail'],
     'author' : 'OpenERP SA',
     'category': 'Tools',
     'description': """
