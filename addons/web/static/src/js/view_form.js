@@ -4238,16 +4238,14 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         var self = this;
 
         self.load_view();
-        this.is_loaded.done(function() {
-            self.on("change:effective_readonly", self, function() {
-                self.is_loaded = self.is_loaded.then(function() {
-                    self.kanban_view.destroy();
-                    return $.when(self.load_view()).done(function() {
-                        self.render_value();
-                    });
+        self.on("change:effective_readonly", self, function() {
+            self.is_loaded = self.is_loaded.then(function() {
+                self.kanban_view.destroy();
+                return $.when(self.load_view()).done(function() {
+                    self.render_value();
                 });
             });
-        })
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
