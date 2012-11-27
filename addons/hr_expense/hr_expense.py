@@ -127,7 +127,8 @@ class hr_expense_expense(osv.osv):
         for expense in self.browse(cr, uid, ids):
             if expense.employee_id and expense.employee_id.parent_id.user_id:
                 self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
-        self.expense_toapprove_notificate(cr, uid, ids)
+        self.message_post(cr, uid, ids, body=_("The request is <b>waiting for Approval</b>"),
+                          subtype="hr_expense.mt_expense_approve", context=context)
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
@@ -135,7 +136,8 @@ class hr_expense_expense(osv.osv):
         return True
 
     def expense_accept(self, cr, uid, ids, *args):
-        self.expense_approve_notificate(cr, uid, ids)
+        self.message_post(cr, uid, ids, body=_("The request has been <b>approved</b>"),
+                          subtype="hr_expense.mt_expense_approved", context=context)
         self.write(cr, uid, ids, {
             'state':'accepted',
             'date_valid':time.strftime('%Y-%m-%d'),
@@ -144,7 +146,8 @@ class hr_expense_expense(osv.osv):
         return True
 
     def expense_canceled(self, cr, uid, ids, *args):
-        self.expense_refuse_notificate(cr, uid, ids)
+        self.message_post(cr, uid, ids, body=_("Request <b>refused</b>"), 
+                          subtype="hr_expense.mt_expense_refused", context=context)
         self.write(cr, uid, ids, {'state':'cancelled'})
         return True
 
@@ -236,21 +239,6 @@ class hr_expense_expense(osv.osv):
             'res_id': voucher_id,
         }
         return result
-
-    def expense_toapprove_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id],
-                _("The request is <b>waiting for Approval</b>"), subtype="hr_expense.mt_expense_approve", context=context)
-
-    def expense_approve_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>approved</b>"), subtype="hr_expense.mt_expense_approved", context=context)
-
-    def expense_refuse_notificate(self, cr, uid, ids, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id],
-                _("Request <b>refused</b>"), subtype="hr_expense.mt_expense_refused", context=context)
 
 hr_expense_expense()
 
