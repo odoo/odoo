@@ -16,10 +16,10 @@
 -
   I create a follow-up.
 -
-  !record {model: account.followup.print, id: account_followup_print_0}:
+  !record {model: account_followup.print, id: account_followup_print_0}:
     {}
 - 
   I will process follow-ups
 - 
-  !python {model: account.followup.print}:  |
+  !python {model: account_followup.print}:  |
     self.do_process(cr, uid, [ref("account_followup_print_0")], {"active_ids": [ref("account_followup.account_followup_print_menu")], "active_id": ref("account_followup.account_followup_print_menu"),})

@@ -39,8 +39,6 @@ class followup(osv.osv):
     }
     _sql_constraints = [('company_uniq', 'unique(company_id)', 'Only one follow-up per company is allowed')] 
 
-followup()
-
 
 
 class followup_line(osv.osv):
@@ -96,7 +94,6 @@ Best Regards,
         (_check_description, 'Your description is invalid, use the right legend or %% if you want to use the percent character.', ['description']),
     ]
 
-followup_line()
 
 class account_move_line(osv.osv):
 
@@ -111,14 +108,10 @@ class account_move_line(osv.osv):
         'followup_line_id': fields.many2one('account_followup.followup.line', 'Follow-up Level', 
                                         ondelete='restrict'), #restrict deletion of the followup line
         'followup_date': fields.date('Latest Follow-up', select=True),
-        'payment_commitment':fields.text('Commitment'),
-        'payment_date':fields.date('Date'),
-        'payment_next_action':fields.text('Next Action'),
         'result':fields.function(_get_result, type='float', method=True, 
                                 string="Balance") #'balance' field is not the same
     }
 
-account_move_line()
 
 
 class email_template(osv.osv):
@@ -130,7 +123,6 @@ class email_template(osv.osv):
         context['current_date'] = fields.date.context_today(cr, uid, context)
         return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
 
-email_template()
 
 
 class res_partner(osv.osv):
@@ -149,7 +141,7 @@ class res_partner(osv.osv):
 
 
 
-    def get_latest_from_company(self, cr, uid, ids, names, arg, context=None, company_id=None):
+    def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
         if company_id == None:
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
@@ -176,37 +168,6 @@ class res_partner(osv.osv):
                                'latest_followup_level_id': latest_level,
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
-    
-    def _get_latest(self, cr, uid, ids, names, arg, context=None):
-        return self.get_latest_from_company(cr, uid, ids, names, arg, context=context)
-    
-    
-            #Not used, but works, field next_followup_level_id
-    def _get_next_followup_level_id(self, cr, uid, ids, name, arg, context=None):
-        company = self.pool.get("res.users").browse(cr, uid, uid, context=context).company_id
-        res = {}
-        for partner in self.browse(cr, uid, ids, context=context):
-            #Get latest
-            latest_id = partner.latest_followup_level_id_without_lit.id
-            latest = latest_id and self.pool.get('account_followup.followup.line').browse(cr, uid, latest_id, context=context) or False
-            old_delay = latest and latest.delay or False
-            print "Old Delay", old_delay
-            newlevel = latest and latest.id or False
-            delay = False
-            #Search next
-            fl_ar = self.pool.get('account_followup.followup.line').search(cr, uid, [('followup_id.company_id.id','=', company.id)])
-            for fl_obj in self.pool.get('account_followup.followup.line').browse(cr, uid, fl_ar, context=context):
-                if not old_delay:
-                    if not delay or fl_obj.delay < delay:
-                        delay = fl_obj.delay
-                        newlevel = fl_obj.id
-                else:
-                    if (not delay and (fl_obj.delay > old_delay)) or ((fl_obj.delay < delay) and (fl_obj.delay > old_delay)):
-                        delay = fl_obj.delay
-                        newlevel = fl_obj.id
-            res[partner.id] = newlevel
-        return res
-
 
 
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
@@ -281,7 +242,7 @@ class res_partner(osv.osv):
         return unknown_mails
 
     def action_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False}, context=context)
+        return self.write(cr, uid, ids, {'payment_next_action_date': False, 'payment_next_action':'', 'payment_responsible_id': False}, context=context)
 
     def do_button_print(self, cr, uid, ids, context=None):
         assert(len(ids) == 1)
@@ -303,16 +264,10 @@ class res_partner(osv.osv):
         self.do_partner_mail(cr, uid, ids, context=context)
 
 
-    def _get_aml_storeids(self, cr, uid, ids, context=None):
-        partnerlist = []
-        for aml in self.pool.get("account.move.line").browse(cr, uid, ids, context=context):
-            if aml.partner_id.id not in partnerlist:
-                partnerlist.append(aml.partner_id.id)
-        return partnerlist
-
     _inherit = "res.partner"
     _columns = {
-        'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', help="Responsible for making sure the action happens."), #TODO find better name for field
+        'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
+                                                 help="Responsible for making sure the action happens."), 
         'payment_note':fields.text('Customer Payment Promise', help="Payment Note"),
         'payment_next_action':fields.text('Next Action',
                                     help="This is the next action to be taken by the user.  It will automatically be set when the action fields are empty and the partner gets a follow-up level that requires a manual action. "), 
@@ -334,12 +289,8 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store=False, 
             multi="latest"),
-        'next_followup_level_id':fields.function(_get_next_followup_level_id, method=True, type='many2one', relation='account_followup.followup.line', 
-                                        string="Next Level", help="The next follow-up level to come when the customer still refuses to pay",   
-                                        store=False),
+        
         'payment_amount_due':fields.related('credit', type='float', string="Total amount due", readonly=True),
         }
-
-res_partner()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

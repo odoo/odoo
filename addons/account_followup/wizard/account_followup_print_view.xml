@@ -4,7 +4,7 @@
 
         <record id="view_account_followup_print" model="ir.ui.view">
             <field name="name">account.followup.print.form</field>
-            <field name="model">account.followup.print</field>
+            <field name="model">account_followup.print</field>
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
                 <group col="4">
@@ -27,7 +27,7 @@
 
         <record id="action_account_followup_print" model="ir.actions.act_window">
             <field name="name">Send Follow-Ups</field>
-            <field name="res_model">account.followup.print</field>
+            <field name="res_model">account_followup.print</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -70,8 +70,8 @@
            </record>
 
            <record id="view_account_followup_sending_results" model="ir.ui.view">
-            <field name="name">account.followup.sending.results.form</field>
-            <field name="model">account.followup.sending.results</field>
+            <field name="name">account_followup.sending.results.form</field>
+            <field name="model">account_followup.sending.results</field>
             <field name="arch" type="xml">
             <form string="Summary of actions" version="7.0">
                 <header>

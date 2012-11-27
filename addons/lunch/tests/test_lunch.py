@@ -23,7 +23,6 @@ import tools
 from openerp.tests import common
 
 class Test_Lunch(common.TransactionCase):
-
     def setUp(self):
         """*****setUp*****"""
         super(Test_Lunch, self).setUp()

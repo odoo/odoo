@@ -77,7 +77,6 @@ account_followup_stat_by_partner()
 
 class account_followup_sending_results(osv.osv_memory):
     
-   
     def do_report(self, cr, uid, ids, context=None):
         return context['report_data']
     
@@ -97,7 +96,7 @@ class account_followup_sending_results(osv.osv_memory):
                 res = context['needprinting']
         return res
     
-    _name = 'account.followup.sending.results'
+    _name = 'account_followup.sending.results'
     _description = 'Results from the sending of the different letters and emails'
     _columns  = {
             'description':fields.text("Description", required=False, readonly=True), 
@@ -113,7 +112,7 @@ account_followup_sending_results()
 
 
 class account_followup_print(osv.osv_memory):
-    _name = 'account.followup.print'
+    _name = 'account_followup.print'
     _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, 
@@ -156,7 +155,7 @@ class account_followup_print(osv.osv_memory):
         resulttext = " "
         for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_ids, context=context):
             if partner.max_followup_id.manual_action:
-                partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context)
+                partner_obj.do_partner_manual_action(cr, uid, [partner.partner_id.id], context=context)
                 nbmanuals = nbmanuals + 1
                 key = partner.partner_id.payment_responsible_id.name or _("Nobody")
                 if not key in manuals.keys():
@@ -164,7 +163,7 @@ class account_followup_print(osv.osv_memory):
                 else:
                     manuals[key] = manuals[key] + 1
             if partner.max_followup_id.send_email:
-                nbunknownmails += partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context)
+                nbunknownmails += partner_obj.do_partner_mail(cr, uid, [partner.partner_id.id], context=context)
                 nbmails += 1
             if partner.max_followup_id.send_letter:
                 partner_ids_to_print.append(partner.id)
@@ -184,7 +183,7 @@ class account_followup_print(osv.osv_memory):
             resulttext = resulttext + "<li>" + item + ":" + str(manuals[item]) +  "\n </li>"
         resulttext += "</p>"
         result = {}
-        action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context)
+        action = partner_obj.do_partner_print(cr, uid, partner_ids_to_print, data, context=context)
         result['needprinting'] = needprinting
         result['resulttext'] = resulttext
         result['action'] = action or {}
@@ -196,16 +195,35 @@ class account_followup_print(osv.osv_memory):
             if to_update[id]['partner_id'] in partner_list:
                 self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 'followup_date': date})
 
+
+    def clear_manual_actions(self, cr, uid, partner_list, context=None):
+        #Partnerlist is list to exclude
+        
+        partner_list_ids = [partner.partner_id.id for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_list, context=context)]
+        print "Clear Manual actions ids"
+        print partner_list_ids
+        parts = self.pool.get('res.partner').browse(cr, uid, partner_list_ids, context=context)
+        for part in parts:
+            print part.name, part.payment_responsible_id
+        ids = self.pool.get('res.partner').search(cr, uid, ['&', ('credit', '<=', 0), '&', ('id','not in',partner_list_ids), '|', ('payment_responsible_id', '!=', False), 
+                                                             ('payment_next_action_date', '!=', False)])
+        parts = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
+        print ids
+        self.pool.get('res.partner').action_done(cr, uid, ids, context=context)
+
     def do_process(self, cr, uid, ids, context=None):
+        #Get partners
         tmp = self._get_partners_followp(cr, uid, ids, context=context)
         partner_list = tmp['partner_ids']
         to_update = tmp['to_update']
-        date = self.browse(cr, uid, ids, context)[0].date
-        data = self.read(cr, uid, ids, [], context)[0]
+        date = self.browse(cr, uid, ids, context=context)[0].date
+        data = self.read(cr, uid, ids, [], context=context)[0]
         data['followup_id'] = data['followup_id'][0]
+        #Update and process partners
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
         restot = self.process_partners(cr, uid, partner_list, data, context=context)
-        res = restot['action']        
+        self.clear_manual_actions(cr, uid, partner_list, context=context)
+        res = restot['action']
         mod_obj = self.pool.get('ir.model.data')
         if context is None:
             context = {}
