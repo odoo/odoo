@@ -121,18 +121,15 @@ class mail_thread(osv.AbstractModel):
 
         return res
 
-    def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        res = {}
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('message_id.model', '=', self._name),
-            ('read', '=', False)
-        ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.res_id] = True
-        return [('id', 'in', res.keys())]
+    def _search_message_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+        cr.execute("""  SELECT DISTINCT m.res_id FROM mail_message m
+                        JOIN mail_notification n
+                        ON (n.message_id = m.id AND n.partner_id = %s AND (n.read = False or n.read IS NULL))
+                        WHERE m.model = %s""",
+                        (user_pid, self._name,))
+        res_ids = [result[0] for result in cr.fetchall()]
+        return [('id', 'in', res_ids)]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         fol_obj = self.pool.get('mail.followers')
@@ -209,8 +206,9 @@ class mail_thread(osv.AbstractModel):
             domain=lambda self: [('model', '=', self._name)],
             string='Messages',
             help="Messages and communication history"),
-        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread,
-            type='boolean', string='Unread Messages', multi="_get_message_data",
+        'message_unread': fields.function(_get_message_data,
+            fnct_search=_search_message_unread, multi="_get_message_data",
+            type='boolean', string='Unread Messages',
             help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
             type='text', string='Summary', multi="_get_message_data",
