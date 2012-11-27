@@ -15,12 +15,12 @@
         </record>
 
         <record model="ir.ui.view" id="view_move_line_tree_wiz">
-            <field name="name">account.move.line.tree.wiz</field>
+            <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
             <field name="inherit_id" ref="account.view_move_line_tree"/>
             <field name="arch" type="xml">
-                <tree string="Account Entry Line">
-                    <field name="reconcile" position="after">
+                <tree>
+                    <field name="reconcile_partial_id" position="after">
                         <field name="amount_to_pay"/>
                     </field>
                 </tree>
