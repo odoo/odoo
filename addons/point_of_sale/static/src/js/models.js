@@ -342,7 +342,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos = options.pos;
             this.order = options.order;
             this.product = options.product;
-            this.price   = options.product.get('list_price');
+            this.price   = options.product.get('price');
             this.quantity = 1;
             this.discount = 0;
             this.type = 'unit';
@@ -396,11 +396,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.product;
         },
         // return the base price of this product (for this orderline)
-        get_list_price: function(){
+        get_price: function(){
             return this.price;
         },
         // changes the base price of the product for this orderline
-        set_list_price: function(price){
+        set_price: function(price){
             this.price = price;
             this.trigger('change');
         },
@@ -434,7 +434,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         export_as_JSON: function() {
             return {
                 qty: this.get_quantity(),
-                price_unit: this.get_list_price(),
+                price_unit: this.get_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().get('id'),
             };
@@ -444,7 +444,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 quantity:           this.get_quantity(),
                 unit_name:          this.get_unit().name,
-                list_price:         this.get_list_price(),
+                price:              this.get_price(),
                 discount:           this.get_discount(),
                 product_name:       this.get_product().get('name'),
                 price_with_tax :    this.get_price_with_tax(),
@@ -589,7 +589,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 line.set_quantity(options.quantity);
             }
             if(options.price !== undefined){
-                line.set_list_price(options.price);
+                line.set_price(options.price);
             }
 
             var last_orderline = this.getLastOrderline();
@@ -625,7 +625,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         getDiscountTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+                return sum + (orderLine.get_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             }), 0);
         },
         getTotalTaxExcluded: function() {

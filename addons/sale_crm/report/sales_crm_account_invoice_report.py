@@ -18,24 +18,18 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from osv import fields,osv
 
-import time
-from report import report_sxw
-from osv import osv
-import pooler
+class account_invoice_report(osv.osv):
+    _inherit = 'account.invoice.report'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
 
-class picking(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(picking, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_product_desc':self.get_product_desc
-        })
-    def get_product_desc(self,move_line):
-        desc = move_line.product_id.name
-        if move_line.product_id.default_code:
-            desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
-        return desc
+    def _select(self):
+        return  super(account_invoice_report, self)._select() + ", ai.section_id as section_id"
 
-report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
+    def _group_by(self):
+        return super(account_invoice_report, self)._group_by() + ", ai.section_id"
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

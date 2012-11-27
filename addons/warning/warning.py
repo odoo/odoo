@@ -55,13 +55,13 @@ res_partner()
 
 class sale_order(osv.osv):
     _inherit = 'sale.order'
-    def onchange_partner_id(self, cr, uid, ids, part):
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value':{'partner_invoice_id': False, 'partner_shipping_id':False, 'payment_term' : False}}
         warning = {}
         title = False
         message = False
-        partner = self.pool.get('res.partner').browse(cr, uid, part)
+        partner = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         if partner.sale_warn != 'no-message':
             if partner.sale_warn == 'block':
                 raise osv.except_osv(_('Alert for %s !') % (partner.name), partner.sale_warn_msg)
@@ -72,7 +72,7 @@ class sale_order(osv.osv):
                     'message': message,
             }
 
-        result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part)
+        result =  super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
 
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
@@ -149,7 +149,7 @@ account_invoice()
 class stock_picking(osv.osv):
     _inherit = 'stock.picking'
 
-    def onchange_partner_in(self, cr, uid, context, partner_id=None):
+    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -165,7 +165,7 @@ class stock_picking(osv.osv):
                 'title': title,
                 'message': message
             }
-        result =  super(stock_picking, self).onchange_partner_in(cr, uid, context, partner_id)
+        result =  super(stock_picking, self).onchange_partner_in(cr, uid, ids, partner_id, context)
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
@@ -179,7 +179,7 @@ stock_picking()
 class stock_picking_in(osv.osv):
     _inherit = 'stock.picking.in'
 
-    def onchange_partner_in(self, cr, uid, context, partner_id=None):
+    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -195,7 +195,7 @@ class stock_picking_in(osv.osv):
                 'title': title,
                 'message': message
             }
-        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, context, partner_id)
+        result =  super(stock_picking_in, self).onchange_partner_in(cr, uid, ids, partner_id, context)
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
@@ -205,7 +205,7 @@ class stock_picking_in(osv.osv):
 class stock_picking_out(osv.osv):
     _inherit = 'stock.picking.out'
 
-    def onchange_partner_in(self, cr, uid, context, partner_id=None):
+    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         if not partner_id:
             return {}
         partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
@@ -221,7 +221,7 @@ class stock_picking_out(osv.osv):
                 'title': title,
                 'message': message
             }
-        result =  super(stock_picking_out, self).onchange_partner_in(cr, uid, context, partner_id)
+        result =  super(stock_picking_out, self).onchange_partner_in(cr, uid, ids, partner_id, context)
         if result.get('warning',False):
             warning['title'] = title and title +' & '+ result['warning']['title'] or result['warning']['title']
             warning['message'] = message and message + ' ' + result['warning']['message'] or result['warning']['message']
