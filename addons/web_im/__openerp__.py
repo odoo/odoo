@@ -9,7 +9,9 @@ OpenERP Chat module
 ===================
 Allows users to chat with each other.
         """,
-    'data': [],
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'depends' : [],
     'js': ['static/src/js/*.js'],
     'css': ['static/src/css/*.css'],
