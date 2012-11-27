@@ -599,8 +599,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.dataset.index = _(this.dataset.ids).indexOf(ids[0]);
         if (this.sidebar) {
+            this.options.$sidebar.show();
             this.sidebar.$el.show();
-            $(this.sidebar.$el).parent().show();
         }
 
         this.compute_aggregates(_(records).map(function (record) {
