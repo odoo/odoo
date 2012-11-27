@@ -19,23 +19,7 @@
 #
 ##############################################################################
 
-import time
-from report import report_sxw
-from osv import osv
-import pooler
+import sales_crm_account_invoice_report
 
-class picking(report_sxw.rml_parse):
-    def __init__(self, cr, uid, name, context):
-        super(picking, self).__init__(cr, uid, name, context=context)
-        self.localcontext.update({
-            'time': time,
-            'get_product_desc':self.get_product_desc
-        })
-    def get_product_desc(self,move_line):
-        desc = move_line.product_id.name
-        if move_line.product_id.default_code:
-            desc = '[' + move_line.product_id.default_code + ']' + ' ' + desc
-        return desc
-
-report_sxw.report_sxw('report.stock.picking.list','stock.picking','addons/stock/report/picking.rml',parser=picking)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

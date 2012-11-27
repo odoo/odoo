@@ -184,8 +184,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     order.getSelectedLine().set_quantity(val);
                 }else if( mode === 'discount'){
                     order.getSelectedLine().set_discount(val);
-                }else if( mode === 'list_price'){
-                    order.getSelectedLine().set_list_price(val);
+                }else if( mode === 'price'){
+                    order.getSelectedLine().set_price(val);
                 }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
