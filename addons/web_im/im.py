@@ -85,8 +85,8 @@ if openerp.tools.config.options["gevent"]:
 
 
 
-class chat_message(osv.osv):
-    _name = 'chat.message'
+class im_message(osv.osv):
+    _name = 'im.message'
     _columns = {
         'message': fields.char(string="Message", size=200),
     }

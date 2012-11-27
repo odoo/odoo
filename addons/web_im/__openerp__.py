@@ -1,5 +1,5 @@
 {
-    'name' : 'Chat',
+    'name' : 'Instant Messaging',
     'version': '1.0',
     'category': 'Tools',
     'complexity': 'easy',

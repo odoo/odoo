@@ -1,32 +1,32 @@
 
-openerp.web_chat = function(instance) {
+openerp.web_im = function(instance) {
 
     instance.web.UserMenu.include({
         do_update: function(){
             var self = this;
             this.update_promise.then(function() {
-                var chat = new instance.web_chat.Chat(self);
-                chat.appendTo(instance.client.$el);
-                var button = new instance.web.ChatTopButton(self);
-                button.chat = chat;
+                var im = new instance.web_im.InstantMessaging(self);
+                im.appendTo(instance.client.$el);
+                var button = new instance.web.IMTopButton(self);
+                button.im = im;
                 button.appendTo(instance.webclient.$el.find('.oe_systray'));
             });
             return this._super.apply(this, arguments);
         },
     });
 
-    instance.web.ChatTopButton = instance.web.Widget.extend({
-        template:'ChatTopButton',
+    instance.web.IMTopButton = instance.web.Widget.extend({
+        template:'IMTopButton',
         events: {
             "click button": "clicked",
         },
         clicked: function() {
-            this.chat.switch_display();
+            this.im.switch_display();
         },
     });
 
-    instance.web_chat.Chat = instance.web.Widget.extend({
-        template: "Chat",
+    instance.web_im.InstantMessaging = instance.web.Widget.extend({
+        template: "InstantMessaging",
         init: function(parent) {
             this._super(parent);
             this.shown = false;
@@ -40,13 +40,13 @@ openerp.web_chat = function(instance) {
             $(window).scroll(_.bind(this.calc_box, this));
             $(window).resize(_.bind(this.calc_box, this));
             self.calc_box();
-            self.$(".oe_chat_input").keypress(function(e) {
+            self.$(".oe_im_input").keypress(function(e) {
                 if(e.which != 13) {
                     return;
                 }
-                var mes = self.$(".oe_chat_input").val();
-                self.$(".oe_chat_input").val("");
-                var model = new instance.web.Model("chat.message");
+                var mes = self.$(".oe_im_input").val();
+                self.$(".oe_im_input").val("");
+                var model = new instance.web.Model("im.message");
                 model.call("post", [mes], {context: new instance.web.CompoundContext()});
             }).focus();
         },
@@ -78,13 +78,13 @@ openerp.web_chat = function(instance) {
         },
         poll: function() {
             var self = this;
-            this.rpc("/chat/poll", {
+            this.rpc("/im/poll", {
                 last: this.last,
                 context: new instance.web.CompoundContext()
             }, {shadow: true}).then(function(result) {
                 self.last = result.last;
                 _.each(result.res, function(mes) {
-                    $("<div>").text(mes).appendTo(self.$(".oe_chat_content"));
+                    $("<div>").text(mes).appendTo(self.$(".oe_im_content"));
                 });
                 self.poll();
             }, function(unused, e) {
