@@ -1566,6 +1566,16 @@ class stock_production_lot(osv.osv):
         """
         value=self.pool.get('action.traceability').action_traceability(cr,uid,ids,context)
         return value
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None: context = {}
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        default.update(date=time.strftime('%Y-%m-%d %H:%M:%S'), revisions=[], move_ids=[])
+        return super(stock_production_lot, self).copy(cr, uid, id, default=default, context=context)
+
 stock_production_lot()
 
 class stock_production_lot_revision(osv.osv):
