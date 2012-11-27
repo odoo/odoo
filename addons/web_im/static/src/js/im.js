@@ -81,12 +81,11 @@ openerp.web_im = function(instance) {
             });
         },
         switch_display: function() {
-            var fct =  _.bind(function() {
-                this.set("right_offset", $(window).width() - this.$el.offset().left);
+            var fct =  _.bind(function(place) {
+                this.set("right_offset", place + this.$el.outerWidth());
             }, this);
             var opt = {
                 step: fct,
-                complete: fct,
             };
             if (this.shown) {
                 this.$el.animate({
