@@ -7,8 +7,8 @@ openerp.web_im = function(instance) {
             this.update_promise.then(function() {
                 var im = new instance.web_im.InstantMessaging(self);
                 im.appendTo(instance.client.$el);
-                var button = new instance.web.ImTopButton(self);
-                button.im = im;
+                var button = new instance.web.ImTopButton(this);
+                button.on("clicked", im, im.switch_display);
                 button.appendTo(instance.webclient.$el.find('.oe_systray'));
             });
             return this._super.apply(this, arguments);
@@ -21,7 +21,7 @@ openerp.web_im = function(instance) {
             "click button": "clicked",
         },
         clicked: function() {
-            this.im.switch_display();
+            this.trigger("clicked");
         },
     });
 
@@ -60,6 +60,7 @@ openerp.web_im = function(instance) {
             var users = new instance.web.Model("res.users");
             var self = this;
             return users.query(["name"]).filter([["name", "ilike", this.$(".oe_im_input").val()]]).limit(20).all().then(function(result) {
+                self.$(".oe_im_input").val("");
                 _.each(self.users, function(user) {
                     user.destroy();
                 });
@@ -67,14 +68,12 @@ openerp.web_im = function(instance) {
                 _.each(result, function(user) {
                     var widget = new instance.web_im.ImUser(self, user);
                     widget.appendTo(self.$(".oe_im_users"));
+                    widget.on("activate_user", self, self.activate_user);
                     self.users.push(widget);
                 });
             });
         },
-        send_message: function() {
-            // old code
-            var mes = self.$(".oe_im_input").val();
-            self.$(".oe_im_input").val("");
+        send_message: function(user_rec, mes) {
             var model = new instance.web.Model("im.message");
             model.call("post", [mes], {context: new instance.web.CompoundContext()});
         },
@@ -112,14 +111,52 @@ openerp.web_im = function(instance) {
                 e.preventDefault();
                 setTimeout(_.bind(self.poll, self), 5000);
             });
-        }
+        },
+        activate_user: function(user_rec) {
+            // shitty, to replace
+            var conv = new instance.web_im.Conversation(this, this, user_rec);
+            conv.appendTo(this.$el);
+        },
     });
 
     instance.web_im.ImUser = instance.web.Widget.extend({
         "template": "ImUser",
+        events: {
+            "click": "activate_user",
+        },
         init: function(parent, user_rec) {
             this._super(parent);
             this.user_rec = user_rec;
+        },
+        activate_user: function() {
+            this.trigger("activate_user", this.user_rec);
+        },
+    });
+
+    instance.web_im.Conversation = instance.web.Widget.extend({
+        "template": "Conversation",
+        events: {
+            "keydown input": "send_message",
+        },
+        init: function(parent, im, user_rec) {
+            this._super(parent);
+            this.im = im;
+            this.user_rec = user_rec;
+        },
+        start: function() {
+            this.im.on("change:right_offset", this, this.calc_pos);
+            this.calc_pos();
+        },
+        calc_pos: function() {
+            this.$el.css("right", this.im.get("right_offset"));
+        },
+        send_message: function(e) {
+            if(e && e.which !== 13) {
+                return;
+            }
+            var mes = this.$("input").val();
+            this.$("input").val("");
+            this.im.send_message(this.user_rec, mes);
         },
     });
 

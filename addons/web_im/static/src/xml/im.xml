@@ -5,8 +5,8 @@
     <t t-name="InstantMessaging">
         <div class="oe_im">
             <input class="oe_im_input" type="text"/>
-            <div class="oe_im_content"></div>
             <div class="oe_im_users"></div>
+            <div class="oe_im_content"></div>
         </div>
     </t>
     <t t-name="ImTopButton">
@@ -17,6 +17,12 @@
     <t t-name="ImUser">
         <div class="oe_im_user">
             <t t-esc="widget.user_rec.name"/>
+        </div>
+    </t>
+    <t t-name="Conversation">
+        <div class="oe_im_conversation">
+            <div class="oe_conversation_text"></div>
+            <input class="oe_conversation_input" type="text"/>
         </div>
     </t>
 </templates>
