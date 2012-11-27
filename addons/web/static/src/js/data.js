@@ -123,9 +123,8 @@ instance.web.Query = instance.web.Class.extend({
 
         var self = this;
 
-        // FIXME: when pyeval is merged
-        var ctx = instance.session.test_eval_contexts(
-                [this._model.context(this._context)]);
+        var ctx = instance.web.pyeval.eval(
+            'context', this._model.context(this._context));
         return this._model.call('read_group', {
             groupby: grouping,
             fields: _.uniq(grouping.concat(this._fields || [])),
