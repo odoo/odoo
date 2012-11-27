@@ -385,14 +385,14 @@ class expression(object):
         self.table_aliases_mapping = {}
         self.joins = []
         self.root_table = None
-        # assign self.__exp with the normalized, parsed domain.
+        # assign self.exp with the normalized, parsed domain.
         self.parse(cr, uid, distribute_not(normalize(exp)), table, context)
 
     # TDE note: this seems not to be used anymore, commenting
     # # TODO used only for osv_memory
     # @property
     # def exp(self):
-    #     return self.__exp[:]
+    #     return self.exp[:]
 
     def _has_table_alias(self, alias):
         return alias in self.table_aliases
@@ -434,7 +434,7 @@ class expression(object):
             :param exp: expression (domain)
             :param table: table object
         """
-        self.__exp = exp
+        self.exp = exp
         self.root_table = table
         self._add_table_alias(table._table, table)
 
@@ -476,7 +476,7 @@ class expression(object):
             return list(value)
 
         i = -1
-        while i + 1 < len(self.__exp):
+        while i + 1 < len(self.exp):
             i += 1
 
             # 0 Preparation
@@ -485,7 +485,7 @@ class expression(object):
             #   - Set working variables
 
             # check validity
-            e = self.__exp[i]
+            e = self.exp[i]
             if is_operator(e) or e == TRUE_LEAF or e == FALSE_LEAF:
                 continue
             if not is_leaf(e):
@@ -493,7 +493,7 @@ class expression(object):
 
             # normalize the leaf's operator
             e = normalize_leaf(*e)
-            self.__exp[i] = e
+            self.exp[i] = e
             left, operator, right = e
 
             # working variables
@@ -517,15 +517,16 @@ class expression(object):
                 self.leaf_to_table[i] = working_table
 
             # 2 Field not found
-            #   - ('id', 'child_of', ids) and continue the processing OR
-            #   - field in magic columns (ex: id) and continue the processing OR
+            #   - ('id', 'child_of', ids): replace the leaf by a computed domain
+            #     after searching and continue the processing OR
+            #   - field in magic columns (ex: id): continue the processing OR
             #   - raise an error
 
             if not field:
                 if left == 'id' and operator == 'child_of':
                     ids2 = to_ids(right, table)
                     dom = child_of_domain(left, ids2, working_table)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
+                    self.exp = self.exp[:i] + dom + self.exp[i + 1:]
                 else:
                     # field could not be found in model columns, it's probably invalid, unless
                     # it's one of the _log_access special fields
@@ -553,12 +554,12 @@ class expression(object):
             if len(field_path) > 1:
                 if field._type == 'many2one':
                     right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                    self.__exp[i] = (field_path[0], 'in', right)
+                    self.exp[i] = (field_path[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=dict(context, active_test=False))
-                    self.__exp[i] = ('id', 'in', right1)
+                    self.exp[i] = ('id', 'in', right1)
 
                 if not isinstance(field, fields.property):
                     continue
@@ -568,7 +569,7 @@ class expression(object):
                 if not field._fnct_search:
                     # the function field doesn't provide a search function and doesn't store
                     # values in the database, so we must ignore it : we generate a dummy leaf
-                    self.__exp[i] = TRUE_LEAF
+                    self.exp[i] = TRUE_LEAF
                     _logger.error(
                         "The field '%s' (%s) can not be searched: non-stored "
                         "function field without fnct_search",
@@ -577,16 +578,16 @@ class expression(object):
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                 else:
-                    subexp = field.search(cr, uid, table, left, [self.__exp[i]], context=context)
+                    subexp = field.search(cr, uid, table, left, [self.exp[i]], context=context)
                     if not subexp:
-                        self.__exp[i] = TRUE_LEAF
+                        self.exp[i] = TRUE_LEAF
                     else:
                         # we assume that the expression is valid
                         # we create a dummy leaf for forcing the parsing of the resulting expression
-                        self.__exp[i] = AND_OPERATOR
-                        self.__exp.insert(i + 1, TRUE_LEAF)
+                        self.exp[i] = AND_OPERATOR
+                        self.exp.insert(i + 1, TRUE_LEAF)
                         for j, se in enumerate(subexp):
-                            self.__exp.insert(i + 2 + j, se)
+                            self.exp.insert(i + 2 + j, se)
             # else, the value of the field is store in the database, so we search on it
 
             elif field._type == 'one2many':
@@ -597,7 +598,7 @@ class expression(object):
                         dom = child_of_domain(left, ids2, relational_table, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
+                    self.exp = self.exp[:i] + dom + self.exp[i + 1:]
 
                 else:
                     call_null = True
@@ -616,17 +617,17 @@ class expression(object):
                             if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null = False
-                                self.__exp[i] = FALSE_LEAF
+                                self.exp[i] = FALSE_LEAF
                         else:
                             ids2 = select_from_where(cr, field._fields_id, relational_table._table, 'id', ids2, operator)
                             if ids2:
                                 call_null = False
                                 o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                                self.__exp[i] = ('id', o2m_op, ids2)
+                                self.exp[i] = ('id', o2m_op, ids2)
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_table._table))
+                        self.exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_table._table))
 
             elif field._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field._sql_names(working_table)
@@ -640,7 +641,7 @@ class expression(object):
                     ids2 = to_ids(right, relational_table)
                     dom = child_of_domain('id', ids2, relational_table)
                     ids2 = relational_table.search(cr, uid, dom, context=context)
-                    self.__exp[i] = ('id', 'in', _rec_convert(ids2))
+                    self.exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
                     call_null_m2m = True
                     if right is not False:
@@ -657,17 +658,17 @@ class expression(object):
                             if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null_m2m = False
-                                self.__exp[i] = FALSE_LEAF
+                                self.exp[i] = FALSE_LEAF
                             else:
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
                             m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            self.__exp[i] = ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0])
+                            self.exp[i] = ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0])
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        self.__exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table))
+                        self.exp[i] = ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table))
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
@@ -676,7 +677,7 @@ class expression(object):
                         dom = child_of_domain(left, ids2, relational_table, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
-                    self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
+                    self.exp = self.exp[:i] + dom + self.exp[i + 1:]
                 else:
                     def _get_expression(relational_table, cr, uid, left, right, operator, context=None):
                         if context is None:
@@ -700,7 +701,7 @@ class expression(object):
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
-                        self.__exp[i] = _get_expression(relational_table, cr, uid, left, right, operator, context=context)
+                        self.exp[i] = _get_expression(relational_table, cr, uid, left, right, operator, context=context)
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         pass
@@ -708,16 +709,16 @@ class expression(object):
             else:
                 # other field type
                 # add the time part to datetime field when it's not there:
-                if field._type == 'datetime' and self.__exp[i][2] and len(self.__exp[i][2]) == 10:
+                if field._type == 'datetime' and self.exp[i][2] and len(self.exp[i][2]) == 10:
 
-                    self.__exp[i] = list(self.__exp[i])
+                    self.exp[i] = list(self.exp[i])
 
                     if operator in ('>', '>='):
-                        self.__exp[i][2] += ' 00:00:00'
+                        self.exp[i][2] += ' 00:00:00'
                     elif operator in ('<', '<='):
-                        self.__exp[i][2] += ' 23:59:59'
+                        self.exp[i][2] += ' 23:59:59'
 
-                    self.__exp[i] = tuple(self.__exp[i])
+                    self.exp[i] = tuple(self.exp[i])
 
                 if field.translate:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
@@ -753,7 +754,7 @@ class expression(object):
                               right,
                              ]
 
-                    self.__exp[i] = ('id', 'inselect', (subselect, params))
+                    self.exp[i] = ('id', 'inselect', (subselect, params))
 
     def __leaf_to_sql(self, leaf, table):
         left, operator, right = leaf
@@ -885,7 +886,7 @@ class expression(object):
         stack = []
         params = []
         # Process the domain from right to left, using a stack, to generate a SQL expression.
-        for i, e in reverse_enumerate(self.__exp):
+        for i, e in reverse_enumerate(self.exp):
             if is_leaf(e, internal=True):
                 table = self.leaf_to_table.get(i, self.root_table)
                 q, p = self.__leaf_to_sql(e, table)
