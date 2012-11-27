@@ -63,7 +63,7 @@ class mail_message(osv.Model):
         # protection for `default_type` values leaking from menu action context (e.g. for invoices)
         if context and context.get('default_type') and context.get('default_type') not in self._columns['type'].selection:
             context = dict(context, default_type=None)
-        return super(mail_message, self).default_get(cr, uid, fields, context=context) 
+        return super(mail_message, self).default_get(cr, uid, fields, context=context)
 
     def _shorten_name(self, name):
         if len(name) <= (self._message_record_name_length + 3):
@@ -146,7 +146,7 @@ class mail_message(osv.Model):
             store=True, string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
-            string='Notifications',
+            string='Notifications', _auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
