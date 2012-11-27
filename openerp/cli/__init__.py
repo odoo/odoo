@@ -14,9 +14,10 @@ class CommandType(type):
         commands[name] = cls
 
 class Command(object):
+    """Subclass this class to define new openerp subcommands """
     __metaclass__ = CommandType
 
-    def run():
+    def run(self, args):
         pass
 
 import server
