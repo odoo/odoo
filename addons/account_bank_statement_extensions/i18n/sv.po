@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-07-03 09:17+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -57,6 +57,11 @@ msgid "Cancel selected statement lines"
 msgstr "Avbryt valda utdragsrader"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
 msgstr "RIB och/eller IBAN är felaktig"
@@ -65,11 +70,6 @@ msgstr "RIB och/eller IBAN är felaktig"
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "Gruppera på..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "Tillstånd"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,19 +107,32 @@ msgid "Batch Payment Info"
 msgstr "Batchbetalningsinformation"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "Bekräfta raderna"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr ""
-"Radering inte tillåten ! Vänligen använd associerat bankuttdrag för att "
-"radera och/eller ändra utdragsrader"
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "Transaktioner"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -128,7 +141,6 @@ msgstr "Typ"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "Journal"
@@ -152,17 +164,6 @@ msgstr "avbryt valda utdragsrader."
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "Motpartens nummer"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "Transaktioner"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "Varning"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -207,16 +208,6 @@ msgstr ""
 "utbetalningar"
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "Valutadatum"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "Bekräfta valda rader från kontoutdraget."
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr "Är du säker på att du vill avbryta valda bankutdragsrader ?"
@@ -240,6 +231,11 @@ msgstr "Anteckningar"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "Manuell"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -277,14 +273,6 @@ msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr "Är du säker på att du vill bekräfta valda bankutdragsrader?"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Beloppet på bokföringsordern måste överenstämma med beloppet på kontoutdraget"
-
-#. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
 msgid ""
 "Code to identify transactions belonging to the same globalisation level "
@@ -311,6 +299,13 @@ msgstr "Kontoutdragsrad"
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
 msgstr "Kod"
+
+#. module: account_bank_statement_extensions
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
@@ -355,12 +350,17 @@ msgid "Bank Statement Lines"
 msgstr "Bankutdragsrad"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "Barnbatchbetalningar"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "Avbryt"
@@ -379,3 +379,30 @@ msgstr "Totalsumma"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "Globalt ID"
+
+#~ msgid "State"
+#~ msgstr "Tillstånd"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Varning"
+
+#~ msgid "Valuta Date"
+#~ msgstr "Valutadatum"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "Bekräfta valda rader från kontoutdraget."
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr ""
+#~ "Radering inte tillåten ! Vänligen använd associerat bankuttdrag för att "
+#~ "radera och/eller ändra utdragsrader"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Beloppet på bokföringsordern måste överenstämma med beloppet på kontoutdraget"

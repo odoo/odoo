@@ -21,39 +21,51 @@
 
 from osv import fields,osv
 from tools.translate import _
+import decimal_precision as dp
 
 class analytic_user_funct_grid(osv.osv):
-
     _name="analytic.user.funct.grid"
-    _description= "Relation table between users and products on a analytic account"
+    _description= "Price per User"
     _columns={
         'user_id': fields.many2one("res.users", "User", required=True,),
-        'product_id': fields.many2one("product.product", "Product", required=True,),
+        'product_id': fields.many2one("product.product", "Service", required=True,),
         'account_id': fields.many2one("account.analytic.account", "Analytic Account", required=True,),
-        }
+        'uom_id': fields.related("product_id", "uom_id", relation="product.uom", string="Unit of Measure", type="many2one", readonly=True),
+        'price': fields.float('Price', digits_compute=dp.get_precision('Product Price'), help="Price per hour for this user.", required=True),
+    }
+    def onchange_user_product_id(self, cr, uid, ids, user_id, product_id, context=None):
+        if not user_id:
+            return {}
+        emp_obj = self.pool.get('hr.employee')
+        emp_id = emp_obj.search(cr, uid, [('user_id', '=', user_id)], context=context)
+        if not emp_id:
+            return {}
 
-analytic_user_funct_grid()
+        value = {}
+        emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
+        if emp.product_id and not product_id:
+            value['product_id'] = emp.product_id.id
+            prod = emp.product_id
+        if product_id:
+            prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        if prod:
+            value['price'] = prod.list_price
+            value['uom_id'] = prod.uom_id.id
+        return {'value': value}
 
 
 class account_analytic_account(osv.osv):
-
     _inherit = "account.analytic.account"
     _columns = {
         'user_product_ids': fields.one2many('analytic.user.funct.grid', 'account_id', 'Users/Products Rel.'),
     }
 
-account_analytic_account()
-
 
 class hr_analytic_timesheet(osv.osv):
-
     _inherit = "hr.analytic.timesheet"
-
-
     # Look in account, if no value for the user => look in parent until there is no more parent to look
     # Take the first found... if nothing found => return False
     def _get_related_user_account_recursiv(self, cr, uid, user_id, account_id):
-
         temp=self.pool.get('analytic.user.funct.grid').search(cr, uid, [('user_id', '=', user_id),('account_id', '=', account_id) ])
         account=self.pool.get('account.analytic.account').browse(cr, uid, account_id)
         if temp:
@@ -63,7 +75,6 @@ class hr_analytic_timesheet(osv.osv):
                 return self._get_related_user_account_recursiv(cr, uid, user_id, account.parent_id.id)
             else:
                 return False
-
 
     def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
         res = {}
@@ -92,7 +103,7 @@ class hr_analytic_timesheet(osv.osv):
             if not a:
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('There is no expense account define ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
@@ -106,12 +117,6 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
-        res = {}
-        if not (user_id):
-            #avoid a useless call to super
-            return res
-
-        #get the old values from super
         res = super(hr_analytic_timesheet, self).on_change_user_id(cr, uid, ids, user_id)
 
         if account_id:
@@ -127,7 +132,7 @@ class hr_analytic_timesheet(osv.osv):
                 if not a:
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                             _('There is no expense account define ' \
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))
@@ -141,7 +146,11 @@ class hr_analytic_timesheet(osv.osv):
                 res ['value']['general_account_id']= a
         return res
 
-hr_analytic_timesheet()
+class account_analytic_line(osv.osv):
+    _inherit = "account.analytic.line"
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+        for grid in account.user_product_ids:
+            if grid.user_id.id==user_id:
+                return grid.price
+        return super(account_analytic_line, self)._get_invoice_price(cr, uid, account, product_id, user_id, qty, context)
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

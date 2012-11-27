@@ -4,17 +4,17 @@
         <record id="view_outlook_installer" model="ir.ui.view">
             <field name="name">outlook.installer.view</field>
             <field name="model">outlook.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
                     <form position="attributes">
                         <attribute name="string">Install Outlook Plug-In</attribute>
                     </form>
-                    <separator string="title" position="before">
-                        <label string="This plug-in allows you to create and link outlook emails with openerp objects."/>
-                    </separator>
-                    <xpath expr="//header" position="replace"/>
+                    <xpath expr="//footer" position="replace">
+                       <footer>
+                            <button string="Close" class="oe_link" special="cancel" />
+                       </footer>
+                    </xpath>
                     <xpath expr="//separator[@string='title']" position="after" version="7.0">
                         <group>
                             <field name="plugin32" widget="url"/>
@@ -23,13 +23,13 @@
                         <separator string="Installation and Configuration Steps"/>
                         <p>Click on the link above to download the installer for either 32 or 64 bits, and execute it.</p>
                         <p>System requirements:</p>
-                        <ul>
-                            <li>1. MS Outlook 2005 or above.</li>
-                            <li>2. MS .Net Framework 3.5 or above.</li>
-                        </ul>
+                        <ol>
+                            <li> MS Outlook 2005 or above.</li>
+                            <li> MS .Net Framework 3.5 or above.</li>
+                        </ol>
                     </xpath>
                     <separator string="title" position="attributes">
-                        <attribute name="string">Install Outlook Plug-In</attribute>
+                        <attribute name="string"></attribute>
                     </separator>
                 </data>
             </field>
@@ -49,17 +49,16 @@
         <record id="view_config_outlook_installer" model="ir.ui.view">
             <field name="name">Sales Application</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <field name="module_plugin_outlook" version="7.0" position="replace">
-                    <label for="module_plugin_outlook"/>
+                <div name="module_plugin_outlook" version="7.0" position="replace">
                     <div>
-                        <field name="module_plugin_outlook"/>
-                        <button name="%(action_outlook_installer)d" type="action" string="Configure" icon="gtk-execute"
-                            attrs="{'invisible': [('module_plugin_outlook','=',False)]}"/>
+                        <field name="module_plugin_outlook" class="oe_inline"/>
+                        <label for="module_plugin_outlook"/>
+                        <button name="%(action_outlook_installer)d" type="action" string="Download and install the plug-in" icon="gtk-execute"
+                            attrs="{'invisible': [('module_plugin_outlook','=',False)]}" class="oe_link"/>
                     </div>
-                </field>
+                </div>
             </field>
         </record>
 

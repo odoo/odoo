@@ -20,6 +20,7 @@
 ##############################################################################
 
 import tools
+import decimal_precision as dp
 from osv import fields,osv
 
 class account_invoice_report(osv.osv):
@@ -27,6 +28,31 @@ class account_invoice_report(osv.osv):
     _description = "Invoices Statistics"
     _auto = False
     _rec_name = 'date'
+
+    def _compute_amounts_in_user_currency(self, cr, uid, ids, field_names, args, context=None):
+        """Compute the amounts in the currency of the user
+        """
+        if context is None:
+            context={}
+        currency_obj = self.pool.get('res.currency')
+        currency_rate_obj = self.pool.get('res.currency.rate')
+        user_currency_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id.id
+        currency_rate_id = currency_rate_obj.search(cr, uid, [('rate', '=', 1)], limit=1, context=context)[0]
+        base_currency_id = currency_rate_obj.browse(cr, uid, currency_rate_id, context=context).currency_id.id
+        res = {}
+        ctx = context.copy()
+        for item in self.browse(cr, uid, ids, context=context):
+            ctx['date'] = item.date
+            price_total = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_total, context=ctx)
+            price_average = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.price_average, context=ctx)
+            residual = currency_obj.compute(cr, uid, base_currency_id, user_currency_id, item.residual, context=ctx)
+            res[item.id] = {
+                'user_currency_price_total': price_total,
+                'user_currency_price_average': price_average,
+                'user_currency_residual': residual,
+            }
+        return res
+
     _columns = {
         'date': fields.date('Date', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
@@ -47,7 +73,9 @@ class account_invoice_report(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
         'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Without Tax', readonly=True),
+        'user_currency_price_total': fields.function(_compute_amounts_in_user_currency, string="Total Without Tax", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'price_average': fields.float('Average Price', readonly=True, group_operator="avg"),
+        'user_currency_price_average': fields.function(_compute_amounts_in_user_currency, string="Average Price", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'currency_rate': fields.float('Currency Rate', readonly=True),
         'nbr':fields.integer('# of Lines', readonly=True),
         'type': fields.selection([
@@ -63,21 +91,22 @@ class account_invoice_report(osv.osv):
             ('open','Open'),
             ('paid','Done'),
             ('cancel','Cancelled')
-            ], 'Invoice State', readonly=True),
+            ], 'Invoice Status', readonly=True),
         'date_due': fields.date('Due Date', readonly=True),
         'account_id': fields.many2one('account.account', 'Account',readonly=True),
         'account_line_id': fields.many2one('account.account', 'Account Line',readonly=True),
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',readonly=True),
         'residual': fields.float('Total Residual', readonly=True),
+        'user_currency_residual': fields.function(_compute_amounts_in_user_currency, string="Total Residual", type='float', digits_compute=dp.get_precision('Account'), multi="_compute_amounts"),
         'delay_to_pay': fields.float('Avg. Delay To Pay', readonly=True, group_operator="avg"),
         'due_delay': fields.float('Avg. Due Delay', readonly=True, group_operator="avg"),
     }
     _order = 'date desc'
-    def init(self, cr):
-        tools.drop_view_if_exists(cr, 'account_invoice_report')
-        cr.execute("""
-            create or replace view account_invoice_report as (
-                 select min(ail.id) as id,
+
+
+    def _select(self):
+        select_str = """
+            SELECT min(ail.id) as id,
                     ai.date_invoice as date,
                     to_char(ai.date_invoice, 'YYYY') as year,
                     to_char(ai.date_invoice, 'MM') as month,
@@ -154,15 +183,30 @@ class account_invoice_report(osv.osv):
                          where a.id=ai.id)
                        ELSE 1
                        END) / cr.rate as residual
-                from account_invoice_line as ail
+        """
+        return select_str
+
+    def _where(self):
+        where_str = """
+            WHERE cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
+                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) order by name desc limit 1)
+        """
+        return where_str
+
+    def _from(self):
+        from_str = """
+            FROM account_invoice_line as ail
                 left join account_invoice as ai ON (ai.id=ail.invoice_id)
                 left join product_product pr on (pr.id=ail.product_id)
                 left join product_template pt on (pt.id=pr.product_tmpl_id)
                 left join product_uom u on (u.id=ail.uos_id),
                 res_currency_rate cr
-                where cr.id in (select id from res_currency_rate cr2  where (cr2.currency_id = ai.currency_id)
-                and ((ai.date_invoice is not null and cr.name <= ai.date_invoice) or (ai.date_invoice is null and cr.name <= NOW())) limit 1)
-                group by ail.product_id,
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
+            GROUP BY ail.product_id,
                     ai.date_invoice,
                     ai.id,
                     cr.rate,
@@ -189,8 +233,15 @@ class account_invoice_report(osv.osv):
                     ai.amount_total,
                     u.uom_type,
                     u.category_id
-            )
-        """)
+        """
+        return group_by_str
+
+    def init(self, cr):
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("CREATE or REPLACE VIEW %s as (%s %s %s %s)" % (
+                    self._table, 
+                    self._select(), self._from(), self._where(), self._group_by()))
 
 account_invoice_report()
 

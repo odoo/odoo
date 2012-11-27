@@ -32,11 +32,21 @@ import datetime
 from osv import fields, osv
 from tools.translate import _
 
+from itertools import groupby
+from operator import itemgetter
+
 
 FIELD_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('not_existing', 'Not Existing')]
 ANONYMIZATION_STATES = FIELD_STATES + [('unstable', 'Unstable')]
+WIZARD_ANONYMIZATION_STATES = [('clear', 'Clear'), ('anonymized', 'Anonymized'), ('unstable', 'Unstable')]
 ANONYMIZATION_HISTORY_STATE = [('started', 'Started'), ('done', 'Done'), ('in_exception', 'Exception occured')]
 ANONYMIZATION_DIRECTION = [('clear -> anonymized', 'clear -> anonymized'), ('anonymized -> clear', 'anonymized -> clear')]
+
+
+def group(lst, cols):
+    if isinstance(cols, basestring):
+        cols = [cols]
+    return dict((k, [v for v in itr]) for k, itr in groupby(sorted(lst, key=itemgetter(*cols)), itemgetter(*cols)))
 
 
 class ir_model_fields_anonymization(osv.osv):
@@ -64,11 +74,15 @@ class ir_model_fields_anonymization(osv.osv):
             state = 'anonymized' # all fields are anonymized
         else:
             state = 'unstable' # fields are mixed: this should be fixed
+
         return state
 
     def _check_write(self, cr, uid, context=None):
-        # check that the field is created from the menu and not from an database update
-        # otherwise the database update can crash:
+        """check that the field is created from the menu and not from an database update
+           otherwise the database update can crash:"""
+        if context is None:
+            context = {}
+
         if context.get('manual'):
             global_state = self._get_global_state(cr, uid, context=context)
             if global_state == 'anonymized':
@@ -100,12 +114,16 @@ class ir_model_fields_anonymization(osv.osv):
         # check field state: all should be clear before we can add a new field to anonymize:
         self._check_write(cr, uid, context=context)
 
+        global_state = self._get_global_state(cr, uid, context=context)
+
         if 'field_name' in vals and vals['field_name'] and 'model_name' in vals and vals['model_name']:
             vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(cr, uid, vals, context=context)
 
         # check not existing fields:
         if not vals.get('field_id'):
             vals['state'] = 'not_existing'
+        else:
+            vals['state'] = global_state
 
         res = super(ir_model_fields_anonymization, self).create(cr, uid, vals, context=context)
 
@@ -199,8 +217,6 @@ class ir_model_fields_anonymization(osv.osv):
         'state': lambda *a: 'clear',
     }
 
-ir_model_fields_anonymization()
-
 
 class ir_model_fields_anonymization_history(osv.osv):
     _name = 'ir.model.fields.anonymization.history'
@@ -214,8 +230,6 @@ class ir_model_fields_anonymization_history(osv.osv):
         'msg': fields.text('Message', readonly=True),
         'filepath': fields.char(string='File path', size=256, readonly=True),
     }
-
-ir_model_fields_anonymization_history()
 
 
 class ir_model_fields_anonymize_wizard(osv.osv_memory):
@@ -242,8 +256,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         'name': fields.char(size=64, string='File Name'),
         'summary': fields.function(_get_summary, type='text', string='Summary'),
         'file_export': fields.binary(string='Export'),
-        'file_import': fields.binary(string='Import'),
-        'state': fields.function(_get_state, string='Status', type='selection', selection=ANONYMIZATION_STATES, readonly=False),
+        'file_import': fields.binary(string='Import', help="This is the file created by the anonymization process. It should have the '.pickle' extention."),
+        'state': fields.function(_get_state, string='Status', type='selection', selection=WIZARD_ANONYMIZATION_STATES, readonly=False),
         'msg': fields.text(string='Message'),
     }
 
@@ -289,10 +303,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
-        
+
         if context is None:
             context = {}
-        
+
         step = context.get('step', 'new_window')
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
@@ -311,6 +325,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # clicked in the menu and the fields are already anonymized
                 placeholder.addnext(etree.Element('newline'))
                 placeholder.addnext(etree.Element('field', {'name': 'file_import', 'required': "1"}))
+                placeholder.addnext(etree.Element('label', {'string': 'Anonymization file'}))
                 eview.remove(placeholder)
             elif step == 'just_anonymized':
                 # we just ran the anonymization process, we need the file export field
@@ -340,8 +355,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                # unstable ?
-                raise
+                msg = "The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                  " while some fields are not anonymized. You should try to solve this problem before trying to do anything else."
+                raise osv.except_osv('Error !', msg)
 
             res['arch'] = etree.tostring(eview)
 
@@ -354,7 +370,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         })
         raise osv.except_osv(error_type, error_msg)
 
-    def anonymize_database(self,cr, uid, ids, context=None):
+    def anonymize_database(self, cr, uid, ids, context=None):
         """Sets the 'anonymized' state to defined fields"""
 
         # create a new history record:
@@ -425,7 +441,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
-                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference"
+                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference."
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
                 if anonymized_value is None:
@@ -453,9 +469,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
                "",
-               "Don't forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
+               "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
-               "This file is also stored in the %s directory. The absolute file path is: %s",
+               "This file is also stored in the %s directory. The absolute file path is: %s.",
               ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
@@ -489,9 +505,8 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    def reverse_anonymize_database(self,cr, uid, ids, context=None):
+    def reverse_anonymize_database(self, cr, uid, ids, context=None):
         """Set the 'clear' state to defined fields"""
-
         ir_model_fields_anonymization_model = self.pool.get('ir.model.fields.anonymization')
         anonymization_history_model = self.pool.get('ir.model.fields.anonymization.history')
 
@@ -515,23 +530,46 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
             if not wizard.file_import:
-                msg = "The anonymization export file was not supplied. It is not possible to reverse the anonymization process without this file."
+                msg = "It is not possible to reverse the anonymization process without supplying the anonymization export file."
                 self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
             # reverse the anonymization:
             # load the pickle file content into a data structure:
             data = pickle.loads(base64.decodestring(wizard.file_import))
 
+            migration_fix_obj = self.pool.get('ir.model.fields.anonymization.migration.fix')
+            fix_ids = migration_fix_obj.search(cr, uid, [('target_version', '=', '7.0')])
+            fixes = migration_fix_obj.read(cr, uid, fix_ids, ['model_name', 'field_name', 'query', 'query_type', 'sequence'])
+            fixes = group(fixes, ('model_name', 'field_name'))
+
             for line in data:
                 table_name = self.pool.get(line['model_id'])._table
-                sql = "update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
-                    'table': table_name,
-                    'field': line['field_id'],
-                }
-                cr.execute(sql, {
-                    'value': line['value'],
-                    'id': line['id']
-                })
+
+                # check if custom sql exists:
+                key = (line['model_id'], line['field_id'])
+                custom_updates =  fixes.get(key)
+                if custom_updates:
+                    custom_updates.sort(itemgetter('sequence'))
+                    queries = [(record['query'], record['query_type']) for record in custom_updates if record['query_type']]
+                else:
+                    queries = [("update %(table)s set %(field)s = %%(value)s where id = %%(id)s" % {
+                        'table': table_name,
+                        'field': line['field_id'],
+                    }, 'sql')]
+
+                for query in queries:
+                    if query[1] == 'sql':
+                        sql = query[0]
+                        cr.execute(sql, {
+                            'value': line['value'],
+                            'id': line['id']
+                        })
+                    elif query[1] == 'python':
+                        raw_code = query[0]
+                        code = raw_code % line
+                        eval(code)
+                    else:
+                        raise Exception("Unknown query type '%s'. Valid types are: sql, python." % (query['query_type'], ))
 
             # update the anonymization fields:
             ir_model_fields_anonymization_model = self.pool.get('ir.model.fields.anonymization')
@@ -580,7 +618,19 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
             res = None
         return res
 
-ir_model_fields_anonymize_wizard()
 
+class ir_model_fields_anonymization_migration_fix(osv.osv):
+    _name = 'ir.model.fields.anonymization.migration.fix'
+    _order = "sequence"
+
+    _columns = {
+        'target_version': fields.char('Target Version'),
+        'model_name': fields.char('Model'),
+        'field_name': fields.char('Field'),
+        'query': fields.text('Query'),
+        'query_type': fields.selection(string='Query', selection=[('sql', 'sql'), ('python', 'python')]),
+        'sequence': fields.integer('Sequence'),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

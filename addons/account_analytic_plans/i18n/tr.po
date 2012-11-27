@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-25 00:10+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:03+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -64,12 +64,6 @@ msgid "Analytic Plan Line"
 msgstr "Analiz Planı Kalemi"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
-#, python-format
-msgid "User Error"
-msgstr "Kullanıcı Hatası"
-
-#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
 msgstr "Analiz Planı Durumu"
@@ -90,9 +84,18 @@ msgid "Account2 Id"
 msgstr "Hesap2 No"
 
 #. module: account_analytic_plans
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
+#: field:account.analytic.plan.instance,account_ids:0
+msgid "Account Id"
+msgstr "Hesap No"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -100,11 +103,9 @@ msgid "Amount"
 msgstr "Tutar"
 
 #. module: account_analytic_plans
-#: constraint:account.journal:0
-msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
-msgstr ""
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Code"
+msgstr "Kod"
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -127,18 +128,14 @@ msgid "Bank Statement Line"
 msgstr "Banka Ekstresi Kalemi"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
-msgid "Define your Analytic Plans"
-msgstr "Analitik Planınızı Tanımlayın"
-
-#. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
 msgstr "Geçersiz BBA Yapılı İletişim !"
 
 #. module: account_analytic_plans
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "There is no analytic plan defined."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -147,6 +144,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -187,16 +186,15 @@ msgid "Percentage"
 msgstr "Yüzde"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
-msgid "A model having this name and code already exists !"
-msgstr "Bu isimde ve kodda bir model zaten var !"
+msgid "There are no analytic lines related to account %s."
+msgstr ""
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "No analytic plan defined !"
-msgstr "Tanımlanmış bir analiz planı yok !"
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Analiz Hesabı"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -231,11 +229,14 @@ msgid "Analytic Plan Lines"
 msgstr "Analiz Planı Kalemleri"
 
 #. module: account_analytic_plans
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
+msgstr "Seçilen günlük ve dönem aynı firmaya ait olmalıdır."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -249,6 +250,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+"çoklu-para birimli bir günlük seçmelisiniz."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -256,19 +260,24 @@ msgid "Currency"
 msgstr "Para Birimi"
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,date1:0
-msgid "Start Date"
-msgstr "Başlangıç Tarihi"
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance,account_ids:0
-msgid "Account Id"
-msgstr "Hesap No"
+#: report:account.analytic.account.crossovered.analytic:0
+msgid "Company"
+msgstr "Firma"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
 msgstr "Hesap5 No"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -286,11 +295,11 @@ msgid "To Date"
 msgstr "Tarihine kadar"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
-msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "'%s' Yevmiyesinde bir analiz yevmiyesi tanımlamalısınız!"
+msgid "You have to define an analytic journal on the '%s' journal."
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -348,22 +357,9 @@ msgid "Root account of this plan."
 msgstr "Bu planın kök hesabı."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:221
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "Error"
-msgstr "Hata"
-
-#. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
 msgstr "Bu dağıtımı Model olarak kaydet"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -371,10 +367,9 @@ msgid "Quantity"
 msgstr "Miktar"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#, python-format
-msgid "Please put a name and a code before saving the model !"
-msgstr "Modeli kaydetmeden önce lütfen bir isim ve kod verin !"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "Fatura Numarası Her Şirkette Tekil Olmalı!"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
@@ -382,16 +377,11 @@ msgid "Print Crossovered Analytic"
 msgstr "Çarpraz Analiz Yazdır"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:341
-#: code:addons/account_analytic_plans/account_analytic_plans.py:485
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
 msgid "No Analytic Journal !"
 msgstr "Analiz Yevmiyesi yok !"
-
-#. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Analiz Hesabı"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -402,11 +392,6 @@ msgstr "Banka Ekstresi"
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
 msgstr "Hesap3 No"
-
-#. module: account_analytic_plans
-#: constraint:account.analytic.line:0
-msgid "You can not create analytic line on view account."
-msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -425,20 +410,15 @@ msgid "Account4 Id"
 msgstr "Hesap4 No"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#, python-format
+msgid "The total should be between %s and %s."
 msgstr ""
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
 msgstr "Analiz Dağılım Kalemleri"
-
-#. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr "Toplam %s ve %s arasında olmalı"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -462,11 +442,6 @@ msgstr "Dağıtım Kodu"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
-msgid "%"
-msgstr "%"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
 msgid "100.00%"
 msgstr "100.00%"
 
@@ -487,9 +462,11 @@ msgid "Journal"
 msgstr "Yevmiye"
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Code"
-msgstr "Kod"
+#: constraint:account.journal:0
+msgid ""
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
+msgstr ""
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
@@ -507,22 +484,33 @@ msgid "Distribution Models"
 msgstr "Dağıtım Modelleri"
 
 #. module: account_analytic_plans
-#: model:ir.actions.act_window,help:account_analytic_plans.account_analytic_plan_form_action_installer
-msgid ""
-"To setup a multiple analytic plans environment, you must define the root "
-"analytic accounts for each plan set. Then, you must attach a plan set to "
-"your account journals."
-msgstr ""
-
-#. module: account_analytic_plans
 #: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
+msgid "You cannot create journal items on an account of type view."
 msgstr ""
 
 #. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "Company"
-msgstr "Firma"
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
+#, python-format
+msgid "User Error!"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#, python-format
+msgid "Please put a name and a code before saving the model."
+msgstr ""
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "Başlangıç Tarihi"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -535,13 +523,23 @@ msgid "The name of the journal must be unique per company !"
 msgstr "Yevmiye adı her firmada benzersiz olmalı."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "or"
+msgstr ""
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
-msgid "Value Error"
-msgstr "Değer Hatası"
+msgid "A model with this name and code already exists."
+msgstr ""
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Görüntüleme mimarisi için Geçersiz XML"
+
+#, python-format
+#~ msgid "User Error"
+#~ msgstr "Kullanıcı Hatası"
 
 #~ msgid "Multiple-plans management in Analytic Accounting"
 #~ msgstr "Analiz Hesabında çoklu plan yönetimi"
@@ -549,8 +547,33 @@ msgstr "Değer Hatası"
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
 
+#, python-format
+#~ msgid "A model having this name and code already exists !"
+#~ msgstr "Bu isimde ve kodda bir model zaten var !"
+
+#, python-format
+#~ msgid "No analytic plan defined !"
+#~ msgstr "Tanımlanmış bir analiz planı yok !"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr "Fiş tutarı banka ekstresi tutarı ile aynı olmalı"
+
+#, python-format
+#~ msgid "You have to define an analytic journal on the '%s' journal!"
+#~ msgstr "'%s' Yevmiyesinde bir analiz yevmiyesi tanımlamalısınız!"
+
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Firma bağlı olduğu hesap ve dönemle aynı olmalıdır."
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Hata"
+
+#, python-format
+#~ msgid "Please put a name and a code before saving the model !"
+#~ msgstr "Modeli kaydetmeden önce lütfen bir isim ve kod verin !"
 
 #~ msgid ""
 #~ "This module allows to use several analytic plans, according to the general "
@@ -620,5 +643,46 @@ msgstr "Değer Hatası"
 #~ "doğrular.\n"
 #~ "        "
 
+#, python-format
+#~ msgid "Value Error"
+#~ msgstr "Değer Hatası"
+
+#~ msgid "%"
+#~ msgstr "%"
+
 #~ msgid "You can not create move line on view account."
 #~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
+
+#, python-format
+#~ msgid "The Total Should be Between %s and %s"
+#~ msgstr "Toplam %s ve %s arasında olmalı"
+
+#~ msgid "Define your Analytic Plans"
+#~ msgstr "Analitik Planınızı Tanımlayın"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."
+
+#~ msgid "You can not create analytic line on view account."
+#~ msgstr "Hesap görünümde analitik satır oluşturamazsınız."
+
+#~ msgid ""
+#~ "To setup a multiple analytic plans environment, you must define the root "
+#~ "analytic accounts for each plan set. Then, you must attach a plan set to "
+#~ "your account journals."
+#~ msgstr ""
+#~ "Çoklu analitik planları ortamını ayarlamak için, her plan seti için kök "
+#~ "analiz hesabı tanımlamalısınız. Sonra, hesap günlüklerinize bir plan seti "
+#~ "eklemelisiniz."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."

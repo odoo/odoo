@@ -7,15 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-04-21 16:39+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:24+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:29+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: document_ftp
+#: view:document.ftp.configuration:0
+msgid "Configure FTP Server"
+msgstr "FTPサーバを設定する"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -36,19 +41,19 @@ msgstr ""
 "指定の形式は HOST:PORT であり、デフォルトのホスト（ローカルホスト）がサーバからのアクセスに最も適しています。"
 
 #. module: document_ftp
-#: model:ir.actions.url,name:document_ftp.action_document_browse
+#: model:ir.model,name:document_ftp.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr ""
+
+#. module: document_ftp
+#: model:ir.actions.act_url,name:document_ftp.action_document_browse
 msgid "Browse Files"
 msgstr "ファイルをブラウズする"
 
 #. module: document_ftp
-#: field:document.ftp.configuration,config_logo:0
-msgid "Image"
-msgstr "画像"
-
-#. module: document_ftp
-#: field:document.ftp.configuration,host:0
-msgid "Address"
-msgstr "住所"
+#: help:knowledge.config.settings,document_ftp_url:0
+msgid "Click the url to browse the documents"
+msgstr ""
 
 #. module: document_ftp
 #: field:document.ftp.browse,url:0
@@ -59,6 +64,11 @@ msgstr "FTPサーバ"
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
 msgstr "FTPサーバの設定"
+
+#. module: document_ftp
+#: field:knowledge.config.settings,document_ftp_url:0
+msgid "Browse Documents"
+msgstr ""
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -77,19 +87,14 @@ msgid "Shared Repository (FTP)"
 msgstr "共有リプジトリ（FTP)"
 
 #. module: document_ftp
+#: field:document.ftp.configuration,host:0
+msgid "Address"
+msgstr "住所"
+
+#. module: document_ftp
 #: view:document.ftp.browse:0
-msgid "_Cancel"
-msgstr "キャンセル(_C)"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "Configure FTP Server"
-msgstr "FTPサーバを設定する"
-
-#. module: document_ftp
-#: view:document.ftp.configuration:0
-msgid "title"
-msgstr "タイトル"
+msgid "Cancel"
+msgstr ""
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
@@ -108,6 +113,11 @@ msgstr "文書をブラウズする"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
+msgid "or"
+msgstr ""
+
+#. module: document_ftp
+#: view:document.ftp.browse:0
 msgid "Browse Document"
 msgstr "文書をブラウズする"
 
@@ -115,3 +125,12 @@ msgstr "文書をブラウズする"
 #: view:document.ftp.configuration:0
 msgid "res_config_contents"
 msgstr "res_config_contents"
+
+#~ msgid "Image"
+#~ msgstr "画像"
+
+#~ msgid "title"
+#~ msgstr "タイトル"
+
+#~ msgid "_Cancel"
+#~ msgstr "キャンセル(_C)"

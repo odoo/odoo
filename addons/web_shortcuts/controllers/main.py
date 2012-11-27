@@ -1,16 +1,9 @@
-try:
-    # embedded
-    import openerp.addons.web.common.http as openerpweb
-    import openerp.addons.web.controllers.main as webmain
-except ImportError:
-    # standalone
-    import web.common.http as openerpweb
-    import web.controllers.main as webmain
+import openerp
 
-class Shortcuts(openerpweb.Controller):
+class Shortcuts(openerp.addons.web.http.Controller):
     _cp_path = "/web/shortcuts"
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def list(self, req):
         return req.session.model('ir.ui.view_sc').get_sc(
             req.session._uid, "ir.ui.menu", req.session.eval_context(req.context))

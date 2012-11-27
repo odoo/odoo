@@ -56,11 +56,12 @@ class product_product(osv.osv):
                     sum(l.price_unit * l.quantity)/sum(l.quantity) as avg_unit_price,
                     sum(l.quantity) as num_qty,
                     sum(l.quantity * (l.price_subtotal/l.quantity)) as total,
-                    sum(l.quantity * product.list_price) as sale_expected,
-                    sum(l.quantity * product.standard_price) as normal_cost
+                    sum(l.quantity * pt.list_price) as sale_expected,
+                    sum(l.quantity * pt.standard_price) as normal_cost
                 from account_invoice_line l
                 left join account_invoice i on (l.invoice_id = i.id)
-                left join product_template product on (product.id=l.product_id)
+                left join product_product product on (product.id=l.product_id)
+                left join product_template pt on (pt.id=product.product_tmpl_id)
                 where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s))
                 """
             invoice_types = ('out_invoice', 'in_refund')
@@ -98,7 +99,7 @@ class product_product(osv.osv):
                 ('paid','Paid'),('open_paid','Open and Paid'),('draft_open_paid','Draft, Open and Paid')
             ], string='Invoice State',multi='product_margin', readonly=True),
         'sale_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
-            help="Avg. Price in Customer Invoices)"),
+            help="Avg. Price in Customer Invoices."),
         'purchase_avg_price' : fields.function(_product_margin, type='float', string='Avg. Unit Price', multi='product_margin',
             help="Avg. Price in Supplier Invoices "),
         'sale_num_invoiced' : fields.function(_product_margin, type='float', string='# Invoiced', multi='product_margin',
@@ -110,15 +111,15 @@ class product_product(osv.osv):
         'purchase_gap' : fields.function(_product_margin, type='float', string='Purchase Gap', multi='product_margin',
             help="Normal Cost - Total Cost"),
         'turnover' : fields.function(_product_margin, type='float', string='Turnover' ,multi='product_margin',
-            help="Sum of Multification of Invoice price and quantity of Customer Invoices"),
+            help="Sum of Multiplication of Invoice price and quantity of Customer Invoices"),
         'total_cost'  : fields.function(_product_margin, type='float', string='Total Cost', multi='product_margin',
-            help="Sum of Multification of Invoice price and quantity of Supplier Invoices "),
+            help="Sum of Multiplication of Invoice price and quantity of Supplier Invoices "),
         'sale_expected' :  fields.function(_product_margin, type='float', string='Expected Sale', multi='product_margin',
-            help="Sum of Multification of Sale Catalog price and quantity of Customer Invoices"),
+            help="Sum of Multiplication of Sale Catalog price and quantity of Customer Invoices"),
         'normal_cost'  : fields.function(_product_margin, type='float', string='Normal Cost', multi='product_margin',
-            help="Sum of Multification of Cost price and quantity of Supplier Invoices"),
+            help="Sum of Multiplication of Cost price and quantity of Supplier Invoices"),
         'total_margin' : fields.function(_product_margin, type='float', string='Total Margin', multi='product_margin',
-            help="Turnorder - Standard price"),
+            help="Turnover - Standard price"),
         'expected_margin' : fields.function(_product_margin, type='float', string='Expected Margin', multi='product_margin',
             help="Expected Sale - Normal Cost"),
         'total_margin_rate' : fields.function(_product_margin, type='float', string='Total Margin (%)', multi='product_margin',

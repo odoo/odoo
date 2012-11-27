@@ -6,20 +6,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-01-13 09:28+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"Last-Translator: Carlos Ch. <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:04+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
+msgstr "¡La referencia del pedido debe ser única por compañía!"
+
+#. module: sale_journal
+#: help:res.partner,property_invoice_type:0
+msgid ""
+"This invoicing type will be used, by default, to invoice the current partner."
 msgstr ""
+
+#. module: sale_journal
+#: view:res.partner:0
+msgid "Sales & Purchases"
+msgstr "Ventas & Compras"
+
+#. module: sale_journal
+#: view:sale.order:0
+#: field:sale.order,invoice_type_id:0
+#: view:sale_journal.invoice.type:0
+#: field:sale_journal.invoice.type,name:0
+#: view:stock.picking:0
+#: field:stock.picking,invoice_type_id:0
+#: view:stock.picking.in:0
+#: field:stock.picking.in,invoice_type_id:0
+#: view:stock.picking.out:0
+#: field:stock.picking.out,invoice_type_id:0
+msgid "Invoice Type"
+msgstr "Tipo de factura"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -27,26 +52,39 @@ msgid "Note"
 msgstr "Nota"
 
 #. module: sale_journal
-#: field:res.partner,property_invoice_type:0
-msgid "Invoicing Type"
-msgstr ""
+#: selection:sale_journal.invoice.type,invoicing_method:0
+msgid "Grouped"
+msgstr "Agrupado"
 
 #. module: sale_journal
-#: help:res.partner,property_invoice_type:0
-msgid ""
-"This invoicing type will be used, by default, for invoicing the current "
-"partner."
-msgstr ""
-
-#. module: sale_journal
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+#: model:ir.model,name:sale_journal.model_stock_picking
+msgid "Picking List"
+msgstr "Albarán"
 
 #. module: sale_journal
 #: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "Ventas & Compras"
+msgid "Invoicing"
+msgstr "Facturación"
+
+#. module: sale_journal
+#: model:ir.model,name:sale_journal.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr ""
+
+#. module: sale_journal
+#: help:sale.order,invoice_type_id:0
+msgid "Generate invoice based on the selected option."
+msgstr ""
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,invoicing_method:0
+msgid "Invoicing method"
+msgstr "Método de facturación"
+
+#. module: sale_journal
+#: field:sale_journal.invoice.type,active:0
+msgid "Active"
+msgstr "Activo"
 
 #. module: sale_journal
 #: help:sale_journal.invoice.type,active:0
@@ -63,26 +101,9 @@ msgid "Notes"
 msgstr "Notas"
 
 #. module: sale_journal
-#: field:sale_journal.invoice.type,invoicing_method:0
-msgid "Invoicing method"
-msgstr "Método de facturación"
-
-#. module: sale_journal
-#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
-#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
-#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
-msgid "Invoice Types"
-msgstr "Tipos de factura"
-
-#. module: sale_journal
 #: selection:sale_journal.invoice.type,invoicing_method:0
 msgid "Non grouped"
 msgstr "No agrupado"
-
-#. module: sale_journal
-#: selection:sale_journal.invoice.type,invoicing_method:0
-msgid "Grouped"
-msgstr "Agrupado"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,help:sale_journal.action_definition_journal_invoice_type
@@ -98,21 +119,32 @@ msgstr ""
 
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
+msgstr "¡La referencia debe ser única por compañía!"
+
+#. module: sale_journal
+#: field:res.partner,property_invoice_type:0
+msgid "Invoicing Type"
+msgstr "Tipo de facturación"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error ! You cannot create recursive associated members."
+msgstr "¡Error! No puede crear miembros asociados recursivamente."
+
+#. module: sale_journal
+#: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
+#: model:ir.model,name:sale_journal.model_sale_journal_invoice_type
+#: model:ir.ui.menu,name:sale_journal.menu_definition_journal_invoice_type
+msgid "Invoice Types"
+msgstr "Tipos de factura"
+
+#. module: sale_journal
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
 msgstr ""
-
-#. module: sale_journal
-#: field:sale.order,invoice_type_id:0
-#: view:sale_journal.invoice.type:0
-#: field:sale_journal.invoice.type,name:0
-#: field:stock.picking,invoice_type_id:0
-msgid "Invoice Type"
-msgstr "Tipo de factura"
-
-#. module: sale_journal
-#: field:sale_journal.invoice.type,active:0
-msgid "Active"
-msgstr "Activo"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -125,14 +157,9 @@ msgid "Sales Order"
 msgstr "Pedido de venta"
 
 #. module: sale_journal
-#: model:ir.model,name:sale_journal.model_stock_picking
-msgid "Picking List"
-msgstr "Albarán"
-
-#. module: sale_journal
-#: view:res.partner:0
-msgid "Invoicing"
-msgstr "Facturación"
+#: model:ir.model,name:sale_journal.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr ""
 
 #~ msgid "Confirmed packing"
 #~ msgstr "Albarán confirmado"
@@ -449,3 +476,10 @@ msgstr "Facturación"
 #~ "\n"
 #~ "    Se proporcionan algunas estadísticas por diario.\n"
 #~ "    "
+
+#~ msgid ""
+#~ "This invoicing type will be used, by default, for invoicing the current "
+#~ "partner."
+#~ msgstr ""
+#~ "Este tipo de facturación será usada por defecto para la facturación de esta "
+#~ "empresa."

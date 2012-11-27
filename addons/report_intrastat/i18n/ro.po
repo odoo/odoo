@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:26+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:59+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:02+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -22,9 +22,9 @@ msgid "Cancelled Invoice"
 msgstr "Factura anulata"
 
 #. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "Numele tarii trebuie sa fie unic !"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Iunie"
 
 #. module: report_intrastat
 #: sql_constraint:res.country:0
@@ -45,14 +45,6 @@ msgstr "Factura furnizor"
 #: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Pret unitar"
-
-#. module: report_intrastat
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Eroare: Unitatea de masura implicita si unitatea de masura pentru achizitii "
-"trebuie sa faca parte din aceeasi categorie."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -110,9 +102,11 @@ msgid "Invoice Date"
 msgstr "Data facturii"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Iunie"
+#: constraint:product.template:0
+msgid ""
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
+msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -128,11 +122,6 @@ msgstr "Cantitate"
 #: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "Baza"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Anul acesta"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -151,11 +140,6 @@ msgstr "Iulie"
 #: view:report.intrastat.code:0
 msgid "Intrastat code"
 msgstr "Cod Intrastat"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Month"
-msgstr "Luna curenta"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -191,6 +175,11 @@ msgstr "Factura"
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
 msgstr "Tara"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Numele tarii trebuie sa fie unic !"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -339,12 +328,16 @@ msgstr "Pret"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:0
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Cod Intrastat"
 
 #~ msgid "Intrastat Reporting - Reporting"
 #~ msgstr "Raportare Intrastat - Raportare"
+
+#~ msgid "This Year"
+#~ msgstr "Anul acesta"
 
 #~ msgid ""
 #~ "\n"
@@ -356,3 +349,12 @@ msgstr "Cod Intrastat"
 #~ "    Un modul care adaugă rapoarte intrastat.\n"
 #~ "    Acest modul oferă detalii despre bunurile comercializate intre tările "
 #~ "Uniunii Europene "
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Eroare: Unitatea de masura implicita si unitatea de masura pentru achizitii "
+#~ "trebuie sa faca parte din aceeasi categorie."
+
+#~ msgid "This Month"
+#~ msgstr "Luna curenta"

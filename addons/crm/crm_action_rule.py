@@ -41,34 +41,15 @@ class base_action_rule(osv.osv):
         'regex_history' : fields.char('Regular Expression on Case History', size=128),
         'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
         'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
-        'act_mail_to_partner': fields.boolean('Mail to Partner',
-                                              help="Check this if you want the rule to send an email to the partner."),
     }
-
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
-        mail_message = self.pool.get('mail.message')
-        body = self.format_mail(obj, body)
-        if not emailfrom:
-            if hasattr(obj, 'user_id')  and obj.user_id and obj.user_id.user_email:
-                emailfrom = obj.user_id.user_email
-
-        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
-        emailfrom = tools.ustr(emailfrom)
-        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.reply_to:
-            reply_to = obj.section_id.reply_to
-        else:
-            reply_to = emailfrom
-        if not emailfrom:
-            raise osv.except_osv(_('Error!'), _("No Email Found for your Company address!"))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
 
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
 
         if hasattr(obj, 'section_id'):
             ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
-        if hasattr(obj, 'categ_id'):
-            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id == obj.categ_id.id)
+        if hasattr(obj, 'categ_ids'):
+            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id in [x.id for x in obj.categ_ids])
 
         #Cheking for history
         regex = action.regex_history
@@ -90,36 +71,18 @@ class base_action_rule(osv.osv):
             ok = ok and res_count
         return ok
 
-    def do_action(self, cr, uid, action, model_obj, obj, context=None):
+    def do_action(self, cr, uid, action, obj, context=None):
+        res = super(base_action_rule, self).do_action(cr, uid, action, obj, context=context)
+        model_obj = self.pool.get(action.model_id.model)
         write = {}
         if hasattr(action, 'act_section_id') and action.act_section_id:
-            obj.section_id = action.act_section_id
             write['section_id'] = action.act_section_id.id
 
-        if hasattr(obj, 'email_cc') and action.act_email_cc:
-            if '@' in (obj.email_cc or ''):
-                emails = obj.email_cc.split(",")
-                if  obj.act_email_cc not in emails:# and '<'+str(action.act_email_cc)+">" not in emails:
-                    write['email_cc'] = obj.email_cc + ',' + obj.act_email_cc
-            else:
-                write['email_cc'] = obj.act_email_cc
-
-        # Put state change by rule in communication history
-        if hasattr(obj, 'state') and hasattr(obj, 'message_append') and action.act_state:
-            model_obj.message_append(cr, uid, [obj], _(action.act_state))
+        if hasattr(action, 'act_categ_id') and action.act_categ_id:
+            write['categ_ids'] = [(4, action.act_categ_id.id)]
 
         model_obj.write(cr, uid, [obj.id], write, context)
-        super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
-        emails = []
-
-        if hasattr(obj, 'email_from') and action.act_mail_to_partner:
-            emails.append(obj.email_from)
-        emails = filter(None, emails)
-        if len(emails) and action.act_mail_body:
-            emails = list(set(emails))
-            self.email_send(cr, uid, obj, emails, action.act_mail_body)
-        return True
-
+        return res
 
     def state_get(self, cr, uid, context=None):
         """Gets available states for crm"""

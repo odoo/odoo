@@ -30,7 +30,7 @@ class account_report_general_ledger(osv.osv_memory):
         'landscape': fields.boolean("Landscape Mode"),
         'initial_balance': fields.boolean('Include Initial Balances',
                                     help='If you selected to filter by date or period, this field allow you to add a row to display the amount of debit/credit/balance that precedes the filter you\'ve set.'),
-        'amount_currency': fields.boolean("With Currency", help="It adds the currency column if the currency is different then the company currency"),
+        'amount_currency': fields.boolean("With Currency", help="It adds the currency column on report if the currency differs from the company currency."),
         'sortby': fields.selection([('sort_date', 'Date'), ('sort_journal_partner', 'Journal & Partner')], 'Sort by', required=True),
         'journal_ids': fields.many2many('account.journal', 'account_report_general_ledger_journal_rel', 'account_id', 'journal_id', 'Journals', required=True),
     }

@@ -5,7 +5,6 @@
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
             <field name="inherit_id" ref="project_issue.project_issue_form_view" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="project_id" position="attributes">
                     <attribute name="on_change">on_change_project(project_id)</attribute>

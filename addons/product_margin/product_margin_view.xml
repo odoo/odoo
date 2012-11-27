@@ -4,7 +4,6 @@
     <record model="ir.ui.view" id="view_product_margin_graph">
             <field name="name">product.margin.graph</field>
             <field name="model">product.product</field>
-            <field name="type">graph</field>
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <graph string="Product Margins" type="bar">
@@ -18,7 +17,6 @@
      <record id="view_product_margin_form" model="ir.ui.view">
             <field name="name">product.margin.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="priority">50</field>
             <field name="arch" type="xml">
                  <form string="Product Margins" version="7.0">
@@ -65,7 +63,6 @@
         <record id="view_product_margin_tree" model="ir.ui.view">
             <field name="name">product.margin.tree</field>
             <field name="model">product.product</field>
-            <field name="type">tree</field>
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
                 <tree string="Product Margins">

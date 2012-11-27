@@ -75,16 +75,26 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                     statement.currency.id, amount, context=ctx)
 
             context.update({'move_line_ids': [line.id]})
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=abs(amount), currency_id= statement.currency.id, ttype=(amount < 0 and 'payment' or 'receipt'), date=line_date, context=context)
-            voucher_res = { 'type':(amount < 0 and 'payment' or 'receipt'),
+            type = 'general'
+            ttype = amount < 0 and 'payment' or 'receipt'
+            sign = 1
+            if line.journal_id.type in ('sale', 'sale_refund'):
+                type = 'customer'
+                ttype = 'receipt'
+            elif line.journal_id.type in ('purchase', 'purhcase_refund'):
+                type = 'supplier'
+                ttype = 'payment'
+                sign = -1
+            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=line.partner_id.id, journal_id=statement.journal_id.id, amount=sign*amount, currency_id= statement.currency.id, ttype=ttype, date=line_date, context=context)
+            voucher_res = { 'type': ttype,
                             'name': line.name,
                             'partner_id': line.partner_id.id,
                             'journal_id': statement.journal_id.id,
-                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id), # improve me: statement.journal_id.default_credit_account_id.id
-                            'company_id':statement.company_id.id,
-                            'currency_id':statement.currency.id,
-                            'date':line.date,
-                            'amount':abs(amount),
+                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
+                            'company_id': statement.company_id.id,
+                            'currency_id': statement.currency.id,
+                            'date': line.date,
+                            'amount': sign*amount,
                             'period_id':statement.period_id.id}
             voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
 
@@ -97,12 +107,6 @@ class account_statement_from_invoice_lines(osv.osv_memory):
             if voucher_line_dict:
                 voucher_line_dict.update({'voucher_id': voucher_id})
                 voucher_line_obj.create(cr, uid, voucher_line_dict, context=context)
-            if line.journal_id.type == 'sale':
-                type = 'customer'
-            elif line.journal_id.type == 'purchase':
-                type = 'supplier'
-            else:
-                type = 'general'
             statement_line_obj.create(cr, uid, {
                 'name': line.name or '?',
                 'amount': amount,
@@ -112,81 +116,10 @@ class account_statement_from_invoice_lines(osv.osv_memory):
                 'statement_id': statement_id,
                 'ref': line.ref,
                 'voucher_id': voucher_id,
-                'date': time.strftime('%Y-%m-%d'), #time.strftime('%Y-%m-%d'), #line.date_maturity or,
+                'date': time.strftime('%Y-%m-%d'),
             }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
 account_statement_from_invoice_lines()
 
-class account_statement_from_invoice(osv.osv_memory):
-    """
-    Generate Entries by Statement from Invoices
-    """
-    _name = "account.statement.from.invoice"
-    _description = "Entries by Statement from Invoices"
-    _columns = {
-        'date': fields.date('Date payment',required=True),
-        'journal_ids': fields.many2many('account.journal', 'account_journal_relation', 'account_id', 'journal_id', 'Journal'),
-        'line_ids': fields.many2many('account.move.line', 'account_move_line_relation', 'move_id', 'line_id', 'Invoices'),
-    }
-    _defaults = {
-        'date': lambda *a: time.strftime('%Y-%m-%d'),
-    }
-
-    def search_invoices(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        line_obj = self.pool.get('account.move.line')
-        statement_obj = self.pool.get('account.bank.statement')
-        journal_obj = self.pool.get('account.journal')
-        mod_obj = self.pool.get('ir.model.data')
-        statement_id = 'statement_id' in context and context['statement_id']
-
-        data =  self.read(cr, uid, ids, context=context)[0]
-        statement = statement_obj.browse(cr, uid, statement_id, context=context)
-        args_move_line = []
-        repeated_move_line_ids = []
-        # Creating a group that is unique for importing move lines(move lines, once imported into statement lines, should not appear again)
-        for st_line in statement.line_ids:
-            args_move_line = []
-            args_move_line.append(('name', '=', st_line.name))
-            args_move_line.append(('ref', '=', st_line.ref))
-            if st_line.partner_id:
-                args_move_line.append(('partner_id', '=', st_line.partner_id.id))
-            args_move_line.append(('account_id', '=', st_line.account_id.id))
-
-            move_line_id = line_obj.search(cr, uid, args_move_line, context=context)
-            if move_line_id:
-                repeated_move_line_ids += move_line_id
-
-        journal_ids = data['journal_ids']
-        if journal_ids == []:
-            journal_ids = journal_obj.search(cr, uid, [('type', 'in', ('sale', 'cash', 'purchase'))], context=context)
-
-        args = [
-            ('reconcile_id', '=', False),
-            ('journal_id', 'in', journal_ids),
-            ('account_id.reconcile', '=', True)]
-
-        if repeated_move_line_ids:
-            args.append(('id', 'not in', repeated_move_line_ids))
-
-        line_ids = line_obj.search(cr, uid, args,
-            context=context)
-
-        model_data_ids = mod_obj.search(cr, uid, [('model', '=', 'ir.ui.view'), ('name', '=', 'view_account_statement_from_invoice_lines')], context=context)
-        resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
-        return {
-            'domain': "[('id','in', ["+','.join([str(x) for x in line_ids])+"])]",
-            'name': _('Import Entries'),
-            'context': context,
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'account.statement.from.invoice.lines',
-            'views': [(resource_id,'form')],
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-        }
-
-account_statement_from_invoice()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

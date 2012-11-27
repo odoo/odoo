@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2010-09-09 07:17+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:06+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -24,12 +24,7 @@ msgstr "Ücret"
 #. module: hr_contract
 #: view:hr.contract:0
 msgid "Information"
-msgstr ""
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Deneme Süresi"
+msgstr "Bilgi"
 
 #. module: hr_contract
 #: field:hr.contract,trial_date_start:0
@@ -37,24 +32,9 @@ msgid "Trial Start Date"
 msgstr "Deneme Başlangıç Tarihi"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Sağlık Kontrolü"
-
-#. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Firma Araçı"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr "Çeşitli"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Güncel"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -65,11 +45,6 @@ msgstr "Gruplandır..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Bölüm"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr "Geçilen"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -85,16 +60,7 @@ msgstr "Sözleşme Ara"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Ev_İş Mesafesi"
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -103,14 +69,9 @@ msgid "Contracts"
 msgstr "Sözleşmeler"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Personel Bilgisi"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
-msgstr ""
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Çocuk Sayısı"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -123,25 +84,14 @@ msgid "Job"
 msgstr "İş"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr "Avantajlar"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr "Geçerliliği"
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
 msgstr "Çalışma İzni"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Çocuk Sayısı"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -150,9 +100,9 @@ msgid "Contract Types"
 msgstr "Sözleşme Türleri"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Hata ! Yinelemeli Personel Sıradizini yaratamazsınız."
+#: view:hr.employee:0
+msgid "Medical Exam"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -162,7 +112,7 @@ msgstr "Bitiş Tarihi"
 #. module: hr_contract
 #: help:hr.contract,wage:0
 msgid "Basic Salary of the employee"
-msgstr ""
+msgstr "Çalışanın Temel Ücreti"
 
 #. module: hr_contract
 #: field:hr.contract,name:0
@@ -183,10 +133,11 @@ msgstr "Notlar"
 #. module: hr_contract
 #: field:hr.contract,permit_no:0
 msgid "Work Permit No"
-msgstr ""
+msgstr "İş İzin No"
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -209,19 +160,19 @@ msgid "Working Schedule"
 msgstr "Çalışma Planı"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr "İş Bilgisi"
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
 msgstr "İş Ünvanı"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -234,14 +185,18 @@ msgid "Start Date"
 msgstr "Baş. Tarihi"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
-"Hata! sözleşme başlangıç tarihi sözleşme bitiş tarihinden önce olmalı."
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Denem Bitiş Tarihi"
 
 #. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
+msgstr "Vize No"
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
@@ -251,8 +206,18 @@ msgstr "Doğum Yeri"
 
 #. module: hr_contract
 #: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 msgid "Duration"
 msgstr "Süre"
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr "Vize Bitiş Tarihi"
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -260,9 +225,9 @@ msgid "Medical Examination Date"
 msgstr "Sağlık Kontrolü Tarihi"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Denem Bitiş Tarihi"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract.type:0
@@ -341,17 +306,42 @@ msgstr "Sözleşme Türü Ara"
 #~ msgid "Gross"
 #~ msgstr "Brüt"
 
+#~ msgid "Miscellaneous"
+#~ msgstr "Çeşitli"
+
+#~ msgid "Current"
+#~ msgstr "Güncel"
+
+#~ msgid "Medical Examination"
+#~ msgstr "Sağlık Kontrolü"
+
+#~ msgid "Trial Period"
+#~ msgstr "Deneme Süresi"
+
 #~ msgid "Basic"
 #~ msgstr "Temel"
 
 #~ msgid "Net"
 #~ msgstr "Net"
 
+#~ msgid "Personal Info"
+#~ msgstr "Personel Bilgisi"
+
 #~ msgid "Hours in the period"
 #~ msgstr "Dönemdeki Saat Miktarı"
 
+#~ msgid "Home-Work Distance"
+#~ msgstr "Ev_İş Mesafesi"
+
+#~ msgid "Valid for"
+#~ msgstr "Geçerliliği"
+
 #~ msgid "Deductions"
 #~ msgstr "Kesintiler"
+
+#~ msgid "Error! contract start-date must be lower then contract end-date."
+#~ msgstr ""
+#~ "Hata! sözleşme başlangıç tarihi sözleşme bitiş tarihinden önce olmalı."
 
 #~ msgid "Search Wage Type"
 #~ msgstr "Ücret Türü Ara"
@@ -359,6 +349,9 @@ msgstr "Sözleşme Türü Ara"
 #~ msgid ""
 #~ "Error ! You cannot select a department for which the employee is the manager."
 #~ msgstr "Hata ! Personelin yönetici olduğu bir bölümü seçemezsiniz."
+
+#~ msgid "Job Info"
+#~ msgstr "İş Bilgisi"
 
 #~ msgid "Search Wage Period"
 #~ msgstr "Ücret Dönemi Ara"
@@ -368,6 +361,9 @@ msgstr "Sözleşme Türü Ara"
 
 #~ msgid "Main Data"
 #~ msgstr "Ana Veri"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Hata ! Yinelemeli Personel Sıradizini yaratamazsınız."
 
 #~ msgid "Period"
 #~ msgstr "Dönem"
@@ -389,9 +385,18 @@ msgstr "Sözleşme Türü Ara"
 #~ "    Bir çalışana birçok sözleşme uygulayabilirsiniz.\n"
 #~ "    "
 
+#~ msgid "Overpassed"
+#~ msgstr "Geçilen"
+
 #~ msgid ""
 #~ "This field is used by the timesheet system to compute the price of an hour "
 #~ "of work wased on the contract of the employee"
 #~ msgstr ""
 #~ "Bu alan, çalışanaın sözleşmesine göre zaman çizelgesinde bir saatlik iş "
 #~ "ücretinin hesaplanmasında kullanılır."
+
+#~ msgid "Contracts in progress"
+#~ msgstr "Sürmekte olan sözleşmeler"
+
+#~ msgid "Contracts whose end date already passed"
+#~ msgstr "Bitiş tarihi çoktan geçmiş sözleşmeler"

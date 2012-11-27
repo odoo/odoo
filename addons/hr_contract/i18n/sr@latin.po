@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2011-01-21 11:41+0000\n"
 "Last-Translator: Sonja Anđelković <sardelic.sonja@gmail.com>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:06+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_contract
 #: field:hr.contract,wage:0
@@ -28,34 +28,14 @@ msgid "Information"
 msgstr ""
 
 #. module: hr_contract
-#: view:hr.contract:0
-msgid "Trial Period"
-msgstr "Probni period"
-
-#. module: hr_contract
 #: field:hr.contract,trial_date_start:0
 msgid "Trial Start Date"
 msgstr "Datum početka Probnog Perioda"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Medical Examination"
-msgstr "Lekarski Pregled"
-
-#. module: hr_contract
 #: field:hr.employee,vehicle:0
 msgid "Company Vehicle"
 msgstr "Vozilo firme"
-
-#. module: hr_contract
-#: view:hr.employee:0
-msgid "Miscellaneous"
-msgstr "Razno"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Current"
-msgstr "Trenutno"
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -66,11 +46,6 @@ msgstr "Grupiši po..."
 #: field:hr.contract,department_id:0
 msgid "Department"
 msgstr "Odeljenje"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Overpassed"
-msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
@@ -86,16 +61,7 @@ msgstr "Pretraga ugovora"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Contracts in progress"
-msgstr ""
-
-#. module: hr_contract
-#: field:hr.employee,vehicle_distance:0
-msgid "Home-Work Distance"
-msgstr "Udaljenost Kuća-Posao"
-
-#. module: hr_contract
-#: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_ids:0
 #: model:ir.actions.act_window,name:hr_contract.act_hr_employee_2_hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract
@@ -104,14 +70,9 @@ msgid "Contracts"
 msgstr "Ugovori"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Personal Info"
-msgstr "Lične informacije"
-
-#. module: hr_contract
-#: view:hr.contract:0
-msgid "Contracts whose end date already passed"
-msgstr ""
+#: field:hr.employee,children:0
+msgid "Number of Children"
+msgstr "Broj dece"
 
 #. module: hr_contract
 #: help:hr.employee,contract_id:0
@@ -124,25 +85,14 @@ msgid "Job"
 msgstr "Posao"
 
 #. module: hr_contract
-#: view:hr.contract:0
 #: field:hr.contract,advantages:0
 msgid "Advantages"
 msgstr "Prednosti"
 
 #. module: hr_contract
 #: view:hr.contract:0
-msgid "Valid for"
-msgstr "Važeći za"
-
-#. module: hr_contract
-#: view:hr.contract:0
 msgid "Work Permit"
 msgstr "Radna dozvola"
-
-#. module: hr_contract
-#: field:hr.employee,children:0
-msgid "Number of Children"
-msgstr "Broj dece"
 
 #. module: hr_contract
 #: model:ir.actions.act_window,name:hr_contract.action_hr_contract_type
@@ -151,9 +101,9 @@ msgid "Contract Types"
 msgstr "Tip ugovora"
 
 #. module: hr_contract
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Greška! Ne možete da kreirate rekurzivnu Hierarhiju Zaposlenih"
+#: view:hr.employee:0
+msgid "Medical Exam"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,date_end:0
@@ -188,6 +138,7 @@ msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract:0
+#: view:hr.employee:0
 #: field:hr.employee,contract_id:0
 #: model:ir.model,name:hr_contract.model_hr_contract
 #: model:ir.ui.menu,name:hr_contract.next_id_56
@@ -210,19 +161,19 @@ msgid "Working Schedule"
 msgstr "Raspored rada"
 
 #. module: hr_contract
-#: view:hr.employee:0
-msgid "Job Info"
-msgstr "Informacije o poslu"
-
-#. module: hr_contract
-#: field:hr.contract,visa_expire:0
-msgid "Visa Expire Date"
+#: view:hr.contract:0
+msgid "Salary and Advantages"
 msgstr ""
 
 #. module: hr_contract
 #: field:hr.contract,job_id:0
 msgid "Job Title"
 msgstr "Naziv posla"
+
+#. module: hr_contract
+#: constraint:hr.contract:0
+msgid "Error! Contract start-date must be less than contract end-date."
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,manager:0
@@ -235,14 +186,18 @@ msgid "Start Date"
 msgstr "Datum početka"
 
 #. module: hr_contract
-#: constraint:hr.contract:0
-msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
-"Greška! datum početka ugovora mora da bude manji od datuma završetka."
+#: field:hr.contract,trial_date_end:0
+msgid "Trial End Date"
+msgstr "Datum završetka probe"
 
 #. module: hr_contract
 #: field:hr.contract,visa_no:0
 msgid "Visa No"
+msgstr ""
+
+#. module: hr_contract
+#: field:hr.employee,vehicle_distance:0
+msgid "Home-Work Dist."
 msgstr ""
 
 #. module: hr_contract
@@ -252,8 +207,18 @@ msgstr "Mesto rođenja"
 
 #. module: hr_contract
 #: view:hr.contract:0
+msgid "Trial Period Duration"
+msgstr ""
+
+#. module: hr_contract
+#: view:hr.contract:0
 msgid "Duration"
 msgstr "Trajanje"
+
+#. module: hr_contract
+#: field:hr.contract,visa_expire:0
+msgid "Visa Expire Date"
+msgstr ""
 
 #. module: hr_contract
 #: field:hr.employee,medic_exam:0
@@ -261,14 +226,17 @@ msgid "Medical Examination Date"
 msgstr "Datum medicinskog pregleda"
 
 #. module: hr_contract
-#: field:hr.contract,trial_date_end:0
-msgid "Trial End Date"
-msgstr "Datum završetka probe"
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
 
 #. module: hr_contract
 #: view:hr.contract.type:0
 msgid "Search Contract Type"
 msgstr "Pretraga Tipa ugovora"
+
+#~ msgid "Medical Examination"
+#~ msgstr "Lekarski Pregled"
 
 #~ msgid "Hourly cost computation"
 #~ msgstr "Proračun troškova po satu"
@@ -276,11 +244,20 @@ msgstr "Pretraga Tipa ugovora"
 #~ msgid "Gross"
 #~ msgstr "Bruto"
 
+#~ msgid "Trial Period"
+#~ msgstr "Probni period"
+
 #~ msgid "Passport"
 #~ msgstr "Pasoš"
 
 #~ msgid "Wage Type Name"
 #~ msgstr "Naziv Vrste Ugovora"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Razno"
+
+#~ msgid "Current"
+#~ msgstr "Trenutno"
 
 #~ msgid "Factor for hour cost"
 #~ msgstr "Faktor za utrošak po satu"
@@ -299,6 +276,12 @@ msgstr "Pretraga Tipa ugovora"
 
 #~ msgid "Hours in the period"
 #~ msgstr "Sati u periodu"
+
+#~ msgid "Home-Work Distance"
+#~ msgstr "Udaljenost Kuća-Posao"
+
+#~ msgid "Personal Info"
+#~ msgstr "Lične informacije"
 
 #~ msgid "Deductions"
 #~ msgstr "Odbitak"
@@ -321,8 +304,14 @@ msgstr "Pretraga Tipa ugovora"
 #~ "    Možete da dodelite više ugovora jednom zaposlenom.\n"
 #~ "    "
 
+#~ msgid "Valid for"
+#~ msgstr "Važeći za"
+
 #~ msgid "Wage Type"
 #~ msgstr "Vrsta Plate"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Greška! Ne možete da kreirate rekurzivnu Hierarhiju Zaposlenih"
 
 #~ msgid ""
 #~ "Error ! You cannot select a department for which the employee is the manager."
@@ -332,8 +321,15 @@ msgstr "Pretraga Tipa ugovora"
 #~ msgid "Search Wage Period"
 #~ msgstr "Pretraga Perioda Plate"
 
+#~ msgid "Job Info"
+#~ msgstr "Informacije o poslu"
+
 #~ msgid "Wage Period"
 #~ msgstr "Period Plate"
+
+#~ msgid "Error! contract start-date must be lower then contract end-date."
+#~ msgstr ""
+#~ "Greška! datum početka ugovora mora da bude manji od datuma završetka."
 
 #~ msgid "Search Wage Type"
 #~ msgstr "Pretraga tipa plate"

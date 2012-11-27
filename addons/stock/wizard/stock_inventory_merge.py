@@ -40,7 +40,7 @@ class stock_inventory_merge(osv.osv_memory):
             context={}
         res = super(stock_inventory_merge, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar,submenu=False)
         if context.get('active_model','') == 'stock.inventory' and len(context['active_ids']) < 2:
-            raise osv.except_osv(_('Warning'),
+            raise osv.except_osv(_('Warning!'),
             _('Please select multiple physical inventories to merge in the list view.'))
         return res    
         
@@ -60,7 +60,7 @@ class stock_inventory_merge(osv.osv_memory):
             context = {}
         for inventory in invent_obj.browse(cr, uid, context['active_ids'], context=context):
             if inventory.state == "done":
-                raise osv.except_osv(_('Warning'),
+                raise osv.except_osv(_('Warning!'),
                 _('Merging is only allowed on draft inventories.'))
 
             for line in inventory.inventory_line_id:

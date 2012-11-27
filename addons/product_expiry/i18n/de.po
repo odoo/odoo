@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2010-12-29 10:20+0000\n"
 "Last-Translator: Thorsten Vocks (OpenBig.org) <thorsten.vocks@big-"
 "consulting.net>\n"
@@ -15,13 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:16+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
-
-#. module: product_expiry
-#: model:ir.model,name:product_expiry.model_stock_production_lot
-msgid "Production lot"
-msgstr "Fertigungslos"
+"X-Launchpad-Export-Date: 2012-11-25 06:21+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_from_product_template
@@ -39,12 +34,18 @@ msgid "Product Life Time"
 msgstr "Verfalldauer"
 
 #. module: product_expiry
-#: help:stock.production.lot,use_date:0
+#: help:stock.production.lot,removal_date:0
 msgid ""
-"The date on which the lot starts deteriorating without becoming dangerous."
+"This is the date on which the goods with this Serial Number should be "
+"removed from the stock."
 msgstr ""
-"Der Tag ab dem sich die Qualität verschlechtert, ohne dass die Produkte "
-"bereits unbrauchbar sind."
+
+#. module: product_expiry
+#: help:product.product,removal_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods should be removed from the stock."
+msgstr ""
 
 #. module: product_expiry
 #: field:product.product,use_time:0
@@ -54,14 +55,8 @@ msgstr "Mindesthaltbarkeit"
 #. module: product_expiry
 #: sql_constraint:stock.production.lot:0
 msgid ""
-"The combination of serial number and internal reference must be unique !"
+"The combination of Serial Number and internal reference must be unique !"
 msgstr ""
-"Die Kombination von Serinenummer und interner Referenz muss eindeutig sein."
-
-#. module: product_expiry
-#: help:stock.production.lot,removal_date:0
-msgid "The date on which the lot should be removed."
-msgstr "Datum ab dem das Fertigungslos nicht mehr verwendet werden sollte."
 
 #. module: product_expiry
 #: model:ir.model,name:product_expiry.model_product_product
@@ -69,11 +64,16 @@ msgid "Product"
 msgstr "Produkt"
 
 #. module: product_expiry
-#: help:product.product,alert_time:0
+#: help:product.product,use_time:0
 msgid ""
-"The number of days after which an alert should be notified about the "
-"production lot."
-msgstr "Anzahl der Tage nachdem ein Alarm ausgegeben werden soll."
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods starts deteriorating, without being dangerous yet."
+msgstr ""
+
+#. module: product_expiry
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
 
 #. module: product_expiry
 #: field:product.product,removal_time:0
@@ -81,17 +81,35 @@ msgid "Product Removal Time"
 msgstr "Dauer bis Vernichtung"
 
 #. module: product_expiry
+#: help:stock.production.lot,alert_date:0
+msgid ""
+"This is the date on which an alert should be notified about the goods with "
+"this Serial Number."
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_stock_production_lot
+msgid "Serial Number"
+msgstr ""
+
+#. module: product_expiry
+#: help:product.product,alert_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before an "
+"alert should be notified."
+msgstr ""
+
+#. module: product_expiry
 #: field:stock.production.lot,removal_date:0
 msgid "Removal Date"
 msgstr "Datum der Vernichtung"
 
 #. module: product_expiry
-#: help:stock.production.lot,life_date:0
+#: constraint:product.product:0
 msgid ""
-"The date on which the lot may become dangerous and should not be consumed."
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
 msgstr ""
-"Datum nachdem die Losnummer verschieden und nicht mehr benutzt werden "
-"sollten."
 
 #. module: product_expiry
 #: model:product.template,name:product_expiry.product_product_pain_product_template
@@ -99,14 +117,7 @@ msgid "Bread"
 msgstr "Brot"
 
 #. module: product_expiry
-#: model:product.uom,name:product_expiry.product_uom_ltr
-#: model:product.uom.categ,name:product_expiry.product_uom_categ_vol
-msgid "LTR"
-msgstr "Produkthaltbarkeit"
-
-#. module: product_expiry
 #: view:product.product:0
-#: view:stock.production.lot:0
 msgid "Dates"
 msgstr "Haltbarkeitsdauern"
 
@@ -126,9 +137,11 @@ msgid "French cheese Camenbert"
 msgstr "französicher Camembert"
 
 #. module: product_expiry
-#: help:product.product,removal_time:0
-msgid "The number of days before a production lot should be removed."
-msgstr "Tage bis ein Los vernichtet oder anderweitig verwertet werden soll"
+#: help:product.product,life_time:0
+msgid ""
+"When a new a Serial Number is issued, this is the number of days before the "
+"goods may become dangerous and must not be consumed."
+msgstr ""
 
 #. module: product_expiry
 #: field:stock.production.lot,alert_date:0
@@ -136,35 +149,18 @@ msgid "Alert Date"
 msgstr "Alarmzeitpunkt"
 
 #. module: product_expiry
-#: help:product.product,use_time:0
+#: help:stock.production.lot,use_date:0
 msgid ""
-"The number of days before a production lot starts deteriorating without "
-"becoming dangerous."
+"This is the date on which the goods with this Serial Number start "
+"deteriorating, without being dangerous yet."
 msgstr ""
-"Die Anzahl der Tage bevor ein Los schlechter wird ohne gefährlich zu werden "
-"(mindestens Haltbar bis ...)"
 
 #. module: product_expiry
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Fehler: Falscher EAN code"
-
-#. module: product_expiry
-#: help:product.product,life_time:0
+#: help:stock.production.lot,life_date:0
 msgid ""
-"The number of days before a production lot may become dangerous and should "
-"not be consumed."
+"This is the date on which the goods with this Serial Number may become "
+"dangerous and must not be consumed."
 msgstr ""
-"Die Anzahl der Tage bevor ein Produkt gefährlich wird und nicht mehr "
-"verwendet werden sollte (Verwendbar bis ...)"
-
-#. module: product_expiry
-#: help:stock.production.lot,alert_date:0
-msgid ""
-"The date on which an alert should be notified about the production lot."
-msgstr ""
-"Das Datum, an dem eine Benachrichtung für den Fertgungsauftrag generiert "
-"werden kann"
 
 #. module: product_expiry
 #: field:product.product,alert_time:0
@@ -180,6 +176,9 @@ msgstr "Datum Ablaufwarnung"
 #~ msgid "Product usetime"
 #~ msgstr "Produkt Verwendungsdauer"
 
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Fehler: Falscher EAN code"
+
 #~ msgid "Product removal time"
 #~ msgstr "Produkt Entfernungszeitpunkt"
 
@@ -190,6 +189,9 @@ msgstr "Datum Ablaufwarnung"
 #~ msgstr ""
 #~ "Fehler: Die Verkaufseinheit sollte in einer anderen Kategorie sein als die "
 #~ "Mengeneinheit"
+
+#~ msgid "Production lot"
+#~ msgstr "Fertigungslos"
 
 #~ msgid "Products date of expiry"
 #~ msgstr "Produkte Verwendungsdauer und Ablaufwarnung"
@@ -222,6 +224,9 @@ msgstr "Datum Ablaufwarnung"
 #~ "- Datum der Vernichtung \n"
 #~ "- Datum der Ablaufwarnung"
 
+#~ msgid "LTR"
+#~ msgstr "Produkthaltbarkeit"
+
 #~ msgid "The date the lot starts deteriorating without becoming dangerous."
 #~ msgstr ""
 #~ "Das Datum, ab dem das Produkt schlechter wird ohne gefährlich zu werden (... "
@@ -229,6 +234,54 @@ msgstr "Datum Ablaufwarnung"
 #~ "die zwar ohneGefahr verzehrt werden können, aber z.B. "
 #~ "geschmacklichbeeinträchtigt sind."
 
+#~ msgid "The number of days before a production lot should be removed."
+#~ msgstr "Tage bis ein Los vernichtet oder anderweitig verwertet werden soll"
+
+#~ msgid ""
+#~ "The number of days before a production lot starts deteriorating without "
+#~ "becoming dangerous."
+#~ msgstr ""
+#~ "Die Anzahl der Tage bevor ein Los schlechter wird ohne gefährlich zu werden "
+#~ "(mindestens Haltbar bis ...)"
+
+#~ msgid ""
+#~ "The number of days before a production lot may become dangerous and should "
+#~ "not be consumed."
+#~ msgstr ""
+#~ "Die Anzahl der Tage bevor ein Produkt gefährlich wird und nicht mehr "
+#~ "verwendet werden sollte (Verwendbar bis ...)"
+
 #~ msgid "The date the lot should be removed."
 #~ msgstr ""
 #~ "Datum an dem das Los vernichtet oder anderweitig verwertet werden soll"
+
+#~ msgid ""
+#~ "The number of days after which an alert should be notified about the "
+#~ "production lot."
+#~ msgstr "Anzahl der Tage nachdem ein Alarm ausgegeben werden soll."
+
+#~ msgid ""
+#~ "The date on which the lot starts deteriorating without becoming dangerous."
+#~ msgstr ""
+#~ "Der Tag ab dem sich die Qualität verschlechtert, ohne dass die Produkte "
+#~ "bereits unbrauchbar sind."
+
+#~ msgid ""
+#~ "The combination of serial number and internal reference must be unique !"
+#~ msgstr ""
+#~ "Die Kombination von Serinenummer und interner Referenz muss eindeutig sein."
+
+#~ msgid ""
+#~ "The date on which an alert should be notified about the production lot."
+#~ msgstr ""
+#~ "Das Datum, an dem eine Benachrichtung für den Fertgungsauftrag generiert "
+#~ "werden kann"
+
+#~ msgid ""
+#~ "The date on which the lot may become dangerous and should not be consumed."
+#~ msgstr ""
+#~ "Datum nachdem die Losnummer verschieden und nicht mehr benutzt werden "
+#~ "sollten."
+
+#~ msgid "The date on which the lot should be removed."
+#~ msgstr "Datum ab dem das Fertigungslos nicht mehr verwendet werden sollte."

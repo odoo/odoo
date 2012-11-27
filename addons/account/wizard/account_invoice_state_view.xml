@@ -4,10 +4,14 @@
         <record id="account_invoice_confirm_view" model="ir.ui.view">
             <field name="name">account.invoice.confirm.form</field>
             <field name="model">account.invoice.confirm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Confirm Draft Invoices" version="7.0">
-                    <separator string="Confirm Draft Invoices"/>
+                    <p class="oe_grey">
+                        Once draft invoices are confirmed, you will not be able
+                        to modify them. The invoices will receive a unique
+                        number and journal items will be created in your chart
+                        of accounts.
+                    </p>
                     <footer>
                         <button string="Confirm Invoices" name="invoice_confirm" type="object" default_focus="1" class="oe_highlight"/>
                         or
@@ -26,10 +30,8 @@
         <record id="account_invoice_cancel_view" model="ir.ui.view">
             <field name="name">account.invoice.cancel.form</field>
             <field name="model">account.invoice.cancel</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cancel Selected Invoices" version="7.0">
-                    <separator string="Cancel Selected Invoices"/>
                     <footer>
                         <button string="Cancel Invoices" name="invoice_cancel" type="object" default_focus="1" class="oe_highlight"/>
                         or

@@ -34,7 +34,7 @@ class crossovered_analytic(report_sxw.rml_parse):
         })
         self.base_amount = 0.00
 
-    def find_children(self,ref_ids):
+    def find_children(self, ref_ids):
         to_return_ids = []
         final_list = []
         parent_list = []
@@ -53,7 +53,7 @@ class crossovered_analytic(report_sxw.rml_parse):
         final_list.extend(set_list)
         return final_list #to_return_ids[0]
 
-    def set_account(self,cats):
+    def set_account(self, cats):
         lst = []
         category = self.pool.get('account.analytic.account').read(self.cr, self.uid, cats)
         for cat in category:
@@ -62,7 +62,7 @@ class crossovered_analytic(report_sxw.rml_parse):
                 lst.extend(self.set_account(cat['child_ids']))
         return lst
 
-    def _ref_lines(self,form):
+    def _ref_lines(self, form):
         result = []
         res = {}
         acc_pool = self.pool.get('account.analytic.account')
@@ -112,7 +112,9 @@ class crossovered_analytic(report_sxw.rml_parse):
         result.append(res)
         return result
 
-    def _lines(self, form, ids={}):
+    def _lines(self, form, ids=None):
+        if ids is None:
+            ids = {}
         if not ids:
             ids = self.ids
 

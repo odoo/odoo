@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-05-21 11:09+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -57,6 +57,11 @@ msgid "Cancel selected statement lines"
 msgstr "Anuleaza liniile selectate ale extrasului de cont"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
 msgstr "Codul RIB si/sau IBAN nu este valabil"
@@ -65,11 +70,6 @@ msgstr "Codul RIB si/sau IBAN nu este valabil"
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "Grupeaza dupa..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "Stare"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,19 +107,32 @@ msgid "Batch Payment Info"
 msgstr "Informatii Plata Lot"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "Confirma Liniile"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr ""
-"Operatiune de stergere nepermisa! Va rugam sa mergeti la extrasul de cont "
-"asociat pentru a sterge si/sau modifica aceasta linie a extrasului de cont"
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "Tranzactii"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -128,7 +141,6 @@ msgstr "Tip:"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "Jurnal"
@@ -152,17 +164,6 @@ msgstr "anuleaza liniile extrasului de cont selectat."
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "Numar Echivalent"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "Tranzactii"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "Atentionare"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -207,16 +208,6 @@ msgstr ""
 "tip IBAN sa faca plati valabile"
 
 #. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "Data Valuta"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "Confirmati liniile extrasului de cont selectat."
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
@@ -241,6 +232,11 @@ msgstr "Note"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "Manual"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -280,14 +276,6 @@ msgstr ""
 "?"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"Suma de pe chitanta trebuie sa fie aceeasi ca si cea din linia extrasului"
-
-#. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
 msgid ""
 "Code to identify transactions belonging to the same globalisation level "
@@ -315,6 +303,13 @@ msgstr "Linie extras de cont"
 #: field:account.bank.statement.line.global,code:0
 msgid "Code"
 msgstr "Cod"
+
+#. module: account_bank_statement_extensions
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
@@ -359,12 +354,17 @@ msgid "Bank Statement Lines"
 msgstr "Linii Extras de cont"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "Plati secundare lot"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "Anuleaza"
@@ -383,3 +383,30 @@ msgstr "Suma totala"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "ID globalizare"
+
+#~ msgid "State"
+#~ msgstr "Stare"
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr ""
+#~ "Operatiune de stergere nepermisa! Va rugam sa mergeti la extrasul de cont "
+#~ "asociat pentru a sterge si/sau modifica aceasta linie a extrasului de cont"
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Atentionare"
+
+#~ msgid "Valuta Date"
+#~ msgstr "Data Valuta"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "Confirmati liniile extrasului de cont selectat."
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "Suma de pe chitanta trebuie sa fie aceeasi ca si cea din linia extrasului"

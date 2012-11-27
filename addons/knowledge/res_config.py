@@ -25,18 +25,16 @@ class knowledge_config_settings(osv.osv_memory):
     _name = 'knowledge.config.settings'
     _inherit = 'res.config.settings'
     _columns = {
-        'module_wiki_faq': fields.boolean('Internal FAQ as a Wiki',
-            help="""This installs the module wiki_faq."""), 
-        'module_wiki_quality_manual': fields.boolean('Quality Manual as a Wiki',
-            help="""This installs the module wiki_quality_manual."""),
-        'module_document': fields.boolean('Document Management',
+        'module_document_page': fields.boolean('Create static web pages',
+            help="""This installs the module document_page."""),
+        'module_document': fields.boolean('Manage documents',
             help="""This is a complete document management system, with: user authentication,
                 full document search (but pptx and docx are not supported), and a document dashboard.
                 This installs the module document."""),
         'module_document_ftp': fields.boolean('Share repositories (FTP)',
             help="""Access your documents in OpenERP through an FTP interface.
                 This installs the module document_ftp."""),
-        'module_document_webdav': fields.boolean('Share Repositories (WebDAV)',
+        'module_document_webdav': fields.boolean('Share repositories (WebDAV)',
             help="""Access your documents in OpenERP through WebDAV.
                 This installs the module document_webdav."""),
     }

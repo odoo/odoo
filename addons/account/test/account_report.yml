@@ -4,7 +4,7 @@
   !record {model: account.invoice, id: test_invoice_1}:
     currency_id: base.EUR
     company_id: base.main_company
-    partner_id: base.res_partner_asus
+    partner_id: base.res_partner_1
     state: draft
     type: out_invoice
     account_id: account.a_recv
@@ -23,7 +23,7 @@
 -
   !python {model: res.partner}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_asus'),ref('base.res_partner_agrolait'),ref('base.res_partner_c2c')], {}, {})
+    (data, format) = netsvc.LocalService('report.account.overdue').create(cr, uid, [ref('base.res_partner_1'),ref('base.res_partner_2'),ref('base.res_partner_12')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'account-report_overdue.'+format), 'wb+').write(data)
 -
@@ -31,7 +31,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
     data_dict = {'chart_account_id':ref('account.chart0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_aged_balance_view',wiz_data=data_dict, context=ctx, our_module='account')
@@ -40,7 +39,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'), 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
@@ -49,7 +47,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_balance_menu',wiz_data=data_dict, context=ctx, our_module='account')
@@ -60,7 +57,6 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
                          ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
-    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
     data_dict = {'chart_account_id':ref('account.chart0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_central_journal',wiz_data=data_dict, context=ctx, our_module='account')
@@ -71,7 +67,6 @@
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),
                          ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
-    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
     data_dict = {'chart_account_id':ref('account.chart0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_journal',wiz_data=data_dict, context=ctx, our_module='account')
@@ -80,7 +75,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'landscape':False}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
@@ -89,7 +83,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'),'landscape':True}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_general_ledger_menu',wiz_data=data_dict, context=ctx, our_module='account')
@@ -99,7 +92,6 @@
   !python {model: account.journal.period}: |
     journal_ids = [ref('account.sales_journal'),ref('account.refund_sales_journal'),ref('account.expenses_journal'),ref('account.refund_expenses_journal'),ref('account.bank_journal'),ref('account.check_journal'),ref('account.cash_journal')]
     ctx={}
-    ctx.update({'model': 'account.journal.period','active_ids':journal_ids})
     data_dict = {'chart_account_id':ref('account.chart0'), 'period_from':ref('period_1'), 'period_to':ref('period_12')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_print_journal',wiz_data=data_dict, context=ctx, our_module='account')
@@ -109,7 +101,6 @@
   !python {model: account.account}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0')}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_partner_balance',wiz_data=data_dict, context=ctx, our_module='account')
 -
@@ -118,7 +109,6 @@
   !python {model: account.account}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0'),'page_split': True}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
 -
@@ -127,7 +117,6 @@
   !python {model: res.partner}: |
     ctx={}
     data_dict = {'chart_account_id':ref('account.chart0'),'page_split': False}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')],'active_id':ref('account.chart0')})
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_partner_ledger',wiz_data=data_dict, context=ctx, our_module='account')
 -
@@ -135,7 +124,6 @@
 -
   !python {model: account.account}: |
     ctx={}
-    ctx.update({'model': 'account.account','active_ids':[ref('account.chart0')]})
     data_dict = {'chart_account_id':ref('account.chart0'), 'target_move': 'all', 'account_report_id': ref('account_financial_report_balancesheet0')}
     from tools import test_reports
     test_reports.try_report_action(cr, uid, 'action_account_report',wiz_data=data_dict, context=ctx, our_module='account')
