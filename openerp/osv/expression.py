@@ -417,7 +417,23 @@ class expression(object):
         return ['"%s"' % item for item in self.table_aliases]
 
     def parse(self, cr, uid, exp, table, context):
-        """ transform the leaves of the expression """
+        """ Transform the leaves of the expression
+
+            For each element in the expression
+            1.  validity check: operator or True / False or a valid leaf
+            2.  TDE FIXME: TO COMPLETE
+
+            Some var explanation for those who have 2 bytes of brain cache memory like me and that cannot remember 32^16 similar variable names.
+                :var obj working_table: table object, table containing the field (the name provided in the left operand)
+                :var list field_path: left operand seen as a path (foo.bar -> [foo, bar])
+                :var string field_table: working_table._table
+                :var obj relational_table: relational table of a field (field._obj)
+                    ex: res_partner.bank_ids -> res_partner_bank
+                :var obj field_obj: deleted var, now renamed to relational_table
+
+            :param exp: expression (domain)
+            :param table: table object
+        """
         self.__exp = exp
         self.root_table = table
         self._add_table_alias(table._table, table)
@@ -445,7 +461,7 @@ class expression(object):
                     return ids + recursive_children(ids2, model, parent_field)
                 return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
 
-        def to_ids(value, field_obj):
+        def to_ids(value, relational_table):
             """Normalize a single id or name, or a list of those, into a list of ids"""
             names = []
             if isinstance(value, basestring):
@@ -453,7 +469,7 @@ class expression(object):
             if value and isinstance(value, (tuple, list)) and isinstance(value[0], basestring):
                 names = value
             if names:
-                return flatten([[x[0] for x in field_obj.name_search(cr, uid, n, [], 'ilike', context=context, limit=None)] \
+                return flatten([[x[0] for x in relational_table.name_search(cr, uid, n, [], 'ilike', context=context, limit=None)] \
                                     for n in names])
             elif isinstance(value, (int, long)):
                 return [value]
@@ -462,11 +478,16 @@ class expression(object):
         i = -1
         while i + 1 < len(self.__exp):
             i += 1
+
+            # 0 Preparation
+            #   - Check validity of current element of expression (operator OR True/False leaf OR leaf)
+            #   - Normalize the leaf's operator
+            #   - Set working variables
+
+            # check validity
             e = self.__exp[i]
             if is_operator(e) or e == TRUE_LEAF or e == FALSE_LEAF:
                 continue
-
-            # check if the expression is valid
             if not is_leaf(e):
                 raise ValueError("Invalid term %r in domain expression %r" % (e, exp))
 
@@ -475,11 +496,13 @@ class expression(object):
             self.__exp[i] = e
             left, operator, right = e
 
+            # working variables
             working_table = table  # The table containing the field (the name provided in the left operand)
             field_path = left.split('.', 1)
 
-            # If the field is _inherits'd, search for the working_table,
-            # and extract the field.
+            # 1 Handle inherits fields: replace by a join
+            #   - Search for the working_table and extract the field
+
             field = None
             if field_path[0] in table._inherit_fields:
                 while True:
@@ -496,6 +519,11 @@ class expression(object):
             else:
                 field = working_table._columns.get(field_path[0])
 
+            # 2 Field not found
+            #   - ('id', 'child_of', ids) and continue the processing OR
+            #   - field in magic columns (ex: id) and continue the processing OR
+            #   - raise an error
+
             if not field:
                 if left == 'id' and operator == 'child_of':
                     ids2 = to_ids(right, table)
@@ -509,14 +537,29 @@ class expression(object):
                         raise ValueError("Invalid field %r in domain expression %r" % (left, exp))
                 continue
 
-            field_obj = table.pool.get(field._obj)
+            # 3 Field found
+            #   - get relational table, existing for relational fields
+            #   - if domain is a path (ex: ('partner_id.name', '=', 'foo')):
+            #     replace all the expression by a normalized equivalent domain
+            #       - find the related ids: partner_id.name='foo' -> res_partner.search(('name', '=', 'foo')))
+            #       - many2one: leaf becomes directly ('partner_id', 'in', 'partner_ids')
+            #       - one2many:
+            #           - search on current table where partner_id is in partner_ids
+            #           - leaf becomes ('id', 'in', ids)
+            #       - get out of current leaf is field is not a property field
+            #   - if domain is not a path
+            #       - handle function fields
+            #       - handle one2many, many2many and many2one fields
+            #       - other fields: handle datetime and translatable fields
+
+            relational_table = table.pool.get(field._obj)
             if len(field_path) > 1:
                 if field._type == 'many2one':
-                    right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
+                    right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
                     self.__exp[i] = (field_path[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
-                    right = field_obj.search(cr, uid, [(field_path[1], operator, right)], context=context)
+                    right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=dict(context, active_test=False))
                     self.__exp[i] = ('id', 'in', right1)
 
@@ -552,9 +595,9 @@ class expression(object):
             elif field._type == 'one2many':
                 # Applying recursivity on field(one2many)
                 if operator == 'child_of':
-                    ids2 = to_ids(right, field_obj)
+                    ids2 = to_ids(right, relational_table)
                     if field._obj != working_table._name:
-                        dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
+                        dom = child_of_domain(left, ids2, relational_table, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
@@ -564,7 +607,7 @@ class expression(object):
 
                     if right is not False:
                         if isinstance(right, basestring):
-                            ids2 = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context, limit=None)]
+                            ids2 = [x[0] for x in relational_table.name_search(cr, uid, right, [], operator, context=context, limit=None)]
                             if ids2:
                                 operator = 'in'
                         else:
@@ -578,7 +621,7 @@ class expression(object):
                                 call_null = False
                                 self.__exp[i] = FALSE_LEAF
                         else:
-                            ids2 = select_from_where(cr, field._fields_id, field_obj._table, 'id', ids2, operator)
+                            ids2 = select_from_where(cr, field._fields_id, relational_table._table, 'id', ids2, operator)
                             if ids2:
                                 call_null = False
                                 o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
@@ -586,26 +629,26 @@ class expression(object):
 
                     if call_null:
                         o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, field_obj._table))
+                        self.__exp[i] = ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_table._table))
 
             elif field._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field._sql_names(working_table)
                 #FIXME
                 if operator == 'child_of':
                     def _rec_convert(ids):
-                        if field_obj == table:
+                        if relational_table == table:
                             return ids
                         return select_from_where(cr, rel_id1, rel_table, rel_id2, ids, operator)
 
-                    ids2 = to_ids(right, field_obj)
-                    dom = child_of_domain('id', ids2, field_obj)
-                    ids2 = field_obj.search(cr, uid, dom, context=context)
+                    ids2 = to_ids(right, relational_table)
+                    dom = child_of_domain('id', ids2, relational_table)
+                    ids2 = relational_table.search(cr, uid, dom, context=context)
                     self.__exp[i] = ('id', 'in', _rec_convert(ids2))
                 else:
                     call_null_m2m = True
                     if right is not False:
                         if isinstance(right, basestring):
-                            res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, context=context)]
+                            res_ids = [x[0] for x in relational_table.name_search(cr, uid, right, [], operator, context=context)]
                             if res_ids:
                                 operator = 'in'
                         else:
@@ -631,14 +674,14 @@ class expression(object):
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
-                    ids2 = to_ids(right, field_obj)
+                    ids2 = to_ids(right, relational_table)
                     if field._obj != working_table._name:
-                        dom = child_of_domain(left, ids2, field_obj, prefix=field._obj)
+                        dom = child_of_domain(left, ids2, relational_table, prefix=field._obj)
                     else:
                         dom = child_of_domain('id', ids2, working_table, parent=left)
                     self.__exp = self.__exp[:i] + dom + self.__exp[i + 1:]
                 else:
-                    def _get_expression(field_obj, cr, uid, left, right, operator, context=None):
+                    def _get_expression(relational_table, cr, uid, left, right, operator, context=None):
                         if context is None:
                             context = {}
                         c = context.copy()
@@ -653,14 +696,14 @@ class expression(object):
                             operator = dict_op[operator]
                         elif isinstance(right, list) and operator in ['!=', '=']:  # for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
-                        res_ids = [x[0] for x in field_obj.name_search(cr, uid, right, [], operator, limit=None, context=c)]
+                        res_ids = [x[0] for x in relational_table.name_search(cr, uid, right, [], operator, limit=None, context=c)]
                         if operator in NEGATIVE_TERM_OPERATORS:
                             res_ids.append(False)  # TODO this should not be appended if False was in 'right'
                         return (left, 'in', res_ids)
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
-                        self.__exp[i] = _get_expression(field_obj, cr, uid, left, right, operator, context=context)
+                        self.__exp[i] = _get_expression(relational_table, cr, uid, left, right, operator, context=context)
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         pass
