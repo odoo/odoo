@@ -39,6 +39,9 @@ import traceback
 import time
 
 import openerp
+
+from . import Command
+
 __author__ = openerp.release.author
 __version__ = openerp.release.version
 
@@ -218,11 +221,11 @@ def configure_babel_localedata_path():
         import babel
         babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
 
-def main():
+def main(args):
     os.environ["TZ"] = "UTC"
 
     check_root_user()
-    openerp.tools.config.parse_config(sys.argv[1:])
+    openerp.tools.config.parse_config(args)
 
     check_postgres_user()
     openerp.netsvc.init_logger()
@@ -265,7 +268,8 @@ def main():
     _logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()
 
-if __name__ == "__main__":
-    main()
+class Server(Command):
+    def run(self, args):
+        main(args)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
