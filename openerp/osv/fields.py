@@ -67,6 +67,7 @@ class _column(object):
     """
     _classic_read = True
     _classic_write = True
+    _auto_join = False
     _prefetch = True
     _properties = False
     _type = 'unknown'
