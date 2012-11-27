@@ -21,7 +21,7 @@ openerp.web_im = function(instance) {
     instance.web_im.ImTopButton = instance.web.Widget.extend({
         template:'ImTopButton',
         events: {
-            "click .oe_e": "clicked",
+            "click": "clicked",
         },
         clicked: function() {
             this.trigger("clicked");
