@@ -1,10 +1,21 @@
 import unittest2
-
+from openerp.osv.orm import BaseModel
 import openerp.tests.common as common
+
 
 class test_expression(common.TransactionCase):
 
-    def test_in_not_in_m2m(self):
+    def _reinit_mock(self):
+        self.query_list = list()
+
+    def _mock_base_model_where_calc(self, model, *args, **kwargs):
+        """ Mock build_email to be able to test its values. Store them into
+            some internal variable for latter processing. """
+        self.query_list.append(self._base_model_where_calc(model, *args, **kwargs))
+        # return the lastly stored query, the one the ORM wants to perform
+        return self.query_list[-1]
+
+    def test_00_in_not_in_m2m(self):
 
         registry, cr, uid = self.registry, self.cr, self.uid
 
@@ -70,3 +81,69 @@ class test_expression(common.TransactionCase):
         # self.assertTrue(a not in with_any_other_than_a, "Search for category_id with any other than cat_a failed (1).")
         # self.assertTrue(ab in with_any_other_than_a, "Search for category_id with any other than cat_a failed (2).")
 
+    def test_10_auto_join(self):
+        registry, cr, uid = self.registry, self.cr, self.uid
+
+        # Mock BaseModel._where_calc(), to be able to proceed to some tests about generated expression
+        self._reinit_mock()
+        self._base_model_where_calc = BaseModel._where_calc
+        BaseModel._where_calc = lambda model, cr, uid, args, context: self._mock_base_model_where_calc(model, cr, uid, args, context)
+
+        # Get models
+        partner_obj = registry('res.partner')
+        state_obj = registry('res.country.state')
+        bank_obj = registry('res.partner.bank')
+
+        # Get test columns
+        state_id_col = partner_obj._columns.get('state_id')  # many2one on res.partner to res.country.state
+        child_ids_col = partner_obj._columns.get('child_ids')  # one2many on res.partner to res.partner
+        bank_ids_col = partner_obj._columns.get('bank_ids')  # one2many on res.partner to res.partner.bank
+        country_id_col = state_obj._columns.get('country_id')  # many2one on res.country.state on res.country
+
+        # Get the first bank account type to be able to create a res.partner.bank
+        bank_type = bank_obj._bank_type_get(cr, uid)[0]
+
+        # Create demo data: partners and bank object
+        p_a = partner_obj.create(cr, uid, {'name': 'test__A'})
+        p_b = partner_obj.create(cr, uid, {'name': 'test__B'})
+        p_aa = partner_obj.create(cr, uid, {'name': 'test__AA', 'parent_id': p_a})
+        p_ab = partner_obj.create(cr, uid, {'name': 'test__AB', 'parent_id': p_a})
+        b_a = bank_obj.create(cr, uid, {'name': '__bank_test_a', 'state': bank_type[0], 'partner_id': p_a, 'acc_number': '1234'})
+
+        # ----------------------------------------
+        # Test2: one2many
+        # ----------------------------------------
+
+        name_test = 'test_a'
+
+        # Do: one2many without _auto_join
+        self._reinit_mock()
+        partner_ids = partner_obj.search(cr, uid, [('bank_ids.name', 'like', name_test)])
+        # Test result
+        self.assertEqual(set(partner_ids), set([p_a]), 'one2many without join failed')
+        # Test produced queries
+        self.assertEqual(len(self.query_list), 3,
+            "_auto_join off: ('bank_ids.name', 'like', '..') should produce 3 queries (1 in res_partner_bank, 1 on res_partner with active, 1 on res_partner)")
+        sql_query = self.query_list[0].get_sql()
+        self.assertIn('res_partner_bank', sql_query[0], "_auto_join off: ('bank_ids.name', 'like', '..') first query should be done in res_partner_bank")
+        self.assertIn('(res_partner_bank."name" like %s)', sql_query[1], "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect where condition")
+        self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]), "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect parameter")
+        sql_query = self.query_list[2].get_sql()
+        self.assertIn('res_partner', sql_query[0], "_auto_join off: ('bank_ids.name', 'like', '..') third query should be done in res_partner")
+        self.assertIn('(res_partner."id" in (%s))', sql_query[1], "_auto_join off: ('bank_ids.name', 'like', '..') third query incorrect where condition")
+        self.assertEqual(set([p_a]), set(sql_query[2]), "_auto_join off: ('bank_ids.name', 'like', '..') third query incorrect parameter")
+
+        # ----------------------------------------
+        # Test2: many2one
+        # ----------------------------------------
+
+        # ----------------------------------------
+        # Test2: more complex tests
+        # ----------------------------------------
+
+        # Remove mocks and modifications
+        bank_ids_col._auto_join = False
+        BaseModel._where_calc = self._base_model_where_calc
+
+if __name__ == '__main__':
+    unittest2.main()

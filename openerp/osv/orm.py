@@ -4712,7 +4712,17 @@ class BaseModel(object):
 
         :raise" except_orm in case order_spec is malformed
         """
-        order_by_clause = self._order
+        def _split_order(order, table):
+            """ from name, id asc make "table"."id", "table."."name" asc """
+            order_list = []
+            for elem in order.split(','):
+                subelems = elem.strip().split(' ')
+                if len(subelems) == 1:
+                    subelems.append('  ')
+                order_list.append('"%s"."%s" %s' % (table, subelems[0], subelems[1]))
+            return order_list
+
+        order_by_clause = ','.join(_split_order(self._order, self._table))
         if order_spec:
             order_by_elements = []
             self._check_qorder(order_spec)
