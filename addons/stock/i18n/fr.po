@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-05-10 17:19+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-11-26 17:09+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:37+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-27 05:23+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -24,7 +24,7 @@ msgstr "Quantité (UdV)"
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr "UdV du produit"
+msgstr "UdV de l'article"
 
 #~ msgid "Product UOM"
 #~ msgstr "UdM du produit"
@@ -63,8 +63,8 @@ msgstr ""
 "Si la valorisation du stock est faite en temps réel, les écritures de "
 "contrepartie de tous les mouvements de stock entrants seront passées sur ce "
 "compte, sauf si un compte particulier est précisé pour l'emplacement source. "
-"C'est la valeur par défaut pour tous les produits de cette catégorie. Il est "
-"également possible de la préciser directement sur chaque produit."
+"C'est la valeur par défaut pour tous les articles de cette catégorie. Il est "
+"également possible de la préciser directement sur chaque article."
 
 #. module: stock
 #: view:stock.picking.out:0
@@ -111,7 +111,7 @@ msgstr "Suivre les lots sortants"
 #: model:ir.actions.act_window,name:stock.action_stock_line_date
 #: model:ir.ui.menu,name:stock.menu_report_stock_line_date
 msgid "Last Product Inventories"
-msgstr "Derniers inventaires des produits"
+msgstr "Derniers inventaires des articles"
 
 #. module: stock
 #: view:stock.move:0
@@ -135,7 +135,7 @@ msgstr "Ordres traités du jour ou planifiés pour aujourd'hui"
 #: view:stock.partial.picking.line:0
 #: view:stock.return.picking.memory:0
 msgid "Product Moves"
-msgstr "Mouvements du produit"
+msgstr "Mouvements de stock"
 
 #. module: stock
 #: code:addons/stock/stock.py:2589
@@ -254,7 +254,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.server,name:stock.action_partial_move_server
 msgid "Deliver/Receive Products"
-msgstr "Livrer/recevoir des produits"
+msgstr "Livrer/recevoir des articles"
 
 #. module: stock
 #: code:addons/stock/report/report_stock.py:78
@@ -309,7 +309,7 @@ msgstr "Origine"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_incoming_product_delay
 msgid "Incoming Products"
-msgstr "Produits entrants"
+msgstr "Réceptions par articles"
 
 #. module: stock
 #: view:report.stock.lines.date:0
@@ -338,7 +338,7 @@ msgstr "Référence"
 #: code:addons/stock/stock.py:1619
 #, python-format
 msgid "Products to Process"
-msgstr "Produits à traiter"
+msgstr "Articles à traiter"
 
 #. module: stock
 #: view:stock.move:0
@@ -351,7 +351,7 @@ msgid ""
 "If checked, all product quantities will be set to zero to help ensure a real "
 "physical inventory is done"
 msgstr ""
-"Si cette case est cochée, toutes les quantités du produit seront mises à "
+"Si cette case est cochée, toutes les quantités de l'article seront mises à "
 "zéro pour s'assurer qu'un inventaire physique est réellement effectué."
 
 #. module: stock
@@ -567,8 +567,8 @@ msgid ""
 "When real-time inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
 msgstr ""
-"Quand la valorisation en temps réel est activée sur un produit, ce compte "
-"donnera la valorisation actuelle des produits."
+"Quand la valorisation en temps réel est activée sur un article, ce compte "
+"donnera la valorisation actuelle des articles."
 
 #. module: stock
 #: field:stock.config.settings,group_stock_tracking_lot:0
@@ -587,7 +587,7 @@ msgstr ""
 #: code:addons/stock/product.py:196
 #, python-format
 msgid "Products: "
-msgstr "Produits: "
+msgstr "Articles : "
 
 #. module: stock
 #: field:report.stock.inventory,location_type:0
@@ -738,7 +738,7 @@ msgstr "Information complémentaire"
 #: report:lot.stock.overview:0
 #: report:lot.stock.overview_all:0
 msgid "Location / Product"
-msgstr "Emplacement / produit"
+msgstr "Emplacement / article"
 
 #. module: stock
 #: field:stock.move,partner_id:0
@@ -854,6 +854,8 @@ msgid ""
 "Forces to specify a Serial Number for all moves containing this product and "
 "coming from a Supplier Location"
 msgstr ""
+"Force à préciser un numéro de série pour tous les mouvements contenant cet "
+"article et provenant d'un emplacement fournisseur"
 
 #. module: stock
 #: help:stock.config.settings,group_uos:0
@@ -976,7 +978,7 @@ msgstr "Adresse du dépôt"
 #: view:stock.move:0
 #: view:stock.move.scrap:0
 msgid "Scrap Products"
-msgstr "Rebuts"
+msgstr "Mettre au rebut"
 
 #. module: stock
 #: view:product.product:0
@@ -1048,7 +1050,7 @@ msgstr "Mouvement automatique"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_change_product_qty
 msgid "Change Product Quantity"
-msgstr "Changer la quantité de produit"
+msgstr "Changer la quantité d'articles"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -1083,7 +1085,7 @@ msgstr "Emplacement d'inventaire"
 #. module: stock
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "Vous devez attribuer un numéro de série pour cet article."
 
 #. module: stock
 #: code:addons/stock/stock.py:2326
@@ -1289,7 +1291,7 @@ msgstr ""
 #. module: stock
 #: field:product.template,property_stock_production:0
 msgid "Production Location"
-msgstr "Emplacement Production"
+msgstr "Emplacement de production"
 
 #. module: stock
 #: code:addons/stock/product.py:121
@@ -1346,16 +1348,16 @@ msgid ""
 "                      "
 msgstr ""
 "* \"Emplacement Fournisseur\" : emplacement virtuel représentant l'origine "
-"des produits reçus d'un fournisseur\n"
+"des articles reçus d'un fournisseur\n"
 "                       \n"
 "* \"Vue\" : emplacement virtuel servant à donner une vision hiérarchisée de "
-"votre entrepôt, en regroupant les produits des emplacements enfants. Ne peut "
-"pas contenir de produit directement\n"
+"votre entrepôt, en regroupant les articles des emplacements enfants. Ne peut "
+"pas contenir d'articles directement\n"
 "                       \n"
 "* \"Emplacement interne\" : emplacement physique dans votre entrepôt\n"
 "                       \n"
 "* \"Emplacement client\": emplacement virtuel représentant la destination "
-"des produits envoyés à un client\n"
+"des articles envoyés à un client\n"
 "                       \n"
 "* \"Inventaire\": emplacement virtuel servant de contrepartie aux mouvements "
 "servant à corriger les niveaux des stocks lors des inventaires physiques\n"
@@ -1602,7 +1604,7 @@ msgid ""
 "Technical field used to record the product cost set by the user during a "
 "picking confirmation (when average price costing method is used)"
 msgstr ""
-"Champ technique utilisé pour enregistrer le coût du produit défini par "
+"Champ technique utilisé pour enregistrer le coût de l'article défini par "
 "l'utilisateur lors de la confirmation de l'opération de manutention (quand "
 "la valorisation se fait sur le prix moyen)"
 
@@ -2003,7 +2005,7 @@ msgstr "Livraison de marchandise"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_category_config_stock
 msgid "Product Categories"
-msgstr "Catégories de produits"
+msgstr "Catégories d'articles"
 
 #. module: stock
 #: view:stock.move:0
@@ -2278,7 +2280,7 @@ msgstr "Remplir l'inventaire"
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Provide the quantities of the returned products."
-msgstr "Indiquez les quantités des produits retournés."
+msgstr "Indiquez les quantités des articles retournés."
 
 #. module: stock
 #: view:product.product:0
@@ -2331,7 +2333,7 @@ msgid ""
 msgstr ""
 "L'analyse des mouvements vous permet de contrôler et d'analyser les "
 "mouvements de stock de la société. Ce rapport vous permet d'analyser les "
-"différents chemins suivis par vos produits et les performances de la gestion "
+"différents chemins suivis par vos articles et les performances de la gestion "
 "des stocks."
 
 #. module: stock
@@ -2583,6 +2585,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Cliquez pour créer un mouvement de stock.\n"
+"              </p><p>\n"
+"                Ce menu vous offre une traçabilité complète\n"
+"                des opérations concernant un article particulier. Vous "
+"pouvez filtrer par article\n"
+"                pour voir les mouvements passés ou prévus pour cet article.\n"
+"              </p>\n"
+"            "
 
 #. module: stock
 #: view:stock.location:0
@@ -2750,7 +2761,7 @@ msgstr ""
 #: view:stock.partial.move:0
 #: view:stock.picking:0
 msgid "Products"
-msgstr "Produits"
+msgstr "Articles"
 
 #. module: stock
 #: view:stock.inventory.line:0
@@ -2789,13 +2800,13 @@ msgstr "Méthode de livraison"
 #: help:stock.picking.in,location_dest_id:0
 #: help:stock.picking.out,location_dest_id:0
 msgid "Location where the system will stock the finished products."
-msgstr "L'emplacement ou le système stockera les produits finis"
+msgstr "Emplacement où le système stockera les produits finis."
 
 #. module: stock
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr "Produits à expédier"
+msgstr "Articles à expédier"
 
 #. module: stock
 #: code:addons/stock/stock.py:2320
@@ -2848,10 +2859,10 @@ msgid ""
 "current inventory value, and the stock input and stock output account will "
 "hold the counterpart moves for incoming and outgoing products."
 msgstr ""
-"Quand la valorisation en temps réel est activée sur un produit, le système "
+"Quand la valorisation en temps réel est activée sur un article, le système "
 "génère automatiquement les écritures comptables correspondant aux mouvements "
-"de stock. Le compte de variation d'inventaire défini dans la catégorie de "
-"produits représente la valorisation actuelle du stock, et les comptes "
+"de stock. Le compte de variation d'inventaire défini dans la catégorie "
+"d'articles représente la valorisation actuelle du stock, et les comptes "
 "d'entrée et de sortie de stock contiennent les contreparties des mouvements "
 "de stock entrants et sortants."
 
@@ -3010,10 +3021,10 @@ msgid ""
 "need this report in order to ensure that the stock of each product is "
 "controlled at least once a year."
 msgstr ""
-"Affichez les derniers inventaires validés sur vos produits et triez-les "
+"Affichez les derniers inventaires validés sur vos articles et triez-les "
 "facilement avec des critères de filtrage. Si vous faites souvent des "
-"inventaires partiels, vous avez besoin de ce rapport pour s'assurer que le "
-"stock de chaque produit est contrôlé une fois par an."
+"inventaires partiels, vous avez besoin de ce rapport pour vous assurer que "
+"le stock de chaque article est contrôlé une fois par an."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_invoice_onshipping.py:112
@@ -3093,7 +3104,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_partial_picking.py:99
 #, python-format
 msgid "Receive Products"
-msgstr "Réception par produit"
+msgstr "Réception par article"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_partial_picking.py:101
@@ -3106,7 +3117,7 @@ msgstr "Livrer les produits"
 #. module: stock
 #: view:stock.location.product:0
 msgid "View Stock of Products"
-msgstr "Voir les stocks produits"
+msgstr "Voir les stocks des articles"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -3143,7 +3154,7 @@ msgstr "Décocher le champ \"Actif\" cache le colis sans le supprimer."
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Product Lots Filter"
-msgstr "Filtre sur les lots de produit"
+msgstr "Filtre sur les numéros de série"
 
 #. module: stock
 #: view:stock.inventory.merge:0
@@ -3352,7 +3363,7 @@ msgid ""
 "If checked, products contained in child locations of selected location will "
 "be included as well."
 msgstr ""
-"Si coché, les produits contenus dans les emplacement fils de l'emplacement "
+"Si coché, les articles contenus dans les emplacement fils de l'emplacement "
 "sélectionné seront également inclus."
 
 #. module: stock
@@ -3612,7 +3623,7 @@ msgstr ""
 #: field:stock.report.tracklots,product_id:0
 #: field:stock.return.picking.memory,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_inventory_form
@@ -3665,7 +3676,7 @@ msgstr "Hauteur (Z)"
 #: model:ir.model,name:stock.model_stock_move_consume
 #: view:stock.move.consume:0
 msgid "Consume Products"
-msgstr "Produits consommés"
+msgstr "Consommer les articles"
 
 #. module: stock
 #: field:stock.location,parent_right:0
@@ -3702,7 +3713,7 @@ msgstr "Valeur Totale"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_product_by_category_stock_form
 msgid "Products by Category"
-msgstr "Produits par catégorie"
+msgstr "Articles par catégorie"
 
 #. module: stock
 #: selection:stock.picking,state:0
@@ -3732,7 +3743,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
 #: model:ir.model,name:stock.model_stock_location_product
 msgid "Products by Location"
-msgstr "Produits par emplacement"
+msgstr "Articles par emplacement"
 
 #. module: stock
 #: view:stock.config.settings:0
@@ -3955,7 +3966,7 @@ msgstr "Société"
 #: field:stock.move.consume,product_uom:0
 #: field:stock.move.scrap,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure d'article"
 
 #. module: stock
 #: code:addons/stock/stock.py:1426
@@ -4253,7 +4264,7 @@ msgstr "Coût unitaire pour cette ligne de produit"
 #: view:report.stock.move:0
 #: field:report.stock.move,categ_id:0
 msgid "Product Category"
-msgstr "Catégorie de produits"
+msgstr "Catégorie d'articles"
 
 #. module: stock
 #: code:addons/stock/stock.py:1407
@@ -4319,7 +4330,7 @@ msgstr "Journal d'enchainement"
 #: code:addons/stock/stock.py:773
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
-msgstr "Pas encore de stock, impossible de réserver les produits."
+msgstr "Pas encore de stock, impossible de réserver les articles."
 
 #. module: stock
 #: view:report.stock.move:0
@@ -4385,7 +4396,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_product_template
 msgid "Product Template"
-msgstr "Modèle de produit"
+msgstr "Modèle d'article"
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -4407,7 +4418,7 @@ msgstr "Valeur du stock virtuel"
 #: view:stock.picking.in:0
 #: view:stock.picking.out:0
 msgid "Return Products"
-msgstr "Retourner les produits"
+msgstr "Retourner les articles"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -4439,7 +4450,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.action_reception_picking_move
 #: model:ir.ui.menu,name:stock.menu_action_pdct_in
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Articles entrants"
 
 #. module: stock
 #: view:product.product:0
@@ -4680,6 +4691,8 @@ msgstr "Janvier"
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
 msgstr ""
+"Il  est impossible de déplacer des articles depuis ou vers un emplacement de "
+"type \"vue\"."
 
 #. module: stock
 #: help:stock.config.settings,group_stock_production_lot:0
