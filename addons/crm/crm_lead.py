@@ -637,17 +637,17 @@ class crm_lead(base_stage, format_address, osv.osv):
         stage_id = stage_ids and stage_ids[0] or False
 
         return {
-                'planned_revenue': lead.planned_revenue,
-                'probability': lead.probability,
-                'name': lead.name,
-                'partner_id': customer and customer.id or False,
-                'user_id': (lead.user_id and lead.user_id.id),
-                'type': 'opportunity',
-                'stage_id': stage_id or False,
-                'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'email_from': customer and customer.email or lead.email_from,
-                'phone': customer and customer.phone or lead.phone,
+            'planned_revenue': lead.planned_revenue,
+            'probability': lead.probability,
+            'name': lead.name,
+            'partner_id': customer and customer.id or False,
+            'user_id': (lead.user_id and lead.user_id.id),
+            'type': 'opportunity',
+            'stage_id': stage_id or False,
+            'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'email_from': customer and customer.email or lead.email_from,
+            'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
