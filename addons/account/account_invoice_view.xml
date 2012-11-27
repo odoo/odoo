@@ -627,6 +627,7 @@
            id="act_account_journal_2_account_invoice_opened"
            name="Unpaid Invoices"
            context="{'search_default_journal_id': [active_id], 'search_default_unpaid':1, 'default_journal_id': active_id}"
+           domain="[('journal_id','=', active_id)]"
            res_model="account.invoice"
            src_model="account.journal"/>
 
