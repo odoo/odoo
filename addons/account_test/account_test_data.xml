@@ -22,7 +22,7 @@ if res[0]['balance']!=0.0 and res[0]['balance'] is not None:
     <record model="accounting.assert.test" id="account_test_02">
         <field name="sequence">2</field>
         <field name="name">Test 2: Opening a fiscal year</field>
-        <field name="desc">Displays the debit and credit amount, of closed and newly created fiscal year, if the balance of current and newly created fiscal year mismatch</field>
+        <field name="desc">Check if the balance of the new opened fiscal year matches with last year's balance</field>
         <field name="code_exec"><![CDATA[result = []
 cr.execute("select coalesce(sum(debit),0) as debit_new_fyear,coalesce(sum(credit),0) as credit_new_fyear from account_move_line where period_id in (select id from account_period where state='draft' and special order by id desc limit 1);")
 rec =  cr.dictfetchall()
@@ -92,7 +92,6 @@ records= cr.dictfetchall()
 rec = [r['id'] for r in records]
 res = reconciled_inv()
 invoices = set(rec).difference(set(res))
-groups = group(list(records),'number')
 result = [rec for rec in records if rec['id'] in invoices]
 if result:
     result.insert(0,_('* Invoices that need to be checked: '))
@@ -108,7 +107,6 @@ result=[]
 if res:
     cr.execute("SELECT distinct inv.number,inv.id from account_invoice inv, account_move_line ml, account_account a, account_move m where m.id=ml.move_id and inv.move_id=m.id and inv.id=inv.move_id and ml.reconcile_id is null and a.type in ('receivable','payable') and ml.account_id=a.id and inv.id in %s",(tuple(res),))
     records = cr.dictfetchall()
-    groups = group(list(records),'number')
     result = [rec for rec in records]
     if result:
         result.insert(0,_('* Invoices that need to be checked: '))

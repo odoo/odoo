@@ -39,15 +39,15 @@
                                 </group>
                                 <group string="Code Help">
                                     <pre>
-You can write a query in order to create Consistency Test and you will get the result of the test 
-in PDF format which can be accessed by Menu Reporting -> Accounting Tests, then select the test 
-and print the report from Print button in header area.
+Code should always return a result value. If result is an empty list, it means that
+the test is succesful. Otherwise it will print what is inside result.
+Code must be python with correct indentation (if needed).
+Here is a list of function that you can use in your test :
+ - group(lst, col) : 
+ - reconciled_inv() : return the list of all reconciled invoices
+ - get_parent(acc_id) : get parent analytical account
+ - now() : return current datetime
 
-You can also use the following functions:
-
-get_parent(acc_id) : return parent id of analytic account(acc_id)
-reconciled_inv() : returns ids of records which are reconciled
-    
 Example: 
 sql = 'select id, name, ref, date from account_move_line where account_id in 
 (select id from account_account where type = 'view')'
