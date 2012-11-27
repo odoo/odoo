@@ -40,7 +40,7 @@ openerp.auth_oauth = function(instance) {
             if (instance.session.debug) {
                 return_url += '?debug';
             }
-            var state = self._oauth_state();
+            var state = this._oauth_state();
             var params = {
                 response_type: 'token',
                 client_id: provider.client_id,
@@ -53,7 +53,7 @@ openerp.auth_oauth = function(instance) {
         },
         _oauth_state: function(provider) {
             // return the state object sent back with the redirected uri
-            var dbname = self.$("form [name=db]").val();
+            var dbname = this.$("form [name=db]").val();
             return {
                 d: dbname,
                 p: provider.id,
