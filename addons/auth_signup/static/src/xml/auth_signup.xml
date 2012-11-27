@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1: -->
+<!-- vim:fdl=1:
+-->
 <templates id="template" xml:space="preserve">
 
     <t t-extend="Login">
@@ -19,9 +20,9 @@
             <li class="oe_signup_hide"><button name="submit">Log in</button></li>
             <li class="oe_signup_show"><button name="submit">Sign in</button></li>
         </t>
-        <t t-jquery="form ul:first li:last" t-operation="after">
-            <li><a class="oe_signup_hide oe_signup_signup" href="#">Sign Up</a></li>
-            <li><a class="oe_signup_show oe_signup_back" href="#">Back to Login</a></li>
+        <t t-jquery="form ul button" t-operation="after">
+            <a class="oe_signup_hide oe_signup_signup" href="#">Sign Up</a>
+            <a class="oe_signup_show oe_signup_back" href="#">Back to Login</a>
         </t>
     </t>
 
