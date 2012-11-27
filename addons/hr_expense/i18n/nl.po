@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 17:56+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"PO-Revision-Date: 2012-11-25 13:11+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:33+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_expense
@@ -52,7 +52,7 @@ msgstr "Vliegticket"
 #. module: hr_expense
 #: model:ir.ui.menu,name:hr_expense.menu_hr_product
 msgid "Type of Expenses"
-msgstr ""
+msgstr "Soort declaratie"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -76,7 +76,7 @@ msgstr "Nieuwe declaratie"
 #: field:hr.expense.line,uom_id:0
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Maateenheid"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -86,7 +86,7 @@ msgstr "Maart"
 #. module: hr_expense
 #: field:hr.expense.expense,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ongelezen berichten"
 
 #. module: hr_expense
 #: field:hr.expense.expense,company_id:0
@@ -113,7 +113,7 @@ msgstr "Declaratie statistieken"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Open Receipt"
-msgstr ""
+msgstr "Open bon"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -138,14 +138,14 @@ msgstr "Opmerkingen"
 #. module: hr_expense
 #: field:hr.expense.expense,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Berichten"
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:179
 #: code:addons/hr_expense/hr_expense.py:195
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_product
@@ -171,7 +171,7 @@ msgstr "De directe manager keurt het formulier af. Teruggezet naar concept."
 #. module: hr_expense
 #: help:hr.expense.expense,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -231,12 +231,15 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
+"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
+"ingevoegd."
 
 #. module: hr_expense
 #: code:addons/hr_expense/hr_expense.py:300
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Waarschuwing"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -285,7 +288,7 @@ msgstr ""
 #: view:hr.expense.report:0
 #: field:hr.expense.report,state:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: hr_expense
 #: field:hr.expense.line,analytic_account:0
@@ -307,7 +310,7 @@ msgstr "Wachten"
 #. module: hr_expense
 #: field:hr.expense.expense,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Volgers"
 
 #. module: hr_expense
 #: report:hr.expense:0
@@ -344,7 +347,7 @@ msgstr "Sommige kosten kunnen doorbelast worden aan de klant"
 #: code:addons/hr_expense/hr_expense.py:195
 #, python-format
 msgid "The employee must have a home address."
-msgstr ""
+msgstr "Voor de werknemer moet een huisadres zijn ingesteld."
 
 #. module: hr_expense
 #: view:board.board:0
@@ -399,7 +402,7 @@ msgstr "Na aanmaken factuur, kosten vergoeden"
 #: code:addons/hr_expense/hr_expense.py:106
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Waarschuwing!"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
@@ -416,7 +419,7 @@ msgstr "Controledatum"
 #: code:addons/hr_expense/hr_expense.py:225
 #, python-format
 msgid "Expense Receipt"
-msgstr ""
+msgstr "Declaratie bon"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -476,7 +479,7 @@ msgstr "Gebruiker"
 #. module: hr_expense
 #: field:hr.expense.expense,voucher_id:0
 msgid "Employee's Receipt"
-msgstr ""
+msgstr "Werknemers bon"
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -500,6 +503,8 @@ msgid ""
 "Selected Unit of Measure does not belong to the same category as the product "
 "Unit of Measure"
 msgstr ""
+"De geselecteerde maateenheid behoort niet tot dezelfde categorie als de "
+"maateenheid van het product."
 
 #. module: hr_expense
 #: help:hr.expense.expense,journal_id:0
@@ -562,7 +567,7 @@ msgstr "Conceptdeclaraties"
 #. module: hr_expense
 #: field:hr.expense.expense,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Is een volger"
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
@@ -590,7 +595,7 @@ msgstr "Uitgebreide filters..."
 #: field:hr.expense.expense,message_comment_ids:0
 #: help:hr.expense.expense,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Opmerkingen en e-mails."
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -616,7 +621,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Generate Accounting Entries"
-msgstr ""
+msgstr "Genereren financiële boekingen"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -631,7 +636,7 @@ msgstr "Declaraties"
 #. module: hr_expense
 #: field:hr.expense.expense,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
@@ -646,7 +651,7 @@ msgstr "Aanbieden aan manager"
 #. module: hr_expense
 #: view:hr.expense.report:0
 msgid "Done Expenses"
-msgstr ""
+msgstr "Afgeronde declaraties"
 
 #. module: hr_expense
 #: model:process.node,note:hr_expense.process_node_confirmedexpenses0
@@ -672,7 +677,7 @@ msgstr "Declaratieformulier"
 #. module: hr_expense
 #: field:hr.expense.report,voucher_id:0
 msgid "Receipt"
-msgstr ""
+msgstr "Ontvangstbewijs"
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -690,7 +695,7 @@ msgstr "Prijs"
 #: view:hr.expense.report:0
 #: selection:hr.expense.report,state:0
 msgid "Done"
-msgstr ""
+msgstr "Gereed"
 
 #. module: hr_expense
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
@@ -711,12 +716,12 @@ msgstr "Doorbelasten"
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Expense Date"
-msgstr ""
+msgstr "Declaratiedatum"
 
 #. module: hr_expense
 #: field:hr.expense.expense,user_valid:0
 msgid "Validation By"
-msgstr ""
+msgstr "Goedgekeurd door"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -853,7 +858,7 @@ msgstr "Naam"
 #: code:addons/hr_expense/hr_expense.py:106
 #, python-format
 msgid "You can only delete draft expenses!"
-msgstr ""
+msgstr "U kunt alleen declaraties in de conceptfase verwijderen."
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -888,7 +893,7 @@ msgstr "Goedkeuren"
 #. module: hr_expense
 #: help:hr.expense.expense,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Berichten en communicatie historie"
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
@@ -917,7 +922,7 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Accounting"
-msgstr ""
+msgstr "Financieel"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0

@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2010-10-30 09:57+0000\n"
-"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
+"PO-Revision-Date: 2012-11-25 21:16+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:35+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: mrp_operations
@@ -45,7 +45,7 @@ msgstr "mrp_operations.operation.code"
 #, python-format
 msgid ""
 "Work order has been <b>cancelled</b> for production order <em>%s</em>."
-msgstr ""
+msgstr "Werkorder is <b>geannuleerd</b> voor productieorder <em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
@@ -61,7 +61,7 @@ msgstr "Informatie van de productiestappen"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,uom:0
 msgid "Unit of Measure"
-msgstr ""
+msgstr "Maateenheid"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -99,7 +99,7 @@ msgstr "Zet op concept"
 #: code:addons/mrp_operations/mrp_operations.py:238
 #, python-format
 msgid "Work order is <b>pending</b> for production order <em>%s</em>."
-msgstr ""
+msgstr "Werkorder is <b>geparkeerd</b> voor productieorder <em>%s</em>."
 
 #. module: mrp_operations
 #: field:mrp.production,allow_reorder:0
@@ -185,7 +185,7 @@ msgstr "Voorraadmutatie"
 #: code:addons/mrp_operations/mrp_operations.py:524
 #, python-format
 msgid "No operation to cancel."
-msgstr ""
+msgstr "Geen operatie om te annuleren."
 
 #. module: mrp_operations
 #: code:addons/mrp_operations/mrp_operations.py:517
@@ -212,7 +212,7 @@ msgstr "Concept"
 #. module: mrp_operations
 #: view:mrp.production.workcenter.line:0
 msgid "Production Workcenter"
-msgstr ""
+msgstr "Productie werkplek"
 
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,date_finished:0
@@ -354,7 +354,7 @@ msgstr "December"
 #: code:addons/mrp_operations/mrp_operations.py:230
 #, python-format
 msgid "Work order has been <b>done</b> for production order <em>%s</em>."
-msgstr ""
+msgstr "Werkorder is <b>uitgevoerd</b> voor productieorder <em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -396,7 +396,7 @@ msgstr "Wacht op materialen"
 #. module: mrp_operations
 #: field:mrp.production.workcenter.line,production_state:0
 msgid "Production Status"
-msgstr ""
+msgstr "Productie status"
 
 #. module: mrp_operations
 #: selection:mrp.workorder,state:0
@@ -474,6 +474,7 @@ msgid ""
 "Operation has already started! You can either Pause/Finish/Cancel the "
 "operation."
 msgstr ""
+"Operatie is al gestart!. U kunt deze operatie pauzeren/beëindigen/annuleren."
 
 #. module: mrp_operations
 #: selection:mrp.workorder,month:0
@@ -535,7 +536,7 @@ msgstr "November"
 #. module: mrp_operations
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "U dient een productie partij toe te wijzen voor dit product."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -556,6 +557,8 @@ msgstr "January"
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
 msgstr ""
+"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+"type 'weergave'"
 
 #. module: mrp_operations
 #: view:mrp.production:0
@@ -658,7 +661,7 @@ msgstr ""
 #: code:addons/mrp_operations/mrp_operations.py:214
 #, python-format
 msgid "Work order has been <b>created</b> for production order <em>%s</em>."
-msgstr ""
+msgstr "Werkorder is <b>aangemaakt</b> voor productieorder <em>%s</em>."
 
 #. module: mrp_operations
 #: model:process.node,name:mrp_operations.process_node_startoperation0
@@ -745,6 +748,7 @@ msgstr "Product"
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
 msgstr ""
+"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
 
 #. module: mrp_operations
 #: view:mrp.workorder:0
@@ -823,7 +827,7 @@ msgstr "Aantal orderregels"
 #: code:addons/mrp_operations/mrp_operations.py:222
 #, python-format
 msgid "Work order has been <b>started</b> for production order <em>%s</em>."
-msgstr ""
+msgstr "Werkorder is <b>gestart</b> voor productieorder <em>%s</em>."
 
 #. module: mrp_operations
 #: view:mrp.production:0

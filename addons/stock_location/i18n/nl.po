@@ -7,19 +7,20 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-02-18 11:54+0000\n"
+"PO-Revision-Date: 2012-11-25 21:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:38+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
 msgstr ""
+"Wordt gebruikt om te weten bij welk bedrijf de regels en mutaties behoren."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -74,7 +75,7 @@ msgstr "Locatie gebruikt door bestemmingslocatie om te leveren"
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "U dient een productie partij toe te wijzen voor dit product."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -164,7 +165,7 @@ msgstr "Pulled flows"
 #. module: stock_location
 #: sql_constraint:product.product:0
 msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+msgstr "Fout! Einddatum kan niet voor de begindatum liggen."
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -197,7 +198,7 @@ msgstr "Maak op voorraad"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "Pulled van een andere locatie."
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -243,6 +244,8 @@ msgstr ""
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
 msgstr ""
+"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+"type 'weergave'"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -281,6 +284,7 @@ msgstr "Is de bestemmingslocatie dat bevoorraad moet worden."
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
 msgstr ""
+"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -363,6 +367,8 @@ msgid ""
 "You provided an invalid \"EAN13 Barcode\" reference. You may use the "
 "\"Internal Reference\" field instead."
 msgstr ""
+"U gebruikte een verkeerde \"EAN13 Barcode\" referentie. Hiervoor in de "
+"plaats kunt u de interne referentie gebruiken."
 
 #. module: stock_location
 #: view:product.product:0

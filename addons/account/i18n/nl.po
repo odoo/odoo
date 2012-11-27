@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-08-26 14:01+0000\n"
+"PO-Revision-Date: 2012-11-25 13:43+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:16+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:41+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #, python-format
@@ -30,6 +30,8 @@ msgstr "Betaling (administratief)"
 msgid ""
 "An account fiscal position could be defined only once time on same accounts."
 msgstr ""
+"Een fiscale positie kan maar één keer worden gedefinieerd voro dezelfde "
+"rekening."
 
 #. module: account
 #: view:account.unreconcile:0
@@ -89,7 +91,7 @@ msgstr "Importeer van factuur of betaling"
 #: code:addons/account/account_move_line.py:1303
 #, python-format
 msgid "Bad Account!"
-msgstr ""
+msgstr "Onjuiste grootboekrekening"
 
 #. module: account
 #: view:account.move:0
@@ -382,7 +384,7 @@ msgstr "(Rekening) Aflettering ongedaan maken"
 #. module: account
 #: field:account.config.settings,module_account_budget:0
 msgid "Budget management"
-msgstr ""
+msgstr "Budget management"
 
 #. module: account
 #: view:product.template:0
@@ -403,7 +405,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,group_multi_currency:0
 msgid "Allow multi currencies"
-msgstr ""
+msgstr "Toestaan meerdere valuta"
 
 #. module: account
 #: code:addons/account/account_invoice.py:73
@@ -449,7 +451,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,user_id:0
 msgid "Salesperson"
-msgstr ""
+msgstr "Verkoper"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -543,7 +545,7 @@ msgstr "Het bedrag uitgedrukt in een optionele andere valuta."
 #. module: account
 #: view:account.journal:0
 msgid "Available Coins"
-msgstr ""
+msgstr "Beschikbare munten"
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -672,7 +674,7 @@ msgstr "De accountant bevestigt het afschrift."
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:31
 #, python-format
 msgid "Nothing to reconcile"
-msgstr ""
+msgstr "Niets af te letteren"
 
 #. module: account
 #: field:account.config.settings,decimal_precision:0
@@ -968,7 +970,7 @@ msgstr "Rekening kostenplaatsdagboek"
 #. module: account
 #: view:account.invoice:0
 msgid "Send by Email"
-msgstr ""
+msgstr "Verzenden via e-mail"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -993,7 +995,7 @@ msgstr ""
 #. module: account
 #: model:mail.message.subtype,name:account.mt_invoice_new
 msgid "created"
-msgstr ""
+msgstr "aangemaakt"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -1057,7 +1059,7 @@ msgstr "Tot"
 #. module: account
 #: field:account.config.settings,purchase_journal_id:0
 msgid "Purchase journal"
-msgstr ""
+msgstr "Inkoopboek"
 
 #. module: account
 #: code:addons/account/account.py:1374
@@ -1172,7 +1174,7 @@ msgstr "Code"
 #. module: account
 #: view:account.config.settings:0
 msgid "Features"
-msgstr ""
+msgstr "Opties"
 
 #. module: account
 #: code:addons/account/account.py:2323
@@ -1261,7 +1263,7 @@ msgstr ""
 #. module: account
 #: view:account.invoice:0
 msgid "Refund "
-msgstr ""
+msgstr "Crediteer "
 
 #. module: account
 #: help:account.config.settings,company_footer:0
@@ -1288,7 +1290,7 @@ msgstr "Kasregisters"
 #. module: account
 #: field:account.config.settings,sale_refund_journal_id:0
 msgid "Sale refund journal"
-msgstr ""
+msgstr "Credit verkoopboek"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_view_bank_statement_tree
@@ -1324,7 +1326,7 @@ msgstr "Begin van de periode"
 #. module: account
 #: view:account.tax:0
 msgid "Refunds"
-msgstr ""
+msgstr "Credits"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
@@ -1394,7 +1396,7 @@ msgstr "Uitgaande Valutakoers"
 #. module: account
 #: field:account.config.settings,chart_template_id:0
 msgid "Template"
-msgstr ""
+msgstr "Sjabloon"
 
 #. module: account
 #: selection:account.analytic.journal,type:0
@@ -1564,12 +1566,12 @@ msgstr "Opties overzicht"
 #. module: account
 #: field:account.fiscalyear.close.state,fy_id:0
 msgid "Fiscal Year to Close"
-msgstr ""
+msgstr "Af te sluiten boekjaar"
 
 #. module: account
 #: field:account.config.settings,sale_sequence_prefix:0
 msgid "Invoice sequence"
-msgstr ""
+msgstr "Factuurnummer reeks"
 
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
@@ -1592,7 +1594,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Factuurstatus"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1677,7 +1679,7 @@ msgstr "Sla 'Concept' status over voor handmatige boekingen"
 #: code:addons/account/wizard/account_report_common.py:159
 #, python-format
 msgid "Not implemented."
-msgstr ""
+msgstr "Niet geïmplementeerd."
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -1687,7 +1689,7 @@ msgstr "Creditfactuur"
 #. module: account
 #: view:account.config.settings:0
 msgid "eInvoicing & Payments"
-msgstr ""
+msgstr "Bonnen & Betalingen"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
@@ -1769,7 +1771,7 @@ msgstr "Onbelast"
 #. module: account
 #: view:account.journal:0
 msgid "Advanced Settings"
-msgstr ""
+msgstr "Geavanceerde instellingen"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -1868,7 +1870,7 @@ msgstr "Boekingsjaar-reeks"
 #. module: account
 #: field:account.config.settings,group_analytic_accounting:0
 msgid "Analytic accounting"
-msgstr ""
+msgstr "Kostenplaatsen"
 
 #. module: account
 #: report:account.overdue:0
@@ -2053,7 +2055,7 @@ msgstr ""
 #. module: account
 #: model:account.journal.view,name:account.account_journal_bank_view
 msgid "Bank/Cash Journal View"
-msgstr ""
+msgstr "Bank/kas dagboekweergave"
 
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
@@ -2088,7 +2090,7 @@ msgstr ""
 #. module: account
 #: view:account.period:0
 msgid "Duration"
-msgstr ""
+msgstr "Tijdsduur"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2158,7 +2160,7 @@ msgstr "Bedrag credit"
 #: field:account.bank.statement,message_ids:0
 #: field:account.invoice,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Berichten"
 
 #. module: account
 #: view:account.vat.declaration:0
@@ -2256,7 +2258,7 @@ msgstr "Factuuranalyse"
 #. module: account
 #: model:ir.model,name:account.model_mail_compose_message
 msgid "Email composition wizard"
-msgstr ""
+msgstr "E-mail samenstellen wizard"
 
 #. module: account
 #: model:ir.model,name:account.model_account_period_close
@@ -2302,7 +2304,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,currency_id:0
 msgid "Default company currency"
-msgstr ""
+msgstr "Standaard bedrijfsvaluta"
 
 #. module: account
 #: field:account.invoice,move_id:0
@@ -2356,7 +2358,7 @@ msgstr "Geldig"
 #: field:account.bank.statement,message_follower_ids:0
 #: field:account.invoice,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Volgers"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_journal
@@ -2377,7 +2379,7 @@ msgstr "Grootboek meerjarige proefbalans"
 #. module: account
 #: view:account.fiscalyear.close.state:0
 msgid "Close Fiscal Year"
-msgstr ""
+msgstr "Afsluiten boekjaar"
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -2405,7 +2407,7 @@ msgstr ""
 #. module: account
 #: field:account.invoice.report,uom_name:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Maateenheid referentie"
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -2421,12 +2423,12 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_move_reconciliation.xml:8
 #, python-format
 msgid "Good job!"
-msgstr ""
+msgstr "Goed gedaan!"
 
 #. module: account
 #: field:account.config.settings,module_account_asset:0
 msgid "Assets management"
-msgstr ""
+msgstr "Assets management"
 
 #. module: account
 #: view:account.account:0
@@ -13845,17 +13847,6 @@ msgstr ""
 #~ msgid "VAT Declaration"
 #~ msgstr "BTW declaratie"
 
-#, python-format
-#~ msgid ""
-#~ "This account does not allow reconciliation! You should update the account "
-#~ "definition to change this."
-#~ msgstr ""
-#~ "Dit account staat afletteren niet toe! U dient de rekeningdefinitie te "
-#~ "veranderen om dit mogelijk te maken."
-
-#~ msgid "The description must be unique per company!"
-#~ msgstr "De omschrijving moet uniek zijn per bedrijf!"
-
 #~ msgid "This months' Sales by type"
 #~ msgstr "Verkopen van deze maand per"
 
@@ -13875,9 +13866,6 @@ msgstr ""
 #, python-format
 #~ msgid "Current currency is not configured properly !"
 #~ msgstr "Huidige valuta is niet correct geconfigureerd!"
-
-#~ msgid "Entry Date"
-#~ msgstr "Invoerdatum"
 
 #~ msgid "Create an Account based on this template"
 #~ msgstr "Maak een rekening gebaseerd op dit sjabloon"
@@ -14993,9 +14981,6 @@ msgstr ""
 #~ "andere financiële rekening. De openingsbalans wordt automatisch voorgesteld, "
 #~ "terwijl het saldo terug te vinden is op het afschrift."
 
-#~ msgid "Description on Invoices"
-#~ msgstr "Omschrijving op facturen"
-
 #~ msgid "Error ! You can not create recursive Tax Codes."
 #~ msgstr "Fout! U kunt geen herhalende belastingrubrieken maken"
 
@@ -15037,9 +15022,6 @@ msgstr ""
 
 #~ msgid "Purchase Taxes"
 #~ msgstr "Inkoopbelastingen"
-
-#~ msgid "Configure your Chart of Accounts"
-#~ msgstr "Installeer uw rekeningschema"
 
 #, python-format
 #~ msgid ""
@@ -15099,16 +15081,6 @@ msgstr ""
 #~ "bedragen in de belastingweergave komen overeen met de onderdelen van de "
 #~ "belastingaangifte van uw land. De hiërarchische structuur kan naar uw wensen "
 #~ "worden aangepast."
-
-#~ msgid ""
-#~ "The tax code definition depends on the tax declaration of your country. "
-#~ "OpenERP allows you to define the tax structure and manage it from this menu. "
-#~ "You can define both numeric and alphanumeric tax codes."
-#~ msgstr ""
-#~ "De balastingrubriek definitie hangt af van de belastingopgave van uw land. "
-#~ "OpenERP geeft u de mogelijkheid om, vanuit dit menu, een belastingweergave "
-#~ "te beheren. Het is mogelijk om numerieke en alfanumerieke belastingrubrieken "
-#~ "te gebruiken."
 
 #~ msgid "Refund Invoice Options"
 #~ msgstr "Credit factuur opties"
@@ -15295,3 +15267,13 @@ msgstr ""
 #~ msgstr ""
 #~ "Selecteer de berekening van deze regel van uw betalingstermijn. U moet op "
 #~ "zijn minst een laatste regel met de berekening 'Saldo' hebben gedefinieerd."
+
+#~ msgid ""
+#~ "The tax code definition depends on the tax declaration of your country. "
+#~ "OpenERP allows you to define the tax structure and manage it from this menu. "
+#~ "You can define both numeric and alphanumeric tax codes."
+#~ msgstr ""
+#~ "De belastingrubriek definitie hangt af van de belastingopgave van uw land. "
+#~ "OpenERP geeft u de mogelijkheid om, vanuit dit menu, een belastingweergave "
+#~ "te beheren. Het is mogelijk om numerieke en alfanumerieke belastingrubrieken "
+#~ "te gebruiken."

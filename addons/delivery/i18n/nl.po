@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-20 15:37+0000\n"
+"PO-Revision-Date: 2012-11-25 19:02+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-24 06:05+0000\n"
+"X-Launchpad-Export-Date: 2012-11-26 04:40+0000\n"
 "X-Generator: Launchpad (build 16293)\n"
 
 #. module: delivery
@@ -29,7 +29,7 @@ msgstr "Aflevering per post"
 #. module: delivery
 #: view:delivery.grid.line:0
 msgid " in Function of "
-msgstr ""
+msgstr " in de functie van "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -64,7 +64,7 @@ msgstr "Volume"
 #. module: delivery
 #: view:delivery.carrier:0
 msgid "Zip"
-msgstr ""
+msgstr "Postcode"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -100,12 +100,30 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               Klik hier om een aflevermethode te definiëren\n"
+"              </p><p>\n"
+"                Iedere vervoerder (bijv. UPS) kan verschillende "
+"aflevermethodes hebben\n"
+"                (Bijv. UPS Express, UPS Standard) met een set van regels "
+"eraan gekoppeld\n"
+"                 voor iedere methode\n"
+"              </p><p>\n"
+"                 Deze methodes geven u de mogelijkheid om automatisch de "
+"afleveringskosten\n"
+"                 te berekenen, volgens uw instellingen op de verkooporder "
+"(gebaseerd op de offerte)\n"
+"                 of de factuur (gebaseerd op de uitgaande levering).\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No line matched this product or order in the chosen delivery grid."
 msgstr ""
+"Geen van de regels komt overeen met dit product of order in het gekozen "
+"afleverschema."
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -146,6 +164,20 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een levering prijslisjt te maken voor een "
+"specifieke regio.\n"
+"              </p><p>\n"
+"                De levering prijslijst geeft u de mogelijkheid om de kosten "
+"en\n"
+"                verkoopprijs te berekenen, op basis van het gewicht van de \n"
+"                producten en andere criteria. U kunt verschillende "
+"prijslijsten\n"
+"                voor elke aflevermethode maken. Maar ook per land of een "
+"gebied\n"
+"                in een land op basis van een postcode bereik.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -218,7 +250,7 @@ msgstr "Planningsdefinitie"
 #: code:addons/delivery/stock.py:89
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Waarschuwing!"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -238,7 +270,7 @@ msgstr "Verkoop orders"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "Uitgaande leveringen"
 
 #. module: delivery
 #: view:sale.order:0
@@ -298,7 +330,7 @@ msgstr ""
 #. module: delivery
 #: field:delivery.carrier,free_if_more_than:0
 msgid "Free If Order Total Amount Is More Than"
-msgstr ""
+msgstr "Gratis indien het orderbedrag meer is dan"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -420,7 +452,7 @@ msgstr "Voorwaarde"
 #. module: delivery
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "U dient een productie partij toe te wijzen voor dit product."
 
 #. module: delivery
 #: field:delivery.grid.line,standard_price:0
@@ -431,6 +463,8 @@ msgstr "Kostprijs"
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
 msgstr ""
+"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+"type 'weergave'"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -488,7 +522,7 @@ msgstr "Orderreferentie moet uniek zijn per bedrijf!"
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Inkomende leveringen"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -499,6 +533,7 @@ msgstr "<="
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
 msgstr ""
+"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -574,7 +609,7 @@ msgstr "Vervoerder"
 #: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
 #: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 msgid "Delivery Methods"
-msgstr ""
+msgstr "Leveringsmethodes"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -607,7 +642,7 @@ msgstr "Verkoopprijs"
 #. module: delivery
 #: view:stock.picking.out:0
 msgid "Print Delivery Order"
-msgstr ""
+msgstr "Afdrukken leveringsbon"
 
 #. module: delivery
 #: view:delivery.grid:0
