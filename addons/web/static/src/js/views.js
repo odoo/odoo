@@ -1232,8 +1232,7 @@ instance.web.View = instance.web.Widget.extend({
         };
         var context = new instance.web.CompoundContext(dataset.get_context(), action_data.context || {});
 
-        var handler = function (r) {
-            var action = r;
+        var handler = function (action) {
             if (action && action.constructor == Object) {
                 var ncontext = new instance.web.CompoundContext(context);
                 if (record_id) {
@@ -1244,18 +1243,10 @@ instance.web.View = instance.web.Widget.extend({
                     });
                 }
                 ncontext.add(action.context || {});
-                return instance.web.pyeval.eval_domains_and_contexts({
-                    contexts: [ncontext],
-                    domains: []
-                }).then(function (results) {
-                    action.context = results.context;
-                    /* niv: previously we were overriding once more with action_data.context,
-                     * I assumed this was not a correct behavior and removed it
-                     */
-                    return self.do_action(action, {
-                        on_close: result_handler,
-                    });
-                }, null);
+                action.context = ncontext;
+                return self.do_action(action, {
+                    on_close: result_handler,
+                });
             } else {
                 self.do_action({"type":"ir.actions.act_window_close"});
                 return result_handler();
@@ -1277,15 +1268,15 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args).done(handler);
+            return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', {
                 action_id: action_data.name,
                 context: instance.web.pyeval.eval('context', context),
                 do_not_eval: true
-            }).done(handler);
+            }).then(handler);
         } else  {
-            return dataset.exec_workflow(record_id, action_data.name).done(handler);
+            return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
     },
     /**
