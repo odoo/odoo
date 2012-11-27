@@ -136,6 +136,7 @@ class account_analytic_account(osv.osv):
             'name': name,
             'view_type': 'form',
             'view_mode': 'tree,form',
+            'context':{'analytic_account':ids[0]},
             'domain' : domain,
             'res_model': 'hr.expense.expense',
             'nodestroy': True,
