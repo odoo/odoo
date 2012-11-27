@@ -536,7 +536,9 @@ class expression(object):
                 continue
 
             # 3 Field found
-            #   - get relational table, existing for relational fields
+            #   - update working variables
+            #       - get relational table that exists for relational fields
+            #       - prepare the alias for tables, that can be the table name if only one-level
             #   - if domain is a path (ex: ('partner_id.name', '=', 'foo')):
             #     replace all the expression by a normalized equivalent domain
             #       - find the related ids: partner_id.name='foo' -> res_partner.search(('name', '=', 'foo')))
@@ -545,21 +547,23 @@ class expression(object):
             #           - search on current table where partner_id is in partner_ids
             #           - leaf becomes ('id', 'in', ids)
             #       - get out of current leaf is field is not a property field
-            #   - if domain is not a path
+            #   - if domain is not a path: handle some leaf replacement / tweaking
             #       - handle function fields
             #       - handle one2many, many2many and many2one fields
             #       - other fields: handle datetime and translatable fields
 
             relational_table = table.pool.get(field._obj)
+            alias = working_table._table
+
             if len(field_path) > 1:
                 if field._type == 'many2one':
                     right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
-                    self.exp[i] = (field_path[0], 'in', right)
+                    self.exp[i] = (alias + '.' + field_path[0], 'in', right)
                 # Making search easier when there is a left operand as field.o2m or field.m2m
                 if field._type in ['many2many', 'one2many']:
                     right = relational_table.search(cr, uid, [(field_path[1], operator, right)], context=context)
                     right1 = table.search(cr, uid, [(field_path[0], 'in', right)], context=dict(context, active_test=False))
-                    self.exp[i] = ('id', 'in', right1)
+                    self.exp[i] = (alias + '.id', 'in', right1)
 
                 if not isinstance(field, fields.property):
                     continue
@@ -763,9 +767,20 @@ class expression(object):
         assert operator in (TERM_OPERATORS + ('inselect',)), \
             "Invalid operator %r in domain term %r" % (operator, leaf)
         assert leaf in (TRUE_LEAF, FALSE_LEAF) or left in table._all_columns \
-            or left in MAGIC_COLUMNS, "Invalid field %r in domain term %r" % (left, leaf)
+            or left in MAGIC_COLUMNS \
+            or ('.' in left and self._has_table_alias(left.split('.')[0])), \
+               "Invalid field %r in domain term %r" % (left, leaf)
 
-        table_alias = table._table
+        if not leaf in (TRUE_LEAF, FALSE_LEAF) and '.' in left:
+            # leaf still contains '.' -> should be aliases (alias.field)
+            # update table with alias, and left with field
+            leaf_path = left.split('.')
+            assert len(leaf_path) == 2, "Invalid leaf with alias %r in leaf %r" % (left, leaf)
+            table_alias = leaf_path[0]
+            table = self._get_table_from_alias(table_alias)
+            left = leaf_path[1]
+        else:
+            table_alias = table._table
 
         if leaf == TRUE_LEAF:
             query = 'TRUE'
