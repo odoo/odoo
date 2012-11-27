@@ -66,6 +66,15 @@ class crm_meeting(base_state, osv.Model):
         'state': 'open',
     }
 
+    def message_get_subscription_data(self, cr, uid, ids, context=None):
+        res = {}
+        for virtual_id in ids:
+            real_id = base_calendar.base_calendar_id2real_id(virtual_id)
+            result = super(crm_meeting, self).message_get_subscription_data(cr, uid, [real_id], context=context)
+            res[virtual_id] = result[real_id]
+        return res
+
+    
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
         default['attendee_ids'] = False
@@ -115,3 +124,41 @@ class crm_meeting(base_state, osv.Model):
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
+    
+class mail_message(osv.osv):
+    _inherit = "mail.message"
+    
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+         cal_event_pool = self.pool.get('calendar.event')
+         for arg in args:
+             if arg[0] == "res_id":
+                 if isinstance(arg[2], (str)):
+                     args[1][2] = cal_event_pool.remove_virtual_id(arg[2])
+         res = super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
+         if count:
+             return len(res)
+         elif limit:
+             return res[offset:offset+limit]
+         else:
+             return res
+        
+mail_message()
+
+class ir_attachment(osv.osv):
+    _inherit = "ir.attachment"
+
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+         cal_event_pool = self.pool.get('calendar.event')
+         for arg in args:
+             if arg[0] == "res_id":
+                 if isinstance(arg[2], (str)):
+                     args[1][2] = cal_event_pool.remove_virtual_id(arg[2])
+         res = super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
+         if count:
+             return len(res)
+         elif limit:
+             return res[offset:offset+limit]
+         else:
+             return res
+            
+    
