@@ -10,7 +10,7 @@ openerp.web_im = function(instance) {
             this.update_promise.then(function() {
                 var im = new instance.web_im.InstantMessaging(self);
                 im.appendTo(instance.client.$el);
-                var button = new instance.web.ImTopButton(this);
+                var button = new instance.web_im.ImTopButton(this);
                 button.on("clicked", im, im.switch_display);
                 button.appendTo(instance.webclient.$el.find('.oe_systray'));
             });
@@ -18,7 +18,7 @@ openerp.web_im = function(instance) {
         },
     });
 
-    instance.web.ImTopButton = instance.web.Widget.extend({
+    instance.web_im.ImTopButton = instance.web.Widget.extend({
         template:'ImTopButton',
         events: {
             "click button": "clicked",
@@ -39,6 +39,10 @@ openerp.web_im = function(instance) {
             this.set("right_offset", 0);
             this.last = null;
             this.users = [];
+            this.c_manager = new instance.web_im.ConversationManager(this);
+            this.on("change:right_offset", this.c_manager, _.bind(function() {
+                this.c_manager.set("right_offset", this.get("right_offset"));
+            }, this));
         },
         start: function() {
             this.$el.css("right", -this.$el.outerWidth());
@@ -103,7 +107,7 @@ openerp.web_im = function(instance) {
             }, {shadow: true}).then(function(result) {
                 self.last = result.last;
                 _.each(result.res, function(mes) {
-                    $("<div>").text(mes).appendTo(self.$(".oe_im_content"));
+                    self.c_manager.received_message(mes, {"id": mes.from[0]});
                 });
                 self.poll();
             }, function(unused, e) {
@@ -112,9 +116,7 @@ openerp.web_im = function(instance) {
             });
         },
         activate_user: function(user_rec) {
-            // shitty, to replace
-            var conv = new instance.web_im.Conversation(this, this, user_rec);
-            conv.appendTo(this.$el);
+            this.c_manager.activate_user(user_rec);
         },
     });
 
@@ -132,22 +134,61 @@ openerp.web_im = function(instance) {
         },
     });
 
+    instance.web_im.ConversationManager = instance.web.Controller.extend({
+        init: function(parent) {
+            this._super(parent);
+            this.set("right_offset", 0);
+            this.conversations = [];
+            this.users = {};
+            this.on("change:right_offset", this, this.calc_positions);
+        },
+        activate_user: function(user_rec) {
+            if (this.users[user_rec.id]) {
+                return this.users[user_rec.id];
+            }
+            var conv = new instance.web_im.Conversation(this, user_rec);
+            conv.appendTo(instance.client.$el);
+            conv.on("destroyed", this, function() {
+                this.conversations = _.without(this.conversations, conv);
+                delete this.users[conv.user_rec.id];
+            });
+            this.conversations.push(conv);
+            this.users[user_rec.id] = conv;
+            this.calc_positions();
+            return conv;
+        },
+        received_message: function(message, user_rec) {
+            var conv = this.activate_user(user_rec);
+            conv.received_message(message);
+        },
+        calc_positions: function() {
+            var current = this.get("right_offset");
+            _.each(_.range(this.conversations.length), function(i) {
+                this.conversations[i].set("right_position", current);
+                current += this.conversations[i].$el.outerWidth();
+            }, this);
+        },
+    });
+
     instance.web_im.Conversation = instance.web.Widget.extend({
         "template": "Conversation",
         events: {
             "keydown input": "send_message",
         },
-        init: function(parent, im, user_rec) {
+        init: function(parent, user_rec) {
             this._super(parent);
-            this.im = im;
             this.user_rec = user_rec;
+            this.set("right_position", 0);
         },
         start: function() {
-            this.im.on("change:right_offset", this, this.calc_pos);
+            this.on("change:right_position", this, this.calc_pos);
             this.calc_pos();
         },
         calc_pos: function() {
-            this.$el.css("right", this.im.get("right_offset"));
+            this.$el.css("right", this.get("right_position"));
+        },
+        received_message: function(message) {
+            this.$(".oe_conversation_text").append($("<div>").text("Him: " + message.message));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -155,8 +196,13 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
+            this.$(".oe_conversation_text").append($("<div>").text("Me: " + mes));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
+        },
+        destroy: function() {
+            this.trigger("destroyed");
+            return this._super();
         },
     });
 

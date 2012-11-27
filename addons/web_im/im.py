@@ -100,7 +100,6 @@ class ImportController(openerp.addons.web.http.Controller):
                 return res
             last = res["last"]
             num += 1
-            print "waiting"
             Watcher.get_watcher(res["dbname"]).stop(POLL_TIMER)
 
 
@@ -117,11 +116,10 @@ class im_message(osv.osv):
             tmp = self.search(cr, uid, [['to', '=', uid]], order="id desc", limit=1, context=context)
             last = tmp[0] if len(tmp) >= 1 else -1
         res = self.search(cr, uid, [['id', '>', last], ['to', '=', uid]], order="id", context=context)
-        res = self.read(cr, uid, res, ["id", "message"], context=context)
-        lst = [x["message"] for x in res]
-        if len(lst) > 0:
+        res = self.read(cr, uid, res, ["id", "message", "from"], context=context)
+        if len(res) > 0:
             last = res[-1]["id"]
-        return {"res": lst, "last": last, "dbname": cr.dbname}
+        return {"res": res, "last": last, "dbname": cr.dbname}
 
     def post(self, cr, uid, message, to_user_id, context=None):
         self.create(cr, uid, {"message": message, 'from': uid, 'to': to_user_id}, context=context)
