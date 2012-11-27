@@ -243,7 +243,7 @@ class account_analytic_line(osv.osv):
                 cr.execute("""SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id
                         FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
                         WHERE account_id = %s
-                            AND id IN %s AND journal.type IN %s AND to_invoice IS NOT NULL
+                            AND id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
                         GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
 
                 for product_id, user_id, factor_id, qty, uom in cr.fetchall():
