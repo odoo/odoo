@@ -261,7 +261,7 @@ var py = {};
 
         var Name = '[a-zA-Z_]\\w*';
 
-        var DecNumber = '\\d+';
+        var DecNumber = '\\d+(L|l)?';
         var IntNumber = DecNumber;
         var PointFloat = group('\\d+\\.\\d*', '\\.\\d+');
         var FloatNumber = PointFloat;
