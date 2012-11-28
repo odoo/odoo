@@ -952,7 +952,7 @@ openerp.mail = function (session) {
 
             this.options = options.options;
             this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
-            this.options.show_compose_message = this.options.show_compose_message && (this.options.display_indented_thread >= this.thread_level || !this.thread_level);
+            this.options.show_compose_message = this.options.show_compose_message && !this.thread_level;
             
             // record options and data
             this.parent_message= parent.thread!= undefined ? parent : false ;
@@ -989,7 +989,7 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.context,
+                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
@@ -1398,6 +1398,7 @@ openerp.mail = function (session) {
          *      When you use this option, the domain is not used for the fetch root.
          *     @param {String} [no_message] Message to display when there are no message
          *     @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
+         *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
          */
         init: function (parent, action) {
             this._super(parent, action);
@@ -1418,6 +1419,7 @@ openerp.mail = function (session) {
                 'show_link_partner': true,
                 'view_inbox': false,
                 'message_ids': undefined,
+                'compose_as_todo' : false,
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
