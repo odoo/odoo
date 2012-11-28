@@ -7,25 +7,25 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2011-01-13 13:39+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"PO-Revision-Date: 2012-11-27 14:24+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "订单号必须在一个公司范围内唯一"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
 msgid ""
 "This invoicing type will be used, by default, to invoice the current partner."
-msgstr ""
+msgstr "这种开票类型已经被使用，默认开票给当前的合作伙伴"
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -69,12 +69,12 @@ msgstr "开发票"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_in
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "入库"
 
 #. module: sale_journal
 #: help:sale.order,invoice_type_id:0
 msgid "Generate invoice based on the selected option."
-msgstr ""
+msgstr "基于选择的选项生成发票。"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,invoicing_method:0
@@ -116,17 +116,17 @@ msgstr "发票类型对业务伙伴，销售订单和发货订单是有用的。
 #: sql_constraint:stock.picking.in:0
 #: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "编号必须在公司内唯一！"
 
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "开票类型"
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: sale_journal
 #: model:ir.actions.act_window,name:sale_journal.action_definition_journal_invoice_type
@@ -138,7 +138,7 @@ msgstr "发票类型"
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "错误：无效的(EAN)条码"
 
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_res_partner
@@ -153,7 +153,7 @@ msgstr "销售单"
 #. module: sale_journal
 #: model:ir.model,name:sale_journal.model_stock_picking_out
 msgid "Delivery Orders"
-msgstr ""
+msgstr "送货单"
 
 #~ msgid "Set to Draft"
 #~ msgstr "设为草稿"

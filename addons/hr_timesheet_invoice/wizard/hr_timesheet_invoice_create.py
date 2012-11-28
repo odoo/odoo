@@ -67,7 +67,7 @@ class account_analytic_line(osv.osv):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
                 raise osv.except_osv(_('Analytic Account incomplete !'),
-                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s.') % (account.name,))
+                        _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
 
 
 
