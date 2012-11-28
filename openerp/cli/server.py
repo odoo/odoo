@@ -94,7 +94,11 @@ def setup_pid_file():
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=openerp.tools.config['init'] or openerp.tools.config['update'], pooljobs=False)
+        config = openerp.tools.config
+        update_module = True if config['init'] or config['update'] else False
+        db, registry = openerp.pooler.get_db_and_pool(
+            dbname, update_module=update_module, pooljobs=False,
+            force_demo=not config['without_demo'])
 
         # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
         registry.schedule_cron_jobs()
@@ -105,7 +109,9 @@ def run_test_file(dbname, test_file):
     """ Preload a registry, possibly run a test file, and start the cron."""
     try:
         config = openerp.tools.config
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        update_module = True if config['init'] or config['update'] else False
+        db, registry = openerp.pooler.get_db_and_pool(
+            dbname, update_module=update_module, pooljobs=False, force_demo=not config['without_demo'])
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
         openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)

@@ -18,7 +18,10 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from docutils import io, nodes
 from docutils.core import publish_string
+from docutils.transforms import Transform, writer_aux
+from docutils.writers.html4css1 import Writer
 import imp
 import logging
 import os
@@ -37,6 +40,7 @@ except ImportError:
 
 import openerp
 from openerp import modules, pooler, tools, addons
+from openerp.modules.db import create_categories
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
@@ -104,6 +108,32 @@ class module_category(osv.osv):
         'visible': 1,
     }
 
+class MyFilterMessages(Transform):
+    """
+    Custom docutils transform to remove `system message` for a document and
+    generate warnings.
+
+    (The standard filter removes them based on some `report_level` passed in
+    the `settings_override` dictionary, but if we use it, we can't see them
+    and generate warnings.)
+    """
+
+    default_priority = 870
+
+    def apply(self):
+        for node in self.document.traverse(nodes.system_message):
+            _logger.warning("docutils' system message present: %s", str(node))
+            node.parent.remove(node)
+
+class MyWriter(Writer):
+    """
+    Custom docutils html4ccs1 writer that doesn't add the warnings to the
+    output document.
+    """
+
+    def get_transforms(self):
+        return [MyFilterMessages, writer_aux.Admonitions]
+
 class module(osv.osv):
     _name = "ir.module.module"
     _rec_name = "shortdesc"
@@ -123,7 +153,7 @@ class module(osv.osv):
         res = dict.fromkeys(ids, '')
         for module in self.browse(cr, uid, ids, context=context):
             overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
-            output = publish_string(source=module.description, writer_name='html', settings_overrides=overrides)
+            output = publish_string(source=module.description, settings_overrides=overrides, writer=MyWriter())
             res[module.id] = output
         return res
 
@@ -692,21 +722,8 @@ class module(osv.osv):
 
         categs = category.split('/')
         if categs != current_category_path:
-            p_id = None
-            while categs:
-                if p_id is not None:
-                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id=%s', (categs[0], p_id))
-                else:
-                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id is NULL', (categs[0],))
-                c_id = cr.fetchone()
-                if not c_id:
-                    cr.execute('INSERT INTO ir_module_category (name, parent_id) VALUES (%s, %s) RETURNING id', (categs[0], p_id))
-                    c_id = cr.fetchone()[0]
-                else:
-                    c_id = c_id[0]
-                p_id = c_id
-                categs = categs[1:]
-            self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
+            cat_id = create_categories(cr, categs)
+            mod_browse.write({'category_id': cat_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         if not filter_lang:

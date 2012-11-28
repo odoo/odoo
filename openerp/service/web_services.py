@@ -205,10 +205,15 @@ class db(netsvc.ExportService):
             # Try to terminate all other connections that might prevent
             # dropping the database
             try:
-                cr.execute("""SELECT pg_terminate_backend(procpid)
+
+                # PostgreSQL 9.2 renamed pg_stat_activity.procpid to pid:
+                # http://www.postgresql.org/docs/9.2/static/release-9-2.html#AEN110389
+                pid_col = 'pid' if cr._cnx.server_version >= 90200 else 'procpid'
+
+                cr.execute("""SELECT pg_terminate_backend(%(pid_col)s)
                               FROM pg_stat_activity
-                              WHERE datname = %s AND 
-                                    procpid != pg_backend_pid()""",
+                              WHERE datname = %%s AND 
+                                    %(pid_col)s != pg_backend_pid()""" % {'pid_col': pid_col},
                            (db_name,))
             except Exception:
                 pass
