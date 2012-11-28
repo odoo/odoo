@@ -148,14 +148,14 @@ var py = {};
     comparator('>'); comparator('>=');
     comparator('<>'); comparator('!='); comparator('==');
 
-    infix('|', 70); infix('^', 80), infix('&', 90);
+    infix('|', 70); infix('^', 80); infix('&', 90);
 
     infix('<<', 100); infix('>>', 100);
 
     infix('+', 110); infix('-', 110);
 
     infix('*', 120); infix('/', 120);
-    infix('//', 120), infix('%', 120);
+    infix('//', 120); infix('%', 120);
 
     prefix('-', 130); prefix('+', 130); prefix('~', 130);
 
@@ -273,12 +273,16 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("'[^']*'", '"[^"]*"');
+        var ContStr = group("[uU]?'([^']*)'", '[uU]?"([^"]*)"');
 
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
+        var number_pattern = new RegExp('^' + Number + '$');
+        var string_pattern = new RegExp('^' + ContStr + '$');
+        var name_pattern = new RegExp('^' + Name + '$');
+        var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            var max=s.length, tokens = [];
+            var max=s.length, tokens = [], start, end = undefined;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
 
@@ -294,18 +298,20 @@ var py = {};
                                     + '; parsed so far: ' + tokens);
                 }
 
-                var start = pseudomatch.index, end = pseudoprog.lastIndex;
+                start = pseudomatch.index;
+                end = pseudoprog.lastIndex;
                 // strip leading space caught by Whitespace
-                var token = s.slice(start, end).replace(new RegExp('^' + Whitespace), '');
+                var token = s.slice(start, end).replace(strip, '');
                 var initial = token[0];
 
-                if (/\d/.test(initial) || (initial === '.' && token !== '.')) {
+                if (number_pattern.test(token)) {
                     tokens.push(create(symbols['(number)'], {
                         value: parseFloat(token)
                     }));
-                } else if (/'|"/.test(initial)) {
+                } else if (string_pattern.test(token)) {
+                    var m = string_pattern.exec(token);
                     tokens.push(create(symbols['(string)'], {
-                        value: token.slice(1, -1)
+                        value: m[2] || m[3]
                     }));
                 } else if (token in symbols) {
                     var symbol;
@@ -320,7 +326,7 @@ var py = {};
                         symbol = symbols[token];
                     }
                     tokens.push(create(symbol));
-                } else if (/[_a-zA-Z]/.test(initial)) {
+                } else if (name_pattern.test(token)) {
                     tokens.push(create(symbols['(name)'], {
                         value: token
                     }));
@@ -369,7 +375,7 @@ var py = {};
             return py.False;
         }
 
-        var fn = function () {}
+        var fn = function () {};
         fn.prototype = py.object;
         if (py.PY_isInstance(val, py.object)
             || py.PY_isSubclass(val, py.object)) {
@@ -413,6 +419,7 @@ var py = {};
         var args = argument[0];
         var kwargs = {};
         for (var k in argument[1]) {
+            if (!argument[1].hasOwnProperty(k)) { continue; }
             kwargs[k] = argument[1][k];
         }
         if (typeof format === 'string') {
@@ -428,9 +435,10 @@ var py = {};
                 "TypeError: unknown format specification " +
                     JSON.stringify(spec));
         };
+        var spec;
         // TODO: ensure all format arg names are actual names?
         for(var i=0; i<args.length; ++i) {
-            var spec = format[i];
+            spec = format[i];
             // spec list ended, or specs switching to keyword-only
             if (!spec || spec === '*') {
                 throw new Error(
@@ -446,7 +454,7 @@ var py = {};
             out[name(spec)] = args[i];
         }
         for(var j=i; j<format.length; ++j) {
-            var spec = format[j];
+            spec = format[j];
             var n = name(spec);
 
             if (n in out) {
@@ -481,7 +489,8 @@ var py = {};
         // Check that all required arguments have been matched, add
         // optional values
         for(var k = 0; k < format.length; ++k) {
-            var spec = format[k], n = name(spec);
+            spec = format[k];
+            var n = name(spec);
             // kwonly, va_arg or matched argument
             if (/^\*/.test(n) || n in out) { continue; }
             // Unmatched required argument
@@ -546,7 +555,7 @@ var py = {};
         if (callable.__is_type) {
             // class hack
             var instance = callable.__new__.call(callable, args, kwargs);
-            var typ = function () {}
+            var typ = function () {};
             typ.prototype = callable;
             if (instance instanceof typ) {
                 instance.__init__.call(instance, args, kwargs);
@@ -616,7 +625,6 @@ var py = {};
 
     // Builtins
     py.type = function type(name, bases, dict) {
-        var proto;
         if (typeof name !== 'string') {
             throw new Error("ValueError: a class name should be a string");
         }
@@ -1116,7 +1124,6 @@ var py = {};
         return expression();
     };
     var evaluate_operator = function (operator, a, b) {
-        var v;
         switch (operator) {
         case 'is': return a === b ? py.True : py.False;
         case 'is not': return a !== b ? py.True : py.False;
