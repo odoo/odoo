@@ -37,14 +37,14 @@ def generate_files():
         fname = action + '.bat'
         files.append(fname)
         with open(fname, 'w') as fp:
-            fp.write('@PATH=%WINDIR%\system32;%WINDIR%;%WINDIR%\System32\Wbem;.')
+            fp.write('@PATH=%WINDIR%\system32;%WINDIR%;%WINDIR%\System32\Wbem;.\n')
             for step in steps:
-                fp.write('@net %s %s' % (step, meta['nt_service_name']))
+                fp.write('@net %s %s\n' % (step, meta['nt_service_name']))
 
     files.append('meta.py')
     with open('meta.py', 'w') as fp:
         for m in 'description serie nt_service_name'.split():
-            fp.write("%s = %r" % (m, meta[m],))
+            fp.write("%s = %r\n" % (m, meta[m],))
 
     return files
 
