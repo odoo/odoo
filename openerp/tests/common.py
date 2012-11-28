@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
-import os
+"""
+The module :mod:`openerp.tests.common` provides a few helpers and classes to write
+tests.
+"""
 import threading
 import time
 import unittest2
@@ -22,7 +25,7 @@ if not DB and hasattr(threading.current_thread(), 'dbname'):
 HOST = '127.0.0.1'
 
 ADMIN_USER = 'admin'
-ADMIN_USER_ID = 1
+ADMIN_USER_ID = openerp.SUPERUSER_ID
 ADMIN_PASSWORD = 'admin'
 
 def start_openerp():
@@ -40,33 +43,86 @@ def stop_openerp():
     """
     openerp.service.stop_services()
 
-class TransactionCase(unittest2.TestCase):
+class BaseCase(unittest2.TestCase):
     """
-    Subclass of TestCase with a single transaction, rolled-back at the end of
-    the tests.
+    Subclass of TestCase for common OpenERP-specific code.
+    
+    This class is abstract and expects self.cr and self.uid to be initialized by subclasses.
+    """
+
+    @classmethod
+    def cursor(self):
+        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
+
+    @classmethod
+    def registry(self, model):
+        return openerp.modules.registry.RegistryManager.get(DB)[model]
+
+    @classmethod
+    def ref(self, xid):
+        """ Returns database ID corresponding to a given identifier.
+
+            :param xid: fully-qualified record identifier, in the form ``module.identifier``
+            :raise: ValueError if not found
+        """
+        assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
+        module, xid = xid.split('.')
+        _, id = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, module, xid)
+        return id
+
+    @classmethod
+    def browse_ref(self, xid):
+        """ Returns a browsable record for the given identifier.
+
+            :param xid: fully-qualified record identifier, in the form ``module.identifier``
+            :raise: ValueError if not found
+        """
+        assert "." in xid, "this method requires a fully qualified parameter, in the following form: 'module.identifier'"
+        module, xid = xid.split('.')
+        return self.registry('ir.model.data').get_object(self.cr, self.uid, module, xid)
+
+
+class TransactionCase(BaseCase):
+    """
+    Subclass of BaseCase with a single transaction, rolled-back at the end of
+    each test (method).
     """
 
     def setUp(self):
-        self.cr = self.cursor()
-        self.uid = openerp.SUPERUSER_ID
+        # Store cr and uid in class variables, to allow ref() and browse_ref to be BaseCase @classmethods
+        # and still access them
+        TransactionCase.cr = self.cursor()
+        TransactionCase.uid = openerp.SUPERUSER_ID
 
     def tearDown(self):
         self.cr.rollback()
         self.cr.close()
 
-    def cursor(self):
-        return openerp.modules.registry.RegistryManager.get(DB).db.cursor()
 
-    def registry(self, model):
-        return openerp.modules.registry.RegistryManager.get(DB)[model]
+class SingleTransactionCase(BaseCase):
+    """
+    Subclass of BaseCase with a single transaction for the whole class,
+    rolled-back after all the tests.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cr = cls.cursor()
+        cls.uid = openerp.SUPERUSER_ID
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.cr.rollback()
+        cls.cr.close()
+
 
 class RpcCase(unittest2.TestCase):
     """
     Subclass of TestCase with a few XML-RPC proxies.
     """
 
-    def __init__(self, name):
-        super(RpcCase, self).__init__(name)
+    def __init__(self, methodName='runTest'):
+        super(RpcCase, self).__init__(methodName)
 
         class A(object):
             pass

@@ -135,7 +135,7 @@ class res_partner_category(osv.osv):
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
     }
     _parent_store = True
     _parent_order = 'name'
@@ -186,7 +186,7 @@ class res_partner(osv.osv, format_address):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Company'),
+        'parent_id': fields.many2one('res.partner', 'Related Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
@@ -213,7 +213,7 @@ class res_partner(osv.osv, format_address):
         'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position', size=128),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
-                                   ('delivery', 'Delivery'), ('contact', 'Contact'),
+                                   ('delivery', 'Shipping'), ('contact', 'Contact'),
                                    ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
@@ -229,7 +229,7 @@ class res_partner(osv.osv, format_address):
         'fax': fields.char('Fax', size=64),
         'mobile': fields.char('Mobile', size=64),
         'birthdate': fields.char('Birthdate', size=64),
-        'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
+        'is_company': fields.boolean('Is a Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
@@ -264,10 +264,15 @@ class res_partner(osv.osv, format_address):
         return False
 
     def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
-        if is_company:
-            image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
-        else:
-            image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        img_path = openerp.modules.get_module_resource('base', 'static/src/img',
+                                                       ('company_image.png' if is_company else 'avatar.png'))
+        with open(img_path, 'rb') as f:
+            image = f.read()
+
+        # colorize user avatars
+        if not is_company:
+            image = tools.image_colorize(image)
+
         return tools.image_resize_image_big(image.encode('base64'))
 
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -318,6 +323,12 @@ class res_partner(osv.osv, format_address):
         if use_parent_address and parent_id:
             parent = self.browse(cr, uid, parent_id, context=context)
             return {'value': dict((key, value_or_id(parent[key])) for key in ADDRESS_FIELDS)}
+        return {}
+
+    def onchange_state(self, cr, uid, ids, state_id, context=None):
+        if state_id:
+            country_id = self.pool.get('res.country.state').browse(cr, uid, state_id, context).country_id.id
+            return {'value':{'country_id':country_id}}
         return {}
 
     def _check_ean_key(self, cr, uid, ids, context=None):
@@ -496,23 +507,6 @@ class res_partner(osv.osv, format_address):
         for adr in adr_pref:
             result[adr] = address_dict.get(adr, default_address)
         return result
-
-    def gen_next_ref(self, cr, uid, ids):
-        if len(ids) != 1:
-            return True
-
-        # compute the next number ref
-        cr.execute("select ref from res_partner where ref is not null order by char_length(ref) desc, ref desc limit 1")
-        res = cr.dictfetchall()
-        ref = res and res[0]['ref'] or '0'
-        try:
-            nextref = int(ref)+1
-        except:
-            raise osv.except_osv(_('Warning'), _("Couldn't generate the next id because some partners have an alphabetic id !"))
-
-        # update the current partner
-        cr.execute("update res_partner set ref=%s where id=%s", (nextref, ids[0]))
-        return True
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)

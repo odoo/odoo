@@ -38,11 +38,11 @@ import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.assertion_report as assertion_report
 from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.tools import assertion_report
 from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models
 
@@ -113,6 +113,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'demo_xml'):
                 noupdate = True
             try:
+                ext = ext.lower()
                 if ext == '.csv':
                     if kind in ('init', 'init_xml'):
                         noupdate = True
@@ -121,8 +122,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
                     tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
-                else:
+                elif ext == '.xml':
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                elif ext == '.js':
+                    pass # .js files are valid but ignored here.
+                else:
+                    _logger.warning("Can't load unknown file type %s.", filename)
             finally:
                 fp.close()
 
@@ -153,7 +158,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         models = pool.load(cr, package)
         loaded_modules.append(package.name)
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if package.state in ('to install', 'to upgrade'):
             init_module_models(cr, package.name, models)
         pool._init_modules.add(package.name)
         status['progress'] = float(index) / len(graph)
@@ -167,18 +172,19 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         idref = {}
 
-        mode = 'update'
-        if hasattr(package, 'init') or package.state == 'to install':
+        if package.state == 'to install':
             mode = 'init'
+        else:
+            mode = 'update'
 
-        if hasattr(package, 'init') or hasattr(package, 'update') or package.state in ('to install', 'to upgrade'):
+        if package.state in ('to install', 'to upgrade'):
             if package.state=='to upgrade':
                 # upgrading the module information
                 modobj.write(cr, SUPERUSER_ID, [module_id], modobj.get_values_from_terp(package.data))
             load_init_xml(module_name, idref, mode)
             load_update_xml(module_name, idref, mode)
             load_data(module_name, idref, mode)
-            if hasattr(package, 'demo') or (package.dbdemo and package.state != 'installed'):
+            if package.dbdemo and package.state != 'installed':
                 status['progress'] = (index + 0.75) / len(graph)
                 load_demo_xml(module_name, idref, mode)
                 load_demo(module_name, idref, mode)
@@ -208,9 +214,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             modobj.update_translations(cr, SUPERUSER_ID, [module_id], None)
 
             package.state = 'installed'
-            for kind in ('init', 'demo', 'update'):
-                if hasattr(package, kind):
-                    delattr(package, kind)
 
         cr.commit()
     
@@ -265,10 +268,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         if not openerp.modules.db.is_initialized(cr):
             _logger.info("init db")
             openerp.modules.db.initialize(cr)
-            tools.config["init"]["all"] = 1
-            tools.config['update']['all'] = 1
-            if not tools.config['without_demo']:
-                tools.config["demo"]['all'] = 1
+            update_module = True
 
         # This is a brand new pool, just created in pooler.get_db_and_pool()
         pool = pooler.get_pool(cr.dbname)
@@ -278,43 +278,51 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps) 
         graph = openerp.modules.graph.Graph()
-        graph.add_module(cr, 'base', force)
+        graph.add_module(cr, 'base', force_demo)
         if not graph:
             _logger.critical('module base cannot be loaded! (hint: verify addons-path)')
             raise osv.osv.except_osv(_('Could not load base module'), _('module base cannot be loaded! (hint: verify addons-path)'))
 
         # processed_modules: for cleanup step after install
         # loaded_modules: to avoid double loading
+        # After load_module_graph(), 'base' has been installed or updated and its state is 'installed'.
         report = assertion_report.assertion_report()
-        loaded_modules, processed_modules = load_module_graph(cr, graph, status, perform_checks=(not update_module), report=report)
+        loaded_modules, processed_modules = load_module_graph(cr, graph, status, report=report)
 
         if tools.config['load_language']:
             for lang in tools.config['load_language'].split(','):
                 tools.load_language(cr, lang)
 
         # STEP 2: Mark other modules to be loaded/updated
+        # This is a one-shot use of tools.config[init|update] from the command line
+        # arguments. It is directly cleared to not interfer with later create/update
+        # issued via RPC.
         if update_module:
             modobj = pool.get('ir.module.module')
-            if ('base' in tools.config['init']) or ('base' in tools.config['update']):
+            if ('base' in tools.config['init']) or ('base' in tools.config['update']) \
+                or ('all' in tools.config['init']) or ('all' in tools.config['update']):
                 _logger.info('updating modules list')
                 modobj.update_list(cr, SUPERUSER_ID)
 
+            if 'all' in tools.config['init']:
+                ids = modobj.search(cr, 1, [])
+                tools.config['init'] = dict.fromkeys([m['name'] for m in modobj.read(cr, 1, ids, ['name'])], 1)
+
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
-            mods = [k for k in tools.config['init'] if tools.config['init'][k]]
-            if mods:
-                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_install(cr, SUPERUSER_ID, ids)
+            mods = [k for k in tools.config['init'] if tools.config['init'][k] and k not in ('base', 'all')]
+            ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'uninstalled'), ('name', 'in', mods)])
+            if ids:
+                modobj.button_install(cr, SUPERUSER_ID, ids) # goes from 'uninstalled' to 'to install'
 
-            mods = [k for k in tools.config['update'] if tools.config['update'][k]]
-            if mods:
-                ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
-                if ids:
-                    modobj.button_upgrade(cr, SUPERUSER_ID, ids)
+            mods = [k for k in tools.config['update'] if tools.config['update'][k] and k not in ('base', 'all')]
+            ids = modobj.search(cr, SUPERUSER_ID, ['&', ('state', '=', 'installed'), ('name', 'in', mods)])
+            if ids:
+                modobj.button_upgrade(cr, SUPERUSER_ID, ids) # goes from 'installed' to 'to upgrade'
 
-            cr.execute("update ir_module_module set state=%s where name=%s", ('installed', 'base'))
-
+        # Remove that funky global one-shot thingy.
+        for kind in ('init', 'demo', 'update'):
+            tools.config[kind] = {}
 
         # STEP 3: Load marked modules (skipping base which was done in STEP 1)
         # IMPORTANT: this is done in two parts, first loading all installed or
@@ -344,7 +352,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj and not model_obj.is_transient():
-                    _logger.warning('Model %s (%s) has no access rules!', model, name)
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
+                        model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights
@@ -364,9 +373,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
 
             # Cleanup orphan records
             pool.get('ir.model.data')._process_end(cr, SUPERUSER_ID, processed_modules)
-
-        for kind in ('init', 'demo', 'update'):
-            tools.config[kind] = {}
 
         cr.commit()
 

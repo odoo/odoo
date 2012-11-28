@@ -77,10 +77,10 @@ class res_request(osv.osv):
         'history': fields.one2many('res.request.history','req_id', 'History')
     }
     _defaults = {
-        'act_from': lambda obj,cr,uid,context={}: uid,
-        'state': lambda obj,cr,uid,context={}: 'draft',
-        'active': lambda obj,cr,uid,context={}: True,
-        'priority': lambda obj,cr,uid,context={}: '1',
+        'act_from': lambda obj,cr,uid,context=None: uid,
+        'state': 'draft',
+        'active': True,
+        'priority': '1',
     }
     _order = 'priority desc, trigger_date, create_date desc'
     _table = 'res_request'
@@ -94,7 +94,7 @@ class res_request_link(osv.osv):
         'priority': fields.integer('Priority'),
     }
     _defaults = {
-        'priority': lambda *a: 5,
+        'priority': 5,
     }
     _order = 'priority'
 res_request_link()
@@ -110,9 +110,9 @@ class res_request_history(osv.osv):
         'date_sent': fields.datetime('Date sent', states={'waiting':[('readonly',True)]}, required=True)
     }
     _defaults = {
-        'name': lambda *a: 'NoName',
-        'act_from': lambda obj,cr,uid,context={}: uid,
-        'act_to': lambda obj,cr,uid,context={}: uid,
+        'name': 'NoName',
+        'act_from': lambda obj,cr,uid,context=None: uid,
+        'act_to': lambda obj,cr,uid,context=None: uid,
         'date_sent': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 res_request_history()

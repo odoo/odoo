@@ -69,7 +69,7 @@ class res_currency(osv.osv):
         'position': fields.selection([('after','After Amount'),('before','Before Amount')], 'Symbol Position', help="Determines where the currency symbol should be placed after or before the amount.")
     }
     _defaults = {
-        'active': lambda *a: 1,
+        'active': 1,
         'position' : 'after',
         'rounding': 0.01,
         'accuracy': 4,
@@ -127,7 +127,7 @@ class res_currency(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         reads = self.read(cr, uid, ids, ['name','symbol'], context=context, load='_classic_write')
-        return [(x['id'], tools.ustr(x['name']) + (x['symbol'] and (' (' + tools.ustr(x['symbol']) + ')') or '')) for x in reads]
+        return [(x['id'], tools.ustr(x['name'])) for x in reads]
 
     def round(self, cr, uid, currency, amount):
         """Return ``amount`` rounded  according to ``currency``'s

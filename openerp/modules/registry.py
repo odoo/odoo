@@ -32,6 +32,7 @@ import openerp.cron
 import openerp.tools
 import openerp.modules.db
 import openerp.tools.config
+from openerp.tools import assertion_report
 
 _logger = logging.getLogger(__name__)
 
@@ -49,6 +50,7 @@ class Registry(object):
         self._store_function = {}
         self._init = True
         self._init_parent = {}
+        self._assertion_report = assertion_report.assertion_report()
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
