@@ -508,23 +508,6 @@ class res_partner(osv.osv, format_address):
             result[adr] = address_dict.get(adr, default_address)
         return result
 
-    def gen_next_ref(self, cr, uid, ids):
-        if len(ids) != 1:
-            return True
-
-        # compute the next number ref
-        cr.execute("select ref from res_partner where ref is not null order by char_length(ref) desc, ref desc limit 1")
-        res = cr.dictfetchall()
-        ref = res and res[0]['ref'] or '0'
-        try:
-            nextref = int(ref)+1
-        except:
-            raise osv.except_osv(_('Warning'), _("Couldn't generate the next id because some partners have an alphabetic id !"))
-
-        # update the current partner
-        cr.execute("update res_partner set ref=%s where id=%s", (nextref, ids[0]))
-        return True
-
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
         if res: return res
