@@ -403,7 +403,11 @@ class expression(object):
     def _get_full_alias(self, alias):
         if not self._get_table_from_alias(alias):
             return False
-        return '%s as %s' % (self._get_table_from_alias(alias)._table, alias)
+        table_name = self._get_table_from_alias(alias)._table
+        if table_name == alias:
+            return '"%s"' % alias
+        else:
+            return '"%s" as %s' % (table_name, alias)
 
     def _add_table_alias(self, alias, table):
         if not self._has_table_alias(alias):
@@ -414,7 +418,7 @@ class expression(object):
 
     def get_tables(self):
         """ Returns the list of tables for SQL queries, like select from ... """
-        return ['"%s"' % item for item in self.table_aliases]
+        return [self._get_full_alias(item) for item in self.table_aliases]
 
     def parse(self, cr, uid, exp, table, context):
         """ Transform the leaves of the expression
@@ -540,6 +544,7 @@ class expression(object):
             #       - get relational table that exists for relational fields
             #       - prepare the alias for tables, that can be the table name if only one-level
             #   - if domain is a path (ex: ('partner_id.name', '=', 'foo')):
+            #     TDE TO ADD: once fully implemented, explain  auto_join
             #     replace all the expression by a normalized equivalent domain
             #       - find the related ids: partner_id.name='foo' -> res_partner.search(('name', '=', 'foo')))
             #       - many2one: leaf becomes directly ('partner_id', 'in', 'partner_ids')
@@ -554,6 +559,44 @@ class expression(object):
 
             relational_table = table.pool.get(field._obj)
             alias = working_table._table
+
+            while len(field_path) > 1 and field._auto_join:
+                if not field._type in ['many2one', 'one2many']:
+                    raise '_auto_join attribute on something else than a many2one or one2many is currently not implemented... crashing'
+
+                previous_alias = alias
+                alias = alias + '__' + field_path[0]
+                if not self._get_table_from_alias(alias):
+                    self._add_table_alias(alias, relational_table)
+                    if field._type == 'many2one':
+                        self.joins.append('%s."%s"=%s."%s"' % (alias, 'id', previous_alias, field_path[0]))
+                    elif field._type == 'one2many':
+                        self.joins.append('%s."%s"=%s."%s"' % (alias, field._fields_id, previous_alias, 'id'))
+                    self.exp[i] = (alias + '.' + field_path[1], self.exp[i][1], self.exp[i][2])
+
+                # udpate working variables
+                field_path = field_path[1].split('.', 1)
+                working_table = relational_table
+                field = working_table._columns.get(field_path[0])
+
+                if not field:
+                    if left == 'id' and operator == 'child_of':
+                        ids2 = to_ids(right, table)
+                        dom = child_of_domain(left, ids2, working_table)
+                        self.exp = self.exp[:i] + dom + self.exp[i + 1:]
+                    else:
+                        # field could not be found in model columns, it's probably invalid, unless
+                        # it's one of the _log_access special fields
+                        # TODO: make these fields explicitly available in self.columns instead!
+                        if field_path[0] not in MAGIC_COLUMNS:
+                            raise ValueError("Invalid field %r in domain expression %r" % (left, exp))
+                    break
+
+                # moved on top
+                relational_table = table.pool.get(field._obj)
+
+            if not field:
+                continue
 
             if len(field_path) > 1:
                 if field._type == 'many2one':
