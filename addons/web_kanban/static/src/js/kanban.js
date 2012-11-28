@@ -323,7 +323,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
-                    self.currently_dragging.index = ui.item.index();
+                    self.currently_dragging.index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
@@ -334,7 +334,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 stop: function(event, ui) {
                     var record = ui.item.data('widget');
                     var old_index = self.currently_dragging.index;
-                    var new_index = ui.item.index();
+                    var new_index = ui.item.parent().children('.oe_kanban_record').index(ui.item);
                     var old_group = self.currently_dragging.group;
                     var new_group = ui.item.parents('.oe_kanban_column:first').data('widget');
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
