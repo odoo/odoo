@@ -1245,12 +1245,15 @@ class account_invoice(osv.osv):
             ref = invoice.reference
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
+        partner = invoice.partner_id
+        if partner.parent_id and not partner.is_company:
+            partner = partner.parent_id
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
-            'partner_id': invoice.partner_id.id,
+            'partner_id': partner.id,
             'ref':ref,
             'date': date,
             'currency_id':currency_id,
@@ -1261,7 +1264,7 @@ class account_invoice(osv.osv):
             'debit': direction * pay_amount<0 and - direction * pay_amount,
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
-            'partner_id': invoice.partner_id.id,
+            'partner_id': partner.id,
             'ref':ref,
             'date': date,
             'currency_id':currency_id,
