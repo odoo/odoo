@@ -148,7 +148,7 @@
                     <group>
                         <group>
                             <label for="type" attrs="{'invisible': [('parent_id','=', False)]}"/>
-                            <div attrs="{'invisible': [('parent_id','=', False)]}" invisible="1" name="div_type">
+                            <div attrs="{'invisible': [('parent_id','=', False)]}" name="div_type">
                                 <field class="oe_inline"
                                     name="type"/>
                                 <label for="use_parent_address" class="oe_edit_only"/>
@@ -295,7 +295,7 @@
                    <filter string="Customers" name="customer" icon="terp-personal" domain="[('customer','=',1)]" help="Customer Partners"/>
                    <separator/>
                    <filter string="Suppliers" name="supplier" icon="terp-personal" domain="[('supplier','=',1)]" help="Supplier Partners"/>
-                   <field name="category_id" string="Category" filter_domain="[('category_id','ilike', self)]"/>
+                   <field name="category_id" string="Tag" filter_domain="[('category_id','ilike', self)]"/>
                    <field name="user_id"/>
                    <field name="parent_id" filter_domain="[('parent_id','child_of',[self])]"/>
                    <group expand="0" string="Group By...">
@@ -527,7 +527,7 @@
             <field name="help">Manage the partner categories in order to better classify them for tracking and analysis purposes. A partner may belong to several categories and categories have a hierarchy structure: a partner belonging to a category also belong to his parent category.</field>
         </record>
 
-        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Categories" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
+        <menuitem action="action_partner_category_form" id="menu_partner_category_form" name="Partner Tags" sequence="4" parent="menu_config_address_book" groups="base.group_no_one"/>
 
     </data>
 </openerp>
