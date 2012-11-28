@@ -68,16 +68,16 @@ else:
     # based on http://mail.python.org/pipermail/python-win32/2007-June/006174.html
     _TH32CS_SNAPPROCESS = 0x00000002
     class _PROCESSENTRY32(ctypes.Structure):
-         _fields_ = [("dwSize", ctypes.c_ulong),
-                     ("cntUsage", ctypes.c_ulong),
-                     ("th32ProcessID", ctypes.c_ulong),
-                     ("th32DefaultHeapID", ctypes.c_ulong),
-                     ("th32ModuleID", ctypes.c_ulong),
-                     ("cntThreads", ctypes.c_ulong),
-                     ("th32ParentProcessID", ctypes.c_ulong),
-                     ("pcPriClassBase", ctypes.c_ulong),
-                     ("dwFlags", ctypes.c_ulong),
-                     ("szExeFile", ctypes.c_char * 260)]
+        _fields_ = [("dwSize", ctypes.c_ulong),
+                    ("cntUsage", ctypes.c_ulong),
+                    ("th32ProcessID", ctypes.c_ulong),
+                    ("th32DefaultHeapID", ctypes.c_ulong),
+                    ("th32ModuleID", ctypes.c_ulong),
+                    ("cntThreads", ctypes.c_ulong),
+                    ("th32ParentProcessID", ctypes.c_ulong),
+                    ("pcPriClassBase", ctypes.c_ulong),
+                    ("dwFlags", ctypes.c_ulong),
+                    ("szExeFile", ctypes.c_char * 260)]
 
     def getppid():
         CreateToolhelp32Snapshot = ctypes.windll.kernel32.CreateToolhelp32Snapshot
@@ -100,7 +100,7 @@ else:
             CloseHandle(hProcessSnap)
 
     from contextlib import contextmanager
-    from openerp.release import serie
+    from openerp.release import nt_service_name
 
     def is_running_as_nt_service():
         @contextmanager
@@ -110,10 +110,8 @@ else:
             finally:
                 ws.CloseServiceHandle(srv)
 
-        service_name = 'openerp-server-' + serie
-
         with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
-            with close_srv(ws.SmartOpenService(hscm, service_name, ws.SERVICE_ALL_ACCESS)) as hs:
+            with close_srv(ws.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
                 info = ws.QueryServiceStatusEx(hs)
                 return info.ProcessId == getppid()
 

@@ -29,14 +29,19 @@ import sys
 import subprocess
 import os
 
-from ..openerp.release import serie
+try:
+    import meta
+except ImportError:
+    if hasattr(sys, 'frozen'):
+        raise
+    from setup import generate_files
+    generate_files()
+    import meta
 
 class OpenERPServerService(win32serviceutil.ServiceFramework):
     # required info
-    _svc_name_ = "openerp-server-" + serie
-    _svc_display_name_ = "OpenERP Server " + serie
-    # optionnal info
-    _svc_description_ = "OpenERP Server %s service" % (serie,)
+    _svc_name_ = meta.nt_service_name
+    _svc_display_name_ = "%s %s" % (meta.description, meta.serie)
 
     def __init__(self, args):
         win32serviceutil.ServiceFramework.__init__(self, args)
