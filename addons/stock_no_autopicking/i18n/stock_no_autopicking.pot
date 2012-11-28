@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-24 02:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -26,6 +26,11 @@ msgid "Manufacturing Order"
 msgstr ""
 
 #. module: stock_no_autopicking
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: stock_no_autopicking
 #: field:product.product,auto_pick:0
 msgid "Auto Picking"
 msgstr ""
@@ -36,11 +41,6 @@ msgid "Auto picking for raw materials of production orders."
 msgstr ""
 
 #. module: stock_no_autopicking
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: stock_no_autopicking
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
 msgstr ""
@@ -48,5 +48,10 @@ msgstr ""
 #. module: stock_no_autopicking
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
+msgstr ""
+
+#. module: stock_no_autopicking
+#: constraint:product.product:0
+msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
 msgstr ""
 

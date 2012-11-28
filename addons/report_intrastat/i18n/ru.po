@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2011-01-01 12:50+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:08+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:02+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -22,9 +22,9 @@ msgid "Cancelled Invoice"
 msgstr "Отмененный счет"
 
 #. module: report_intrastat
-#: sql_constraint:res.country:0
-msgid "The name of the country must be unique !"
-msgstr "Название страны должно быть уникальным !"
+#: selection:report.intrastat,month:0
+msgid "June"
+msgstr "Июнь"
 
 #. module: report_intrastat
 #: sql_constraint:res.country:0
@@ -45,14 +45,6 @@ msgstr "Счета поставщиков"
 #: report:account.invoice.intrastat:0
 msgid "Unit Price"
 msgstr "Цена за ед."
-
-#. module: report_intrastat
-#: constraint:product.template:0
-msgid ""
-"Error: The default UOM and the purchase UOM must be in the same category."
-msgstr ""
-"Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
-"категорию."
 
 #. module: report_intrastat
 #: selection:report.intrastat,type:0
@@ -110,9 +102,11 @@ msgid "Invoice Date"
 msgstr "Дата счета-фактуры"
 
 #. module: report_intrastat
-#: selection:report.intrastat,month:0
-msgid "June"
-msgstr "Июнь"
+#: constraint:product.template:0
+msgid ""
+"Error: The default Unit of Measure and the purchase Unit of Measure must be "
+"in the same category."
+msgstr ""
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -128,11 +122,6 @@ msgstr "Количество"
 #: report:account.invoice.intrastat:0
 msgid "Base"
 msgstr "База"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Year"
-msgstr "Этот год"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -151,11 +140,6 @@ msgstr "Июль"
 #: view:report.intrastat.code:0
 msgid "Intrastat code"
 msgstr "Код интрастат"
-
-#. module: report_intrastat
-#: view:report.intrastat:0
-msgid "This Month"
-msgstr "Данный месяц"
 
 #. module: report_intrastat
 #: report:account.invoice.intrastat:0
@@ -191,6 +175,11 @@ msgstr "Счет"
 #: model:ir.model,name:report_intrastat.model_res_country
 msgid "Country"
 msgstr "Страна"
+
+#. module: report_intrastat
+#: sql_constraint:res.country:0
+msgid "The name of the country must be unique !"
+msgstr "Название страны должно быть уникальным !"
 
 #. module: report_intrastat
 #: selection:report.intrastat,month:0
@@ -339,6 +328,7 @@ msgstr "Цена"
 #. module: report_intrastat
 #: model:ir.actions.act_window,name:report_intrastat.action_report_intrastat_code_tree
 #: model:ir.ui.menu,name:report_intrastat.menu_report_intrastat_code
+#: view:report.intrastat.code:0
 #: field:report.intrastat.code,name:0
 msgid "Intrastat Code"
 msgstr "Код интрастат"
@@ -351,6 +341,9 @@ msgstr "Код интрастат"
 
 #~ msgid "All Months"
 #~ msgstr "Все месяцы"
+
+#~ msgid "This Month"
+#~ msgstr "Данный месяц"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Неправильный XML для просмотра архитектуры!"
@@ -366,3 +359,12 @@ msgstr "Код интрастат"
 
 #~ msgid "Origin"
 #~ msgstr "Источник"
+
+#~ msgid ""
+#~ "Error: The default UOM and the purchase UOM must be in the same category."
+#~ msgstr ""
+#~ "Ошибка. ед. изм. по умолчанию и закупочные ед. изм. должны иметь одинаковую "
+#~ "категорию."
+
+#~ msgid "This Year"
+#~ msgstr "Этот год"

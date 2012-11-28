@@ -79,10 +79,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //the client is starting to weight
         weighting_start: function(){
             if(!this.weighting){
-                this.weight = 0;
                 this.weighting = true;
-                this.bypass_proxy = false;
-                return this.message('weighting_start');
+                if(!this.bypass_proxy){
+                    this.weight = 0;
+                    return this.message('weighting_start');
+                }
             }
         },
 
@@ -104,18 +105,25 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
         },
 
-        // sets a custom weight, ignoring the proxy returned value until the next weighting_end 
+        // sets a custom weight, ignoring the proxy returned value. 
         debug_set_weight: function(kg){
             this.bypass_proxy = true;
             this.weight = kg;
         },
 
+        // resets the custom weight and re-enable listening to the proxy for weight values
+        debug_reset_weight: function(){
+            this.bypass_proxy = false;
+            this.weight = 0;
+        },
+
         // the client has finished weighting products
         weighting_end: function(){
-            this.weight = 0;
-            this.weighting = false;
-            this.bypass_proxy = false;
-            return this.message('weighting_end');
+            if(!this.bypass_proxy){
+                this.weight = 0;
+                this.weighting = false;
+                this.message('weighting_end');
+            }
         },
 
         // the pos asks the client to pay 'price' units
@@ -194,7 +202,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *     {
          *          quantity:           (number) the number of items, or the weight, 
          *          unit_name:          (string) the name of the item's unit (kg, dozen, ...)
-         *          list_price:         (number) the price of one unit of the item before discount
+         *          price:              (number) the price of one unit of the item before discount
          *          discount:           (number) the discount on the product in % [0,100] 
          *          product_name:       (string) the name of the product
          *          price_with_tax:     (number) the price paid for this orderline, tax included

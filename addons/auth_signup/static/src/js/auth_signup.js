@@ -7,12 +7,15 @@ openerp.auth_signup = function(instance) {
             var self = this;
             var d = this._super();
 
+            self.$(".oe_signup_show").hide();
             // to switch between the signup and regular login form
             this.$('a.oe_signup_signup').click(function(ev) {
                 if (ev) {
                     ev.preventDefault();
                 }
                 self.$el.addClass("oe_login_signup");
+                self.$(".oe_signup_show").show();
+                self.$(".oe_signup_hide").hide();
                 return false;
             });
             this.$('a.oe_signup_back').click(function(ev) {
@@ -20,6 +23,8 @@ openerp.auth_signup = function(instance) {
                     ev.preventDefault();
                 }
                 self.$el.removeClass("oe_login_signup");
+                self.$(".oe_signup_show").hide();
+                self.$(".oe_signup_hide").show();
                 delete self.params.token;
                 return false;
             });
@@ -32,9 +37,11 @@ openerp.auth_signup = function(instance) {
 
             // in case of a signup, retrieve the user information from the token
             if (self.params.db && self.params.token) {
-                d = self.rpc("/auth_signup/retrieve", {dbname: self.params.db, token: self.params.token})
+                d.done(function() {
+                    self.rpc("/auth_signup/retrieve", {dbname: self.params.db, token: self.params.token})
                         .done(self.on_token_loaded)
-                        .fail(self.on_token_failed);
+                        .fail(self.on_token_failed)
+                });
             }
             return d;
         },
@@ -98,7 +105,6 @@ openerp.auth_signup = function(instance) {
                     name: name,
                     login: login,
                     password: password,
-                    //state: $.param(this.params)
                 };
                 
                 var self = this,
