@@ -827,9 +827,10 @@ openerp.mail = function (session) {
             return false;
         },
 
-        /*The selected thread and all childs (messages/thread) became read
-        * @param {object} mouse envent
-        */
+        /* Set the selected thread and all childs as read or unread, based on
+         * read parameter.
+         * @param {boolean} read_value
+         */
         on_message_read_unread: function (read_value) {
             var self = this;
             var messages = [this].concat(this.get_childs());
