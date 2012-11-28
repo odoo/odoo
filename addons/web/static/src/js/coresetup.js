@@ -119,6 +119,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
+        var url = "#";
+        $.bbq.pushState(url);
+        window.location.search = "";
         return this.rpc("/web/session/destroy", {});
     },
     get_cookie: function (name) {
