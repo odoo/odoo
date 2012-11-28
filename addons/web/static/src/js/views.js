@@ -394,6 +394,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             options.on_close();
         }
         this.dialog_stop();
+        return $.when();
     },
     ir_actions_server: function (action, options) {
         var self = this;
@@ -407,29 +408,36 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_report_xml: function(action, options) {
         var self = this;
         instance.web.blockUI();
-        instance.web.pyeval.eval_domains_and_contexts({
+        return instance.web.pyeval.eval_domains_and_contexts({
             contexts: [action.context],
             domains: []
-        }).done(function(res) {
+        }).then(function(res) {
             action = _.clone(action);
             action.context = res.context;
             var c = instance.webclient.crashmanager;
-            self.session.get_file({
-                url: '/web/report',
-                data: {action: JSON.stringify(action)},
-                complete: instance.web.unblockUI,
-                success: function(){
-                    if (!self.dialog) {
-                        options.on_close();
+            return $.Deferred(function (d) {
+                self.session.get_file({
+                    url: '/web/report',
+                    data: {action: JSON.stringify(action)},
+                    complete: instance.web.unblockUI,
+                    success: function(){
+                        if (!self.dialog) {
+                            options.on_close();
+                        }
+                        self.dialog_stop();
+                        d.resolve();
+                    },
+                    error: function () {
+                        c.rpc_error.apply(c, arguments);
+                        d.reject();
                     }
-                    self.dialog_stop();
-                },
-                error: c.rpc_error.bind(c)
-            })
+                })
+            });
         });
     },
     ir_actions_act_url: function (action) {
         window.open(action.url, action.target === 'self' ? '_self' : '_blank');
+        return $.when();
     },
 });
 
