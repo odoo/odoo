@@ -109,8 +109,29 @@ class sale_order_line_make_invoice(osv.osv_memory):
 
         if not invoices:
             raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
-
+        if context.get('open_invoices', False):
+            return self.open_invoices( cr, uid, ids, res, context=context)
         return {'type': 'ir.actions.act_window_close'}
+
+    def open_invoices(self, cr, uid, ids, invoice_ids, context=None):
+        """ open a view on one of the given invoice_ids """
+        ir_model_data = self.pool.get('ir.model.data')
+        form_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_form')
+        form_id = form_res and form_res[1] or False
+        tree_res = ir_model_data.get_object_reference(cr, uid, 'account', 'invoice_tree')
+        tree_id = tree_res and tree_res[1] or False
+ 
+        return {
+            'name': _('Invoice'),
+            'view_type': 'form',
+            'view_mode': 'form,tree',
+            'res_model': 'account.invoice',
+            'res_id': invoice_ids,
+            'view_id': False,
+            'views': [(form_id, 'form'), (tree_id, 'tree')],
+            'context': {'type': 'out_invoice'},
+            'type': 'ir.actions.act_window',
+        }
 
 sale_order_line_make_invoice()
 
