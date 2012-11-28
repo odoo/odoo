@@ -1681,11 +1681,11 @@ instance.web.form.compute_domain = function(expr, fields) {
         switch (op.toLowerCase()) {
             case '=':
             case '==':
-                stack.push(field_value == val);
+                stack.push(_.isEqual(field_value, val));
                 break;
             case '!=':
             case '<>':
-                stack.push(field_value != val);
+                stack.push(!_.isEqual(field_value, val));
                 break;
             case '<':
                 stack.push(field_value < val);
