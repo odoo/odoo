@@ -448,6 +448,20 @@
     </table>
     </div>
 </t>
+<t t-name="WebClient.timezone_notification">
+    <div class="oe_webclient_timezone_notification">
+        <p>Your user's preference timezone does not match your browser timezone:</p>
+
+        <dl>
+            <dt>User's timezone</dt>
+            <dd><t t-esc="user_timezone"/> (<t t-esc="user_offset"/>)</dd>
+            <dt>Browser's timezone</dt>
+            <dd><t t-esc="browser_offset"/></dd>
+        </dl>
+
+        <p><a href="#">Click here to change your user's timezone.</a></p>
+    </div>
+</t>
 
 <t t-name="EmbedClient">
     <div class="openerp">

@@ -24,7 +24,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', {
+        return this.$el.notify('create', {
             title: title,
             text: text
         }, opts);
@@ -35,7 +35,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', 'oe_notification_alert', {
+        return this.$el.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         }, opts);
@@ -1163,6 +1163,30 @@ instance.web.WebClient = instance.web.Client.extend({
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
+        self.check_timezone();
+    },
+    check_timezone: function() {
+        var self = this;
+        var user_offset = instance.session.user_context.tz_offset;
+        var offset = -(new Date().getTimezoneOffset());
+        // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+        var browser_offset = (offset < 0) ? "-" : "+";
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+        if (browser_offset !== user_offset) {
+            var notification = this.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
+                user_timezone: instance.session.user_context.tz || 'UTC',
+                user_offset: user_offset,
+                browser_offset: browser_offset,
+            }), true);
+            notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                notification.close();
+            }).find('a').on('click', function() {
+                notification.close();
+                self.user_menu.on_menu_settings();
+                return false;
+            });
+        }
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
@@ -1179,11 +1203,11 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     do_notify: function() {
         var n = this.notification;
-        n.notify.apply(n, arguments);
+        return n.notify.apply(n, arguments);
     },
     do_warn: function() {
         var n = this.notification;
-        n.warn.apply(n, arguments);
+        return n.warn.apply(n, arguments);
     },
     on_logout: function() {
         var self = this;
