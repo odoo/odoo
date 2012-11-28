@@ -295,12 +295,16 @@ class sale_order(osv.osv):
         }
         return {'warning': warning, 'value': value}
 
-    def onchange_partner_id(self, cr, uid, ids, part):
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
             return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
 
-        addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['delivery', 'invoice', 'contact'])
-        part = self.pool.get('res.partner').browse(cr, uid, part)
+        part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
+        #if the chosen partner is not a company and has a parent company, use the parent to choose the delivery, the 
+        #invoicing addresses and all the fields related to the partner.
+        if part.parent_id and not part.is_company:
+            part = part.parent_id
+        addr = self.pool.get('res.partner').address_get(cr, uid, [part.id], ['delivery', 'invoice', 'contact'])
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         payment_term = part.property_payment_term and part.property_payment_term.id or False
         fiscal_position = part.property_account_position and part.property_account_position.id or False
@@ -355,7 +359,7 @@ class sale_order(osv.osv):
             'type': 'out_invoice',
             'reference': order.client_order_ref or order.name,
             'account_id': order.partner_id.property_account_receivable.id,
-            'partner_id': order.partner_id.id,
+            'partner_id': order.partner_invoice_id.id,
             'journal_id': journal_ids[0],
             'invoice_line': [(6, 0, lines)],
             'currency_id': order.pricelist_id.currency_id.id,
