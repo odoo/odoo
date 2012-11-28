@@ -166,28 +166,35 @@ class account_move_line(osv.osv):
                 del data[f]
         return data
 
+    def _prepare_analytic_line(self, cr, uid, obj_line, context=None):
+        """
+        Prepare the values given at the create() of account.analytic.line upon the validation of a journal item having
+        an analytic account. This method is intended to be extended in other modules.
+
+        :param obj_line: browse record of the account.move.line that triggered the analytic line creation
+        """
+        return {'name': obj_line.name,
+                'date': obj_line.date,
+                'account_id': obj_line.analytic_account_id.id,
+                'unit_amount': obj_line.quantity,
+                'product_id': obj_line.product_id and obj_line.product_id.id or False,
+                'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
+                'amount': (obj_line.credit or  0.0) - (obj_line.debit or 0.0),
+                'general_account_id': obj_line.account_id.id,
+                'journal_id': obj_line.journal_id.analytic_journal_id.id,
+                'ref': obj_line.ref,
+                'move_id': obj_line.id,
+                'user_id': uid,
+               }
+
     def create_analytic_lines(self, cr, uid, ids, context=None):
         acc_ana_line_obj = self.pool.get('account.analytic.line')
         for obj_line in self.browse(cr, uid, ids, context=context):
             if obj_line.analytic_account_id:
                 if not obj_line.journal_id.analytic_journal_id:
                     raise osv.except_osv(_('No Analytic Journal !'),_("You have to define an analytic journal on the '%s' journal!") % (obj_line.journal_id.name, ))
-                amt = (obj_line.credit or  0.0) - (obj_line.debit or 0.0)
-                vals_lines = {
-                    'name': obj_line.name,
-                    'date': obj_line.date,
-                    'account_id': obj_line.analytic_account_id.id,
-                    'unit_amount': obj_line.quantity,
-                    'product_id': obj_line.product_id and obj_line.product_id.id or False,
-                    'product_uom_id': obj_line.product_uom_id and obj_line.product_uom_id.id or False,
-                    'amount': amt,
-                    'general_account_id': obj_line.account_id.id,
-                    'journal_id': obj_line.journal_id.analytic_journal_id.id,
-                    'ref': obj_line.ref,
-                    'move_id': obj_line.id,
-                    'user_id': uid
-                }
-                acc_ana_line_obj.create(cr, uid, vals_lines)
+                vals_line = self._prepare_analytic_line(cr, uid, obj_line, context=context)
+                acc_ana_line_obj.create(cr, uid, vals_line)
         return True
 
     def _default_get_move_form_hook(self, cursor, user, data):
@@ -591,12 +598,34 @@ class account_move_line(osv.osv):
                     return False
         return True
 
+    def _check_currency_and_amount(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if (l.amount_currency and not l.currency_id):
+                return False
+        return True
+
+    def _check_currency_amount(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.amount_currency:
+                if (l.amount_currency > 0.0 and l.credit > 0.0) or (l.amount_currency < 0.0 and l.debit > 0.0):
+                    return False
+        return True
+
+    def _check_currency_company(self, cr, uid, ids, context=None):
+        for l in self.browse(cr, uid, ids, context=context):
+            if l.currency_id.id == l.company_id.currency_id.id:
+                return False
+        return True
+
     _constraints = [
         (_check_no_view, 'You cannot create journal items on an account of type view.', ['account_id']),
         (_check_no_closed, 'You cannot create journal items on closed account.', ['account_id']),
         (_check_company_id, 'Account and Period must belong to the same company.', ['company_id']),
         (_check_date, 'The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal.', ['date']),
         (_check_currency, 'The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal.', ['currency_id']),
+        (_check_currency_and_amount, "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field.", ['currency_id','amount_currency']),
+        (_check_currency_amount, 'The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit.', ['amount_currency']),
+        (_check_currency_company, "You cannot provide a secondary currency if it is the same than the company one." , ['currency_id']),
     ]
 
     #TODO: ONCHANGE_ACCOUNT_ID: set account_tax_id
@@ -967,7 +996,7 @@ class account_move_line(osv.osv):
                                 'has been confirmed.') % res[2])
         return res
 
-    def _remove_move_reconcile(self, cr, uid, move_ids=None, context=None):
+    def _remove_move_reconcile(self, cr, uid, move_ids=None, opening_reconciliation=False, context=None):
         # Function remove move rencocile ids related with moves
         obj_move_line = self.pool.get('account.move.line')
         obj_move_rec = self.pool.get('account.move.reconcile')
@@ -982,6 +1011,8 @@ class account_move_line(osv.osv):
         unlink_ids += rec_ids
         unlink_ids += part_rec_ids
         if unlink_ids:
+            if opening_reconciliation:
+                obj_move_rec.write(cr, uid, unlink_ids, {'opening_reconciliation': False})
             obj_move_rec.unlink(cr, uid, unlink_ids)
         return True
 

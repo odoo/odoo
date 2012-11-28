@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-24 02:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,12 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:75
+#: view:audittrail.log:0
+msgid "Old Value Text : "
+msgstr ""
+
+#. module: audittrail
+#: code:addons/audittrail/audittrail.py:76
 #, python-format
 msgid "WARNING: audittrail is not part of the pool"
 msgstr ""
@@ -33,9 +38,11 @@ msgid "Subscribed"
 msgstr ""
 
 #. module: audittrail
-#: sql_constraint:audittrail.rule:0
-msgid "There is already a rule defined on this object\n"
-" You cannot define another: please edit the existing one."
+#: code:addons/audittrail/audittrail.py:260
+#: code:addons/audittrail/audittrail.py:347
+#: code:addons/audittrail/audittrail.py:408
+#, python-format
+msgid "'%s' Model does not exist..."
 msgstr ""
 
 #. module: audittrail
@@ -44,14 +51,21 @@ msgid "Subscribed Rule"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
 #: model:ir.model,name:audittrail.model_audittrail_rule
 msgid "Audittrail Rule"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.rule:0
+#: field:audittrail.rule,state:0
+msgid "Status"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.view.log:0
 #: model:ir.actions.act_window,name:audittrail.action_audittrail_log_tree
-#: model:ir.ui.menu,name:audittrail.menu_action_audittrail_log_tree
+#: model:ir.ui.menu,name:audittrail.menu_audit_logs
 msgid "Audit Logs"
 msgstr ""
 
@@ -59,12 +73,6 @@ msgstr ""
 #: view:audittrail.log:0
 #: view:audittrail.rule:0
 msgid "Group By..."
-msgstr ""
-
-#. module: audittrail
-#: view:audittrail.rule:0
-#: field:audittrail.rule,state:0
-msgid "State"
 msgstr ""
 
 #. module: audittrail
@@ -188,8 +196,8 @@ msgid "Select this if you want to keep track of modification on any record of th
 msgstr ""
 
 #. module: audittrail
-#: field:audittrail.rule,log_create:0
-msgid "Log Creates"
+#: view:audittrail.rule:0
+msgid "AuditTrail Rules"
 msgstr ""
 
 #. module: audittrail
@@ -198,8 +206,8 @@ msgid "Select object for which you want to generate log."
 msgstr ""
 
 #. module: audittrail
-#: view:audittrail.log:0
-msgid "Old Value Text : "
+#: model:ir.ui.menu,name:audittrail.menu_audit
+msgid "Audit"
 msgstr ""
 
 #. module: audittrail
@@ -213,7 +221,7 @@ msgid "Log Reads"
 msgstr ""
 
 #. module: audittrail
-#: code:addons/audittrail/audittrail.py:76
+#: code:addons/audittrail/audittrail.py:77
 #, python-format
 msgid "Change audittrail depends -- Setting rule as DRAFT"
 msgstr ""
@@ -229,8 +237,8 @@ msgid "Fields"
 msgstr ""
 
 #. module: audittrail
-#: view:audittrail.rule:0
-msgid "AuditTrail Rules"
+#: field:audittrail.rule,log_create:0
+msgid "Log Creates"
 msgstr ""
 
 #. module: audittrail
@@ -260,8 +268,20 @@ msgid "UnSubscribe"
 msgstr ""
 
 #. module: audittrail
+#: sql_constraint:audittrail.rule:0
+msgid "There is already a rule defined on this object\n"
+" You cannot define another: please edit the existing one."
+msgstr ""
+
+#. module: audittrail
 #: field:audittrail.rule,log_unlink:0
 msgid "Log Deletes"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.log:0
+#: view:audittrail.rule:0
+msgid "Model"
 msgstr ""
 
 #. module: audittrail
@@ -300,6 +320,12 @@ msgid "New Value"
 msgstr ""
 
 #. module: audittrail
+#: code:addons/audittrail/audittrail.py:223
+#, python-format
+msgid "'%s' field does not exist in '%s' model"
+msgstr ""
+
+#. module: audittrail
 #: view:audittrail.log:0
 msgid "AuditTrail Logs"
 msgstr ""
@@ -310,6 +336,7 @@ msgid "Draft  Rule"
 msgstr ""
 
 #. module: audittrail
+#: view:audittrail.log:0
 #: model:ir.model,name:audittrail.model_audittrail_log
 msgid "Audittrail Log"
 msgstr ""
@@ -342,6 +369,11 @@ msgstr ""
 #. module: audittrail
 #: model:ir.model,name:audittrail.model_audittrail_log_line
 msgid "Log Line"
+msgstr ""
+
+#. module: audittrail
+#: view:audittrail.view.log:0
+msgid "or"
 msgstr ""
 
 #. module: audittrail

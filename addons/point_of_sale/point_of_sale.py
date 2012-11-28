@@ -618,9 +618,10 @@ class pos_order(osv.osv):
         return session_ids and session_ids[0] or False
 
     def _default_pricelist(self, cr, uid, context=None):
-        res = self.pool.get('sale.shop').search(cr, uid, [], context=context)
-        if res:
-            shop = self.pool.get('sale.shop').browse(cr, uid, res[0], context=context)
+        session_ids = self._default_session(cr, uid, context) 
+        if session_ids:
+            session_record = self.pool.get('pos.session').browse(cr, uid, session_ids, context=context)
+            shop = self.pool.get('sale.shop').browse(cr, uid, session_record.config_id.shop_id.id, context=context)
             return shop.pricelist_id and shop.pricelist_id.id or False
         return False
 
@@ -1305,9 +1306,10 @@ class product_product(osv.osv):
     _columns = {
         'income_pdt': fields.boolean('Point of Sale Cash In', help="Check if, this is a product you can use to put cash into a statement for the point of sale backend."),
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="Check if, this is a product you can use to take cash from a statement for the point of sale backend, example: money lost, transfer to bank, etc."),
+        'available_in_pos': fields.boolean('Available in the Point of Sale', help='Check if you want this product to appear in the Point of Sale'), 
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
-            help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'to_weight' : fields.boolean('To Weigh', help="Check if the product should be weighted (mainly used with self check-out interface)."),
+            help="The Point of Sale Category this products belongs to. Those categories are used to group similar products and are specific to the Point of Sale."),
+        'to_weight' : fields.boolean('To Weight', help="Check if the product should be weighted (mainly used with self check-out interface)."),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):
@@ -1332,6 +1334,7 @@ class product_product(osv.osv):
 
     _defaults = {
         'to_weight' : False,
+        'available_in_pos': True,
         'pos_categ_id' : _default_pos_categ_id,
     }
 

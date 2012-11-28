@@ -51,7 +51,6 @@ GTD rests on the principle that a person needs to move tasks out of the mind by 
     'demo': ['project_gtd_demo.xml'],
     'test':['test/task_timebox.yml'],
     'installable': True,
-    'application': True,
     'auto_install': False,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

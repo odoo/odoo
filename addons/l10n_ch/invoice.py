@@ -67,7 +67,7 @@ class account_invoice(osv.osv):
     _columns = {
         ### BVR reference type BVR or FREE
         'reference_type': fields.selection(_get_reference_type,
-            'Reference Type', required=True),
+            'Payment Reference', required=True),
         ### Partner bank link between bank and partner id
         'partner_bank_id': fields.many2one('res.partner.bank', 'Bank Account',
             help='The partner bank account to pay\nKeep empty to use the default'

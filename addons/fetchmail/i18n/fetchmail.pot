@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-24 02:52+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,18 +46,13 @@ msgid "Keep Attachments"
 msgstr ""
 
 #. module: fetchmail
+#: field:fetchmail.server,is_ssl:0
+msgid "SSL/TLS"
+msgstr ""
+
+#. module: fetchmail
 #: help:fetchmail.server,original:0
 msgid "Whether a full original copy of each email should be kept for referenceand attached to each processed message. This will usually double the size of your message database."
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,priority:0
-msgid "Server Priority"
-msgstr ""
-
-#. module: fetchmail
-#: field:fetchmail.server,state:0
-msgid "State"
 msgstr ""
 
 #. module: fetchmail
@@ -77,8 +72,8 @@ msgid "Incoming Mail Servers"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,port:0
-msgid "Port"
+#: view:fetchmail.server:0
+msgid "Server type IMAP."
 msgstr ""
 
 #. module: fetchmail
@@ -92,8 +87,8 @@ msgid "Local Server"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,user:0
-msgid "Username"
+#: field:fetchmail.server,state:0
+msgid "Status"
 msgstr ""
 
 #. module: fetchmail
@@ -112,8 +107,8 @@ msgid "SSL"
 msgstr ""
 
 #. module: fetchmail
-#: model:ir.model,name:fetchmail.model_mail_message
-msgid "Email Message"
+#: model:ir.model,name:fetchmail.model_fetchmail_config_settings
+msgid "fetchmail.config.settings"
 msgstr ""
 
 #. module: fetchmail
@@ -137,10 +132,8 @@ msgid "Keep Original"
 msgstr ""
 
 #. module: fetchmail
-#: code:addons/fetchmail/fetchmail.py:155
-#, python-format
-msgid "Here is what we got instead:\n"
-" %s"
+#: view:fetchmail.server:0
+msgid "Advanced Options"
 msgstr ""
 
 #. module: fetchmail
@@ -161,13 +154,13 @@ msgid "Connection test failed!"
 msgstr ""
 
 #. module: fetchmail
-#: help:fetchmail.server,server:0
-msgid "Hostname or IP of the mail server"
+#: field:fetchmail.server,user:0
+msgid "Username"
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Server type IMAP."
+#: help:fetchmail.server,server:0
+msgid "Hostname or IP of the mail server"
 msgstr ""
 
 #. module: fetchmail
@@ -176,8 +169,10 @@ msgid "Name"
 msgstr ""
 
 #. module: fetchmail
-#: field:fetchmail.server,is_ssl:0
-msgid "SSL/TLS"
+#: code:addons/fetchmail/fetchmail.py:155
+#, python-format
+msgid "Here is what we got instead:\n"
+" %s."
 msgstr ""
 
 #. module: fetchmail
@@ -191,7 +186,7 @@ msgid "Server Action"
 msgstr ""
 
 #. module: fetchmail
-#: field:mail.message,fetchmail_server_id:0
+#: field:mail.mail,fetchmail_server_id:0
 msgid "Inbound Mail Server"
 msgstr ""
 
@@ -217,8 +212,13 @@ msgid "Whether attachments should be downloaded. If not enabled, incoming emails
 msgstr ""
 
 #. module: fetchmail
-#: view:fetchmail.server:0
-msgid "Advanced Options"
+#: model:ir.model,name:fetchmail.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
+
+#. module: fetchmail
+#: field:fetchmail.server,priority:0
+msgid "Server Priority"
 msgstr ""
 
 #. module: fetchmail
@@ -297,7 +297,7 @@ msgid "POP Server"
 msgstr ""
 
 #. module: fetchmail
-#: view:mail.message:0
-msgid "Mail Server"
+#: field:fetchmail.server,port:0
+msgid "Port"
 msgstr ""
 

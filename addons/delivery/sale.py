@@ -31,10 +31,10 @@ class sale_order(osv.osv):
         'id': fields.integer('ID', readonly=True,invisible=True),
     }
 
-    def onchange_partner_id(self, cr, uid, ids, part):
-        result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part)
+    def onchange_partner_id(self, cr, uid, ids, part, context=None):
+        result = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         if part:
-            dtype = self.pool.get('res.partner').browse(cr, uid, part).property_delivery_carrier.id
+            dtype = self.pool.get('res.partner').browse(cr, uid, part, context=context).property_delivery_carrier.id
             result['value']['carrier_id'] = dtype
         return result
 
