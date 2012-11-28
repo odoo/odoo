@@ -1638,8 +1638,8 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception, e:
-            args = { 'error': e.message }
+        except Exception,e:
+            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):

@@ -978,11 +978,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
             var args = [].slice.call(arguments).slice(1);
-            if (args[0] && args[0].error) {
-                alert(args[0].error);
-            } else {
-                self.do_attachement_update(self.dataset, self.model_id);
-            }
+            self.do_attachement_update(self.dataset, self.model_id,args);
             instance.web.unblockUI();
         });
     },
@@ -1092,9 +1088,21 @@ instance.web.Sidebar = instance.web.Widget.extend({
             });
         });
     },
-    do_attachement_update: function(dataset, model_id) {
+    do_attachement_update: function(dataset, model_id,args) {
+        var self = this;
         this.dataset = dataset;
         this.model_id = model_id;
+        if (args && args[0]["erorr"]) {
+             instance.web.dialog($('<div>'),{
+                    modal: true,
+                    title: "OpenERP " + _.str.capitalize(args[0]["title"]),
+                    buttons: [{
+                        text: _t("Ok"),
+                        click: function(){
+                            $(this).dialog("close");
+                    }}]
+              }).html(args[0]["erorr"]);
+        }
         if (!model_id) {
             this.on_attachments_loaded([]);
         } else {
