@@ -2246,7 +2246,9 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         var $input = this.$el.find('input');
         $input.change(function() {
-            self.internal_set_value(self.parse_value($input.val()));
+            if(self.is_syntax_valid()){
+                self.internal_set_value(self.parse_value($input.val()));
+            }
         });
         this.setupFocus($input);
     },
