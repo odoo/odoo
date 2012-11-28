@@ -1257,6 +1257,9 @@ openerp.mail = function (session) {
                 // insert the message on dom
                 thread.insert_message( message, typeof dom_insert_after == 'object' ? dom_insert_after : false);
             });
+            if (!records.length && this.options.root_thread == this) {
+                this.no_message();
+            }
         },
 
         /**
@@ -1440,7 +1443,6 @@ openerp.mail = function (session) {
             });
 
             this.thread.appendTo( this.$el );
-            this.thread.no_message();
 
             if (this.action.params.show_compose_message) {
                 this.thread.instantiate_compose_message();
