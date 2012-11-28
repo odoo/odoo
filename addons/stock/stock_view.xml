@@ -1198,7 +1198,7 @@
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field eval="4" name="priority"/>
+            <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves" version="7.0">
                 <header>
@@ -1247,7 +1247,7 @@
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability"
+                        <group string="Traceability"
                             groups="stock.group_tracking_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
@@ -1307,6 +1307,7 @@
                                 <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
                             </div>
                             <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
+                            <field name="partner_id"/>
                             </group>
                             <group>
                                 <field name="create_date" invisible="1"/>
