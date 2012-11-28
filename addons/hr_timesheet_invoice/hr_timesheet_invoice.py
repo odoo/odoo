@@ -368,10 +368,13 @@ class account_move_line(osv.osv):
         res = super(account_move_line, self).create_analytic_lines(cr, uid, ids,context=context)
         analytic_line_obj = self.pool.get('account.analytic.line')
         for move_line in self.browse(cr, uid, ids, context=context):
+            #For customer invoice, link analytic line to the invoice so it is not proposed for invoicing in Bill Tasks Work
+            invoice_id = move_line.invoice and move_line.invoice.type in ('out_invoice','out_refund') and move_line.invoice.id or False
             for line in move_line.analytic_lines:
-                toinv = line.account_id.to_invoice.id
-                if toinv:
-                    analytic_line_obj.write(cr, uid, line.id, {'to_invoice': toinv})
+                analytic_line_obj.write(cr, uid, line.id, {
+                    'invoice_id': invoice_id,
+                    'to_invoice': line.account_id.to_invoice and line.account_id.to_invoice.id or False
+                    }, context=context)
         return res
 
 account_move_line()
