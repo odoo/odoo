@@ -464,7 +464,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             if field_info is None:
                 continue
             field = field_info.column
-            value = None or ''
+            value = ''
 
             if field._type == 'selection':
                 if hasattr(field.selection, '__call__'):
