@@ -1117,7 +1117,9 @@ class Menu(openerpweb.Controller):
         Menus = req.session.model('ir.ui.menu')
 
         if menu_ids == False:
-            menu_ids = Menus.search([('needaction_enabled', '=', True)], context=context)
+            menu_ids = Menus.search([], context=context)
+            # TDE FIXME: set needaction_enabled column to store, to enable this more limited search
+            # menu_ids = Menus.search([('needaction_enabled', '=', True)], context=context)
 
         menu_needaction_data = Menus.get_needaction_data(menu_ids, context)
         return menu_needaction_data
