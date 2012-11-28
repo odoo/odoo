@@ -42,6 +42,7 @@ from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
+from openerp.tools import assertion_report
 from openerp.modules.module import initialize_sys_path, \
     load_openerp_module, init_module_models
 
