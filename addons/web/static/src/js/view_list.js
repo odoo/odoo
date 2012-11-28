@@ -830,7 +830,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 250);
         });
     }
 });
