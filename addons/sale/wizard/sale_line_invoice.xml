@@ -7,11 +7,19 @@
             <field name="arch" type="xml">
              <form string="Create invoices" version="7.0">
                 <header>
+                    <separator string="Do you want to invoice the selected sale order lines?" />
+                </header>
+                <p class="oe_grey">
+                    All items in these order lines will be invoiced. You can also invoice a percentage of the sale order 
+                    or a fixed price (for advances) directly from the sale order form if you prefer.
+                </p>
+                <footer>
+                    <button name="make_invoices" string="Create &amp; View Invoice" type="object"
+                        context="{'open_invoices': True}" class="oe_highlight"/>
                     <button name="make_invoices" string="Create Invoices" type="object" class="oe_highlight"/>
                     or
                     <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
-                <separator string="Do you really want to create the invoice(s)?" />
+                </footer>
             </form>
             </field>
         </record>

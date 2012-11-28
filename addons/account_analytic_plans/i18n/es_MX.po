@@ -1,32 +1,33 @@
-# Translation of OpenERP Server.
-# This file contains the translation of the following modules:
-#	* account_analytic_plans
+# Spanish (Mexico) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0dev\n"
-"Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-03 16:56+0000\n"
-"PO-Revision-Date: 2011-01-12 18:12+0000\n"
-"Last-Translator: Alberto Luengo Cabanillas (Pexego) <alberto@pexego.es>\n"
-"Language-Team: \n"
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-28 00:35+0000\n"
+"Last-Translator: OscarAlca <oscarolar@hotmail.com>\n"
+"Language-Team: Spanish (Mexico) <es_MX@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-09-05 05:25+0000\n"
-"X-Generator: Launchpad (build 13830)\n"
+"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid ""
 "This distribution model has been saved.You will be able to reuse it later."
 msgstr ""
-"Este modelo de distribución ha sido guardado. Lo podrá reutilizar más tarde."
+"Este modelo de distribución ha sido guardado. Podrá utilizarlo después."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,plan_id:0
 msgid "Plan Id"
-msgstr "Id plan"
+msgstr "Id del plan"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -52,11 +53,6 @@ msgid "Analytic Plan"
 msgstr "Plan analítico"
 
 #. module: account_analytic_plans
-#: model:ir.module.module,shortdesc:account_analytic_plans.module_meta_information
-msgid "Multiple-plans management in Analytic Accounting"
-msgstr "Gestión de múltiples planes en contabilidad analítica"
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,journal_id:0
 #: view:account.crossovered.analytic:0
 #: field:account.crossovered.analytic,journal_ids:0
@@ -70,12 +66,6 @@ msgid "Analytic Plan Line"
 msgstr "Línea de plan analítico"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:60
-#, python-format
-msgid "User Error"
-msgstr "Error de usuario"
-
-#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
 msgstr "Instancia de plan analítico"
@@ -86,11 +76,6 @@ msgid "Ok"
 msgstr "Aceptar"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on closed account."
-msgstr "No puede crear una línea de movimiento en una cuenta cerrada."
-
-#. module: account_analytic_plans
 #: field:account.analytic.plan.instance,plan_id:0
 msgid "Model's Plan"
 msgstr "Plan del modelo"
@@ -98,17 +83,26 @@ msgstr "Plan del modelo"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account2_ids:0
 msgid "Account2 Id"
-msgstr "Id cuenta2"
+msgstr "Id de cuenta2"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account_ids:0
 msgid "Account Id"
-msgstr "Id cuenta"
+msgstr "Id de cuenta"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "Error!"
+msgstr "¡Error!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Amount"
-msgstr "Importe"
+msgstr "Monto"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -123,7 +117,7 @@ msgstr "¡Valor haber o debe erróneo en el asiento contable!"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account6_ids:0
 msgid "Account6 Id"
-msgstr "Id cuenta6"
+msgstr "Id de cuenta6"
 
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
@@ -136,9 +130,24 @@ msgid "Bank Statement Line"
 msgstr "Línea extracto bancario"
 
 #. module: account_analytic_plans
-#: field:account.analytic.plan.instance.line,analytic_account_id:0
-msgid "Analytic Account"
-msgstr "Cuenta analítica"
+#: constraint:account.invoice:0
+msgid "Invalid BBA Structured Communication !"
+msgstr "¡Estructura de comunicación BBA no válida!"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
+#, python-format
+msgid "There is no analytic plan defined."
+msgstr "No hay plan analítico definido."
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The date of your Journal Entry is not in the defined period! You should "
+"change the date or remove this constraint from the journal."
+msgstr ""
+"¡La fecha de su asiento no está en el periodo definido! Usted debería "
+"cambiar la fecha o borrar esta restricción del diario."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -148,20 +157,12 @@ msgstr "¡El código del diario debe ser único por compañía!"
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
-msgstr "Referencia cuenta analítica"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid ""
-"You can not create move line on receivable/payable account without partner"
-msgstr ""
-"No puede crear una línea de movimiento en una cuenta a cobrar/a pagar sin "
-"una empresa."
+msgstr "Referencia de cuenta analítica"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Línea pedido de venta"
+msgstr "Línea de Orden de venta"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:47
@@ -182,20 +183,20 @@ msgstr "Imprimir"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
+#: field:account.analytic.line,percentage:0
 msgid "Percentage"
 msgstr "Porcentaje"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
-msgid "A model having this name and code already exists !"
-msgstr "¡Ya existe un modelo con este nombre y código!"
+msgid "There are no analytic lines related to account %s."
+msgstr "No hay lineas analíticas relacionadas a la cuenta %s"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "No analytic plan defined !"
-msgstr "¡No se ha definido un plan analítico!"
+#: field:account.analytic.plan.instance.line,analytic_account_id:0
+msgid "Analytic Account"
+msgstr "Cuenta Analítica"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,rate:0
@@ -230,18 +231,31 @@ msgid "Analytic Plan Lines"
 msgstr "Líneas de plan analítico"
 
 #. module: account_analytic_plans
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr "La cuenta y el periodo deben pertenecer a la misma compañía."
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement:0
+msgid "The journal and period chosen have to belong to the same company."
 msgstr ""
-"El importe del recibo debe ser el mismo importe que el de la línea del "
-"extracto"
+"El diario y periodo seleccionados tienen que pertenecer a la misma compañía"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
 msgid "Invoice Line"
-msgstr "Línea factura"
+msgstr "Línea de factura"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid ""
+"The selected account of your Journal Entry forces to provide a secondary "
+"currency. You should remove the secondary currency on the account or select "
+"a multi-currency view on the journal."
+msgstr ""
+"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+"vista multi-moneda"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -249,9 +263,9 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,date1:0
-msgid "Start Date"
-msgstr "Fecha inicial"
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr "No puede crear una linea analitica a una cuenta de vista."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -261,7 +275,12 @@ msgstr "Compañía"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account5_ids:0
 msgid "Account5 Id"
-msgstr "Id cuenta5"
+msgstr "Id de cuenta5"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr "No puedes crear elementos de diario en cuentas cerradas."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -276,14 +295,14 @@ msgstr "Cuenta principal"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "To Date"
-msgstr "Hasta fecha"
+msgstr "Hasta la Fecha"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
-msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr "¡Debe definir un diario analítico en el diario '%s'!"
+msgid "You have to define an analytic journal on the '%s' journal."
+msgstr "Tiene que definir un diario analitico en el diario '%s'"
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -296,80 +315,14 @@ msgid "analytic.plan.create.model.action"
 msgstr "analitica.plan.crear.modelo.accion"
 
 #. module: account_analytic_plans
+#: model:ir.model,name:account_analytic_plans.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "Línea analítica"
+
+#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account :"
 msgstr "Cuenta analítica:"
-
-#. module: account_analytic_plans
-#: model:ir.module.module,description:account_analytic_plans.module_meta_information
-msgid ""
-"This module allows to use several analytic plans, according to the general "
-"journal,\n"
-"so that multiple analytic lines are created when the invoice or the entries\n"
-"are confirmed.\n"
-"\n"
-"For example, you can define the following analytic structure:\n"
-"  Projects\n"
-"      Project 1\n"
-"          SubProj 1.1\n"
-"          SubProj 1.2\n"
-"      Project 2\n"
-"  Salesman\n"
-"      Eric\n"
-"      Fabien\n"
-"\n"
-"Here, we have two plans: Projects and Salesman. An invoice line must\n"
-"be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-"Fabien. The amount can also be split. The following example is for\n"
-"an invoice that touches the two subproject and assigned to one salesman:\n"
-"\n"
-"Plan1:\n"
-"    SubProject 1.1 : 50%\n"
-"    SubProject 1.2 : 50%\n"
-"Plan2:\n"
-"    Eric: 100%\n"
-"\n"
-"So when this line of invoice will be confirmed, it will generate 3 analytic "
-"lines,\n"
-"for one account entry.\n"
-"The analytic plan validates the minimum and maximum percentage at the time "
-"of creation\n"
-"of distribution models.\n"
-"        "
-msgstr ""
-"Este módulo permite utilizar varios planes analíticos, de acuerdo con el "
-"diario general,\n"
-"para crear múltiples líneas analíticas cuando la factura o los asientos\n"
-"sean confirmados.\n"
-"\n"
-"Por ejemplo, puede definir la siguiente estructura de analítica:\n"
-"  Proyectos\n"
-"      Proyecto 1\n"
-"          Subproyecto 1,1\n"
-"          Subproyecto 1,2\n"
-"      Proyecto 2\n"
-"  Comerciales\n"
-"      Eduardo\n"
-"      Marta\n"
-"\n"
-"Aquí, tenemos dos planes: Proyectos y Comerciales. Una línea de factura "
-"debe\n"
-"ser capaz de escribir las entradas analíticas en los 2 planes: Subproyecto "
-"1.1 y\n"
-"Eduardo. La cantidad también se puede dividir. El siguiente ejemplo es para\n"
-"una factura que implica a los dos subproyectos y asignada a un comercial:\n"
-"\n"
-"Plan1:\n"
-"    Subproyecto 1.1: 50%\n"
-"    Subproyecto 1.2: 50%\n"
-"Plan2:\n"
-"    Eduardo: 100%\n"
-"\n"
-"Así, cuando esta línea de la factura sea confirmada, generará 3 líneas "
-"analíticas para un asiento contable.\n"
-"El plan analítico valida el porcentaje mínimo y máximo en el momento de "
-"creación de los modelos de distribución.\n"
-"        "
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -379,7 +332,7 @@ msgstr "Referencia cuenta analítica:"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
 msgid "Plan Name"
-msgstr "Nombre de plan"
+msgstr "Nombre del plan"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan,default_instance_id:0
@@ -394,12 +347,7 @@ msgstr "Elementos diario"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account1_ids:0
 msgid "Account1 Id"
-msgstr "Id cuenta1"
-
-#. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "Company must be same for its related account and period."
-msgstr "La compañía debe ser la misma para la cuenta y periodo relacionados."
+msgstr "Id de cuenta1"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,min_required:0
@@ -412,14 +360,6 @@ msgid "Root account of this plan."
 msgstr "Cuenta principal de este plan."
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:201
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
-#, python-format
-msgid "Error"
-msgstr "Error"
-
-#. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
 msgstr "Guardar esta distribución como un modelo"
@@ -430,10 +370,9 @@ msgid "Quantity"
 msgstr "Cantidad"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
-#, python-format
-msgid "Please put a name and a code before saving the model !"
-msgstr "¡Introduzca un nombre y un código antes de guardar el modelo!"
+#: sql_constraint:account.invoice:0
+msgid "Invoice Number must be unique per Company!"
+msgstr "¡El número de factura debe ser único por compañía!"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
@@ -441,11 +380,11 @@ msgid "Print Crossovered Analytic"
 msgstr "Imprimir analítica cruzada"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:321
-#: code:addons/account_analytic_plans/account_analytic_plans.py:462
+#: code:addons/account_analytic_plans/account_analytic_plans.py:342
+#: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "¡No diario analítico!"
+msgstr "¡No hay diario analítico!"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement
@@ -455,7 +394,7 @@ msgstr "Extracto bancario"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account3_ids:0
 msgid "Account3 Id"
-msgstr "Id cuenta3"
+msgstr "Id de cuenta3"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -471,7 +410,13 @@ msgstr "Cancelar"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,account4_ids:0
 msgid "Account4 Id"
-msgstr "Id cuenta4"
+msgstr "Id de cuenta4"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/account_analytic_plans.py:234
+#, python-format
+msgid "The total should be between %s and %s."
+msgstr "El total debe estar entre %s y %s"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -479,20 +424,14 @@ msgid "Analytic Distribution Lines"
 msgstr "Líneas de distribución analítica"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
-#, python-format
-msgid "The Total Should be Between %s and %s"
-msgstr "El total debería estar entre %s y %s"
-
-#. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "at"
-msgstr "a las"
+msgstr "en"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Account Name"
-msgstr "Nombre de cuenta"
+msgstr "Nombre de la cuenta"
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -503,11 +442,6 @@ msgstr "Línea de distribución analítica"
 #: field:account.analytic.plan.instance,code:0
 msgid "Distribution Code"
 msgstr "Código de distribución"
-
-#. module: account_analytic_plans
-#: report:account.analytic.account.crossovered.analytic:0
-msgid "%"
-msgstr "%"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -531,6 +465,16 @@ msgid "Journal"
 msgstr "Diario"
 
 #. module: account_analytic_plans
+#: constraint:account.journal:0
+msgid ""
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
+msgstr ""
+"¡Error de confuguración!\n"
+"La moneda seleccionada también tiene que ser la que está en las cuentas por "
+"defecto."
+
+#. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
 msgid "analytic.plan.create.model"
 msgstr "analitica.plan.crear.modelo"
@@ -543,7 +487,37 @@ msgstr "Fecha final"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_instance_model_open
 msgid "Distribution Models"
-msgstr "Modelos distribución"
+msgstr "Modelos de distribución"
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr "No puede crear elementos de diario en una cuenta de tipo vista."
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
+#, python-format
+msgid "User Error!"
+msgstr "¡Error de usuario!"
+
+#. module: account_analytic_plans
+#: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
+#, python-format
+msgid "Please put a name and a code before saving the model."
+msgstr "Por favor ponga un nombre y código antes de guardar el modelo."
+
+#. module: account_analytic_plans
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
+msgstr "Fecha inicial"
+
+#. module: account_analytic_plans
+#: constraint:account.bank.statement.line:0
+msgid ""
+"The amount of the voucher must be the same amount as the one on the "
+"statement line."
+msgstr ""
+"El monto del comprobante debe ser el mismo que esta en la linea de asiento."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -556,120 +530,13 @@ msgid "The name of the journal must be unique per company !"
 msgstr "¡El nombre del diaro debe ser único por compañía!"
 
 #. module: account_analytic_plans
-#: code:addons/account_analytic_plans/account_analytic_plans.py:214
-#, python-format
-msgid "Value Error"
-msgstr "Valor erróneo"
+#: view:account.crossovered.analytic:0
+#: view:analytic.plan.create.model:0
+msgid "or"
+msgstr "ó"
 
 #. module: account_analytic_plans
-#: constraint:account.move.line:0
-msgid "You can not create move line on view account."
-msgstr "No puede crear una línea de movimiento en una cuenta de tipo vista."
-
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "¡El nombre del objeto debe empezar con x_ y no contener ningún carácter "
-#~ "especial!"
-
-#~ msgid "Currency:"
-#~ msgstr "Moneda:"
-
-#~ msgid "Select Information"
-#~ msgstr "Seleccionar información"
-
-#~ msgid "Analytic Account Ref."
-#~ msgstr "Ref. cuenta analítica"
-
-#~ msgid "Create Model"
-#~ msgstr "Crear modelo"
-
-#~ msgid "to"
-#~ msgstr "hasta"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "¡XML inválido para la definición de la vista!"
-
-#~ msgid "OK"
-#~ msgstr "Aceptar"
-
-#~ msgid "Period from"
-#~ msgstr "Período desde"
-
-#~ msgid "Printing date:"
-#~ msgstr "Fecha impresión:"
-
-#~ msgid "Analytic Distribution's models"
-#~ msgstr "Modelos de distribución analítica"
-
-#~ msgid ""
-#~ "This distribution model has been saved. You will be able to reuse it later."
-#~ msgstr ""
-#~ "Este modelo de distribución ha sido guardado. Más tarde podrá reutilizarlo."
-
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nombre de modelo no válido en la definición de acción."
-
-#~ msgid ""
-#~ "This module allows to use several analytic plans, according to the general "
-#~ "journal,\n"
-#~ "so that multiple analytic lines are created when the invoice or the entries\n"
-#~ "are confirmed.\n"
-#~ "\n"
-#~ "For example, you can define the following analytic structure:\n"
-#~ "  Projects\n"
-#~ "      Project 1\n"
-#~ "          SubProj 1.1\n"
-#~ "          SubProj 1.2\n"
-#~ "      Project 2\n"
-#~ "  Salesman\n"
-#~ "      Eric\n"
-#~ "      Fabien\n"
-#~ "\n"
-#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
-#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
-#~ "Fabien. The amount can also be split. The following example is for\n"
-#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    SubProject 1.1 : 50%\n"
-#~ "    SubProject 1.2 : 50%\n"
-#~ "Plan2:\n"
-#~ "    Eric: 100%\n"
-#~ "\n"
-#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
-#~ "lines,\n"
-#~ "for one account entry.\n"
-#~ "        "
-#~ msgstr ""
-#~ "Este módulo permite utilizar varios planes analíticos, de acuerdo con el "
-#~ "diario general,\n"
-#~ "para que crea múltiples líneas analíticas cuando la factura o los asientos\n"
-#~ "sean confirmados.\n"
-#~ "\n"
-#~ "Por ejemplo, puede definir la siguiente estructura de analítica:\n"
-#~ "  Proyectos\n"
-#~ "      Proyecto 1\n"
-#~ "          Subproyecto 1,1\n"
-#~ "          Subproyecto 1,2\n"
-#~ "      Proyecto 2\n"
-#~ "  Comerciales\n"
-#~ "      Eduardo\n"
-#~ "      Marta\n"
-#~ "\n"
-#~ "Aquí, tenemos dos planes: Proyectos y Comerciales. Una línea de factura "
-#~ "debe\n"
-#~ "ser capaz de escribir las entradas analíticas en los 2 planes: Subproyecto "
-#~ "1.1 y\n"
-#~ "Eduardo. La cantidad también se puede dividir. El siguiente ejemplo es para\n"
-#~ "una factura que implica a los dos subproyectos y asignada a un comercial:\n"
-#~ "\n"
-#~ "Plan1:\n"
-#~ "    Subproyecto 1.1: 50%\n"
-#~ "    Subproyecto 1.2: 50%\n"
-#~ "Plan2:\n"
-#~ "    Eduardo: 100%\n"
-#~ "\n"
-#~ "Así, cuando esta línea de la factura sea confirmada, generará 3 líneas "
-#~ "analíticas para un asiento contable.\n"
-#~ "        "
+#: code:addons/account_analytic_plans/account_analytic_plans.py:221
+#, python-format
+msgid "A model with this name and code already exists."
+msgstr "Un modelo con este código y nombre ya existe."

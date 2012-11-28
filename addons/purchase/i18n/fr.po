@@ -7,15 +7,21 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-05-24 17:54+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2012-11-26 15:00+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-27 05:23+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
+
+#. module: purchase
+#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
+#: model:process.node,name:purchase.process_node_packinglist0
+#: model:process.node,name:purchase.process_node_productrecept0
+msgid "Incoming Products"
+msgstr "Réceptions par articles"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
@@ -141,7 +147,7 @@ msgid ""
 "computes the supplier price for the selected products/quantities."
 msgstr ""
 "La liste de prix fixe la devise utilisée pour le bon de commande. Elle "
-"calcule également le prix fournisseur pour les quantités et/ou produits "
+"calcule également le prix fournisseur pour les quantités et/ou articles "
 "sélectionnés."
 
 #. module: purchase
@@ -159,13 +165,6 @@ msgstr "Commande du jour"
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
 msgstr ""
-
-#. module: purchase
-#: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
-#: model:process.node,name:purchase.process_node_packinglist0
-#: model:process.node,name:purchase.process_node_productrecept0
-msgid "Incoming Products"
-msgstr "Produits entrants"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -304,6 +303,8 @@ msgstr "Approbation"
 msgid ""
 "Allows you to select and maintain different units of measure for products."
 msgstr ""
+"Permet de choisir et de gérer différentes unités de mesures pour les "
+"articles."
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -311,8 +312,8 @@ msgid ""
 "This is computed as the minimum scheduled date of all purchase order lines' "
 "products."
 msgstr ""
-"Elle est calculée comme la date planifiée minimum de tous les lignes de "
-"produit de la commande d'achat."
+"Elle est calculée comme la date prévue minimum de tous articles des lignes "
+"de la commande d'achat."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:252
@@ -429,7 +430,7 @@ msgstr ""
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "Vous devez attribuer un numéro de série pour cet article."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -450,7 +451,7 @@ msgstr ""
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
-msgstr "Un bon de transfert est enregistré pour suivre les produits entrants"
+msgstr "Un bon de transfert est enregistré pour suivre les articles entrants"
 
 #. module: purchase
 #: sql_constraint:stock.picking:0
@@ -915,7 +916,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr "Catégories de produits"
+msgstr "Catégories d'articles"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1114,7 +1115,7 @@ msgid ""
 "In case there is no supplier for this product, the buyer can fill the form "
 "manually and confirm it. The RFQ becomes a confirmed Purchase Order."
 msgstr ""
-"Dans le cas où il n'y a pas de fournisseur pour ce produit, l'acheteur peut "
+"Dans le cas où il n'y a pas de fournisseur pour cet article, l'acheteur peut "
 "remplir lui-même le formulaire et le confirmer : la demande de prix devient "
 "un bon de commande confirmé."
 
@@ -1254,7 +1255,7 @@ msgstr "Taxes"
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
-msgstr "Produits"
+msgstr "Articles"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -1277,7 +1278,7 @@ msgstr "Validé par"
 #: view:purchase.report:0
 #: field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr "Valeur des produits"
+msgstr "Valeur des articles"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1345,7 +1346,7 @@ msgstr "Juillet"
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr "Produits à expédier"
+msgstr "Articles à expédier"
 
 #. module: purchase
 #: view:product.product:0
@@ -1393,7 +1394,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Products"
-msgstr "Réception de produits"
+msgstr "Réception par article"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1426,7 +1427,7 @@ msgstr "Etat de l'ordre d'achat."
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure d'article"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1647,7 +1648,7 @@ msgstr "Factures fournisseur"
 #: view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
@@ -1663,7 +1664,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr "Produits par catégorie"
+msgstr "Articles par catégorie"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1980,7 +1981,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:971
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr "Le fournisseur sélectionné peut seulement vendre ce produit par %s"
+msgstr "Le fournisseur sélectionné peut seulement vendre cet article par %s"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
@@ -2255,17 +2256,17 @@ msgid ""
 "\n"
 " "
 msgstr ""
-" Veuillez noter que:\n"
+" Veuillez noter que :\n"
 "\n"
-"Les commandes seront fusionnées seulement si:\n"
-" * Les bons de commande sont à l'état 'Brouillon' \n"
+"Les commandes seront fusionnées seulement si :\n"
+" * Les bons de commande sont à l'état \"Brouillon\"\n"
 " * Les bons de commande sont pour le même fournisseur\n"
 " * les bons de commande sont pour le même emplacement et la même liste de "
 "prix \n"
 "\n"
 "Les lignes seront fusionnées seulement si:\n"
-" * les lignes de commandes sont exactement les mêmes sauf pour le produit, "
-"la quantité et l'unité. \n"
+" * les lignes de commandes sont exactement les mêmes sauf pour l'article, la "
+"quantité et l'unité. \n"
 " "
 
 #. module: purchase
