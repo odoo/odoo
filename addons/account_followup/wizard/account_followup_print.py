@@ -193,23 +193,19 @@ class account_followup_print(osv.osv_memory):
         #update the follow-up level on account.move.line
         for id in to_update.keys():
             if to_update[id]['partner_id'] in partner_list:
-                self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 'followup_date': date})
+                self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 
+                                                                              'followup_date': date})
 
 
     def clear_manual_actions(self, cr, uid, partner_list, context=None):
-        #Partnerlist is list to exclude
-        
+        # Partnerlist is list to exclude
+        # Will 
         partner_list_ids = [partner.partner_id.id for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_list, context=context)]
-        print "Clear Manual actions ids"
-        print partner_list_ids
-        parts = self.pool.get('res.partner').browse(cr, uid, partner_list_ids, context=context)
-        for part in parts:
-            print part.name, part.payment_responsible_id
         ids = self.pool.get('res.partner').search(cr, uid, ['&', ('credit', '<=', 0), '&', ('id','not in',partner_list_ids), '|', ('payment_responsible_id', '!=', False), 
                                                              ('payment_next_action_date', '!=', False)])
-        parts = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
         print ids
         self.pool.get('res.partner').action_done(cr, uid, ids, context=context)
+        return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):
         #Get partners
@@ -236,7 +232,7 @@ class account_followup_print(osv.osv_memory):
             'view_type': 'form',
             'context': context,
             'view_mode': 'tree,form',
-            'res_model': 'account.followup.sending.results',
+            'res_model': 'account_followup.sending.results',
             'views': [(resource_id,'form')],
             'type': 'ir.actions.act_window',
             'target': 'new',
