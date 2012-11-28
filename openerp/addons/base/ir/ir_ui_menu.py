@@ -266,6 +266,8 @@ class ir_ui_menu(osv.osv):
         return res
 
     def _get_needaction_enabled(self, cr, uid, ids, field_names, args, context=None):
+        """ needaction_enabled: tell whether the menu has a related action
+            that uses the needaction mechanism. """
         res = dict.fromkeys(ids, False)
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.action and menu.action.type in ('ir.actions.act_window', 'ir.actions.client') and menu.action.res_model:
@@ -275,6 +277,11 @@ class ir_ui_menu(osv.osv):
         return res
 
     def get_needaction_data(self, cr, uid, ids, context=None):
+        """ Return for each menu entry of ids :
+            - if it uses the needaction mechanism (needaction_enabled)
+            - the needaction counter of the related action, taking into account
+              the action domain
+        """
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
             res[menu.id] = {
@@ -310,7 +317,7 @@ class ir_ui_menu(osv.osv):
         'web_icon_hover_data': fields.function(_get_image_icon, string='Web Icon Image (hover)', type='binary', readonly=True, store=True, multi='icon'),
         'needaction_enabled': fields.function(_get_needaction_enabled,
             type='boolean',
-            # store=True,
+            # store=True, TDE TODO: uncomment after internal tests
             string='Target model uses the need action mechanism',
             help='If the menu entry action is an act_window action, and if this action is related to a model that uses the need_action mechanism, this field is set to true. Otherwise, it is false.'),
         'action': fields.function(_action, fnct_inv=_action_inv,
