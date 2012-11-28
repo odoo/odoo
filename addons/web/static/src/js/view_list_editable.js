@@ -63,6 +63,12 @@ openerp.web.list_editable = function (instance) {
             }
             this._super();
         },
+        sort_by_column: function (e) {
+            e.stopPropagation();
+            if (!this.editor.is_editing()) {
+                this._super.apply(this, arguments);
+            }
+        },
         /**
          * Handles the activation of a record in editable mode (making a record
          * editable), called *after* the record has become editable.

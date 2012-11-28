@@ -486,7 +486,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             group.records.forEach(function(record) {
                 self.many2manys.forEach(function(name) {
                     var field = record.record[name];
-                    var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']');
+                    var $el = record.$('.oe_form_field.oe_tags[name=' + name + ']').empty();
                     if (!relations[field.relation]) {
                         relations[field.relation] = { ids: [], elements: {}};
                     }

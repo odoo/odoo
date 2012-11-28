@@ -1924,7 +1924,8 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'integer'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0 : val, {'widget': 'integer'});
         } catch (e) {
             return "";
         }
@@ -1948,7 +1949,8 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'float'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0.0 : val, {'widget': 'float'});
         } catch (e) {
             return "";
         }

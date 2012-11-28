@@ -897,7 +897,7 @@ class Session(openerpweb.Controller):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+            return {'error':'You cannot leave any password empty.','title': 'Change Password'}
         if new_password != confirm_password:
             return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
         try:
@@ -905,7 +905,7 @@ class Session(openerpweb.Controller):
                 old_password, new_password):
                 return {'new_password':new_password}
         except Exception:
-            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+            return {'error': 'The old password you provided is incorrect, your password was not changed.', 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
     @openerpweb.jsonrequest
@@ -1617,8 +1617,8 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception, e:
-            args = { 'error': e.message }
+        except Exception,e:
+            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):

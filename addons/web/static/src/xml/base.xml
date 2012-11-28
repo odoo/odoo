@@ -71,9 +71,9 @@
                 </div>
                 <ul>
                     <li>Username</li>
-                    <li><input type="text" name="login" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
+                    <li><input name="login" type="text" t-att-value="widget.selected_login || ''" autofocus="autofocus"/></li>
                     <li>Password</li>
-                    <li><input type="password" name="password" t-att-value="widget.selected_password || ''"/></li>
+                    <li><input name="password" type="password" t-att-value="widget.selected_password || ''"/></li>
                     <li><button name="submit">Log in</button></li>
                 </ul>
             </form>
@@ -97,7 +97,6 @@
         </t>
     </select>
 </t>
-
 
 <t t-name="DatabaseManager">
     <div class="oe_view_manager_view_form">
@@ -315,26 +314,32 @@
 
 <t t-name="ChangePassword">
     <form name="change_password_form" method="POST">
+      <div class="oe_form">
         <table align="center">
             <tr>
-                <td><label for="old_pwd">Old Password:</label></td>
-                <td><input type="password" name="old_pwd"
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="old_pwd" class="oe_form_label">Old Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="old_pwd"
                            minlength="1" autofocus="autofocus"/></td>
             </tr>
             <tr>
-            <td><label for="new_password">New Password:</label></td>
-            <td><input type="password" name="new_password"
+            <td class="oe_form_group_cell oe_form_group_cell_label"><label for="new_password" class="oe_form_label">New Password:</label></td>
+            <td class="oe_form_group_cell"><input type="password" name="new_password"
                        minlength="1"/></td>
             </tr>
             <tr>
-                <td><label for="confirm_pwd">Confirm Password:</label></td>
-                <td><input type="password" name="confirm_pwd"
+                <td class="oe_form_group_cell oe_form_group_cell_label"><label for="confirm_pwd" class="oe_form_label">Confirm New Password:</label></td>
+                <td class="oe_form_group_cell"><input type="password" name="confirm_pwd"
                              minlength="1"/></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><button class="oe_button">Change Password</button></td>
+                <td colspan="2" align="right">
+                    <button class='oe_button oe_form_button'>Change Password</button>
+                    <span class="oe_fade oe_form_button"> or </span>
+                    <button type="button" class="oe_button oe_form_button_cancel oe_form_button oe_link" href="javascript:void(0)"><span>Cancel</span></button>
+                </td>
             </tr>
         </table>
+      </div>
     </form>
 </t>
 
@@ -1597,10 +1602,10 @@
     <span/>
 </t>
 <t t-name="SearchView.extended_search.proposition.integer">
-    <input type="number" class="field_integer" step="1"/>
+    <input type="number" class="field_integer" value = "0" step="1"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.float">
-    <input type="number" class="field_float" step="0.01"/>
+    <input type="number" class="field_float" value = "0.0" step="0.01"/>
 </t>
 <t t-name="SearchView.extended_search.proposition.selection">
     <select>
