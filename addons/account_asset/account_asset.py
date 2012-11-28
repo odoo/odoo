@@ -223,7 +223,7 @@ class account_asset_asset(osv.osv):
                 val['currency_id'] = company.currency_id.id
         return {'value': val}
     
-    def onchange_purchase_salvage_value(self, cr, uid, ids, purchase_value, salvage_value=0.0, context=None):
+    def onchange_purchase_salvage_value(self, cr, uid, ids, purchase_value, salvage_value, context=None):
         val = {}
         for asset in self.browse(cr, uid, ids, context=context):
             if purchase_value:
