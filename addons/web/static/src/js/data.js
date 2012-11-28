@@ -610,7 +610,8 @@ instance.web.DataSet =  instance.web.Class.extend(instance.web.PropertiesMixin, 
         return instance.session.rpc('/web/dataset/resequence', {
             model: this.model,
             ids: ids,
-            context: this.get_context(options.context),
+            context: instance.web.pyeval.eval(
+                'context', this.get_context(options.context)),
         }).then(function (results) {
             return results;
         });
