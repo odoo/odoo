@@ -430,6 +430,85 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
 // Classes
 
 /**
+    A class containing common utility methods useful when working with OpenERP as well as the PropertiesMixin.
+*/
+instance.web.Controller = instance.web.Class.extend(instance.web.PropertiesMixin, {
+    /**
+     * Constructs the object and sets its parent if a parent is given.
+     *
+     * @param {instance.web.Controller} parent Binds the current instance to the given Controller instance.
+     * When that controller is destroyed by calling destroy(), the current instance will be
+     * destroyed too. Can be null.
+     */
+    init: function(parent) {
+        instance.web.PropertiesMixin.init.call(this);
+        this.setParent(parent);
+    },
+    /**
+     * Proxies a method of the object, in order to keep the right ``this`` on
+     * method invocations.
+     *
+     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
+     * even more so to ``jQuery.proxy`` with a fundamental difference: its
+     * resolution of the method being called is lazy, meaning it will use the
+     * method as it is when the proxy is called, not when the proxy is created.
+     *
+     * Other methods will fix the bound method to what it is when creating the
+     * binding/proxy, which is fine in most javascript code but problematic in
+     * OpenERP Web where developers may want to replace existing callbacks with
+     * theirs.
+     *
+     * The semantics of this precisely replace closing over the method call.
+     *
+     * @param {String|Function} method function or name of the method to invoke
+     * @returns {Function} proxied method
+     */
+    proxy: function (method) {
+        var self = this;
+        return function () {
+            var fn = (typeof method === 'string') ? self[method] : method;
+            return fn.apply(self, arguments);
+        }
+    },
+    /**
+     * Informs the action manager to do an action. This supposes that
+     * the action manager can be found amongst the ancestors of the current widget.
+     * If that's not the case this method will simply return `false`.
+     */
+    do_action: function() {
+        var parent = this.getParent();
+        if (parent) {
+            return parent.do_action.apply(parent, arguments);
+        }
+        return false;
+    },
+    do_notify: function() {
+        if (this.getParent()) {
+            return this.getParent().do_notify.apply(this,arguments);
+        }
+        return false;
+    },
+    do_warn: function() {
+        if (this.getParent()) {
+            return this.getParent().do_warn.apply(this,arguments);
+        }
+        return false;
+    },
+    rpc: function(url, data, options) {
+        var def = $.Deferred();
+        var self = this;
+        instance.session.rpc(url, data, options).done(function() {
+            if (!self.isDestroyed())
+                def.resolve.apply(def, arguments);
+        }).fail(function() {
+            if (!self.isDestroyed())
+                def.reject.apply(def, arguments);
+        });
+        return def.promise();
+    }
+});
+
+/**
  * Base class for all visual components. Provides a lot of functionalities helpful
  * for the management of a part of the DOM.
  *
@@ -477,7 +556,7 @@ instance.web.PropertiesMixin = _.extend({}, instance.web.EventDispatcherMixin, {
  *
  * That will kill the widget in a clean way and erase its content from the dom.
  */
-instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
+instance.web.Widget = instance.web.Controller.extend({
     // Backbone-ish API
     tagName: 'div',
     id: null,
@@ -501,8 +580,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      * destroyed too. Can be null.
      */
     init: function(parent) {
-        instance.web.PropertiesMixin.init.call(this);
-        this.setParent(parent);
+        this._super(parent);
         // Bind on_/do_* methods to this
         // We might remove this automatic binding in the future
         for (var name in this) {
@@ -603,32 +681,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      */
     start: function() {
         return $.when();
-    },
-    /**
-     * Proxies a method of the object, in order to keep the right ``this`` on
-     * method invocations.
-     *
-     * This method is similar to ``Function.prototype.bind`` or ``_.bind``, and
-     * even more so to ``jQuery.proxy`` with a fundamental difference: its
-     * resolution of the method being called is lazy, meaning it will use the
-     * method as it is when the proxy is called, not when the proxy is created.
-     *
-     * Other methods will fix the bound method to what it is when creating the
-     * binding/proxy, which is fine in most javascript code but problematic in
-     * OpenERP Web where developers may want to replace existing callbacks with
-     * theirs.
-     *
-     * The semantics of this precisely replace closing over the method call.
-     *
-     * @param {String|Function} method function or name of the method to invoke
-     * @returns {Function} proxied method
-     */
-    proxy: function (method) {
-        var self = this;
-        return function () {
-            var fn = (typeof method === 'string') ? self[method] : method;
-            return fn.apply(self, arguments);
-        }
     },
     /**
      * Renders the element. The default implementation renders the widget using QWeb,
@@ -749,42 +801,6 @@ instance.web.Widget = instance.web.Class.extend(instance.web.PropertiesMixin, {
      */
     $: function(selector) {
         return this.$el.find(selector);
-    },
-    /**
-     * Informs the action manager to do an action. This supposes that
-     * the action manager can be found amongst the ancestors of the current widget.
-     * If that's not the case this method will simply return `false`.
-     */
-    do_action: function() {
-        var parent = this.getParent();
-        if (parent) {
-            return parent.do_action.apply(parent, arguments);
-        }
-        return false;
-    },
-    do_notify: function() {
-        if (this.getParent()) {
-            return this.getParent().do_notify.apply(this,arguments);
-        }
-        return false;
-    },
-    do_warn: function() {
-        if (this.getParent()) {
-            return this.getParent().do_warn.apply(this,arguments);
-        }
-        return false;
-    },
-    rpc: function(url, data, options) {
-        var def = $.Deferred();
-        var self = this;
-        instance.session.rpc(url, data, options).done(function() {
-            if (!self.isDestroyed())
-                def.resolve.apply(def, arguments);
-        }).fail(function() {
-            if (!self.isDestroyed())
-                def.reject.apply(def, arguments);
-        });
-        return def.promise();
     }
 });
 
@@ -974,7 +990,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         };
         date.today = new py.def(function () {
             var d = new Date();
-            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            return new date(d.getFullYear(), d.getMonth() + 1, d.getDate());
         });
         datetime.time = new py.type(function time() {
             throw new Error('datetime.time not implemented');

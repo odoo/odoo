@@ -52,8 +52,29 @@ instance.web.dialog = function(element) {
     return result;
 };
 
+/**
+    A useful class to handle dialogs.
+
+    Attributes:
+    - $buttons: A jQuery element targeting a dom part where buttons can be added. It always exists
+    during the lifecycle of the dialog.
+*/
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
+    /**
+        Constructor.
+
+        @param {Widget} parent
+        @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
+            dictionary can contain the following keys:
+            - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
+                label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
+                corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
+                in OpenERP must be personalized in some way (button in red, link instead of button, ...) and this
+                feature does not allow that kind of personalization.
+            - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
+        @param {jQuery object} content Some content to replace this.$el .
+    */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -83,9 +104,9 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.on("closing", this, this._closing);
         this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
     },
-    _get_options: function(options) {
+    _get_options: function() {
         var self = this;
-        var o = _.extend({}, this.dialog_options, options || {});
+        var o = _.extend({}, this.dialog_options);
         var sizes = {
             width: $(window.top).width(),
             height: $(window.top).height(),
@@ -121,20 +142,17 @@ instance.web.Dialog = instance.web.Widget.extend({
             this._super();
         }
     },
-    open: function(options) {
-        var o = this._get_options(options);
-        if (o.buttons) {
-            this._add_buttons(o.buttons);
-            delete(o.buttons);
-        }
+    /**
+        Opens the popup. Inits the dialog if it is not already inited.
+
+        @return this
+    */
+    open: function() {
         if (!this.dialog_inited) {
-            this.init_dialog(o);
+            this.init_dialog();
         }
-        instance.web.dialog(this.$el, o).dialog('open');
+        this.$el.dialog('open');
         this.$el.dialog("widget").append(this.$buttons);
-        if (o.height === 'auto' && o.max_height) {
-            this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
-        }
         return this;
     },
     _add_buttons: function(buttons) {
@@ -153,13 +171,29 @@ instance.web.Dialog = instance.web.Widget.extend({
             });
         });
     },
-    init_dialog: function(options) {
+    /**
+        Initializes the popup.
+
+        @return The result returned by start().
+    */
+    init_dialog: function() {
+        var options = this._get_options();
+        if (options.buttons) {
+            this._add_buttons(options.buttons);
+            delete(options.buttons);
+        }
         this.renderElement();
         instance.web.dialog(this.$el, options);
+        if (options.height === 'auto' && options.max_height) {
+            this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
+        }
         this.dialog_inited = true;
         var res = this.start();
         return res;
     },
+    /**
+        Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
+    */
     close: function() {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
             this.$el.dialog('close');
@@ -174,6 +208,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_closing = undefined;
         }
     },
+    /**
+        Destroys the popup, also closes it.
+    */
     destroy: function () {
         this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
@@ -729,20 +766,24 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
-        self.$el.validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }).done(function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
+        this.getParent().dialog_title = "Change Password";
+        var $button = self.$el.find('.oe_form_button');
+        $button.appendTo(this.getParent().$buttons);
+        $button.eq(2).click(function(){
+           self.getParent().close();
+        })
+        $button.eq(0).click(function(){
+          self.rpc("/web/session/change_password",{
+               'fields': $("form[name=change_password_form]").serializeArray()
+          }).done(function(result) {
+               if (result.error) {
+                  self.display_error(result);
+                  return;
+               } else {
+                   instance.webclient.on_logout();
+               }
+          });
+       })
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
@@ -949,6 +990,14 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
+                if(!instance.session.debug) {
+                    self.rpc("/web/database/get_list", {}).done( function(result) {
+                       if (result.length > 1) {
+                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
+                       }
+                        self.$el.find('.oe_topbar_name').text(topbar_name);
+                    });
+                }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
             });
@@ -1058,9 +1107,7 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$el.on('click', '.oe_logo', function() {
-                self.action_manager.do_action('home');
-            });
+            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2).slice(0, -1));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {

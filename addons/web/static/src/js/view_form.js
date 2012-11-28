@@ -195,7 +195,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.sidebar.add_items('other', _.compact([
                 self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
                 self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate },
-                { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
             ]));
         }
 
@@ -1034,7 +1033,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many'
-                        || field.field.type === 'binary') {
+                        || field.field.type === 'binary'
+                        || field.password) {
                     return false;
                 }
 
@@ -1682,11 +1682,11 @@ instance.web.form.compute_domain = function(expr, fields) {
         switch (op.toLowerCase()) {
             case '=':
             case '==':
-                stack.push(field_value == val);
+                stack.push(_.isEqual(field_value, val));
                 break;
             case '!=':
             case '<>':
-                stack.push(field_value != val);
+                stack.push(!_.isEqual(field_value, val));
                 break;
             case '<':
                 stack.push(field_value < val);
@@ -2247,7 +2247,9 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         var $input = this.$el.find('input');
         $input.change(function() {
-            self.internal_set_value(self.parse_value($input.val()));
+            if(self.is_syntax_valid()){
+                self.internal_set_value(self.parse_value($input.val()));
+            }
         });
         this.setupFocus($input);
     },
@@ -4026,6 +4028,9 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         }
         this._super(value_);
     },
+    is_false: function() {
+        return _(this.get("value")).isEmpty();
+    },
     get_value: function() {
         var tmp = [commands.replace_with(this.get("value"))];
         return tmp;
@@ -4236,16 +4241,14 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         var self = this;
 
         self.load_view();
-        this.is_loaded.done(function() {
-            self.on("change:effective_readonly", self, function() {
-                self.is_loaded = self.is_loaded.then(function() {
-                    self.kanban_view.destroy();
-                    return $.when(self.load_view()).done(function() {
-                        self.render_value();
-                    });
+        self.on("change:effective_readonly", self, function() {
+            self.is_loaded = self.is_loaded.then(function() {
+                self.kanban_view.destroy();
+                return $.when(self.load_view()).done(function() {
+                    self.render_value();
                 });
             });
-        })
+        });
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4629,6 +4632,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                         'import_enabled': false,
                         '$buttons': self.$buttonpane,
                         'disable_editable_mode': true,
+                        '$pager': self.$('.oe_popup_list_pager'),
                     }, self.options.list_view_options || {}));
             self.view_list.on('edit:before', self, function (e) {
                 e.cancel = true;
@@ -4788,6 +4792,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         this._super(field_manager, node);
         this.binary_value = false;
         this.useFileAPI = !!window.FileReader;
+        this.max_upload_size = 25 * 1024 * 1024; // 25Mo
         if (!this.useFileAPI) {
             this.fileupload_id = _.uniqueId('oe_fileupload');
             $(window).on(this.fileupload_id, function() {
@@ -4813,6 +4818,11 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
         if ((this.useFileAPI && file_node.files.length) || (!this.useFileAPI && $(file_node).val() !== '')) {
             if (this.useFileAPI) {
                 var file = file_node.files[0];
+                if (file.size > this.max_upload_size) {
+                    var msg = _t("The selected file exceed the maximum file size of %s.");
+                    instance.webclient.notification.warn(_t("File upload"), _.str.sprintf(msg, instance.web.human_size(this.max_upload_size)));
+                    return false;
+                }
                 var filereader = new FileReader();
                 filereader.readAsDataURL(file);
                 filereader.onloadend = function(upload) {

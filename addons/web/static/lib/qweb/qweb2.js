@@ -698,7 +698,7 @@ QWeb2.Element = (function() {
             this.top("debugger;");
         },
         compile_action_log : function(value) {
-            this.top("console.log(" + this.format_expression(value) + "});");
+            this.top("console.log(" + this.format_expression(value) + ");");
         }
     });
     return Element;
