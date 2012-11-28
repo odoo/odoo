@@ -97,7 +97,8 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
         'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
-        'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
+        'filter_id':fields.many2one('ir.filters', 'Precondition Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
+        'filter_post_id': fields.many2one('ir.filters', 'Postcondition Filter', required=False),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
@@ -110,7 +111,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
     _order = 'sequence'
 
 
-    def post_action(self, cr, uid, ids, model, old_records=None, context=None):
+    def post_action(self, cr, uid, ids, model, precondition_ok=None, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
@@ -122,7 +123,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             # If the rule doesn't involve a time condition, run it immediately
             # Otherwise we let the scheduler run the action
             if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
-                self._action(cr, uid, [rule_id], model_pool.browse(cr, uid, ids, context=context), old_records=old_records, context=context)
+                self._action(cr, uid, [rule_id], model_pool.browse(cr, uid, ids, context=context), precondition_ok=precondition_ok, context=context)
         return True
 
     def _create(self, old_create, model, context=None):
@@ -134,8 +135,17 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             if context is None:
                 context = {}
             new_id = old_create(cr, uid, vals, context=context)
+            #As it is a new record, we can assume that the precondition is true for every filter. 
+            #(There is nothing before the create so no condition)
+            precondition_ok = {}
+            precondition_ok[new_id] = {}
+            for action in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
+                if action.filter_id:
+                    precondition_ok[new_id][action.id] = False
+                else:
+                    precondition_ok[new_id][action.id] = True
             if not context.get('action'):
-                self.post_action(cr, uid, [new_id], model, context=context)
+                self.post_action(cr, uid, [new_id], model, precondition_ok=precondition_ok, context=context)
             return new_id
         return wrapper
 
@@ -151,15 +161,22 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             if isinstance(ids, (str, int, long)):
                 ids = [ids]
             model_pool = self.pool.get(model)
-            # get the old records (before the write)
-            if model and ids:
-                old_records = model_pool.browse(cr,uid,ids,context=context)
-                # look at records' states to fill the record cache
-                for record in old_records:
-                    record.state
+            # We check for the pre-filter. We must apply it before the write
+            precondition_ok = {}
+            for id in ids:
+                precondition_ok[id] = {}
+                for action in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
+                    precondition_ok[id][action.id] = True
+                    if action.filter_id and action.model_id.model == action.filter_id.model_id:
+                        ctx = dict(context)
+                        ctx.update(eval(action.filter_id.context))
+                        obj_ids = []
+                        if self.pool.get(action.model_id.model)!=None:
+                            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
+                        precondition_ok[id][action.id] = id in obj_ids
             old_write(cr, uid, ids, vals, context=context)
             if not context.get('action'):
-                self.post_action(cr, uid, ids, model, old_records=old_records, context=context)
+                self.post_action(cr, uid, ids, model, precondition_ok=precondition_ok, context=context)
             return True
         return wrapper
 
@@ -263,15 +280,15 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                         
                         
 
-    def do_check(self, cr, uid, action, obj, old_records=None, context=None):
+    def do_check(self, cr, uid, action, obj, precondition_ok=True, context=None):
         """ check Action """
         if context is None:
             context = {}
-        ok = True
-        if action.filter_id and action.model_id.model == action.filter_id.model_id:
+        ok = precondition_ok
+        if action.filter_post_id and action.model_id.model == action.filter_post_id.model_id:
             ctx = dict(context)
-            ctx.update(eval(action.filter_id.context))
-            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
+            ctx.update(eval(action.filter_post_id.context))
+            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_post_id.domain), context=ctx)
             ok = ok and obj.id in obj_ids
         if getattr(obj, 'user_id', False):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
@@ -284,22 +301,6 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                     (action.trg_partner_categ_id.id in map(lambda x: x.id, obj.partner_id.category_id or []))
                 )
             )
-        #state_to = the state after a write or a create
-        state_to = getattr(obj, 'state', False)
-        #state_from = nothing or the state of old_records
-        state_from = ""
-        if old_records != None:
-            for record in old_records:
-                state_from = record.state
-        else:
-            state_from = "na" #it means that there was no state before (creation for example)
-        #if we have an action that check the status
-        if action.trg_state_to:
-            if action.trg_state_from:
-                ok = ok and action.trg_state_from==state_from
-            else:
-                ok = state_from!=state_to
-            ok = ok and action.trg_state_to==state_to
         reg_name = action.regex_name
         result_name = True
         if reg_name:
@@ -341,7 +342,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
         return True
 
-    def _action(self, cr, uid, ids, objects, scrit=None, old_records=None, context=None):
+    def _action(self, cr, uid, ids, objects, scrit=None, precondition_ok=None, context=None):
         """ Do Action """
         if context is None:
             context = {}
@@ -350,9 +351,11 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             objects = [objects]
         for action in self.browse(cr, uid, ids, context=context):
             for obj in objects:
-                if self.do_check(cr, uid, action, obj, old_records=old_records, context=context):
+                ok = True
+                if precondition_ok!=None:
+                    ok = precondition_ok[obj.id][action.id]
+                if self.do_check(cr, uid, action, obj, precondition_ok=ok, context=context):
                     self.do_action(cr, uid, action, obj, context=context)
-
         context.update({'action': False})
         return True
 

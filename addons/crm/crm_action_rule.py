@@ -43,8 +43,8 @@ class base_action_rule(osv.osv):
         'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
     }
 
-    def do_check(self, cr, uid, action, obj, old_records=None, context=None):
-        ok = super(base_action_rule, self).do_check(cr, uid, action, obj, old_records=old_records, context=context)
+    def do_check(self, cr, uid, action, obj, precondition_ok=True, context=None):
+        ok = super(base_action_rule, self).do_check(cr, uid, action, obj, precondition_ok=precondition_ok, context=context)
 
         if hasattr(obj, 'section_id'):
             ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
