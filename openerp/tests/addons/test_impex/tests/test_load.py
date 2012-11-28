@@ -1140,6 +1140,10 @@ class test_datetime(ImporterCase):
         """ If there is no tz either in the context or on the user, falls back
         to UTC
         """
+        self.registry('res.users').write(
+            self.cr, openerp.SUPERUSER_ID, [openerp.SUPERUSER_ID],
+            {'tz': False})
+
         result = self.import_(['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
