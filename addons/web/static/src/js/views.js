@@ -1090,19 +1090,18 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
-            var additional_context = _.extend({
-                active_id: ids[0],
-                active_ids: ids,
-                active_model: self.getParent().dataset.model
-            }, context);
+            var c = instance.web.pyeval.eval('context',
+                new instance.web.CompoundContext({
+                    active_id: ids[0],
+                    active_ids: ids,
+                    active_model: self.getParent().dataset.model
+                }, context));
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
-                context: instance.web.pyeval.eval(
-                    'context', additional_context)
+                context: c
             }).done(function(result) {
                 result.context = new instance.web.CompoundContext(
-                    result.context,
-                    additional_context);
+                    c, result.context);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
                 self.do_action(result, {
