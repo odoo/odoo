@@ -572,7 +572,7 @@ class expression(object):
                         self.joins.append('%s."%s"=%s."%s"' % (alias, 'id', previous_alias, field_path[0]))
                     elif field._type == 'one2many':
                         self.joins.append('%s."%s"=%s."%s"' % (alias, field._fields_id, previous_alias, 'id'))
-                    self.exp[i] = (alias + '.' + field_path[1], self.exp[i][1], self.exp[i][2])
+                self.exp[i] = (alias + '.' + field_path[1], self.exp[i][1], self.exp[i][2])
 
                 # udpate working variables
                 field_path = field_path[1].split('.', 1)
