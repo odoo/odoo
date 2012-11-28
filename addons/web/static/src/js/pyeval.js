@@ -288,7 +288,7 @@ openerp.web.pyeval = function (instance) {
             return py.str.fromJSON(s);
         },
         __eq__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.False;
             }
             return (this.days === other.days
@@ -297,7 +297,7 @@ openerp.web.pyeval = function (instance) {
                     ? py.True : py.False;
         },
         __add__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;
             }
             return py.PY_call(datetime.timedelta, [
@@ -308,7 +308,7 @@ openerp.web.pyeval = function (instance) {
         },
         __radd__: function (other) { return this.__add__(other); },
         __sub__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;
             }
             return py.PY_call(datetime.timedelta, [
@@ -318,7 +318,7 @@ openerp.web.pyeval = function (instance) {
             ]);
         },
         __rsub__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;
             }
             return this.__neg__().__add__(other);
@@ -332,7 +332,7 @@ openerp.web.pyeval = function (instance) {
         },
         __pos__: function () { return this; },
         __mul__: function (other) {
-            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+            if (!py.PY_isInstance(other, py.float)) {
                 return py.NotImplemented;
             }
             var n = other.toJSON();
@@ -344,7 +344,7 @@ openerp.web.pyeval = function (instance) {
         },
         __rmul__: function (other) { return this.__mul__(other); },
         __div__: function (other) {
-            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+            if (!py.PY_isInstance(other, py.float)) {
                 return py.NotImplemented;
             }
             var usec = ((this.days * 24 * 3600) + this.seconds) * 1000000
@@ -410,13 +410,12 @@ openerp.web.pyeval = function (instance) {
         combine: py.classmethod.fromJSON(function () {
             var args = py.PY_parseArgs(arguments, 'date time');
             return py.PY_call(datetime.datetime, [
-                // FIXME: should use getattr
-                args.date.year,
-                args.date.month,
-                args.date.day,
-                args.time.hour,
-                args.time.minute,
-                args.time.second
+                py.PY_getAttr(args.date, 'year'),
+                py.PY_getAttr(args.date, 'month'),
+                py.PY_getAttr(args.date, 'day'),
+                py.PY_getAttr(args.time, 'hour'),
+                py.PY_getAttr(args.time, 'minute'),
+                py.PY_getAttr(args.time, 'second')
             ]);
         })
     });
@@ -452,7 +451,7 @@ openerp.web.pyeval = function (instance) {
                 ? py.True : py.False;
         },
         __add__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.timedelta)) {
                 return py.NotImplemented;
             }
             var s = tmxxx(this.year, this.month, this.day + other.days);
@@ -460,13 +459,15 @@ openerp.web.pyeval = function (instance) {
         },
         __radd__: function (other) { return this.__add__(other); },
         __sub__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.timedelta]) === py.True) {
+            if (py.PY_isInstance(other, datetime.timedelta)) {
                 return this.__add__(other.__neg__());
             }
-            if (py.PY_call(py.isinstance, [other, datetime.date]) === py.True) {
+            if (py.PY_isInstance(other, datetime.date)) {
                 // FIXME: getattr and sub API methods
                 return py.PY_call(datetime.timedelta, [
-                    this.toordinal().__sub__(other.toordinal())
+                    py.PY_subtract(
+                        py.PY_call(py.PY_getAttr(this, 'toordinal')),
+                        py.PY_call(py.PY_getAttr(other, 'toordinal')))
                 ]);
             }
             return py.NotImplemented;
@@ -494,12 +495,10 @@ openerp.web.pyeval = function (instance) {
     });
     var time = py.PY_call(py.object);
     time.strftime = py.PY_def.fromJSON(function () {
-        // FIXME: needs PY_getattr
-        var d = py.PY_call(datetime.__getattribute__('datetime')
-                                   .__getattribute__('now'));
-        var args = [].slice.call(arguments);
-        return py.PY_call.apply(
-            null, [d.__getattribute__('strftime')].concat(args));
+        var args  = py.PY_parseArgs(arguments, 'format');
+        var dt_class = py.PY_getAttr(datetime, 'datetime');
+        var d = py.PY_call(py.PY_getAttr(dt_class, 'now'));
+        return py.PY_call(py.PY_getAttr(d, 'strftime'), [args.format]);
     });
 
     var relativedelta = py.type('relativedelta', null, {
@@ -510,7 +509,7 @@ openerp.web.pyeval = function (instance) {
                 + 'weekday leakdays yearday nlyearday');
         },
         __add__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.date]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.date)) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
@@ -555,7 +554,7 @@ openerp.web.pyeval = function (instance) {
         },
 
         __sub__: function (other) {
-            if (py.PY_call(py.isinstance, [other, datetime.date]) !== py.True) {
+            if (!py.PY_isInstance(other, datetime.date)) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
