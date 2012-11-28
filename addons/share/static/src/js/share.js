@@ -12,7 +12,7 @@ openerp.share = function(session) {
         }
         if (view.fields_view.type == 'form') rec_name = view.datarecord.name;
         else rec_name = '';
-        session.web.pyeval.eval_domain_and_context({
+        session.web.pyeval.eval_domains_and_contexts({
             domains: [domain],
             contexts: [view.dataset.context]
         }).done(function (result) {
