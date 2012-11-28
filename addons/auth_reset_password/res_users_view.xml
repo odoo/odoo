@@ -10,7 +10,8 @@
                 <!-- Reset Password button -->
                 <xpath expr="//sheet/*[1]" position="before">
                     <div class="oe_right oe_button_box">
-                        <button string="Reset Password" type="object" name="action_reset_password"/>
+                        <button string="Reset Password" type="object" name="action_reset_password"
+                            help="Send a special url by email to make the user (re)set their password."/>
                     </div>
                 </xpath>
                 <!-- password is never required; one can use Reset Password -->
