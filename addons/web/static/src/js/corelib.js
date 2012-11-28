@@ -990,7 +990,7 @@ instance.web.JsonRPC = instance.web.Class.extend(instance.web.PropertiesMixin, {
         };
         date.today = new py.def(function () {
             var d = new Date();
-            return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+            return new date(d.getFullYear(), d.getMonth() + 1, d.getDate());
         });
         datetime.time = new py.type(function time() {
             throw new Error('datetime.time not implemented');
