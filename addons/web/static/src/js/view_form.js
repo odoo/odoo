@@ -1033,7 +1033,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         || field.get("readonly")
                         || field.field.type === 'one2many'
                         || field.field.type === 'many2many'
-                        || field.field.type === 'binary') {
+                        || field.field.type === 'binary'
+                        || field.password) {
                     return false;
                 }
 
