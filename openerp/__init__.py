@@ -26,6 +26,7 @@
 SUPERUSER_ID = 1
 
 import addons
+import cli
 import conf
 import loglevels
 import modules

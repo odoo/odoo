@@ -22,6 +22,9 @@
 import logging
 import time
 
+from osv import osv, fields
+from tools.translate import _
+
 import openerp
 
 _logger = logging.getLogger(__name__)
@@ -98,6 +101,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment == 0:
+             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         sql = "CREATE SEQUENCE ir_sequence_%03d INCREMENT BY %%s START WITH %%s" % id
         cr.execute(sql, (number_increment, number_next))
@@ -122,6 +127,8 @@ class ir_sequence(openerp.osv.osv.osv):
 
         There is no access rights check.
         """
+        if number_increment == 0:
+             raise osv.except_osv(_('Warning!'),_("Increment number must not be zero."))
         assert isinstance(id, (int, long))
         cr.execute("""
             ALTER SEQUENCE ir_sequence_%03d INCREMENT BY %%s RESTART WITH %%s
