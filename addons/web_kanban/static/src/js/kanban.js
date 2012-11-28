@@ -1070,8 +1070,10 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
      */
     quick_add: function () {
         var self = this;
+        var val = this.$input.val();
+        if (/^\s*$/.test(val)) { return; }
         this._dataset.call(
-            'name_create', [self.$input.val() || false, new instance.web.CompoundContext(
+            'name_create', [val, new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
             .then(function(record) {
                 self.$input.val("");
