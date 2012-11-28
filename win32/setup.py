@@ -52,7 +52,7 @@ excludes = "Tkconstants Tkinter tcl _imagingtk PIL._imagingtk ImageTk PIL.ImageT
 
 setup(service      = ["OpenERPServerService"],
       version      = meta['version'],
-      licence      = meta['licence'],
+      license      = meta['license'],
       url          = meta['url'],
       author       = meta['author'],
       author_email = meta['author_email'],
