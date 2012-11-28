@@ -583,7 +583,7 @@ class mail_message(osv.Model):
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.iteritems()
-                if not message.get('model') and not message.get('res_id')]
+                if not message.get('res_model') and not message.get('res_id')]
         else:
             author_ids = []
 
@@ -640,6 +640,7 @@ class mail_message(osv.Model):
                             (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
+        values['model'] = context.get('default_res_model') if (context and context.get('default_res_model')) else ''
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
