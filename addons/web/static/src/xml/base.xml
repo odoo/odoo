@@ -390,7 +390,7 @@
         <t t-esc="menu.name"/>
         <t t-if="menu.needaction_enabled and menu.needaction_counter">
             <div class="oe_tag oe_tag_dark oe_menu_counter">
-                <t t-esc="menu.needaction_counter"/>
+                <t t-if="menu.needaction_counter &gt; 99"> 99+ </t><t t-if="menu.needaction_counter &lt;= 99"> <t t-esc="menu.needaction_counter"/> </t>
             </div>
         </t>
     </a>
@@ -681,13 +681,15 @@
         </tr>
     </tfoot>
 </table>
-<div t-name="ListView.buttons" class="oe_list_buttons">
+<t t-name="ListView.buttons">
+    <div class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
     </t>
-</div>
+    </div>
+</t>
 <t t-name="ListView.pager">
     <div class="oe_list_pager" t-att-colspan="widget.columns_count">
         <t t-if="!widget.no_leaf and widget.options.pager !== false" t-call="ViewPager">
@@ -1033,7 +1035,7 @@
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-id="widget.id_for_label">
                 <t t-foreach="widget.values" t-as="option">
-                    <option><t t-esc="option[1]"/></option>
+                    <option><t t-esc="widget.node.attrs.placeholder" t-if="option[0] == false and widget.node.attrs.placeholder"/><t t-esc="option[1]" t-if="option[0] != false"/></option>
                 </t>
         </select>
     </span>
