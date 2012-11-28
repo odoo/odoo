@@ -730,7 +730,7 @@ class stock_picking(osv.osv):
                 model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
         return super(stock_picking,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
-    def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
+    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         return {}
 
     def action_explode(self, cr, uid, moves, context=None):

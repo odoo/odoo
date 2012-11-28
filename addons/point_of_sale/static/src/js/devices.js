@@ -202,7 +202,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *     {
          *          quantity:           (number) the number of items, or the weight, 
          *          unit_name:          (string) the name of the item's unit (kg, dozen, ...)
-         *          list_price:         (number) the price of one unit of the item before discount
+         *          price:              (number) the price of one unit of the item before discount
          *          discount:           (number) the discount on the product in % [0,100] 
          *          product_name:       (string) the name of the product
          *          price_with_tax:     (number) the price paid for this orderline, tax included
