@@ -4036,8 +4036,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         return this.get("value");
     },
     render_value: function() {
-        if (this.get("effective_readonly"))
-            return;
         var self = this;
         var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
         var values = self.get("value");
