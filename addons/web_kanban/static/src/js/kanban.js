@@ -319,7 +319,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.compute_groups_width();
         if (this.group_by) {
             // Kanban cards drag'n'drop
-            var $columns = this.$el.find('.oe_kanban_column');
+            var $columns = this.$el.find('.oe_kanban_column .oe_kanban_column_cards');
             $columns.sortable({
                 handle : '.oe_kanban_draghandle',
                 start: function(event, ui) {
@@ -368,8 +368,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     stop: function(event, ui) {
                         var stop_index = ui.item.index();
                         if (start_index !== stop_index) {
-                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(start_index);
-                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column').eq(stop_index);
+                            var $start_column = $('.oe_kanban_groups_records .oe_kanban_column .oe_kanban_column_cards').eq(start_index);
+                            var $stop_column = $('.oe_kanban_groups_records .oe_kanban_column .oe_kanban_column_cards').eq(stop_index);
                             var method = (start_index > stop_index) ? 'insertBefore' : 'insertAfter';
                             $start_column[method]($stop_column);
                             var tmp_group = self.groups.splice(start_index, 1)[0];
@@ -657,14 +657,15 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var self = this;
         var $list_header = this.$records.find('.oe_kanban_group_list_header');
         var $show_more = this.$records.find('.oe_kanban_show_more');
+        var $cards = this.$records.find('.oe_kanban_column_cards');
 
         _.each(records, function(record) {
             var rec = new instance.web_kanban.KanbanRecord(self, record);
             if (!prepend) {
-                rec.insertBefore($show_more);
+                rec.appendTo($cards);
                 self.records.push(rec);
             } else {
-                rec.insertAfter($list_header);
+                rec.prependTo($cards);
                 self.records.unshift(rec);
             }
         });
