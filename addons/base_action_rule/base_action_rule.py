@@ -97,8 +97,8 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
         'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
-        'filter_id':fields.many2one('ir.filters', 'Precondition Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
-        'filter_post_id': fields.many2one('ir.filters', 'Postcondition Filter', required=False),
+        'filter_id':fields.many2one('ir.filters', 'Postcondition Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
+        'filter_pre_id': fields.many2one('ir.filters', 'Precondition Filter', required=False),
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
@@ -140,7 +140,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             precondition_ok = {}
             precondition_ok[new_id] = {}
             for action in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
-                if action.filter_id:
+                if action.filter_pre_id:
                     precondition_ok[new_id][action.id] = False
                 else:
                     precondition_ok[new_id][action.id] = True
@@ -167,12 +167,12 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 precondition_ok[id] = {}
                 for action in self.browse(cr, uid, self.search(cr, uid, [], context=context), context=context):
                     precondition_ok[id][action.id] = True
-                    if action.filter_id and action.model_id.model == action.filter_id.model_id:
+                    if action.filter_pre_id and action.model_id.model == action.filter_pre_id.model_id:
                         ctx = dict(context)
-                        ctx.update(eval(action.filter_id.context))
+                        ctx.update(eval(action.filter_pre_id.context))
                         obj_ids = []
                         if self.pool.get(action.model_id.model)!=None:
-                            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
+                            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_pre_id.domain), context=ctx)
                         precondition_ok[id][action.id] = id in obj_ids
             old_write(cr, uid, ids, vals, context=context)
             if not context.get('action'):
@@ -285,10 +285,10 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         if context is None:
             context = {}
         ok = precondition_ok
-        if action.filter_post_id and action.model_id.model == action.filter_post_id.model_id:
+        if action.filter_id and action.model_id.model == action.filter_id.model_id:
             ctx = dict(context)
-            ctx.update(eval(action.filter_post_id.context))
-            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_post_id.domain), context=ctx)
+            ctx.update(eval(action.filter_id.context))
+            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
             ok = ok and obj.id in obj_ids
         if getattr(obj, 'user_id', False):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)

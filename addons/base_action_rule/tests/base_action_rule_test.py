@@ -39,7 +39,7 @@ class base_action_rule_test(common.TransactionCase):
             'user_id': self.admin_user[1],
             }, context=context)
 
-    def create_rule(self, cr, uid, filter_id=None, filter_post_id=None, context=None):
+    def create_rule(self, cr, uid, filter_id=None, filter_pre_id=None, context=None):
         """
             The "Rule 1" says that when a lead goes to the 'draft' state, the responsible for that lead changes to "demo_user"
         """
@@ -49,7 +49,7 @@ class base_action_rule_test(common.TransactionCase):
             'model_id': self.registry('ir.model').search(cr, uid, [('model','=','base.action.rule.lead.test')], context=context)[0],
             'active' : 1,
             'trg_date_type' : 'none',
-            'filter_post_id' : filter_post_id,
+            'filter_pre_id' : filter_pre_id,
             'filter_id' : filter_id,
             'act_user_id': self.demo_user[1],
             }, context=context)
@@ -61,7 +61,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         context = {}
         filter_draft = self.create_filter_draft(cr, uid, context=context)
-        rule_1_id = self.create_rule(cr, uid, filter_id=filter_draft, context=context)
+        rule_1_id = self.create_rule(cr, uid, filter_pre_id=filter_draft, context=context)
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
@@ -74,7 +74,7 @@ class base_action_rule_test(common.TransactionCase):
         cr, uid = self.cr, self.uid
         context = {}
         filter_draft = self.create_filter_draft(cr, uid, context=context)
-        rule_1_id = self.create_rule(cr, uid, filter_post_id=filter_draft, context=context)
+        rule_1_id = self.create_rule(cr, uid, filter_id=filter_draft, context=context)
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
@@ -92,7 +92,7 @@ class base_action_rule_test(common.TransactionCase):
         context = {}
         filter_draft = self.create_filter_draft(cr, uid, context=context)
         filter_done = self.create_filter_done(cr, uid, context=context)
-        self.create_rule(cr, uid, filter_id=filter_draft, filter_post_id=filter_done, context=context)
+        self.create_rule(cr, uid, filter_pre_id=filter_draft, filter_id=filter_done, context=context)
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
@@ -130,7 +130,7 @@ class base_action_rule_test(common.TransactionCase):
         context = {}
         filter_draft = self.create_filter_draft(cr, uid, context=context)
         filter_done = self.create_filter_done(cr, uid, context=context)
-        self.create_rule(cr, uid, filter_id=filter_draft, filter_post_id=filter_done, context=context)
+        self.create_rule(cr, uid, filter_pre_id=filter_draft, filter_id=filter_done, context=context)
         new_lead_id = self.create_lead_test_1(cr,uid,context=context)
         new_lead = self.registry('base.action.rule.lead.test').browse(cr, uid, new_lead_id, context=context)
         self.assertTrue(new_lead.state=='draft')
