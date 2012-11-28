@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import collections
 import datetime
 import functools
 import operator
@@ -31,8 +32,69 @@ REPLACE_WITH = lambda ids: (6, False, ids)
 
 class ConversionNotFound(ValueError): pass
 
+class ColumnWrapper(object):
+    def __init__(self, column, cr, uid, pool, fromtype, context=None):
+        self._converter = None
+        self._column = column
+        if column._obj:
+            self._pool = pool
+            self._converter_args = {
+                'cr': cr,
+                'uid': uid,
+                'model': pool[column._obj],
+                'fromtype': fromtype,
+                'context': context
+            }
+    @property
+    def converter(self):
+        if not self._converter:
+            self._converter = self._pool['ir.fields.converter'].for_model(
+                **self._converter_args)
+        return self._converter
+
+    def __getattr__(self, item):
+        return getattr(self._column, item)
+
 class ir_fields_converter(orm.Model):
     _name = 'ir.fields.converter'
+
+    def for_model(self, cr, uid, model, fromtype=str, context=None):
+        """ Returns a converter object for the model. A converter is a
+        callable taking a record-ish (a dictionary representing an openerp
+        record with values of typetag ``fromtype``) and returning a converted
+        records matching what :meth:`openerp.osv.orm.Model.write` expects.
+
+        :param model: :class:`openerp.osv.orm.Model` for the conversion base
+        :returns: a converter callable
+        :rtype: (record: dict, logger: (field, error) -> None) -> dict
+        """
+        columns = dict(
+            (k, ColumnWrapper(v.column, cr, uid, self.pool, fromtype, context))
+            for k, v in model._all_columns.iteritems())
+        converters = dict(
+            (k, self.to_field(cr, uid, model, column, fromtype, context))
+            for k, column in columns.iteritems())
+
+        def fn(record, log):
+            converted = {}
+            for field, value in record.iteritems():
+                if field in (None, 'id', '.id'): continue
+                if not value:
+                    converted[field] = False
+                    continue
+                try:
+                    converted[field], ws = converters[field](value)
+                    for w in ws:
+                        if isinstance(w, basestring):
+                            # wrap warning string in an ImportWarning for
+                            # uniform handling
+                            w = ImportWarning(w)
+                        log(field, w)
+                except ValueError, e:
+                    log(field, e)
+
+            return converted
+        return fn
 
     def to_field(self, cr, uid, model, column, fromtype=str, context=None):
         """ Fetches a converter for the provided column object, from the
@@ -343,6 +405,10 @@ class ir_fields_converter(orm.Model):
             # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
             records = ({subfield:item} for item in record[subfield].split(','))
 
+        def log(_, e):
+            if not isinstance(e, Warning):
+                raise e
+            warnings.append(e)
         for record in records:
             id = None
             refs = only_ref_fields(record)
@@ -355,7 +421,7 @@ class ir_fields_converter(orm.Model):
                     cr, uid, model, column, subfield, reference, context=context)
                 warnings.extend(w2)
 
-            writable = exclude_ref_fields(record)
+            writable = column.converter(exclude_ref_fields(record), log)
             if id:
                 commands.append(LINK_TO(id))
                 commands.append(UPDATE(id, writable))

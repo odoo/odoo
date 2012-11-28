@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import json
 import pkgutil
+import unittest2
 
 import openerp.modules.registry
 import openerp
@@ -246,7 +247,7 @@ class test_integer_field(ImporterCase):
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
     def test_out_of_range(self):
         result = self.import_(['value'], [[str(2**31)]])
         self.assertIs(result['ids'], False)
@@ -388,18 +389,22 @@ class test_unbound_string_field(ImporterCase):
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'unknown'")])
+            u"Missing required value for the field 'value'. This might be "
+            u"'unknown' in the current model, or a field of the same name in "
+            u"an o2m.")])
         self.assertIs(result['ids'], False)
 
-    @mute_logger('openerp.sql_db')
+    @mute_logger('openerp.sql_db', 'openerp.osv.orm')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
-            u"Missing required value for the field 'unknown'")])
+            u"Missing required value for the field 'value'. This might be "
+            u"'unknown' in the current model, or a field of the same name in "
+            u"an o2m.")])
         self.assertIs(result['ids'], False)
 
 class test_text(ImporterCase):
@@ -1007,6 +1012,46 @@ class test_realworld(common.TransactionCase):
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
 
+    def test_backlink(self):
+        data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json'))
+        result = self.registry('res.partner').load(
+            self.cr, openerp.SUPERUSER_ID,
+            ["name", "type", "street", "city", "country_id", "category_id",
+             "supplier", "customer", "is_company", "parent_id"],
+            data)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), len(data))
+
+    def test_recursive_o2m(self):
+        """ The content of the o2m field's dict needs to go through conversion
+        as it may be composed of convertables or other relational fields
+        """
+        self.registry('ir.model.data').clear_caches()
+        Model = self.registry('export.one2many.recursive')
+        result = Model.load(self.cr, openerp.SUPERUSER_ID,
+            ['value', 'child/const', 'child/child1/str', 'child/child2/value'],
+            [
+                ['4', '42', 'foo', '55'],
+                ['', '43', 'bar', '56'],
+                ['', '', 'baz', ''],
+                ['', '55', 'qux', '57'],
+                ['5', '99', 'wheee', ''],
+                ['', '98', '', '12'],
+            ],
+        context=None)
+
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 2)
+
+        b = Model.browse(self.cr, openerp.SUPERUSER_ID, result['ids'], context=None)
+        self.assertEqual((b[0].value, b[1].value), (4, 5))
+
+        self.assertEqual([child.str for child in b[0].child[1].child1],
+                         ['bar', 'baz'])
+        self.assertFalse(len(b[1].child[1].child1))
+        self.assertEqual([child.value for child in b[1].child[1].child2],
+                         [12])
+
 class test_date(ImporterCase):
     model_name = 'export.date'
 
@@ -1088,7 +1133,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', '=', result['ids'])])),
+            values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 01:11:11'])
 
     def test_notz(self):
@@ -1098,5 +1143,5 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', '=', result['ids'])])),
+            values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 11:11:11'])

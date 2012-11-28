@@ -83,7 +83,7 @@
     Test one2many operator with False
 -
     !assert {model: res.partner, search: "[('child_ids', '=', False)]"}:
-        - address in (False, None, [])
+        - child_ids in (False, None, [])
 -
     Test many2many operator with empty search list
 -

@@ -46,7 +46,7 @@ no other references to the sub-records in the system), they have to be
 spliced into the matrix somehow. This is done by adding lines composed
 *only* of o2m record fields below the main record:
 
-.. literalinclude:: o2m.txt
+.. literalinclude:: 06_misc_import_o2m.txt
 
 the sections in double-lines represent the span of two o2m
 fields. During parsing, they are extracted into their own ``data``

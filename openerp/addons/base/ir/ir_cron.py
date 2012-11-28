@@ -80,13 +80,13 @@ class ir_cron(osv.osv):
 
     _defaults = {
         'nextcall' : lambda *a: time.strftime(DEFAULT_SERVER_DATETIME_FORMAT),
-        'priority' : lambda *a: 5,
+        'priority' : 5,
         'user_id' : lambda obj,cr,uid,context: uid,
-        'interval_number' : lambda *a: 1,
-        'interval_type' : lambda *a: 'months',
-        'numbercall' : lambda *a: 1,
-        'active' : lambda *a: 1,
-        'doall' : lambda *a: 1
+        'interval_number' : 1,
+        'interval_type' : 'months',
+        'numbercall' : 1,
+        'active' : 1,
+        'doall' : 1
     }
 
     def _check_args(self, cr, uid, ids, context=None):

@@ -38,7 +38,6 @@ import openerp.osv as osv
 import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
-import openerp.tools.assertion_report as assertion_report
 from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
@@ -113,6 +112,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             if kind in ('demo', 'demo_xml'):
                 noupdate = True
             try:
+                ext = ext.lower()
                 if ext == '.csv':
                     if kind in ('init', 'init_xml'):
                         noupdate = True
@@ -121,8 +121,12 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
                     tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
-                else:
+                elif ext == '.xml':
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                elif ext == '.js':
+                    pass # .js files are valid but ignored here.
+                else:
+                    _logger.warning("Can't load unknown file type %s.", filename)
             finally:
                 fp.close()
 
@@ -347,7 +351,8 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             for (model, name) in cr.fetchall():
                 model_obj = pool.get(model)
                 if model_obj and not model_obj.is_transient():
-                    _logger.warning('Model %s (%s) has no access rules!', model, name)
+                    _logger.warning('The model %s has no access rules, consider adding one. E.g. access_%s,access_%s,model_%s,,1,1,1,1',
+                        model, model.replace('.', '_'), model.replace('.', '_'), model.replace('.', '_'))
 
             # Temporary warning while we remove access rights on osv_memory objects, as they have
             # been replaced by owner-only access rights
