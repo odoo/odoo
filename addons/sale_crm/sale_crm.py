@@ -46,4 +46,19 @@ class sale_order(osv.osv):
 
 sale_order()
 
+class res_users(osv.Model):
+    _inherit = 'res.users'
+    _columns = {
+        'default_section_id': fields.many2one('crm.case.section', 'Default Sales Team'),
+    }
+
+class account_invoice(osv.osv):
+    _inherit = 'account.invoice'
+    _columns = {
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+    }
+    _defaults = {
+        'section_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).default_section_id.id or False,
+    }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
