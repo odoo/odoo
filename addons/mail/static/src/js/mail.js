@@ -851,7 +851,7 @@ openerp.mail = function (session) {
             }
             var message_ids = _.map(messages, function (val) { return val.id; });
 
-            this.ds_notification.call('set_message_read', [message_ids, read_value, this.context])
+            this.ds_message.call('set_message_read', [message_ids, read_value, this.context])
                 .then(function () {
                     // apply modification
                     _.each(messages, function (msg) {
@@ -900,7 +900,7 @@ openerp.mail = function (session) {
             var self=this;
             var button = self.$('.oe_star:first');
 
-            this.ds_message.call('favorite_toggle', [[self.id]])
+            this.ds_message.call('set_message_starred', [[self.id], !self.is_favorite])
                 .then(function (star) {
                     self.is_favorite=star;
                     if (self.is_favorite) {

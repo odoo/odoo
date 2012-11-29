@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
 import tools
@@ -63,12 +62,15 @@ class mail_notification(osv.Model):
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read', select=1),
+        'starred': fields.boolean('Starred', select=1,
+            help='Starred message that goes into the todo mailbox'),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
         'read': False,
+        'starred': False,
     }
 
     def init(self, cr):
@@ -82,31 +84,6 @@ class mail_notification(osv.Model):
         if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
         return False
-
-    def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
-        """ Set messages as (un)read. Technically, the notifications related
-            to uid are set to (un)read. If for some msg_ids there are missing
-            notifications (i.e. due to load more or thread parent fetching),
-            they are created.
-
-            :param bool read: (un)read notification
-        """
-        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        notif_ids = self.search(cr, uid, [
-            ('partner_id', '=', user_pid),
-            ('message_id', 'in', msg_ids)
-            ], context=context)
-
-        # all message have notifications: already set them as (un)read
-        if len(notif_ids) == len(msg_ids):
-            return self.write(cr, uid, notif_ids, {'read': read}, context=context)
-
-        # some messages do not have notifications: find which one, create notification, update read status
-        notified_msg_ids = [notification.message_id.id for notification in self.browse(cr, uid, notif_ids, context=context)]
-        to_create_msg_ids = list(set(msg_ids) - set(notified_msg_ids))
-        for msg_id in to_create_msg_ids:
-            self.create(cr, uid, {'partner_id': user_pid, 'read': read, 'message_id': msg_id}, context=context)
-        return self.write(cr, uid, notif_ids, {'read': read}, context=context)
 
     def get_partners_to_notify(self, cr, uid, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
