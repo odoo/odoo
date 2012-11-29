@@ -845,6 +845,42 @@ openerp.testing.section('search-serialization', {
                 ok(!context.get_eval_context(), "context should have no evaluation context");
             });
     });
+    test('Empty filter domains', {asserts: 4}, function (instance) {
+        var view = {inputs: [], query: {on: function () {}}};
+        var filter_a = new instance.web.search.Filter(
+            {attrs: {name: 'a', context: '{}', domain: '[]'}}, view);
+        var filter_b = new instance.web.search.Filter(
+            {attrs: {name: 'b', context: '{}', domain: '[]'}}, view);
+        var filter_c = new instance.web.search.Filter(
+            {attrs: {name: 'c', context: '{b: 42}', domain: '[["a", "=", 3]]'}}, view);
+        var group = new instance.web.search.FilterGroup(
+            [filter_a, filter_b, filter_c], view);
+        var t1 = group.facet_for_defaults({a: true, c: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+
+            var domain = group.get_domain(model);
+            deepEqual(domain, '[["a", "=", 3]]', "domain should ignore empties");
+            var context = group.get_context(model);
+            deepEqual(context, '{b: 42}', "context should ignore empties");
+        });
+        var t2 = group.facet_for_defaults({a: true, b: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+
+            var domain = group.get_domain(model);
+            equal(domain, null, "domain should ignore empties");
+            var context = group.get_context(model);
+            equal(context, null, "context should ignore empties");
+        });
+        return $.when(t1, t2);
+    });
 });
 openerp.testing.section('removal', {
     dependencies: ['web.search'],

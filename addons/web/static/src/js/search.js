@@ -1009,6 +1009,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_context: function (facet) {
         var contexts = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
+            .without('{}')
             .reject(_.isEmpty)
             .value();
 
@@ -1027,6 +1028,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_groupby: function (facet) {
         return  facet.values.chain()
             .map(function (f) { return f.get('value').attrs.context; })
+            .without('{}')
             .reject(_.isEmpty)
             .value();
     },
@@ -1039,6 +1041,7 @@ instance.web.search.FilterGroup = instance.web.search.Input.extend(/** @lends in
     get_domain: function (facet) {
         var domains = facet.values.chain()
             .map(function (f) { return f.get('value').attrs.domain; })
+            .without('[]')
             .reject(_.isEmpty)
             .value();
 
