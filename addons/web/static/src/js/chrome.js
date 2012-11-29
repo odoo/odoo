@@ -1175,18 +1175,23 @@ instance.web.WebClient = instance.web.Client.extend({
             browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
             browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
             if (browser_offset !== user_offset) {
-                var notification = self.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
-                    user_timezone: instance.session.user_context.tz || 'UTC',
-                    user_offset: user_offset,
-                    browser_offset: browser_offset,
-                }), true);
-                notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                    notification.close();
-                }).find('a').on('click', function() {
-                    notification.close();
-                    self.user_menu.on_menu_settings();
-                    return false;
+                var $icon = $(QWeb.render('WebClient.timezone_systray'));
+                $icon.on('click', function() {
+                    var notification = self.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
+                        user_timezone: instance.session.user_context.tz || 'UTC',
+                        user_offset: user_offset,
+                        browser_offset: browser_offset,
+                    }), true);
+                    notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                        notification.close();
+                    }).find('a').on('click', function() {
+                        $icon.remove();
+                        notification.close();
+                        self.user_menu.on_menu_settings();
+                        return false;
+                    });
                 });
+                $icon.appendTo(self.$('.oe_systray'));
             }
         });
     },
