@@ -2,6 +2,7 @@
  * py.js helpers and setup
  */
 openerp.web.pyeval = function (instance) {
+    var _t = instance.web._t;
     instance.web.pyeval = {};
 
     var obj = function () {};
@@ -71,7 +72,7 @@ openerp.web.pyeval = function (instance) {
     var ymd2ord = function (year, month, day) {
         var dim = days_in_month(year, month);
         if (!(1 <= day && day <= dim)) {
-            throw new Error("ValueError: day must be in 1.." + dim);
+            throw new Error(_.str.sprintf(_t("ValueError: day must be in 1..%d"), dim));
         }
         return days_before_year(year)
              + days_before_month(year, month)
@@ -277,10 +278,11 @@ openerp.web.pyeval = function (instance) {
             });
             var s = _.str.sprintf("%d:%02d:%02d", hh, mm, ss);
             if (this.days) {
-                s = _.str.sprintf("%d day%s, %s",
-                    this.days,
-                    (this.days != 1 && this.days != -1) ? 's' : '',
-                    s);
+            	if (this.days != 1 && this.days != -1) {
+            		s = _.str.sprintf(_t("%d days, %s"), this.days, s);
+            	} else {
+            		s = _.str.sprintf(_t("%d day, %s"), this.days, s);
+            	};
             }
             if (this.microseconds) {
                 s = _.str.sprintf("%s.%06d", s, this.microseconds);
@@ -726,7 +728,7 @@ openerp.web.pyeval = function (instance) {
         case 'context': case 'compound_context':
             return instance.web.pyeval.eval('contexts', [arg]);
         default:
-            throw new Error(instance.web._t("Unknown nonliteral type " + arg.__ref));
+            throw new Error(_t("Unknown nonliteral type ") + arg.__ref);
         }
     };
     /**
@@ -760,11 +762,11 @@ openerp.web.pyeval = function (instance) {
             } catch (e) {
                 d.resolve({ error: {
                     code: 400,
-                    message: instance.web._t("Evaluation Error"),
+                    message: _t("Evaluation Error"),
                     data: {
                         type: 'local_exception',
                         debug: _.str.sprintf(
-                                instance.web._t("Local evaluation failure\n%s\n\n%s"),
+                                _t("Local evaluation failure\n%s\n\n%s"),
                                 e.message, JSON.stringify(source))
                     }
                 }});
