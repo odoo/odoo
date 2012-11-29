@@ -49,7 +49,7 @@
        % endif
     </p>  
     
-    % if object.company_id.paypal_account and object.type in ('out_invoice', 'in_refund'):
+    % if object.company_id.paypal_account and object.type in ('out_invoice'):
     <% 
     comp_name = quote(object.company_id.name)
     inv_number = quote(object.number)
