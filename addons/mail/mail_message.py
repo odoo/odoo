@@ -98,8 +98,7 @@ class mail_message(osv.Model):
     def _search_to_read(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
-        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        return ['&', ('notification_ids.partner_id', '=', pid), ('notification_ids.read', '=', not domain[0][2])]
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.read', '=', not domain[0][2])]
 
     def _get_starred(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
@@ -118,8 +117,7 @@ class mail_message(osv.Model):
     def _search_starred(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
-        pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        return ['&', ('notification_ids.partner_id', '=', pid), ('notification_ids.starred', '=', domain[0][2])]
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.starred', '=', domain[0][2])]
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -179,9 +177,7 @@ class mail_message(osv.Model):
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
-        if self._needaction:
-            return [('to_read', '=', True)]
-        return []
+        return [('to_read', '=', True)]
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
@@ -528,15 +524,6 @@ class mail_message(osv.Model):
         self._message_read_add_expandables(cr, uid, message_list, message_tree, parent_tree,
             thread_level=thread_level, message_unload_ids=message_unload_ids, domain=domain, parent_id=parent_id, context=context)
         return message_list
-
-    # TDE Note: do we need this ?
-    # def user_free_attachment(self, cr, uid, context=None):
-    #     attachment = self.pool.get('ir.attachment')
-    #     attachment_list = []
-    #     attachment_ids = attachment.search(cr, uid, [('res_model', '=', 'mail.message'), ('create_uid', '=', uid)])
-    #     if len(attachment_ids):
-    #         attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
-    #     return attachment_list
 
     #------------------------------------------------------
     # mail_message internals
