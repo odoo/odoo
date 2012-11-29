@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-05-10 18:18+0000\n"
+"PO-Revision-Date: 2012-11-28 18:29+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:45+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-29 05:14+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr "Numéro du Produit"
+msgstr "N° article"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
@@ -130,7 +130,7 @@ msgstr "Jour"
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr "Nom du Produit"
+msgstr "Nom de l'article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
@@ -787,7 +787,7 @@ msgstr "Pizza"
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr "Ajouter un produit"
+msgstr "Ajouter un article"
 
 #. module: point_of_sale
 #: field:pos.config,name:0
@@ -992,7 +992,7 @@ msgstr "Mars"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr "Produit utilisateur"
+msgstr "Articles utilisateur"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:1141
@@ -1002,7 +1002,7 @@ msgid ""
 "Please set one before choosing a product."
 msgstr ""
 "Vous devez sélectionner une liste de prix dans le formulaire de vente !\n"
-"Veuillez en choisir une avant de choisir un produit"
+"Veuillez en choisir une avant de choisir un article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
@@ -1449,7 +1449,7 @@ msgstr "Dr. Oetker Restaurant Funghi"
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "Catégories d'articles"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
@@ -1581,7 +1581,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "The scanned product was not recognized"
-msgstr ""
+msgstr "L'article scanné n'a pas été reconnu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -1690,7 +1690,7 @@ msgstr "Annuler"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:306
 #, python-format
 msgid "Please put your product on the scale"
-msgstr ""
+msgstr "Veuillez placer l'article sur la balance"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
@@ -1725,7 +1725,7 @@ msgstr "Prix unitaire"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:184
 #, python-format
 msgid "Product Weighting"
-msgstr ""
+msgstr "Pesée des articles"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1866,7 +1866,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
 msgid "Unreferenced Products"
-msgstr ""
+msgstr "Article inconnu"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
@@ -1949,6 +1949,8 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Indique l'ordre d'affichage lorsqu'une liste de catégories d'articles est "
+"affichée."
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -2099,7 +2101,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 #: view:pos.order:0
 msgid "Products"
-msgstr "Produits"
+msgstr "Articles"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
@@ -2283,7 +2285,7 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Qty of product"
-msgstr "Qté de Produits"
+msgstr "Qté d'articles"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
@@ -2323,7 +2325,7 @@ msgstr "Coca-Cola Light 50cl"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:472
 #, python-format
 msgid "Unknown Product"
-msgstr ""
+msgstr "Article inconnu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2754,7 +2756,7 @@ msgstr "Statistiques des commandes du point de vente"
 #: view:report.pos.order:0
 #: field:report.pos.order,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
