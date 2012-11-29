@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"PO-Revision-Date: 2012-11-24 02:54+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,6 +25,11 @@ msgstr ""
 #: model:ir.model,name:warning.model_purchase_order_line
 #: field:product.product,purchase_line_warn:0
 msgid "Purchase Order Line"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_in
+msgid "Incoming Shipments"
 msgstr ""
 
 #. module: warning
@@ -64,6 +69,11 @@ msgid "Warnings"
 msgstr ""
 
 #. module: warning
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr ""
+
+#. module: warning
 #: selection:product.product,purchase_line_warn:0
 #: selection:product.product,sale_line_warn:0
 #: selection:res.partner,invoice_warn:0
@@ -91,6 +101,11 @@ msgstr ""
 #. module: warning
 #: view:res.partner:0
 msgid "Warning on the Invoice"
+msgstr ""
+
+#. module: warning
+#: constraint:product.product:0
+msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
 msgstr ""
 
 #. module: warning
@@ -132,6 +147,8 @@ msgstr ""
 
 #. module: warning
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
@@ -160,10 +177,12 @@ msgstr ""
 #. module: warning
 #: code:addons/warning/warning.py:67
 #: code:addons/warning/warning.py:96
-#: code:addons/warning/warning.py:132
-#: code:addons/warning/warning.py:163
-#: code:addons/warning/warning.py:213
-#: code:addons/warning/warning.py:246
+#: code:addons/warning/warning.py:130
+#: code:addons/warning/warning.py:161
+#: code:addons/warning/warning.py:191
+#: code:addons/warning/warning.py:217
+#: code:addons/warning/warning.py:265
+#: code:addons/warning/warning.py:298
 #, python-format
 msgid "Alert for %s !"
 msgstr ""
@@ -196,10 +215,12 @@ msgstr ""
 #. module: warning
 #: code:addons/warning/warning.py:68
 #: code:addons/warning/warning.py:97
-#: code:addons/warning/warning.py:134
-#: code:addons/warning/warning.py:164
-#: code:addons/warning/warning.py:214
-#: code:addons/warning/warning.py:247
+#: code:addons/warning/warning.py:132
+#: code:addons/warning/warning.py:162
+#: code:addons/warning/warning.py:192
+#: code:addons/warning/warning.py:218
+#: code:addons/warning/warning.py:266
+#: code:addons/warning/warning.py:299
 #, python-format
 msgid "Warning for %s"
 msgstr ""
@@ -210,7 +231,7 @@ msgid "Warning on the Sale Order"
 msgstr ""
 
 #. module: warning
-#: constraint:product.product:0
+#: constraint:res.partner:0
 msgid "Error: Invalid ean code"
 msgstr ""
 
@@ -227,6 +248,11 @@ msgstr ""
 #. module: warning
 #: model:ir.model,name:warning.model_sale_order
 msgid "Sales Order"
+msgstr ""
+
+#. module: warning
+#: model:ir.model,name:warning.model_stock_picking_out
+msgid "Delivery Orders"
 msgstr ""
 
 #. module: warning

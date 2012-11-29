@@ -12,10 +12,10 @@ openerp.share = function(session) {
         }
         if (view.fields_view.type == 'form') rec_name = view.datarecord.name;
         else rec_name = '';
-        self.rpc('/web/session/eval_domain_and_context', {
+        session.web.pyeval.eval_domains_and_contexts({
             domains: [domain],
             contexts: [view.dataset.context]
-        }, function (result) {
+        }).done(function (result) {
             Share.create({
                 name: action.name,
                 record_name: rec_name,
@@ -24,9 +24,8 @@ openerp.share = function(session) {
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
                 invite: invite || false,
-            }, function(result) {
-                var share_id = result.result;
-                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+            }).done(function(share_id) {
+                var step1 = Share.call('go_step_1', [[share_id]]).done(function(result) {
                     var action = result;
                     self.do_action(action);
                 });
@@ -35,19 +34,19 @@ openerp.share = function(session) {
     }
 
     function has_share(yes, no) {
-        if (!session.connection.share_flag) {
-            session.connection.share_flag = $.Deferred(function() {
+        if (!session.session.share_flag) {
+            session.session.share_flag = $.Deferred(function() {
                 var func = new session.web.Model("share.wizard").get_func("has_share");
-                func(session.connection.uid).pipe(function(res) {
+                func(session.session.uid).then(function(res) {
                     if(res) {
-                        session.connection.share_flag.resolve();
+                        session.session.share_flag.resolve();
                     } else {
-                        session.connection.share_flag.reject();
+                        session.session.share_flag.reject();
                     }
                 });
             });
         }
-        session.connection.share_flag.done(yes).fail(no);
+        session.session.share_flag.done(yes).fail(no);
     }
 
     /* Extend the Sidebar to add Share and Embed links in the 'More' menu */
@@ -89,7 +88,7 @@ openerp.share = function(session) {
         start: function() {
             start_res = this._super.apply(this, arguments);
             if (has_action_id) {
-                this.$element.find('button.oe_share_invite').show();
+                this.$el.find('button.oe_share_invite').show();
             }
             return start_res;
         }
@@ -100,7 +99,7 @@ openerp.share = function(session) {
             var self = this;
             this.check_if_action_is_defined();
             has_share(function() {
-                self.$element.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
+                self.$el.delegate('button.oe_share_invite', 'click', self.on_click_share_invite);
             });
             return this._super.apply(this, arguments);
         },

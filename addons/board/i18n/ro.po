@@ -6,56 +6,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-03-26 06:04+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:07+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  An  "
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Creare meniu"
+#: view:board.create:0
+msgid "Create"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informatii Meniu"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr ""
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Ultimele conexiuni"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
-msgstr "Jurnal creat in ultima luna"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Panoul de administrare"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Grupeaza dupa..."
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
-msgstr "Jurnal creat in anul curent"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -63,289 +66,104 @@ msgid "Board"
 msgstr "Panou"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Nume Meniu"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr "Activitatea Globala Saptamanala"
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Titlu"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr "# de inregistrari"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Luna"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr "Jurnal creat in luna curenta"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr "Activitate Lunara per Document"
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
-msgstr "Vedere generala Configurare"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Definitie Tablou de bord"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Martie"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "August"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
-msgstr "Conexiuni Utilizator"
-
-#. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Data crearii"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Analiza Jurnal"
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Obiect"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Iunie"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Actiune Vizualizari"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr "Raport Jurnal"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
-#, python-format
-msgid "Please Insert Dashboard View(s) !"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
 msgstr ""
-"Va rugam sa inserati Vizualizarea (Vizualizarile) Tabloului de bord !"
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Iulie"
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Zi"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Creeaza Meniul pentru Tabloul de bord"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
+#, python-format
+msgid "Add to Dashboard"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Februarie"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Octombrie"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
-msgstr "Linie panou"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
 
 #. module: board
-#: field:board.menu.create,menu_parent_id:0
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Meniu Principal"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Luna-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Ianuarie"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr "Utilizatori"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Noiembrie"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr "Da ordinea secventei atunci cand afiseaza o lista cu linii de panou."
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "Aprilie"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Tablou de bord"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Eroare utilizator!"
+msgid "Change Layout.."
+msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Actiune"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
+msgstr ""
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Pozitie"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Model"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
-msgstr "Pagina de pornire"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
-msgstr "Ultimele activitati"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Stanga"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Vizualizare panou"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Dreapta"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "Latime"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Luna   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Secventa"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Septembrie"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Decembrie"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Creeaza Meniu"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Inaltime"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Creeaza Meniu Panou"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Mai"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "An"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Anuleaza"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Vizualizare Panou"
+#: view:board.create:0
+msgid "or"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
 
 #~ msgid "Author"
 #~ msgstr "Autor"
@@ -353,11 +171,20 @@ msgstr "Vizualizare Panou"
 #~ msgid "Note"
 #~ msgstr "Notă"
 
+#~ msgid "Title"
+#~ msgstr "Titlu"
+
 #~ msgid "Configuration"
 #~ msgstr "Configurare"
 
 #~ msgid "Notes"
 #~ msgstr "Note"
+
+#~ msgid "Dashboard"
+#~ msgstr "Tablou de bord"
+
+#~ msgid "Right"
+#~ msgstr "Dreapta"
 
 #~ msgid "Note type"
 #~ msgstr "Tip notă"
@@ -410,5 +237,181 @@ msgstr "Vizualizare Panou"
 #~ msgid "Dashboards"
 #~ msgstr "Panouri"
 
+#~ msgid "Administration Dashboard"
+#~ msgstr "Panoul de administrare"
+
 #~ msgid "Extended Filters..."
 #~ msgstr "Filtre extinse..."
+
+#~ msgid "July"
+#~ msgstr "Iulie"
+
+#~ msgid "June"
+#~ msgstr "Iunie"
+
+#~ msgid "March"
+#~ msgstr "Martie"
+
+#~ msgid "August"
+#~ msgstr "August"
+
+#~ msgid "November"
+#~ msgstr "Noiembrie"
+
+#~ msgid "January"
+#~ msgstr "Ianuarie"
+
+#~ msgid "October"
+#~ msgstr "Octombrie"
+
+#~ msgid "February"
+#~ msgstr "Februarie"
+
+#~ msgid "Day"
+#~ msgstr "Zi"
+
+#~ msgid "April"
+#~ msgstr "Aprilie"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Luna-1    "
+
+#~ msgid "September"
+#~ msgstr "Septembrie"
+
+#~ msgid "Year"
+#~ msgstr "An"
+
+#~ msgid "May"
+#~ msgstr "Mai"
+
+#~ msgid "Object"
+#~ msgstr "Obiect"
+
+#~ msgid "December"
+#~ msgstr "Decembrie"
+
+#~ msgid "Model"
+#~ msgstr "Model"
+
+#~ msgid "User Connections"
+#~ msgstr "Conexiuni Utilizator"
+
+#~ msgid "Menu Create"
+#~ msgstr "Creare meniu"
+
+#~ msgid "# of Entries"
+#~ msgstr "# de inregistrari"
+
+#~ msgid "Monthly Activity per Document"
+#~ msgstr "Activitate Lunara per Document"
+
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr ""
+#~ "Va rugam sa inserati Vizualizarea (Vizualizarile) Tabloului de bord !"
+
+#~ msgid "  Year  "
+#~ msgstr "  An  "
+
+#~ msgid "Log created in last month"
+#~ msgstr "Jurnal creat in ultima luna"
+
+#~ msgid "Log created in current year"
+#~ msgstr "Jurnal creat in anul curent"
+
+#~ msgid "Menu Name"
+#~ msgstr "Nume Meniu"
+
+#~ msgid "Group By..."
+#~ msgstr "Grupeaza dupa..."
+
+#~ msgid "Latest Connections"
+#~ msgstr "Ultimele conexiuni"
+
+#~ msgid "Log created in current month"
+#~ msgstr "Jurnal creat in luna curenta"
+
+#~ msgid "Configuration Overview"
+#~ msgstr "Vedere generala Configurare"
+
+#~ msgid "Month"
+#~ msgstr "Luna"
+
+#~ msgid "Dashboard Definition"
+#~ msgstr "Definitie Tablou de bord"
+
+#~ msgid "Log Report"
+#~ msgstr "Raport Jurnal"
+
+#~ msgid "Creation Date"
+#~ msgstr "Data crearii"
+
+#~ msgid "Log Analysis"
+#~ msgstr "Analiza Jurnal"
+
+#~ msgid "Action Views"
+#~ msgstr "Actiune Vizualizari"
+
+#~ msgid "Users"
+#~ msgstr "Utilizatori"
+
+#~ msgid "Create Menu For Dashboard"
+#~ msgstr "Creeaza Meniul pentru Tabloul de bord"
+
+#~ msgid "Latest Activities"
+#~ msgstr "Ultimele activitati"
+
+#~ msgid "Position"
+#~ msgstr "Pozitie"
+
+#~ msgid "Left"
+#~ msgstr "Stanga"
+
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Eroare utilizator!"
+
+#~ msgid "Action"
+#~ msgstr "Actiune"
+
+#~ msgid "Home Page"
+#~ msgstr "Pagina de pornire"
+
+#~ msgid "Board View"
+#~ msgstr "Vizualizare panou"
+
+#~ msgid "Height"
+#~ msgstr "Inaltime"
+
+#~ msgid "Create Board Menu"
+#~ msgstr "Creeaza Meniu Panou"
+
+#~ msgid "Create Menu"
+#~ msgstr "Creeaza Meniu"
+
+#~ msgid "Sequence"
+#~ msgstr "Secventa"
+
+#~ msgid "Width"
+#~ msgstr "Latime"
+
+#~ msgid "   Month   "
+#~ msgstr "   Luna   "
+
+#~ msgid "Dashboard View"
+#~ msgstr "Vizualizare Panou"
+
+#~ msgid ""
+#~ "Gives the sequence order                         when displaying a list of "
+#~ "board lines."
+#~ msgstr "Da ordinea secventei atunci cand afiseaza o lista cu linii de panou."
+
+#~ msgid "Board Line"
+#~ msgstr "Linie panou"
+
+#~ msgid "Menu Information"
+#~ msgstr "Informatii Meniu"
+
+#~ msgid "Weekly Global Activity"
+#~ msgstr "Activitatea Globala Saptamanala"

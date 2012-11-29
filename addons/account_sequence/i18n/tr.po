@@ -7,32 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-01-25 00:14+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:26+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Hesap Dizisi Uygulama Yapılandırması"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr ""
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -105,11 +99,6 @@ msgid "Internal Number"
 msgstr "İç Sayı"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -125,14 +114,14 @@ msgstr "Ad"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
+msgid "You cannot create journal items on an account of type view."
 msgstr ""
 
 #. module: account_sequence
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: account_sequence
@@ -141,9 +130,20 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Hesap girişindeki alacak ya da borç değeri hatalı !"
 
 #. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on a centralized journal."
+msgstr ""
+
+#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "İç Dizi"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -159,11 +159,6 @@ msgstr "Hesap Girişi"
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Sonek"
-
-#. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Resim"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -182,6 +177,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+"çoklu-para birimli bir günlük seçmelisiniz."
 
 #. module: account_sequence
 #: constraint:account.move.line:0
@@ -189,6 +187,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_sequence
 #: field:account.sequence.installer,prefix:0
@@ -242,6 +242,9 @@ msgstr "Hesap Dizisi Uygulamasını kurarak geliştirebilirsiniz."
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Kapalı hesaplarda hareket satırı oluşturamazsınız."
 
+#~ msgid "Image"
+#~ msgstr "Resim"
+
 #~ msgid "You can not create move line on view account."
 #~ msgstr "Hesap Görünümünde hareket oluşturamazsınız."
 
@@ -249,3 +252,23 @@ msgstr "Hesap Dizisi Uygulamasını kurarak geliştirebilirsiniz."
 #~ "You cannot create entries on different periods/journals in the same move"
 #~ msgstr ""
 #~ "Aynı hareket için farklı dönemler/yevmiyeler e ait girişler oluşturamazsınız."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "İlişkili hesap ve dönem için aynı firma olmalı."
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "Merkezi günlük üzerinde her dönem için birden fazla hareket oluşturmazsınız"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."

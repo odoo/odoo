@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import hr_attendance_sign_in_out
 import hr_attendance_error
 import hr_attendance_byweek
 import hr_attendance_bymonth

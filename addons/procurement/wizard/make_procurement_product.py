@@ -110,12 +110,24 @@ class make_procurement(osv.osv_memory):
         """
         if context is None:
             context = {}
-        record_id = context and context.get('active_id', False) or False
+        record_id = context.get('active_id')
 
         res = super(make_procurement, self).default_get(cr, uid, fields, context=context)
-        product_id = self.pool.get('product.product').browse(cr, uid, record_id, context=context).id
-        if 'product_id' in fields:
-            res.update({'product_id':product_id})
+
+        if record_id and 'product_id' in fields:
+            proxy = self.pool.get('product.product')
+            product_ids = proxy.search(cr, uid, [('id', '=', record_id)], context=context, limit=1)
+            if product_ids:
+                product_id = product_ids[0]
+
+                product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+                res['product_id'] = product.id
+                res['uom_id'] = product.uom_id.id
+
+        if 'warehouse_id' in fields:
+            warehouse_id = self.pool.get('stock.warehouse').search(cr, uid, [], context=context)
+            res['warehouse_id'] = warehouse_id[0] if warehouse_id else False
+
         return res
 
 make_procurement()

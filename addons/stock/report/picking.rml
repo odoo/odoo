@@ -162,12 +162,14 @@
           <para style="terp_default_Bold_9">Customer Address : [[ (picking.type == 'out' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_Bold_9">Warehouse Address : [[ (picking.type == 'internal' or removeParentNode('para')) and '' ]]</para>
           <para style="terp_default_9">[[ (picking.partner_id and picking.partner_id.id and picking.partner_id.title.name) or '' ]] [[ picking.partner_id and picking.partner_id.id and picking.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'delivery') ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]]</para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email or removeParentNode('para')]]</para>
         </td>
         <td>
           <para style="terp_default_Bold_9">Contact Address :</para>
           <para style="terp_default_9">[[ picking.partner_id and picking.partner_id.title.name or '' ]] [[ picking.partner_id and picking.partner_id.name or '' ]]</para>
-          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id,'default') ]] </para>
+          <para style="terp_default_9">[[ picking.partner_id and display_address(picking.partner_id) ]] </para>
+          <para style="terp_default_9">[[ picking.partner_id.phone or picking.partner_id.email or removeParentNode('para')]]</para>
         </td>
       </tr>
     </blockTable>
@@ -189,7 +191,7 @@
     <para style="terp_default_5cm_Above_Space">
       <font color="white"> </font>
     </para>
-    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Header_Order_Reference_Tbl">
+    <blockTable colWidths="100.0,154.0,161.0,109.0" style="Header_Order_Reference_Tbl">
       <tr>
         <td>
           <para style="terp_tblheader_General_Centre">Journal</para>
@@ -198,26 +200,20 @@
           <para style="terp_tblheader_General_Centre">Order(Origin)</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Recipient</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_General_Centre">Expected Shipping Date </para>
+          <para style="terp_tblheader_General_Centre">Schedule Date</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Weight</para>
         </td>
       </tr>
     </blockTable>
-    <blockTable colWidths="100.0,100.0,108.0,107.0,109.0" style="Content_Order_Reference_Table">
+    <blockTable colWidths="100.0,154.0,162.0,109.0" style="Content_Order_Reference_Table">
       <tr>
         <td>
           <para style="terp_default_Centre_8">[[ picking.stock_journal_id.name]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ picking.origin or '']]</para>
-        </td>
-        <td>
-          <para style="terp_default_Centre_8">[[ (picking.partner_id and picking.partner_id.title.name) or '' ]] [[ (picking.partner_id and picking.partner_id.name) or '' ]] </para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ formatLang(picking.min_date,date_time = True) ]]</para>
@@ -236,7 +232,7 @@
           <para style="terp_tblheader_Details">Description</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Centre">Lot</para>
+          <para style="terp_tblheader_Details_Centre">Serial Number</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Centre">Status</para>
@@ -255,7 +251,7 @@
       <blockTable colWidths="256.0,74.0,58.0,60.0,73.0" style="Move_Line_Contect_Assign_State">
         <tr>
           <td>
-            <para style="terp_default_9"><font face="Helvetica" size="9.0">[ [[ (move_lines.product_id.default_code) or removeParentNode('font') ]] ]</font> [[ move_lines.product_id.name ]] [[ move_lines.product_id.variants or '']] </para>
+            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
@@ -280,7 +276,7 @@
       <blockTable colWidths="256.0,74.0,57.0,61.0,72.0" style="Table1">
         <tr>
           <td>
-            <para style="terp_default_9"><font face="Helvetica" size="9.0">[ [[ (move_lines.product_id.default_code) or removeParentNode('font') ]] ]</font> [[ move_lines.product_id.name ]] [[ move_lines.product_id.variants or '']]</para>
+            <para style="terp_default_9"><font face="Helvetica" size="9.0">[[ get_product_desc(move_lines) ]] </font></para>
           </td>
           <td>
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
@@ -299,21 +295,6 @@
         </tr>
       </blockTable>
     </section>
-    <blockTable colWidths="388.0,56.0,77.0" style="Table2">
-      <tr>
-        <td>
-          <para style="terp_default_9">
-            <font color="white"> </font>
-          </para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Total</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(get_qtytotal(picking.move_lines)['quantity']) ]] [[ get_qtytotal(picking.move_lines)['uom'] ]]</para>
-        </td>
-      </tr>
-    </blockTable>
     <para style="terp_default_2">
       <font color="white"> </font>
     </para>

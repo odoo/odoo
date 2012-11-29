@@ -12,7 +12,6 @@
         <record id="view_report_timesheet_task_user_tree" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.tree</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Timesheet/Task hours Report Per Month" >
                     <field name="name"/>
@@ -27,7 +26,6 @@
       <record id="view_report_timesheet_task_user_search" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.search</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Tasks by User">
                     <field name="name" string="Date"/>
@@ -44,7 +42,6 @@
         <record id="view_task_hour_per_month_graph" model="ir.ui.view">
             <field name="name">report.timesheet.task.user.graph</field>
             <field name="model">report.timesheet.task.user</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Task Hours Per Month" type="bar">
                      <field name="user_id"/>

@@ -6,14 +6,14 @@
         id="stock.next_id_61"
         name="Warehouse"
         sequence="15"
-        parent="base.menu_reporting"/>
+        parent="base.menu_reporting"
+        groups="group_stock_manager"/>
 
     <record id="view_stock_tree" model="ir.ui.view">
         <field name="name">report.stock.move.tree</field>
         <field name="model">report.stock.move</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Moves Analysis">
+            <tree string="Moves Analysis" create="false">
                 <field name="date" invisible="1"/>
                 <field name="year" invisible="1" />
                 <field name="month" invisible="1"/>
@@ -41,7 +41,6 @@
     <record id="view_stock_graph" model="ir.ui.view">
          <field name="name">report.stock.move.graph</field>
          <field name="model">report.stock.move</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
@@ -53,7 +52,6 @@
     <record id="view_stock_search" model="ir.ui.view">
         <field name="name">report.stock.move.search</field>
         <field name="model">report.stock.move</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <filter string="Done" name="done" icon="terp-dialog-close" domain="[('state','=','done')]" help = "Completed Stock-Moves"/>
@@ -106,9 +104,8 @@
     <record id="view_stock_inventory_tree" model="ir.ui.view">
         <field name="name">report.stock.inventory.tree</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Inventory Analysis">
+            <tree string="Inventory Analysis" create="false">
                 <field name="date" invisible="1"/>
                 <field name="year" invisible="1" />
                 <field name="month" invisible="1"/>
@@ -129,7 +126,6 @@
     <record id="view_stock_inventory_graph" model="ir.ui.view">
          <field name="name">report.stock.inventory.graph</field>
          <field name="model">report.stock.inventory</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Inventory Analysis" type="bar">
                  <field name="product_id"/>
@@ -141,7 +137,6 @@
     <record id="view_stock_inventory_search" model="ir.ui.view">
         <field name="name">report.stock.inventory.search</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
                 <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
@@ -160,7 +155,7 @@
                     <field name="state"/>
                     <field name="location_type"/>
                     <field name="date"/>
-                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
+                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('scrap_location','=','True')]"/>
                 </group>
                 <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
@@ -169,8 +164,10 @@
                     <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
                     <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
-                    <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>

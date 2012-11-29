@@ -6,15 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2009-02-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:11+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "Select Dates Period"
+msgstr "أختر تواريخ المدة"
 
 #. module: account_budget
 #: field:crossovered.budget,creating_user_id:0
@@ -104,46 +112,15 @@ msgid "Percentage"
 msgstr "النسبة"
 
 #. module: account_budget
-#: report:crossovered.budget.report:0
-msgid "to"
-msgstr "إلى"
-
-#. module: account_budget
 #: field:crossovered.budget,state:0
 msgid "Status"
 msgstr "الحالة"
-
-#. module: account_budget
-#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
-msgid ""
-"A budget is a forecast of your company's income and expenses expected for a "
-"period in the future. With a budget, a company is able to carefully look at "
-"how much money they are taking in during a given period, and figure out the "
-"best way to divide it among various categories. By keeping track of where "
-"your money goes, you may be less likely to overspend, and more likely to "
-"meet your financial goals. Forecast a budget by detailing the expected "
-"revenue per analytic account and monitor its evolution based on the actuals "
-"realised during that period."
-msgstr ""
-"الميزانية هى تكهن بالدخل والنفقات المتوقعة للشركة لفترة في المستقبل. مع "
-"الميزانية،  الشركة تكون قادرة على النظر بعناية في مقدار الاموال التي "
-"تستهلكها في خلال فترة معينة، و معرفة أفضل طريقة لتقسيمها بين مختلف الفئات. "
-"عن طريق معرفة المسار حيث يذهب المال، قد تكون أقل عرضة للإسراف في النفقات، و "
-"أكبر احتمالا لتحقيق أهدافك المالية. توقعات الميزانية التي تفصل الدخل المتوقع "
-"لكل حساب تحليلي و رصد تطورها استنادا على الأرقام الفعلية التي تحققت خلال تلك "
-"الفترة."
 
 #. module: account_budget
 #: code:addons/account_budget/account_budget.py:119
 #, python-format
 msgid "The Budget '%s' has no accounts!"
 msgstr "الميزانية '%s' ليس لديها حسابات!"
-
-#. module: account_budget
-#: report:account.budget:0
-#: report:crossovered.budget.report:0
-msgid "%"
-msgstr "٪"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -162,6 +139,11 @@ msgid "Total :"
 msgstr "الإجمالي:"
 
 #. module: account_budget
+#: constraint:account.analytic.account:0
+msgid "Error! You cannot create recursive analytic accounts."
+msgstr ""
+
+#. module: account_budget
 #: field:account.budget.post,company_id:0
 #: field:crossovered.budget,company_id:0
 #: field:crossovered.budget.lines,company_id:0
@@ -169,9 +151,9 @@ msgid "Company"
 msgstr "شركة"
 
 #. module: account_budget
-#: view:crossovered.budget:0
-msgid "To Approve"
-msgstr "للموافقة"
+#: report:crossovered.budget.report:0
+msgid "to"
+msgstr "إلى"
 
 #. module: account_budget
 #: view:crossovered.budget:0
@@ -240,12 +222,6 @@ msgid "Budget Line"
 msgstr "خط الميزانية"
 
 #. module: account_budget
-#: view:account.analytic.account:0
-#: view:account.budget.post:0
-msgid "Lines"
-msgstr "سطور"
-
-#. module: account_budget
 #: report:account.budget:0
 #: view:crossovered.budget:0
 #: field:crossovered.budget.lines,crossovered_budget_id:0
@@ -261,10 +237,9 @@ msgid "To Approve Budgets"
 msgstr "للموافقة علي الميزانية"
 
 #. module: account_budget
-#: code:addons/account_budget/account_budget.py:119
-#, python-format
-msgid "Error!"
-msgstr "خطأ!"
+#: view:crossovered.budget:0
+msgid "Duration"
+msgstr ""
 
 #. module: account_budget
 #: field:account.budget.post,code:0
@@ -280,7 +255,6 @@ msgstr "يستخدم هذا المعالج لطباعة الميزانية"
 
 #. module: account_budget
 #: model:ir.actions.act_window,name:account_budget.act_crossovered_budget_view
-#: model:ir.actions.act_window,name:account_budget.action_account_budget_post_tree
 #: model:ir.actions.act_window,name:account_budget.action_account_budget_report
 #: model:ir.actions.report.xml,name:account_budget.report_crossovered_budget
 #: model:ir.ui.menu,name:account_budget.menu_act_crossovered_budget_view
@@ -306,10 +280,9 @@ msgid "Approve"
 msgstr "تصديق"
 
 #. module: account_budget
-#: field:crossovered.budget,date_from:0
-#: field:crossovered.budget.lines,date_from:0
-msgid "Start Date"
-msgstr "تاريخ البدء"
+#: view:crossovered.budget:0
+msgid "To Approve"
+msgstr "للموافقة"
 
 #. module: account_budget
 #: view:account.budget.post:0
@@ -338,12 +311,10 @@ msgid "Theoretical Amt"
 msgstr "الكمية النظرية"
 
 #. module: account_budget
-#: view:account.budget.analytic:0
-#: view:account.budget.crossvered.report:0
-#: view:account.budget.crossvered.summary.report:0
-#: view:account.budget.report:0
-msgid "Select Dates Period"
-msgstr "أختر تواريخ المدة"
+#: code:addons/account_budget/account_budget.py:119
+#, python-format
+msgid "Error!"
+msgstr "خطأ!"
 
 #. module: account_budget
 #: view:account.budget.analytic:0
@@ -361,6 +332,14 @@ msgid "Theoretical Amount"
 msgstr "الكمية النظرية"
 
 #. module: account_budget
+#: view:account.budget.analytic:0
+#: view:account.budget.crossvered.report:0
+#: view:account.budget.crossvered.summary.report:0
+#: view:account.budget.report:0
+msgid "or"
+msgstr ""
+
+#. module: account_budget
 #: field:crossovered.budget.lines,analytic_account_id:0
 #: model:ir.model,name:account_budget.model_account_analytic_account
 msgid "Analytic Account"
@@ -370,6 +349,29 @@ msgstr "حساب تحليلي"
 #: report:account.budget:0
 msgid "Budget :"
 msgstr "الميزانية:"
+
+#. module: account_budget
+#: model:ir.actions.act_window,help:account_budget.act_crossovered_budget_view
+msgid ""
+"<p>\n"
+"                A budget is a forecast of your company's income and/or "
+"expenses\n"
+"                expected for a period in the future. A budget is defined on "
+"some\n"
+"                financial accounts and/or analytic accounts (that may "
+"represent\n"
+"                projects, departments, categories of products, etc.)\n"
+"              </p><p>\n"
+"                By keeping track of where your money goes, you may be less\n"
+"                likely to overspend, and more likely to meet your financial\n"
+"                goals. Forecast a budget by detailing the expected revenue "
+"per\n"
+"                analytic account and monitor its evolution based on the "
+"actuals\n"
+"                realised during that period.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_budget
 #: report:account.budget:0
@@ -407,9 +409,10 @@ msgid "Cancel"
 msgstr "إلغاء"
 
 #. module: account_budget
-#: constraint:account.analytic.account:0
-msgid "Error! You can not create recursive analytic accounts."
-msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
+#: field:crossovered.budget,date_from:0
+#: field:crossovered.budget.lines,date_from:0
+msgid "Start Date"
+msgstr "تاريخ البدء"
 
 #. module: account_budget
 #: report:account.budget:0
@@ -422,10 +425,37 @@ msgstr "نموذج تحليلى"
 msgid "Draft Budgets"
 msgstr "ميزانيات مؤقتة"
 
+#~ msgid "%"
+#~ msgstr "٪"
+
+#~ msgid "Lines"
+#~ msgstr "سطور"
+
 #~ msgid ""
 #~ "Error! The currency has to be the same as the currency of the selected "
 #~ "company"
 #~ msgstr "خطأ! العملة لابد و أن تكون مثل العملة للشركة المختارة"
+
+#~ msgid "Error! You can not create recursive analytic accounts."
+#~ msgstr "خطأ! لا يمكنك إنشاء حسابات تحليلية متكررة."
+
+#~ msgid ""
+#~ "A budget is a forecast of your company's income and expenses expected for a "
+#~ "period in the future. With a budget, a company is able to carefully look at "
+#~ "how much money they are taking in during a given period, and figure out the "
+#~ "best way to divide it among various categories. By keeping track of where "
+#~ "your money goes, you may be less likely to overspend, and more likely to "
+#~ "meet your financial goals. Forecast a budget by detailing the expected "
+#~ "revenue per analytic account and monitor its evolution based on the actuals "
+#~ "realised during that period."
+#~ msgstr ""
+#~ "الميزانية هى تكهن بالدخل والنفقات المتوقعة للشركة لفترة في المستقبل. مع "
+#~ "الميزانية،  الشركة تكون قادرة على النظر بعناية في مقدار الاموال التي "
+#~ "تستهلكها في خلال فترة معينة، و معرفة أفضل طريقة لتقسيمها بين مختلف الفئات. "
+#~ "عن طريق معرفة المسار حيث يذهب المال، قد تكون أقل عرضة للإسراف في النفقات، و "
+#~ "أكبر احتمالا لتحقيق أهدافك المالية. توقعات الميزانية التي تفصل الدخل المتوقع "
+#~ "لكل حساب تحليلي و رصد تطورها استنادا على الأرقام الفعلية التي تحققت خلال تلك "
+#~ "الفترة."
 
 #~ msgid "Budget Management"
 #~ msgstr "إدارة الميزاينة"

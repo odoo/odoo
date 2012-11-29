@@ -1,22 +1,22 @@
 <openerp>
 <data noupdate="1">       
         <record id="smartmode" model="res.partner">
-            <field name="comment">UK OpenERP Partner</field>
-            <field name="ref">smartmode</field>
-            <field name="website">http://www.smartmode.co.uk</field>
             <field name="name">SmartMode LTD</field>
+            <field name="is_company">1</field>
+            <field name="street">12, Hill Lane</field>
+            <field name="zip">HA4 7JW</field>
+            <field name="city">Ruislip</field>
+            <field name="country_id" model="res.country" search="[('code','=','uk')]"/>
+            <field name="phone">+44 845 643 4548</field>
+            <field name="fax">08455274653</field>
+            <field name="website">http://www.smartmode.co.uk</field>
         </record>
 
         <record id="res_partner_address_1" model="res.partner">
-            <field name="fax">08455274653</field>
             <field name="name">Vadim Chobanu</field>
-            <field name="zip">HA4 7JW</field>
-            <field name="city">Ruislip</field>
-            <field name="partner_id" ref="smartmode"/>
-            <field name="country_id" model="res.country" search="[('code','=','uk')]"/>
+            <field name="parent_id" ref="smartmode"/>
+            <field name="use_parent_address" eval="1"/>
             <field name="email">vadim@smartmode.co.uk</field>
-            <field name="phone">+44 (0) 8456434548</field>
-            <field name="street">12, Hill Lane</field>
             <field name="active">1</field>
             <field name="type">default</field>
         </record>

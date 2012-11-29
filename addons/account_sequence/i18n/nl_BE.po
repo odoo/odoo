@@ -7,34 +7,26 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-07-27 13:19+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-27 13:36+0000\n"
 "Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
 "Language-Team: Dutch (Belgium) <nl_BE@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-28 04:57+0000\n"
-"X-Generator: Launchpad (build 15694)\n"
+"X-Launchpad-Export-Date: 2012-11-28 04:41+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr "U kunt geen boekingen doen op een afgesloten rekening."
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
 msgstr "Instellen boekingsnummers"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
-"U kunt niet meer dan een beweging maken per periode in een "
-"centralisatiedagboek."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "De rekening en de periode moeten van dezelfde firma zijn."
 
 #. module: account_sequence
 #: help:account.move,internal_sequence_number:0
@@ -108,12 +100,6 @@ msgid "Internal Number"
 msgstr "Intern nummer"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
-"U kunt geen boekingslijnen maken voor een rekening van het type Weergave."
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -129,17 +115,17 @@ msgstr "Naam"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "U kunt niet boeken op een afgesloten rekening."
+msgid "You cannot create journal items on an account of type view."
+msgstr "U kunt geen boekingen doen op een rekening van het type Weergave."
 
 #. module: account_sequence
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
-"Configuratiefout: de gekozen munt moet door de standaardrekeningen worden "
-"gedeeld."
+"Configuratiefout.\n"
+"De gekozen munt moet door de standaardrekeningen worden gedeeld."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -147,9 +133,22 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr "Verkeerde credit– of debetwaarde in de boeking."
 
 #. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on a centralized journal."
+msgstr ""
+"U kunt niet meer dan één boeking per periode doen in een gecentraliseerd "
+"dagboek."
+
+#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Intern volgnummer"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr "De rekening en de periode moeten tot dezelfde firma behoren."
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -165,11 +164,6 @@ msgstr "Boeking"
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
 msgstr "Suffix"
-
-#. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
-msgstr "Afbeelding"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -225,3 +219,29 @@ msgstr "Journaal"
 #: view:account.sequence.installer:0
 msgid "You can enhance the Account Sequence Application by installing ."
 msgstr "Verbeter de boekingsnummering en installeer"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "De rekening en de periode moeten van dezelfde firma zijn."
+
+#~ msgid ""
+#~ "You can not create more than one move per period on centralized journal"
+#~ msgstr ""
+#~ "U kunt niet meer dan een beweging maken per periode in een "
+#~ "centralisatiedagboek."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr ""
+#~ "U kunt geen boekingslijnen maken voor een rekening van het type Weergave."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "U kunt niet boeken op een afgesloten rekening."
+
+#~ msgid "Image"
+#~ msgstr "Afbeelding"
+
+#~ msgid ""
+#~ "Configuration error! The currency chosen should be shared by the default "
+#~ "accounts too."
+#~ msgstr ""
+#~ "Configuratiefout: de gekozen munt moet door de standaardrekeningen worden "
+#~ "gedeeld."

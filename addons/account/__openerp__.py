@@ -19,11 +19,11 @@
 #
 ##############################################################################
 {
-    "name" : "eInvoicing",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category": 'Accounting & Finance',
-    "description": """
+    'name' : 'eInvoicing',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category' : 'Accounting & Finance',
+    'description' : """
 Accounting and Financial Management.
 ====================================
 
@@ -44,14 +44,13 @@ Creates a dashboard for accountants that includes:
     * Company Analysis
     * Graph of Treasury
 
-The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) for a particular
-financial year and for preparation of vouchers there is a module named account_voucher.
+The processes like maintaining of general ledger is done through the defined financial Journals (entry move line orgrouping is maintained through journal) 
+for a particular financial year and for preparation of vouchers there is a module named account_voucher.
     """,
     'website': 'http://www.openerp.com',
     'images' : ['images/accounts.jpeg','images/bank_statement.jpeg','images/cash_register.jpeg','images/chart_of_accounts.jpeg','images/customer_invoice.jpeg','images/journal_entries.jpeg'],
-    'init_xml': [],
-    "depends" : ["base_setup", "product", "analytic", "process", "board", "edi"],
-    'update_xml': [
+    'depends' : ['base_setup', 'product', 'analytic', 'process', 'board', 'edi'],
+    'data': [
         'security/account_security.xml',
         'security/ir.model.access.csv',
         'account_menuitem.xml',
@@ -64,6 +63,8 @@ financial year and for preparation of vouchers there is a module named account_v
         'wizard/account_use_model_view.xml',
         'account_installer.xml',
         'wizard/account_period_close_view.xml',
+        'wizard/account_reconcile_view.xml',
+        'wizard/account_unreconcile_view.xml',
         'account_view.xml',
         'account_report.xml',
         'account_financial_report_data.xml',
@@ -72,7 +73,6 @@ financial year and for preparation of vouchers there is a module named account_v
         'wizard/account_fiscalyear_close_state.xml',
         'wizard/account_chart_view.xml',
         'wizard/account_tax_chart_view.xml',
-        'wizard/account_move_journal_view.xml',
         'wizard/account_move_line_reconcile_select_view.xml',
         'wizard/account_open_closed_fiscalyear_view.xml',
         'wizard/account_move_line_unreconcile_select_view.xml',
@@ -86,14 +86,12 @@ financial year and for preparation of vouchers there is a module named account_v
         'wizard/account_journal_select_view.xml',
         'wizard/account_change_currency_view.xml',
         'wizard/account_validate_move_view.xml',
-        'wizard/account_unreconcile_view.xml',
         'wizard/account_report_general_ledger_view.xml',
         'wizard/account_invoice_state_view.xml',
         'wizard/account_report_partner_balance_view.xml',
         'wizard/account_report_account_balance_view.xml',
         'wizard/account_report_aged_partner_balance_view.xml',
         'wizard/account_report_partner_ledger_view.xml',
-        'wizard/account_reconcile_view.xml',
         'wizard/account_reconcile_partner_process_view.xml',
         'wizard/account_automatic_reconcile_view.xml',
         'wizard/account_financial_report_view.xml',
@@ -122,12 +120,22 @@ financial year and for preparation of vouchers there is a module named account_v
         'ir_sequence_view.xml',
         'company_view.xml',
         'board_account_view.xml',
-        "edi/invoice_action_data.xml",
-        "account_bank_view.xml",
-        "res_config_view.xml",
-        "account_pre_install.yml"
+        'edi/invoice_action_data.xml',
+        'account_bank_view.xml',
+        'res_config_view.xml',
+        'account_pre_install.yml'
     ],
-    'demo_xml': [
+    'js': [
+        'static/src/js/account_move_reconciliation.js',
+        'static/src/js/account_move_line_quickadd.js',
+    ],
+    'qweb' : [
+        "static/src/xml/account_move_reconciliation.xml",
+        "static/src/xml/account_move_line_quickadd.xml",
+    ],
+    'css':['static/src/css/account_move_reconciliation.css'
+    ],
+    'demo': [
         'demo/account_demo.xml',
         'project/project_demo.xml',
         'project/analytic_account_demo.xml',
@@ -152,6 +160,5 @@ financial year and for preparation of vouchers there is a module named account_v
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0080331923549',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

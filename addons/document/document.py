@@ -23,7 +23,7 @@ import base64
 from osv import osv, fields
 import os
 
-# from psycopg2 import Binary
+#from psycopg2 import Binary
 #from tools import config
 import tools
 from tools.translate import _
@@ -36,9 +36,8 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
-    _rec_name = 'datas_fname'
-   
-   
+    _rec_name = 'name'
+
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
         """Migrate ir.attachments to the document module.
 
@@ -61,7 +60,7 @@ class document_file(osv.osv):
             return False
 
         if ids is not None:
-            raise NotImplementedError("Ids is just there by convention! Don't use it yet, please.")
+            raise NotImplementedError("Ids are just there by convention, please do not use it.")
 
         cr.execute("UPDATE ir_attachment " \
                     "SET parent_id = %s, db_datas = decode(encode(db_datas,'escape'), 'base64') " \
@@ -149,29 +148,12 @@ class document_file(osv.osv):
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
     ]
-    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
-        name = vals.get('name', False)
-        parent_id = vals.get('parent_id', False)
-        res_model = vals.get('res_model', False)
-        res_id = vals.get('res_id', 0)
-        if op == 'write':
-            for file in self.browse(cr, uid, ids): # FIXME fields_only
-                if not name:
-                    name = file.name
-                if not parent_id:
-                    parent_id = file.parent_id and file.parent_id.id or False
-                if not res_model:
-                    res_model = file.res_model and file.res_model or False
-                if not res_id:
-                    res_id = file.res_id and file.res_id or 0
-                res = self.search(cr, uid, [('id', '<>', file.id), ('name', '=', name), ('parent_id', '=', parent_id), ('res_model', '=', res_model), ('res_id', '=', res_id)])
-                if len(res):
-                    return False
-        if op == 'create':
-            res = self.search(cr, uid, [('name', '=', name), ('parent_id', '=', parent_id), ('res_id', '=', res_id), ('res_model', '=', res_model)])
-            if len(res):
-                return False
-        return True
+
+    def onchange_file(self, cr, uid, ids, datas_fname=False, context=None):
+        res = {'value':{}}
+        if datas_fname:
+            res['value'].update({'name': datas_fname})
+        return res
 
     def check(self, cr, uid, ids, mode, context=None, values=None):
         """Check access wrt. res_model, relax the rule of ir.attachment parent
@@ -209,7 +191,7 @@ class document_file(osv.osv):
             default = {}
         if 'name' not in default:
             name = self.read(cr, uid, [id], ['name'])[0]['name']
-            default.update({'name': name + " " + _("(copy)")})
+            default.update(name=_("%s (copy)") % (name))
         return super(document_file, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -219,8 +201,6 @@ class document_file(osv.osv):
         res = self.search(cr, uid, [('id', 'in', ids)])
         if not len(res):
             return False
-        if not self._check_duplication(cr, uid, vals, ids, 'write'):
-            raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
 
         # if nodes call this write(), they must skip the code below
         from_node = context and context.get('__from_node', False)
@@ -286,22 +266,8 @@ class document_file(osv.osv):
         else:
             if vals.get('file_size'):
                 del vals['file_size']
-        result = self._check_duplication(cr, uid, vals)
-        if not result:
-            domain = [
-                ('res_id', '=', vals['res_id']),
-                ('res_model', '=', vals['res_model']),
-                ('datas_fname', '=', vals['datas_fname']),
-            ]
-            attach_ids = self.search(cr, uid, domain, context=context)
-            super(document_file, self).write(cr, uid, attach_ids, 
-                                             {'datas' : vals['datas']},
-                                             context=context)
-            result = attach_ids[0]
-        else:
-            #raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
-            result = super(document_file, self).create(cr, uid, vals, context)
-        return result
+
+        return super(document_file, self).create(cr, uid, vals, context)
 
     def __get_partner_id(self, cr, uid, res_model, res_id, context=None):
         """ A helper to retrieve the associated partner from any res_model+id
@@ -339,7 +305,7 @@ class document_file(osv.osv):
                 if r:
                     unres.append(r)
             else:
-                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage",
+                self.loggerdoc.warning("Unlinking attachment #%s %s that has no storage.",
                                                 f.id, f.name)
         res = super(document_file, self).unlink(cr, uid, ids, context)
         stor.do_unlink(cr, uid, unres)

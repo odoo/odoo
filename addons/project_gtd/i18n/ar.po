@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:06+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -24,7 +24,7 @@ msgstr "قيد التقدم"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr ""
+msgstr "اظهار المهام فقط التي لها زمن نهائي"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -54,12 +54,13 @@ msgstr "تايم بوكس فارغ تم اكتمال العملية بنجاح"
 #. module: project_gtd
 #: view:project.task:0
 msgid "Pending Tasks"
-msgstr ""
+msgstr "مهام قيد الإنتظار"
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
-msgstr "التالي"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
+msgstr "لا يوجد خانة زمنية فرعية لها !"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,help:project_gtd.open_gtd_timebox_tree
@@ -78,6 +79,11 @@ msgid "Today"
 msgstr "اليوم"
 
 #. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
+msgstr ""
+
+#. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_lt
 msgid "Long Term"
 msgstr "المدى الطويل"
@@ -93,8 +99,9 @@ msgid "Pending"
 msgstr "معلّق"
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr "الوقت الزمني"
 
@@ -102,12 +109,6 @@ msgstr "الوقت الزمني"
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
 msgstr "عيين إلى تايم بوكس"
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
-msgstr "خطأ !"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_task
@@ -125,11 +126,6 @@ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
 msgstr "هذا الأسبوع"
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
-msgstr "ال_غاء"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -200,6 +196,12 @@ msgid "project.gtd.timebox"
 msgstr "project.gtd.timebox"
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -213,21 +215,21 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr "السياق"
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
-msgstr "لا يوجد خانة زمنية فرعية لها !"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
+msgstr "اختيار المهام"
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
-msgstr "م_وافق"
+#: view:project.task:0
+msgid "Display"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_office
@@ -235,7 +237,8 @@ msgid "Office"
 msgstr "مكتب"
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr "مسلسل"
 
@@ -260,11 +263,6 @@ msgid "Timebox Definition"
 msgstr "تعريف خانة الزمن"
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr "اختيار المهام"
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr "صندوق الوارد"
@@ -278,6 +276,11 @@ msgstr "احصل من خانة الزمن"
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
 msgstr "مكان السياق حيث يتعامل المستخدم مع المهام"
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
+msgstr ""
 
 #. module: project_gtd
 #: model:project.gtd.context,name:project_gtd.context_home
@@ -301,12 +304,28 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
-msgstr "السابق"
+#: view:project.timebox.fill.plan:0
+msgid "or"
+msgstr ""
+
+#~ msgid "Next"
+#~ msgstr "التالي"
+
+#~ msgid "_Cancel"
+#~ msgstr "ال_غاء"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "خطأ !"
 
 #~ msgid "This Month"
 #~ msgstr "هذا الشهر"
+
+#~ msgid "_Ok"
+#~ msgstr "م_وافق"
+
+#~ msgid "Previous"
+#~ msgstr "السابق"
 
 #, python-format
 #~ msgid "Getting Things Done"

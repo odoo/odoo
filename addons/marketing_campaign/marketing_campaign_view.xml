@@ -1,32 +1,60 @@
 <?xml version="1.0"?>
 <openerp>
+    <data noupdate="1">
+
+        <record id="action_client_marketing_menu" model="ir.actions.client">
+            <field name="name">Open Marketing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.marketing_menu')}"/>
+        </record>
+
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_marketing_menu"/>
+            <field name="state">open</field>
+        </record>
+
+    </data>
     <data>
 
     <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
 
     <!-- Marketing Campaign -->
-    <act_window name="All Segments"
-        res_model="marketing.campaign.segment"
-        src_model="marketing.campaign"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
+    
+    <record id="act_marketing_campaing_segment_opened" model="ir.actions.act_window">
+        <field name="res_model">marketing.campaign.segment</field>
+        <field name="view_type">form</field>
+        <field name="name">Segments</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
+    
+    <!-- Campaign Follow-ups -->
+        
+    <record id="act_marketing_campaing_followup" model="ir.actions.act_window">
+        <field name="res_model">marketing.campaign.workitem</field>
+        <field name="view_type">form</field>
+        <field name="name">Workitems</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
+    
+    <!-- Campaign Statistics -->
+    
+    <record id="act_marketing_campaing_stat" model="ir.actions.act_window" >
+        <field name="res_model">campaign.analysis</field>
+        <field name="view_type">form</field>
+        <field name="name">Campaign Follow-up</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
 
     <!-- Campaign Followups -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_followup"
-        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
 
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Marketing Campaign" version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
@@ -36,12 +64,15 @@
             </header>
             <sheet string="Campaign">
                 <div class="oe_right oe_button_box" name="button_box">
-                        <button type="action"
+                    <button type="action"
+                        name="%(act_marketing_campaing_stat)d"
+                        string="Campaign Statistics"/>
+                    <button type="action"
+                        name="%(act_marketing_campaing_segment_opened)d"
+                        string="Segments"/>  
+                    <button type="action"
                         name="%(act_marketing_campaing_followup)d"
                         string="Follow-Up"/>
-                        <button type="action"
-                        name="%(act_marketing_campaing_segment_opened)d"
-                        string="Segments"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -68,7 +99,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_tree">
         <field name="name">marketing.campaign.tree</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name"/>
@@ -83,7 +113,6 @@
     <record id="view_marketing_campaign_diagram" model="ir.ui.view">
         <field name="name">marketing.campaign.diagram</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">diagram</field>
         <field name="arch" type="xml">
             <diagram string="Campaign Editor">
                 <node object="marketing.campaign.activity" shape="rectangle:type=='subcampaign'" bgcolor="gray:start==True">
@@ -105,7 +134,6 @@
     <record id="view_marketing_campaign_search" model="ir.ui.view">
         <field name="name">marketing.campaign.search</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaigns">
                 <field name="name" string="Campaign"/>
@@ -133,7 +161,20 @@
         <field name="view_id" ref="view_marketing_campaign_tree"/>
         <field name="context">{'group_by': []}</field>
         <field name="search_view_id" ref="view_marketing_campaign_search"/>
-        <field name="help">A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered from a specific situation. One action could be sending an email template that has previously been created in the system.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a marketing campaign.
+          </p><p>
+            OpenERP's marketing campaign allows you to automate communication
+            to your prospects. You can define a segment (set of conditions) on
+            your leads and partners to fullfil the campaign.
+          </p><p>
+            A campaign can have many activities like sending an email, printing
+            a letter, assigning to a team, etc. These activities are triggered
+            from specific situations; contact form, 10 days after first
+            contact, if a lead is not closed yet, etc.
+          </p>
+        </field>
     </record>
 
     <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
@@ -143,9 +184,8 @@
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
         <field name="name">marketing.campaign.segment.form</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Marketing Campaign Segment" version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
@@ -181,7 +221,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_segment_tree">
         <field name="name">marketing.campaign.segment.tree</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
@@ -196,7 +235,6 @@
     <record id="view_marketing_campaign_segment_search" model="ir.ui.view">
         <field name="name">marketing.campaign.segment.search</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Segments">
                 <field name="name" string="Segment"/>
@@ -238,7 +276,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
         <field name="name">marketing.campaign.activity.form</field>
         <field name="model">marketing.campaign.activity</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Activities" version="7.0">
                 <group>
@@ -247,7 +284,7 @@
                         <field name="signal" groups="base.group_no_one"/>
                         <field name="start"/>
                         <field name="object_id" invisible="1"/>
-                        <field name="campaign_id" invisible="1"/>
+                        <field name="campaign_id" invisible="1" required="0"/>
                     </group>
                     <group>
                         <field name="variable_cost"/>
@@ -309,7 +346,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
         <field name="name">marketing.campaign.activity.tree</field>
         <field name="model">marketing.campaign.activity</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Activities">
                 <field name="name"/>
@@ -325,7 +361,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_workitem_tree">
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
@@ -347,7 +382,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_workitem_form">
         <field name="name">marketing.campaign.workitem.form</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Marketing Campaign Activities" version="7.0">
             <header>
@@ -383,7 +417,6 @@
     <record id="view_marketing_campaign_workitem_search" model="ir.ui.view">
         <field name="name">marketing.campaign.workitem.search</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Marketing Campaign Activities">
                 <field name="res_name" string="Marketing Campaign Activity"/>
@@ -420,30 +453,6 @@
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
-
-    <act_window name="All Segments"
-        res_model="marketing.campaign.segment"
-        src_model="marketing.campaign"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
-
-    <!-- Campaign Follow-ups -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_followup"
-        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
-
-    <!-- Campaign Statistics -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_stat"
-        name="Campaign Statistics" res_model="campaign.analysis"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
 
     </data>
 </openerp>

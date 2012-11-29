@@ -20,6 +20,7 @@
             rml="account/report/account_print_invoice.rml"
             string="Invoices"
             attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
+            attachment_use="True"
             usage="default"
             />
         <report id="account_transfers" model="account.transfer" name="account.transfer" string="Transfers" xml="account/report/transfer.xml" xsl="account/report/transfer.xsl"/>
@@ -39,14 +40,6 @@
             name="Taxes"
             groups="group_account_user,group_account_manager"
             parent="account.menu_finance_generic_reporting" sequence="3"/>
-
-        <report id="account_account_balance_landscape"
-            string="Account balance"
-            model="account.account"
-            name="account.account.balance.landscape"
-            rml="account/report/account_balance_landscape.rml"
-            auto="False"
-            menu="False"/>
 
     </data>
 </openerp>

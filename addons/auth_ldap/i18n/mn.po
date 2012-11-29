@@ -1,0 +1,197 @@
+# Mongolian translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2010-12-21 13:53+0000\n"
+"Last-Translator: OpenERP Administrators <Unknown>\n"
+"Language-Team: Mongolian <mn@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:30+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: auth_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Алдаа! Рекурсив компани үүсгэж болохгүй."
+
+#. module: auth_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Энэ хэрэглэгчийн сонгосон компани зөвшөөрөгдсөн компаниуд дунд алга байна."
+
+#. module: auth_ldap
+#: field:res.company.ldap,user:0
+msgid "Template User"
+msgstr ""
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"LDAP сервертэй холбогдоход TLS/SSL нууцлагдсан кодчлолыг ашиглана. Энэ "
+"сонголт нь STARTTLS зөвшөөрөгдсөн байхыг шаардах бөгөөд үгүй бол бүх эрх "
+"шалгах оролдлого бүтэлгүй болно."
+
+#. module: auth_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "LDAP Тохиргоо"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: auth_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Компани"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAP сервер хаяг"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "LDAP сервер порт"
+
+#. module: auth_ldap
+#: help:res.company.ldap,create_user:0
+msgid ""
+"Automatically create local user accounts for new users authenticating via "
+"LDAP"
+msgstr ""
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP сан"
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr "Хэрэглэгчийн мэдээлэл"
+
+#. module: auth_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "Компаний нэр үл давхцах байх ёстой !"
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAP нууц үг"
+
+#. module: auth_ldap
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company
+msgid "Companies"
+msgstr "Компаниуд"
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr "Парамтерийг Боловсруулах"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: auth_ldap
+#: help:res.company.ldap,user:0
+msgid "User to copy when creating new users"
+msgstr ""
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "TLS-г хэрэглэх"
+
+#. module: auth_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Дараалал"
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr "Нэвтрэх мэдээлэл"
+
+#. module: auth_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr "Серверийн мэдээлэл"
+
+#. module: auth_ldap
+#: model:ir.actions.act_window,name:auth_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Өөрийн LDAP серверийг тохируулах"
+
+#. module: auth_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Ижил нэвтрэх кодтой хоёр хэрэглэгч байж болохгүй!"
+
+#. module: auth_ldap
+#: view:res.company:0
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP параметрүүд"
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"LDAP сервер дээр хэрэглэгчийн жагсаалтыг авахад хэрэглэгдэх хэрэглэгчийн "
+"нууц үг."
+
+#. module: auth_ldap
+#: constraint:res.users:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: auth_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"LDAP сервер дээр хэрэглэгчийн жагсаалтыг авахад хэрэглэгдэх хэрэглэгчийн "
+"нэр. Хоосон үлдээвэл anonymous байдлаар холбогдоно."
+
+#. module: auth_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP шүүлтүүр"
+
+#. module: auth_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Хэрэглэгч үүсгэх"

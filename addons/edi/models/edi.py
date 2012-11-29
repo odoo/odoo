@@ -24,15 +24,13 @@ import hashlib
 import json
 import logging
 import re
-import threading
 import time
 import urllib2
 
 import openerp
 import openerp.release as release
-import netsvc
-import pooler
-from osv import osv,fields,orm
+import openerp.netsvc as netsvc
+from openerp.osv import osv, fields
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 _logger = logging.getLogger(__name__)
@@ -74,16 +72,9 @@ def last_update_for(record):
     return False
 
 
-class edi_document(osv.osv):
-    _name = 'edi.document'
-    _description = 'EDI Document'
-    _columns = {
-                'name': fields.char("EDI token", size = 128, help="Unique identifier for retrieving an EDI document."),
-                'document': fields.text("Document", help="EDI document content")
-    }
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', 'EDI Tokens must be unique!')
-    ]
+class edi(osv.AbstractModel):
+    _name = 'edi.edi'
+    _description = 'EDI Subsystem'
 
     def new_edi_token(self, cr, uid, record):
         """Return a new, random unique token to identify this model record,
@@ -109,7 +100,7 @@ class edi_document(osv.osv):
         """Generates a final EDI document containing the EDI serialization
         of the given records, which should all be instances of a Model
         that has the :meth:`~.edi` mixin. The document is not saved in the
-        database, this is done by :meth:`~.export_edi`.
+        database.
 
         :param list(browse_record) records: records to export as EDI
         :return: UTF-8 encoded string containing the serialized records
@@ -119,19 +110,6 @@ class edi_document(osv.osv):
             record_model_obj = self.pool.get(record._name)
             edi_list += record_model_obj.edi_export(cr, uid, [record], context=context)
         return self.serialize(edi_list)
-
-    def get_document(self, cr, uid, edi_token, context=None):
-        """Retrieve the EDI document corresponding to the given edi_token.
-
-        :return: EDI document string
-        :raise: ValueError if requested EDI token does not match any know document
-        """
-        _logger.debug("get_document(%s)", edi_token)
-        edi_ids = self.search(cr, uid, [('name','=', edi_token)], context=context)
-        if not edi_ids:
-            raise ValueError('Invalid EDI token: %s' % edi_token)
-        edi = self.browse(cr, uid, edi_ids[0], context=context)
-        return edi.document
 
     def load_edi(self, cr, uid, edi_documents, context=None):
         """Import the given EDI document structures into the system, using
@@ -147,16 +125,16 @@ class edi_document(osv.osv):
         res = []
         for edi_document in edi_documents:
             module = edi_document.get('__import_module') or edi_document.get('__module')
-            assert module, 'a `__module` or `__import_module` attribute is required in each EDI document'
+            assert module, 'a `__module` or `__import_module` attribute is required in each EDI document.'
             if module != 'base' and not ir_module.search(cr, uid, [('name','=',module),('state','=','installed')]):
-                raise osv.except_osv(_('Missing Application'),
+                raise osv.except_osv(_('Missing application.'),
                             _("The document you are trying to import requires the OpenERP `%s` application. "
                               "You can install it by connecting as the administrator and opening the configuration assistant.")%(module,))
             model = edi_document.get('__import_model') or edi_document.get('__model')
-            assert model, 'a `__model` or `__import_model` attribute is required in each EDI document'
+            assert model, 'a `__model` or `__import_model` attribute is required in each EDI document.'
             model_obj = self.pool.get(model)
             assert model_obj, 'model `%s` cannot be found, despite module `%s` being available - '\
-                              'this EDI document seems invalid or unsupported' % (model,module)
+                              'this EDI document seems invalid or unsupported.' % (model,module)
             record_id = model_obj.edi_import(cr, uid, edi_document, context=context)
             record_action = model_obj._edi_record_display_action(cr, uid, record_id, context=context)
             res.append((model, record_id, record_action))
@@ -171,38 +149,18 @@ class edi_document(osv.osv):
         """
         return json.loads(edi_documents_string)
 
-    def export_edi(self, cr, uid, records, context=None):
-        """Export the given database records as EDI documents, stores them
-        permanently with a new unique EDI token, for later retrieval via :meth:`~.get_document`,
-        and returns the list of the new corresponding ``ir.edi.document`` records.
-
-        :param records: list of browse_record of any model
-        :return: list of IDs of the new ``ir.edi.document`` entries, in the same
-                 order as the provided ``records``.
-        """
-        exported_ids = []
-        for record in records:
-            document = self.generate_edi(cr, uid, [record], context)
-            token = self.new_edi_token(cr, uid, record)
-            self.create(cr, uid, {
-                         'name': token,
-                         'document': document
-                        }, context=context)
-            exported_ids.append(token)
-        return exported_ids
-
     def import_edi(self, cr, uid, edi_document=None, edi_url=None, context=None):
         """Import a JSON serialized EDI Document string into the system, first retrieving it
         from the given ``edi_url`` if provided.
 
-        :param str|unicode edi_document: UTF-8 string or unicode containing JSON-serialized
+        :param str|unicode edi: UTF-8 string or unicode containing JSON-serialized
                                          EDI Document to import. Must not be provided if
                                          ``edi_url`` is given.
-        :param str|unicode edi_url: URL where the EDI document (same format as ``edi_document``)
+        :param str|unicode edi_url: URL where the EDI document (same format as ``edi``)
                                     may be retrieved, without authentication.
         """
         if edi_url:
-            assert not edi_document, 'edi_document must not be provided if edi_url is given'
+            assert not edi_document, 'edi must not be provided if edi_url is given.'
             edi_document = urllib2.urlopen(edi_url).read()
         assert edi_document, 'EDI Document is empty!'
         edi_documents = self.deserialize(edi_document)
@@ -215,11 +173,11 @@ class EDIMixin(object):
        ``edi_import()`` and ``edi_export()`` methods to implement their
        specific behavior, based on the primitives provided by this mixin."""
 
-    def _edi_requires_attributes(self, attributes, edi_document):
-        model_name = edi_document.get('__imported_model') or edi_document.get('__model') or self._name
+    def _edi_requires_attributes(self, attributes, edi):
+        model_name = edi.get('__imported_model') or edi.get('__model') or self._name
         for attribute in attributes:
-            assert edi_document.get(attribute),\
-                 'Attribute `%s` is required in %s EDI documents' % (attribute, model_name)
+            assert edi.get(attribute),\
+                 'Attribute `%s` is required in %s EDI documents.' % (attribute, model_name)
 
     # private method, not RPC-exposed as it creates ir.model.data entries as
     # SUPERUSER based on its parameters
@@ -261,7 +219,7 @@ class EDIMixin(object):
             ext_id = existing_id or safe_unique_id(db_uuid, record._name, record.id)
             # ID is unique cross-db thanks to db_uuid (already included in existing_module)
             module = existing_module or "%s:%s" % (record._original_module, db_uuid)
-            _logger.debug("%s: Generating new external ID `%s.%s` for %r", self._name,
+            _logger.debug("%s: Generating new external ID `%s.%s` for %r.", self._name,
                           module, ext_id, record)
             ir_model_data.create(cr, openerp.SUPERUSER_ID,
                                  {'name': ext_id,
@@ -276,7 +234,7 @@ class EDIMixin(object):
                     # this could happen for data records defined in a module that depends
                     # on the module that owns the model, e.g. purchase defines
                     # product.pricelist records.
-                    _logger.debug('Mismatching module: expected %s, got %s, for %s',
+                    _logger.debug('Mismatching module: expected %s, got %s, for %s.',
                                   module, record._original_module, record)
                 # ID is unique cross-db thanks to db_uuid
                 module = "%s:%s" % (module, db_uuid)
@@ -318,7 +276,6 @@ class EDIMixin(object):
         :return: list of dicts containing boilerplate EDI metadata for each record,
                  at the corresponding index from ``records``.
         """
-        data_ids = []
         ir_attachment = self.pool.get('ir.attachment')
         results = []
         for record in records:
@@ -398,7 +355,7 @@ class EDIMixin(object):
         return [self.edi_m2o(cr, uid, r, context=context) for r in records]
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
-        """Returns a list of dicts representing an edi.document containing the
+        """Returns a list of dicts representing EDI documents containing the
            records, and matching the given ``edi_struct``, if provided.
 
            :param edi_struct: if provided, edi_struct should be a dictionary
@@ -443,50 +400,6 @@ class EDIMixin(object):
             results.append(edi_dict)
         return results
 
-    def edi_export_and_email(self, cr, uid, ids, template_ext_id, context=None):
-        """Export the given records just like :meth:`~.export_edi`, the render the
-           given email template, in order to trigger appropriate notifications.
-           This method is intended to be called as part of business documents'
-           lifecycle, so it silently ignores any error occurring during the process,
-           as this is usually non-critical. To avoid any delay, it is also asynchronous
-           and will spawn a short-lived thread to perform the action.
-
-           :param str template_ext_id: external id of the email.template to use for
-                the mail notifications
-           :return: True
-        """
-        def email_task():
-            db = pooler.get_db(cr.dbname)
-            local_cr = None
-            try:
-                time.sleep(3) # lame workaround to wait for commit of parent transaction
-                # grab a fresh browse_record on local cursor
-                local_cr = db.cursor()
-                web_root_url = self.pool.get('ir.config_parameter').get_param(local_cr, uid, 'web.base.url')
-                if not web_root_url:
-                    _logger.warning('Ignoring EDI mail notification, web.base.url not defined in parameters')
-                    return
-                mail_tmpl = self._edi_get_object_by_external_id(local_cr, uid, template_ext_id, 'email.template', context=context)
-                if not mail_tmpl:
-                    # skip EDI export if the template was not found
-                    _logger.warning('Ignoring EDI mail notification, template %s cannot be located', template_ext_id)
-                    return
-                for edi_record in self.browse(local_cr, uid, ids, context=context):
-                    edi_token = self.pool.get('edi.document').export_edi(local_cr, uid, [edi_record], context = context)[0]
-                    edi_context = dict(context, edi_web_url_view=EDI_VIEW_WEB_URL % (web_root_url, local_cr.dbname, edi_token))
-                    self.pool.get('email.template').send_mail(local_cr, uid, mail_tmpl.id, edi_record.id,
-                                                              force_send=False, context=edi_context)
-                    _logger.info('EDI export successful for %s #%s, email notification sent.', self._name, edi_record.id)
-            except Exception:
-                _logger.warning('Ignoring EDI mail notification, failed to generate it.', exc_info=True)
-            finally:
-                if local_cr:
-                    local_cr.commit()
-                    local_cr.close()
-
-        threading.Thread(target=email_task, name='EDI ExportAndEmail for %s %r' % (self._name, ids)).start()
-        return True
-
     def _edi_get_object_by_name(self, cr, uid, name, model_name, context=None):
         model = self.pool.get(model_name)
         search_results = model.name_search(cr, uid, name, operator='=', context=context)
@@ -515,28 +428,30 @@ class EDIMixin(object):
                 file_name = record.name_get()[0][1]
                 file_name = re.sub(r'[^a-zA-Z0-9_-]', '_', file_name)
                 file_name += ".pdf"
-                ir_attachment = self.pool.get('ir.attachment').create(cr, uid, 
-                                                                      {'name': file_name,
-                                                                       'datas': result,
-                                                                       'datas_fname': file_name,
-                                                                       'res_model': self._name,
-                                                                       'res_id': record.id,
-                                                                       'type': 'binary'},
-                                                                      context=context)
+                self.pool.get('ir.attachment').create(cr, uid,
+                                                      {
+                                                       'name': file_name,
+                                                       'datas': result,
+                                                       'datas_fname': file_name,
+                                                       'res_model': self._name,
+                                                       'res_id': record.id,
+                                                       'type': 'binary'
+                                                      },
+                                                      context=context)
 
-    def _edi_import_attachments(self, cr, uid, record_id, edi_document, context=None):
+    def _edi_import_attachments(self, cr, uid, record_id, edi, context=None):
         ir_attachment = self.pool.get('ir.attachment')
-        for attachment in edi_document.get('__attachments', []):
+        for attachment in edi.get('__attachments', []):
             # check attachment data is non-empty and valid
             file_data = None
             try:
                 file_data = base64.b64decode(attachment.get('content'))
             except TypeError:
                 pass
-            assert file_data, 'Incorrect/Missing attachment file content'
-            assert attachment.get('name'), 'Incorrect/Missing attachment name'
-            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
-            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name'
+            assert file_data, 'Incorrect/Missing attachment file content.'
+            assert attachment.get('name'), 'Incorrect/Missing attachment name.'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name.'
+            assert attachment.get('file_name'), 'Incorrect/Missing attachment file name.'
             ir_attachment.create(cr, uid, {'name': attachment['name'],
                                            'datas_fname': attachment['file_name'],
                                            'res_model': self._name,
@@ -573,8 +488,10 @@ class EDIMixin(object):
         if data_ids:
             model = self.pool.get(model)
             data = ir_model_data.browse(cr, uid, data_ids[0], context=context)
-            result = model.browse(cr, uid, data.res_id, context=context)
-            return result
+            if model.exists(cr, uid, [data.res_id]):
+                return model.browse(cr, uid, data.res_id, context=context)
+            # stale external-id, cleanup to allow re-import, as the corresponding record is gone
+            ir_model_data.unlink(cr, 1, [data_ids[0]])
 
     def edi_import_relation(self, cr, uid, model, value, external_id, context=None):
         """Imports a M2O/M2M relation EDI specification ``[external_id,value]`` for the
@@ -588,45 +505,51 @@ class EDIMixin(object):
            * If previous steps gave no result, create a new record with the given
              value in the target model, assign it the given external_id, and return
              the new database ID
+
+           :param str value: display name of the record to import
+           :param str external_id: fully-qualified external ID of the record
+           :return: database id of newly-imported or pre-existing record
         """
         _logger.debug("%s: Importing EDI relationship [%r,%r]", model, external_id, value)
         target = self._edi_get_object_by_external_id(cr, uid, external_id, model, context=context)
         need_new_ext_id = False
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID not found, trying name_get",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - ID not found, trying name_get.",
                           self._name, external_id, value)
             target = self._edi_get_object_by_name(cr, uid, value, model, context=context)
             need_new_ext_id = True
         if not target:
-            _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it!",
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - name not found, creating it.",
                           self._name, external_id, value)
             # also need_new_ext_id here, but already been set above
             model = self.pool.get(model)
-            # should use name_create() but e.g. res.partner won't allow it at the moment 
-            res_id = model.create(cr, uid, {model._rec_name: value}, context=context)
+            res_id, _ = model.name_create(cr, uid, value, context=context)
             target = model.browse(cr, uid, res_id, context=context)
+        else:
+            _logger.debug("%s: Importing EDI relationship [%r,%r] - record already exists with ID %s, using it",
+                          self._name, external_id, value, target.id)
         if need_new_ext_id:
             ext_id_members = split_external_id(external_id)
             # module name is never used bare when creating ir.model.data entries, in order
-            # to avoid being taken as part of the module's data, and cleanup up at next update  
+            # to avoid being taken as part of the module's data, and cleanup up at next update
             module = "%s:%s" % (ext_id_members['module'], ext_id_members['db_uuid'])
             # create a new ir.model.data entry for this value
             self._edi_external_id(cr, uid, target, existing_id=ext_id_members['id'], existing_module=module, context=context)
         return target.id
 
-    def edi_import(self, cr, uid, edi_document, context=None):
-        """Imports a dict representing an edi.document into the system.
+    def edi_import(self, cr, uid, edi, context=None):
+        """Imports a dict representing an EDI document into the system.
 
-           :param dict edi_document: EDI document to import
+           :param dict edi: EDI document to import
            :return: the database ID of the imported record
         """
-        assert self._name == edi_document.get('__import_model') or \
-                ('__import_model' not in edi_document and self._name == edi_document.get('__model')), \
-                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)" % \
-                   (edi_document['__model'], self._name)
+        assert self._name == edi.get('__import_model') or \
+                ('__import_model' not in edi and self._name == edi.get('__model')), \
+                "EDI Document Model and current model do not match: '%s' (EDI) vs '%s' (current)." % \
+                   (edi.get('__model'), self._name)
 
         # First check the record is now already known in the database, in which case it is ignored
-        ext_id_members = split_external_id(edi_document['__id'])
+        ext_id_members = split_external_id(edi['__id'])
         existing = self._edi_get_object_by_external_id(cr, uid, ext_id_members['full'], self._name, context=context)
         if existing:
             _logger.info("'%s' EDI Document with ID '%s' is already known, skipping import!", self._name, ext_id_members['full'])
@@ -634,18 +557,18 @@ class EDIMixin(object):
 
         record_values = {}
         o2m_todo = {} # o2m values are processed after their parent already exists
-        for field_name, field_value in edi_document.iteritems():
+        for field_name, field_value in edi.iteritems():
             # skip metadata and empty fields
             if field_name.startswith('__') or field_value is None or field_value is False:
                 continue
             field_info = self._all_columns.get(field_name)
             if not field_info:
-                _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document', field_name, self._name)
+                _logger.warning('Ignoring unknown field `%s` when importing `%s` EDI document.', field_name, self._name)
                 continue
             field = field_info.column
             # skip function/related fields
             if isinstance(field, fields.function):
-                _logger.warning("Unexpected function field value found in '%s' EDI document: '%s'" % (self._name, field_name))
+                _logger.warning("Unexpected function field value is found in '%s' EDI document: '%s'." % (self._name, field_name))
                 continue
             relation_model = field._obj
             if field._type == 'many2one':
@@ -679,7 +602,7 @@ class EDIMixin(object):
                 dest_model.edi_import(cr, uid, o2m_line, context=context)
 
         # process the attachments, if any
-        self._edi_import_attachments(cr, uid, record_id, edi_document, context=context)
+        self._edi_import_attachments(cr, uid, record_id, edi, context=context)
 
         return record_id
 

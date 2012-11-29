@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:06+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -57,8 +57,9 @@ msgid "Pending Tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Next"
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "No timebox child of this one !"
 msgstr ""
 
 #. module: project_gtd
@@ -72,6 +73,11 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_daily
 msgid "Today"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.task:0
+msgid "Timeframe"
 msgstr ""
 
 #. module: project_gtd
@@ -90,20 +96,15 @@ msgid "Pending"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.gtd.timebox:0 field:project.gtd.timebox,name:0
-#: view:project.task:0 field:project.task,timebox_id:0
+#: view:project.gtd.timebox:0
+#: field:project.gtd.timebox,name:0
+#: field:project.task,timebox_id:0
 msgid "Timebox"
 msgstr ""
 
 #. module: project_gtd
 #: field:project.timebox.fill.plan,timebox_to_id:0
 msgid "Set to Timebox"
-msgstr ""
-
-#. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "Error !"
 msgstr ""
 
 #. module: project_gtd
@@ -121,11 +122,6 @@ msgstr ""
 #. module: project_gtd
 #: model:project.gtd.timebox,name:project_gtd.timebox_weekly
 msgid "This Week"
-msgstr ""
-
-#. module: project_gtd
-#: view:project.timebox.fill.plan:0
-msgid "_Cancel"
 msgstr ""
 
 #. module: project_gtd
@@ -197,6 +193,12 @@ msgid "project.gtd.timebox"
 msgstr ""
 
 #. module: project_gtd
+#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.open_gtd_timebox_tree
 #: model:ir.ui.menu,name:project_gtd.menu_open_gtd_time_timeboxes
 #: view:project.gtd.timebox:0
@@ -210,20 +212,20 @@ msgstr ""
 
 #. module: project_gtd
 #: model:ir.model,name:project_gtd.model_project_gtd_context
-#: view:project.gtd.context:0 field:project.gtd.context,name:0
+#: view:project.gtd.context:0
+#: field:project.gtd.context,name:0
 #: field:project.task,context_id:0
 msgid "Context"
 msgstr ""
 
 #. module: project_gtd
-#: code:addons/project_gtd/wizard/project_gtd_empty.py:52
-#, python-format
-msgid "No timebox child of this one !"
+#: field:project.timebox.fill.plan,task_ids:0
+msgid "Tasks selection"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.timebox.empty:0
-msgid "_Ok"
+#: view:project.task:0
+msgid "Display"
 msgstr ""
 
 #. module: project_gtd
@@ -232,7 +234,8 @@ msgid "Office"
 msgstr ""
 
 #. module: project_gtd
-#: field:project.gtd.context,sequence:0 field:project.gtd.timebox,sequence:0
+#: field:project.gtd.context,sequence:0
+#: field:project.gtd.timebox,sequence:0
 msgid "Sequence"
 msgstr ""
 
@@ -257,11 +260,6 @@ msgid "Timebox Definition"
 msgstr ""
 
 #. module: project_gtd
-#: field:project.timebox.fill.plan,task_ids:0
-msgid "Tasks selection"
-msgstr ""
-
-#. module: project_gtd
 #: view:project.task:0
 msgid "Inbox"
 msgstr ""
@@ -274,6 +272,11 @@ msgstr ""
 #. module: project_gtd
 #: help:project.task,context_id:0
 msgid "The context place where user has to treat task"
+msgstr ""
+
+#. module: project_gtd
+#: view:project.timebox.fill.plan:0
+msgid "Cancel"
 msgstr ""
 
 #. module: project_gtd
@@ -295,6 +298,6 @@ msgid "For reopening the tasks"
 msgstr ""
 
 #. module: project_gtd
-#: view:project.task:0
-msgid "Previous"
+#: view:project.timebox.fill.plan:0
+msgid "or"
 msgstr ""

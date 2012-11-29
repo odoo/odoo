@@ -26,24 +26,19 @@ class crm_configuration(osv.osv_memory):
     _inherit = ['sale.config.settings', 'fetchmail.config.settings']
 
     _columns = {
-        'fetchmail_lead': fields.boolean("Create Leads from Incoming Mails",
+        'fetchmail_lead': fields.boolean("Create leads from incoming mails",
             fetchmail_model='crm.lead', fetchmail_name='Incoming Leads',
             help="""Allows you to configure your incoming mail server, and create leads from incoming emails."""),
-        'module_crm_caldav': fields.boolean("Caldav Synchronization",
-            help="""Use protocol caldav to synchronize meetings with other calendar applications (like Sunbird).
-                This installs the module crm_caldav."""),
-        'module_import_sugarcrm': fields.boolean("SugarCRM Import",
-            help="""Import SugarCRM leads, opportunities, users, accounts, contacts, employees, meetings, phonecalls, emails, project and project tasks data.
-                This installs the module import_sugarcrm."""),
-        'module_import_google': fields.boolean("Google Import",
-            help="""Import google contact in partner address and add google calendar events details in Meeting.
-                This installs the module import_google."""),
-        'module_wiki_sale_faq': fields.boolean("Install a Sales FAQ",
-            help="""This provides demo data, thereby creating a Wiki Group and a Wiki Page for Wiki Sale FAQ.
-                This installs the module wiki_sale_faq."""),
-        'module_google_map': fields.boolean("Google Maps on Customer",
-            help="""Locate customers on Google Map.
-                This installs the module google_map."""),
+        'group_fund_raising': fields.boolean("Manage Fund Raising",
+            implied_group='crm.group_fund_raising',
+            help="""Allows you to trace and manage your activities for fund raising."""),
+        'module_crm_claim':fields.boolean("Manage Customer Claims",
+            help="""Allows you to track your customers/suppliers claims and grievances.
+                    This installs the module crm_claim."""),
+        'module_crm_helpdesk':fields.boolean("Manage Helpdesk and Support",
+            help="""Allows you to communicate with Customer,  process Customer query, and provide better help and support. This installs the module crm_helpdesk."""),
+        
+        
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

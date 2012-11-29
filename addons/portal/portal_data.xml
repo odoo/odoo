@@ -1,42 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-
-        <record id="portal" model="res.portal">
-            <field name="name">Portal</field>
-            <field name="group_id" ref="group_portal_member"/>
-            <field name="override_menu" eval="False"/>
-        </record>
+    <data noupdate="1">
 
         <!-- Mail group for the company's news -->
         <record id="company_news_feed" model="mail.group">
-            <field name="name">Company's news feed</field>
+            <field name="name">Company's news</field>
+            <field name="public">public</field>
         </record>
 
-        <record id="action_news" model="ir.actions.act_window">
+        <record id="action_news" model="ir.actions.client">
             <field name="name">News</field>
-            <field name="res_model">mail.group</field>
-            <field name="res_id" ref="company_news_feed"/>
-            <field name="view_mode">form</field>
+            <field name="tag">mail.wall</field>
+            <field name="model">mail.group</field>
+            <field name="params" eval="{
+                'domain': [
+                    ('model', '=', 'mail.group'),
+                    ('res_id', '=', ref('company_news_feed'))
+                ],
+                'context':{
+                    'search_default_message_unread': False,
+                    'default_model': 'mail.group',
+                    'default_res_id': ref('company_news_feed'),
+                },
+                'show_link_partner': False,
+                'res_model': 'mail.message',
+                'thread_level': 1,
+            }"/>
+            <field name="help" type="html">
+                <p>
+                    Youd don't have unread company's news.
+                </p>
+            </field>
         </record>
 
-        <!-- Top menu item -->
-        <menuitem name="Portal"
-            id="portal_menu"
-            groups="base.group_no_one,portal.group_portal_member,anonymous.group_anonymous"
-            sequence="20"/>
+        <!-- Mail group for the company's jobs -->
+        <record id="company_jobs" model="mail.group">
+            <field name="name">Company's jobs</field>
+            <field name="public">public</field>
+        </record>
 
-            <menuitem name="Our company" id="portal_company" parent="portal_menu" sequence="10"/>
-                <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+        <record id="action_jobs" model="ir.actions.client">
+            <field name="name">Jobs</field>
+            <field name="tag">mail.wall</field>
+            <field name="res_model">mail.message</field>
+            <field name="res_id" ref="company_jobs"/>
+            <field name="params" eval="{
+                'domain':[
+                    ('model', '=', 'mail.group'),
+                    ('res_id', '=', ref('company_jobs'))
+                ],
+                'context':{
+                    'search_default_message_unread': False,
+                    'default_model': 'mail.group',
+                    'default_res_id': ref('company_jobs'),
+                },
+                'show_link_partner': False,
+                'res_model': 'mail.message',
+                'thread_level': 1,
+            }"/>
+            <field name="help" type="html">
+                <p>
+                    Youd don't have unread job offers.
+                </p>
+            </field>
+        </record>
+        
 
-            <!--
-                Create menu items that we'll leave empty for now - they'll be
-                filled up by other portal modules.
-            -->
-            <menuitem name="Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
-            <menuitem name="Invoices and Payments" id="portal_invoices_payements" parent="portal_menu" sequence="30"/>
-            <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
-            <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="50"/>
+        <record id="paypal_acquirer" model="portal.payment.acquirer">
+            <field name="name">Paypal</field>
+            <field name="form_template"><![CDATA[
+% if object.company_id.paypal_account:
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
+  <input type="hidden" name="cmd" value="_xclick"/>
+  <input type="hidden" name="business" value="${object.company_id.paypal_account}"/>
+  <input type="hidden" name="item_name" value="${object.company_id.name} ${kind.title()} ${reference}"/>
+  <input type="hidden" name="amount" value="${amount}"/>
+  <input type="hidden" name="currency_code" value="${currency.name}"/>
+  <input type="image" name="submit" src="https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif"/>
+</form>
+% endif
+            ]]></field>
+        </record>
 
     </data>
 </openerp>

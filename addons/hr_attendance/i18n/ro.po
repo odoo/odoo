@@ -6,286 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-05-10 17:15+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:10+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Tineti evidenta orelor"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Grupeaza dupa..."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Astazi"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Martie"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"Nu ati semnat de iesire data trecuta. Va rugam sa introduceti data si ora "
-"cand ati iesit."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Perioada totala:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Motivul"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Imprima Eroarea Raportului de Prezenta"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr "Data iesirii trebuie sa fie in trecut"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Data pontajului"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-"Functionalitatea Tineti evidenta Orelor are drept scop gestionarea prezentei "
-"angajatilor din actiunile Semneza de intrare/Semneaza de iesire. De "
-"asemenea, puteti lega aceasta caracteristica de un dispozitiv de prezenta "
-"folosind caracteristicile serviciului web OpenERP."
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Motive prezenta"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Zi"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Prezent"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
-msgid "Ask for Sign In Out"
-msgstr "Cereti Semnarea la intrare/la iesire"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Motivul actiunii"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Definiti motivul prezentei"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Prezenta dupa Luna"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,name:0
-#: field:hr.sign.in.out.ask,name:0
-msgid "Employees name"
-msgstr "Numele angajatilor"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Motive Prezenta"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "UserError"
-msgstr "EroareUtilizator"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Data de sfarsit"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid "Warning"
-msgstr "Atentionare"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "Data de intrare trebuie sa fie in trecut"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "O intrare trebuie sa urmeze imediat dupa o iesire"
-
-#. module: hr_attendance
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Prezenta"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Intarzierea max. (Min)"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Tipariti"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Cautare Prezenta RU"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Prezenta dupa Saptamana"
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Eroare: Intrarea (respectiv Iesirea) trebuie sa fie urmata de Iesire "
-"(respectiv Intrare)"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Iulie"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Raport Eroare de pontaj"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Data de inceput"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Min intarziere"
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign In"
-msgstr "Intrare"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Operatiune"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available"
-msgstr "Nu exista date disponibile"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "Septembrie"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "Decembrie"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Luna"
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Tipul actiunii"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) O intarziere negativa inseamna ca angajatul a lucrat mai mult decat a "
-"codat."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Prezentele mele"
-
-#. module: hr_attendance
-#: help:hr.attendance,action_desc:0
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr ""
-"Specifica motivul pentru inregistrarea Intrarii/Iesirii in cazul orelor "
-"suplimentare."
+"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -293,138 +22,33 @@ msgid "Print Monthly Attendance Report"
 msgstr "Tipariti Raportul lunar de prezenta"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out
-msgid "Sign In Sign Out"
-msgstr "Semnare la intrare Semnare la iesire"
+#: view:hr.attendance:0
+msgid "Hr Attendance Search"
+msgstr "Cautare Prezenta RU"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
-#: view:hr.sign.in.out:0
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
-#, python-format
-msgid "Sign in / Sign out"
-msgstr "Pontaj Intrari / Iesiri"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.out.ask"
-msgstr "ru.cere.semnare_la_iesire"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Tipariti Saptamanal Raportul de Prezenta"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "August"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr "O iesire trebuie sa urmeze imediat dupa o intrare !"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Iunie"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Tipariti Raportul cu erorile de prezenta"
-
-#. module: hr_attendance
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Data"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "Noiembrie"
-
-#. module: hr_attendance
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Eroare ! Nu puteti crea Ierarhii recursive ale Angajatilor."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Octombrie"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Ianuarie"
-
-#. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Intrare"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Informatii analiza"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Sign-out Entry Must Follow Sign-in."
-msgstr "Inregistrarea Iesirii trebuie sa o urmeze pe cea de Intrare"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Erori prezenta"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Actiune"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid ""
-"If you need your staff to sign in when they arrive at work and sign out "
-"again at the end of the day, OpenERP allows you to manage this with this "
-"tool. If each employee has been linked to a system user, then they can "
-"encode their time with this action button."
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
 msgstr ""
-"Daca aveti nevoie ca personalul dumneavoastra sa semneze la intrare atunci "
-"cand ajunge la serviciu si sa se semneze la iesire la sfarsitul zilei, "
-"OpenERP va permite sa gestionati acest lucru cu acest instrument. In cazul "
-"in care fiecare angajat a fost legat la un utilizator din sistem, atunci ei "
-"isi pot codifica timpul cu acest buton de actiune."
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Tipariti Raportul Saptamanal de Prezenta"
+#: view:hr.attendance:0
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Prezenta"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-#: field:hr.sign.in.out.ask,emp_id:0
-msgid "Empoyee ID"
-msgstr "ID angajat"
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:34
+#, python-format
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr ""
 
 #. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Cancel"
-msgstr "Anuleaza"
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+msgstr ""
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -445,9 +69,13 @@ msgid "Print Attendance Report Monthly"
 msgstr "Tipariti Raportul Lunar de Prezenta"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/report/timesheet.py:122
+#, python-format
+msgid "Attendances by Week"
+msgstr ""
+
+#. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Iesire"
 
@@ -458,30 +86,65 @@ msgstr "Intarziere"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+msgid "Group By..."
+msgstr "Grupeaza dupa..."
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "October"
+msgstr "Octombrie"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign Out"
+msgstr "Iesire"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No records are found for your selection!"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Print"
+msgstr "Tipariti"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Salariat"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"Ati incercat sa %s cu o data anterioara altui eveniment !\n"
-"Contactati administratorul pentru corectarea prezentei."
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-#: field:hr.sign.in.out.ask,last_time:0
-msgid "Your last sign out"
-msgstr "Ultima iesire a dvs."
+#: field:hr.attendance.month,month:0
+msgid "Month"
+msgstr "Luna"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
 msgstr "Data inregistrata"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign In"
+msgstr "Intrare"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+#: field:hr.attendance.week,init_date:0
+msgid "Starting Date"
+msgstr "Data de inceput"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -492,37 +155,124 @@ msgstr "Prezenta"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Mai"
+msgid "March"
+msgstr "Martie"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "Your last sign in"
-msgstr "Ultima intrare a dumneavoastra"
+#: selection:hr.attendance.month,month:0
+msgid "August"
+msgstr "August"
 
 #. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr "Iesire"
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid "Warning"
+msgstr "Atentionare"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
-msgid ""
-"Sign in / Sign out. In some companies, staff have to sign in when they "
-"arrive at work and sign out again at the end of the day. If each employee "
-"has been linked to a system user, then they can encode their time with this "
-"action button."
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
 msgstr ""
-"Intrare / Iesire. In unele companii, personalul trebuie sa semneze de "
-"intrare atunci cand ajunge la serviciu si apoi sa semneze de iesire la "
-"sfarsitul zilei. Daca fiecare angajat a fost conectat la un utilizator din "
-"sistem, atunci ei isi pot coda orele cu acest buton de actiune."
 
 #. module: hr_attendance
-#: field:hr.attendance,employee_id:0
-msgid "Employee's Name"
-msgstr "Numele salariatului"
+#: field:hr.employee,attendance_access:0
+msgid "unknown"
+msgstr ""
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
+msgstr "Prezentele mele"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "June"
+msgstr "Iunie"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#, python-format
+msgid "Attendances by Month"
+msgstr ""
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
+msgstr "Prezenta dupa Saptamana"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Tipariti Raportul cu erorile de prezenta"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Total period:"
+msgstr "Perioada totala:"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Motivul"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Print Attendance Report Error"
+msgstr "Imprima Eroarea Raportului de Prezenta"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
+msgid ""
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
+msgstr ""
+"Functionalitatea Tineti evidenta Orelor are drept scop gestionarea prezentei "
+"angajatilor din actiunile Semneza de intrare/Semneaza de iesire. De "
+"asemenea, puteti lega aceasta caracteristica de un dispozitiv de prezenta "
+"folosind caracteristicile serviciului web OpenERP."
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "Today"
+msgstr "Astazi"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Data pontajului"
+
+#. module: hr_attendance
+#: field:hr.attendance,name:0
+msgid "Date"
+msgstr "Data"
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr ""
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "July"
+msgstr "Iulie"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr "Raport Eroare de pontaj"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,day:0
+msgid "Day"
+msgstr "Zi"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Prezent"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -535,19 +285,93 @@ msgid "February"
 msgstr "Februarie"
 
 #. module: hr_attendance
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Motivul actiunii"
+
+#. module: hr_attendance
+#: field:hr.attendance.month,year:0
+msgid "Year"
+msgstr "An"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr "Min intarziere"
+
+#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
 msgstr "Prezenta salariatilor"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Starea curenta"
+#: view:hr.action.reason:0
+msgid "Define attendance reason"
+msgstr "Definiti motivul prezentei"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Intrare"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Analysis Information"
+msgstr "Informatii analiza"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+msgid "Attendances By Month"
+msgstr "Prezenta dupa Luna"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "January"
+msgstr "Ianuarie"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No Data Available !"
+msgstr ""
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "April"
 msgstr "Aprilie"
+
+#. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr "Tipariti Saptamanal Raportul de Prezenta"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Attendance Errors"
+msgstr "Erori prezenta"
+
+#. module: hr_attendance
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Actiune"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Tineti evidenta orelor"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Motive Prezenta"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "November"
+msgstr "Noiembrie"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -556,36 +380,149 @@ msgstr ""
 "In afara de aceasta intarziere, eroarea este considerata ca fiind voluntara"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Intarzierea max. (Min)"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+#: field:hr.attendance.week,end_date:0
+msgid "Ending Date"
+msgstr "Data de sfarsit"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "September"
+msgstr "Septembrie"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Motive prezenta"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_week
+msgid "Print Week Attendance Report"
+msgstr "Tipariti Raportul Saptamanal de Prezenta"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr ""
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
-msgid "No records found for your selection!"
+msgid "Click to Sign In at %s."
 msgstr ""
-"Nu au fost gasite inregistrari care sa corespunda selectiei dumneavoastra!"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Tipul actiunii"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "May"
+msgstr "Mai"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
 msgid ""
-"You did not sign in the last time. Please enter the date and time you signed "
-"in."
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
 msgstr ""
-"Nu v-ati semnat la intrare data trecuta. Va rugam sa introduceti data si ora "
-"la care ati semnat de intrare."
 
 #. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "An"
+#: selection:hr.attendance.month,month:0
+msgid "December"
+msgstr "Decembrie"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.in.out.ask"
-msgstr "ru.cereti.semnare_la_intrare.iesire"
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Cancel"
+msgstr "Anuleaza"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Operation"
+msgstr "Operatiune"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) O intarziere negativa inseamna ca angajatul a lucrat mai mult decat a "
+"codat."
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "or"
+msgstr ""
+
+#. module: hr_attendance
+#: help:hr.attendance,action_desc:0
+msgid ""
+"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgstr ""
+"Specifica motivul pentru inregistrarea Intrarii/Iesirii in cazul orelor "
+"suplimentare."
+
+#, python-format
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "Data iesirii trebuie sa fie in trecut"
+
+#, python-format
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "Data de intrare trebuie sa fie in trecut"
+
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "EroareUtilizator"
+
+#, python-format
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "O intrare trebuie sa urmeze imediat dupa o iesire"
+
+#~ msgid "Empoyee ID"
+#~ msgstr "ID angajat"
 
 #~ msgid "Employee ID"
 #~ msgstr "ID angajat"
 
+#~ msgid "Employee's Name"
+#~ msgstr "Numele salariatului"
+
+#~ msgid "Current state"
+#~ msgstr "Starea curenta"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
 #~ msgid "Action's type"
 #~ msgstr "Tipul acțiunii"
+
+#~ msgid ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+#~ msgstr ""
+#~ "Nu ati semnat de iesire data trecuta. Va rugam sa introduceti data si ora "
+#~ "cand ati iesit."
+
+#~ msgid "Ask for Sign In Out"
+#~ msgstr "Cereti Semnarea la intrare/la iesire"
 
 #~ msgid ""
 #~ "Error ! You cannot select a department for which the employee is the manager."
@@ -594,6 +531,11 @@ msgstr "ru.cereti.semnare_la_intrare.iesire"
 
 #~ msgid "Employee attendance"
 #~ msgstr "Prezenta angajat"
+
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Eroare: Intrarea (respectiv Iesirea) trebuie sa fie urmata de Iesire "
+#~ "(respectiv Intrare)"
 
 #~ msgid ""
 #~ "\n"
@@ -608,11 +550,87 @@ msgstr "ru.cereti.semnare_la_intrare.iesire"
 #~ "    actiunilor (Semnare la intrare/Semnare la iesire) efectuate de ei.\n"
 #~ "       "
 
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Nu exista date disponibile"
+
+#~ msgid "Sign In Sign Out"
+#~ msgstr "Semnare la intrare Semnare la iesire"
+
+#, python-format
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr "O iesire trebuie sa urmeze imediat dupa o intrare !"
+
 #~ msgid "My Attendances"
 #~ msgstr "Prezentele mele"
 
 #~ msgid "Attendances Of Employees"
 #~ msgstr "Prezenta angajatilor"
 
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Eroare ! Nu puteti crea Ierarhii recursive ale Angajatilor."
+
 #~ msgid "Sign-Out Entry must follow Sign-In."
 #~ msgstr "Inregistrarea Iesirii trebuie sa o urmeze pe cea de Intrare"
+
+#~ msgid "Your last sign in"
+#~ msgstr "Ultima intrare a dumneavoastra"
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr ""
+#~ "Nu au fost gasite inregistrari care sa corespunda selectiei dumneavoastra!"
+
+#~ msgid "Employees name"
+#~ msgstr "Numele angajatilor"
+
+#~ msgid "hr.sign.out.ask"
+#~ msgstr "ru.cere.semnare_la_iesire"
+
+#, python-format
+#~ msgid "Sign in / Sign out"
+#~ msgstr "Pontaj Intrari / Iesiri"
+
+#~ msgid ""
+#~ "If you need your staff to sign in when they arrive at work and sign out "
+#~ "again at the end of the day, OpenERP allows you to manage this with this "
+#~ "tool. If each employee has been linked to a system user, then they can "
+#~ "encode their time with this action button."
+#~ msgstr ""
+#~ "Daca aveti nevoie ca personalul dumneavoastra sa semneze la intrare atunci "
+#~ "cand ajunge la serviciu si sa se semneze la iesire la sfarsitul zilei, "
+#~ "OpenERP va permite sa gestionati acest lucru cu acest instrument. In cazul "
+#~ "in care fiecare angajat a fost legat la un utilizator din sistem, atunci ei "
+#~ "isi pot codifica timpul cu acest buton de actiune."
+
+#, python-format
+#~ msgid ""
+#~ "You tried to %s with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "Ati incercat sa %s cu o data anterioara altui eveniment !\n"
+#~ "Contactati administratorul pentru corectarea prezentei."
+
+#~ msgid "Your last sign out"
+#~ msgstr "Ultima iesire a dvs."
+
+#~ msgid ""
+#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
+#~ "arrive at work and sign out again at the end of the day. If each employee "
+#~ "has been linked to a system user, then they can encode their time with this "
+#~ "action button."
+#~ msgstr ""
+#~ "Intrare / Iesire. In unele companii, personalul trebuie sa semneze de "
+#~ "intrare atunci cand ajunge la serviciu si apoi sa semneze de iesire la "
+#~ "sfarsitul zilei. Daca fiecare angajat a fost conectat la un utilizator din "
+#~ "sistem, atunci ei isi pot coda orele cu acest buton de actiune."
+
+#~ msgid "hr.sign.in.out.ask"
+#~ msgstr "ru.cereti.semnare_la_intrare.iesire"
+
+#~ msgid ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+#~ msgstr ""
+#~ "Nu v-ati semnat la intrare data trecuta. Va rugam sa introduceti data si ora "
+#~ "la care ati semnat de intrare."

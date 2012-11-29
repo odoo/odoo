@@ -64,7 +64,9 @@ class crm_make_sale(osv.osv_memory):
         """
         if context is None:
             context = {}
-
+        # update context: if come from phonecall, default state values can make the quote crash lp:1017353
+        context.pop('default_state', False)        
+        
         case_obj = self.pool.get('crm.lead')
         sale_obj = self.pool.get('sale.order')
         partner_obj = self.pool.get('res.partner')
@@ -85,8 +87,8 @@ class crm_make_sale(osv.osv_memory):
                             ['default', 'invoice', 'delivery', 'contact'])
                     pricelist = partner.property_product_pricelist.id
                 if False in partner_addr.values():
-                    raise osv.except_osv(_('Data Insufficient!'), _('Customer has no addresses defined!'))
-                
+                    raise osv.except_osv(_('Insufficient Data!'), _('No addresse(s) defined for this customer.'))
+
                 vals = {
                     'origin': _('Opportunity: %s') % str(case.id),
                     'section_id': case.section_id and case.section_id.id or False,
@@ -106,7 +108,7 @@ class crm_make_sale(osv.osv_memory):
                 case_obj.write(cr, uid, [case.id], {'ref': 'sale.order,%s' % new_id})
                 new_ids.append(new_id)
                 message = _("Opportunity has been <b>converted</b> to the quotation <em>%s</em>.") % (sale_order.name)
-                case.message_append_note(body=message)
+                case.message_post(body=message)
             if make.close:
                 case_obj.case_close(cr, uid, data)
             if not new_ids:
@@ -143,7 +145,7 @@ class crm_make_sale(osv.osv_memory):
     _columns = {
         'shop_id': fields.many2one('sale.shop', 'Shop', required=True),
         'partner_id': fields.many2one('res.partner', 'Customer', required=True, domain=[('customer','=',True)]),
-        'close': fields.boolean('Close Opportunity', help='Check this to close the opportunity after having created the sale order.'),
+        'close': fields.boolean('Mark Won', help='Check this to close the opportunity after having created the sale order.'),
     }
     _defaults = {
         'shop_id': _get_shop_id,

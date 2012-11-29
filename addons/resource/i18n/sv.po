@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-11-24 02:54+0000\n"
 "PO-Revision-Date: 2012-05-10 18:15+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: Swedish <sv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:18+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:22+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: resource
 #: help:resource.calendar.leaves,resource_id:0
@@ -48,13 +48,9 @@ msgid "Resources Leaves"
 msgstr "Resurser ur funktion"
 
 #. module: resource
-#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
-#: view:resource.calendar:0
-#: field:resource.calendar,attendance_ids:0
-#: view:resource.calendar.attendance:0
-#: field:resource.resource,calendar_id:0
-msgid "Working Time"
-msgstr "Arbetstid"
+#: field:resource.calendar.attendance,dayofweek:0
+msgid "Day of Week"
+msgstr "Veckodag"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -71,6 +67,11 @@ msgstr "Gruppera på..."
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Sunday"
 msgstr "Söndag"
+
+#. module: resource
+#: field:resource.resource,time_efficiency:0
+msgid "Efficiency Factor"
+msgstr ""
 
 #. module: resource
 #: view:resource.resource:0
@@ -95,14 +96,15 @@ msgid "Make sure the Working time has been configured with proper week days!"
 msgstr "Se till att arbetstid har konfigurerats med riktiga veckodagar!"
 
 #. module: resource
-#: field:resource.calendar,manager:0
-msgid "Workgroup Manager"
+#: code:addons/resource/resource.py:310
+#, python-format
+msgid "%s (copy)"
 msgstr ""
 
 #. module: resource
-#: help:resource.calendar.attendance,hour_from:0
-msgid "Working time will start from"
-msgstr "Arbetstid startar"
+#: view:resource.calendar:0
+msgid "Search Working Time"
+msgstr "Sök arbetstid"
 
 #. module: resource
 #: constraint:resource.calendar.leaves:0
@@ -129,24 +131,9 @@ msgid "Friday"
 msgstr "Fredag"
 
 #. module: resource
-#: field:resource.calendar.attendance,dayofweek:0
-msgid "Day of Week"
-msgstr "Veckodag"
-
-#. module: resource
-#: help:resource.calendar.attendance,hour_to:0
-msgid "Working time will end at"
-msgstr "Arbetstid slutar"
-
-#. module: resource
-#: field:resource.calendar.attendance,date_from:0
-msgid "Starting date"
-msgstr "Startdatum"
-
-#. module: resource
-#: view:resource.calendar:0
-msgid "Search Working Time"
-msgstr "Sök arbetstid"
+#: view:resource.calendar.attendance:0
+msgid "Hours"
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
@@ -170,8 +157,13 @@ msgid "Search Working Period Leaves"
 msgstr "Sök arbetsperiodsfrånvaro"
 
 #. module: resource
-#: field:resource.resource,time_efficiency:0
-msgid "Efficiency Factor"
+#: field:resource.calendar.attendance,date_from:0
+msgid "Starting Date"
+msgstr ""
+
+#. module: resource
+#: field:resource.calendar,manager:0
+msgid "Workgroup Manager"
 msgstr ""
 
 #. module: resource
@@ -193,7 +185,6 @@ msgid "Resource"
 msgstr "Resurs"
 
 #. module: resource
-#: view:resource.calendar:0
 #: field:resource.calendar,name:0
 #: field:resource.calendar.attendance,name:0
 #: field:resource.calendar.leaves,name:0
@@ -202,15 +193,30 @@ msgid "Name"
 msgstr "Namn"
 
 #. module: resource
-#: selection:resource.calendar.attendance,dayofweek:0
-msgid "Wednesday"
-msgstr "Onsdag"
+#: model:ir.actions.act_window,name:resource.action_resource_calendar_form
+#: view:resource.calendar:0
+#: field:resource.calendar,attendance_ids:0
+#: view:resource.calendar.attendance:0
+#: field:resource.calendar.leaves,calendar_id:0
+#: field:resource.resource,calendar_id:0
+msgid "Working Time"
+msgstr "Arbetstid"
+
+#. module: resource
+#: help:resource.calendar.attendance,hour_from:0
+msgid "Start and End time of working."
+msgstr ""
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 #: view:resource.resource:0
 msgid "Working Period"
 msgstr "Arbetsperiod"
+
+#. module: resource
+#: selection:resource.calendar.attendance,dayofweek:0
+msgid "Wednesday"
+msgstr "Onsdag"
 
 #. module: resource
 #: model:ir.model,name:resource.model_resource_resource
@@ -253,16 +259,17 @@ msgstr ""
 #: help:resource.resource,user_id:0
 msgid "Related user name for the resource to manage its access."
 msgstr ""
+"Relaterat användarnamn för resursen vid administration av dess rättigheter"
 
 #. module: resource
 #: help:resource.resource,calendar_id:0
 msgid "Define the schedule of resource"
-msgstr ""
+msgstr "Definiera planeringen för en resurs"
 
 #. module: resource
 #: view:resource.calendar.leaves:0
 msgid "Starting Date of Leave"
-msgstr ""
+msgstr "Semesterstart"
 
 #. module: resource
 #: field:resource.resource,code:0
@@ -280,13 +287,9 @@ msgid "Work to"
 msgstr "Arbeta till"
 
 #. module: resource
-#: help:resource.resource,time_efficiency:0
-msgid ""
-"This field depict the efficiency of the resource to complete tasks. e.g  "
-"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
-"show a load of 100% for this phase by default, but if we put a efficency of "
-"200%, then his load will only be 50%."
-msgstr ""
+#: model:ir.model,name:resource.model_resource_calendar_attendance
+msgid "Work Detail"
+msgstr "Arbetsdetaljer"
 
 #. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
@@ -294,9 +297,13 @@ msgid "Tuesday"
 msgstr "Tisdag"
 
 #. module: resource
-#: field:resource.calendar.leaves,calendar_id:0
-msgid "Working time"
-msgstr "Arbetstid"
+#: help:resource.resource,time_efficiency:0
+msgid ""
+"This field depict the efficiency of the resource to complete tasks. e.g  "
+"resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+"show a load of 100% for this phase by default, but if we put a efficiency of "
+"200%, then his load will only be 50%."
+msgstr ""
 
 #. module: resource
 #: model:ir.actions.act_window,name:resource.action_resource_calendar_leave_tree
@@ -311,6 +318,9 @@ msgid ""
 "in a specific project phase. You can also set their efficiency level and "
 "workload based on their weekly working hours."
 msgstr ""
+"Med resurser kan du skapa och hantera resurser som bör vara inblandade i ett "
+"specifikt projektfas. Du kan också ställa in resursens verkningsgrad och "
+"arbetsbelastning utifrån en veckoarbetstid."
 
 #. module: resource
 #: view:resource.resource:0
@@ -335,9 +345,9 @@ msgid "Human"
 msgstr "Mänsklig"
 
 #. module: resource
-#: model:ir.model,name:resource.model_resource_calendar_attendance
-msgid "Work Detail"
-msgstr "Arbetsdetaljer"
+#: view:resource.calendar.leaves:0
+msgid "Duration"
+msgstr ""
 
 #. module: resource
 #: field:resource.calendar.leaves,date_from:0
@@ -345,24 +355,46 @@ msgid "Start Date"
 msgstr "Startdatum"
 
 #. module: resource
-#: code:addons/resource/resource.py:310
-#, python-format
-msgid " (copy)"
-msgstr " (kopia)"
-
-#. module: resource
 #: selection:resource.calendar.attendance,dayofweek:0
 msgid "Saturday"
 msgstr "lördag"
 
+#~ msgid "Starting date"
+#~ msgstr "Startdatum"
+
 #~ msgid "Day of week"
 #~ msgstr "Veckodag"
 
+#~ msgid "Working time"
+#~ msgstr "Arbetstid"
+
 #~ msgid "General Information"
 #~ msgstr "Allmän information"
+
+#~ msgid "Working time will start from"
+#~ msgstr "Arbetstid startar"
 
 #~ msgid "Workgroup manager"
 #~ msgstr "Arbetsgruppschef"
 
 #~ msgid "Efficiency factor"
 #~ msgstr "Effektivitetsfactor"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopia)"
+
+#~ msgid "Working time will end at"
+#~ msgstr "Arbetstid slutar"
+
+#~ msgid ""
+#~ "This field depict the efficiency of the resource to complete tasks. e.g  "
+#~ "resource put alone on a phase of 5 days with 5 tasks assigned to him, will "
+#~ "show a load of 100% for this phase by default, but if we put a efficency of "
+#~ "200%, then his load will only be 50%."
+#~ msgstr ""
+#~ "Detta fält visar effektiviteten av resursen för att slutföra uppgifter. "
+#~ "t.ex. resurs satte ensam på en hastighet av 5 dagar med 5 uppgifter som "
+#~ "tilldelats honom, kommer att visa en belastning på 100% för denna fas som "
+#~ "standard, men om vi sätter en verkningsgrad på 200%, då hans last bara vara "
+#~ "50%."

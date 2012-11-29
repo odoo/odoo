@@ -63,7 +63,7 @@ class project_issue_report(osv.osv):
         'project_id':fields.many2one('project.project', 'Project',readonly=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'user_id' : fields.many2one('res.users', 'Assigned to',readonly=True),
-        'partner_id': fields.many2one('res.partner','Partner',domain="[('object_id.model', '=', 'project.issue')]"),
+        'partner_id': fields.many2one('res.partner','Contact',domain="[('object_id.model', '=', 'project.issue')]"),
         'channel_id': fields.many2one('crm.case.channel', 'Channel',readonly=True),
         'task_id': fields.many2one('project.task', 'Task',domain="[('object_id.model', '=', 'project.issue')]" ),
         'email': fields.integer('# Emails', size=128, readonly=True),

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-17 03:56+0000\n"
-"Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-27 03:04+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 05:41+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-28 04:40+0000\n"
+"X-Generator: Launchpad (build 16309)\n"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -22,9 +22,14 @@ msgid "Order Ref."
 msgstr "关联单号"
 
 #. module: delivery
-#: model:product.template,name:delivery.delivery_product_product_template
+#: model:product.template,name:delivery.product_product_delivery_product_template
 msgid "Delivery by Poste"
 msgstr "由post送货"
+
+#. module: delivery
+#: view:delivery.grid.line:0
+msgid " in Function of "
+msgstr " 在功能 "
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -36,11 +41,6 @@ msgstr "目标库位"
 #: field:stock.move,weight_net:0
 msgid "Net weight"
 msgstr "净重"
-
-#. module: delivery
-#: view:stock.picking:0
-msgid "Delivery Order"
-msgstr "送货单"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_delivery_grid_line
@@ -57,8 +57,14 @@ msgstr "送货网络"
 #: selection:delivery.grid.line,type:0
 #: selection:delivery.grid.line,variable_factor:0
 #: field:stock.picking,volume:0
+#: field:stock.picking.out,volume:0
 msgid "Volume"
 msgstr "体积"
+
+#. module: delivery
+#: view:delivery.carrier:0
+msgid "Zip"
+msgstr "邮政编码"
 
 #. module: delivery
 #: field:delivery.grid,line_ids:0
@@ -76,9 +82,41 @@ msgid "Delivery order"
 msgstr "送货单"
 
 #. module: delivery
-#: view:res.partner:0
-msgid "Deliveries Properties"
-msgstr "送货属性"
+#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new deliver method. \n"
+"              </p><p>\n"
+"                Each carrier (e.g. UPS) can have several delivery methods "
+"(e.g.\n"
+"                UPS Express, UPS Standard) with a set of pricing rules "
+"attached\n"
+"                to each method.\n"
+"              </p><p>\n"
+"                These methods allows to automaticaly compute the delivery "
+"price\n"
+"                according to your settings; on the sale order (based on the\n"
+"                quotation) or the invoice (based on the delivery orders).\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击 定义一个新的运输方法 \n"
+"              </p><p>\n"
+"                每个承运商人 (比如：UPS，顺风)可以几种运输方法 \n"
+"               (例如：UPS Express, UPS Standard ) ，每种方法可\n"
+"               以有一个定价规则.\n"
+"              </p><p>\n"
+"                在销售订单（基于报价单）或者发票（基于发运单），\n"
+"                这些方法可以根据你的设置自动计算运输价格；\n"
+"              </p>\n"
+"            "
+
+#. module: delivery
+#: code:addons/delivery/delivery.py:221
+#, python-format
+msgid "No line matched this product or order in the chosen delivery grid."
+msgstr "在选择运输网络里，没有一行匹配这个产品或者订单。"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.action_picking_tree4
@@ -96,11 +134,35 @@ msgid "Gives the sequence order when displaying a list of delivery grid."
 msgstr "输入序列用于在送货网络列表上排序"
 
 #. module: delivery
-#: view:delivery.carrier:0
 #: view:delivery.grid:0
 #: field:delivery.grid,country_ids:0
 msgid "Countries"
 msgstr "国家"
+
+#. module: delivery
+#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a delivery price list for a specific "
+"region.\n"
+"              </p><p>\n"
+"                The delivery price list allows you to compute the cost and\n"
+"                sales price of the delivery according to the weight of the\n"
+"                products and other criteria. You can define several price "
+"lists\n"
+"                for each delivery method: per country or a zone in a "
+"specific\n"
+"                country defined by a postal code range.\n"
+"              </p>\n"
+"            "
+msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击 为指定区域创建运输价格表.\n"
+"              </p><p>\n"
+"                运输价格表允许 根据产品的重量和其他条件，计算运输的成本和销售价格.\n"
+"               你能为每种运输方法定义几种价格表:为每个国家，或者在特定国家根据邮政编码的定义的一个区域.\n"
+"              </p>\n"
+"            "
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -113,18 +175,14 @@ msgid "Variable Factor"
 msgstr "变量系数"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_grid_form
-msgid ""
-"The delivery price list allows you to compute the cost and sales price of "
-"the delivery according to the weight of the products and other criteria. You "
-"can define several price lists for one delivery method, per country or a "
-"zone in a specific country defined by a postal code range."
-msgstr "送货价格表允许您通过重量或其它条件计算成本和售价。您可以为一个送货方式定义多个价格表。按国家或地区（以邮政编码区分）"
-
-#. module: delivery
 #: field:delivery.carrier,amount:0
 msgid "Amount"
 msgstr "金额"
+
+#. module: delivery
+#: view:sale.order:0
+msgid "Add in Quote"
+msgstr "添加引用"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -133,17 +191,13 @@ msgstr "固定的"
 
 #. module: delivery
 #: field:delivery.carrier,name:0
-#: view:delivery.sale.order:0
-#: field:delivery.sale.order,carrier_id:0
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
-#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
 #: field:res.partner,property_delivery_carrier:0
 #: field:sale.order,carrier_id:0
 msgid "Delivery Method"
 msgstr "送货方式"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:213
+#: code:addons/delivery/delivery.py:221
 #, python-format
 msgid "No price available!"
 msgstr "无可用价格！"
@@ -155,11 +209,14 @@ msgstr "库存调拨"
 
 #. module: delivery
 #: field:stock.picking,carrier_tracking_ref:0
+#: field:stock.picking.out,carrier_tracking_ref:0
 msgid "Carrier Tracking Ref"
 msgstr "承运方跟踪号"
 
 #. module: delivery
 #: field:stock.picking,weight_net:0
+#: field:stock.picking.in,weight_net:0
+#: field:stock.picking.out,weight_net:0
 msgid "Net Weight"
 msgstr "净重"
 
@@ -175,9 +232,10 @@ msgid "Grid definition"
 msgstr "网络定义"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Cancel"
-msgstr "取消(_C)"
+#: code:addons/delivery/stock.py:89
+#, python-format
+msgid "Warning!"
+msgstr "警告！"
 
 #. module: delivery
 #: field:delivery.grid.line,operator:0
@@ -195,16 +253,16 @@ msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form1
-msgid ""
-"Define your delivery methods and their pricing. The delivery costs can be "
-"added on the sale order form or in the invoice, based on the delivery orders."
-msgstr "定义你的送货方式和价格。运费可以被加到销售订单或发票，基于送货单。"
+#: model:ir.model,name:delivery.model_stock_picking_out
+msgid "Delivery Orders"
+msgstr "送货单"
 
 #. module: delivery
-#: report:sale.shipping:0
-msgid "Lot"
-msgstr "批次"
+#: view:sale.order:0
+msgid ""
+"If you don't 'Add in Quote', the exact price will be computed when invoicing "
+"based on delivery order(s)."
+msgstr "如果你没有“添加引用”，当基于送货单开票时，将计算精确的价格。"
 
 #. module: delivery
 #: field:delivery.carrier,partner_id:0
@@ -215,12 +273,6 @@ msgstr "物流公司"
 #: model:ir.model,name:delivery.model_delivery_grid
 msgid "Delivery Grid"
 msgstr "送货网络"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:213
-#, python-format
-msgid "No line matched this product or order in the choosed delivery grid."
-msgstr "在选择的运输网格包含的明细中没有匹配的产品或订单。"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -238,19 +290,16 @@ msgid "Delivery Grids"
 msgstr "送货网络"
 
 #. module: delivery
-#: model:ir.model,name:delivery.model_delivery_sale_order
-msgid "Make Delievery"
-msgstr "发运"
-
-#. module: delivery
 #: field:delivery.grid.line,name:0
 msgid "Name"
 msgstr "名称"
 
 #. module: delivery
-#: field:delivery.grid,zip_from:0
-msgid "Start Zip"
-msgstr "开始邮编"
+#: help:delivery.carrier,free_if_more_than:0
+msgid ""
+"If the order is more expensive than a certain amount, the customer can "
+"benefit from a free shipping"
+msgstr "如果订单金额高于某个特定金额，客户可以享受免费送货"
 
 #. module: delivery
 #: help:delivery.carrier,amount:0
@@ -260,10 +309,9 @@ msgid ""
 msgstr "免费送货的订单金额，以公司本位币显示"
 
 #. module: delivery
-#: code:addons/delivery/stock.py:89
-#, python-format
-msgid "Warning"
-msgstr "警告"
+#: field:delivery.carrier,free_if_more_than:0
+msgid "Free If Order Total Amount Is More Than"
+msgstr "当订单总额多于 时，免费"
 
 #. module: delivery
 #: field:delivery.grid.line,grid_id:0
@@ -283,15 +331,10 @@ msgid "To Zip"
 msgstr "目的地邮编"
 
 #. module: delivery
-#: code:addons/delivery/delivery.py:141
+#: code:addons/delivery/delivery.py:147
 #, python-format
 msgid "Default price"
 msgstr "默认价格"
-
-#. module: delivery
-#: model:ir.model,name:delivery.model_delivery_define_delivery_steps_wizard
-msgid "delivery.define.delivery.steps.wizard"
-msgstr "delivery.define.delivery.steps.wizard"
 
 #. module: delivery
 #: field:delivery.carrier,normal_price:0
@@ -309,12 +352,8 @@ msgid "Grid Name"
 msgstr "网络名"
 
 #. module: delivery
-#: view:stock.move:0
-msgid "Weights"
-msgstr "重量"
-
-#. module: delivery
 #: field:stock.picking,number_of_packages:0
+#: field:stock.picking.out,number_of_packages:0
 msgid "Number of Packages"
 msgstr "包装件数"
 
@@ -324,6 +363,8 @@ msgstr "包装件数"
 #: report:sale.shipping:0
 #: field:stock.move,weight:0
 #: field:stock.picking,weight:0
+#: field:stock.picking.in,weight:0
+#: field:stock.picking.out,weight:0
 msgid "Weight"
 msgstr "重量"
 
@@ -332,21 +373,16 @@ msgstr "重量"
 msgid ""
 "Check this box if you want to manage delivery prices that depends on the "
 "destination, the weight, the total of the order, etc."
-msgstr "如果你要根据目的地、重量、订单总价来管理运费，请勾选这里。"
+msgstr "如果要根据目的地、重量、订单总价来管理运费，请勾选这里。"
 
 #. module: delivery
 #: help:delivery.carrier,normal_price:0
 msgid ""
 "Keep empty if the pricing depends on the advanced pricing per destination"
-msgstr "如果价格基于每个目的地的固定价格，这里留空。"
+msgstr "默认的运费的价格，如果根据目的地定价，这里留空。"
 
 #. module: delivery
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "您不能将产品移动到视图类型的库位。"
-
-#. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:55
 #, python-format
 msgid "No grid available !"
 msgstr "没有可用的送货网络"
@@ -357,21 +393,15 @@ msgid ">="
 msgstr ">="
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:58
 #, python-format
 msgid "Order not in draft state !"
 msgstr "单据不在草稿状态！"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Choose Your Default Picking Policy"
-msgstr "选择你的默认分拣方式"
-
-#. module: delivery
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "你尝试分配一个来自其它产品的批次"
+#: report:sale.shipping:0
+msgid "Lot"
+msgstr "批次"
 
 #. module: delivery
 #: field:delivery.carrier,active:0
@@ -395,14 +425,19 @@ msgid "Condition"
 msgstr "条件"
 
 #. module: delivery
+#: constraint:stock.move:0
+msgid "You must assign a serial number for this product."
+msgstr "你必须为这个产品指定序列号"
+
+#. module: delivery
 #: field:delivery.grid.line,standard_price:0
 msgid "Cost Price"
 msgstr "成本价"
 
 #. module: delivery
-#: field:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Picking Policy"
-msgstr "分拣方式"
+#: constraint:stock.move:0
+msgid "You cannot move products from or to a location of the type view."
+msgstr "你不能从视图类型的库位移动"
 
 #. module: delivery
 #: selection:delivery.grid.line,price_type:0
@@ -417,6 +452,8 @@ msgstr "这个送货方式会在基于送货单开发票的时候使用。"
 
 #. module: delivery
 #: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.in:0
+#: sql_constraint:stock.picking.out:0
 msgid "Reference must be unique per Company!"
 msgstr "编号必须在公司内唯一！"
 
@@ -431,22 +468,9 @@ msgid "Quantity"
 msgstr "数量"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-#: model:ir.actions.act_window,name:delivery.action_define_delivery_steps
-msgid "Setup Your Picking Policy"
-msgstr "设置你的分拣方式"
-
-#. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form1
-msgid "Define Delivery Methods"
-msgstr "设置发货方式"
-
-#. module: delivery
-#: help:delivery.carrier,free_if_more_than:0
-msgid ""
-"If the order is more expensive than a certain amount, the customer can "
-"benefit from a free shipping"
-msgstr "如果订单金额高于某个特定金额，客户可以享受免费送货"
+#: field:delivery.grid,zip_from:0
+msgid "Start Zip"
+msgstr "开始邮编"
 
 #. module: delivery
 #: help:sale.order,carrier_id:0
@@ -455,12 +479,7 @@ msgid ""
 msgstr "如果你计划按装运按装箱开发票请输入此字段。"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Cancel"
-msgstr "取消"
-
-#. module: delivery
-#: code:addons/delivery/delivery.py:130
+#: code:addons/delivery/delivery.py:136
 #, python-format
 msgid "Free if more than %.2f"
 msgstr "金额高于 %.2f 免费"
@@ -471,17 +490,9 @@ msgid "Order Reference must be unique per Company!"
 msgstr "订单号必须在一个公司范围内唯一"
 
 #. module: delivery
-#: model:ir.actions.act_window,help:delivery.action_delivery_carrier_form
-msgid ""
-"Define the delivery methods you are using and their pricing in order to "
-"reinvoice the delivery costs when you are doing invoicing based on delivery "
-"orders"
-msgstr "定义送货方式以及价格，以便你基于送货单开发票"
-
-#. module: delivery
-#: view:res.partner:0
-msgid "Sales & Purchases"
-msgstr "销售&采购"
+#: model:ir.model,name:delivery.model_stock_picking_in
+msgid "Incoming Shipments"
+msgstr "入库"
 
 #. module: delivery
 #: selection:delivery.grid.line,operator:0
@@ -490,25 +501,8 @@ msgstr "<="
 
 #. module: delivery
 #: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "必须为此产品赋予一个生产批次"
-
-#. module: delivery
-#: field:delivery.carrier,free_if_more_than:0
-msgid "Free If More Than"
-msgstr "免费起始金额"
-
-#. module: delivery
-#: view:delivery.sale.order:0
-msgid "Create Deliveries"
-msgstr "创建送货单"
-
-#. module: delivery
-#: view:delivery.carrier:0
-#: view:delivery.grid:0
-#: field:delivery.grid,state_ids:0
-msgid "States"
-msgstr "状态"
+msgid "You try to assign a lot which is not from the same product."
+msgstr "您企图为不一样的产品创建批号"
 
 #. module: delivery
 #: report:sale.shipping:0
@@ -536,7 +530,7 @@ msgid "Price"
 msgstr "价格"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:70
+#: code:addons/delivery/sale.py:55
 #, python-format
 msgid "No grid matching for this carrier !"
 msgstr "没有送货网络适用于此承运方"
@@ -553,11 +547,6 @@ msgid "Weight * Volume"
 msgstr "重量* 体积"
 
 #. module: delivery
-#: selection:delivery.grid.line,operator:0
-msgid "="
-msgstr "="
-
-#. module: delivery
 #: code:addons/delivery/stock.py:90
 #, python-format
 msgid "The carrier %s (id: %d) has no delivery grid!"
@@ -569,14 +558,9 @@ msgid "Pricing Information"
 msgstr "价格信息"
 
 #. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "一次性交货"
-
-#. module: delivery
 #: field:delivery.carrier,use_detailed_pricelist:0
 msgid "Advanced Pricing per Destination"
-msgstr "每个目的地的固定价格"
+msgstr "根据目的地定价"
 
 #. module: delivery
 #: view:delivery.carrier:0
@@ -584,13 +568,15 @@ msgstr "每个目的地的固定价格"
 #: model:ir.model,name:delivery.model_delivery_carrier
 #: report:sale.shipping:0
 #: field:stock.picking,carrier_id:0
+#: field:stock.picking.out,carrier_id:0
 msgid "Carrier"
 msgstr "承运方"
 
 #. module: delivery
-#: view:delivery.sale.order:0
-msgid "_Apply"
-msgstr "应用(_A)"
+#: model:ir.actions.act_window,name:delivery.action_delivery_carrier_form
+#: model:ir.ui.menu,name:delivery.menu_action_delivery_carrier_form
+msgid "Delivery Methods"
+msgstr "运输方法"
 
 #. module: delivery
 #: field:sale.order,id:0
@@ -598,8 +584,7 @@ msgid "ID"
 msgstr "ID"
 
 #. module: delivery
-#: code:addons/delivery/wizard/delivery_sale_order.py:53
-#: code:addons/delivery/wizard/delivery_sale_order.py:73
+#: code:addons/delivery/sale.py:58
 #, python-format
 msgid "The order state have to be draft to add delivery lines."
 msgstr "只能对草稿状态的订单增加送货明细"
@@ -620,28 +605,44 @@ msgid "Sale Price"
 msgstr "销售价格"
 
 #. module: delivery
-#: model:ir.actions.act_window,name:delivery.action_delivery_cost
-#: view:sale.order:0
-msgid "Delivery Costs"
-msgstr "送货成本"
+#: view:stock.picking.out:0
+msgid "Print Delivery Order"
+msgstr "打印送货单"
 
 #. module: delivery
-#: selection:delivery.define.delivery.steps.wizard,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "分批交货"
+#: view:delivery.grid:0
+#: field:delivery.grid,state_ids:0
+msgid "States"
+msgstr "状态"
 
 #. module: delivery
-#: view:delivery.define.delivery.steps.wizard:0
-msgid "Apply"
-msgstr "接受"
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr "错误:无效EAN编码"
 
 #. module: delivery
 #: field:delivery.grid.line,price_type:0
 msgid "Price Type"
 msgstr "价格类型"
 
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "警告"
+
 #~ msgid "Carrier Partner"
 #~ msgstr "承运业务伙伴"
+
+#~ msgid "="
+#~ msgstr "="
+
+#~ msgid "Cancel"
+#~ msgstr "取消"
+
+#~ msgid "Deliveries Properties"
+#~ msgstr "送货属性"
+
+#~ msgid "Delivery Costs"
+#~ msgstr "送货成本"
 
 #~ msgid "Notes"
 #~ msgstr "备注"
@@ -649,6 +650,9 @@ msgstr "价格类型"
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "对象名必须要以X_开头并且不能含有特殊字符!"
+
+#~ msgid "Sales & Purchases"
+#~ msgstr "销售&采购"
 
 #~ msgid "Generate Draft Invoices On Receptions"
 #~ msgstr "在接收产生发票草稿"
@@ -662,9 +666,6 @@ msgstr "价格类型"
 
 #~ msgid "Packing to be invoiced"
 #~ msgstr "包装要开发票"
-
-#~ msgid "Error: Invalid ean code"
-#~ msgstr "错误:无效EAN编码"
 
 #~ msgid "The VAT doesn't seem to be correct."
 #~ msgstr "这增值税似乎不正确"
@@ -704,8 +705,36 @@ msgstr "价格类型"
 #~ msgid "No price available !"
 #~ msgstr "无价格表可用！"
 
+#~ msgid "_Cancel"
+#~ msgstr "取消(_C)"
+
+#~ msgid "Delivery Order"
+#~ msgstr "送货单"
+
+#~ msgid "Weights"
+#~ msgstr "重量"
+
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "单号必须唯一！"
+
+#~ msgid ""
+#~ "The delivery price list allows you to compute the cost and sales price of "
+#~ "the delivery according to the weight of the products and other criteria. You "
+#~ "can define several price lists for one delivery method, per country or a "
+#~ "zone in a specific country defined by a postal code range."
+#~ msgstr "送货价格表允许您通过重量或其它条件计算成本和售价。您可以为一个送货方式定义多个价格表。按国家或地区（以邮政编码区分）"
+
+#~ msgid "Make Delievery"
+#~ msgstr "发运"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "你尝试分配一个来自其它产品的批次"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "必须为此产品赋予一个生产批次"
+
+#~ msgid "_Apply"
+#~ msgstr "应用(_A)"
 
 #, python-format
 #~ msgid "No line matched this order in the choosed delivery grids !"
@@ -734,5 +763,53 @@ msgstr "价格类型"
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "错误！您不能创建递归的商会会员。"
 
+#~ msgid "Create Deliveries"
+#~ msgstr "创建送货单"
+
 #~ msgid "Carriers and deliveries"
 #~ msgstr "承运方和送货"
+
+#, python-format
+#~ msgid "No line matched this product or order in the choosed delivery grid."
+#~ msgstr "在选择的运输网格包含的明细中没有匹配的产品或订单。"
+
+#~ msgid "delivery.define.delivery.steps.wizard"
+#~ msgstr "delivery.define.delivery.steps.wizard"
+
+#~ msgid ""
+#~ "Define your delivery methods and their pricing. The delivery costs can be "
+#~ "added on the sale order form or in the invoice, based on the delivery orders."
+#~ msgstr "定义你的送货方式和价格。运费可以被加到销售订单或发票，基于送货单。"
+
+#~ msgid "Picking Policy"
+#~ msgstr "分拣方式"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "您不能将产品移动到视图类型的库位。"
+
+#~ msgid "Choose Your Default Picking Policy"
+#~ msgstr "选择你的默认分拣方式"
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "一次性交货"
+
+#~ msgid "Define Delivery Methods"
+#~ msgstr "设置发货方式"
+
+#~ msgid "Setup Your Picking Policy"
+#~ msgstr "设置你的分拣方式"
+
+#~ msgid "Free If More Than"
+#~ msgstr "免费起始金额"
+
+#~ msgid ""
+#~ "Define the delivery methods you are using and their pricing in order to "
+#~ "reinvoice the delivery costs when you are doing invoicing based on delivery "
+#~ "orders"
+#~ msgstr "定义送货方式以及价格，以便你基于送货单开发票"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "分批交货"
+
+#~ msgid "Apply"
+#~ msgstr "接受"

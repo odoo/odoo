@@ -36,24 +36,11 @@ documentation at http://doc.openerp.com.
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email_template'],
     'icon': '/edi/static/src/img/knowledge.png',
-    'data': [
-        'security/ir.model.access.csv',
-    ],
-    'test': [
-        'test/edi_partner_test.yml',
-    ],
-    'js': [
-        'static/src/js/edi.js',
-    ],
-    "css": [
-        "static/src/css/edi.css"
-    ],
-    'qweb': [
-        "static/src/xml/*.xml",
-    ],
-    'installable': True,
+    'test': ['test/edi_partner_test.yml'],
+    'js': ['static/src/js/edi.js'],
+    'css': ['static/src/css/edi.css'],
+    'qweb': ['static/src/xml/*.xml'],
     'auto_install': False,
-    'certificate': '002046536359186',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

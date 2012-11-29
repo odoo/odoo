@@ -24,20 +24,36 @@
     'name': 'Portal Sale',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
-This module adds sale menu and features to your portal if sale and portal are 
-installed.
+This module adds a Sales menu to your portal as soon as sale and portal are installed.
+======================================================================================
+
+After installing this module, portal users will be able to access their own documents
+via the following menus:
+
+  - Quotations
+  - Sale Orders
+  - Delivery Orders
+  - Products (public ones)
+  - Invoices
+  - Payments/Refunds
+
+If online payment acquirers are configured, portal users will also be given the opportunity to
+pay online on their Sale Orders and Invoices that are not paid yet. Paypal is included
+by default, you simply need to configure a Paypal account in the Accounting/Invoicing settings.
     """,
     'author': 'OpenERP SA',
     'depends': ['sale','portal'],
     'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',
-        "security/ir.model.access.csv",
+        'portal_sale_data.xml',
+        'res_config_view.xml',
+        'security/ir.model.access.csv',
     ],
-    'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
+    'auto_install': True,
+    'category': 'Hidden',
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

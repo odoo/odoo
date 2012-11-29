@@ -22,12 +22,12 @@
 
 
 {
-    "name" : "Share any Document",
-    "version" : "2.0",
-    "depends" : ["base", "mail"],
-    "author" : "OpenERP SA",
-    "category": 'Tools',
-    "description": """
+    'name' : 'Share any Document',
+    'version' : '2.0',
+    'depends' : ['base', 'mail'],
+    'author' : 'OpenERP SA',
+    'category': 'Tools',
+    'description': """
 This module adds generic sharing tools to your current OpenERP database.
 ========================================================================
 
@@ -42,7 +42,7 @@ This is extremely useful for collaborative work, knowledge sharing,
 synchronization with other companies.
     """,
     'website': 'http://www.openerp.com',
-    'demo_xml': ['share_demo.xml'],
+    'demo': ['share_demo.xml'],
     'data': [
         'security/share_security.xml',
         'res_users_view.xml',
@@ -50,12 +50,9 @@ synchronization with other companies.
     ],
     'installable': True,
     'web': True,
-    'certificate' : '001301246528927038493',
     'js': ['static/src/js/share.js'],
     'css': ['static/src/css/share.css'],
-    'qweb' : [
-        "static/src/xml/*.xml",
-    ],
+    'qweb' : ['static/src/xml/*.xml'],
     'images': ['images/share_wizard.jpeg','images/sharing_wizard_step1.jpeg', 'images/sharing_wizard_step2.jpeg'],
 }
 

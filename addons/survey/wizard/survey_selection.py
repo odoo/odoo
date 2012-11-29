@@ -77,10 +77,10 @@ class survey_name_wiz(osv.osv_memory):
         res = cr.fetchone()[0]
         sur_rec = survey_obj.browse(cr,uid,survey_id,context=context)
         if sur_rec.response_user and res >= sur_rec.response_user:
-            raise osv.except_osv(_('Warning !'),_("You can not give response for this survey more than %s times") % (sur_rec.response_user))
+            raise osv.except_osv(_('Warning!'),_("You cannot give response for this survey more than %s times.") % (sur_rec.response_user))
 
         if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey:
-            raise osv.except_osv(_('Warning !'),_("You can not give more response. Please contact the author of this survey for further assistance."))
+            raise osv.except_osv(_('Warning!'),_("You cannot give more responses. Please contact the author of this survey for further assistance."))
 
         search_id = search_obj.search(cr,uid,[('model','=','survey.question.wiz'),('name','=','Survey Search')])
         return {

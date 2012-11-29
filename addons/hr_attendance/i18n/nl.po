@@ -6,282 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-05-10 17:41+0000\n"
-"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-11-25 07:23+0000\n"
+"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:10+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
-
-#. module: hr_attendance
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
-msgid "Time Tracking"
-msgstr "Tijdregistratie"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Group By..."
-msgstr "Groepeer op..."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Today"
-msgstr "Vandaag"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "March"
-msgstr "Maart"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid ""
-"You did not sign out the last time. Please enter the date and time you "
-"signed out."
-msgstr ""
-"U bent de vorige keer niet uitgeklokt. Vul aub de datum en tijd in van "
-"uitklokken."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Total period:"
-msgstr "Totaal periode:"
-
-#. module: hr_attendance
-#: field:hr.action.reason,name:0
-msgid "Reason"
-msgstr "Reden"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Print Attendance Report Error"
-msgstr "Fout bij afdruk aanwezigheidsoverzicht"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#, python-format
-msgid "The sign-out date must be in the past"
-msgstr "De uitklokdatum moet in het verleden liggen"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Date Signed"
-msgstr "Dagtekening"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
-msgid ""
-"The Time Tracking functionality aims to manage employee attendances from "
-"Sign in/Sign out actions. You can also link this feature to an attendance "
-"device using OpenERP's web service features."
-msgstr ""
-"De tijdregistratie functionaliteit beoogt werknemer aanwezigheid te beheren "
-"via aan-/afmeld acties. U kunt deze funktie ook koppelen met een prikklok "
-"apparaat via OpenERP's webservice mogelijkheden."
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Attendance reasons"
-msgstr "Aanwezigheidsredenen"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-#: field:hr.attendance,day:0
-msgid "Day"
-msgstr "Dag"
-
-#. module: hr_attendance
-#: selection:hr.employee,state:0
-msgid "Present"
-msgstr "Aanwezig"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
-msgid "Ask for Sign In Out"
-msgstr "Vragen om in-/uitklokken"
-
-#. module: hr_attendance
-#: field:hr.attendance,action_desc:0
-#: model:ir.model,name:hr_attendance.model_hr_action_reason
-msgid "Action Reason"
-msgstr "Reden actie"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Ok"
-msgstr "Ok"
-
-#. module: hr_attendance
-#: view:hr.action.reason:0
-msgid "Define attendance reason"
-msgstr "Aanwezigheidsreden definieren"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/report/attendance_by_month.py:184
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
-#, python-format
-msgid "Attendances By Month"
-msgstr "Aanwezigheid per maand"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,name:0
-#: field:hr.sign.in.out.ask,name:0
-msgid "Employees name"
-msgstr "Naam werknemer"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
-#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
-msgid "Attendance Reasons"
-msgstr "Aanwezigheidsredenen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "UserError"
-msgstr "Gebruikersfout"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,end_date:0
-#: field:hr.attendance.week,end_date:0
-msgid "Ending Date"
-msgstr "Einddatum"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid "Warning"
-msgstr "Waarschuwing"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
-#, python-format
-msgid "The Sign-in date must be in the past"
-msgstr "De inklokdatum moet in het verleden liggen"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
-#, python-format
-msgid "A sign-in must be right after a sign-out !"
-msgstr "Inklokken moet direct na uitklokken !"
-
-#. module: hr_attendance
-#: field:hr.employee,state:0
-#: model:ir.model,name:hr_attendance.model_hr_attendance
-msgid "Attendance"
-msgstr "Aanwezigheid"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,max_delay:0
-msgid "Max. Delay (Min)"
-msgstr "Maximale vertraging (min)"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-msgid "Print"
-msgstr "Afdrukken"
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "Hr Attendance Search"
-msgstr "Pers. aanwezigheid zoeken"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
-msgid "Attendances By Week"
-msgstr "Aanwezigheid per week"
-
-#. module: hr_attendance
-#: constraint:hr.attendance:0
-msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
-"Fout: Inklokken (resp uitklokken) moet volgen op uitklokken (resp. inklokken)"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "July"
-msgstr "Juli"
-
-#. module: hr_attendance
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
-#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
-msgid "Attendance Error Report"
-msgstr "Overzicht aanwezigheidsfoutmeldingen"
-
-#. module: hr_attendance
-#: field:hr.attendance.error,init_date:0
-#: field:hr.attendance.week,init_date:0
-msgid "Starting Date"
-msgstr "Startdatum"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Min Delay"
-msgstr "Minimale vertraging"
-
-#. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign In"
-msgstr "Inklokken"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Operation"
-msgstr "Handeling"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
-#, python-format
-msgid "No Data Available"
-msgstr "Geen beschikbare gegevens"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "September"
-msgstr "September"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "December"
-msgstr "December"
-
-#. module: hr_attendance
-#: field:hr.attendance.month,month:0
-msgid "Month"
-msgstr "Maand"
-
-#. module: hr_attendance
-#: field:hr.action.reason,action_type:0
-msgid "Action Type"
-msgstr "Actiesoort"
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid ""
-"(*) A negative delay means that the employee worked more than encoded."
-msgstr ""
-"(*) A negatieve vertraging betekent dat de werknemer langer werkte dan "
-"vastgelegd."
-
-#. module: hr_attendance
-#: view:hr.attendance:0
-msgid "My Attendance"
-msgstr "Mijn aanwezigheid"
-
-#. module: hr_attendance
-#: help:hr.attendance,action_desc:0
-msgid ""
-"Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Geeft de reden voor in-/uitklokken ingeval van overuren."
+"X-Launchpad-Export-Date: 2012-11-26 04:42+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -289,137 +22,34 @@ msgid "Print Monthly Attendance Report"
 msgstr "Afdrukken maandelijks aanwezigheidsoverzicht"
 
 #. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_sign_in_out
-msgid "Sign In Sign Out"
-msgstr "Inklokken Uitklokken"
+#: view:hr.attendance:0
+msgid "Hr Attendance Search"
+msgstr "Pers. aanwezigheid zoeken"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:129
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:146
-#: view:hr.sign.in.out:0
-#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_sigh_in_out
-#: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
+#: field:hr.employee,last_sign:0
+msgid "Last Sign"
+msgstr "Laatste inlog"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.employee,state:0
+#: model:ir.model,name:hr_attendance.model_hr_attendance
+msgid "Attendance"
+msgstr "Aanwezigheid"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
-msgid "Sign in / Sign out"
-msgstr "Inklokken/Uitklokken"
+msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
+msgstr "Laatste inlog: %s,<br />%s.<br />Klik om uit te loggen"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.out.ask"
-msgstr "hr.sign.out.ask"
-
-#. module: hr_attendance
-#: view:hr.attendance.week:0
-msgid "Print Attendance Report Weekly"
-msgstr "Afdrukken wekelijkse  aanwezigheidsrapportage"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "August"
-msgstr "Augustus"
-
-#. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
-#, python-format
-msgid "A sign-out must be right after a sign-in !"
-msgstr "Een uitklok moet direct na een inklok !"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "June"
-msgstr "Juni"
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_error
-msgid "Print Error Attendance Report"
-msgstr "Afdrukken aanwezigheidsfouten overzicht"
-
-#. module: hr_attendance
-#: field:hr.attendance,name:0
-msgid "Date"
-msgstr "Datum"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "November"
-msgstr "November"
-
-#. module: hr_attendance
-#: constraint:hr.employee:0
-msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Fout ! U kunt geen recursieve werknemershiërarchie aanmaken."
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "October"
-msgstr "Oktober"
-
-#. module: hr_attendance
-#: selection:hr.attendance.month,month:0
-msgid "January"
-msgstr "Januari"
-
-#. module: hr_attendance
-#: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Sign in"
-msgstr "Inklokken"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-msgid "Analysis Information"
-msgstr "Analyse-informatie"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid "Sign-out Entry Must Follow Sign-in."
-msgstr "Uitklokken-boeking moet volgen op inklokken."
-
-#. module: hr_attendance
-#: report:report.hr.timesheet.attendance.error:0
-msgid "Attendance Errors"
-msgstr "Aanwezigheidsfouten"
-
-#. module: hr_attendance
-#: field:hr.attendance,action:0
-#: selection:hr.attendance,action:0
-msgid "Action"
-msgstr "Actie"
-
-#. module: hr_attendance
-#: view:hr.sign.in.out:0
-msgid ""
-"If you need your staff to sign in when they arrive at work and sign out "
-"again at the end of the day, OpenERP allows you to manage this with this "
-"tool. If each employee has been linked to a system user, then they can "
-"encode their time with this action button."
+#: constraint:hr.attendance:0
+msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
 msgstr ""
-"Als uw werknemers moeten aanmelden als ze aankomen op het werk en afmelden "
-"aan het einde van de werkdag, laat OpenERP u dit beheren met deze tool. Als "
-"elke werknemer is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
-"invoeren met deze actieknop."
-
-#. module: hr_attendance
-#: model:ir.model,name:hr_attendance.model_hr_attendance_week
-msgid "Print Week Attendance Report"
-msgstr "Afdrukken weekaanwezigheid overzicht"
-
-#. module: hr_attendance
-#: field:hr.sign.in.out,emp_id:0
-#: field:hr.sign.in.out.ask,emp_id:0
-msgid "Empoyee ID"
-msgstr "Werknemer ID"
-
-#. module: hr_attendance
-#: view:hr.attendance.error:0
-#: view:hr.attendance.month:0
-#: view:hr.attendance.week:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
-msgid "Cancel"
-msgstr "Annuleren"
+"Fout! Login (resp. Log uit) moet volgen na uitloggen (resp. Inloggen)"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -440,9 +70,13 @@ msgid "Print Attendance Report Monthly"
 msgstr "Maandelijks afdrukken aanwezigheidsoverzicht"
 
 #. module: hr_attendance
+#: code:addons/hr_attendance/report/timesheet.py:122
+#, python-format
+msgid "Attendances by Week"
+msgstr "Aanwezigheid per week"
+
+#. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
-#: view:hr.sign.in.out:0
-#: view:hr.sign.in.out.ask:0
 msgid "Sign out"
 msgstr "Uitklokken"
 
@@ -453,30 +87,65 @@ msgstr "Vertraging"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
+msgid "Group By..."
+msgstr "Groepeer op..."
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "October"
+msgstr "Oktober"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign Out"
+msgstr "Uitklokken"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No records are found for your selection!"
+msgstr "Geen records gevonden binnen uw selectie!"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Print"
+msgstr "Afdrukken"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,employee_id:0
 #: model:ir.model,name:hr_attendance.model_hr_employee
 msgid "Employee"
 msgstr "Werknemer"
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/hr_attendance.py:140
-#, python-format
-msgid ""
-"You tried to %s with a date anterior to another event !\n"
-"Try to contact the administrator to correct attendances."
-msgstr ""
-"U probeerde te %s met een datum voorafgaand aan een andere gebeurtenis !\n"
-"Neem contact op met de beheerder om de aanwezigheid te corrigeren."
-
-#. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-#: field:hr.sign.in.out.ask,last_time:0
-msgid "Your last sign out"
-msgstr "Uw laatste uitklokmoment"
+#: field:hr.attendance.month,month:0
+msgid "Month"
+msgstr "Maand"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid "Date Recorded"
 msgstr "Registratiedatum"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:154
+#: selection:hr.attendance,action:0
+#: view:hr.employee:0
+#, python-format
+msgid "Sign In"
+msgstr "Inklokken"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,init_date:0
+#: field:hr.attendance.week,init_date:0
+msgid "Starting Date"
+msgstr "Startdatum"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance
@@ -487,37 +156,123 @@ msgstr "Aanwezigheid"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
-msgid "May"
-msgstr "Mei"
+msgid "March"
+msgstr "Maart"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "Your last sign in"
-msgstr "Uw laatste inkloktijdstip"
+#: selection:hr.attendance.month,month:0
+msgid "August"
+msgstr "Augustus"
 
 #. module: hr_attendance
-#: selection:hr.attendance,action:0
-#: view:hr.employee:0
-msgid "Sign Out"
-msgstr "Uitklokken"
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
+msgid "Warning"
+msgstr "Waarschuwing"
 
 #. module: hr_attendance
-#: model:ir.actions.act_window,help:hr_attendance.action_hr_attendance_sigh_in_out
+#: help:hr.config.settings,group_hr_attendance:0
+msgid "Allocates attendance group to all users."
+msgstr "Aanwezigheidsgroep toewijzen aan alle gebruikers."
+
+#. module: hr_attendance
+#: field:hr.employee,attendance_access:0
+msgid "unknown"
+msgstr "onbekend"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+msgid "My Attendance"
+msgstr "Mijn aanwezigheid"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "June"
+msgstr "Juni"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/report/attendance_by_month.py:193
+#, python-format
+msgid "Attendances by Month"
+msgstr "Aanwezigheid per maand"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
+msgid "Attendances By Week"
+msgstr "Aanwezigheid per week"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_error
+msgid "Print Error Attendance Report"
+msgstr "Afdrukken aanwezigheidsfouten overzicht"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Total period:"
+msgstr "Totaal periode:"
+
+#. module: hr_attendance
+#: field:hr.action.reason,name:0
+msgid "Reason"
+msgstr "Reden"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Print Attendance Report Error"
+msgstr "Fout bij afdruk aanwezigheidsoverzicht"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,help:hr_attendance.open_view_attendance
 msgid ""
-"Sign in / Sign out. In some companies, staff have to sign in when they "
-"arrive at work and sign out again at the end of the day. If each employee "
-"has been linked to a system user, then they can encode their time with this "
-"action button."
+"The Time Tracking functionality aims to manage employee attendances from "
+"Sign in/Sign out actions. You can also link this feature to an attendance "
+"device using OpenERP's web service features."
 msgstr ""
-"In-/Uitklokken. In sommige bedrijven moet werknemers zich aanmelden als ze "
-"aankomen op het werk en afmelden aan het einde van de werkdag. Als elke "
-"medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
-"invoeren met deze actieknop."
+"De tijdregistratie functionaliteit beoogt werknemer aanwezigheid te beheren "
+"via aan-/afmeld acties. U kunt deze funktie ook koppelen met een prikklok "
+"apparaat via OpenERP's webservice mogelijkheden."
 
 #. module: hr_attendance
-#: field:hr.attendance,employee_id:0
-msgid "Employee's Name"
-msgstr "Naam werknemer"
+#: view:hr.attendance:0
+msgid "Today"
+msgstr "Vandaag"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Date Signed"
+msgstr "Dagtekening"
+
+#. module: hr_attendance
+#: field:hr.attendance,name:0
+msgid "Date"
+msgstr "Datum"
+
+#. module: hr_attendance
+#: field:hr.config.settings,group_hr_attendance:0
+msgid "Track attendances for all employees"
+msgstr "Volg de aanwezigheid van alle werknemers."
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "July"
+msgstr "Juli"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_error
+#: model:ir.actions.report.xml,name:hr_attendance.attendance_error_report
+msgid "Attendance Error Report"
+msgstr "Aanwezigh. foutmeldingen"
+
+#. module: hr_attendance
+#: view:hr.attendance:0
+#: field:hr.attendance,day:0
+msgid "Day"
+msgstr "Dag"
+
+#. module: hr_attendance
+#: selection:hr.employee,state:0
+msgid "Present"
+msgstr "Aanwezig"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -530,19 +285,93 @@ msgid "February"
 msgstr "Februari"
 
 #. module: hr_attendance
+#: field:hr.attendance,action_desc:0
+#: model:ir.model,name:hr_attendance.model_hr_action_reason
+msgid "Action Reason"
+msgstr "Reden actie"
+
+#. module: hr_attendance
+#: field:hr.attendance.month,year:0
+msgid "Year"
+msgstr "Jaar"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Min Delay"
+msgstr "Minimale vertraging"
+
+#. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
 msgstr "Aanwezigheid werknemer"
 
 #. module: hr_attendance
-#: field:hr.sign.in.out,state:0
-msgid "Current state"
-msgstr "Huidige status"
+#: view:hr.action.reason:0
+msgid "Define attendance reason"
+msgstr "Aanwezigheidsreden definieren"
+
+#. module: hr_attendance
+#: selection:hr.action.reason,action_type:0
+msgid "Sign in"
+msgstr "Inklokken"
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+msgid "Analysis Information"
+msgstr "Analyse-informatie"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_month
+msgid "Attendances By Month"
+msgstr "Aanwezigheid per maand"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "January"
+msgstr "Januari"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#, python-format
+msgid "No Data Available !"
+msgstr "Geen gegevens beschikbaar!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
 msgid "April"
 msgstr "April"
+
+#. module: hr_attendance
+#: view:hr.attendance.week:0
+msgid "Print Attendance Report Weekly"
+msgstr "Afdrukken wekelijkse  aanwezigheidsrapportage"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Attendance Errors"
+msgstr "Aanwezigheidsfouten"
+
+#. module: hr_attendance
+#: field:hr.attendance,action:0
+#: selection:hr.attendance,action:0
+msgid "Action"
+msgstr "Actie"
+
+#. module: hr_attendance
+#: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
+msgid "Time Tracking"
+msgstr "Tijdregistratie"
+
+#. module: hr_attendance
+#: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
+#: model:ir.ui.menu,name:hr_attendance.menu_open_view_attendance_reason
+msgid "Attendance Reasons"
+msgstr "Aanwezigheidsredenen"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "November"
+msgstr "November"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -551,29 +380,105 @@ msgstr ""
 "Onder deze vertraging wordt de fout verondersteld vrijwillig te zijn."
 
 #. module: hr_attendance
-#: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
+#: field:hr.attendance.error,max_delay:0
+msgid "Max. Delay (Min)"
+msgstr "Maximale vertraging (min)"
+
+#. module: hr_attendance
+#: field:hr.attendance.error,end_date:0
+#: field:hr.attendance.week,end_date:0
+msgid "Ending Date"
+msgstr "Einddatum"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "September"
+msgstr "September"
+
+#. module: hr_attendance
+#: view:hr.action.reason:0
+msgid "Attendance reasons"
+msgstr "Aanwezigheidsredenen"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_attendance_week
+msgid "Print Week Attendance Report"
+msgstr "Afdrukken weekaanwezigheid overzicht"
+
+#. module: hr_attendance
+#: model:ir.model,name:hr_attendance.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr "hr.config.settings"
+
+#. module: hr_attendance
+#. openerp-web
+#: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
-msgid "No records found for your selection!"
-msgstr "Geen gegevens gevonden voor uw selectie !"
+msgid "Click to Sign In at %s."
+msgstr "Klik km in te loggen als %s."
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
+#: field:hr.action.reason,action_type:0
+msgid "Action Type"
+msgstr "Actiesoort"
+
+#. module: hr_attendance
+#: selection:hr.attendance.month,month:0
+msgid "May"
+msgstr "Mei"
+
+#. module: hr_attendance
+#: code:addons/hr_attendance/hr_attendance.py:161
+#, python-format
 msgid ""
-"You did not sign in the last time. Please enter the date and time you signed "
-"in."
+"You tried to %s with a date anterior to another event !\n"
+"Try to contact the HR Manager to correct attendances."
 msgstr ""
-"U heeft de laatste keer niet ingeklokt. Vul aub de datum en tijd in van "
-"inklokken."
 
 #. module: hr_attendance
-#: field:hr.attendance.month,year:0
-msgid "Year"
-msgstr "Jaar"
+#: selection:hr.attendance.month,month:0
+msgid "December"
+msgstr "December"
 
 #. module: hr_attendance
-#: view:hr.sign.in.out.ask:0
-msgid "hr.sign.in.out.ask"
-msgstr "hr.sign.in.out.ask"
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid "Operation"
+msgstr "Handeling"
+
+#. module: hr_attendance
+#: constraint:hr.employee:0
+msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+msgstr ""
+"Fout! Het is niet toegestaan om een recursieve werknemer hiërarchie aan te "
+"maken."
+
+#. module: hr_attendance
+#: report:report.hr.timesheet.attendance.error:0
+msgid ""
+"(*) A negative delay means that the employee worked more than encoded."
+msgstr ""
+"(*) A negatieve vertraging betekent dat de werknemer langer werkte dan "
+"vastgelegd."
+
+#. module: hr_attendance
+#: view:hr.attendance.error:0
+#: view:hr.attendance.month:0
+#: view:hr.attendance.week:0
+msgid "or"
+msgstr "of"
+
+#. module: hr_attendance
+#: help:hr.attendance,action_desc:0
+msgid ""
+"Specifies the reason for Signing In/Signing Out in case of extra hours."
+msgstr "Geeft de reden voor in-/uitklokken ingeval van overuren."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -591,6 +496,10 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Print Timesheet"
 #~ msgstr "Urenstaat afdrukken"
+
+#, python-format
+#~ msgid "Sign in / Sign out"
+#~ msgstr "Inklokken/Uitklokken"
 
 #~ msgid "You are now ready to sign in or out of the attendance follow up"
 #~ msgstr "U bent nu klaar om in- of uit te klokken"
@@ -610,8 +519,15 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Print Attendance Error Report"
 #~ msgstr "Urenstaat foutenoverzicht afdrukken"
 
+#~ msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
+#~ msgstr ""
+#~ "Fout: Inklokken (resp uitklokken) moet volgen op uitklokken (resp. inklokken)"
+
 #~ msgid "Print Timesheet by month"
 #~ msgstr "Urenstaat per maand afdrukken"
+
+#~ msgid "Your last sign in"
+#~ msgstr "Uw laatste inkloktijdstip"
 
 #~ msgid ""
 #~ "You did not signed out the last time. Please enter the date and time you "
@@ -619,6 +535,12 @@ msgstr "hr.sign.in.out.ask"
 #~ msgstr ""
 #~ "U heeft de laatste keer niet uitgeklokt. Geef alstublieft de datum/tijd dat "
 #~ "u vertrok."
+
+#~ msgid "Current state"
+#~ msgstr "Huidige status"
+
+#~ msgid "Your last sign out"
+#~ msgstr "Uw laatste uitklokmoment"
 
 #~ msgid "Select a starting and a end date"
 #~ msgstr "Selecteer een start- en een einddatum"
@@ -639,8 +561,59 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Select a month"
 #~ msgstr "Kies een maand"
 
+#, python-format
+#~ msgid "UserError"
+#~ msgstr "Gebruikersfout"
+
+#~ msgid "Ok"
+#~ msgstr "Ok"
+
+#, python-format
+#~ msgid ""
+#~ "You tried to %s with a date anterior to another event !\n"
+#~ "Try to contact the administrator to correct attendances."
+#~ msgstr ""
+#~ "U probeerde te %s met een datum voorafgaand aan een andere gebeurtenis !\n"
+#~ "Neem contact op met de beheerder om de aanwezigheid te corrigeren."
+
 #~ msgid "Employee attendance"
 #~ msgstr "Aanwezigheid medewerker"
+
+#~ msgid ""
+#~ "You did not sign out the last time. Please enter the date and time you "
+#~ "signed out."
+#~ msgstr ""
+#~ "U bent de vorige keer niet uitgeklokt. Vul aub de datum en tijd in van "
+#~ "uitklokken."
+
+#, python-format
+#~ msgid "The sign-out date must be in the past"
+#~ msgstr "De uitklokdatum moet in het verleden liggen"
+
+#~ msgid "Ask for Sign In Out"
+#~ msgstr "Vragen om in-/uitklokken"
+
+#, python-format
+#~ msgid "A sign-in must be right after a sign-out !"
+#~ msgstr "Inklokken moet direct na uitklokken !"
+
+#, python-format
+#~ msgid "The Sign-in date must be in the past"
+#~ msgstr "De inklokdatum moet in het verleden liggen"
+
+#, python-format
+#~ msgid "No Data Available"
+#~ msgstr "Geen beschikbare gegevens"
+
+#~ msgid "Sign In Sign Out"
+#~ msgstr "Inklokken Uitklokken"
+
+#, python-format
+#~ msgid "A sign-out must be right after a sign-in !"
+#~ msgstr "Een uitklok moet direct na een inklok !"
+
+#~ msgid "hr.sign.out.ask"
+#~ msgstr "hr.sign.out.ask"
 
 #~ msgid "Attendances Of Employees"
 #~ msgstr "Aanwezigheid van medewerkers"
@@ -650,6 +623,20 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Sign-Out Entry must follow Sign-In."
 #~ msgstr "Uitklokken-boeking moet volgen op inklokken."
+
+#, python-format
+#~ msgid "No records found for your selection!"
+#~ msgstr "Geen gegevens gevonden voor uw selectie !"
+
+#~ msgid ""
+#~ "You did not sign in the last time. Please enter the date and time you signed "
+#~ "in."
+#~ msgstr ""
+#~ "U heeft de laatste keer niet ingeklokt. Vul aub de datum en tijd in van "
+#~ "inklokken."
+
+#~ msgid "hr.sign.in.out.ask"
+#~ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "Employee ID"
 #~ msgstr "Medewerker ID"
@@ -671,3 +658,37 @@ msgstr "hr.sign.in.out.ask"
 #~ "Error ! You cannot select a department for which the employee is the manager."
 #~ msgstr ""
 #~ "Fout ! U kunt geen afdeling selecteren waarvan de medewerker de beheerder is."
+
+#~ msgid "Empoyee ID"
+#~ msgstr "Werknemer ID"
+
+#~ msgid ""
+#~ "If you need your staff to sign in when they arrive at work and sign out "
+#~ "again at the end of the day, OpenERP allows you to manage this with this "
+#~ "tool. If each employee has been linked to a system user, then they can "
+#~ "encode their time with this action button."
+#~ msgstr ""
+#~ "Als uw werknemers moeten aanmelden als ze aankomen op het werk en afmelden "
+#~ "aan het einde van de werkdag, laat OpenERP u dit beheren met deze tool. Als "
+#~ "elke werknemer is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
+#~ "invoeren met deze actieknop."
+
+#~ msgid ""
+#~ "Sign in / Sign out. In some companies, staff have to sign in when they "
+#~ "arrive at work and sign out again at the end of the day. If each employee "
+#~ "has been linked to a system user, then they can encode their time with this "
+#~ "action button."
+#~ msgstr ""
+#~ "In-/Uitklokken. In sommige bedrijven moet werknemers zich aanmelden als ze "
+#~ "aankomen op het werk en afmelden aan het einde van de werkdag. Als elke "
+#~ "medewerker is gekoppeld aan een systeem gebruiker, kunnen ze hun tijd "
+#~ "invoeren met deze actieknop."
+
+#~ msgid "Employee's Name"
+#~ msgstr "Naam werknemer"
+
+#~ msgid "Employees name"
+#~ msgstr "Naam werknemer"
+
+#~ msgid "Error ! You cannot create recursive Hierarchy of Employees."
+#~ msgstr "Fout ! U kunt geen recursieve werknemershiërarchie aanmaken."

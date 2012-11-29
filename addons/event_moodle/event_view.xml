@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="moodle_information">
             <field name="name">event.moodle.registration</field>
             <field name="model">event.registration</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="event.view_event_registration_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='user_id']" position="after">
@@ -24,7 +23,6 @@
         <record model="ir.ui.view" id="moodle_information_event">
             <field name="name">event.moodle.event</field>
             <field name="model">event.event</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="event.view_event_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='registration_ids']/tree/field[@name='name']" position="replace">

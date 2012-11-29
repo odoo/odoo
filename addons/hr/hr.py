@@ -20,11 +20,9 @@
 ##############################################################################
 
 import addons
-import io
 import logging
 from osv import fields, osv
-from PIL import Image
-import StringIO
+import tools
 _logger = logging.getLogger(__name__)
 
 class hr_employee_category(osv.osv):
@@ -66,7 +64,7 @@ class hr_employee_category(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Categories.', ['parent_id'])
+        (_check_recursion, 'Error! You cannot create recursive Categories.', ['parent_id'])
     ]
 
 hr_employee_category()
@@ -92,16 +90,17 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
-        'expected_employees': fields.function(_no_of_employee, string='Total Employees',
+        'expected_employees': fields.function(_no_of_employee, string='Total Forecasted Employees',
             help='Expected number of employees for this job position after new recruitment.',
             store = {
                 'hr.job': (lambda self,cr,uid,ids,c=None: ids, ['no_of_recruitment'], 10),
                 'hr.employee': (_get_job_position, ['job_id'], 10),
             },
             multi='no_of_employee'),
-        'no_of_employee': fields.function(_no_of_employee, string="Number of Employees",
+        'no_of_employee': fields.function(_no_of_employee, string="Current Number of Employees",
             help='Number of employees currently occupying this job position.',
             store = {
                 'hr.employee': (_get_job_position, ['job_id'], 10),
@@ -113,7 +112,7 @@ class hr_job(osv.osv):
         'requirements': fields.text('Requirements'),
         'department_id': fields.many2one('hr.department', 'Department'),
         'company_id': fields.many2one('res.company', 'Company'),
-        'state': fields.selection([('open', 'In Position'), ('recruit', 'In Recruitement')], 'Status', readonly=True, required=True,
+        'state': fields.selection([('open', 'No Recruitment'), ('recruit', 'Recruitement in Progress')], 'Status', readonly=True, required=True,
             help="By default 'In position', set it to 'In Recruitment' if recruitment process is going on for this job position."),
     }
     _defaults = {
@@ -149,34 +148,18 @@ class hr_employee(osv.osv):
     _description = "Employee"
     _inherits = {'resource.resource': "resource_id"}
 
-    def onchange_photo(self, cr, uid, ids, value, context=None):
-        if not value:
-            return {'value': {'photo_big': value, 'photo': value} }
-        return {'value': {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context), 'photo': self._photo_resize(cr, uid, value, context=context)} }
-    
-    def _set_photo(self, cr, uid, id, name, value, args, context=None):
-        if not value:
-            vals = {'photo_big': value}
-        else:
-            vals = {'photo_big': self._photo_resize(cr, uid, value, 540, 450, context=context)}
-        return self.write(cr, uid, [id], vals, context=context)
-    
-    def _photo_resize(self, cr, uid, photo, heigth=180, width=150, context=None):
-        image_stream = io.BytesIO(photo.decode('base64'))
-        img = Image.open(image_stream)
-        img.thumbnail((heigth, width), Image.ANTIALIAS)
-        img_stream = StringIO.StringIO()
-        img.save(img_stream, "JPEG")
-        return img_stream.getvalue().encode('base64')
-    
-    def _get_photo(self, cr, uid, ids, name, args, context=None):
+    def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
-        for hr_empl in self.browse(cr, uid, ids, context=context):
-            if hr_empl.photo_big:
-                result[hr_empl.id] = self._photo_resize(cr, uid, hr_empl.photo_big, context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
     
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+    
     _columns = {
+        #we need a related field in order to be able to sort the employee by name
+        'name_related': fields.related('resource_id', 'name', type='char', string='Name', readonly=True, store=True),
         'country_id': fields.many2one('res.country', 'Nationality'),
         'birthday': fields.date("Date of Birth"),
         'ssnid': fields.char('SSN No', size=32, help='Social Security Number'),
@@ -195,16 +178,30 @@ class hr_employee(osv.osv):
         'work_location': fields.char('Office Location', size=32),
         'notes': fields.text('Notes'),
         'parent_id': fields.many2one('hr.employee', 'Manager'),
-        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Categories'),
+        'category_ids': fields.many2many('hr.employee.category', 'employee_category_rel', 'emp_id', 'category_id', 'Tags'),
         'child_ids': fields.one2many('hr.employee', 'parent_id', 'Subordinates'),
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
-        'photo_big': fields.binary('Big-sized employee photo', help="This field holds the photo of the employee. The photo field is used as an interface to access this field. The image is base64 encoded, and PIL-supported. Full-sized photo are however resized to 540x450 px."),
-        'photo': fields.function(_get_photo, fnct_inv=_set_photo, string='Employee photo', type="binary",
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Photo",
+            help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['photo_big'], 10),
-            }, help="Image used as photo for the employee. It is automatically resized as a 180x150 px image. A larger photo is stored inside the photo_big field."),
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized photo of the employee. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized photo", type="binary", multi="_get_image",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the employee. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
         'city': fields.related('address_id', 'city', type='char', string='City'),
@@ -212,12 +209,14 @@ class hr_employee(osv.osv):
         'last_login': fields.related('user_id', 'date', type='datetime', string='Latest Connection', readonly=1),
     }
 
+    _order='name_related'
+
     def create(self, cr, uid, data, context=None):
         employee_id = super(hr_employee, self).create(cr, uid, data, context=context)
         try:
             (model, mail_group_id) = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'group_all_employees')
             employee = self.browse(cr, uid, employee_id, context=context)
-            self.pool.get('mail.group').message_append_note(cr, uid, [mail_group_id], body='Welcome to %s! Please help him make its first steps in OpenERP!' % (employee.name), context=context)
+            self.pool.get('mail.group').message_post(cr, uid, [mail_group_id], body='Welcome to %s! Please help them take the first steps with OpenERP!' % (employee.name), context=context)
         except:
             pass # group deleted: do not push a message
         return employee_id
@@ -236,7 +235,7 @@ class hr_employee(osv.osv):
     def onchange_address_id(self, cr, uid, ids, address, context=None):
         if address:
             address = self.pool.get('res.partner').browse(cr, uid, address, context=context)
-            return {'value': {'work_email': address.email, 'work_phone': address.phone, 'mobile_phone': address.mobile}}
+            return {'value': {'work_phone': address.phone, 'mobile_phone': address.mobile}}
         return {'value': {}}
 
     def onchange_company(self, cr, uid, ids, company, context=None):
@@ -257,17 +256,16 @@ class hr_employee(osv.osv):
     def onchange_user(self, cr, uid, ids, user_id, context=None):
         work_email = False
         if user_id:
-            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).user_email
+            work_email = self.pool.get('res.users').browse(cr, uid, user_id, context=context).email
         return {'value': {'work_email' : work_email}}
 
-    def _default_get_photo(self, cr, uid, context=None):
-        photo_path = addons.get_module_resource('hr','images','photo.png')
-        return self._photo_resize(cr, uid, open(photo_path, 'rb').read().encode('base64'), context=context)
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = addons.get_module_resource('hr', 'static/src/img', 'default_image.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _defaults = {
         'active': 1,
-        'photo': _default_get_photo,
-        'marital': 'single',
+        'image': _get_default_image,
         'color': 0,
     }
 
@@ -282,7 +280,7 @@ class hr_employee(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot create recursive Hierarchy of Employees.', ['parent_id']),
+        (_check_recursion, 'Error! You cannot create recursive hierarchy of Employee(s).', ['parent_id']),
     ]
 
 hr_employee()
@@ -295,8 +293,12 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-hr_department()
-
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['member_ids'] = []
+        return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
 class res_users(osv.osv):
     _name = 'res.users'
@@ -315,7 +317,7 @@ class res_users(osv.osv):
                                             'user_id': user_id}, context=context)
             except:
                 # Tolerate a missing shortcut. See product/product.py for similar code.
-                _logger.debug('Skipped meetings shortcut for user "%s"', data.get('name','<new'))
+                _logger.debug('Skipped meetings shortcut for user "%s".', data.get('name','<new'))
 
         return user_id
 

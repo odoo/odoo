@@ -1,11 +1,6 @@
 <openerp>
     <data>
 
-        <record id="category_hr_management_config" model="ir.actions.todo.category">
-            <field name="name">HR Management</field>
-            <field name="sequence">5</field>
-        </record>
-
         <record model="ir.actions.act_window" id="view_department_form_installer">
             <field name="name">Create Your Departments</field>
             <field name="type">ir.actions.act_window</field>
@@ -13,7 +8,15 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="hr.view_department_tree"/>
-            <field name="help">Your departments structure is used to manage all documents related to employees by departments: expenses and timesheet validation, leaves management, recruitments, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new department.
+              </p><p>
+                Your departments structure is used to manage all documents
+                related to employees by departments: expenses and timesheets,
+                leaves and holidays, recruitments, etc.
+              </p>
+            </field>
         </record>
 
     </data>

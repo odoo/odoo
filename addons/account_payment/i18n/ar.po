@@ -6,20 +6,28 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2009-02-03 06:24+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:03+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: account_payment
-#: field:payment.order,date_scheduled:0
-msgid "Scheduled date if fixed"
-msgstr "تاريخ مقرر اذا تم تثبيته"
+#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a payment order.\n"
+"              </p><p>\n"
+"                A payment order is a payment request from your company to "
+"pay a\n"
+"                supplier invoice or a customer refund.\n"
+"              </p>\n"
+"            "
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,currency:0
@@ -55,17 +63,6 @@ msgid "Owner Account"
 msgstr "حساب المالك"
 
 #. module: account_payment
-#: help:payment.order,state:0
-msgid ""
-"When an order is placed the state is 'Draft'.\n"
-" Once the bank is confirmed the state is set to 'Confirmed'.\n"
-" Then the order is paid the state is 'Done'."
-msgstr ""
-"عندما يكون الامر محل الحالة هي ‘سحب‘.\n"
-"عندما ي}كد البنك الحالة المعينة الى ‘تأكيد‘.\n"
-"عندما يكون الامر مدفوع الحالة تكون ‘تم‘."
-
-#. module: account_payment
 #: help:account.invoice,amount_to_pay:0
 msgid ""
 "The amount which should be paid at the current date\n"
@@ -80,11 +77,6 @@ msgstr ""
 #: field:payment.order,company_id:0
 msgid "Company"
 msgstr "شركة"
-
-#. module: account_payment
-#: field:payment.order,date_prefered:0
-msgid "Preferred date"
-msgstr "تاريخ مفضل"
 
 #. module: account_payment
 #: model:res.groups,name:account_payment.group_account_payment
@@ -128,6 +120,12 @@ msgstr "إ_ضافه الى أمر الدفع"
 #: model:ir.actions.act_window,name:account_payment.action_account_populate_statement_confirm
 msgid "Payment Populate statement"
 msgstr "بيان تعبئة الدفع"
+
+#. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: account_payment
 #: report:payment.order:0
@@ -205,6 +203,14 @@ msgid "Amount Total"
 msgstr "مبلغ الأجمالى"
 
 #. module: account_payment
+#: help:payment.order,state:0
+msgid ""
+"When an order is placed the status is 'Draft'.\n"
+" Once the bank is confirmed the status is set to 'Confirmed'.\n"
+" Then the order is paid the status is 'Done'."
+msgstr ""
+
+#. module: account_payment
 #: view:payment.order:0
 #: selection:payment.order,state:0
 msgid "Confirmed"
@@ -226,10 +232,9 @@ msgid "Structured"
 msgstr "منظم"
 
 #. module: account_payment
-#: view:payment.order:0
-#: field:payment.order,state:0
-msgid "State"
-msgstr "الحالة"
+#: view:account.bank.statement:0
+msgid "Import Payment Lines"
+msgstr ""
 
 #. module: account_payment
 #: view:payment.line:0
@@ -243,6 +248,7 @@ msgstr "معلومات المعاملة"
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_mode_form
 #: view:payment.mode:0
 #: view:payment.order:0
+#: field:payment.order,mode:0
 msgid "Payment Mode"
 msgstr "طريقة الدفع"
 
@@ -267,20 +273,14 @@ msgstr ""
 "المباشر. ‘تاريخ مستحق‘ وفقًا لتاريخ مجدول للتنفيذ."
 
 #. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "Error !"
-msgstr "خطأ !"
+#: field:payment.order,date_created:0
+msgid "Creation Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.move.line:0
 msgid "Total debit"
 msgstr "أجمالى المدين"
-
-#. module: account_payment
-#: field:payment.order,date_done:0
-msgid "Execution date"
-msgstr "تاريخ التنفيذ"
 
 #. module: account_payment
 #: help:payment.mode,journal:0
@@ -341,6 +341,11 @@ msgid "Partner"
 msgstr "الشريك"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
+msgstr ""
+
+#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr "قائمة البنك"
@@ -393,6 +398,12 @@ msgid "Account Payment Populate Statement"
 msgstr "بيان نشر دفع الحساب"
 
 #. module: account_payment
+#: code:addons/account_payment/account_move_line.py:110
+#, python-format
+msgid "There is no partner defined on the entry line."
+msgstr ""
+
+#. module: account_payment
 #: help:payment.mode,name:0
 msgid "Mode of Payment"
 msgstr "حالة الدفع"
@@ -419,15 +430,15 @@ msgid "Draft"
 msgstr "مسودة"
 
 #. module: account_payment
+#: view:payment.order:0
+#: field:payment.order,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_payment
 #: help:payment.line,communication2:0
 msgid "The successor message of Communication."
 msgstr "رسالة الوريث للاتصال."
-
-#. module: account_payment
-#: code:addons/account_payment/account_move_line.py:110
-#, python-format
-msgid "No partner defined on entry line"
-msgstr "لا شريك معرف على المدخلات"
 
 #. module: account_payment
 #: help:payment.line,info_partner:0
@@ -450,11 +461,6 @@ msgid "Select a date if you have chosen Preferred Date to be fixed."
 msgstr "اختار التاريخ اذا قمت باختيار تاريخ مفضل ليُثبت."
 
 #. module: account_payment
-#: field:payment.order,user_id:0
-msgid "User"
-msgstr "المستخدم"
-
-#. module: account_payment
 #: field:account.payment.populate.statement,lines:0
 msgid "Payment Lines"
 msgstr "خطوط الدفع"
@@ -463,11 +469,6 @@ msgstr "خطوط الدفع"
 #: model:ir.model,name:account_payment.model_account_move_line
 msgid "Journal Items"
 msgstr "عناصر اليومية"
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
 
 #. module: account_payment
 #: help:payment.line,move_line_id:0
@@ -482,10 +483,9 @@ msgid "Search"
 msgstr "بحث"
 
 #. module: account_payment
-#: model:ir.actions.report.xml,name:account_payment.payment_order1
-#: model:ir.model,name:account_payment.model_payment_order
-msgid "Payment Order"
-msgstr "أمر الدفع"
+#: field:payment.order,user_id:0
+msgid "Responsible"
+msgstr ""
 
 #. module: account_payment
 #: field:payment.line,date:0
@@ -498,9 +498,9 @@ msgid "Total:"
 msgstr "الإجمالي:"
 
 #. module: account_payment
-#: field:payment.order,date_created:0
-msgid "Creation date"
-msgstr "تاريخ الإنشاء"
+#: field:payment.order,date_done:0
+msgid "Execution Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.populate.statement:0
@@ -508,9 +508,9 @@ msgid "ADD"
 msgstr "جمع"
 
 #. module: account_payment
-#: view:account.bank.statement:0
-msgid "Import payment lines"
-msgstr "خطوط دفع الاستيراد"
+#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
+msgid "Populate Payment"
+msgstr "تعبئة الدفع"
 
 #. module: account_payment
 #: field:account.move.line,amount_to_pay:0
@@ -594,21 +594,11 @@ msgid "Information"
 msgstr "معلومات"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
-msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
-
-#. module: account_payment
-#: model:ir.actions.act_window,help:account_payment.action_payment_order_tree
-msgid ""
-"A payment order is a payment request from your company to pay a supplier "
-"invoice or a customer credit note. Here you can register all payment orders "
-"that should be done, keep track of all payment orders and mention the "
-"invoice reference and the partner the payment should be done for."
-msgstr ""
-"امر الدفع هو طلب الدفع من شركتك لدفع فاتورة المورد او مذكرة رصيد العميل. هنا "
-"يمكنك تسجيل كل اوامر الدفع لبتي تمت, احفظ مسار كل اوامر الدفع اند تذكر مرجع "
-"الفاتورة الشريك الذي تم الدفع لهم."
+#: model:ir.actions.report.xml,name:account_payment.payment_order1
+#: model:ir.model,name:account_payment.model_payment_order
+#: view:payment.order:0
+msgid "Payment Order"
+msgstr "أمر الدفع"
 
 #. module: account_payment
 #: help:payment.line,amount:0
@@ -629,6 +619,11 @@ msgstr "الكمية في العملة الشريكة"
 #: field:payment.line,communication2:0
 msgid "Communication 2"
 msgstr "اتصال2"
+
+#. module: account_payment
+#: field:payment.order,date_scheduled:0
+msgid "Scheduled Date"
+msgstr ""
 
 #. module: account_payment
 #: view:account.payment.make.payment:0
@@ -689,6 +684,11 @@ msgid "Name"
 msgstr "الاسم"
 
 #. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on an account of type view."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr "حساب البنك"
@@ -710,11 +710,6 @@ msgid "Order"
 msgstr "أمر"
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
-msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
-
-#. module: account_payment
 #: field:payment.order,total:0
 msgid "Total"
 msgstr "الإجمالي"
@@ -726,14 +721,21 @@ msgid "Make Payment"
 msgstr "القيام بالدفع"
 
 #. module: account_payment
-#: field:payment.order,mode:0
-msgid "Payment mode"
-msgstr "نظام الدفع"
+#: field:payment.order,date_prefered:0
+msgid "Preferred Date"
+msgstr ""
 
 #. module: account_payment
-#: model:ir.actions.act_window,name:account_payment.action_create_payment_order
-msgid "Populate Payment"
-msgstr "تعبئة الدفع"
+#: view:account.payment.make.payment:0
+#: view:account.payment.populate.statement:0
+#: view:payment.order.create:0
+msgid "or"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_payment
 #: help:payment.mode,bank_id:0
@@ -743,14 +745,53 @@ msgstr "حساب المصرف لنظام الدفع"
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "لا يمكنك إنشاء حركة سطر علي حساب مغلق."
 
+#~ msgid "State"
+#~ msgstr "الحالة"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "خطأ !"
+
+#~ msgid "User"
+#~ msgstr "المستخدم"
+
+#~ msgid "Creation date"
+#~ msgstr "تاريخ الإنشاء"
+
+#~ msgid "Execution date"
+#~ msgstr "تاريخ التنفيذ"
+
+#, python-format
+#~ msgid "No partner defined on entry line"
+#~ msgstr "لا شريك معرف على المدخلات"
+
 #~ msgid "Payment Management"
 #~ msgstr "إدراة الدفع"
+
+#~ msgid "Preferred date"
+#~ msgstr "تاريخ مفضل"
+
+#~ msgid "Import payment lines"
+#~ msgstr "خطوط دفع الاستيراد"
 
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "يجب ان تكون الشركة نفس فترتها وحسابها المتعلق بها."
 
+#~ msgid "Payment mode"
+#~ msgstr "نظام الدفع"
+
 #~ msgid "Destination Bank account"
 #~ msgstr "حساب وجهة المصرف"
+
+#~ msgid ""
+#~ "A payment order is a payment request from your company to pay a supplier "
+#~ "invoice or a customer credit note. Here you can register all payment orders "
+#~ "that should be done, keep track of all payment orders and mention the "
+#~ "invoice reference and the partner the payment should be done for."
+#~ msgstr ""
+#~ "امر الدفع هو طلب الدفع من شركتك لدفع فاتورة المورد او مذكرة رصيد العميل. هنا "
+#~ "يمكنك تسجيل كل اوامر الدفع لبتي تمت, احفظ مسار كل اوامر الدفع اند تذكر مرجع "
+#~ "الفاتورة الشريك الذي تم الدفع لهم."
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "لا يمكن انشاء خط متحرك على حساب العرض."
@@ -767,3 +808,24 @@ msgstr "حساب المصرف لنظام الدفع"
 #~ "* كفاءة اكثر لطريقة ادارة دفع الفاتورة.\n"
 #~ "*آلية اساسية لسد الدفع الالي المتنوع بسهولة.\n"
 #~ "    "
+
+#~ msgid ""
+#~ "When an order is placed the state is 'Draft'.\n"
+#~ " Once the bank is confirmed the state is set to 'Confirmed'.\n"
+#~ " Then the order is paid the state is 'Done'."
+#~ msgstr ""
+#~ "عندما يكون الامر محل الحالة هي ‘سحب‘.\n"
+#~ "عندما ي}كد البنك الحالة المعينة الى ‘تأكيد‘.\n"
+#~ "عندما يكون الامر مدفوع الحالة تكون ‘تم‘."
+
+#~ msgid "Scheduled date if fixed"
+#~ msgstr "تاريخ مقرر اذا تم تثبيته"
+
+#~ msgid "Company must be the same for its related account and period."
+#~ msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
+
+#~ msgid "You can not create journal items on an account of type view."
+#~ msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
+
+#~ msgid "You can not create journal items on closed account."
+#~ msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."

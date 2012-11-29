@@ -7,20 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2012-02-15 22:13+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish (Costa Rica) <es_CR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:27+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: google_base_account
 #: field:res.users,gmail_user:0
 msgid "Username"
 msgstr "Nombre de Usuario"
+
+#. module: google_base_account
+#: view:res.users:0
+msgid "Synchronization"
+msgstr ""
 
 #. module: google_base_account
 #: model:ir.actions.act_window,name:google_base_account.act_google_login_form
@@ -34,9 +39,16 @@ msgid "Google Contacts Import Error!"
 msgstr "¡Contactos de Google Error de importación!"
 
 #. module: google_base_account
-#: view:res.users:0
-msgid " Synchronization "
-msgstr " Sincronización "
+#: model:ir.model,name:google_base_account.model_res_users
+msgid "Users"
+msgstr ""
+
+#. module: google_base_account
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"La compañía seleccionada no está en las compañías permitidas para este "
+"usuario"
 
 #. module: google_base_account
 #: sql_constraint:res.users:0
@@ -44,20 +56,14 @@ msgid "You can not have two users with the same login !"
 msgstr "¡No puede tener dos usuarios con el mismo identificador de usuario!"
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Error"
-msgstr "Error"
+#: sql_constraint:res.users:0
+msgid "OAuth UID must be unique per provider"
+msgstr ""
 
 #. module: google_base_account
 #: view:google.login:0
 msgid "Google login"
 msgstr "iniciar sesión en Google"
-
-#. module: google_base_account
-#: model:ir.model,name:google_base_account.model_res_users
-msgid "res.users"
-msgstr "res.usuarios"
 
 #. module: google_base_account
 #: field:google.login,password:0
@@ -66,8 +72,14 @@ msgstr "Contraseña de Google"
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Cancel"
-msgstr "_Cancelar"
+msgid "or"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: google_base_account
 #: view:res.users:0
@@ -75,9 +87,15 @@ msgid "Google Account"
 msgstr "Cuenta Google"
 
 #. module: google_base_account
-#: field:google.login,user:0
-msgid "Google Username"
-msgstr "Nombre usuario Google"
+#: constraint:res.users:0
+msgid "Error: Invalid ean code"
+msgstr ""
+
+#. module: google_base_account
+#: code:addons/google_base_account/wizard/google_login.py:77
+#, python-format
+msgid "Authentication failed. Check the user and password."
+msgstr ""
 
 #. module: google_base_account
 #: code:addons/google_base_account/wizard/google_login.py:29
@@ -96,15 +114,13 @@ msgstr "Contacto Google"
 
 #. module: google_base_account
 #: view:google.login:0
-msgid "_Login"
-msgstr "_inicio sesión"
+msgid "Cancel"
+msgstr ""
 
 #. module: google_base_account
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"La compañía seleccionada no está en las compañías permitidas para este "
-"usuario"
+#: field:google.login,user:0
+msgid "Google Username"
+msgstr "Nombre usuario Google"
 
 #. module: google_base_account
 #: field:res.users,gmail_password:0
@@ -112,12 +128,26 @@ msgid "Password"
 msgstr "Contraseña"
 
 #. module: google_base_account
-#: code:addons/google_base_account/wizard/google_login.py:75
-#, python-format
-msgid "Authentication fail check the user and password !"
-msgstr "¡Autenticación falló verifique su usuario y contraseña¡"
-
-#. module: google_base_account
 #: view:google.login:0
-msgid "ex: user@gmail.com"
-msgstr "ejemplo: usuario@gmail.com"
+msgid "_Login"
+msgstr "_inicio sesión"
+
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Error"
+
+#~ msgid " Synchronization "
+#~ msgstr " Sincronización "
+
+#~ msgid "_Cancel"
+#~ msgstr "_Cancelar"
+
+#~ msgid "res.users"
+#~ msgstr "res.usuarios"
+
+#, python-format
+#~ msgid "Authentication fail check the user and password !"
+#~ msgstr "¡Autenticación falló verifique su usuario y contraseña¡"
+
+#~ msgid "ex: user@gmail.com"
+#~ msgstr "ejemplo: usuario@gmail.com"

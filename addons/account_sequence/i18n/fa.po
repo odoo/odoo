@@ -7,31 +7,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2011-12-18 16:58+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-14 06:26+0000\n"
-"X-Generator: Launchpad (build 15614)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot create journal items on closed account."
+msgstr ""
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
 #: model:ir.actions.act_window,name:account_sequence.action_account_seq_installer
 msgid "Account Sequence Application Configuration"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You can not create more than one move per period on centralized journal"
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Company must be the same for its related account and period."
 msgstr ""
 
 #. module: account_sequence
@@ -104,11 +98,6 @@ msgid "Internal Number"
 msgstr ""
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You can not create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
 #: help:account.sequence.installer,padding:0
 msgid ""
 "OpenERP will automatically adds some '0' on the left of the 'Next Number' to "
@@ -122,14 +111,14 @@ msgstr ""
 
 #. module: account_sequence
 #: constraint:account.move.line:0
-msgid "You can not create journal items on closed account."
+msgid "You cannot create journal items on an account of type view."
 msgstr ""
 
 #. module: account_sequence
 #: constraint:account.journal:0
 msgid ""
-"Configuration error! The currency chosen should be shared by the default "
-"accounts too."
+"Configuration error!\n"
+"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: account_sequence
@@ -138,8 +127,19 @@ msgid "Wrong credit or debit value in accounting entry !"
 msgstr ""
 
 #. module: account_sequence
+#: constraint:account.move:0
+msgid ""
+"You cannot create more than one move per period on a centralized journal."
+msgstr ""
+
+#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "Account and Period must belong to the same company."
 msgstr ""
 
 #. module: account_sequence
@@ -155,11 +155,6 @@ msgstr ""
 #. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
-msgstr ""
-
-#. module: account_sequence
-#: field:account.sequence.installer,config_logo:0
-msgid "Image"
 msgstr ""
 
 #. module: account_sequence

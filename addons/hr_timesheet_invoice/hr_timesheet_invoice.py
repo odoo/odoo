@@ -19,15 +19,17 @@
 #
 ##############################################################################
 
-from osv import fields, osv
+import time
 
+from osv import fields, osv
 from tools.translate import _
 
 class hr_timesheet_invoice_factor(osv.osv):
     _name = "hr_timesheet_invoice.factor"
     _description = "Invoice Rate"
+    _order = 'factor'
     _columns = {
-        'name': fields.char('Internal name', size=128, required=True, translate=True),
+        'name': fields.char('Internal Name', size=128, required=True, translate=True),
         'customer_name': fields.char('Name', size=128, help="Label for the customer"),
         'factor': fields.float('Discount (%)', required=True, help="Discount in percentage"),
     }
@@ -70,8 +72,7 @@ class account_analytic_account(osv.osv):
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
             help="Total invoiced"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Timesheet Invoicing Ratio',
-            help="This field allows you to define the rate in case you plan to reinvoice " \
-            "the costs in this analytic account: timesheets, expenses, ..."),
+            help="You usually invoice 100% of the timesheets. But if you mix fixed price and timesheet invoicing, you may use another ratio. For instance, if you do a 20% advance invoice (fixed price, based on a sale order), you should invoice the rest on timesheet with a 80% ratio."),
     }
     _defaults = {
         'pricelist_id': lambda self, cr, uid, ctx: ctx.get('pricelist_id', False),
@@ -84,8 +85,8 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
         return res
 
-    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context=None):
-        res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
+    def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
+        res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         if pricelist:
@@ -93,27 +94,27 @@ class account_analytic_account(osv.osv):
         return res
 
     def set_close(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.write(cr, uid, ids, {'state': 'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_closed", context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        message = _("Contract has been <b>cancelled</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
+        message = _("Contract has been <b>canceled</b>.")
+        self.message_post(cr, uid, ids, body=message, subtype="hr_timesheet_invoice.mt_account_canceled", context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.write(cr, uid, ids, {'state': 'open'}, context=context)
         message = _("Contract has been <b>opened</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         message = _("Contract has been set as <b>pending</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
 account_analytic_account()
@@ -123,21 +124,24 @@ class account_analytic_line(osv.osv):
     _inherit = 'account.analytic.line'
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
-        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
+        'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Invoiceable', help="It allows to set the discount while making invoice, keep empty if the activities should not be invoiced."),
     }
 
     def _default_journal(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        return employee.journal_id and employee.journal_id.id or False
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            return employee.journal_id and employee.journal_id.id or False
+        return False
 
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
-        if employee.product_id and employee.product_id.property_account_income:
-            return employee.product_id.property_account_income.id
+        if record_ids:
+            employee = proxy.browse(cr, uid, record_ids[0], context=context)
+            if employee.product_id and employee.product_id.property_account_income:
+                return employee.product_id.property_account_income.id
         return False
 
     _defaults = {
@@ -157,7 +161,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                         _('You cannot modify an invoiced analytic line!'))
         return True
 
@@ -169,12 +173,149 @@ class account_analytic_line(osv.osv):
         return super(account_analytic_line, self).copy(cursor, user, obj_id,
                 default, context=context)
 
+    def _get_invoice_price(self, cr, uid, account, product_id, user_id, qty, context = {}):
+        pro_price_obj = self.pool.get('product.pricelist')
+        if account.pricelist_id:
+            pl = account.pricelist_id.id
+            price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=context)[pl]
+        else:
+            price = 0.0
+        return price
+
+    def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
+        analytic_account_obj = self.pool.get('account.analytic.account')
+        account_payment_term_obj = self.pool.get('account.payment.term')
+        invoice_obj = self.pool.get('account.invoice')
+        product_obj = self.pool.get('product.product')
+        invoice_factor_obj = self.pool.get('hr_timesheet_invoice.factor')
+        fiscal_pos_obj = self.pool.get('account.fiscal.position')
+        product_uom_obj = self.pool.get('product.uom')
+        invoice_line_obj = self.pool.get('account.invoice.line')
+        invoices = []
+        if context is None:
+            context = {}
+        if data is None:
+            data = {}
+
+        journal_types = {}
+        for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
+            if line.journal_id.type not in journal_types:
+                journal_types[line.journal_id.type] = set()
+            journal_types[line.journal_id.type].add(line.account_id.id)
+        for journal_type, account_ids in journal_types.items():
+            for account in analytic_account_obj.browse(cr, uid, list(account_ids), context=context):
+                partner = account.partner_id
+                if (not partner) or not (account.pricelist_id):
+                    raise osv.except_osv(_('Analytic Account incomplete !'),
+                            _('Contract incomplete. Please fill in the Customer and Pricelist fields.'))
+
+                date_due = False
+                if partner.property_payment_term:
+                    pterm_list= account_payment_term_obj.compute(cr, uid,
+                            partner.property_payment_term.id, value=1,
+                            date_ref=time.strftime('%Y-%m-%d'))
+                    if pterm_list:
+                        pterm_list = [line[0] for line in pterm_list]
+                        pterm_list.sort()
+                        date_due = pterm_list[-1]
+
+                curr_invoice = {
+                    'name': time.strftime('%d/%m/%Y') + ' - '+account.name,
+                    'partner_id': account.partner_id.id,
+                    'company_id': account.company_id.id,
+                    'payment_term': partner.property_payment_term.id or False,
+                    'account_id': partner.property_account_receivable.id,
+                    'currency_id': account.pricelist_id.currency_id.id,
+                    'date_due': date_due,
+                    'fiscal_position': account.partner_id.property_account_position.id
+                }
+
+                context2 = context.copy()
+                context2['lang'] = partner.lang
+                # set company_id in context, so the correct default journal will be selected
+                context2['force_company'] = curr_invoice['company_id']
+                # set force_company in context so the correct product properties are selected (eg. income account)
+                context2['company_id'] = curr_invoice['company_id']
+
+                last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
+                invoices.append(last_invoice)
+
+                cr.execute("""SELECT product_id, user_id, to_invoice, sum(unit_amount), product_uom_id
+                        FROM account_analytic_line as line LEFT JOIN account_analytic_journal journal ON (line.journal_id = journal.id)
+                        WHERE account_id = %s
+                            AND line.id IN %s AND journal.type = %s AND to_invoice IS NOT NULL
+                        GROUP BY product_id, user_id, to_invoice, product_uom_id""", (account.id, tuple(ids), journal_type))
+
+                for product_id, user_id, factor_id, qty, uom in cr.fetchall():
+                    if data.get('product'):
+                        product_id = data['product'][0]
+                    product = product_obj.browse(cr, uid, product_id, context=context2)
+                    if not product:
+                        raise osv.except_osv(_('Error!'), _('There is no product defined. Please select one or force the product through the wizard.'))
+                    factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
+                    factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
+                    if factor.customer_name:
+                        factor_name += ' - ' + factor.customer_name
+
+                    ctx =  context.copy()
+                    ctx.update({'uom':uom})
+
+                    price = self._get_invoice_price(cr, uid, account, product_id, user_id, qty, ctx)
+
+                    general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                    if not general_account:
+                        raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                    taxes = product.taxes_id or general_account.tax_ids
+                    tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
+                    curr_line = {
+                        'price_unit': price,
+                        'quantity': qty,
+                        'discount':factor.factor,
+                        'invoice_line_tax_id': [(6,0,tax )],
+                        'invoice_id': last_invoice,
+                        'name': factor_name,
+                        'product_id': product_id,
+                        'invoice_line_tax_id': [(6,0,tax)],
+                        'uos_id': uom,
+                        'account_id': general_account.id,
+                        'account_analytic_id': account.id,
+                    }
+
+                    #
+                    # Compute for lines
+                    #
+                    cr.execute("SELECT * FROM account_analytic_line WHERE account_id = %s and id IN %s AND product_id=%s and to_invoice=%s ORDER BY account_analytic_line.date", (account.id, tuple(ids), product_id, factor_id))
+
+                    line_ids = cr.dictfetchall()
+                    note = []
+                    for line in line_ids:
+                        # set invoice_line_note
+                        details = []
+                        if data.get('date', False):
+                            details.append(line['date'])
+                        if data.get('time', False):
+                            if line['product_uom_id']:
+                                details.append("%s %s" % (line['unit_amount'], product_uom_obj.browse(cr, uid, [line['product_uom_id']],context2)[0].name))
+                            else:
+                                details.append("%s" % (line['unit_amount'], ))
+                        if data.get('name', False):
+                            details.append(line['name'])
+                        note.append(u' - '.join(map(lambda x: unicode(x) or '',details)))
+
+                    if note:
+                        curr_line['name'] += "\n" + ("\n".join(map(lambda x: unicode(x) or '',note)))
+                    invoice_line_obj.create(cr, uid, curr_line, context=context)
+                    cr.execute("update account_analytic_line set invoice_id=%s WHERE account_id = %s and id IN %s", (last_invoice, account.id, tuple(ids)))
+
+                invoice_obj.button_reset_taxes(cr, uid, [last_invoice], context)
+        return invoices
+
 account_analytic_line()
 
 
 class hr_analytic_timesheet(osv.osv):
     _inherit = "hr.analytic.timesheet"
-    def on_change_account_id(self, cr, uid, ids, account_id):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False):
         res = {}
         if not account_id:
             return res
@@ -199,6 +340,7 @@ class hr_analytic_timesheet(osv.osv):
 
 hr_analytic_timesheet()
 
+
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
@@ -218,6 +360,7 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
+
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
@@ -234,4 +377,3 @@ class account_move_line(osv.osv):
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

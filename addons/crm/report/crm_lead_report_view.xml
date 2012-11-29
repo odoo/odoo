@@ -7,9 +7,8 @@
         <record id="view_report_crm_lead_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree string="Leads Analysis">
+            <tree string="Leads Analysis" create="false">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
@@ -26,7 +25,6 @@
                 <field name="partner_id" invisible="1"/>
                 <field name="country_id" invisible="1"/>
                 <field name="nbr" sum="# Leads"/>
-                <field name="email" sum="# Mails"/>
                 <field name="delay_open"/>
                 <field name="delay_close"/>
                 <field name="planned_revenue"/>
@@ -39,7 +37,6 @@
         <record id="view_report_crm_lead_graph" model="ir.ui.view">
             <field name="name">crm.lead.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -52,7 +49,6 @@
         <record id="view_report_crm_opportunity_graph" model="ir.ui.view">
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="vertical" string="Leads Analysis" type="bar">
                     <field name="stage_id"/>
@@ -67,7 +63,6 @@
         <record id="view_report_crm_lead_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.select</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <filter icon="terp-personal" name="lead" string="Lead" domain="[('type','=', 'lead')]" help="Show only lead"/>
@@ -109,20 +104,10 @@
                         <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Stage" name="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                         <filter string="Priority"  icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
-                        <filter string="Campaign" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'type_id'}" />
-                        <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
-                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'creation_year'}"/>
-                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'creation_month'}"/>
-                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'creation_day'}"/>
-                        <filter string="Exp. Closing"  icon="terp-go-month" domain="[]" context="{'group_by':'deadline_month'}"/>
                         <filter string="Campaign" icon="terp-gtk-jump-to-rtl"
                             domain="[]" context="{'group_by':'type_id'}" />
                         <filter string="Channel" icon="terp-call-start"
                             domain="[]" context="{'group_by':'channel_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Status" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
                         <separator orientation="vertical" />
                         <filter string="Year" icon="terp-go-year"
                             domain="[]" context="{'group_by':'creation_year'}"/>
@@ -143,9 +128,8 @@
         <record id="view_report_crm_opportunity_tree" model="ir.ui.view">
             <field name="name">crm.lead.report.tree</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " string="Opportunities Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('open','pending','done');gray:state == 'cancel' " create="false" string="Opportunities Analysis">
                 <field name="creation_year" invisible="1"/>
                 <field name="creation_month" invisible="1"/>
                 <field name="creation_day" invisible="1"/>
@@ -163,7 +147,6 @@
                 <field name="company_id" invisible="1" groups="base.group_multi_company"/>
                 <field name="nbr" string="#Opportunities" sum="#Opportunities"/>
                 <field name="planned_revenue" sum="Planned Revenues"/>
-                <field name="email" sum="# of Emails"/>
                 <field name="delay_open" sum='Delay to open'/>
                 <field name="delay_close" sum='Delay to close'/>
                 <field name="delay_expected"/>
@@ -182,7 +165,7 @@
            <field name="context">{'search_default_year': 1,'search_default_lead': 1, "search_default_user":1, "search_default_this_month":1, 'group_by_no_leaf':1, 'group_by':[]}</field>
            <field name="view_mode">tree,graph</field>
            <field name="domain">[]</field>
-           <field name="help">Leads Analysis allows you to check different CRM related information. Check for treatment delays, number of responses given and emails sent. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
+           <field name="help">Leads Analysis allows you to check different CRM related information like the treatment delays or number of leads per state. You can sort out your leads analysis by different groups to get accurate grained analysis.</field>
        </record>
        <record model="ir.actions.act_window.view" id="action_report_crm_lead_tree">
             <field name="sequence" eval="1"/>
