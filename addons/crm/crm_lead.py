@@ -484,7 +484,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 value = lead[field_name]
 
             body.append("%s: %s" % (field.string, value or ''))
-        return "\n".join(body + ['---'])
+        return "<br/>".join(body + ['<br/>'])
 
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
         #TOFIX: mail template should be used instead of fix body, subject text
