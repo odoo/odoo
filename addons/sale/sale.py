@@ -546,7 +546,7 @@ class sale_order(osv.osv):
                 # Update the line (only when needed)
                 if line.invoiced != invoiced:
                     self.pool.get('sale.order.line').write(cr, uid, [line.id], {'invoiced': invoiced}, context=context)
-        self.write(cr, uid, ids, {'state': 'invoice_except', 'invoice_ids': False}, context=context)
+        self.write(cr, uid, ids, {'state': 'invoice_except'}, context=context)
         return True
 
     def action_invoice_end(self, cr, uid, ids, context=None):
