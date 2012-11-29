@@ -134,7 +134,7 @@
 
         <!-- Purchase order Read/Unread actions -->
         <record id="actions_server_purchase_order_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Purchase: Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_purchase_order"/>
@@ -152,7 +152,7 @@
         </record>
 
         <record id="actions_server_purchase_order_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Purchase: Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_purchase_order"/>

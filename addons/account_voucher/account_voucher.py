@@ -1549,6 +1549,15 @@ class account_bank_statement(osv.osv):
             return move_line_obj.write(cr, uid, [x.id for x in v.move_ids], {'statement_id': st_line.statement_id.id}, context=context)
         return super(account_bank_statement, self).create_move_from_st_line(cr, uid, st_line.id, company_currency_id, next_number, context=context)
 
+    def write(self, cr, uid, ids, vals, context=None):
+        # Restrict to modify the journal if we already have some voucher of reconciliation created/generated.
+        # Because the voucher keeps in memory the journal it was created with.
+        for bk_st in self.browse(cr, uid, ids, context=context):
+            if vals.get('journal_id') and bk_st.line_ids:
+                if any([x.voucher_id and True or False for x in bk_st.line_ids]):
+                    raise osv.except_osv(_('Unable to change journal !'), _('You can not change the journal as you already reconciled some statement lines!'))
+        return super(account_bank_statement, self).write(cr, uid, ids, vals, context=context)
+
 account_bank_statement()
 
 class account_bank_statement_line(osv.osv):

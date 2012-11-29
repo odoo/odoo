@@ -641,8 +641,7 @@ class account_account(osv.osv):
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
-        group1 = ['payable', 'receivable', 'other']
-        group2 = ['consolidation','view']
+        restricted_groups = ['consolidation','view']
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
             old_type = account.type
@@ -650,14 +649,25 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type which contains journal items!"))
-                #Check for change From group1 to group2 and vice versa
-                if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from '%s' to '%s' type as it contains journal items!") % (old_type,new_type,))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
+                # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
+                if (new_type in restricted_groups):
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
+
+        return True
+
+    # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
+    # the code of an account if journal entries have been already posted on this account. This cannot be simply 
+    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    def _check_allow_code_change(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])], context=context)
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
+                raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-
         if context is None:
             context = {}
         if not ids:
@@ -677,6 +687,8 @@ class account_account(osv.osv):
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
+        if 'code' in vals.keys():
+            self._check_allow_code_change(cr, uid, ids, context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -1470,6 +1482,11 @@ class account_move(osv.osv):
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
                                 move['name'])
+            for line in move.line_id:
+                if line.invoice:
+                    raise osv.except_osv(_('User Error!'),
+                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
+                                    (line.invoice.number,move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
             context['period_id'] = move.period_id.id
@@ -1678,11 +1695,41 @@ class account_move_reconcile(osv.osv):
         'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
+        'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
         'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
+    
+    # You cannot unlink a reconciliation if it is a opening_reconciliation one,
+    # you should use the generate opening entries wizard for that
+    def unlink(self, cr, uid, ids, context=None):
+        for move_rec in self.browse(cr, uid, ids, context=context):
+            if move_rec.opening_reconciliation:
+                raise osv.except_osv(_('Error!'), _('You cannot unreconcile journal items if they has been generated by the \
+                                                        opening/closing fiscal year process.'))
+        return super(account_move_reconcile, self).unlink(cr, uid, ids, context=context)
+    
+    # Look in the line_id and line_partial_ids to ensure the partner is the same or empty
+    # on all lines. We allow that only for opening/closing period
+    def _check_same_partner(self, cr, uid, ids, context=None):
+        for reconcile in self.browse(cr, uid, ids, context=context):
+            move_lines = []
+            if not reconcile.opening_reconciliation:
+                if reconcile.line_id:
+                    first_partner = reconcile.line_id[0].partner_id.id
+                    move_lines = reconcile.line_id
+                elif reconcile.line_partial_ids:
+                    first_partner = reconcile.line_partial_ids[0].partner_id.id
+                    move_lines = reconcile.line_partial_ids
+                if any([line.partner_id.id != first_partner for line in move_lines]):
+                    return False
+        return True
 
+    _constraints = [
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+    ]
+    
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
         for rec in self.browse(cr, uid, ids, context=context):
