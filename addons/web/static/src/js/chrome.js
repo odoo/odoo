@@ -847,7 +847,7 @@ instance.web.Menu =  instance.web.Widget.extend({
             var $item = self.$secondary_menus.find('a[data-menu="' + menu_id + '"]');
             $item.remove('oe_menu_counter');
             if (item.needaction_counter && item.needaction_counter > 0) {
-                $item.append('<div class="oe_tag oe_tag_dark oe_menu_counter">' + item.needaction_counter + '</div>');
+                $item.append(QWeb.render("Menu.needaction_counter", { widget : item }));
             }
         });
     },

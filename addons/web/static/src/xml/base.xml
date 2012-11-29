@@ -388,12 +388,14 @@
         t-att-data-action-model="menu.action ? menu.action.split(',')[0] : ''"
         t-att-data-action-id="menu.action ? menu.action.split(',')[1] : ''">
         <t t-esc="menu.name"/>
-        <t t-if="menu.needaction_enabled and menu.needaction_counter">
-            <div class="oe_tag oe_tag_dark oe_menu_counter">
-                <t t-if="menu.needaction_counter &gt; 99"> 99+ </t><t t-if="menu.needaction_counter &lt;= 99"> <t t-esc="menu.needaction_counter"/> </t>
-            </div>
-        </t>
     </a>
+</t>
+
+<t t-name="Menu.needaction_counter">
+    <div class="oe_tag oe_tag_dark oe_menu_counter">
+        <t t-if="widget.needaction_counter &gt; 99"> 99+ </t>
+        <t t-if="widget.needaction_counter &lt;= 99"> <t t-esc="widget.needaction_counter"/> </t>
+    </div>
 </t>
 
 <t t-name="UserMenu">
