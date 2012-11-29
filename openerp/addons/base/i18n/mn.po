@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-27 14:09+0000\n"
+"PO-Revision-Date: 2012-11-28 13:28+0000\n"
 "Last-Translator: gobi <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-28 04:39+0000\n"
-"X-Generator: Launchpad (build 16309)\n"
+"X-Launchpad-Export-Date: 2012-11-29 05:13+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_writing
@@ -496,6 +496,14 @@ msgid ""
 "invoices from picking, OpenERP is able to add and compute the shipping "
 "line.\n"
 msgstr ""
+"\n"
+"Борлуулалтын захиалга болон бэлтгэх баримтанд хүргэх аргыг нэмэх боломжийг "
+"олгодог.\n"
+"==============================================================\n"
+"\n"
+"Өөрийн тээвэрлэгчид болон хүргэлтийн сүлжээг үнэнд зориулан тодорхойлж "
+"болно. Бэлтгэх баримтаас нэхэмжлэх үүсгэхэд OpenERP нь хүргэлтийн мөрийг "
+"нэмж тооцоолж чаддаг.\n"
 
 #. module: base
 #: code:addons/base/ir/ir_filters.py:83
@@ -504,6 +512,8 @@ msgid ""
 "There is already a shared filter set as default for %(model)s, delete or "
 "change it before setting a new default"
 msgstr ""
+"%(model)s-д анхны шүүлтүүр аль хэдийнээ тохируулагдсан байна, шинийг "
+"тохируулахыг тулд хуучныг нь устгах буюу солино уу"
 
 #. module: base
 #: code:addons/orm.py:2639
@@ -599,7 +609,7 @@ msgstr ""
 #. module: base
 #: field:ir.model.relation,name:0
 msgid "Relation Name"
-msgstr ""
+msgstr "Харьцааны Нэр"
 
 #. module: base
 #: model:res.country,name:base.tv
@@ -665,6 +675,15 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Шинжилгээний обьект тодорхойлох модуль.\n"
+"===============================================\n"
+"\n"
+"OpenERP-д шинжилгээний дансд нь ерөнхий дансдадтай холбогддог боловч \n"
+"бүрэн үл хамаарах байдаг. Иймээс ерөнхий санхүүгийн данс эсрэг тал нь болгох "
+"албагүй \n"
+"бөгөөд төрөл бүрийн шинжилгээний үйлдлүүдийг оруулж болно.\n"
+"    "
 
 #. module: base
 #: field:ir.ui.view.custom,ref_id:0
@@ -688,6 +707,18 @@ msgid ""
 "* Use emails to automatically confirm and send acknowledgements for any "
 "event registration\n"
 msgstr ""
+"\n"
+"Үйл явдлуудын зохион байгуулалт болон менежмент.\n"
+"======================================\n"
+"\n"
+"Үйл явдал модуль нь үйл явдлыг оновчтой зохион байгуулж холбогдох бүх "
+"даалгаврыг менеж хийдэг. \n"
+"Үүнд: төлөвлөх, бүргэлийг хөтлөх, ирц гэх мэт зүйлс хамаарна.\n"
+"\n"
+"Түлхүүр Онцлогууд\n"
+"------------\n"
+"* Үйл явдлын бүртгэлийг менеж хийнэ\n"
+"* Имэйл ашиглан үйл явдлын бүртгэлийн магадлагааг автоматаар илгээнэ\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -713,6 +744,21 @@ msgid ""
 "requested it.\n"
 "    "
 msgstr ""
+"\n"
+"Gengo API-н тусламжтай автомат орчуулга\n"
+"----------------------------------------\n"
+"\n"
+"Энэ модуль нь Gengo API-г ашиглан автомат орчуулгын идэлвхгүй товлогдсон "
+"үйлдлийг суулгадаг.\n"
+"Идэвхжүүлэхийн тулд:\n"
+"1) Gengo эрхийн тохиргоог `Тохиргоо > Компаниуд > Gengo параметрүүд`-д "
+"тохируулах ёстой\n"
+"2) `Тохиргоо > Програмын нэр томъёо > Gengo: Орчуулгын Гар хүсэлт` харилцах "
+"цонхыг дуудаж тохиргоог хийнэ.\n"
+"\n"
+"Энэ харилцах цонх нь CRON даалгавр болон Товлогчийг идэвхжүүлдэг бөгөөд таны "
+"хүссэн бүх нэр томъёог Gengo сервисээр автомат орчуулж эхэлдэг.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.report.xml,attachment_use:0
@@ -865,6 +911,32 @@ msgid ""
 "module named account_voucher.\n"
 "    "
 msgstr ""
+"\n"
+"Санхүү болон санхүүгийн менежмент\n"
+"====================================\n"
+"\n"
+"Санхүү, НББ модулийн хамрах хүрээ:\n"
+"--------------------------------------------\n"
+"    * Ерөнхий санхүү\n"
+"    * Өртөг/Шинжилгээний санхүү\n"
+"    * Гуравдагч этгээдийн санхүү\n"
+"    * Татварын менежмент\n"
+"    * Төсөв\n"
+"    * Захиалагч болон Нийлүүлэгчийн нэхэмжлэл\n"
+"    * Банкны хуулга\n"
+"    * Харилцагчаарх тулгалт\n"
+"\n"
+"Нягтлангуудад зориулсан хянах самбар үүсгэдэг бөгөөд агууламж нь:\n"
+"--------------------------------------------------\n"
+"    * Захиалагчийн батлах нэхэмжлэх\n"
+"    * Компаний шинжилгээ\n"
+"    * Мөнгөн сангийн график\n"
+"\n"
+"Ерөнхий дэвтэр хөтөлдөг шиг боловсруулалт нь тухайлсан санхүүгийн жилд "
+"тодорхойлогдсон санхүүүгийн журналуудаар хийгддэг (бичилтийн мөрүүдийн "
+"шилжилт, бүлэглэлт зэрэг нь журналаар хийгддэг) \n"
+"бөгөөд account_voucher гэсэн нэртэй ваучер бэлддэг модуль байдаг.\n"
+"    "
 
 #. module: base
 #: view:ir.model:0
@@ -884,6 +956,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Хаягийн дэвтэрт холбогчийг нэмэхийн тулд дарна уу.\n"
+"              </p><p>\n"
+"                OpenERP нь захиалагчтай холбогдох бүх харилцааг хялбархан \n"
+"                боломж олгодог: харилцаа, бизнес боломжуудын түүх,\n"
+"                баримтууд, гм.\n"
+"              </p>\n"
+"            "
 
 #. module: base
 #: model:ir.module.module,description:base.module_web_linkedin
@@ -894,6 +974,11 @@ msgid ""
 "This module provides the Integration of the LinkedIn with OpenERP.\n"
 "        "
 msgstr ""
+"\n"
+"OpenERP Вебийн LinkedIn модуль.\n"
+"============================\n"
+"Энэ модуль нь OpenERP-г LinkedIn-тэй холбодог.\n"
+"        "
 
 #. module: base
 #: help:ir.actions.act_window,src_model:0
@@ -939,7 +1024,7 @@ msgstr "Руминь - Санхүү"
 #. module: base
 #: model:ir.model,name:base.model_res_config_settings
 msgid "res.config.settings"
-msgstr ""
+msgstr "res.config.settings"
 
 #. module: base
 #: help:res.partner,image_small:0
@@ -948,6 +1033,9 @@ msgid ""
 "image, with aspect ratio preserved. Use this field anywhere a small image is "
 "required."
 msgstr ""
+"Холбогчийн жижиг хэмжээтэй зураг. Энэ нь автоматаар харьцаа нь хадгалагдан "
+"64x64px хэмжээтэй болдог. Энэ талбарыг жижиг зураг хэрэг болсон газар бүрт "
+"хэрэглэж болно."
 
 #. module: base
 #: help:ir.actions.server,mobile:0
@@ -967,7 +1055,7 @@ msgstr "Нууцлал ба Эрх олголт"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_calendar
 msgid "Web Calendar"
-msgstr ""
+msgstr "Веб Цаглабар"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -978,7 +1066,7 @@ msgstr "Швед хэл / svenska"
 #: field:base.language.export,name:0
 #: field:ir.attachment,datas_fname:0
 msgid "File Name"
-msgstr ""
+msgstr "Файлын нэр"
 
 #. module: base
 #: model:res.country,name:base.rs
@@ -1029,6 +1117,30 @@ msgid ""
 "also possible in order to automatically create a meeting when a holiday "
 "request is accepted by setting up a type of meeting in Leave Type.\n"
 msgstr ""
+"\n"
+"Амралт, чөлөө болон амралт, чөлөөний хуваарилалтын хүсэлтүүдийг менеж хийнэ\n"
+"=====================================\n"
+"\n"
+"Энэ програм нь компаний амралтын товыг хянадаг. Энэ модуль нь ажилчид "
+"амралтаа хүсэх боломжийг олгогдог. Менежер дараад нь амралтын хүсэлтийг "
+"хянаж зөвшөөрөх юмуу татгалздаг. Ийм байдлаар байгууллагыг бүхэлд нь буюу "
+"хэлтсээр нь бүх амралтыг хянадаг. \n"
+"\n"
+"Амралт чөлөөний хэд хэдэн төрөл (өвчний, баяр ёслолын, цалинтай, ...)-г "
+"тохируулж болдог бөгөөд ажилчинд эсвэл хэлтэст амралт, чөлөөг хуваарилах "
+"хүсэлтийг үүсгэх замаар хуваарилж өгдөг. Ажилчин нь мөн амралт, чөлөөг шинэ "
+"хуваарилалт үүсгэх байдлаар хүсч болдог. Хэрэв хүсэлт зөвшөөрөгдвөл тухайн "
+"төрөлийн амралт чөлөөний хуваарилагдсан хугацаа нь нэмэгддэг.\n"
+"\n"
+"Амралт, чөлөөг дараах төрөл бүрийн тайлангуудын тусламжтайгаар хянах "
+"боломжтой: \n"
+"\n"
+"* Амралт чөлөөний товчоо\n"
+"* Амралт, чөлөө хэлтсээр\n"
+"* Амралт, чөлөөний шинжилгээ\n"
+"\n"
+"Захиалагчийн харилцагчийн CRM модульд уулзалт үүсгэсэн тохиолдолд уулзалт "
+"төрөлтэй чөлөө үүсч дотоод цагалбарт ижилтгэгддэг.\n"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1074,7 +1186,7 @@ msgstr "Имэйл тохиргоо"
 #: code:addons/base/ir/ir_fields.py:196
 #, python-format
 msgid "'%s' does not seem to be a valid date for field '%%(field)s'"
-msgstr ""
+msgstr "'%s' нь '%%(field)s' гэсэн огноо талбарт тохирохгүй бололтой"
 
 #. module: base
 #: view:res.partner:0
@@ -1091,6 +1203,7 @@ msgstr "Зимбаб"
 msgid ""
 "Type of the constraint: `f` for a foreign key, `u` for other constraints."
 msgstr ""
+"Хязгаарлалтын төрөл: `f` нь гадаад түлхүүр, `u` нь бусад хязгаарлалт."
 
 #. module: base
 #: view:ir.actions.report.xml:0
@@ -1176,7 +1289,7 @@ msgstr "Бусад батлагдсан OSI лиценз"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_gantt
 msgid "Web Gantt"
-msgstr ""
+msgstr "Веб Гант"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_menu_create
@@ -1203,7 +1316,7 @@ msgstr "Google Хэрэглэгчид"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_fleet
 msgid "Fleet Management"
-msgstr ""
+msgstr "Машин Зогсоолын Менежмент"
 
 #. module: base
 #: help:ir.server.object.lines,value:0
@@ -1258,7 +1371,7 @@ msgstr ""
 #: code:addons/base/ir/ir_model.py:724
 #, python-format
 msgid "Document model"
-msgstr ""
+msgstr "Баримтын модель"
 
 #. module: base
 #: view:res.lang:0
@@ -1308,7 +1421,7 @@ msgstr "Улсын нэр давхцахгүй байх ёстой !"
 #. module: base
 #: field:ir.module.module,installed_version:0
 msgid "Latest Version"
-msgstr ""
+msgstr "Сүүлийн Хувилбар"
 
 #. module: base
 #: code:addons/base/ir/ir_mail_server.py:213
@@ -1330,7 +1443,7 @@ msgstr "Дэлгэцийн XML алдаатай!"
 #. module: base
 #: view:res.partner:0
 msgid "Tel:"
-msgstr ""
+msgstr "Утас:"
 
 #. module: base
 #: model:res.country,name:base.ky
@@ -1340,7 +1453,7 @@ msgstr "Кайманы арлууд"
 #. module: base
 #: view:ir.rule:0
 msgid "Record Rule"
-msgstr ""
+msgstr "Бичлэгийн Дүрэм"
 
 #. module: base
 #: model:res.country,name:base.kr
@@ -1383,7 +1496,7 @@ msgstr "Харагдхуйц"
 #. module: base
 #: model:ir.actions.client,name:base.action_client_base_menu
 msgid "Open Settings Menu"
-msgstr ""
+msgstr "Тохиргооны Менюг Нээх"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -1683,12 +1796,12 @@ msgstr "%Y - Зуунтай хамт он."
 #. module: base
 #: view:res.company:0
 msgid "Report Footer Configuration"
-msgstr ""
+msgstr "Тайлангийн Хөлний Тохиргоо"
 
 #. module: base
 #: field:ir.translation,comments:0
 msgid "Translation comments"
-msgstr ""
+msgstr "Орчуулгын Сэтгэгдлүүд"
 
 #. module: base
 #: model:ir.module.module,description:base.module_lunch
@@ -2241,7 +2354,7 @@ msgstr "Бүтэн зам"
 #. module: base
 #: view:base.language.export:0
 msgid "The next step depends on the file format:"
-msgstr ""
+msgstr "Дараагийн алхам файлын форматаас хамаарна:"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_idea
