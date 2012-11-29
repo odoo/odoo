@@ -4,7 +4,6 @@ import mock
 import unittest2
 
 from ..controllers import main
-from ..session import OpenERPSession
 
 class Placeholder(object):
     def __init__(self, **kwargs):
@@ -40,11 +39,11 @@ class LoadTest(unittest2.TestCase):
         root = self.menu.do_load(self.request)
 
         self.MockMenus.search.assert_called_with(
-            [], 0, False, False, self.request.session.eval_context())
+            [], 0, False, False, self.request.context)
         self.MockMenus.read.assert_called_with(
             [], ['name', 'sequence', 'parent_id',
                  'action', 'needaction_enabled', 'needaction_counter'],
-            self.request.session.eval_context())
+            self.request.context)
 
         self.assertListEqual(
             root['children'],
@@ -63,7 +62,7 @@ class LoadTest(unittest2.TestCase):
         self.MockMenus.read.assert_called_with(
             [1, 2, 3], ['name', 'sequence', 'parent_id',
                         'action', 'needaction_enabled', 'needaction_counter'],
-            self.request.session.eval_context())
+            self.request.context)
 
         self.assertEqual(
             root['children'],

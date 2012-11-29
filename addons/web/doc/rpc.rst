@@ -257,16 +257,17 @@ method you want to call) and a mapping of attributes to values (applied
 as keyword arguments on the Python method [#]_). This function fetches
 the return value of the Python methods, converted to JSON.
 
-For instance, to call the ``eval_domain_and_context`` of the
-:class:`~web.controllers.main.Session` controller:
+For instance, to call the ``resequence`` of the
+:class:`~web.controllers.main.DataSet` controller:
 
 .. code-block:: javascript
 
-    openerp.connection.rpc('/web/session/eval_domain_and_context', {
-        domains: ds,
-        contexts: cs
+    openerp.connection.rpc('/web/dataset/resequence', {
+        model: some_model,
+        ids: array_of_ids,
+        offset: 42
     }).then(function (result) {
-        // handle result
+        // resequenced on server
     });
 
 .. [#] with a small twist: SQLAlchemy's ``orm.query.Query.group_by``

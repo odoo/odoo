@@ -152,9 +152,9 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     instance.dummy = {};
     instance.dummy.DummyWidget = instance.web.search.Field.extend(
         dummy_widget_attributes || {});
-    if (!('/web/searchview/load' in instance.session.responses)) {
-        instance.session.responses['/web/searchview/load'] = function () {
-            return {fields_view: {
+    if (!('/web/view/load' in instance.session.responses)) {
+        instance.session.responses['/web/view/load'] = function () {
+            return {
                 type: 'search',
                 fields: {
                     dummy: {type: 'char', string: "Dummy"}
@@ -171,13 +171,13 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
                         children: []
                     }]
                 }
-            }};
+            };
         };
     }
-    instance.session.responses['/web/searchview/get_filters'] = function () {
+    instance.session.responses['ir.filters:get_filters'] = function () {
         return [];
     };
-    instance.session.responses['/web/searchview/fields_get'] = function () {
+    instance.session.responses['dummy.model:fields_get'] = function () {
         return {fields: {
             dummy: {type: 'char', string: 'Dummy'}
         }};
@@ -890,9 +890,9 @@ openerp.testing.section('filters', {
     rpc: 'mock',
     templates: true,
     setup: function (instance, $s, mock) {
-        mock('/web/searchview/load', function () {
+        mock('/web/view/load', function () {
             // view with a single group of filters
-            return {fields_view: {
+            return {
                 type: 'search',
                 fields: {},
                 arch: {
@@ -915,7 +915,7 @@ openerp.testing.section('filters', {
                         children: []
                     }]
                 }
-            }};
+            };
         });
     }
 }, function (test) {
@@ -992,7 +992,7 @@ openerp.testing.section('saved_filters', {
 }, function (test) {
     test('checkboxing', {asserts: 6}, function (instance, $fix, mock) {
         var view = makeSearchView(instance);
-        mock('/web/searchview/get_filters', function () {
+        mock('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
         });
 
@@ -1015,7 +1015,7 @@ openerp.testing.section('saved_filters', {
     });
     test('removal', {asserts: 1}, function (instance, $fix, mock) {
         var view = makeSearchView(instance);
-        mock('/web/searchview/get_filters', function () {
+        mock('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
         });
 
