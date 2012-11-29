@@ -40,7 +40,7 @@
 
         <!-- We assign after so that default values applies -->
         <record id="project_project_1" model="project.project">
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_analysis'),ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_deployment')])]"/>
+            <field name="type_ids" eval="[(4, ref('project_tt_analysis')) ,(4,ref('project_tt_specification')), (4,ref('project_tt_development')), (4,ref('project_tt_testing')), (4,ref('project_tt_deployment'))]"/>
         </record>
 
         <record id="project_project_2" model="project.project">
@@ -53,7 +53,7 @@
 
         <!-- We assign after so that default values applies -->
         <record id="project_project_2" model="project.project">
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
+            <field name="type_ids" eval="[(4, ref('project_tt_specification')),(4,ref('project_tt_development')),(4,ref('project_tt_testing')),(4,ref('project_tt_merge')),(4,ref('project_tt_deployment'))]"/>
         </record>
 
         <record id="project_project_3" model="project.project">
@@ -63,13 +63,11 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="privacy_visibility">public</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
+            <field name="members" eval="[(4, ref('base.user_root')), (4, ref('base.user_demo'))]"/>
         </record>
 
         <record id="project_project_3" model="project.project">
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
+            <field name="type_ids" eval="[(4, ref('project_tt_specification')),(4,ref('project_tt_development')),(4,ref('project_tt_testing')),(4,ref('project_tt_merge')),(4,ref('project_tt_deployment'))]"/>
         </record>
 
         <record id="project_project_4" model="project.project">
@@ -78,13 +76,11 @@
             <field name="name">Website Design Templates</field>
             <field name="user_id" ref="base.user_root"/>
             <field name="alias_model">project.task</field>
-            <field name="members" eval="[(6, 0, [
-                    ref('base.user_root'),
-                    ref('base.user_demo')])]"/>
+            <field name="members" eval="[(4, ref('base.user_root')), (4,ref('base.user_demo'))]"/>
         </record>
 
         <record id="project_project_4" model="project.project">
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_design'),ref('project_tt_development'),ref('project_tt_testing')])]"/>
+            <field name="type_ids" eval="[(4, ref('project_tt_design')),(4,ref('project_tt_development')),(4,ref('project_tt_testing'))]"/>
         </record>
 
         <record id="project_project_5" model="project.project">
@@ -99,7 +95,7 @@
         </record>
 
         <record id="project_project_5" model="project.project">
-            <field name="type_ids" eval="[(6, 0, [ref('project_tt_development')])]"/>
+            <field name="type_ids" eval="[(4, ref('project_tt_development'))]"/>
         </record>
 
 
