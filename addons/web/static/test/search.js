@@ -178,9 +178,9 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
         return [];
     };
     instance.session.responses['dummy.model:fields_get'] = function () {
-        return {fields: {
+        return {
             dummy: {type: 'char', string: 'Dummy'}
-        }};
+        };
     };
 
     var dataset = {model: 'dummy.model', get_context: function () { return {}; }};

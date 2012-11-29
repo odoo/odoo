@@ -1708,7 +1708,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             new instance.web.Model(this.view.model).call('fields_get').done(function(data) {
                 self.fields = _.extend({
                     id: { string: 'ID', type: 'id' }
-                }, data.fields);
+                }, data);
         })).done(function () {
             self.append_proposition();
         });
