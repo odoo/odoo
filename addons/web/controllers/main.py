@@ -28,6 +28,7 @@ except ImportError:
     xlwt = None
 
 import openerp
+from openerp.tools.translate import _
 
 from .. import http
 from .. import nonliterals
@@ -821,7 +822,7 @@ class Database(openerpweb.Controller):
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
                 return {'error': e.faultCode, 'title': 'Drop Database'}
-        return {'error': 'Could not drop database !', 'title': 'Drop Database'}
+        return {'error': _('Could not drop database !'), 'title': _('Drop Database')}
 
     @openerpweb.httprequest
     def backup(self, req, backup_db, backup_pwd, token):
@@ -839,7 +840,7 @@ class Database(openerpweb.Controller):
                {'fileToken': int(token)}
             )
         except xmlrpclib.Fault, e:
-            return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
+            return simplejson.dumps([[],[{'error': e.faultCode, 'title': _('Backup Database')}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -860,8 +861,8 @@ class Database(openerpweb.Controller):
             return req.session.proxy("db").change_admin_password(old_password, new_password)
         except xmlrpclib.Fault, e:
             if e.faultCode and e.faultCode.split(':')[0] == 'AccessDenied':
-                return {'error': e.faultCode, 'title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+                return {'error': e.faultCode, 'title': _('Change Password')}
+        return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
 class Session(openerpweb.Controller):
     _cp_path = "/web/session"
@@ -897,16 +898,16 @@ class Session(openerpweb.Controller):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':'You cannot leave any password empty.','title': 'Change Password'}
+            return {'error':_('You cannot leave any password empty.'),'title': _('Change Password')}
         if new_password != confirm_password:
-            return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
+            return {'error': _('The new password and its confirmation must be identical.'),'title': _('Change Password')}
         try:
             if req.session.model('res.users').change_password(
                 old_password, new_password):
                 return {'new_password':new_password}
         except Exception:
-            return {'error': 'The old password you provided is incorrect, your password was not changed.', 'title': 'Change Password'}
-        return {'error': 'Error, password not changed !', 'title': 'Change Password'}
+            return {'error': _('The old password you provided is incorrect, your password was not changed.'), 'title': _('Change Password')}
+        return {'error': _('Error, password not changed !'), 'title': _('Change Password')}
 
     @openerpweb.jsonrequest
     def sc_list(self, req):
@@ -918,7 +919,7 @@ class Session(openerpweb.Controller):
         try:
             return req.session.proxy("db").list_lang() or []
         except Exception, e:
-            return {"error": e, "title": "Languages"}
+            return {"error": e, "title": _("Languages")}
 
     @openerpweb.jsonrequest
     def modules(self, req):
@@ -1450,7 +1451,7 @@ class SearchView(View):
                         if not isinstance(parsed_domain, nonliterals.BaseDomain)
                         else req.session.eval_domain(parsed_domain))
             except Exception:
-                logger.exception("Failed to parse custom filter %s in %s",
+                logger.exception(_("Failed to parse custom filter %s in %s"),
                                  filter['name'], model)
                 filter['disabled'] = True
                 del filter['context']
@@ -1571,7 +1572,7 @@ class Binary(openerpweb.Controller):
             res = Model.default_get(fields, context)
         filecontent = base64.b64decode(res.get(field, ''))
         if not filecontent:
-            raise ValueError("No content found for field '%s' on '%s:%s'" %
+            raise ValueError(_("No content found for field '%s' on '%s:%s'") %
                 (field, model, id))
         else:
             filename = '%s_%s' % (model.replace('.', '_'), id)

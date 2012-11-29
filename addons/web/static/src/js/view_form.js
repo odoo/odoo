@@ -148,7 +148,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     load_form: function(data) {
         var self = this;
         if (!data) {
-            throw new Error("No data provided.");
+            throw new Error(_t("No data provided."));
         }
         if (this.arch) {
             throw "Form view does not support multiple calls to load_form";
@@ -316,12 +316,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this, set_values = [];
         if (!record) {
             this.set({ 'title' : undefined });
-            this.do_warn("Form", "The record could not be found in the database.", true);
+            this.do_warn(_t("Form"), _t("The record could not be found in the database."), true);
             return $.Deferred().reject();
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : "New" });
+        this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
@@ -431,7 +431,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var onchange = _.str.trim(on_change);
         var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
         if (!call) {
-            throw new Error("Wrong on change format: " + onchange);
+            throw new Error(_.str.sprintf( _t("Wrong on change format: %s"), onchange ));
         }
 
         var method = call[1];
@@ -872,7 +872,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).value();
         warnings.unshift('<ul>');
         warnings.push('</ul>');
-        this.do_warn("The following fields are invalid :", warnings.join(''));
+        this.do_warn(_t("The following fields are invalid:", warnings.join(''));
     },
     /**
      * Reload the form after saving
@@ -1241,11 +1241,11 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         _.each(this.fields_to_init, function($elem) {
             var name = $elem.attr("name");
             if (!self.fvg.fields[name]) {
-                throw new Error("Field '" + name + "' specified in view could not be found.");
+                throw new Error(_.str.sprintf(_t("Field '%s' specified in view could not be found."), name));
             }
             var obj = self.fields_registry.get_any([$elem.attr('widget'), self.fvg.fields[name].type]);
             if (!obj) {
-                throw new Error("Widget type '"+ $elem.attr('widget') + "' is not implemented");
+                throw new Error(_.str.sprintf(_t("Widget type '%s' is not implemented"), $elem.attr('widget')));
             }
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
@@ -2319,7 +2319,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
+            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2348,7 +2348,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn("Resource error", "This resource is empty");
+            this.do_warn(_t("Resource error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -3385,7 +3385,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                throw new Error(_.str.sprintf(_t("View type '%s' is not supported in One2Many."), mode));
             }
             var view = {
                 view_id: false,
@@ -4840,7 +4840,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
         if (size === false) {
-            this.do_warn("File Upload", "There was a problem while uploading your file");
+            this.do_warn(_t("File Upload"), _t("There was a problem while uploading your file"));
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -5009,7 +5009,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.field_manager = field_manager;
         this.node = node;
         if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
-            throw "The type of the field '"+this.field.string+"' must be a many2many field with a relation to 'ir.attachment' model.";
+            throw _.str.sprintf(_t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model."), this.field.string);
         }
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');

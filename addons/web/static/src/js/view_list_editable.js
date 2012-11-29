@@ -3,7 +3,9 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
-    // editability status of list rows
+	var _t = instance.web._t;
+
+	// editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
     // TODO: not sure second @lends on existing item is correct, to check
@@ -775,7 +777,7 @@ openerp.web.list_editable = function (instance) {
         cancel: function (force) {
             if (!(force || this.form.can_be_discarded())) {
                 return $.Deferred().reject({
-                    message: "The form's data can not be discarded"}).promise();
+                    message: _t("The form's data can not be discarded")}).promise();
             }
             var record = this.record;
             this.record = null;

@@ -409,7 +409,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
                 evt.preventDefault();
-                alert("An error has occured while moving the record to this group.");
+                alert(_t("An error has occured while moving the record to this group."));
                 self.do_reload(); // TODO: use draggable + sortable in order to cancel the dragging when the rcp fails
             });
         }

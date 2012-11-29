@@ -161,7 +161,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             }
         });
         msg += "</ul>";
-        this.do_warn("The following fields are invalid :", msg);
+        this.do_warn(_t("The following fields are invalid :"), msg);
     },
     add_node_name : function(node) {
         if(node.tagName.toLowerCase() == "button" || node.tagName.toLowerCase() == "field"){
@@ -260,7 +260,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                         "arch": view_arch_list});
                 });
             } else {
-                self.do_warn("Please select view in list :");
+                self.do_warn(_t("Please select view in list :"));
             }
         });
     },
@@ -387,10 +387,10 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                                 self.inherited_view(selected_row);
                             }
                         }else{
-                            alert("Can't Update View");
+                            alert(_t("Can't Update View"));
                         }
                     }else{
-                        alert("Select an element");
+                        alert(_t("Select an element"));
                     }
                 }},
                 {text: _t("Preview"), click: function() {
@@ -983,7 +983,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             } else {
                 table_selector.append('<td align="right">' + node.string + '</td>' + type_widget.render() );
                 if (node.name == "field_value") {
-                    table_selector.append('<td id="new_field" align="right"  width="100px"> <button>New Field</button></td>');
+                    table_selector.append('<td id="new_field" align="right"  width="100px"> <button>' + _t("New Field") + '</button></td>');
                 }
             }
             type_widget.start();
