@@ -436,26 +436,26 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         var method = call[1];
         if (!_.str.trim(call[2])) {
-            return {method: method, args: [], context_index: null}
+            return {method: method, args: []}
         }
 
         var argument_replacement = {
             'False': function () {return false;},
             'True': function () {return true;},
             'None': function () {return null;},
-            'context': function (i) {
-                context_index = i;
-                var ctx = new instance.web.CompoundContext(self.dataset.get_context(), widget.build_context() ? widget.build_context() : {});
-                return ctx;
+            'context': function () {
+                return new instance.web.CompoundContext(
+                        self.dataset.get_context(),
+                        widget.build_context() ? widget.build_context() : {});
             }
         };
-        var parent_fields = null, context_index = null;
+        var parent_fields = null;
         var args = _.map(call[2].split(','), function (a, i) {
             var field = _.str.trim(a);
 
             // literal constant or context
             if (field in argument_replacement) {
-                return argument_replacement[field](i);
+                return argument_replacement[field]();
             }
             // literal number
             if (/^-?\d+(\.\d+)?$/.test(field)) {
@@ -490,8 +490,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         return {
             method: method,
-            args: args,
-            context_index: context_index
+            args: args
         };
     },
     do_onchange: function(widget, processed) {
@@ -510,18 +509,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                def = self.rpc('/web/dataset/onchange', {
-                    model: self.dataset.model,
-                    method: change_spec.method,
-                    args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                    context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                });
+                var id = [self.datarecord.id == null ? [] : [self.datarecord.id]];
+                def = new instance.web.Model(self.dataset.model).call(
+                    change_spec.method, id.concat(change_spec.args));
             } else {
                 def = $.when({});
             }
             return def.then(function(response) {
                 if (widget.field['change_default']) {
-                    var fieldname = widget.name
+                    var fieldname = widget.name;
                     var value_;
                     if (response.value && (fieldname in response.value)) {
                         // Use value from onchange if onchange executed
@@ -533,11 +529,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     var condition = fieldname + '=' + value_;
 
                     if (value_) {
-                        return self.rpc('/web/dataset/call', {
-                            model: 'ir.values',
-                            method: 'get_defaults',
-                            args: [self.model, condition]
-                        }).then(function (results) {
+                        return new instance.web.Model('ir.values').call(
+                            'get_defaults', [self.model, condition]
+                        ).then(function (results) {
                             if (!results.length) {
                                 return response;
                             }
@@ -4591,7 +4585,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            self.rpc('/web/session/eval_domain_and_context', {
+            instance.web.pyeval.eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
             }).done(function (results) {
@@ -4664,7 +4658,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: domains || [],
             contexts: contexts || [],
             group_by_seq: groupbys || []

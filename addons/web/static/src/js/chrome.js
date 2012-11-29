@@ -1264,11 +1264,12 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         return this.rpc("/web/action/load", { action_id: options.action_id })
             .then(function (result) {
-                var action = result;
                 if (options.needaction) {
-                    action.context.search_default_message_unread = true;
+                    result.context = new instance.web.CompoundContext(
+                        result.context,
+                        {search_default_message_unread: true});
                 }
-                return $.when(self.action_manager.do_action(action, {
+                return $.when(self.action_manager.do_action(result, {
                     clear_breadcrumbs: true,
                     action_menu_id: self.menu.current_menu,
                 })).fail(function() {
