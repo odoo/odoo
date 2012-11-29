@@ -561,8 +561,8 @@ class expression(object):
             alias = working_table._table
 
             while len(field_path) > 1 and field._auto_join:
-                if not field._type in ['many2one', 'one2many']:
-                    raise '_auto_join attribute on something else than a many2one or one2many is currently not implemented... crashing'
+                assert field._type in ['many2one', 'one2many'], \
+                    '_auto_join attribute on something else than a many2one or one2many is currently not supported'
 
                 previous_alias = alias
                 alias = alias + '__' + field_path[0]
@@ -625,6 +625,8 @@ class expression(object):
                     if _logger.isEnabledFor(logging.DEBUG):
                         _logger.debug(''.join(traceback.format_stack()))
                 else:
+                    assert working_table == table, \
+                        'function fields can not be contained in paths using _auto_join'
                     subexp = field.search(cr, uid, table, left, [self.exp[i]], context=context)
                     if not subexp:
                         self.exp[i] = TRUE_LEAF
