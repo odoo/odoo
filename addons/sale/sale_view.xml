@@ -207,7 +207,7 @@
                         <page string="Order Lines">
                             <field name="order_line">
                                 <form string="Sales Order Lines" version="7.0">
-                                    <header>
+                                    <header groups="base.group_user">
                                         <button name="%(action_view_sale_order_line_make_invoice)d" states="confirmed" string="Invoice" type="action" icon="terp-document-new"/>
                                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done" statusbar_colors='{"exception":"red","cancel":"red"}'/>
                                     </header>
