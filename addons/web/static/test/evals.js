@@ -16,8 +16,8 @@ openerp.testing.section('eval.types', {
         strictEqual(
             py.eval("time.strftime('%Y-%m-%d %H:%M:%S')", context),
             _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
-                d.getFullYear(), d.getMonth() + 1, d.getDate(),
-                d.getHours(), d.getMinutes(), d.getSeconds()));
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
     });
     // Port from pypy/lib_pypy/test_datetime.py
     var makeEq = function (instance, c2) {

@@ -398,14 +398,14 @@ openerp.web.pyeval = function (instance) {
         now: py.classmethod.fromJSON(function () {
             var d = new Date();
             return py.PY_call(datetime.datetime,
-                [d.getFullYear(), d.getMonth() + 1, d.getDate(),
-                 d.getHours(), d.getMinutes(), d.getSeconds(),
-                 d.getMilliseconds() * 1000]);
+                [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+                 d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(),
+                 d.getUTCMilliseconds() * 1000]);
         }),
         today: py.classmethod.fromJSON(function () {
             var d = new Date();
             return py.PY_call(datetime.datetime,
-                [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
+                [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
         }),
         combine: py.classmethod.fromJSON(function () {
             var args = py.PY_parseArgs(arguments, 'date time');
@@ -442,7 +442,7 @@ openerp.web.pyeval = function (instance) {
         today: py.classmethod.fromJSON(function () {
             var d = new Date();
             return py.PY_call(
-                datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
+                datetime.date, [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
         }),
         __eq__: function (other) {
             return (this.year === other.year
