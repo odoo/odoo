@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,21 +18,14 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import fields,osv
 
-class account_invoice_report(osv.osv):
-    _inherit = 'account.invoice.report'
+from osv import fields, osv
+
+class sale_configuration(osv.osv_memory):
+    _inherit = 'sale.config.settings'
+
     _columns = {
-        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'group_template_required': fields.boolean("Mandatory use of templates.",
+            implied_group='account_analytic_analysis.group_template_required',
+            help="Allows you to set the template field as required when creating an analytic account or a contract."),
     }
-
-    def _select(self):
-        return  super(account_invoice_report, self)._select() + ", sub.section_id as section_id"
-
-    def _sub_select(self):
-        return  super(account_invoice_report, self)._sub_select() + ", ai.section_id as section_id"
-
-    def _group_by(self):
-        return super(account_invoice_report, self)._group_by() + ", ai.section_id"
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
