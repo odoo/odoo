@@ -29,6 +29,7 @@ from os.path import join as opj
 if os.name == 'nt':
     import ctypes
     import win32service as ws
+    import win32serviceutil as wsu
 
 
 def listdir(dir, recursive=False):
@@ -111,7 +112,7 @@ else:
                 ws.CloseServiceHandle(srv)
 
         with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
-            with close_srv(ws.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
+            with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
                 info = ws.QueryServiceStatusEx(hs)
                 return info.ProcessId == getppid()
 
