@@ -346,16 +346,6 @@
             groups="account.group_account_user"
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
-        <!-- link from account to journal items 
-        TODO make sure all the columns are display
-        -->
-
-        <act_window
-            id="action_move_line_select"
-            name="Journal Items"
-            context="{'search_default_account_id': [active_id]}"
-            res_model="account.move.line"
-            src_model="account.account"/>
 
 
         <!-- Account Journal -->
@@ -485,7 +475,7 @@
         <act_window
            id="act_account_journal_2_account_move_line"
            name="Journal Items"
-           context="{'search_default_journal_id':[active_id], 'default_journal_id': [active_id]}"
+           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
            res_model="account.move.line"
            src_model="account.journal"/>
 
@@ -1118,8 +1108,8 @@
                     <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
                     <field name="state" />
                     <field name="company_id" invisible="1"/>
-                    <field name="tax_code_id"/>
-                    <field name="tax_amount"/>
+                    <!-- <field name="tax_code_id"/>
+                    <field name="tax_amount"/> -->
                 </tree>
             </field>
         </record>
@@ -1438,7 +1428,7 @@
         <act_window
             id="act_account_move_to_account_move_line_open"
             name="Journal Items"
-            context="{'search_default_move_id':[active_id], 'default_move_id': active_id}"
+            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
         <act_window
