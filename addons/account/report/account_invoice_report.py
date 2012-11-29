@@ -101,7 +101,6 @@ class account_invoice_report(osv.osv):
     }
     _order = 'date desc'
 
-
     def _select(self):
         select_str = """
             SELECT sub.id, sub.date, sub.year, sub.month, sub.day, sub.product_id, sub.partner_id,
@@ -109,8 +108,12 @@ class account_invoice_report(osv.osv):
                 sub.fiscal_position, sub.user_id, sub.company_id, sub.nbr, sub.type, sub.state,
                 sub.categ_id, sub.date_due, sub.account_id, sub.account_line_id, sub.partner_bank_id,
                 sub.product_qty, sub.price_total / cr.rate as price_total, sub.price_average /cr.rate as price_average,
-                cr.rate as currency_rate, sub.residual / cr.rate as residual, sub.section_id
-            FROM (
+                cr.rate as currency_rate, sub.residual / cr.rate as residual
+        """
+        return select_str
+
+    def _sub_select(self):
+        select_str = """
                 SELECT min(ail.id) AS id,
                     ai.date_invoice AS date,
                     to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text) AS year,
@@ -167,13 +170,22 @@ class account_invoice_report(osv.osv):
                                       LEFT JOIN account_invoice a ON a.id = l.invoice_id
                                       WHERE a.id = ai.id)
                                ELSE 1::bigint
-                          END::numeric AS residual,
-                    ai.section_id
+                          END::numeric AS residual
+        """
+        return select_str
+
+    def _from(self):
+        from_str = """
                 FROM account_invoice_line ail
                 JOIN account_invoice ai ON ai.id = ail.invoice_id
                 LEFT JOIN product_product pr ON pr.id = ail.product_id
                 left JOIN product_template pt ON pt.id = pr.product_tmpl_id
                 LEFT JOIN product_uom u ON u.id = ail.uos_id
+        """
+        return from_str
+
+    def _group_by(self):
+        group_by_str = """
                 GROUP BY ail.product_id, ai.date_invoice, ai.id,
                     to_char(ai.date_invoice::timestamp with time zone, 'YYYY'::text),
                     to_char(ai.date_invoice::timestamp with time zone, 'MM'::text),
@@ -181,7 +193,17 @@ class account_invoice_report(osv.osv):
                     ai.partner_id, ai.payment_term, ai.period_id, u.name, ai.currency_id, ai.journal_id,
                     ai.fiscal_position, ai.user_id, ai.company_id, ai.type, ai.state, pt.categ_id,
                     ai.date_due, ai.account_id, ail.account_id, ai.partner_bank_id, ai.residual,
-                    ai.amount_total, u.uom_type, u.category_id, ai.section_id
+                    ai.amount_total, u.uom_type, u.category_id
+        """
+        return group_by_str
+
+    def init(self, cr):
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("""CREATE or REPLACE VIEW %s as (
+            %s
+            FROM (
+                %s %s %s
             ) AS sub
             JOIN res_currency_rate cr ON (cr.currency_id = sub.currency_id)
             WHERE
@@ -190,17 +212,10 @@ class account_invoice_report(osv.osv):
                           WHERE (cr2.currency_id = sub.currency_id)
                               AND ((sub.date IS NOT NULL AND cr.name <= sub.date)
                                     OR (sub.date IS NULL AND cr.name <= NOW()))
-                          ORDER BY name DESC LIMIT 1);
-        """
-        return select_str
-
-
-    def init(self, cr):
-        # self._table = account_invoice_report
-        tools.drop_view_if_exists(cr, self._table)
-        cr.execute("CREATE or REPLACE VIEW %s as (%s)" % (
+                          ORDER BY name DESC LIMIT 1)
+        )""" % (
                     self._table, 
-                    self._select()))
+                    self._select(), self._sub_select(), self._from(), self._group_by()))
 
 account_invoice_report()
 
