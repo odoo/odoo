@@ -171,7 +171,13 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             if (!r) { graph_data.push(datapoint); }
         });
         graph_data = _(graph_data).sortBy(function (point) {
-            return point[self.abscissa] + '[[--]]' + point[self.group_field];
+            var point_abscissa = point[self.abscissa];
+            if (self.fields[self.abscissa].type == 'selection') {
+                var selection_index = _.chain(self.fields[self.abscissa].selection)
+                                        .pluck(1).indexOf(point_abscissa).value();
+                point_abscissa = _.str.sprintf('%08d', selection_index);
+            }
+            return point_abscissa + '[[--]]' + point[self.group_field];
         });
         if (_.include(['bar','line','area'],this.chart)) {
             return this.schedule_bar_line_area(graph_data);
