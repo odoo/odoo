@@ -31,6 +31,7 @@ import urllib
 import zipimport
 
 from openerp import modules, pooler, release, tools, addons
+from openerp.modules.db import create_categories
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
@@ -638,21 +639,8 @@ class module(osv.osv):
 
         categs = category.split('/')
         if categs != current_category_path:
-            p_id = None
-            while categs:
-                if p_id is not None:
-                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id=%s', (categs[0], p_id))
-                else:
-                    cr.execute('SELECT id FROM ir_module_category WHERE name=%s AND parent_id is NULL', (categs[0],))
-                c_id = cr.fetchone()
-                if not c_id:
-                    cr.execute('INSERT INTO ir_module_category (name, parent_id) VALUES (%s, %s) RETURNING id', (categs[0], p_id))
-                    c_id = cr.fetchone()[0]
-                else:
-                    c_id = c_id[0]
-                p_id = c_id
-                categs = categs[1:]
-            self.write(cr, uid, [mod_browse.id], {'category_id': p_id})
+            cat_id = create_categories(cr, categs)
+            mod_browse.write({'category_id': cat_id})
 
     def update_translations(self, cr, uid, ids, filter_lang=None, context=None):
         if not filter_lang:
