@@ -11,7 +11,7 @@ from mako.template import Template
 from openerp.modules import module
 
 from .main import module_topological_sort
-from ..http import Controller, httprequest
+from .. import http
 
 NOMODULE_TEMPLATE = Template(u"""<!DOCTYPE html>
 <html>
@@ -82,10 +82,10 @@ TESTING = Template(u"""<!DOCTYPE html>
 </html>
 """)
 
-class TestRunnerController(Controller):
+class TestRunnerController(http.Controller):
     _cp_path = '/web/tests'
 
-    @httprequest
+    @http.httprequest
     def index(self, req, mod=None, **kwargs):
         ms = module.get_modules()
         manifests = dict(

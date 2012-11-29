@@ -152,9 +152,9 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
     instance.dummy = {};
     instance.dummy.DummyWidget = instance.web.search.Field.extend(
         dummy_widget_attributes || {});
-    if (!('/web/searchview/load' in instance.session.responses)) {
-        instance.session.responses['/web/searchview/load'] = function () {
-            return {fields_view: {
+    if (!('/web/view/load' in instance.session.responses)) {
+        instance.session.responses['/web/view/load'] = function () {
+            return {
                 type: 'search',
                 fields: {
                     dummy: {type: 'char', string: "Dummy"}
@@ -171,16 +171,16 @@ var makeSearchView = function (instance, dummy_widget_attributes, defaults) {
                         children: []
                     }]
                 }
-            }};
+            };
         };
     }
-    instance.session.responses['/web/searchview/get_filters'] = function () {
+    instance.session.responses['ir.filters:get_filters'] = function () {
         return [];
     };
-    instance.session.responses['/web/searchview/fields_get'] = function () {
-        return {fields: {
+    instance.session.responses['dummy.model:fields_get'] = function () {
+        return {
             dummy: {type: 'char', string: 'Dummy'}
-        }};
+        };
     };
 
     var dataset = {model: 'dummy.model', get_context: function () { return {}; }};
@@ -845,6 +845,42 @@ openerp.testing.section('search-serialization', {
                 ok(!context.get_eval_context(), "context should have no evaluation context");
             });
     });
+    test('Empty filter domains', {asserts: 4}, function (instance) {
+        var view = {inputs: [], query: {on: function () {}}};
+        var filter_a = new instance.web.search.Filter(
+            {attrs: {name: 'a', context: '{}', domain: '[]'}}, view);
+        var filter_b = new instance.web.search.Filter(
+            {attrs: {name: 'b', context: '{}', domain: '[]'}}, view);
+        var filter_c = new instance.web.search.Filter(
+            {attrs: {name: 'c', context: '{b: 42}', domain: '[["a", "=", 3]]'}}, view);
+        var group = new instance.web.search.FilterGroup(
+            [filter_a, filter_b, filter_c], view);
+        var t1 = group.facet_for_defaults({a: true, c: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+
+            var domain = group.get_domain(model);
+            deepEqual(domain, '[["a", "=", 3]]', "domain should ignore empties");
+            var context = group.get_context(model);
+            deepEqual(context, '{b: 42}', "context should ignore empties");
+        });
+        var t2 = group.facet_for_defaults({a: true, b: true})
+        .done(function (facet) {
+            var model = facet;
+            if (!(model instanceof instance.web.search.Facet)) {
+                model = new instance.web.search.Facet(facet);
+            }
+
+            var domain = group.get_domain(model);
+            equal(domain, null, "domain should ignore empties");
+            var context = group.get_context(model);
+            equal(context, null, "context should ignore empties");
+        });
+        return $.when(t1, t2);
+    });
 });
 openerp.testing.section('removal', {
     dependencies: ['web.search'],
@@ -890,9 +926,9 @@ openerp.testing.section('filters', {
     rpc: 'mock',
     templates: true,
     setup: function (instance, $s, mock) {
-        mock('/web/searchview/load', function () {
+        mock('/web/view/load', function () {
             // view with a single group of filters
-            return {fields_view: {
+            return {
                 type: 'search',
                 fields: {},
                 arch: {
@@ -915,7 +951,7 @@ openerp.testing.section('filters', {
                         children: []
                     }]
                 }
-            }};
+            };
         });
     }
 }, function (test) {
@@ -992,7 +1028,7 @@ openerp.testing.section('saved_filters', {
 }, function (test) {
     test('checkboxing', {asserts: 6}, function (instance, $fix, mock) {
         var view = makeSearchView(instance);
-        mock('/web/searchview/get_filters', function () {
+        mock('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
         });
 
@@ -1015,7 +1051,7 @@ openerp.testing.section('saved_filters', {
     });
     test('removal', {asserts: 1}, function (instance, $fix, mock) {
         var view = makeSearchView(instance);
-        mock('/web/searchview/get_filters', function () {
+        mock('ir.filters:get_filters', function () {
             return [{ name: "filter name", user_id: 42 }];
         });
 

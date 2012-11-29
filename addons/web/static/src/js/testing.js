@@ -2,7 +2,8 @@
 openerp.testing = {};
 (function (testing) {
     var dependencies = {
-        corelib: [],
+        pyeval: [],
+        corelib: ['pyeval'],
         coresetup: ['corelib'],
         data: ['corelib', 'coresetup'],
         dates: [],
@@ -269,6 +270,9 @@ openerp.testing = {};
                     .each(function (module) {
                         openerp.web[module](instance);
                     });
+            }
+            if (instance.session) {
+                instance.session.uid = 42;
             }
             if (_.isNumber(opts.asserts)) {
                 expect(opts.asserts);

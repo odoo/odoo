@@ -1,14 +1,7 @@
 What
 ====
 
-``py.js`` is a parser and evaluator of Python expressions, written in
-pure javascript.
 
-``py.js`` is not intended to implement a full Python interpreter
-(although it could be used for such an effort later on), its
-specification document is the `Python 2.7 Expressions spec
-<http://docs.python.org/reference/expressions.html>`_ (along with the
-lexical analysis part).
 
 Syntax
 ------
@@ -60,7 +53,7 @@ Builtins
     Same as tuple (``list`` is currently an alias for ``tuple``)
 
 ``dict``
-    Implements just about nothing
+    Implements trivial getting and setting, nothing beyond that.
 
 Note that most methods are probably missing from all of these.
 
@@ -69,17 +62,17 @@ Data model protocols
 
 ``py.js`` currently implements the following protocols (or
 sub-protocols) of the `Python 2.7 data model
-<http://docs.python.org/reference/datamodel.html>`_:
+<>`_:
 
 Rich comparisons
-    Roughly complete implementation but for two limits: ``__eq__`` and
-    ``__ne__`` can't return ``NotImplemented`` (well they can but it's
-    not going to work right), and the behavior is undefined if a
-    rich-comparison operation does not return a ``py.bool``.
+    Pretty much complete (including operator fallbacks), although the
+    behavior is currently undefined if an operation does not return
+    either a ``py.bool`` or ``NotImplemented``.
 
-    Also, a ``NotImplemented`` result does not try the reverse
-    operation, not sure if it's supposed to. It directly falls back to
-    comparing type names.
+    ``__hash__`` is supported (and used), but it should return **a
+    javascript string**. ``py.js``'s dict build on javascript objects,
+    reimplementing numeral hashing is worthless complexity at this
+    point.
 
 Boolean conversion
     Implementing ``__nonzero__`` should work.
@@ -93,6 +86,12 @@ Descriptor protocol
     As with attributes, ``__delete__`` is not implemented.
 
 Callable objects
+    Work, although the handling of arguments isn't exactly nailed
+    down. For now, callables get two (javascript) arguments ``args``
+    and ``kwargs``, holding (respectively) positional and keyword
+    arguments.
+
+    Conflicts are *not* handled at this point.
 
 Collections Abstract Base Classes
     Container is the only implemented ABC protocol (ABCs themselves
@@ -119,8 +118,8 @@ implementation:
     ``py.js`` types.
 
     When accessing instance methods, ``py.js`` automatically wraps
-    these in a variant of ``py.def`` automatically, to behave as
-    Python's (bound) methods.
+    these in a variant of ``py.def``, to behave as Python's (bound)
+    methods.
 
 Why
 ===
