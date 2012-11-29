@@ -278,7 +278,7 @@
                                 <group>
                                     <field name="invoice_method"/>
                                     <field name="invoiced"/>
-                                    <field name="fiscal_position"/>
+                                    <field name="fiscal_position" attrs="{'readonly': [('state','=','done')]}"/>
                                     <!-- We do not need these fields anymore, the information is in open chatter -->
                                     <field name="validator" groups="base.group_no_one"/>
                                     <field name="date_approve" groups="base.group_no_one"/>
