@@ -41,12 +41,10 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if hasattr(user, 'partner_address_id') and user.partner_address_id:
-            return user.partner_address_id
-        return user.company_id.partner_id.id
+        if context.get('portal'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            return user.partner_id.id
+        return False
 
     def _get_default_email(self, cr, uid, context=None):
         """ Gives default email address for current user
@@ -54,10 +52,10 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
-            return False
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.email
+        if context.get('portal'):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            return user.email
+        return False        
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -65,7 +63,7 @@ class base_stage(object):
         """
         if context is None:
             context = {}
-        if not context or not context.get('portal'):
+        if not context or context.get('portal'):
             return False
         return uid
 
@@ -202,9 +200,7 @@ class base_stage(object):
 
     def case_escalate(self, cr, uid, ids, context=None):
         """ Escalates case to parent level """
-        cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
-        for case in cases:
+        for case in self.browse(cr, uid, ids, context=context):
             data = {'active': True}
             if case.section_id.parent_id:
                 data['section_id'] = case.section_id.parent_id.id
@@ -215,8 +211,6 @@ class base_stage(object):
                 raise osv.except_osv(_('Error!'), _("You are already at the top level of your sales-team category.\nTherefore you cannot escalate furthermore."))
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(case.section_id.parent_id, context=context)
-        cases = self.browse(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'escalate', context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -256,8 +250,7 @@ class base_stage(object):
 
     def case_set(self, cr, uid, ids, new_state_name=None, values_to_update=None, new_stage_id=None, context=None):
         """ Generic method for setting case. This methods wraps the update
-            of the record, as well as call to _action and browse_record
-            case setting to fill the cache.
+            of the record.
 
             :params new_state_name: the new state of the record; this method
                                     will call ``stage_set_with_state_name``
@@ -271,7 +264,6 @@ class base_stage(object):
                      update when writing values to the record.
         """
         cases = self.browse(cr, uid, ids, context=context)
-        cases[0].state # fill browse record cache, for _action having old and new values
         # 1. update the stage
         if new_state_name:
             self.stage_set_with_state_name(cr, uid, cases, new_state_name, context=context)
@@ -280,13 +272,14 @@ class base_stage(object):
         # 2. update values
         if values_to_update:
             self.write(cr, uid, ids, values_to_update, context=context)
-        # 3. call _action for base action rule
-        if new_state_name:
-            self._action(cr, uid, cases, new_state_name, context=context)
-        elif not (new_stage_id is None):
-            new_state_name = self.read(cr, uid, ids, ['state'], context=context)[0]['state']
-        self._action(cr, uid, cases, new_state_name, context=context)
         return True
+    
+    def write(self, cr, uid, ids, vals, context=None):
+        res = super(base_stage,self).write(cr, uid, ids, vals, context)
+        if vals.get('stage_id'):
+            for case in self.browse(cr, uid, ids, context=context):
+                self._action(cr, uid, case, case.stage_id.state, context=context)
+        return res
 
     def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
         if context is None:

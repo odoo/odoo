@@ -83,7 +83,7 @@ class crm_contact_us(osv.TransientModel):
         Since they are potentially sensitive, we don't want any user to be able
         to read datas generated through this module.  Therefore we'll write
         these information directly in the crm.lead table and leave blank
-        entries in the portal_crm.crm_contact_us table.
+        entries in the contact table.
         This is why the create() method is overwritten.
         """
         crm_lead = self.pool.get('crm.lead')
@@ -95,11 +95,11 @@ class crm_contact_us(osv.TransientModel):
         it is quite complicated to set proper rights for this object.
         Therefore, user SUPERUSER_ID will perform the creation.
         """
-        values['contact_name'] = values['name']
+        values['contact_name'] = values['partner_name']
         crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
 
         """
-        Create an empty record in the portal_crm.crm_contact_us table.
+        Create an empty record in the contact table.
         Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
         """
         empty_values = dict((k, False) if k != 'name' else (k, '') for k, v in values.iteritems())
@@ -114,7 +114,7 @@ class crm_contact_us(osv.TransientModel):
             'res_model': self._name,
             'res_id': ids[0],
             'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_crm', 'wizard_contact_form_view_thanks')[1],
-            'target': 'inline',
+            'target': 'new',
         }
 
     def _needaction_domain_get(self, cr, uid, context=None):

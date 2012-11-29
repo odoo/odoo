@@ -25,37 +25,12 @@ openerp.project = function(openerp) {
                 });
             });
         },
-        project_display_categ_names: function() {
-            /*
-             * Set proper names to project categories.
-             * In kanban views, many2many fields only return a list of ids.
-             * Therefore, we have to fetch the matching data by ourselves.
-             */
-            var self = this;
-            var categ_ids = [];
-
-            // Collect categories ids
-            self.$el.find('span[data-categ_id]').each(function() {
-                categ_ids.push($(this).data('categ_id'));
-            });
-
-            // Find their matching names
-            var dataset = new openerp.web.DataSetSearch(self, 'project.category', self.session.context, [['id', 'in', _.uniq(categ_ids)]]);
-            dataset.read_slice(['id', 'name']).done(function(result) {
-                _.each(result, function(v, k) {
-                    // Set the proper value in the DOM and display the element
-                    self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
-                });
-            });
-        },
         on_groups_started: function() {
             var self = this;
             self._super.apply(self, arguments);
 
             if (self.dataset.model === 'project.project') {
                 self.project_display_members_names();
-            } else if (self.dataset.model === 'project.task') {
-                self.project_display_categ_names();
             }
         },
         on_record_moved: function(record, old_group, old_index, new_group, new_index){
@@ -73,10 +48,6 @@ openerp.project = function(openerp) {
             } else {
                 this._super.apply(this, arguments);
             }
-        },
-        bind_events: function() {
-            this._super();
-            this.view.project_display_categ_names();
         },
     });
 };

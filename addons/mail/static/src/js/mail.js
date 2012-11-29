@@ -204,7 +204,7 @@ openerp.mail = function (session) {
             this.subject = datasets.subject ||  false,
             this.name = datasets.name ||  false,
             this.record_name = datasets.record_name ||  false,
-            this.body = datasets.body ||  false,
+            this.body = datasets.body || '',
             this.vote_nb = datasets.vote_nb || 0,
             this.has_voted = datasets.has_voted ||  false,
             this.is_favorite = datasets.is_favorite ||  false,
@@ -508,7 +508,6 @@ openerp.mail = function (session) {
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 view_type: 'form',
-                action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
                 context: context,
@@ -574,12 +573,7 @@ openerp.mail = function (session) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
-                            if (thread.parent_message) {
-                                self.$el.remove();
-                                self.parent_thread.compose_message = null;
-                            } else {
-                                self.on_cancel();
-                            }
+                            self.on_cancel();
                         });
                         //session.web.unblockUI();
                     });
@@ -591,11 +585,11 @@ openerp.mail = function (session) {
         */
         on_compose_expandable: function (event) {
 
-            if (!this.stay_open && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
+            if ((!this.stay_open || (event && event.type == 'click')) && (!this.show_composer || !this.$('textarea:not(.oe_compact)').val().match(/\S+/))) {
                 this.show_composer = !this.show_composer || this.stay_open;
                 this.reinit();
             }
-            if (!this.stay_open && this.show_composer) {
+            if (!this.stay_open && this.show_composer && (!event || event.type != 'blur')) {
                 this.$('textarea:not(.oe_compact):first').focus();
             }
             return true;
@@ -725,7 +719,7 @@ openerp.mail = function (session) {
         on_message_reply:function (event) {
             event.stopPropagation();
             this.create_thread();
-            this.thread.on_compose_message();
+            this.thread.on_compose_message(event);
             return false;
         },
 
@@ -833,9 +827,10 @@ openerp.mail = function (session) {
             return false;
         },
 
-        /*The selected thread and all childs (messages/thread) became read
-        * @param {object} mouse envent
-        */
+        /* Set the selected thread and all childs as read or unread, based on
+         * read parameter.
+         * @param {boolean} read_value
+         */
         on_message_read_unread: function (read_value) {
             var self = this;
             var messages = [this].concat(this.get_childs());
@@ -958,7 +953,7 @@ openerp.mail = function (session) {
 
             this.options = options.options;
             this.options.root_thread = (options.options.root_thread != undefined ? options.options.root_thread : this);
-            this.options.show_compose_message = this.options.show_compose_message && (this.options.display_indented_thread >= this.thread_level || !this.thread_level);
+            this.options.show_compose_message = this.options.show_compose_message && !this.thread_level;
             
             // record options and data
             this.parent_message= parent.thread!= undefined ? parent : false ;
@@ -995,7 +990,7 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.context,
+                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
@@ -1136,9 +1131,9 @@ openerp.mail = function (session) {
         * Call the on_compose_expandable method to allow the user to write his message.
         * (Is call when a user click on "Reply" button)
         */
-        on_compose_message: function () {
+        on_compose_message: function (event) {
             this.instantiate_compose_message();
-            this.compose_message.on_compose_expandable();
+            this.compose_message.on_compose_expandable(event);
             return false;
         },
 
@@ -1241,6 +1236,7 @@ openerp.mail = function (session) {
             } else {
                 message.appendTo(self.$el);
             }
+            message.$el.hide().fadeIn(500);
 
             return message
         },
@@ -1262,6 +1258,9 @@ openerp.mail = function (session) {
                 // insert the message on dom
                 thread.insert_message( message, typeof dom_insert_after == 'object' ? dom_insert_after : false);
             });
+            if (!records.length && this.options.root_thread == this) {
+                this.no_message();
+            }
         },
 
         /**
@@ -1291,8 +1290,10 @@ openerp.mail = function (session) {
             var messages = _.sortBy( this.messages, function (val) { return val.id; });
             var it = _.indexOf( messages, message );
 
-            var msg_up = messages[it-1];
-            var msg_down = messages[it+1];
+            var msg_up = message.$el.prev('.oe_msg');
+            var msg_down = message.$el.next('.oe_msg');
+            var msg_up = msg_up.hasClass('oe_msg_expandable') ? _.find( this.messages, function (val) { return val.$el[0] == msg_up[0]; }) : false;
+            var msg_down = msg_down.hasClass('oe_msg_expandable') ? _.find( this.messages, function (val) { return val.$el[0] == msg_down[0]; }) : false;
 
             var message_dom = [ ["id", "=", message.id] ];
 
@@ -1397,6 +1398,8 @@ openerp.mail = function (session) {
          *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
          *      When you use this option, the domain is not used for the fetch root.
          *     @param {String} [no_message] Message to display when there are no message
+         *     @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
+         *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
          */
         init: function (parent, action) {
             this._super(parent, action);
@@ -1414,8 +1417,10 @@ openerp.mail = function (session) {
                 'show_compose_message' : false,
                 'show_compact_message' : false,
                 'compose_placeholder': false,
+                'show_link_partner': true,
                 'view_inbox': false,
                 'message_ids': undefined,
+                'compose_as_todo' : false,
             }, this.action.params);
 
             this.action.params.help = this.action.help || false;
@@ -1441,7 +1446,6 @@ openerp.mail = function (session) {
             });
 
             this.thread.appendTo( this.$el );
-            this.thread.no_message();
 
             if (this.action.params.show_compose_message) {
                 this.thread.instantiate_compose_message();
@@ -1632,7 +1636,7 @@ openerp.mail = function (session) {
          */
         do_searchview_search: function (domains, contexts, groupbys) {
             var self = this;
-            this.rpc('/web/session/eval_domain_and_context', {
+            session.web.pyeval.eval_domains_and_contexts({
                 domains: domains || [],
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
