@@ -23,8 +23,8 @@ from osv import osv, fields
 
 class crm_contact_us(osv.TransientModel):
     """ Add employees list to the portal's contact page """
-    _description = 'Contact form for the portal'
     _inherit = 'portal_crm.crm_contact_us'
+    _description = 'Contact form for the portal'
     _columns = {
         'employee_ids' : fields.many2many('hr.employee', string='Employees', readonly=True),
     }
@@ -51,6 +51,7 @@ class hr_employee(osv.osv):
     _columns = {
         'visibility': fields.selection([('public', 'Public'),('private', 'Private')],
             string='Visibility', help='Employee\'s visibility in the portal\'s contact page'),
+        'public_info': fields.text(),
     }
     _defaults = {
         'visibility': 'private',
