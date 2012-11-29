@@ -872,7 +872,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).value();
         warnings.unshift('<ul>');
         warnings.push('</ul>');
-        this.do_warn(_t("The following fields are invalid:", warnings.join(''));
+        this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
     },
     /**
      * Reload the form after saving
