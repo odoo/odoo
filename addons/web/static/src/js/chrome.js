@@ -1167,26 +1167,28 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     check_timezone: function() {
         var self = this;
-        var user_offset = instance.session.user_context.tz_offset;
-        var offset = -(new Date().getTimezoneOffset());
-        // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
-        var browser_offset = (offset < 0) ? "-" : "+";
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
-        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
-        if (browser_offset !== user_offset) {
-            var notification = this.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
-                user_timezone: instance.session.user_context.tz || 'UTC',
-                user_offset: user_offset,
-                browser_offset: browser_offset,
-            }), true);
-            notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
-                notification.close();
-            }).find('a').on('click', function() {
-                notification.close();
-                self.user_menu.on_menu_settings();
-                return false;
-            });
-        }
+        return new instance.web.Model('res.users').call('read', [[this.session.uid], ['tz_offset']]).then(function(result) {
+            var user_offset = result[0]['tz_offset'];
+            var offset = -(new Date().getTimezoneOffset());
+            // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+            var browser_offset = (offset < 0) ? "-" : "+";
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+            browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+            if (browser_offset !== user_offset) {
+                var notification = self.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
+                    user_timezone: instance.session.user_context.tz || 'UTC',
+                    user_offset: user_offset,
+                    browser_offset: browser_offset,
+                }), true);
+                notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                    notification.close();
+                }).find('a').on('click', function() {
+                    notification.close();
+                    self.user_menu.on_menu_settings();
+                    return false;
+                });
+            }
+        });
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
