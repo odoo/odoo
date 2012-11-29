@@ -990,7 +990,8 @@ openerp.mail = function (session) {
             // add message composition form view
             if (!this.compose_message) {
                 this.compose_message = new mail.ThreadComposeMessage(this, this, {
-                    'context': this.options.compose_as_todo && !this.thread_level ? _.extend(this.context, { 'default_favorite_user_ids': [this.session.uid] }) : this.context,
+                    // TDE FIXME: default_favorite_user_ids does not exist anymore -> you should create the message, set starred then update
+                    'context': this.options.compose_as_todo && !this.thread_level ? this.context : this.context,
                     'options': this.options,
                 });
                 if (!this.thread_level || this.thread_level > this.options.display_indented_thread) {
