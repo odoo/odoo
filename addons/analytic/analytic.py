@@ -20,8 +20,10 @@
 ##############################################################################
 
 import time
+from datetime import datetime
 
 from osv import fields, osv
+import tools
 from tools.translate import _
 import decimal_precision as dp
 
@@ -199,8 +201,11 @@ class account_analytic_account(osv.osv):
             return {}
         res = {'value':{}}
         template = self.browse(cr, uid, template_id, context=context)
-        res['value']['date_start'] = template.date_start
-        res['value']['date'] = template.date
+        from_dt = datetime.strptime(template.date_start, tools.DEFAULT_SERVER_DATE_FORMAT)
+        to_dt = datetime.strptime(template.date, tools.DEFAULT_SERVER_DATE_FORMAT)
+        timedelta = to_dt - from_dt
+        res['value']['date_start'] = fields.date.today()
+        res['value']['date'] = datetime.strftime(datetime.now() + timedelta, tools.DEFAULT_SERVER_DATE_FORMAT)
         res['value']['quantity_max'] = template.quantity_max
         res['value']['description'] = template.description
         return res
