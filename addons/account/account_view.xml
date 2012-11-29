@@ -264,13 +264,6 @@
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
 
         <act_window
-            id="act_account_acount_move_line_open"
-            name="Entries"
-            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0, 'default_account_id': active_id}"
-            res_model="account.move.line"
-            src_model="account.account"/>
-
-        <act_window
             id="act_account_acount_move_line_open_unreconciled"
             name="Unreconciled Entries"
             res_model="account.move.line"
@@ -347,6 +340,12 @@
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
 
+        <act_window
+            id="action_move_line_select"
+            name="Journal Items"
+            context="{'search_default_account_id': [active_id]}"
+            res_model="account.move.line"
+            src_model="account.account"/>
 
         <!-- Account Journal -->
         <record id="view_account_journal_tree" model="ir.ui.view">
