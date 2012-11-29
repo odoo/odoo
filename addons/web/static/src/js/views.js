@@ -807,7 +807,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'tests':
                 this.do_action({
-                    name: "JS Tests",
+                    name: _t("JS Tests"),
                     target: 'new',
                     type : 'ir.actions.act_url',
                     url: '/web/tests?mod=*'
@@ -835,7 +835,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 break;
             case 'translate':
                 this.do_action({
-                    name: "Technical Translation",
+                    name: _t("Technical Translation"),
                     res_model : 'ir.translation',
                     domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
                     views: [[false, 'list'], [false, 'form']],
@@ -1418,7 +1418,7 @@ instance.web.json_node_to_xml = function(node, human_readable, indent) {
         return sindent + node;
     } else if (typeof(node.tag) !== 'string' || !node.children instanceof Array || !node.attrs instanceof Object) {
         throw new Error(
-            _.str.sprintf("Node [%s] is not a JSONified XML node",
+            _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
                           JSON.stringify(node)));
     }
     for (var attr in node.attrs) {
@@ -1452,7 +1452,7 @@ instance.web.xml_to_str = function(node) {
     } else if (window.ActiveXObject) {
         return node.xml;
     } else {
-        throw new Error("Could not serialize XML");
+        throw new Error(_t("Could not serialize XML"));
     }
 };
 instance.web.str_to_xml = function(s) {
@@ -1460,7 +1460,7 @@ instance.web.str_to_xml = function(s) {
         var dp = new DOMParser();
         var r = dp.parseFromString(s, "text/xml");
         if (r.body && r.body.firstChild && r.body.firstChild.nodeName == 'parsererror') {
-            throw new Error("Could not parse string to xml");
+            throw new Error(_t("Could not parse string to xml"));
         }
         return r;
     }
@@ -1468,7 +1468,7 @@ instance.web.str_to_xml = function(s) {
     try {
         xDoc = new ActiveXObject("MSXML2.DOMDocument");
     } catch (e) {
-        throw new Error("Could not find a DOM Parser: " + e.message);
+        throw new Error(_.str.sprintf( _t("Could not find a DOM Parser: %s"), e.message));
     }
     xDoc.async = false;
     xDoc.preserveWhiteSpace = true;

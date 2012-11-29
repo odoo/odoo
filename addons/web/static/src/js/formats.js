@@ -224,7 +224,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             } while(tmp !== value);
             tmp = Number(value);
             if (isNaN(tmp))
-                throw new Error(value + " is not a correct integer");
+                throw new Error(_.str.sprintf(_t("'%s' is not a correct integer"), value));
             return tmp;
         case 'float':
             var tmp = Number(value);
@@ -239,7 +239,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             var reformatted_value = tmp.replace(instance.web._t.database.parameters.decimal_point, ".");
             var parsed = Number(reformatted_value);
             if (isNaN(parsed))
-                throw new Error(value + " is not a correct float");
+                throw new Error(_.str.sprintf(_t("'%s' is not a correct float"), value));
             return parsed;
         case 'float_time':
             var factor = 1;
@@ -263,7 +263,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             datetime = Date.parse(value);
             if (datetime !== null)
                 return instance.web.datetime_to_str(datetime);
-            throw new Error(value + " is not a valid datetime");
+            throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
         case 'date':
             var date = Date.parseExact(value, date_pattern);
             if (date !== null)
@@ -271,7 +271,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             date = Date.parse(value);
             if (date !== null)
                 return instance.web.date_to_str(date);
-            throw new Error(value + " is not a valid date");
+            throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
         case 'time':
             var time = Date.parseExact(value, time_pattern);
             if (time !== null)
@@ -279,7 +279,7 @@ instance.web.parse_value = function (value, descriptor, value_if_empty) {
             time = Date.parse(value);
             if (time !== null)
                 return instance.web.time_to_str(time);
-            throw new Error(value + " is not a valid time");
+            throw new Error(_.str.sprintf(_t("'%s' is not a correct time"), value));
     }
     return value;
 };
@@ -294,7 +294,7 @@ instance.web.auto_str_to_date = function(value, type) {
     try {
         return instance.web.str_to_time(value);
     } catch(e) {}
-    throw new Error("'" + value + "' is not a valid date, datetime nor time");
+    throw new Error(_.str.sprintf(_t("'%s' is not a correct date, datetime nor time"), value));
 };
 
 instance.web.auto_date_to_str = function(value, type) {
@@ -306,7 +306,7 @@ instance.web.auto_date_to_str = function(value, type) {
         case 'time':
             return instance.web.time_to_str(value);
         default:
-            throw new Error(type + " is not convertible to date, datetime nor time");
+            throw new Error(_.str.sprintf(_t("'%s' is not convertible to date, datetime nor time"), type));
     }
 };
 
