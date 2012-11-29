@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
 
 from datetime import datetime, timedelta
 
@@ -54,6 +55,8 @@ class res_users(osv.osv):
         template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_reset_password', 'reset_password_email')
         assert template._name == 'email.template'
         for user in self.browse(cr, uid, ids, context):
+            if not user.email:
+                raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
             self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
 
         return True
