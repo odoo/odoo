@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-25 16:35+0000\n"
-"Last-Translator: ccdos <ccdos@163.com>\n"
+"PO-Revision-Date: 2012-11-28 14:03+0000\n"
+"Last-Translator: hifly <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:40+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-29 05:13+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -29,13 +29,13 @@ msgid ""
 "                This installs the module mrp_repair."
 msgstr ""
 "允许管理所有的产品维修.\n"
-"                    * 添加删除要修复的产品\n"
+"                    * 添加/删除要修复的产品\n"
 "                    * 影响库存\n"
 "                    * 开票（产品和/或服务）\n"
 "                    * 保修\n"
 "                    * 修理报价单\n"
 "                    * 技术人员和最终客户的说明.\n"
-"             这需要安装模块mrp_repair."
+"             为此需要安装模块mrp_repair."
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -45,12 +45,12 @@ msgstr "周期数"
 #. module: mrp
 #: help:mrp.production,location_src_id:0
 msgid "Location where the system will look for components."
-msgstr "系统用于查找部件的位置。"
+msgstr "系统用于查找部件的库位。"
 
 #. module: mrp
 #: field:mrp.production,workcenter_lines:0
 msgid "Work Centers Utilisation"
-msgstr "工作中心利用率"
+msgstr "工作中心效率"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -1231,6 +1231,9 @@ msgid ""
 "                cases entail a small performance impact.\n"
 "                This installs the module mrp_jit."
 msgstr ""
+"允许需求计划及时进行排程。\n"
+"                所有需求计划将被立即处理。这可能会影响一点效率。\n"
+"                为此需要安装模块 mrp_jit."
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1491,6 +1494,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建一个新的属性。\n"
+"              </p><p>\n"
+"               OpenERP里的属性用于在制造同一个产品却有不同方法时，选择正确的BoM。\n"
+"                你可以为每个BoM设置多个属性。 \n"
+"                销售员创建销售订单时，可以关联多个属性，\n"
+"                这样OpenERP将根据这些属性自动匹配对应的BoM。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_procurement_order
@@ -1581,7 +1593,7 @@ msgid ""
 "                within your work centers in order to produce a product. They "
 "are attached to bills of materials\n"
 "                that will define the required raw materials."
-msgstr ""
+msgstr "工艺路线允许你创建并管理制造工序。为了生产产品，这些工序被分配到工作中心。我们在定义原材料的BoM里可以设置工艺路线。"
 
 #. module: mrp
 #: view:report.workcenter.load:0
@@ -2151,6 +2163,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                点击创建BoM。\n"
+"              </p><p>\n"
+"                BoM允许你为制造一个产品而定义一组原材料；\n"
+"                生产可通过生产订单或者产品包装来完成。\n"
+"              </p><p>\n"
+"                OpenERP使用这些BoM，依据需求自动给出生产订单建议。\n"
+"              </p>\n"
+"            "
 
 #. module: mrp
 #: field:mrp.routing.workcenter,routing_id:0
@@ -2175,6 +2196,10 @@ msgid ""
 "                With this module: A + B + C -> D + E.\n"
 "                This installs the module mrp_byproduct."
 msgstr ""
+"你可以在BoM里配置副产品。\n"
+"                不安装该模块，只能做到: A + B + C -> D.\n"
+"                安装该模块后，可以做到: A + B + C -> D + E.\n"
+"                为此需要安装模块 mrp_byproduct."
 
 #. module: mrp
 #: field:procurement.order,bom_id:0
