@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-05-09 10:19+0000\n"
-"PO-Revision-Date: 2012-03-20 14:39+0000\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2012-11-16 14:05+0000\n"
+"Last-Translator: Normunds (Alistek) <Unknown>\n"
 "Language-Team: Latvian <lv@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 08:19+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-11-17 05:01+0000\n"
+"X-Generator: Launchpad (build 16278)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -23,23 +23,25 @@ msgid ""
 "The buyer has to approve the RFQ before being sent to the supplier. The RFQ "
 "becomes a confirmed Purchase Order."
 msgstr ""
+"Pirms tāme tiek aizsūtīta piegādātājam, pircējam tā ir jāapstiprina. Pēc tam "
+"tāme kļūst par apstiprinātu Iepirkumu."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:292
 #, python-format
 msgid "You can not confirm purchase order without Purchase Order Lines."
-msgstr ""
+msgstr "Nevar apstiprināt iepirkumu, ja tajā nav Iepirkumu Rindas."
 
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoiced & Paid"
-msgstr ""
+msgstr "Rēķins Piestādīts un Apmaksāts"
 
 #. module: purchase
 #: field:purchase.order,location_id:0 view:purchase.report:0
 #: field:purchase.report,location_id:0
 msgid "Destination"
-msgstr ""
+msgstr "Galamērķis"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
@@ -48,11 +50,12 @@ msgid ""
 "You have to select a product UOM in the same category than the purchase UOM "
 "of the product"
 msgstr ""
+"Produkta mērv. jābūt tajā pašā kategorijā, kurā ir produkta iepirkšanas mērv."
 
 #. module: purchase
 #: help:purchase.report,date:0
 msgid "Date on which this document has been created"
-msgstr ""
+msgstr "Datums, kurā dokuments izveidots"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_rfq
@@ -70,39 +73,39 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Picking"
-msgstr ""
+msgstr "No Komplektācijas"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Nav Izrakstīts Rēķins"
 
 #. module: purchase
 #: field:purchase.order,dest_address_id:0
 msgid "Destination Address"
-msgstr ""
+msgstr "Galamērķa Adrese"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.report,validator:0
 msgid "Validated By"
-msgstr ""
+msgstr "Apstiprināja"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_invoice_onshipping
 msgid "Stock Invoice Onshipping"
-msgstr ""
+msgstr "Rēķina Piestādīšana pēc Piegādes"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,partner_id:0
 #: view:purchase.order.line:0 view:purchase.report:0
 #: field:purchase.report,partner_id:0
 msgid "Supplier"
-msgstr ""
+msgstr "Piegādātājs"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Do you want to generate the supplier invoices ?"
-msgstr ""
+msgstr "Vai vēlaties veidot piegādātāju rēķinus?"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -111,72 +114,75 @@ msgid ""
 "products, etc. For each purchase order, you can track the products received, "
 "and control the supplier invoices."
 msgstr ""
+"Izmantojiet šo izvēlni, lai meklētu iepirkuma pasūtījumus pēc kodiem, "
+"piegādātājiem, produktiem utt. Ir iespējams kontrolēt saņemtos produktus un "
+"piegādātāja rēķinus."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_line_invoice.py:145
 #, python-format
 msgid "Supplier Invoices"
-msgstr ""
+msgstr "Piegādātāju Rēķini"
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique !"
-msgstr ""
+msgstr "Pasūtījuma kodam ir jābūt unikālam!"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_packinginvoice0
 #: model:process.transition,name:purchase.process_transition_productrecept0
 msgid "From a Pick list"
-msgstr ""
+msgstr "No Komplektācijas saraksta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:735
 #, python-format
 msgid "No Pricelist !"
-msgstr ""
+msgstr "Nav Cenrāža!"
 
 #. module: purchase
 #: field:purchase.order.line,product_qty:0 view:purchase.report:0
 #: field:purchase.report,quantity:0
 msgid "Quantity"
-msgstr ""
+msgstr "Skaits"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
 msgid "Select an Open Sale Order"
-msgstr ""
+msgstr "Izvēlēties Aktīvu Pasūtījumu"
 
 #. module: purchase
 #: field:purchase.order,company_id:0 field:purchase.order.line,company_id:0
 #: view:purchase.report:0 field:purchase.report,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Uzņēmums"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_monthly_categ_graph
 #: view:purchase.report:0
 msgid "Monthly Purchase by Category"
-msgstr ""
+msgstr "Ikmēneša Iepirkumi pa Kategorijām"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Set to Draft"
-msgstr ""
+msgstr "Atzīmēt kā Melnrakstu"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Invoice Exception"
-msgstr ""
+msgstr "Brīdinājums par Izmaiņām rēķinā"
 
 #. module: purchase
 #: model:product.pricelist,name:purchase.list0
 msgid "Default Purchase Pricelist"
-msgstr ""
+msgstr "Noklusējuma Iepirkumu Cenrādis"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_current_purchases
 msgid "Current purchases"
-msgstr ""
+msgstr "Pašreizējie iepirkumi"
 
 #. module: purchase
 #: help:purchase.order,dest_address_id:0
@@ -185,18 +191,21 @@ msgid ""
 "customer.In this case, it will remove the warehouse link and set the "
 "customer location."
 msgstr ""
+"Ierakstīt adresi, ja vēlaties veikt piegādājumu klientam tieši no "
+"piegādātāja. Šajā gadījumā tiks noņemta sasaiste ar noliktavu, un tiks "
+"norādīta klienta adrese."
 
 #. module: purchase
 #: help:res.partner,property_product_pricelist_purchase:0
 msgid ""
 "This pricelist will be used, instead of the default one, for purchases from "
 "the current partner"
-msgstr ""
+msgstr "Partnera iepirkumiem tiks lietots šis cenrādis noklusētā vietā"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Fax :"
-msgstr ""
+msgstr "Fakss :"
 
 #. module: purchase
 #: help:purchase.order,pricelist_id:0
@@ -204,55 +213,57 @@ msgid ""
 "The pricelist sets the currency used for this purchase order. It also "
 "computes the supplier price for the selected products/quantities."
 msgstr ""
+"Cenrādis norāda iepirkuma valūtu. Tas arī aprēķina izvēlēto "
+"produktu/daudzumu un piegādes cenu."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_picking
 msgid "Partial Picking"
-msgstr ""
+msgstr "Daļēja Komplektācija"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:289
 #, python-format
 msgid "Purchase order '%s' is confirmed."
-msgstr ""
+msgstr "Iepirkums \"%s\" ir apstiprināts."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Purchase"
-msgstr ""
+msgstr "Apstiprināt Iepirkumu"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_approvepurchaseorder0
 #: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.report,state:0
 msgid "Approved"
-msgstr ""
+msgstr "Apstiprināts"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Reference UOM"
-msgstr ""
+msgstr "Atsauces Mērv."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Origin"
-msgstr ""
+msgstr "Izcelsme"
 
 #. module: purchase
 #: field:purchase.report,product_uom:0
 msgid "Reference UoM"
-msgstr ""
+msgstr "Atsauces Mērv."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_line_product_tree
 msgid "Purchases"
-msgstr ""
+msgstr "Iepirkumi"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,notes:0
 #: view:purchase.order.line:0 field:purchase.order.line,notes:0
 msgid "Notes"
-msgstr ""
+msgstr "Piezīmes"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:735
@@ -261,17 +272,19 @@ msgid ""
 "You have to select a pricelist or a supplier in the purchase form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Iepirkuma formā jāizvēlas cenrādis vai piegādātājs!\n"
+"Lūdzu, uzstādiet pirms izvēlaties produktu."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "September"
-msgstr ""
+msgstr "Septembris"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr ""
+msgstr "Nodokļi"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -281,35 +294,35 @@ msgstr ""
 #: model:res.request.link,name:purchase.req_link_purchase_order
 #: field:stock.picking,purchase_id:0
 msgid "Purchase Order"
-msgstr ""
+msgstr "Iepirkums"
 
 #. module: purchase
 #: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr ""
+msgstr "Pasūtījuma Atsauce"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Neto Summa:"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure Your Purchases Management Application"
-msgstr ""
+msgstr "Konfigurēt Iepirkumu Vadību"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_product
 #: model:ir.ui.menu,name:purchase.menu_procurement_partner_contact_form
 #: model:ir.ui.menu,name:purchase.menu_product_in_config_purchase
 msgid "Products"
-msgstr ""
+msgstr "Preces"
 
 #. module: purchase
 #: field:purchase.installer,progress:0
 msgid "Configuration Progress"
-msgstr ""
+msgstr "Konfigurācijas Progress"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -322,96 +335,96 @@ msgstr ""
 #: selection:purchase.order,state:0 selection:purchase.order.line,state:0
 #: selection:purchase.report,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Atcelts"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:315
 #, python-format
 msgid "Purchase amount over the limit"
-msgstr ""
+msgstr "Iepirkuma summa pārsniedz limitu"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Convert to Purchase Order"
-msgstr ""
+msgstr "Konvertēt uz Iepirkumu Pasūtījumu"
 
 #. module: purchase
 #: field:purchase.order,pricelist_id:0 field:purchase.report,pricelist_id:0
 msgid "Pricelist"
-msgstr ""
+msgstr "Cenrādis"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Shipping Exception"
-msgstr ""
+msgstr "Brīdinājums par Izmaiņām piegādē"
 
 #. module: purchase
 #: field:purchase.order.line,invoice_lines:0
 msgid "Invoice Lines"
-msgstr ""
+msgstr "Rēķina Rindas"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinglist0
 #: model:process.node,name:purchase.process_node_productrecept0
 msgid "Incoming Products"
-msgstr ""
+msgstr "Ienākošās Preces"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_packinginvoice0
 msgid "Outgoing Products"
-msgstr ""
+msgstr "Izejošās Preces"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr ""
+msgstr "Manuāli Labots"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "   Month   "
-msgstr ""
+msgstr "   Mēnesis   "
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr ""
+msgstr "Artikuls (Kods)"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:244
 #, python-format
 msgid "Cannot delete Purchase Order(s) which are in %s State!"
-msgstr ""
+msgstr "Nevar dzēst Iepirkumu(-s), kura(-u) Statuss ir %s!"
 
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr ""
+msgstr "Kontaktpersona Galamērķa Adresē"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Noliktavas Grāmatojums"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,day:0
 msgid "Day"
-msgstr ""
+msgstr "Diena"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:326
 #, python-format
 msgid "Purchase order '%s' has been set in draft state."
-msgstr ""
+msgstr "Iepirkums \"%s\" ir atzīmēts kā melnraksts."
 
 #. module: purchase
 #: field:purchase.order.line,account_analytic_id:0
 msgid "Analytic Account"
-msgstr ""
+msgstr "Analītiskais Konts"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Rindu skaits"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
@@ -419,86 +432,86 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Brīdinājums"
 
 #. module: purchase
 #: field:purchase.installer,purchase_analytic_plans:0
 msgid "Purchase Analytic Plans"
-msgstr ""
+msgstr "Iepirkumu Analītiskie Plāni"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_installer
 msgid "purchase.installer"
-msgstr ""
+msgstr "purchase.installer"
 
 #. module: purchase
 #: selection:purchase.order.line,state:0
 msgid "Draft"
-msgstr ""
+msgstr "Neapstiprināts"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Net Price"
-msgstr ""
+msgstr "Neto Cena"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Order Line"
-msgstr ""
+msgstr "Pasūtījuma Rinda"
 
 #. module: purchase
 #: help:purchase.order,shipped:0
 msgid "It indicates that a picking has been done"
-msgstr ""
+msgstr "Parāda, ka komplektācija ir pabeigta"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:772
 #, python-format
 msgid "Wrong Product UOM !"
-msgstr ""
+msgstr "Nepareiza Produkta Mērv."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_confirmpurchaseorder0
 #: selection:purchase.order.line,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Apstiprināts"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_average:0
 msgid "Average Price"
-msgstr ""
+msgstr "Vidējā Cena"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Total :"
-msgstr ""
+msgstr "Kopā:"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_confirmpurchaseorder0
 #: view:purchase.order.line_invoice:0
 msgid "Confirm"
-msgstr ""
+msgstr "Apstiprināt"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_invoice
 #: view:purchase.order:0
 msgid "Invoice Control"
-msgstr ""
+msgstr "Rēķinu Kontrole"
 
 #. module: purchase
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "Kļūda! Jums nav tiesību veidot rekursīvus uzņēmumus."
 
 #. module: purchase
 #: field:purchase.order,partner_ref:0
 msgid "Supplier Reference"
-msgstr ""
+msgstr "Piegādātāja Kods"
 
 #. module: purchase
 #: help:purchase.order,amount_tax:0
 msgid "The tax amount"
-msgstr ""
+msgstr "Nodokļa Summa"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_productrecept0
@@ -513,7 +526,7 @@ msgstr ""
 #: view:purchase.order.line:0 field:purchase.order.line,state:0
 #: view:purchase.report:0 view:stock.picking:0
 msgid "State"
-msgstr ""
+msgstr "Statuss"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_stock_move_report_po
@@ -525,60 +538,60 @@ msgstr ""
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Tel.:"
-msgstr ""
+msgstr "Tālr.:"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
 #: field:purchase.order,picking_ids:0
 msgid "Picking List"
-msgstr ""
+msgstr "Iepakošanas Saraksts"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Print"
-msgstr ""
+msgstr "Drukāt"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_order_group
 msgid "Merge Purchase orders"
-msgstr ""
+msgstr "Apvienot Iepirkumu Pasūtījumus"
 
 #. module: purchase
 #: field:purchase.order,order_line:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Pasūtījuma Rindas"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:737
 #, python-format
 msgid "No Partner!"
-msgstr ""
+msgstr "Nav Definēts Partneris!"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Fax:"
-msgstr ""
+msgstr "Fakss:"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Cena Kopā"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed amount"
-msgstr ""
+msgstr "Summa bez nodokļiem"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_pricelist
 msgid "Pricelists"
-msgstr ""
+msgstr "Cenrāži"
 
 #. module: purchase
 #: field:purchase.report,partner_address_id:0
 msgid "Address Contact Name"
-msgstr ""
+msgstr "Kontaktpersonas Adrese"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -594,7 +607,7 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,invoice_ids:0
 msgid "Invoices generated for a purchase order"
-msgstr ""
+msgstr "Iepirkumam izveidotie rēķini"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:285 code:addons/purchase/purchase.py:348
@@ -602,22 +615,22 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_line_invoice.py:111
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Kļūda!"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "General Information"
-msgstr ""
+msgstr "Pamatinformācija"
 
 #. module: purchase
 #: view:board.board:0
 msgid "My Board"
-msgstr ""
+msgstr "Mans Panelis"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Purchase Order N°"
-msgstr ""
+msgstr "Iepirkuma Nr."
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -631,7 +644,7 @@ msgstr ""
 #: code:addons/purchase/purchase.py:769
 #, python-format
 msgid "The selected supplier only sells this product by %s"
-msgstr ""
+msgstr "Izvēlētais piegādātājs produktu pārdod tikai pēc %s"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompackinglist0
@@ -644,62 +657,62 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "From Order"
-msgstr ""
+msgstr "No Pasūtījuma"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_invoicefrompurchaseorder0
 msgid "Create invoice"
-msgstr ""
+msgstr "Veidot rēķinu"
 
 #. module: purchase
 #: field:purchase.order.line,move_dest_id:0
 msgid "Reservation Destination"
-msgstr ""
+msgstr "Rezervācijas Galamērķis"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:236
 #, python-format
 msgid "Invalid action !"
-msgstr ""
+msgstr "Nederīga darbība!"
 
 #. module: purchase
 #: view:purchase.order:0 selection:purchase.order,state:0
 #: selection:purchase.order.line,state:0 selection:purchase.report,state:0
 #: view:stock.picking:0
 msgid "Done"
-msgstr ""
+msgstr "Pabeigts"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "July"
-msgstr ""
+msgstr "Jūlijs"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_config_purchase
 #: view:res.company:0
 msgid "Configuration"
-msgstr ""
+msgstr "Konfigurācija"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_by_supplier
 #: view:purchase.report:0
 msgid "Purchase by supplier"
-msgstr ""
+msgstr "Iepirkumi pēc piegādātāja"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total amount"
-msgstr ""
+msgstr "Summa kopā"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_purchase_order_2_stock_picking
 msgid "Receptions"
-msgstr ""
+msgstr "Saņemšana"
 
 #. module: purchase
 #: field:purchase.order,validator:0 view:purchase.report:0
 msgid "Validated by"
-msgstr ""
+msgstr "Apstiprināja"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_invoice_pending
@@ -714,12 +727,12 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
 #: model:process.node,name:purchase.process_node_draftpurchaseorder1
 msgid "RFQ"
-msgstr ""
+msgstr "Tāme"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_pending_invoice
 msgid "Supplier Invoices to Receive"
-msgstr ""
+msgstr "Saņemt Ienākošos Rēķinus"
 
 #. module: purchase
 #: help:purchase.installer,purchase_requisition:0
@@ -727,55 +740,56 @@ msgid ""
 "Manages your Purchase Requisition and allows you to easily keep track and "
 "manage all your purchase orders."
 msgstr ""
+"Ļauj organizēt jūsu Iepirkumu Pieprasījumus, kā arī kontrolēt iepirkumus."
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "    Month-1    "
-msgstr ""
+msgstr "    Mēnesis-1    "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:349
 #, python-format
 msgid "There is no purchase journal defined for this company: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Uzņēmumam \"%s\" (id:%d) nav definēts iepirkumu žurnāls"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Waiting Approval"
-msgstr ""
+msgstr "Gaida Apstiprinājumu"
 
 #. module: purchase
 #: selection:purchase.order,invoice_method:0
 msgid "Manual"
-msgstr ""
+msgstr "Manuāla"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:410
 #, python-format
 msgid "You must first cancel all picking attached to this purchase order."
-msgstr ""
+msgstr "Vispirms jāatceļ ar iepirkumu saistītā komplektēšana."
 
 #. module: purchase
 #: report:purchase.order:0 view:purchase.order:0
 #: field:purchase.order,date_order:0 field:purchase.order.line,date_order:0
 #: field:purchase.report,date:0 view:stock.picking:0
 msgid "Order Date"
-msgstr ""
+msgstr "Pasūtījuma Datums"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_productrecept0
 msgid "Incoming products to control"
-msgstr ""
+msgstr "Kontrolējamie ienākošie produkti"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
 msgid "Approbation"
-msgstr ""
+msgstr "Aprobācija"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Purchase Orders Statistics"
-msgstr ""
+msgstr "Iepirkumu Statistika"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_line_form_action2
@@ -790,12 +804,12 @@ msgstr ""
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
 #: model:process.node,name:purchase.process_node_invoicecontrol0
 msgid "Draft Invoice"
-msgstr ""
+msgstr "Neapstiprināts Rēķins"
 
 #. module: purchase
 #: help:purchase.installer,purchase_analytic_plans:0
 msgid "Manages analytic distribution and purchase orders."
-msgstr ""
+msgstr "Pārvalda iepirkumus un analītisko distribūciju"
 
 #. module: purchase
 #: help:purchase.order,minimum_planned_date:0
@@ -807,48 +821,48 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "August"
-msgstr ""
+msgstr "Augusts"
 
 #. module: purchase
 #: field:purchase.installer,purchase_requisition:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "Iepirkumu Pieprasījums"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Mērvienību Kategorijas"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay_pass:0
 msgid "Days to Deliver"
-msgstr ""
+msgstr "Atlikušas Dienas līdz Piegādei"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
 msgid "Receive Products"
-msgstr ""
+msgstr "Saņemt Preci"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Pasūtījums"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,invoice_ids:0
 msgid "Invoices"
-msgstr ""
+msgstr "Rēķini"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_purchaseorder0
 msgid "Confirmed purchase order to invoice"
-msgstr ""
+msgstr "Apstiprināts iepirkums, par kuru izrakstīt rēķinu"
 
 #. module: purchase
 #: field:purchase.config.wizard,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Attēls"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -858,134 +872,134 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,month:0
 msgid "Month"
-msgstr ""
+msgstr "Mēnesis"
 
 #. module: purchase
 #: selection:purchase.report,state:0
 msgid "Waiting Supplier Ack"
-msgstr ""
+msgstr "Gaida Piegādātāja Apstiprinājumu"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Request for Quotation :"
-msgstr ""
+msgstr "Cenu Piedāvājuma Pieprasījums:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_waiting
 msgid "Purchase Order Waiting Approval"
-msgstr ""
+msgstr "Iepirkums Gaida Apstiprināšanu"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Total Untaxed amount"
-msgstr ""
+msgstr "Summa bez Nodokļiem kopā"
 
 #. module: purchase
 #: field:purchase.order,shipped:0 field:purchase.order,shipped_rate:0
 msgid "Received"
-msgstr ""
+msgstr "Saņemts"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinglist0
 msgid "List of ordered products."
-msgstr ""
+msgstr "Pasūtīto produktu saraksts."
 
 #. module: purchase
 #: help:purchase.order,picking_ids:0
 msgid ""
 "This is the list of picking list that have been generated for this purchase"
-msgstr ""
+msgstr "Komplektēšanas saraksts, kas tika izveidots no iepirkuma"
 
 #. module: purchase
 #: model:ir.actions.todo.category,name:purchase.category_purchase_config
 #: model:ir.ui.menu,name:purchase.menu_procurement_management
 msgid "Purchase Management"
-msgstr ""
+msgstr "Iepirkumu Vadība"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_invoiceafterpacking0
 #: model:process.node,note:purchase.process_node_invoicecontrol0
 msgid "To be reviewed by the accountant."
-msgstr ""
+msgstr "Pārbaudīt Grāmatvedim."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "Purchase Lines Not Invoiced"
-msgstr ""
+msgstr "Iepirkumu rindas, par kurām nav izrakstīts rēķins"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Nodokļi:"
 
 #. module: purchase
 #: field:purchase.order,invoiced_rate:0 field:purchase.order.line,invoiced:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Rēķins izrakstīts"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategorija"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
 #: model:process.node,note:purchase.process_node_confirmpurchaseorder0
 msgid "State of the Purchase Order."
-msgstr ""
+msgstr "Iepirkuma Statuss"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "  Year  "
-msgstr ""
+msgstr "  Gads  "
 
 #. module: purchase
 #: field:purchase.report,state:0
 msgid "Order State"
-msgstr ""
+msgstr "Pasūtījuma Statuss"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_view_purchase_line_invoice
 msgid "Create invoices"
-msgstr ""
+msgstr "Veidot rēķinus"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line
 #: view:purchase.order.line:0 field:stock.move,purchase_line_id:0
 msgid "Purchase Order Line"
-msgstr ""
+msgstr "Pasūtījuma Rinda"
 
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error ! You can not create recursive associated members."
-msgstr ""
+msgstr "Kļūda! Nevar izveidot rekursīvus asociētos locekļus."
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Calendar View"
-msgstr ""
+msgstr "Kalendāra Skatījums"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_group
 msgid "Purchase Order Merge"
-msgstr ""
+msgstr "Iepirkumu Apvienošana"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Regards,"
-msgstr ""
+msgstr "Ar Cieņu,"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_negotiation_by_supplier
 #: view:purchase.report:0
 msgid "Negotiation by Supplier"
-msgstr ""
+msgstr "Piegādātājs vēl nav apstiprinājis"
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Purchase Properties"
-msgstr ""
+msgstr "Iepirkuma Parametri"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_purchaseinvoice0
@@ -998,58 +1012,58 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
 msgid "Untaxed Amount"
-msgstr ""
+msgstr "Summa bez nodokļiem"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
 msgid "It indicates that an invoice has been paid"
-msgstr ""
+msgstr "Norāda, ka rēķins ir apmaksāts"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_packinginvoice0
 msgid "Outgoing products to invoice"
-msgstr ""
+msgstr "Izejošie produkti, par kuriem piestādīt rēķinu"
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "Configure"
-msgstr ""
+msgstr "Konfigurēt"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_qty_per_product
 #: view:purchase.report:0
 msgid "Qty. per product"
-msgstr ""
+msgstr "Daudzums pēc produktiem"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Jūs mēģināt piesaistīt lotu no cita produkta"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
 msgid "Date on which this document has been created."
-msgstr ""
+msgstr "Datums, kurā izveidots dokuments."
 
 #. module: purchase
 #: view:res.partner:0
 msgid "Sales & Purchases"
-msgstr ""
+msgstr "Tirdzniecība un Iepirkumi"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "June"
-msgstr ""
+msgstr "Jūnijs"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_report
 msgid "Purchases Orders"
-msgstr ""
+msgstr "Iepirkumi"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Manual Invoices"
-msgstr ""
+msgstr "Manuālie Rēķini"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:318
@@ -1057,55 +1071,56 @@ msgstr ""
 msgid ""
 "Somebody has just confirmed a purchase with an amount over the defined limit"
 msgstr ""
+"Kāds ir apstiprinājis iepirkumu, kura summa pārsniedz noteikto limitu"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "November"
-msgstr ""
+msgstr "Novembris"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Extended Filters..."
-msgstr ""
+msgstr "Paplašinātie filtri..."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:359
 #: code:addons/purchase/wizard/purchase_line_invoice.py:112
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Produktam \"%s\" (id:%d) nav definēts izdevumu konts."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:418
 #, python-format
 msgid "You must first cancel all invoices attached to this purchase order."
-msgstr ""
+msgstr "Vispirms jāatceļ visi iepirkumam piesaistītie rēķini."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:48
 #, python-format
 msgid "Please select multiple order to merge in the list view."
-msgstr ""
+msgstr "No saraksta skatījuma izvēlēties vairākus pasūtījumus, ko apvienot."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
 msgid "Pick list generated"
-msgstr ""
+msgstr "Izveidots komplektācijas saraksts"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Exception"
-msgstr ""
+msgstr "Kļūda"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "October"
-msgstr ""
+msgstr "Oktobris"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Compute"
-msgstr ""
+msgstr "Aprēķināt"
 
 #. module: purchase
 #: model:ir.module.module,description:purchase.module_meta_information
@@ -1129,67 +1144,70 @@ msgid ""
 "The selected supplier has a minimal quantity set to %s, you cannot purchase "
 "less."
 msgstr ""
+"Izvēlētais piegādātājs ir norādījis minimālo daudzumu %s. Nav iespējams "
+"iegādāties mazāk."
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "January"
-msgstr ""
+msgstr "Janvāris"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Uzņēmumi"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Cancel Purchase Order"
-msgstr ""
+msgstr "Atcelt Iepirkumu"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Šim produktam ir jāpiesaista produkcijas lots"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
 msgid "A pick list is generated to track the incoming products."
 msgstr ""
+"Komplektēšanas saraksts ir izveidots, lai kontrolētu ienākošos produktus."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_deshboard
 msgid "Dashboard"
-msgstr ""
+msgstr "Rīku panelis"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,price_standard:0
 msgid "Products Value"
-msgstr ""
+msgstr "Produktu Vērtība"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_product_pricelist_type
 msgid "Pricelists Types"
-msgstr ""
+msgstr "Cenrāžu Tipi"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.report:0
 msgid "Quotations"
-msgstr ""
+msgstr "Cenu Piedāvājumi"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_po_per_month_tree
 #: view:purchase.report:0
 msgid "Purchase order per month"
-msgstr ""
+msgstr "Iepirkumi pa mēnešiem"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "History"
-msgstr ""
+msgstr "Vēsture"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_by_category_purchase_form
 msgid "Products by Category"
-msgstr ""
+msgstr "Preces pa Kategorijām"
 
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,delay:0
@@ -1215,28 +1233,28 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order.line,price_subtotal:0
 msgid "Subtotal"
-msgstr ""
+msgstr "Apakšsumma kopā"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
 #: model:ir.ui.menu,name:purchase.menu_purchase_rfq
 msgid "Requests for Quotation"
-msgstr ""
+msgstr "Tāmes"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
 msgid "Date on which purchase order has been approved"
-msgstr ""
+msgstr "Datums, kurā iepirkums apstiprināts"
 
 #. module: purchase
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Waiting"
-msgstr ""
+msgstr "Gaida"
 
 #. module: purchase
 #: model:product.pricelist.version,name:purchase.ver0
 msgid "Default Purchase Pricelist Version"
-msgstr ""
+msgstr "Noklusējuma Iepirkumu Cenrāža Versija"
 
 #. module: purchase
 #: view:purchase.installer:0
@@ -1248,28 +1266,28 @@ msgstr ""
 #: model:ir.actions.act_window,name:purchase.action_purchase_install_module
 #: view:purchase.installer:0
 msgid "Purchases Application Configuration"
-msgstr ""
+msgstr "Iepirkumu Moduļu Konfigurācija"
 
 #. module: purchase
 #: field:purchase.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr ""
+msgstr "Nodokļu Profils"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Request for Quotation N°"
-msgstr ""
+msgstr "Tame Nr."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_invoicefrompackinglist0
 #: model:process.transition,name:purchase.process_transition_invoicefrompurchase0
 msgid "Invoice"
-msgstr ""
+msgstr "Rēķins"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "December"
-msgstr ""
+msgstr "Decembris"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1277,17 +1295,17 @@ msgstr ""
 #: view:purchase.order:0 view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "Cancel"
-msgstr ""
+msgstr "Atcelt"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Purchase Order Lines"
-msgstr ""
+msgstr "Iepirkumu Rindas"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_approvingpurchaseorder0
 msgid "The supplier approves the Purchase Order."
-msgstr ""
+msgstr "Piegādātājs apstiprina Iepirkumu."
 
 #. module: purchase
 #: code:addons/purchase/wizard/purchase_order_group.py:80
@@ -1297,17 +1315,17 @@ msgstr ""
 #: view:purchase.report:0
 #, python-format
 msgid "Purchase Orders"
-msgstr ""
+msgstr "Iepirkums"
 
 #. module: purchase
 #: field:purchase.order,origin:0
 msgid "Source Document"
-msgstr ""
+msgstr "Pamatojuma Dokuments"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Merge orders"
-msgstr ""
+msgstr "Apvienot pasūtījumus"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_order_line_invoice
@@ -1317,101 +1335,101 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree4
 msgid "Incoming Shipments"
-msgstr ""
+msgstr "Ienākošās Piegādes"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_by_user_all
 msgid "Total Orders by User per month"
-msgstr ""
+msgstr "Pasūtījumi kopā pēc lietotāja pa mēnešiem"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_quotation
 #: selection:purchase.order,state:0 selection:purchase.report,state:0
 msgid "Request for Quotation"
-msgstr ""
+msgstr "Tāme"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Tél. :"
-msgstr ""
+msgstr "Tālr. :"
 
 #. module: purchase
 #: field:purchase.order,create_uid:0 view:purchase.report:0
 #: field:purchase.report,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Atbildīgais"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Our Order Reference"
-msgstr ""
+msgstr "Iekšējais Komentārs"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0
 msgid "Search Purchase Order"
-msgstr ""
+msgstr "Meklēt Iepirkumu"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0 view:purchase.report:0
 #: field:purchase.report,warehouse_id:0
 msgid "Warehouse"
-msgstr ""
+msgstr "Noliktava"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_draftpurchaseorder0
 #: model:process.node,note:purchase.process_node_draftpurchaseorder1
 msgid "Request for Quotations."
-msgstr ""
+msgstr "Tāmes"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Date Req."
-msgstr ""
+msgstr "Piepras. Datums"
 
 #. module: purchase
 #: field:purchase.order,date_approve:0 field:purchase.report,date_approve:0
 msgid "Date Approved"
-msgstr ""
+msgstr "Datums, kurā apstiprināts"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:417
 #, python-format
 msgid "Could not cancel this purchase order !"
-msgstr ""
+msgstr "Nevar atcelt iepirkumu!"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.order.line,price_unit:0
 msgid "Unit Price"
-msgstr ""
+msgstr "Vienības Cena"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery & Invoicing"
-msgstr ""
+msgstr "Piegāde un Rēķinu Izrakstīšana"
 
 #. module: purchase
 #: field:purchase.order.line,date_planned:0
 msgid "Scheduled Date"
-msgstr ""
+msgstr "Ieplānotais Datums"
 
 #. module: purchase
 #: field:purchase.order,product_id:0 view:purchase.order.line:0
 #: field:purchase.order.line,product_id:0 view:purchase.report:0
 #: field:purchase.report,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Produkts"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder0
 #: model:process.transition,name:purchase.process_transition_confirmingpurchaseorder1
 msgid "Confirmation"
-msgstr ""
+msgstr "Apstiprinājums"
 
 #. module: purchase
 #: report:purchase.order:0 field:purchase.order.line,name:0
 #: report:purchase.quotation:0
 msgid "Description"
-msgstr ""
+msgstr "Apraksts"
 
 #. module: purchase
 #: help:res.company,po_lead:0
@@ -1421,18 +1439,18 @@ msgstr ""
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "Expected Delivery address:"
-msgstr ""
+msgstr "Plānotā Piegādes adrese:"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_stock_move_report_po
 #: model:ir.ui.menu,name:purchase.menu_action_stock_move_report_po
 msgid "Receptions Analysis"
-msgstr ""
+msgstr "Saņemto Preču Analīze"
 
 #. module: purchase
 #: help:purchase.order,amount_untaxed:0
 msgid "The amount without tax"
-msgstr ""
+msgstr "Summa bez nodokļiem"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_supplier_address_form
@@ -1445,44 +1463,44 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Delivery"
-msgstr ""
+msgstr "Piegāde"
 
 #. module: purchase
 #: view:board.board:0 model:ir.actions.act_window,name:purchase.purchase_draft
 msgid "Request for Quotations"
-msgstr ""
+msgstr "Tāmes"
 
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product UOM"
-msgstr ""
+msgstr "Produkta Mērv."
 
 #. module: purchase
 #: report:purchase.order:0 report:purchase.quotation:0
 msgid "Qty"
-msgstr ""
+msgstr "Sk."
 
 #. module: purchase
 #: field:purchase.order,partner_address_id:0
 msgid "Address"
-msgstr ""
+msgstr "Adrese"
 
 #. module: purchase
 #: field:purchase.order.line,move_ids:0
 msgid "Reservation"
-msgstr ""
+msgstr "Rezervācija"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr ""
+msgstr "Skaits un Summa kopā pēc mēnešiem"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:409
 #, python-format
 msgid "Could not cancel purchase order !"
-msgstr ""
+msgstr "Nevar atcelt iepirkumu!"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1494,67 +1512,67 @@ msgstr ""
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "February"
-msgstr ""
+msgstr "Februāris"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Products Categories"
-msgstr ""
+msgstr "Produktu Kategorijas"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_all
 #: model:ir.ui.menu,name:purchase.menu_action_purchase_order_report_all
 msgid "Purchase Analysis"
-msgstr ""
+msgstr "Iepirkuma Analīze"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Your Order Reference"
-msgstr ""
+msgstr "Komentārs"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,minimum_planned_date:0
 #: report:purchase.quotation:0 field:purchase.report,expected_date:0
 #: view:stock.picking:0
 msgid "Expected Date"
-msgstr ""
+msgstr "Paredzamais Datums"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_total_price_by_product_by_state
 #: view:purchase.report:0
 msgid "Total price by product by state"
-msgstr ""
+msgstr "Cena kopā pēc produktiem pēc statusa"
 
 #. module: purchase
 #: report:purchase.quotation:0
 msgid "TVA:"
-msgstr ""
+msgstr "PVN"
 
 #. module: purchase
 #: report:purchase.order:0
 #: field:purchase.order,date_order:0
 msgid "Date Ordered"
-msgstr ""
+msgstr "Datums, kad tika pasūtīts"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "Shipping address :"
-msgstr ""
+msgstr "Piegādes adrese:"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Control"
-msgstr ""
+msgstr "Iepirkumu Kontrole"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "March"
-msgstr ""
+msgstr "Marts"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "April"
-msgstr ""
+msgstr "Aprīlis"
 
 #. module: purchase
 #: view:purchase.order.group:0
@@ -1575,38 +1593,38 @@ msgstr ""
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,name:0
 msgid "Year"
-msgstr ""
+msgstr "Gads"
 
 #. module: purchase
 #: field:purchase.report,negociation:0
 msgid "Purchase-Standard Price"
-msgstr ""
+msgstr "Iepirkuma Standarta Cena"
 
 #. module: purchase
 #: model:product.pricelist.type,name:purchase.pricelist_type_purchase
 #: field:res.partner,property_product_pricelist_purchase:0
 msgid "Purchase Pricelist"
-msgstr ""
+msgstr "Iepirkumu Cenrādis"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
 msgid "Invoicing Control"
-msgstr ""
+msgstr "Rēķinu Kontrole"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingpurchaseorder0
 msgid "Approve"
-msgstr ""
+msgstr "Apstiprināt"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "To Approve"
-msgstr ""
+msgstr "Jāapstiprina"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Invoicing"
-msgstr ""
+msgstr "Rēķinu izrakstīšana"
 
 #. module: purchase
 #: help:purchase.order.line,state:0
@@ -1619,58 +1637,66 @@ msgid ""
 "                                      \n"
 "* The 'Cancelled' state is set automatically when user cancel purchase order."
 msgstr ""
+" * Stāvoklis \"Melnraksts\" tiek automātiski uzlikts, kad iepirkums ir "
+"melnraksta stāvoklī.                                        \n"
+"* Stāvoklis \"Apstiprināts\" tiek automātiski uzlikts, kad tiek apstiprināts "
+"iepirkums.                                        \n"
+"* Stāvoklis \"Pabeigts\" tiek automātiski uzlikts, kad iepirkums ir "
+"pabeigts.                                        \n"
+"* Stāvoklis \"Atcelts\" tiek automātiski uzlikts, kad lietotājs atceļ "
+"iepirkumu."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:426
 #, python-format
 msgid "Purchase order '%s' is cancelled."
-msgstr ""
+msgstr "Iepirkums \"%s\" ir atcelts."
 
 #. module: purchase
 #: field:purchase.order,amount_total:0
 msgid "Total"
-msgstr ""
+msgstr "Summa"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action_purhase
 msgid "Pricelist Versions"
-msgstr ""
+msgstr "Cenrāža Versijas"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
 msgid "Addresses"
-msgstr ""
+msgstr "Adreses"
 
 #. module: purchase
 #: view:purchase.order.group:0
 msgid "Are you sure you want to merge these orders ?"
-msgstr ""
+msgstr "Vai tiešām vēlaties apvienot šos pasūtījumus"
 
 #. module: purchase
 #: view:purchase.order:0 view:purchase.order.line:0 view:purchase.report:0
 #: view:stock.picking:0
 msgid "Group By..."
-msgstr ""
+msgstr "Grupēt Pēc..."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_purchaseinvoice0
 msgid "From a purchase order"
-msgstr ""
+msgstr "No iepirkuma"
 
 #. module: purchase
 #: report:purchase.order:0
 msgid "TVA :"
-msgstr ""
+msgstr "PVN :"
 
 #. module: purchase
 #: help:purchase.order,amount_total:0
 msgid "The total amount"
-msgstr ""
+msgstr "Summa kopā"
 
 #. module: purchase
 #: selection:purchase.report,month:0
 msgid "May"
-msgstr ""
+msgstr "Maijs"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -1688,13 +1714,13 @@ msgstr ""
 #. module: purchase
 #: model:process.process,name:purchase.process_process_purchaseprocess0
 msgid "Purchase"
-msgstr ""
+msgstr "Iepirkums"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_res_partner
 #: field:purchase.order.line,partner_id:0 view:stock.picking:0
 msgid "Partner"
-msgstr ""
+msgstr "Partneris"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:737
@@ -1703,32 +1729,34 @@ msgid ""
 "You have to select a partner in the purchase form !\n"
 "Please set one partner before choosing a product."
 msgstr ""
+"Iepirkuma formā ir jāizvēlas partneris!\n"
+"Lūdzu norādiet partneri, pirms izvēlaties produktu."
 
 #. module: purchase
 #: view:purchase.installer:0
 msgid "title"
-msgstr ""
+msgstr "nosaukums"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_partial_move
 msgid "Partial Move"
-msgstr ""
+msgstr "Daļējs Grāmatojums"
 
 #. module: purchase
 #: view:purchase.order.line:0
 msgid "Stock Moves"
-msgstr ""
+msgstr "Preču kustība Noliktavā"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_unit_measure_purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_form_action
 msgid "Units of Measure"
-msgstr ""
+msgstr "Mērvienības"
 
 #. module: purchase
 #: view:purchase.report:0
 msgid "Orders"
-msgstr ""
+msgstr "Pasūtījumi"
 
 #. module: purchase
 #: help:purchase.order,name:0
@@ -1736,10 +1764,12 @@ msgid ""
 "unique number of the purchase order,computed automatically when the purchase "
 "order is created"
 msgstr ""
+"Iepirkuma unikālais numurs. Tiek automātiski piešķirts, kad tiek izveidots "
+"iepirkums"
 
 #. module: purchase
 #: view:board.board:0
 #: model:ir.actions.act_window,name:purchase.open_board_purchase
 #: model:ir.ui.menu,name:purchase.menu_board_purchase
 msgid "Purchase Dashboard"
-msgstr ""
+msgstr "Iepirkumu Rīku Panelis"
