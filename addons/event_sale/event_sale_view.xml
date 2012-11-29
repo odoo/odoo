@@ -28,5 +28,11 @@
                 </xpath>
              </field>
         </record>
+        
+        <!-- the presence of 'event user' makes the order lines non-editable -->
+        <record id="sale.view_order_form_editable_list" model="ir.ui.view">
+            <field name="groups_id" eval="[(4, ref('event.group_event_user'))]"/>
+        </record>        
+        
     </data>
 </openerp>
