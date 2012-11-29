@@ -89,7 +89,7 @@ class project_issue(base_stage, osv.osv):
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
             search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+        search_domain += [('id', 'in', ids)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
@@ -244,7 +244,7 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -442,11 +442,9 @@ class project_issue(base_stage, osv.osv):
         # OR all section_ids and OR with case_default
         search_domain = []
         if section_ids:
-            search_domain += [('|')] * len(section_ids)
+            search_domain += [('|')] * (len(section_ids)-1)
             for section_id in section_ids:
                 search_domain.append(('project_ids', '=', section_id))
-        search_domain.append(('case_default', '=', True))
-        # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)
