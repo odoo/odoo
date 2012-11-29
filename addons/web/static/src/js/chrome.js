@@ -1185,7 +1185,6 @@ instance.web.WebClient = instance.web.Client.extend({
                     notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
                         notification.close();
                     }).find('a').on('click', function() {
-                        $icon.remove();
                         notification.close();
                         self.user_menu.on_menu_settings();
                         return false;
