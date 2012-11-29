@@ -383,7 +383,8 @@ openerp.web.list_editable = function (instance) {
                 version: '7.0'
             });
             _(view.arch.children).chain()
-                .zip(this.columns)
+                .zip(_(this.columns).filter(function (c) {
+                    return !(c instanceof instance.web.list.MetaColumn);}))
                 .each(function (ar) {
                     var widget = ar[0], column = ar[1];
                     var modifiers = _.extend({}, column.modifiers);
