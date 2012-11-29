@@ -198,7 +198,7 @@ class account_invoice_report(osv.osv):
     def init(self, cr):
         # self._table = account_invoice_report
         tools.drop_view_if_exists(cr, self._table)
-        cr.execute("CREATE or REPLACE VIEW %s as (%s %s)" % (
+        cr.execute("CREATE or REPLACE VIEW %s as (%s)" % (
                     self._table, 
                     self._select()))
 
