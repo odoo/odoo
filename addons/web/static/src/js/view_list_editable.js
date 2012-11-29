@@ -3,9 +3,9 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
-	var _t = instance.web._t;
+    var _t = instance.web._t;
 
-	// editability status of list rows
+    // editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
     // TODO: not sure second @lends on existing item is correct, to check
