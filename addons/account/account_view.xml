@@ -2,7 +2,10 @@
 <openerp>
     <data>
 
-        <!-- Fiscal Year -->
+        <!--
+            Fiscal Year
+        -->
+
         <record id="view_account_fiscalyear_form" model="ir.ui.view">
             <field name="name">account.fiscalyear.form</field>
             <field name="model">account.fiscalyear</field>
@@ -67,7 +70,7 @@
                 </search>
             </field>
         </record>
-        <record id="action_account_fiscalyear" model="ir.actions.act_window">
+        <record id="action_account_fiscalyear_form" model="ir.actions.act_window">
             <field name="name">Fiscal Years</field>
             <field name="res_model">account.fiscalyear</field>
             <field name="view_type">form</field>
@@ -87,9 +90,12 @@
             </field>
         </record>
         <menuitem id="next_id_23" name="Periods" parent="account.menu_finance_configuration" sequence="5" />
-        <menuitem id="menu_action_account_fiscalyear" action="action_account_fiscalyear" parent="next_id_23"/>
+        <menuitem action="action_account_fiscalyear_form" id="menu_action_account_fiscalyear_form" parent="next_id_23"/>
 
-        <!-- Period -->
+        <!--
+            Period
+        -->
+
         <record id="view_account_period_form" model="ir.ui.view">
             <field name="name">account.period.form</field>
             <field name="model">account.period</field>
@@ -136,6 +142,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_period_search" model="ir.ui.view">
             <field name="name">account.period.search</field>
             <field name="model">account.period</field>
@@ -146,7 +153,8 @@
                 </search>
             </field>
         </record>
-        <record id="action_account_period" model="ir.actions.act_window">
+
+        <record id="action_account_period_form" model="ir.actions.act_window">
             <field name="name">Periods</field>
             <field name="res_model">account.period</field>
             <field name="view_type">form</field>
@@ -161,9 +169,12 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_action_account_period" action="action_account_period" parent="account.next_id_23" groups="base.group_no_one"/>
+        <menuitem action="action_account_period_form" id="menu_action_account_period_form" parent="account.next_id_23" groups="base.group_no_one"/>
 
-        <!-- Accounts -->
+
+        <!--
+            Accounts
+        -->
         <record id="view_account_form" model="ir.ui.view">
             <field name="name">account.account.form</field>
             <field name="model">account.account</field>
@@ -204,6 +215,25 @@
                 </form>
             </field>
         </record>
+
+        <record id="view_account_search" model="ir.ui.view">
+            <field name="name">account.account.search</field>
+            <field name="model">account.account</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account"/>
+                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
+                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
+                    <field name="user_type"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
+                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
+                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
         <record id="view_account_list" model="ir.ui.view">
             <field name="name">account.account.list</field>
             <field name="model">account.account</field>
@@ -221,23 +251,6 @@
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="company_currency_id"/>
                 </tree>
-            </field>
-        </record>
-        <record id="view_account_search" model="ir.ui.view">
-            <field name="name">account.account.search</field>
-            <field name="model">account.account</field>
-            <field name="arch" type="xml">
-                <search string="Accounts">
-                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Account"/>
-                    <filter icon="terp-sale" string="Receivable Accounts" domain="[('type','=','receivable')]"/>
-                    <filter icon="terp-purchase" string="Payable Accounts" domain="[('type','=','payable')]"/>
-                    <field name="user_type"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Parent Account" icon="terp-folder-orange" domain="" context="{'group_by':'parent_id'}"/>
-                        <filter string="Account Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'user_type'}"/>
-                        <filter string="Internal Type" icon="terp-stock_symbol-selection" domain="" context="{'group_by':'type'}"/>
-                    </group>
-                </search>
             </field>
         </record>
         <record id="action_account_form" model="ir.actions.act_window">
@@ -262,20 +275,6 @@
         </record>
         <menuitem id="account_account_menu" name="Accounts" parent="account.menu_finance_configuration" sequence="15"/>
         <menuitem action="action_account_form" id="menu_action_account_form" parent="account_account_menu"/>
-
-        <act_window
-            id="act_account_acount_move_line_open"
-            name="Entries"
-            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0, 'default_account_id': active_id}"
-            res_model="account.move.line"
-            src_model="account.account"/>
-
-        <act_window
-            id="act_account_acount_move_line_open_unreconciled"
-            name="Unreconciled Entries"
-            res_model="account.move.line"
-            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
-            src_model="account.account"/>
 
         <record id="view_account_tree" model="ir.ui.view">
             <field name="name">account.account.tree</field>
@@ -302,6 +301,7 @@
             <field name="view_id" ref="view_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
+
         <record id="view_account_gain_loss_tree" model="ir.ui.view">
            <field name="name">Unrealized Gain or Loss</field>
             <field name="model">account.account</field>
@@ -321,6 +321,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="action_account_gain_loss" model="ir.actions.act_window">
             <field name="name">Unrealized Gain or Loss</field>
             <field name="res_model">account.account</field>
@@ -340,6 +341,7 @@
               </p>
             </field>
         </record>
+
         <menuitem
             name="Unrealized Gain or Loss"
             action="action_account_gain_loss"
@@ -347,8 +349,88 @@
             id="menu_unrealized_gains_losses"
             parent="account.menu_multi_currency"/>
 
+        <!--
+        Journal
 
-        <!-- Account Journal -->
+        Account Journal Columns
+        -->
+
+        <record id="view_journal_column_form" model="ir.ui.view">
+            <field name="name">account.journal.column.form</field>
+            <field name="model">account.journal.column</field>
+            <field name="arch" type="xml">
+                <form string="Journal Column" version="7.0">
+                    <field name="name"/>
+                    <field name="field"/>
+                    <field name="sequence"/>
+                </form>
+            </field>
+        </record>
+        <record id="view_journal_column_tree" model="ir.ui.view">
+            <field name="name">account.journal.column.tree</field>
+            <field name="model">account.journal.column</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Column">
+                    <field name="sequence"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_journal_view_search" model="ir.ui.view">
+            <field name="name">account.journal.view.search</field>
+            <field name="model">account.journal.view</field>
+            <field name="arch" type="xml">
+                <search string="Journal View">
+                    <field name="name" string="Journal View"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_account_journal_view_tree" model="ir.ui.view">
+            <field name="name">account.journal.view.tree</field>
+            <field name="model">account.journal.view</field>
+            <field name="arch" type="xml">
+                <tree string="Journal View">
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_account_journal_view_form" model="ir.ui.view">
+            <field name="name">account.journal.view.form</field>
+            <field name="model">account.journal.view</field>
+            <field name="arch" type="xml">
+                <form string="Journal View" version="7.0">
+                    <field name="name"/>
+                    <field name="columns_id"/>
+                </form>
+            </field>
+        </record>
+        <record id="action_account_journal_view" model="ir.actions.act_window">
+            <field name="name">Journal Views</field>
+            <field name="res_model">account.journal.view</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_account_journal_view_search"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to specify lists of columns to display for a type of journal.
+              </p><p>
+                Journal views determine the way you can record entries in
+                your journal. Select the fields you want to appear in a journal
+                and determine the sequence in which they will appear.
+              </p><p>
+                On the journal definition form, you can select the view you
+                want to use to display journal items related to this journal.
+              </p>
+            </field>
+        </record>
+
+        <menuitem action="action_account_journal_view" id="menu_action_account_journal_view" parent="account.menu_journals" sequence="20"/>
+
+        <!--
+    # Account Journal
+    -->
+
         <record id="view_account_journal_tree" model="ir.ui.view">
             <field name="name">account.journal.tree</field>
             <field name="model">account.journal</field>
@@ -380,6 +462,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_account_journal_form" model="ir.ui.view">
             <field name="name">account.journal.form</field>
             <field name="model">account.journal</field>
@@ -392,7 +475,7 @@
                     <group>
                         <group>
                             <field name="code"/>
-                            <field name="type"/>
+                            <field name="type" on_change="onchange_type(type, currency, context)"/>
                         </group>
                         <group>
                             <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
@@ -406,6 +489,7 @@
                             <group>
                                 <group>
                                     <field name="user_id"/>
+                                    <field name="view_id" widget="selection"/>
                                     <field name="sequence_id" required="0"/>
                                 </group>
                                 <group>
@@ -445,6 +529,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_account_journal_form" model="ir.actions.act_window">
             <field name="name">Journals</field>
             <field name="res_model">account.journal</field>
@@ -465,21 +550,6 @@
         </record>
         <menuitem action="action_account_journal_form" id="menu_action_account_journal_form" parent="menu_journals"/>
 
-        <act_window
-           id="act_account_journal_2_account_bank_statement"
-           name="Bank statements"
-           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
-           res_model="account.bank.statement"
-           src_model="account.journal"/>
-
-        <act_window
-           id="act_account_journal_2_account_move_line"
-           name="Journal Items"
-           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
-           res_model="account.move.line"
-           src_model="account.journal"/>
-
-        <!-- Bank statement -->
         <record id="view_account_bank_statement_filter" model="ir.ui.view">
             <field name="name">account.cash.statement.select</field>
             <field name="model">account.bank.statement</field>
@@ -665,7 +735,9 @@
             <field name="filter" eval="True"/>
         </record>
 
-        <!-- Account Types -->
+        <!--
+    Account Types
+    -->
         <record id="view_account_type_search" model="ir.ui.view">
             <field name="name">account.account.type.search</field>
             <field name="model">account.account.type</field>
@@ -675,6 +747,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_account_type_tree" model="ir.ui.view">
             <field name="name">account.account.type.tree</field>
             <field name="model">account.account.type</field>
@@ -685,6 +758,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_type_form" model="ir.ui.view">
             <field name="name">account.account.type.form</field>
             <field name="model">account.account.type</field>
@@ -724,8 +798,9 @@
             </field>
         </record>
         <menuitem action="action_account_type_form" sequence="20" id="menu_action_account_type_form" parent="account_account_menu" groups="base.group_no_one"/>
-
-        <!-- Entries -->
+        <!--
+    Entries
+    -->
         <record id="view_account_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -743,7 +818,10 @@
             </field>
         </record>
 
-        <!-- Reconcile -->
+        <!--
+    Reconcile
+    -->
+
         <record id="view_move_reconcile_form" model="ir.ui.view">
             <field name="name">account.move.reconcile.form</field>
             <field name="model">account.move.reconcile</field>
@@ -762,7 +840,9 @@
             </field>
         </record>
 
-        <!-- Tax Codes -->
+        <!--
+    Tax Codes
+    -->
         <record id="view_tax_code_search" model="ir.ui.view">
             <field name="name">account.tax.code.search</field>
             <field name="model">account.tax.code</field>
@@ -833,17 +913,13 @@
               </p>
             </field>
         </record>
-        <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="20"/>
-        <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12" groups="base.group_no_one"/>
+       <menuitem id="next_id_27" name="Taxes" parent="account.menu_finance_configuration" sequence="20"/>
+       <menuitem action="action_tax_code_list" id="menu_action_tax_code_list" parent="next_id_27" sequence="12" groups="base.group_no_one"/>
 
-        <act_window
-            id="action_tax_code_line_open"
-            name="Journal Items"
-            domain="[('tax_code_id','child_of',active_id),('state','&lt;&gt;','draft')]"
-            res_model="account.move.line"
-            src_model="account.tax.code"/>
 
-        <!-- Tax -->
+        <!--
+    Tax
+    -->
         <record id="view_tax_tree" model="ir.ui.view">
             <field name="name">account.tax.tree</field>
             <field name="model">account.tax</field>
@@ -965,7 +1041,57 @@
             <field name="view_id" ref="view_tax_code_tree"/>
         </record>
 
-        <!-- Journal Items -->
+        <!--
+    Entries lines
+    -->
+
+        <record id="view_move_line_tree_reconcile" model="ir.ui.view">
+            <field name="model">account.move.line</field>
+            <field eval="24" name="priority"/>
+            <field name="arch" type="xml">
+                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="state" invisible="1"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                </tree_account_reconciliation>
+            </field>
+        </record>
+
+        <record id="view_move_line_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
+                    <field name="date"/>
+                    <field name="period_id"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="invoice"/>
+                    <field name="name"/>
+                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
+                    <field name="journal_id"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                    <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="reconcile_id"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
         <record id="view_move_line_form" model="ir.ui.view">
             <field name="name">account.move.line.form</field>
             <field name="model">account.move.line</field>
@@ -1035,6 +1161,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_move_line_form2" model="ir.ui.view">
             <field name="name">account.move.line.form2</field>
             <field name="model">account.move.line</field>
@@ -1082,37 +1209,7 @@
                 </form>
             </field>
         </record>
-        <record id="view_move_line_tree" model="ir.ui.view">
-            <field name="name">account.move.line.tree</field>
-            <field name="model">account.move.line</field>
-            <field eval="1" name="priority"/>
-            <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" create="true" on_write="on_create_write" version="7.0" editable="top">
-                    <field name="journal_id" options='{"no_open":True}' invisible="context.get('journal_id',False)"/>
-                    <field name="period_id" options='{"no_open":True}' invisible="context.get('period_id',False)"/>
-                    <field name="date"/>
-                    <field name="name"/>
-                    <field name="ref"/>
-                    <field name="statement_id" invisible="1"/>
-                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
-                    <field name="account_id" options='{"no_open":True}' domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]" on_change="onchange_account_id(account_id)"/>
-                    <field name="date_maturity" invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund']"/>
-                    <field name="account_tax_id" options='{"no_open":True}' invisible="context.get('journal_type', False) not in ['sale','sale_refund','purchase','purchase_refund','general']"/>
-                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('type','not in',['view','template'])]" invisible="not context.get('analytic_journal_id',False)"/>
-                    <field name="move_id" required="0"/>
-                    <field name="debit" sum="Total Debit"/>
-                    <field name="credit" sum="Total Credit"/>
-                    <field name="reconcile"/>
-                    <field name="invoice" invisible="1"/>
-                    <field name="amount_currency" readonly="True" invisible="not context.get('currency',False)"/>
-                    <field name="currency_id" readonly="True" invisible="not context.get('currency',False)" />
-                    <field name="state" />
-                    <field name="company_id" invisible="1"/>
-                    <!-- <field name="tax_code_id"/>
-                    <field name="tax_amount"/> -->
-                </tree>
-            </field>
-        </record>
+
         <record id="account_move_line_graph" model="ir.ui.view">
             <field name="name">account.move.line.graph</field>
             <field name="model">account.move.line</field>
@@ -1124,6 +1221,7 @@
                 </graph>
             </field>
         </record>
+
         <record id="view_account_move_line_filter" model="ir.ui.view">
             <field name="name">Journal Items</field>
             <field name="model">account.move.line</field>
@@ -1153,15 +1251,17 @@
                 </search>
             </field>
         </record>
+
         <record id="action_account_moves_all_a" model="ir.actions.act_window">
-            <field name="context">{'journal_type':'general'}</field>
             <field name="name">Journal Items</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree"/>
-            <field name="view_mode">tree_account_move_line_quickadd</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{}</field>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
-                Select the period and the journal you want to fill.
+                Click to register a new journal item.
               </p><p>
                 This view can be used by accountants in order to quickly record
                 entries in OpenERP. If you want to record a supplier invoice,
@@ -1171,6 +1271,7 @@
               </p>
             </field>
         </record>
+
         <menuitem
             action="action_account_moves_all_a"
             icon="STOCK_JUSTIFY_FILL"
@@ -1180,49 +1281,37 @@
             groups="group_account_user"
         />
 
-        <record id="view_move_line_tree_reconcile" model="ir.ui.view">
-            <field name="model">account.move.line</field>
-            <field eval="24" name="priority"/>
-            <field name="arch" type="xml">
-                <tree_account_reconciliation colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false" version="7.0">
-                    <field name="date"/>
-                    <field name="move_id"/>
-                    <field name="ref"/>
-                    <field name="name"/>
-                    <field name="partner_id"/>
-                    <field name="account_id"/>
-                    <field name="reconcile_partial_id"/>
-                    <field name="state" invisible="1"/>
-                    <field name="debit" sum="Total debit"/>
-                    <field name="credit" sum="Total credit"/>
-                </tree_account_reconciliation>
-            </field>
-        </record>
-        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
-            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
-            <field name="name">Journal Items to Reconcile</field>
+        <record id="action_view_move_line" model="ir.actions.act_window">
+            <field name="name">Lines to reconcile</field>
             <field name="res_model">account.move.line</field>
-            <field name="view_id" ref="view_move_line_tree_reconcile"/>
-            <field name="view_mode">tree_account_reconciliation</field>
-            <field name="help" type="html">
-                <p>
-                    No journal items found.
-                </p>
-            </field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('account_id.reconcile', '=', True),('reconcile_id','=',False)]</field>
+            <field eval="False" name="view_id"/>
+            <field eval="True" name="filter"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
         </record>
-        <menuitem
-             name="Journal Items to Reconcile"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile_bank"
-             sequence="20"
-             parent="account.menu_finance_bank_and_cash"/>
-        <menuitem
-             name="Manual Reconciliation"
-             action="action_account_manual_reconcile"
-             id="menu_manual_reconcile"
-             parent="account.periodical_processing_reconciliation"/>
 
-        <!-- Account.Entry Edition -->
+        <record id="action_move_line_select" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
+            <field name="context">{'search_default_account_id': [active_id]}</field>
+        </record>
+
+        <record id="ir_account_move_line_select" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.account</field>
+            <field name="name">Open Journal Items</field>
+            <field eval="'ir.actions.act_window,%d'%action_move_line_select" name="value"/>
+        </record>
+        <!--
+    Account.Entry Edition
+    -->
+
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -1271,8 +1360,10 @@
                     </group>
                     <notebook>
                         <page string="Journal Items">
+                            <field name="balance" invisible="1"/>
                             <field name="line_id" widget="one2many_list"
-                              context="{'line_id': line_id , 'journal_id': journal_id }">
+                              on_change="onchange_line_id(line_id)"
+                              context="{'balance': balance , 'journal': journal_id }">
                                 <form string="Journal Item" version="7.0">
                                     <group col="6" colspan="4">
                                         <field name="name"/>
@@ -1339,6 +1430,7 @@
                                     </notebook>
                                 </form>
                                 <tree colors="blue:state == 'draft';black:state == 'posted'" editable="top" string="Journal Items">
+                                    <field name="ref"/>
                                     <field name="invoice"/>
                                     <field name="name"/>
                                     <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,parent.date,parent.journal_id)"/>
@@ -1363,6 +1455,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_move_filter" model="ir.ui.view">
             <field name="name">account.move.select</field>
             <field name="model">account.move</field>
@@ -1387,6 +1480,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_move_journal_line" model="ir.actions.act_window">
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
@@ -1408,6 +1502,7 @@
               </p>
             </field>
         </record>
+
         <menuitem
             icon="STOCK_JUSTIFY_FILL"
             action="action_move_journal_line"
@@ -1428,9 +1523,70 @@
         <act_window
             id="act_account_move_to_account_move_line_open"
             name="Journal Items"
-            context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
+            context="{'search_default_move_id':[active_id], 'default_move_id': active_id}"
             res_model="account.move.line"
             src_model="account.move"/>
+
+        <record id="action_move_line_search" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="search_view_id" ref="view_account_move_line_filter"/>
+        </record>
+        <record id="action_move_line_search_view1" model="ir.actions.act_window.view">
+            <field eval="10" name="sequence"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_move_line_tree"/>
+            <field name="act_window_id" ref="action_move_line_search"/>
+        </record>
+        <record id="action_move_line_search_view2" model="ir.actions.act_window.view">
+            <field eval="11" name="sequence"/>
+            <field name="view_mode">form</field>
+            <field name="act_window_id" ref="action_move_line_search"/>
+        </record>
+
+        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_reconcile"/>
+            <field name="view_mode">tree_account_reconciliation</field>
+            <field name="help" type="html">
+                <p>
+                    No journal items found.
+                </p>
+            </field>
+        </record>
+        <menuitem
+             name="Journal Items to Reconcile"
+             action="action_account_manual_reconcile"
+             id="menu_manual_reconcile_bank"
+             sequence="20"
+             parent="account.menu_finance_bank_and_cash"/>
+
+        <menuitem
+             name="Manual Reconciliation"
+             action="action_account_manual_reconcile"
+             id="menu_manual_reconcile"
+             parent="account.periodical_processing_reconciliation"/>
+
+
+        <act_window
+            id="act_account_acount_move_line_open"
+            name="Entries"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':0, 'default_account_id': active_id}"
+            res_model="account.move.line"
+            src_model="account.account"/>
+
+        <act_window
+            id="act_account_acount_move_line_open_unreconciled"
+            name="Unreconciled Entries"
+            res_model="account.move.line"
+            context="{'search_default_account_id':[active_id], 'search_default_unreconciled':1, 'default_account_id': active_id}"
+            src_model="account.account"/>
+
         <act_window
             domain="[('reconcile_id', '=', active_id)]"
             id="act_account_acount_move_line_reconcile_open"
@@ -1438,7 +1594,13 @@
             res_model="account.move.line"
             src_model="account.move.reconcile"/>
 
-        <!-- TODO: Print Journal (and change state), Close Journal (and verify that there is no draft Entry Lines) -->
+
+        <!--
+    TODO:
+        Print Journal (and change state)
+        Close Journal (and verify that there is no draft Entry Lines)
+-->
+
         <record id="view_journal_period_tree" model="ir.ui.view">
             <field name="name">account.journal.period.tree</field>
             <field name="model">account.journal.period</field>
@@ -1458,7 +1620,10 @@
             <field name="view_type">tree</field>
         </record>
 
-        <!-- Account Models -->
+        <!--
+        # Account Models
+        -->
+
         <record id="view_model_line_tree" model="ir.ui.view">
             <field name="name">account.model.line.tree</field>
             <field name="model">account.model.line</field>
@@ -1475,6 +1640,8 @@
                 </tree>
             </field>
         </record>
+
+
         <record id="view_model_line_form" model="ir.ui.view">
             <field name="name">account.model.line.form</field>
             <field name="model">account.model.line</field>
@@ -1494,6 +1661,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_model_form" model="ir.ui.view">
             <field name="name">account.model.form</field>
             <field name="model">account.model</field>
@@ -1512,6 +1680,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_model_tree" model="ir.ui.view">
             <field name="name">account.model.tree</field>
             <field name="model">account.model</field>
@@ -1523,6 +1692,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_model_search" model="ir.ui.view">
             <field name="name">account.model.search</field>
             <field name="model">account.model</field>
@@ -1551,7 +1721,10 @@
             action="action_model_form" name="Models" id="menu_action_model_form" sequence="5"
             parent="account.menu_finance_recurrent_entries"/>
 
-        <!-- Payment Terms -->
+        <!--
+            # Payment Terms
+        -->
+
         <record id="view_payment_term_line_tree" model="ir.ui.view">
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
@@ -1566,6 +1739,8 @@
                 </tree>
             </field>
         </record>
+
+
         <record id="view_payment_term_line_form" model="ir.ui.view">
             <field name="name">account.payment.term.line.form</field>
             <field name="model">account.payment.term.line</field>
@@ -1605,6 +1780,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_payment_term_search" model="ir.ui.view">
             <field name="name">account.payment.term.search</field>
             <field name="model">account.payment.term</field>
@@ -1615,6 +1791,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_payment_term_form" model="ir.ui.view">
             <field name="name">account.payment.term.form</field>
             <field name="model">account.payment.term</field>
@@ -1630,6 +1807,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_payment_term_form" model="ir.actions.act_window">
             <field name="name">Payment Terms</field>
             <field name="res_model">account.payment.term</field>
@@ -1640,7 +1818,10 @@
         <menuitem action="action_payment_term_form"
             id="menu_action_payment_term_form" parent="menu_configuration_misc"/>
 
-        <!-- Account Subscriptions -->
+        <!--
+        # Account Subscriptions
+        -->
+
         <record id="view_subscription_line_form" model="ir.ui.view">
             <field name="name">account.subscription.line.form</field>
             <field name="model">account.subscription.line</field>
@@ -1653,6 +1834,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_subscription_line_tree" model="ir.ui.view">
             <field name="name">account.subscription.line.tree</field>
             <field name="model">account.subscription.line</field>
@@ -1663,6 +1845,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_subscription_tree" model="ir.ui.view">
             <field name="name">account.subscription.tree</field>
             <field name="model">account.subscription</field>
@@ -1676,6 +1859,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_subscription_search" model="ir.ui.view">
             <field name="name">account.subscription.search</field>
             <field name="model">account.subscription</field>
@@ -1693,6 +1877,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_subscription_form" model="ir.ui.view">
             <field name="name">account.subscription.form</field>
             <field name="model">account.subscription</field>
@@ -1778,7 +1963,72 @@
             </field>
         </record>
 
-        <!-- res.partner links -->
+        <record id="action_move_line_tree1" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('account_id','child_of', [active_id]),('state','&lt;&gt;','draft')]</field>
+            <field name="context">{'account_id':active_id}</field>
+        </record>
+
+        <record id="view_move_line_tax_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tax.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="4" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="statement_id" string="St."/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="tax_code_id"/>
+                    <field name="tax_amount"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                    <field name="account_tax_id"/>
+                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
+                    <field name="state" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_tax_code_line_open" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_move_line_tax_tree"/>
+            <field name="domain">[('tax_code_id','child_of',active_id),('state','&lt;&gt;','draft')]</field>
+        </record>
+        <record id="ir_open_tax_move_line" model="ir.values">
+            <field name="key2">tree_but_open</field>
+            <field name="model">account.tax.code</field>
+            <field name="name">Tax Details</field>
+            <field eval="'ir.actions.act_window,%d'%action_tax_code_line_open" name="value"/>
+        </record>
+
+
+        <!--
+    # Admin config
+    -->
+
+        <act_window
+           id="act_account_journal_2_account_bank_statement"
+           name="Bank statements"
+           context="{'search_default_journal_id': active_id, 'default_journal_id': active_id}"
+           res_model="account.bank.statement"
+           src_model="account.journal"/>
+
+        <act_window
+           id="act_account_journal_2_account_move_line"
+           name="Journal Items"
+           context="{'search_default_journal_id':active_id, 'default_journal_id': active_id}"
+           res_model="account.move.line"
+           src_model="account.journal"/>
+
         <act_window
             context="{'search_default_unreconciled':True, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
@@ -1787,13 +2037,29 @@
             res_model="account.move.line"
             src_model="res.partner"/>
 
-        <act_window 
-            context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
-            id="act_account_partner_account_move"
-            name="Journal Items"
-            res_model="account.move.line"
-            src_model="res.partner"
-            groups="account.group_account_user"/>
+        <act_window context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}" id="act_account_partner_account_move" name="Journal Items" res_model="account.move.line" src_model="res.partner" groups="account.group_account_user"/>
+
+        <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
+            <field name="name">Create Account</field>
+            <field name="model">account.addtmpl.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Create Account" version="7.0">
+                    <header>
+                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"  />
+                    </header>
+                    <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
+                    <field name="cparent_id"/>
+                </form>
+            </field>
+        </record>
+
+        <act_window domain="[]" id="action_account_addtmpl_wizard_form"
+            name="Create Account"
+            target="new"
+            res_model="account.addtmpl.wizard"
+            context="{'tmpl_ids': active_id}"
+            src_model="account.account.template"
+            view_type="form" view_mode="form"/>
 
         <!-- Account Templates -->
         <menuitem
@@ -1811,6 +2077,7 @@
             name="Accounts"
             parent="account_template_folder"
             sequence="1"/>
+
 
         <record id="view_account_template_form" model="ir.ui.view">
             <field name="name">account.account.template.form</field>
@@ -1837,6 +2104,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_template_tree" model="ir.ui.view">
             <field name="name">account.account.template.tree</field>
             <field name="model">account.account.template</field>
@@ -1849,6 +2117,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_template_search" model="ir.ui.view">
             <field name="name">account.account.template.search</field>
             <field name="model">account.account.template</field>
@@ -1867,6 +2136,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_account_template_form" model="ir.actions.act_window">
             <field name="name">Account Templates</field>
             <field name="res_model">account.account.template</field>
@@ -1874,32 +2144,11 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_template_search"/>
         </record>
+
         <menuitem action="action_account_template_form" id="menu_action_account_template_form" parent="account_template_accounts"/>
 
-        <record id="view_account_addtmpl_wizard_form" model="ir.ui.view">
-            <field name="name">Create Account</field>
-            <field name="model">account.addtmpl.wizard</field>
-            <field name="arch" type="xml">
-                <form string="Create Account" version="7.0">
-                    <header>
-                        <button icon="gtk-ok" name="action_create" string="Add" type="object" class="oe_highlight"  />
-                    </header>
-                    <separator col="4" colspan="4" string="Create an Account Based on this Template"/>
-                    <field name="cparent_id"/>
-                </form>
-            </field>
-        </record>
-
-        <act_window domain="[]" id="action_account_addtmpl_wizard_form"
-            name="Create Account"
-            target="new"
-            res_model="account.addtmpl.wizard"
-            context="{'tmpl_ids': active_id}"
-            src_model="account.account.template"
-            view_type="form" view_mode="form"/>
-
-
         <!-- Chart of Accounts Templates -->
+
         <record id="view_account_chart_template_form" model="ir.ui.view">
             <field name="name">account.chart.template.form</field>
             <field name="model">account.chart.template</field>
@@ -1972,9 +2221,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
+
         <menuitem action="action_account_chart_template_form" id="menu_action_account_chart_template_form" parent="account_template_accounts" sequence="1"/>
 
         <!-- Account Tax Templates -->
+
         <record id="view_account_tax_template_form" model="ir.ui.view">
             <field name="name">account.tax.template.form</field>
             <field name="model">account.tax.template</field>
@@ -2053,6 +2304,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_account_tax_template_form" model="ir.actions.act_window">
             <field name="name">Tax Templates</field>
             <field name="res_model">account.tax.template</field>
@@ -2060,6 +2312,7 @@
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_account_tax_template_search"/>
         </record>
+
         <menuitem action="action_account_tax_template_form" id="menu_action_account_tax_template_form" parent="account_template_taxes" sequence="13"/>
 
         <!-- Account Tax Code Templates -->
@@ -2075,6 +2328,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_tax_code_template_search" model="ir.ui.view">
             <field name="name">account.tax.code.template.search</field>
             <field name="model">account.tax.code.template</field>
@@ -2088,6 +2342,7 @@
                 </search>
             </field>
         </record>
+
         <record id="view_tax_code_template_form" model="ir.ui.view">
             <field name="name">account.tax.code.template.form</field>
             <field name="model">account.tax.code.template</field>
@@ -2104,6 +2359,7 @@
                 </form>
             </field>
         </record>
+
         <record id="action_account_tax_code_template_form" model="ir.actions.act_window">
             <field name="name">Tax Code Templates</field>
             <field name="res_model">account.tax.code.template</field>
@@ -2115,6 +2371,7 @@
 
 
         <!--  Wizard for Multi Charts of Accounts -->
+
         <record id="view_wizard_multi_chart" model="ir.ui.view">
             <field name="name">Set Your Accounting Options</field>
             <field name="model">wizard.multi.charts.accounts</field>
@@ -2153,6 +2410,7 @@
                 </group>
             </field>
         </record>
+
         <record id="action_wizard_multi_chart" model="ir.actions.act_window">
             <field name="name">Set Your Accounting Options</field>
             <field name="type">ir.actions.act_window</field>
@@ -2258,6 +2516,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_bank_statement_form2" model="ir.ui.view">
             <field name="name">account.bank.statement.form</field>
             <field name="model">account.bank.statement</field>
@@ -2390,7 +2649,6 @@
               </p>
             </field>
         </record>
-
         <record model="ir.actions.act_window.view" id="act_cash_statement1_all">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -2420,7 +2678,10 @@
             parent="menu_finance_payables"
             action="base.action_partner_supplier_form" sequence="100"/>
 
-        <!-- Account Reports -->
+        <!--
+            Account Reports
+        -->
+
         <record id="view_account_financial_report_form" model="ir.ui.view">
             <field name="name">account.financial.report.form</field>
             <field name="model">account.financial.report</field>
@@ -2447,6 +2708,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_account_financial_report_tree" model="ir.ui.view">
             <field name="name">account.financial.report.tree</field>
             <field name="model">account.financial.report</field>
@@ -2459,6 +2721,7 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_account_financial_report_search" model="ir.ui.view">
             <field name="name">account.financial.report.search</field>
             <field name="model">account.financial.report</field>
@@ -2474,6 +2737,7 @@
                 </search>
             </field>
         </record>
+
         <record id="action_account_financial_report_tree" model="ir.actions.act_window">
             <field name="name">Financial Reports</field>
             <field name="type">ir.actions.act_window</field>
@@ -2483,6 +2747,7 @@
             <field name="search_view_id" ref="view_account_financial_report_search"/>
             <field name="view_id" ref="view_account_financial_report_tree"/>
         </record>
+
         <menuitem id="menu_account_financial_reports_tree" name="Account Reports" parent="menu_account_reports" action="action_account_financial_report_tree"/>
 
         <record id="view_account_report_tree_hierarchy" model="ir.ui.view">
@@ -2505,6 +2770,7 @@
             <field name="view_id" ref="view_account_report_tree_hierarchy"/>
             <field name="domain">[('parent_id','=',False)]</field>
         </record>
+
         <menuitem id="menu_account_report_tree_hierarchy" name="Account Reports Hierarchy"
                   parent="menu_account_reports" action="action_account_report_tree_hierarchy"/>
 
