@@ -311,7 +311,7 @@ var py = {};
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
                     tokens.push(create(symbols['(string)'], {
-                        value: m[2] || m[3]
+                        value: (m[2] !== undefined ? m[2] : m[3])
                     }));
                 } else if (token in symbols) {
                     var symbol;

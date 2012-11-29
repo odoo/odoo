@@ -188,34 +188,4 @@ class OpenERPSession(object):
 
         context['lang'] = lang
 
-    @property
-    def base_eval_context(self):
-        """ Default evaluation context for the session.
-
-        Used to evaluate contexts and domains.
-        """
-        base = dict(
-            uid=self._uid,
-            current_date=datetime.date.today().strftime('%Y-%m-%d'),
-            time=time,
-            datetime=datetime,
-            relativedelta=dateutil.relativedelta.relativedelta
-        )
-        base.update(self.context)
-        return base
-
-    def evaluation_context(self, context=None):
-        """ Returns the session's evaluation context, augmented with the
-        provided context if any.
-
-        :param dict context: to add merge in the session's base eval context
-        :returns: the augmented context
-        :rtype: dict
-        """
-        d = dict(self.base_eval_context)
-        if context:
-            d.update(context)
-        d['context'] = d
-        return d
-
 # vim:et:ts=4:sw=4:
