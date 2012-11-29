@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import datetime
 import math
 import openerp
 from osv import osv, fields
@@ -178,6 +179,12 @@ class res_partner(osv.osv, format_address):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
 
+    def _get_tz_offset(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = datetime.datetime.now(pytz.timezone(obj.tz or 'GMT')).strftime('%z')
+        return result
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -195,6 +202,7 @@ class res_partner(osv.osv, format_address):
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
+        'tz_offset': fields.function(_get_tz_offset, type='char', size=5, string='Timezone offset', store=True),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
         'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
@@ -507,23 +515,6 @@ class res_partner(osv.osv, format_address):
         for adr in adr_pref:
             result[adr] = address_dict.get(adr, default_address)
         return result
-
-    def gen_next_ref(self, cr, uid, ids):
-        if len(ids) != 1:
-            return True
-
-        # compute the next number ref
-        cr.execute("select ref from res_partner where ref is not null order by char_length(ref) desc, ref desc limit 1")
-        res = cr.dictfetchall()
-        ref = res and res[0]['ref'] or '0'
-        try:
-            nextref = int(ref)+1
-        except:
-            raise osv.except_osv(_('Warning'), _("Couldn't generate the next id because some partners have an alphabetic id !"))
-
-        # update the current partner
-        cr.execute("update res_partner set ref=%s where id=%s", (nextref, ids[0]))
-        return True
 
     def view_header_get(self, cr, uid, view_id, view_type, context):
         res = super(res_partner, self).view_header_get(cr, uid, view_id, view_type, context)
