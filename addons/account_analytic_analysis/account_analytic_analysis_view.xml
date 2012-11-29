@@ -154,7 +154,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
                 <field name="template_id" position="attributes">
-                    <attribute name="required">True</attribute>
+                    <attribute name="attrs">{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}</attribute>
                 </field>
             </field>
         </record>
