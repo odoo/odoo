@@ -1238,7 +1238,7 @@
                     <separator/>
                     <filter string="Next Partner to Reconcile" help="Next Partner Entries to reconcile" name="next_partner" context="{'next_partner_only': 1}" icon="terp-gtk-jump-to-ltr" domain="[('account_id.reconcile','=',True),('reconcile_id','=',False)]"/>
                     <field name="move_id" string="Number (Move)"/>
-                    <field name="account_id"/>
+                    <field name="account_id" filter_domain="['|', ('name', 'ilike', self), ('code', 'ilike', self)]"/>
                     <field name="partner_id"/>
                     <field name="journal_id" context="{'journal_id':self}" widget="selection"/> <!-- it's important to keep widget='selection' in this filter viewbecause without that the value passed in the context is not the ID but the textual value (name) of the selected journal -->
                     <field name="period_id" context="{'period_id':self}" widget="selection"/> <!-- it's important to keep the widget='selection' in this field, for the same reason as explained above -->
