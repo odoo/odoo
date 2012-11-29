@@ -344,7 +344,13 @@ def make_conditional(req, response, last_modified=None, etag=None):
     return response.make_conditional(req.httprequest)
 
 def login_and_redirect(req, db, login, key, redirect_url='/'):
-    req.session.authenticate(db, login, key, {})
+    wsgienv = req.httprequest.environ
+    env = dict(
+        base_location=req.httprequest.url_root.rstrip('/'),
+        HTTP_HOST=wsgienv['HTTP_HOST'],
+        REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+    )
+    req.session.authenticate(db, login, key, env)
     return set_cookie_and_redirect(req, redirect_url)
 
 def set_cookie_and_redirect(req, redirect_url):
@@ -832,7 +838,7 @@ class Session(openerpweb.Controller):
         old_password, new_password,confirm_password = operator.itemgetter('old_pwd', 'new_password','confirm_pwd')(
                 dict(map(operator.itemgetter('name', 'value'), fields)))
         if not (old_password.strip() and new_password.strip() and confirm_password.strip()):
-            return {'error':'All passwords have to be filled.','title': 'Change Password'}
+            return {'error':'You cannot leave any password empty.','title': 'Change Password'}
         if new_password != confirm_password:
             return {'error': 'The new password and its confirmation must be identical.','title': 'Change Password'}
         try:
@@ -840,7 +846,7 @@ class Session(openerpweb.Controller):
                 old_password, new_password):
                 return {'new_password':new_password}
         except Exception:
-            return {'error': 'Original password incorrect, your password was not changed.', 'title': 'Change Password'}
+            return {'error': 'The old password you provided is incorrect, your password was not changed.', 'title': 'Change Password'}
         return {'error': 'Error, password not changed !', 'title': 'Change Password'}
 
     @openerpweb.jsonrequest
@@ -1341,8 +1347,8 @@ class Binary(openerpweb.Controller):
                 'filename': ufile.filename,
                 'id':  attachment_id
             }
-        except Exception, e:
-            args = { 'error': e.message }
+        except Exception,e:
+            args = {'erorr':e.faultCode.split('--')[1],'title':e.faultCode.split('--')[0]}
         return out % (simplejson.dumps(callback), simplejson.dumps(args))
 
 class Action(openerpweb.Controller):
@@ -1472,7 +1478,9 @@ class Export(View):
     def fields_info(self, req, model, export_fields):
         info = {}
         fields = self.fields_get(req, model)
-
+        if ".id" in export_fields:
+            fields['.id'] = fields.pop('id', {'string': 'ID'})
+            
         # To make fields retrieval more efficient, fetch all sub-fields of a
         # given field at the same time. Because the order in the export list is
         # arbitrary, this requires ordering all sub-fields of a given field

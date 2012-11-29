@@ -330,7 +330,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 dialogClass: executor.klass,
             });
             this.dialog.on("closing", null, options.on_close);
-            this.dialog.init_dialog();
             this.dialog.dialog_title = executor.action.name;
             if (widget instanceof instance.web.ViewManager) {
                 _.extend(widget.flags, {
@@ -829,6 +828,9 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'toggle_layout_outline':
                 current_view.rendering_engine.toggle_layout_debugging();
                 break;
+            case 'set_defaults':
+                current_view.open_defaults_dialog();
+                break;
             case 'translate':
                 this.do_action({
                     name: "Technical Translation",
@@ -999,11 +1001,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
             var args = [].slice.call(arguments).slice(1);
-            if (args[0] && args[0].error) {
-                alert(args[0].error);
-            } else {
-                self.do_attachement_update(self.dataset, self.model_id);
-            }
+            self.do_attachement_update(self.dataset, self.model_id,args);
             instance.web.unblockUI();
         });
     },
@@ -1084,24 +1082,27 @@ instance.web.Sidebar = instance.web.Widget.extend({
     },
     on_item_action_clicked: function(item) {
         var self = this;
-        self.getParent().sidebar_context().done(function (context) {
+        self.getParent().sidebar_eval_context().done(function (sidebar_eval_context) {
             var ids = self.getParent().get_selected_ids();
             if (ids.length == 0) {
                 instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), { title: _t("Warning"), modal: true });
                 return false;
             }
+            var active_ids_context = {
+                active_id: ids[0],
+                active_ids: ids,
+                active_model: self.getParent().dataset.model
+            }; 
             var c = instance.web.pyeval.eval('context',
-                new instance.web.CompoundContext({
-                    active_id: ids[0],
-                    active_ids: ids,
-                    active_model: self.getParent().dataset.model
-                }, context));
+                new instance.web.CompoundContext(
+                    sidebar_eval_context, active_ids_context));
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
                 context: c
             }).done(function(result) {
                 result.context = new instance.web.CompoundContext(
-                    c, result.context);
+                    result.context || {}, active_ids_context)
+                        .set_eval_context(c);
                 result.flags = result.flags || {};
                 result.flags.new_window = true;
                 self.do_action(result, {
@@ -1113,9 +1114,21 @@ instance.web.Sidebar = instance.web.Widget.extend({
             });
         });
     },
-    do_attachement_update: function(dataset, model_id) {
+    do_attachement_update: function(dataset, model_id,args) {
+        var self = this;
         this.dataset = dataset;
         this.model_id = model_id;
+        if (args && args[0]["erorr"]) {
+             instance.web.dialog($('<div>'),{
+                    modal: true,
+                    title: "OpenERP " + _.str.capitalize(args[0]["title"]),
+                    buttons: [{
+                        text: _t("Ok"),
+                        click: function(){
+                            $(this).dialog("close");
+                    }}]
+              }).html(args[0]["erorr"]);
+        }
         if (!model_id) {
             this.on_attachments_loaded([]);
         } else {
@@ -1349,8 +1362,8 @@ instance.web.View = instance.web.Widget.extend({
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
     },
-    sidebar_context: function () {
-        return $.when();
+    sidebar_eval_context: function () {
+        return $.when({});
     },
     /**
      * Asks the view to reload itself, if the reloading is asynchronous should

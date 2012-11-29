@@ -119,6 +119,9 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     },
     session_logout: function() {
         this.set_cookie('session_id', '');
+        var url = "#";
+        $.bbq.pushState(url);
+        window.location.search = "";
         return this.rpc("/web/session/destroy", {});
     },
     get_cookie: function (name) {
@@ -543,12 +546,12 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }}
 };
 instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which one ?
 instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
     '_t' : instance.web._t,
     'JSON': JSON,
+    '__debug__': instance.session.debug,
 };
 instance.web.qweb.preprocess_node = function() {
     // Note that 'this' is the Qweb Node

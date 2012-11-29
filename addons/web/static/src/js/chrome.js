@@ -24,7 +24,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', {
+        return this.$el.notify('create', {
             title: title,
             text: text
         }, opts);
@@ -35,7 +35,7 @@ instance.web.Notification =  instance.web.Widget.extend({
         if (sticky) {
             opts.expires = false;
         }
-        this.$el.notify('create', 'oe_notification_alert', {
+        return this.$el.notify('create', 'oe_notification_alert', {
             title: title,
             text: text
         }, opts);
@@ -52,8 +52,29 @@ instance.web.dialog = function(element) {
     return result;
 };
 
+/**
+    A useful class to handle dialogs.
+
+    Attributes:
+    - $buttons: A jQuery element targeting a dom part where buttons can be added. It always exists
+    during the lifecycle of the dialog.
+*/
 instance.web.Dialog = instance.web.Widget.extend({
     dialog_title: "",
+    /**
+        Constructor.
+
+        @param {Widget} parent
+        @param {dictionary} options A dictionary that will be forwarded to jQueryUI Dialog. Additionaly, that
+            dictionary can contain the following keys:
+            - buttons: Deprecated. The buttons key is not propagated to jQueryUI Dialog. It must be a dictionary (key = button
+                label, value = click handler) or a list of dictionaries (each element in the dictionary is send to the
+                corresponding method of a jQuery element targeting the <button> tag). It is deprecated because all dialogs
+                in OpenERP must be personalized in some way (button in red, link instead of button, ...) and this
+                feature does not allow that kind of personalization.
+            - destroy_on_close: Default true. If true and the dialog is closed, it is automatically destroyed.
+        @param {jQuery object} content Some content to replace this.$el .
+    */
     init: function (parent, options, content) {
         var self = this;
         this._super(parent);
@@ -66,50 +87,49 @@ instance.web.Dialog = instance.web.Widget.extend({
             max_width: '95%',
             height: 'auto',
             min_height: 0,
-            max_height: this.get_height('100%') - 200,
+            max_height: $(window.top).height() - 200,
             autoOpen: false,
             position: [false, 40],
-            buttons: {},
+            buttons: null,
             beforeClose: function () {
                 self.trigger("closing");
             },
-            resizeStop: this.on_resized
+            resizeStop: function() {
+                self.trigger("resized");
+            },
         };
-        for (var f in this) {
-            if (f.substr(0, 10) == 'on_button_') {
-                this.dialog_options.buttons[f.substr(10)] = this[f];
-            }
-        }
         if (options) {
             _.extend(this.dialog_options, options);
         }
         this.on("closing", this, this._closing);
+        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix"><span class="oe_dialog_custom_buttons"/></div>');
     },
-    get_options: function(options) {
-        var self = this,
-            o = _.extend({}, this.dialog_options, options || {});
-        _.each(['width', 'height'], function(unit) {
-            o[unit] = self['get_' + unit](o[unit]);
-            o['min_' + unit] = self['get_' + unit](o['min_' + unit] || 0);
-            o['max_' + unit] = self['get_' + unit](o['max_' + unit] || 0);
-            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) o[unit] = o['min_' + unit];
-            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) o[unit] = o['max_' + unit];
+    _get_options: function() {
+        var self = this;
+        var o = _.extend({}, this.dialog_options);
+        var sizes = {
+            width: $(window.top).width(),
+            height: $(window.top).height(),
+        };
+        _.each(sizes, function(available_size, unit) {
+            o[unit] = self._get_size(o[unit], available_size);
+            o['min_' + unit] = self._get_size(o['min_' + unit] || 0, available_size);
+            o['max_' + unit] = self._get_size(o['max_' + unit] || 0, available_size);
+            if (o[unit] !== 'auto' && o['min_' + unit] && o[unit] < o['min_' + unit]) {
+                o[unit] = o['min_' + unit];
+            }
+            if (o[unit] !== 'auto' && o['max_' + unit] && o[unit] > o['max_' + unit]) {
+                o[unit] = o['max_' + unit];
+            }
         });
-        if (!o.title && this.dialog_title) {
-            o.title = this.dialog_title;
-        }
+        o.title = o.title || this.dialog_title;
         return o;
     },
-    get_width: function(val) {
-        return this.get_size(val.toString(), $(window.top).width());
-    },
-    get_height: function(val) {
-        return this.get_size(val.toString(), $(window.top).height());
-    },
-    get_size: function(val, available_size) {
+    _get_size: function(val, available_size) {
+        val = val.toString();
         if (val === 'auto') {
             return val;
-        } else if (val.slice(-1) == "%") {
+        } else if (val.slice(-1) === "%") {
             return Math.round(available_size / 100 * parseInt(val.slice(0, -1), 10));
         } else {
             return parseInt(val, 10);
@@ -122,41 +142,58 @@ instance.web.Dialog = instance.web.Widget.extend({
             this._super();
         }
     },
-    open: function(options) {
-        if (! this.dialog_inited)
+    /**
+        Opens the popup. Inits the dialog if it is not already inited.
+
+        @return this
+    */
+    open: function() {
+        if (!this.dialog_inited) {
             this.init_dialog();
-        var o = this.get_options(options);
-        this.add_buttons(o.buttons);
-        delete(o.buttons);
-        this.$buttons.appendTo($("body"));
-        instance.web.dialog(this.$el, o).dialog('open');
-        this.$el.dialog("widget").find(".ui-dialog-buttonpane").remove();
-        this.$buttons.appendTo(this.$el.dialog("widget"));
-        if (o.height === 'auto' && o.max_height) {
-            this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
+        this.$el.dialog('open');
+        this.$el.dialog("widget").append(this.$buttons);
         return this;
     },
-    add_buttons: function(buttons) {
+    _add_buttons: function(buttons) {
         var self = this;
-        _.each(buttons, function(fn, but) {
-            var $but = $(QWeb.render('WidgetButton', { widget : { string: but, node: { attrs: {} }}}));
-            self.$buttons.append($but);
+        var $customButons = this.$buttons.find('.oe_dialog_custom_buttons').empty();
+        _.each(buttons, function(fn, text) {
+            // buttons can be object or array
+            if (!_.isFunction(fn)) {
+                text = fn.text;
+                fn = fn.click;
+            }
+            var $but = $(QWeb.render('WidgetButton', { widget : { string: text, node: { attrs: {} }}}));
+            $customButons.append($but);
             $but.on('click', function(ev) {
                 fn.call(self.$el, ev);
             });
         });
     },
-    init_dialog: function(options) {
+    /**
+        Initializes the popup.
+
+        @return The result returned by start().
+    */
+    init_dialog: function() {
+        var options = this._get_options();
+        if (options.buttons) {
+            this._add_buttons(options.buttons);
+            delete(options.buttons);
+        }
         this.renderElement();
-        var o = this.get_options(options);
-        instance.web.dialog(this.$el, o);
-        this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
-        this.$el.dialog("widget").append(this.$buttons);
+        instance.web.dialog(this.$el, options);
+        if (options.height === 'auto' && options.max_height) {
+            this.$el.css({ 'max-height': options.max_height, 'overflow-y': 'auto' });
+        }
         this.dialog_inited = true;
         var res = this.start();
         return res;
     },
+    /**
+        Closes the popup, if destroy_on_close was passed to the constructor, it is also destroyed.
+    */
     close: function() {
         if (this.dialog_inited && this.$el.is(":data(dialog)")) {
             this.$el.dialog('close');
@@ -171,9 +208,11 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.__tmp_dialog_closing = undefined;
         }
     },
-    on_resized: function() {
-    },
+    /**
+        Destroys the popup, also closes it.
+    */
     destroy: function () {
+        this.$buttons.remove();
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
@@ -182,7 +221,7 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.close();
             this.__tmp_dialog_destroying = undefined;
         }
-        if (this.dialog_inited && !this.isDestroyed()) {
+        if (this.dialog_inited && !this.isDestroyed() && this.$el.is(":data(dialog)")) {
             this.$el.dialog('destroy');
         }
         this._super();
@@ -726,20 +765,24 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
     template: "ChangePassword",
     start: function() {
         var self = this;
-        self.$el.validate({
-            submitHandler: function (form) {
-                self.rpc("/web/session/change_password",{
-                    'fields': $(form).serializeArray()
-                }).done(function(result) {
-                    if (result.error) {
-                        self.display_error(result);
-                        return;
-                    } else {
-                        instance.webclient.on_logout();
-                    }
-                });
-            }
-        });
+        this.getParent().dialog_title = "Change Password";
+        var $button = self.$el.find('.oe_form_button');
+        $button.appendTo(this.getParent().$buttons);
+        $button.eq(2).click(function(){
+           self.getParent().close();
+        })
+        $button.eq(0).click(function(){
+          self.rpc("/web/session/change_password",{
+               'fields': $("form[name=change_password_form]").serializeArray()
+          }).done(function(result) {
+               if (result.error) {
+                  self.display_error(result);
+                  return;
+               } else {
+                   instance.webclient.on_logout();
+               }
+          });
+       })
     },
     display_error: function (error) {
         return instance.web.dialog($('<div>'), {
@@ -946,6 +989,14 @@ instance.web.UserMenu =  instance.web.Widget.extend({
                 if(res.company_id[0] > 1)
                     topbar_name = _.str.sprintf("%s (%s)", topbar_name, res.company_id[1]);
                 self.$el.find('.oe_topbar_name').text(topbar_name);
+                if(!instance.session.debug) {
+                    self.rpc("/web/database/get_list", {}).done( function(result) {
+                       if (result.length > 1) {
+                            topbar_name = _.str.sprintf("%s (%s)", topbar_name, instance.session.db);
+                       }
+                        self.$el.find('.oe_topbar_name').text(topbar_name);
+                    });
+                }
                 var avatar_src = self.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: self.session.uid});
                 $avatar.attr('src', avatar_src);
             });
@@ -1055,9 +1106,7 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).then(function() {
-            self.$el.on('click', '.oe_logo', function() {
-                self.action_manager.do_action('home');
-            });
+            self.$(".oe_logo").attr("href", $.param.fragment("" + window.location, "", 2).slice(0, -1));
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -1114,6 +1163,30 @@ instance.web.WebClient = instance.web.Client.extend({
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
+        self.check_timezone();
+    },
+    check_timezone: function() {
+        var self = this;
+        var user_offset = instance.session.user_context.tz_offset;
+        var offset = -(new Date().getTimezoneOffset());
+        // _.str.sprintf()'s zero front padding is buggy with signed decimals, so doing it manually
+        var browser_offset = (offset < 0) ? "-" : "+";
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset / 60));
+        browser_offset += _.str.sprintf("%02d", Math.abs(offset % 60));
+        if (browser_offset !== user_offset) {
+            var notification = this.do_warn(_t("Timezone"), QWeb.render('WebClient.timezone_notification', {
+                user_timezone: instance.session.user_context.tz || 'UTC',
+                user_offset: user_offset,
+                browser_offset: browser_offset,
+            }), true);
+            notification.element.find('.oe_webclient_timezone_notification').on('click', function() {
+                notification.close();
+            }).find('a').on('click', function() {
+                notification.close();
+                self.user_menu.on_menu_settings();
+                return false;
+            });
+        }
     },
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
@@ -1130,11 +1203,11 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     do_notify: function() {
         var n = this.notification;
-        n.notify.apply(n, arguments);
+        return n.notify.apply(n, arguments);
     },
     do_warn: function() {
         var n = this.notification;
-        n.warn.apply(n, arguments);
+        return n.warn.apply(n, arguments);
     },
     on_logout: function() {
         var self = this;

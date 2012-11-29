@@ -1890,6 +1890,9 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     get_value: function() {
         return this.datewidget.get_value();
     },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"datetime" });
+    },
     start: function() {
         var ready = this._super();
         this.datewidget = new (this.widget())(this);
@@ -1898,7 +1901,10 @@ instance.web.search.ExtendedSearchProposition.DateTime = instance.web.search.Ext
     }
 });
 instance.web.search.ExtendedSearchProposition.Date = instance.web.search.ExtendedSearchProposition.DateTime.extend({
-    widget: function () { return instance.web.DateWidget; }
+    widget: function () { return instance.web.DateWidget; },
+    toString: function () {
+        return instance.web.format_value(this.get_value(), { type:"date" });
+    }
 });
 instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.ExtendedSearchProposition.Field.extend({
     template: 'SearchView.extended_search.proposition.integer',
@@ -1915,7 +1921,8 @@ instance.web.search.ExtendedSearchProposition.Integer = instance.web.search.Exte
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'integer'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0 : val, {'widget': 'integer'});
         } catch (e) {
             return "";
         }
@@ -1939,7 +1946,8 @@ instance.web.search.ExtendedSearchProposition.Float = instance.web.search.Extend
     },
     get_value: function() {
         try {
-            return instance.web.parse_value(this.$el.val(), {'widget': 'float'});
+            var val =this.$el.val();
+            return instance.web.parse_value(val == "" ? 0.0 : val, {'widget': 'float'});
         } catch (e) {
             return "";
         }
