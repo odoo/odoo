@@ -4,10 +4,10 @@
 -
   I create a cash account with currency USD
 -
-  !record {model: account.account, id: account_cash_usd_id}:
+  !record {model: account.account, id: account_cash_usd_id2}:
     currency_id: base.USD
     name: "cash account in usd"
-    code: "Xcash usd"
+    code: "Xcash usd2"
     type: 'liquidity'
     user_type: "account.data_account_type_cash"
 
@@ -56,8 +56,8 @@
     type: bank
     analytic_journal_id: account.sit
     sequence_id: account.sequence_bank_journal
-    default_debit_account_id: account_cash_usd_id
-    default_credit_account_id: account_cash_usd_id
+    default_debit_account_id: account_cash_usd_id2
+    default_credit_account_id: account_cash_usd_id2
     currency: base.USD
     company_id: base.main_company
     view_id: account.account_journal_bank_view
