@@ -199,12 +199,20 @@ class account_followup_print(osv.osv_memory):
 
     def clear_manual_actions(self, cr, uid, partner_list, context=None):
         # Partnerlist is list to exclude
-        # Will 
+        # Will clear the actions of partners that have no due payments anymore
         partner_list_ids = [partner.partner_id.id for partner in self.pool.get('account_followup.stat.by.partner').browse(cr, uid, partner_list, context=context)]
-        ids = self.pool.get('res.partner').search(cr, uid, ['&', ('credit', '<=', 0), '&', ('id','not in',partner_list_ids), '|', ('payment_responsible_id', '!=', False), 
-                                                             ('payment_next_action_date', '!=', False)])
-        print ids
-        self.pool.get('res.partner').action_done(cr, uid, ids, context=context)
+        ids = self.pool.get('res.partner').search(cr, uid, ['&', ('id', 'not in', partner_list_ids), '|', 
+                                                             ('payment_responsible_id', '!=', False), 
+                                                             ('payment_next_action_date', '!=', False)], context=context)
+        partners = self.pool.get('res.partner').browse(cr, uid, ids, context=context)
+        newids = []
+        for part in partners:
+            credit = 0
+            for aml in part.unreconciled_aml_ids: 
+                credit +=aml.result
+            if credit <= 0: 
+                newids.append(part.id)
+        self.pool.get('res.partner').action_done(cr, uid, newids, context=context)
         return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):
@@ -218,7 +226,9 @@ class account_followup_print(osv.osv_memory):
         #Update and process partners
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
         restot = self.process_partners(cr, uid, partner_list, data, context=context)
-        self.clear_manual_actions(cr, uid, partner_list, context=context)
+        nbactionscleared = self.clear_manual_actions(cr, uid, partner_list, context=context)
+        if nbactionscleared > 0:
+            restot['resulttext'] = restot['resulttext'] + "<li>" +  str(nbactionscleared) + " " + _("partners have no credits and as such the action is cleared") + "</li>" 
         res = restot['action']
         mod_obj = self.pool.get('ir.model.data')
         if context is None:

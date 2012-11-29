@@ -260,8 +260,6 @@ class res_partner(osv.osv):
         }
 
 
-    def do_button_mail(self, cr, uid, ids, context=None):
-        self.do_partner_mail(cr, uid, ids, context=context)
 
 
     _inherit = "res.partner"
