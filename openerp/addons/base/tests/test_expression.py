@@ -137,7 +137,7 @@ class test_expression(common.TransactionCase):
             "_auto_join off: ('bank_ids.name', 'like', '..'): incorrect result")
         # Test produced queries
         self.assertEqual(len(self.query_list), 3,
-            "_auto_join off: ('bank_ids.name', 'like', '..') should produce 3 queries (1 in res_partner_bank, 1 on res_partner with active, 1 on res_partner)")
+            "_auto_join off: ('bank_ids.name', 'like', '..') should produce 3 queries (1 in res_partner_bank, 2 on res_partner)")
         sql_query = self.query_list[0].get_sql()
         self.assertIn('res_partner_bank', sql_query[0],
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect main table")
@@ -161,7 +161,7 @@ class test_expression(common.TransactionCase):
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
         # Test produced queries
         self.assertEqual(len(self.query_list), 5,
-            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 5 queries (1 in res_partner_bank, 2 on res_partner with active, 2 on res_partner, childs then parents)")
+            "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]) should produce 5 queries (1 in res_partner_bank, 4 on res_partner)")
 
         # Do: one2many with _auto_join
         partner_bank_ids_col._auto_join = True
