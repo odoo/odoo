@@ -148,7 +148,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     load_form: function(data) {
         var self = this;
         if (!data) {
-            throw new Error("No data provided.");
+            throw new Error(_t("No data provided."));
         }
         if (this.arch) {
             throw "Form view does not support multiple calls to load_form";
@@ -316,12 +316,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this, set_values = [];
         if (!record) {
             this.set({ 'title' : undefined });
-            this.do_warn("Form", "The record could not be found in the database.", true);
+            this.do_warn(_t("Form"), _t("The record could not be found in the database."), true);
             return $.Deferred().reject();
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : "New" });
+        this.set({ 'title' : record.id ? record.display_name : _t("New") });
 
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
@@ -431,31 +431,31 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var onchange = _.str.trim(on_change);
         var call = onchange.match(/^\s?(.*?)\((.*?)\)\s?$/);
         if (!call) {
-            throw new Error("Wrong on change format: " + onchange);
+            throw new Error(_.str.sprintf( _t("Wrong on change format: %s"), onchange ));
         }
 
         var method = call[1];
         if (!_.str.trim(call[2])) {
-            return {method: method, args: [], context_index: null}
+            return {method: method, args: []}
         }
 
         var argument_replacement = {
             'False': function () {return false;},
             'True': function () {return true;},
             'None': function () {return null;},
-            'context': function (i) {
-                context_index = i;
-                var ctx = new instance.web.CompoundContext(self.dataset.get_context(), widget.build_context() ? widget.build_context() : {});
-                return ctx;
+            'context': function () {
+                return new instance.web.CompoundContext(
+                        self.dataset.get_context(),
+                        widget.build_context() ? widget.build_context() : {});
             }
         };
-        var parent_fields = null, context_index = null;
+        var parent_fields = null;
         var args = _.map(call[2].split(','), function (a, i) {
             var field = _.str.trim(a);
 
             // literal constant or context
             if (field in argument_replacement) {
-                return argument_replacement[field](i);
+                return argument_replacement[field]();
             }
             // literal number
             if (/^-?\d+(\.\d+)?$/.test(field)) {
@@ -490,8 +490,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         return {
             method: method,
-            args: args,
-            context_index: context_index
+            args: args
         };
     },
     do_onchange: function(widget, processed) {
@@ -510,18 +509,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             var on_change = widget.node.attrs.on_change;
             if (on_change) {
                 var change_spec = self.parse_on_change(on_change, widget);
-                def = self.rpc('/web/dataset/onchange', {
-                    model: self.dataset.model,
-                    method: change_spec.method,
-                    args: [(self.datarecord.id == null ? [] : [self.datarecord.id])].concat(change_spec.args),
-                    context_id: change_spec.context_index == undefined ? null : change_spec.context_index + 1
-                });
+                var id = [self.datarecord.id == null ? [] : [self.datarecord.id]];
+                def = new instance.web.Model(self.dataset.model).call(
+                    change_spec.method, id.concat(change_spec.args));
             } else {
                 def = $.when({});
             }
             return def.then(function(response) {
                 if (widget.field['change_default']) {
-                    var fieldname = widget.name
+                    var fieldname = widget.name;
                     var value_;
                     if (response.value && (fieldname in response.value)) {
                         // Use value from onchange if onchange executed
@@ -533,11 +529,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     var condition = fieldname + '=' + value_;
 
                     if (value_) {
-                        return self.rpc('/web/dataset/call', {
-                            model: 'ir.values',
-                            method: 'get_defaults',
-                            args: [self.model, condition]
-                        }).then(function (results) {
+                        return new instance.web.Model('ir.values').call(
+                            'get_defaults', [self.model, condition]
+                        ).then(function (results) {
                             if (!results.length) {
                                 return response;
                             }
@@ -872,7 +866,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }).value();
         warnings.unshift('<ul>');
         warnings.push('</ul>');
-        this.do_warn("The following fields are invalid :", warnings.join(''));
+        this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
     },
     /**
      * Reload the form after saving
@@ -1241,11 +1235,11 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         _.each(this.fields_to_init, function($elem) {
             var name = $elem.attr("name");
             if (!self.fvg.fields[name]) {
-                throw new Error("Field '" + name + "' specified in view could not be found.");
+                throw new Error(_.str.sprintf(_t("Field '%s' specified in view could not be found."), name));
             }
             var obj = self.fields_registry.get_any([$elem.attr('widget'), self.fvg.fields[name].type]);
             if (!obj) {
-                throw new Error("Widget type '"+ $elem.attr('widget') + "' is not implemented");
+                throw new Error(_.str.sprintf(_t("Widget type '%s' is not implemented"), $elem.attr('widget')));
             }
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             var $label = self.labels[$elem.attr("name")];
@@ -2319,7 +2313,7 @@ instance.web.form.FieldEmail = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value') || !this.is_syntax_valid()) {
-            this.do_warn("E-mail error", "Can't send email to invalid e-mail address");
+            this.do_warn(_t("E-mail error"), _t("Can't send email to invalid e-mail address"));
         } else {
             location.href = 'mailto:' + this.get('value');
         }
@@ -2348,7 +2342,7 @@ instance.web.form.FieldUrl = instance.web.form.FieldChar.extend({
     },
     on_button_clicked: function() {
         if (!this.get('value')) {
-            this.do_warn("Resource error", "This resource is empty");
+            this.do_warn(_t("Resource error"), _t("This resource is empty"));
         } else {
             var url = $.trim(this.get('value'));
             if(/^www\./i.test(url))
@@ -3385,7 +3379,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
+                throw new Error(_.str.sprintf(_t("View type '%s' is not supported in One2Many."), mode));
             }
             var view = {
                 view_id: false,
@@ -4075,13 +4069,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         If you see this options, do not use it, it's basically a dirty hack to make one
         precise o2m to behave the way we want.
 */
-instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();
-        this.initial_is_loaded = this.is_loaded;
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
         var self = this;
@@ -4089,24 +4082,44 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
             self.dataset_changed();
         });
         this.set_value([]);
+        this.list_dm = new instance.web.DropMisordered();
+        this.render_value_dm = new instance.web.DropMisordered();
     },
-    start: function() {
-        this.$el.addClass('oe_form_field oe_form_field_many2many');
-
+    initialize_content: function() {
         var self = this;
 
-        self.load_view();
-        this.is_loaded.done(function() {
-            self.on("change:effective_readonly", self, function() {
-                self.is_loaded = self.is_loaded.then(function() {
-                    self.list_view.destroy();
-                    return $.when(self.load_view()).done(function() {
-                        self.render_value();
-                    });
-                });
+        this.$el.addClass('oe_form_field oe_form_field_many2many');
+
+        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
+                    'addable': this.get("effective_readonly") ? null : _t("Add"),
+                    'deletable': this.get("effective_readonly") ? false : true,
+                    'selectable': this.multi_selection,
+                    'sortable': false,
+                    'reorderable': false,
+                    'import_enabled': false,
             });
+        var embedded = (this.field.views || {}).tree;
+        if (embedded) {
+            this.list_view.set_embedded_view(embedded);
+        }
+        this.list_view.m2m_field = this;
+        var loaded = $.Deferred();
+        this.list_view.on("list_view_loaded", this, function() {
+            loaded.resolve();
         });
-        this._super.apply(this, arguments);
+        this.list_view.appendTo(this.$el);
+
+        var old_def = self.is_loaded;
+        self.is_loaded = $.Deferred().done(function() {
+            old_def.resolve();
+        });
+        this.list_dm.add(loaded).then(function() {
+            self.is_loaded.resolve();
+        });
+    },
+    destroy_content: function() {
+        this.list_view.destroy();
+        this.list_view = undefined;
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4121,35 +4134,10 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     is_false: function () {
         return _(this.get("value")).isEmpty();
     },
-    load_view: function() {
-        var self = this;
-        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': self.get("effective_readonly") ? null : _t("Add"),
-                    'deletable': self.get("effective_readonly") ? false : true,
-                    'selectable': self.multi_selection,
-                    'sortable': false,
-                    'reorderable': false,
-                    'import_enabled': false,
-            });
-        var embedded = (this.field.views || {}).tree;
-        if (embedded) {
-            this.list_view.set_embedded_view(embedded);
-        }
-        this.list_view.m2m_field = this;
-        var loaded = $.Deferred();
-        this.list_view.on("list_view_loaded", self, function() {
-            self.initial_is_loaded.resolve();
-            loaded.resolve();
-        });
-        $.async_when().done(function () {
-            self.list_view.appendTo(self.$el);
-        });
-        return loaded;
-    },
     render_value: function() {
         var self = this;
         this.dataset.set_ids(this.get("value"));
-        this.is_loaded = this.is_loaded.then(function() {
+        this.render_value_dm.add(this.is_loaded).then(function() {
             return self.list_view.reload_content();
         });
     },
@@ -4591,7 +4579,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
         var self = this;
         this.init_dataset();
         if (this.options.initial_view == "search") {
-            self.rpc('/web/session/eval_domain_and_context', {
+            instance.web.pyeval.eval_domains_and_contexts({
                 domains: [],
                 contexts: [this.context]
             }).done(function (results) {
@@ -4664,7 +4652,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
     },
     do_search: function(domains, contexts, groupbys) {
         var self = this;
-        this.rpc('/web/session/eval_domain_and_context', {
+        instance.web.pyeval.eval_domains_and_contexts({
             domains: domains || [],
             contexts: contexts || [],
             group_by_seq: groupbys || []
@@ -4840,7 +4828,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
     },
     on_file_uploaded: function(size, name, content_type, file_base64) {
         if (size === false) {
-            this.do_warn("File Upload", "There was a problem while uploading your file");
+            this.do_warn(_t("File Upload"), _t("There was a problem while uploading your file"));
             // TODO: use openerp web crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -5009,7 +4997,7 @@ instance.web.form.FieldMany2ManyBinaryMultiFiles = instance.web.form.AbstractFie
         this.field_manager = field_manager;
         this.node = node;
         if(this.field.type != "many2many" || this.field.relation != 'ir.attachment') {
-            throw "The type of the field '"+this.field.string+"' must be a many2many field with a relation to 'ir.attachment' model.";
+            throw _.str.sprintf(_t("The type of the field '%s' must be a many2many field with a relation to 'ir.attachment' model."), this.field.string);
         }
         this.ds_file = new instance.web.DataSetSearch(this, 'ir.attachment');
         this.fileupload_id = _.uniqueId('oe_fileupload_temp');

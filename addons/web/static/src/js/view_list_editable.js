@@ -3,6 +3,8 @@
  * @namespace
  */
 openerp.web.list_editable = function (instance) {
+    var _t = instance.web._t;
+
     // editability status of list rows
     instance.web.ListView.prototype.defaults.editable = null;
 
@@ -383,7 +385,8 @@ openerp.web.list_editable = function (instance) {
                 version: '7.0'
             });
             _(view.arch.children).chain()
-                .zip(this.columns)
+                .zip(_(this.columns).filter(function (c) {
+                    return !(c instanceof instance.web.list.MetaColumn);}))
                 .each(function (ar) {
                     var widget = ar[0], column = ar[1];
                     var modifiers = _.extend({}, column.modifiers);
@@ -775,7 +778,7 @@ openerp.web.list_editable = function (instance) {
         cancel: function (force) {
             if (!(force || this.form.can_be_discarded())) {
                 return $.Deferred().reject({
-                    message: "The form's data can not be discarded"}).promise();
+                    message: _t("The form's data can not be discarded")}).promise();
             }
             var record = this.record;
             this.record = null;
