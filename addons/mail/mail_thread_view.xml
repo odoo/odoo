@@ -43,7 +43,8 @@
                     ('partner_ids.user_ids', 'in', [uid])
                 ],
                 'view_mailbox': True,
-                'read_action': 'read', }&quot;"/>
+                'read_action': 'read',
+                'show_compose_message': False }&quot;"/>
             <field name="help" type="html">
                 <p>
                     <b>No private message.</b>
@@ -67,7 +68,8 @@
                     ('starred', '=', True),
                 ],
                 'view_mailbox': True,
-                'read_action': 'read', }&quot;"/>
+                'read_action': 'read',
+                'compose_as_todo': True }&quot;"/>
             <field name="help" type="html">
                 <p>
                     <b>No todo.</b>
@@ -91,7 +93,8 @@
                     ('notification_ids.partner_id.user_ids', 'in', [uid]),
                     ('author_id.user_ids', 'in', [uid]),
                 ],
-                'view_mailbox': True, }&quot;"/>
+                'view_mailbox': True,
+                'show_compose_message': False }&quot;"/>
             <field name="help" type="html">
                 <p>
                     No message found and no message sent yet.
