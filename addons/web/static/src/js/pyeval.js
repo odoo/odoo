@@ -402,11 +402,6 @@ openerp.web.pyeval = function (instance) {
                  d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(),
                  d.getUTCMilliseconds() * 1000]);
         }),
-        today: py.classmethod.fromJSON(function () {
-            var d = new Date();
-            return py.PY_call(datetime.datetime,
-                [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
-        }),
         combine: py.classmethod.fromJSON(function () {
             var args = py.PY_parseArgs(arguments, 'date time');
             return py.PY_call(datetime.datetime, [
@@ -479,6 +474,17 @@ openerp.web.pyeval = function (instance) {
             return py.PY_call(datetime.date, [year, month, day])
         }
     });
+    /**
+        Returns the current local date, which means the date on the client (which can be different
+        compared to the date of the server).
+
+        @return {datetime.date}
+    */
+    var context_today = function() {
+        var d = new Date();
+        return py.PY_call(
+            datetime.date, [d.getFullYear(), d.getMonth() + 1, d.getDate()]);
+    };
     datetime.time = py.type('time', null, {
         __init__: function () {
             var zero = py.float.fromJSON(0);
@@ -691,6 +697,7 @@ openerp.web.pyeval = function (instance) {
         return {
             uid: py.float.fromJSON(instance.session.uid),
             datetime: datetime,
+            context_today: context_today,
             time: time,
             relativedelta: relativedelta,
             current_date: py.PY_call(
