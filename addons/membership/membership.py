@@ -483,16 +483,16 @@ class Invoice(osv.osv):
     '''Invoice'''
     _inherit = 'account.invoice'
 
-    def action_cancel(self, cr, uid, ids, *args):
+    def action_cancel(self, cr, uid, ids, context=None):
         '''Create a 'date_cancel' on the membership_line object'''
         member_line_obj = self.pool.get('membership.membership_line')
         today = time.strftime('%Y-%m-%d')
-        for invoice in self.browse(cr, uid, ids):
+        for invoice in self.browse(cr, uid, ids, context=context):
             mlines = member_line_obj.search(cr, uid,
                     [('account_invoice_line', 'in',
                         [l.id for l in invoice.invoice_line])])
             member_line_obj.write(cr, uid, mlines, {'date_cancel': today})
-        return super(Invoice, self).action_cancel(cr, uid, ids)
+        return super(Invoice, self).action_cancel(cr, uid, ids, context=context)
 
 Invoice()
 
