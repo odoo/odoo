@@ -6,7 +6,7 @@
 
         <!-- Project issue Read/Unread actions -->
         <record id="actions_server_project_issue_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Issue: Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_issue"/>
@@ -24,7 +24,7 @@
         </record>
 
         <record id="actions_server_project_issue_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Issue: Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_issue"/>
@@ -264,9 +264,7 @@
                                         <field name="version_id"/>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <div class="oe_left oe_tags">
-                                            <field name="categ_ids"/>
-                                        </div>
+                                        <field name="categ_ids"/>
                                         <div class="oe_right">
                                             <span class="oe_kanban_highlight">
                                                 <t t-set="priority" t-value="record.priority.raw_value || 5"/>

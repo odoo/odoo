@@ -59,7 +59,7 @@
 
         <!-- Event Read/Unread actions -->
         <record id="actions_server_event_event_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Event: Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
@@ -77,7 +77,7 @@
         </record>
 
         <record id="actions_server_event_event_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Event: Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
@@ -377,7 +377,7 @@
 
         <!-- Registration Read/Unread actions -->
         <record id="actions_server_event_registration_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Event registration : Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
@@ -395,7 +395,7 @@
         </record>
 
         <record id="actions_server_event_registration_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Event registration : Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
