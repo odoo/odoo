@@ -4069,13 +4069,12 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
         If you see this options, do not use it, it's basically a dirty hack to make one
         precise o2m to behave the way we want.
 */
-instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
+instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     multi_selection: false,
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
         this.is_loaded = $.Deferred();
-        this.initial_is_loaded = this.is_loaded;
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
         var self = this;
@@ -4083,24 +4082,44 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
             self.dataset_changed();
         });
         this.set_value([]);
+        this.list_dm = new instance.web.DropMisordered();
+        this.render_value_dm = new instance.web.DropMisordered();
     },
-    start: function() {
-        this.$el.addClass('oe_form_field oe_form_field_many2many');
-
+    initialize_content: function() {
         var self = this;
 
-        self.load_view();
-        this.is_loaded.done(function() {
-            self.on("change:effective_readonly", self, function() {
-                self.is_loaded = self.is_loaded.then(function() {
-                    self.list_view.destroy();
-                    return $.when(self.load_view()).done(function() {
-                        self.render_value();
-                    });
-                });
+        this.$el.addClass('oe_form_field oe_form_field_many2many');
+
+        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
+                    'addable': this.get("effective_readonly") ? null : _t("Add"),
+                    'deletable': this.get("effective_readonly") ? false : true,
+                    'selectable': this.multi_selection,
+                    'sortable': false,
+                    'reorderable': false,
+                    'import_enabled': false,
             });
+        var embedded = (this.field.views || {}).tree;
+        if (embedded) {
+            this.list_view.set_embedded_view(embedded);
+        }
+        this.list_view.m2m_field = this;
+        var loaded = $.Deferred();
+        this.list_view.on("list_view_loaded", this, function() {
+            loaded.resolve();
         });
-        this._super.apply(this, arguments);
+        this.list_view.appendTo(this.$el);
+
+        var old_def = self.is_loaded;
+        self.is_loaded = $.Deferred().done(function() {
+            old_def.resolve();
+        });
+        this.list_dm.add(loaded).then(function() {
+            self.is_loaded.resolve();
+        });
+    },
+    destroy_content: function() {
+        this.list_view.destroy();
+        this.list_view = undefined;
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -4115,35 +4134,10 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     is_false: function () {
         return _(this.get("value")).isEmpty();
     },
-    load_view: function() {
-        var self = this;
-        this.list_view = new instance.web.form.Many2ManyListView(this, this.dataset, false, {
-                    'addable': self.get("effective_readonly") ? null : _t("Add"),
-                    'deletable': self.get("effective_readonly") ? false : true,
-                    'selectable': self.multi_selection,
-                    'sortable': false,
-                    'reorderable': false,
-                    'import_enabled': false,
-            });
-        var embedded = (this.field.views || {}).tree;
-        if (embedded) {
-            this.list_view.set_embedded_view(embedded);
-        }
-        this.list_view.m2m_field = this;
-        var loaded = $.Deferred();
-        this.list_view.on("list_view_loaded", self, function() {
-            self.initial_is_loaded.resolve();
-            loaded.resolve();
-        });
-        $.async_when().done(function () {
-            self.list_view.appendTo(self.$el);
-        });
-        return loaded;
-    },
     render_value: function() {
         var self = this;
         this.dataset.set_ids(this.get("value"));
-        this.is_loaded = this.is_loaded.then(function() {
+        this.render_value_dm.add(this.is_loaded).then(function() {
             return self.list_view.reload_content();
         });
     },
