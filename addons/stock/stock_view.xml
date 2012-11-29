@@ -1364,7 +1364,7 @@
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
                     <field name="product_id"/>
-                    <field name="location_id" string="Location" />
+                    <field name="name" string="Location" filter_domain="['|',('location_id','ilike',self),('location_dest_id','ilike',self)]"/>
                     <field name="partner_id" string="Partner"  filter_domain="[('picking_id.partner_id','ilike',self)]"/>
                     <field name="prodlot_id"/>
                     <group expand="0" string="Group By...">
