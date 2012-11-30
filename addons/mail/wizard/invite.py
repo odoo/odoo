@@ -71,12 +71,14 @@ class invite_wizard(osv.osv_memory):
 
             # send an email
             if wizard.message:
+                ctx = dict(context)
+                ctx.update({'default_res_id': False})
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     mail_id = mail_mail.create(cr, uid, {
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
-                        }, context=context)
+                        }, context=ctx)
                     mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

@@ -578,7 +578,7 @@ class mail_message(osv.Model):
                 model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
 
         # Author condition, for read and create (private message) -> could become an ir.rule, but not till we do not have a many2one variable field
-        if operation == 'read':
+        if operation == 'read' or operation == 'write':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
@@ -640,7 +640,6 @@ class mail_message(osv.Model):
                             (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
-        values['model'] = context.get('default_res_model') if (context and context.get('default_res_model')) else ''
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
