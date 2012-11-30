@@ -70,7 +70,10 @@ class ir_model(osv.osv):
         models = self.browse(cr, uid, ids, context=context)
         res = dict.fromkeys(ids)
         for model in models:
-            res[model.id] = self.pool.get(model.model).is_transient()
+            if self.pool.get(model.model):
+                res[model.id] = self.pool.get(model.model).is_transient()
+            else:
+                _logger.error('Missing model %s' % (model.model, ))
         return res
 
     def _search_osv_memory(self, cr, uid, model, name, domain, context=None):
