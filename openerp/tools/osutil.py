@@ -114,7 +114,7 @@ else:
         with close_srv(ws.OpenSCManager(None, None, ws.SC_MANAGER_ALL_ACCESS)) as hscm:
             with close_srv(wsu.SmartOpenService(hscm, nt_service_name, ws.SERVICE_ALL_ACCESS)) as hs:
                 info = ws.QueryServiceStatusEx(hs)
-                return info.ProcessId == getppid()
+                return info['ProcessId'] == getppid()
 
 if __name__ == '__main__':
 	from pprint import pprint as pp
