@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+  <data>
+
+    <record id="view_res_bank_form_add_code" model="ir.ui.view">
+      <field name="name">res.bank.form.add.code</field>
+      <field name="model">res.bank</field>
+      <field name="inherit_id" ref="base.view_res_bank_form"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="active" position="after">
+          <field name="code" select="1"/>
+        </field>
+      </field>
+    </record>
+
+    <record id="view_res_bank_tree_add_code" model="ir.ui.view">
+      <field name="name">res.bank.tree.add.code</field>
+      <field name="model">res.bank</field>
+      <field name="inherit_id" ref="base.view_res_bank_tree"/>
+      <field name="type">form</field>
+      <field name="arch" type="xml">
+        <field name="country" position="after">
+          <field name="code"/>
+        </field>
+      </field>
+    </record>
+
+  </data>
+</openerp>
+

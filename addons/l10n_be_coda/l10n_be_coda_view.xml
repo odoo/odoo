@@ -11,10 +11,11 @@
         <field name="model">coda.bank.account</field>
         <field name="arch" type="xml">
             <search string="CODA Bank Account Configuration">
-                <field name="name" filter_domain="['|', ('name','ilike',self), ('description1','ilike',self)]" string="CODA Bank Account"/>
                 <filter string="Normal" domain="[('state','=','normal')]" icon="terp-folder-green"/>
                 <filter string="Info" domain="[('state','=','info')]" icon="terp-folder-yellow"/>
+                <field name="name"/>
                 <field name="bank_id"/>
+                <field name="description1"/>
                 <field name="journal"/>
                 <field name="currency" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -54,15 +55,52 @@
                 <field name="state" on_change="onchange_state(state)"/>
                 <field name="journal" attrs="{'invisible':[('state','=','info')]}"/>
                 <newline/>
-                <field name="def_payable"/>
-                <field name="def_receivable"/>
-                <field name="awaiting_account"/>
-                <field name="transfer_account"/>
+                <field name="find_payment"/>
                 <field name="find_bbacom"/>
+                <field name="find_inv_number"/>
                 <field name="find_partner"/>
-                <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                <field name="update_partner"/>
+                <field name="balance_start_enforce"/>
+                <field name="discard_dup"/>
                 <field name="active"/>
+                <field name="company_id" widget='selection' groups="base.group_multi_company"/>
             </group>
+            <notebook colspan="4">
+            <page string="Default Accounts">
+              <group string="Default Account Mapping">
+                  <field name="awaiting_account"/>
+                  <field name="transfer_account"/>
+              </group>
+            </page>
+            <page string="Accounts Mapping">
+              <field colspan="4" name="account_mapping_ids" nolabel="1">
+                <tree string="Account Mapping Rules">
+                  <field name="sequence"/>
+                  <field name="name"/>
+                  <field name="trans_type_id"/>
+                  <field name="trans_family_id"/>
+                  <field name="trans_code_id"/>
+                  <field name="trans_category_id"/>
+                  <field name="struct_comm_type_id"/>
+                  <field name="partner_id"/>
+                  <field name="account_id"/>
+                </tree>
+                <form string="Account Mapping Rules">
+                  <field name="name"/>
+                  <field name="account_id"/>
+                  <field name="sequence"/>
+                  <field name="active"/>
+                  <separator string="Conditions" colspan="4"/>
+                  <field name="trans_type_id"/>
+                  <field name="trans_family_id"/>
+                  <field name="trans_code_id"/>
+                  <field name="trans_category_id"/>
+                  <field name="struct_comm_type_id"/>
+                  <field name="partner_id"/>
+                </form>
+              </field>
+            </page>
+          </notebook>
         </form>
       </field>
     </record>
@@ -282,11 +320,12 @@
       <field name="name">coda.bank.statement.list</field>
       <field name="model">coda.bank.statement</field>
       <field name="arch" type="xml">
-        <tree colors="red:balance_end_real!=balance_end;blue:state=='draft' and (balance_end_real==balance_end)" string="CODA Bank Statements" create="false">
+        <tree colors="red:balance_end_real!=balance_end" string="CODA Bank Statements">
           <field name="name"/>
-          <field name="date"/>
-          <field name="period_id"/>
+          <field name="coda_creation_date"/>
           <field name="coda_bank_account_id"/>
+          <field name="old_balance_date"/>
+          <field name="new_balance_date"/>
           <field name="balance_start"/>
           <field name="balance_end_real"/>
           <field name="balance_end"/>
@@ -299,61 +338,56 @@
       <field name="name">coda.bank.statement.form</field>
       <field name="model">coda.bank.statement</field>
       <field name="arch" type="xml">
-          <form string="CODA Bank Statement" version="7.0" create="false">
-              <sheet>
-                  <group col="4">
-                      <field name="name"/>
-                      <field name="date"/>
-                      <field name="coda_bank_account_id"/>
-                      <field name="currency" groups="base.group_multi_currency"/>
-                      <field name="period_id"/>
-                      <field name="type"/>
-                      <newline/>
-                      <field name="balance_start"/>
-                      <field name="balance_end_real"/>
-                  </group>
-                  <notebook>
-                    <page string="Transactions">
-                      <field name="line_ids">
-                        <tree string="CODA Statement Lines">
-                          <field name="sequence" string="Seq"/>
-                          <field name="date"/>
-                          <field name="val_date"/>
-                          <field name="ref"/>
-                          <field name="name" width="250"/>
-                          <field name="type"/>
-                          <field name="partner_id"/>
-                          <field name="account_id"/>
-                          <field name="amount"/>
-                          <field name="globalisation_amount" string="Glob. Amount"/>
-                          <field name="globalisation_id" string="Glob. Id"/>
-                        </tree>
-                        <form string="CODA Statement Lines" version="7.0">
-                          <group col="4">
-                              <field name="sequence" string="Seq"/>
-                              <field name="date"/>
-                              <field name="val_date"/>
-                              <field name="name"/>
-                              <field name="type"/>
-                              <field name="partner_id"/>
-                              <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
-                              <field name="amount"/>
-                              <field name="ref"/>
-                              <field name="globalisation_amount"/>
-                              <field name="globalisation_level"/>
-                              <field name="globalisation_id"/>
-                          </group>
-                          <separator string="Notes"/>
-                          <field name="note"/>
-                        </form>
-                      </field>
-                    </page>
-                  </notebook>
-                  <group colspan="4">
-                    <field name="balance_end"/>
-                  </group>
-              </sheet>
-          </form>
+          <form string="CODA Bank Statement">
+          <field name="name"/>
+          <field name="coda_creation_date"/>
+          <field name="coda_bank_account_id"/>
+          <field name="currency"/>
+          <field name="type"/>
+          <newline/>
+          <field name="balance_start"/>
+          <field name="balance_end_real"/>
+          <field name="old_balance_date"/>
+          <field name="new_balance_date"/>
+          <notebook colspan="4">
+            <page string="Transactions">
+              <field colspan="4" name="line_ids" nolabel="1">
+                <tree string="CODA Statement Lines">
+                  <field name="sequence" string="Seq"/>
+                  <field name="date"/>
+                  <field name="val_date"/>
+                  <field name="ref"/>
+                  <field name="name" width="250"/>
+                  <field name="type"/>
+                  <field name="partner_id"/>
+                  <field name="account_id"/>
+                  <field name="amount"/>
+                  <field name="globalisation_amount" string="Glob. Amount"/>
+                  <field name="globalisation_id" string="Glob. Id"/>
+                </tree>
+                <form string="CODA Statement Lines">
+                  <field name="sequence" string="Seq"/>
+                  <field name="date"/>
+                  <field name="val_date"/>
+                  <field name="name"/>
+                  <field name="type"/>
+                  <field name="partner_id"/>
+                  <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                  <field name="amount"/>
+                  <field name="ref"/>
+                  <field name="globalisation_amount"/>
+                  <field name="globalisation_level"/>
+                  <field name="globalisation_id"/>
+                  <separator colspan="4" string="Notes"/>
+                  <field colspan="4" name="note" nolabel="1"/>
+                </form>
+              </field>
+            </page>
+          </notebook>
+          <group colspan="4">
+            <field name="balance_end"/>
+          </group>
+        </form>
       </field>
     </record>
 
@@ -362,10 +396,12 @@
         <field name="model">coda.bank.statement</field>
         <field name="arch" type="xml">
             <search string="Search CODA Bank Statements">
-                <field name="name" string="CODA Bank Statement"/>
-                <field name="date"/>
                 <filter string="Normal" domain="[('type','=','normal')]" icon="terp-folder-green"/>
                 <filter string="Info" domain="[('type','=','info')]" icon="terp-folder-yellow"/>
+                <field name="name"/>
+                <field name="coda_creation_date"/>
+                <field name="old_balance_date"/>
+                <field name="new_balance_date"/>
                 <field name="period_id"/>
                 <field name="coda_bank_account_id"/>
                 <field name="journal_id" domain="[('type', '=', 'bank')]"/>
@@ -457,6 +493,7 @@
                     <field name="amount"/>
                     <field name="globalisation_amount" string="Glob. Amount"/>
                     <field name="type"/>
+                    <field name="ref"/>
                     <field name="note"/>
                 </group>
                 <newline/>
