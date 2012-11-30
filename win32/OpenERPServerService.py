@@ -75,7 +75,7 @@ def option_handler(opts):
     # configure the service to auto restart on failures...
     service_name = OpenERPServerService._svc_name
 
-    subprocess.call('sc failure %s reset= 0 actions= restart/0/restart/0/restart/0' % (service_name,))
+    subprocess.call(['sc', 'failure', service_name, 'reset=', '0', 'actions=', 'restart/0/restart/0/restart/0'])
 
     # hscm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
     # try:
