@@ -105,6 +105,7 @@ Dashboard for CRM will include:
     'test': [
         'test/process/communication_with_customer.yml',
         'test/process/lead2opportunity2win.yml',
+        'test/process/lead2opportunity_assign_salesmen.yml',
         'test/process/merge_opportunity.yml',
         'test/process/cancel_lead.yml',
         'test/process/action_rule.yml',
