@@ -434,11 +434,6 @@ openerp.web.pyeval = function (instance) {
                     throw new Error('ValueError: No known conversion for ' + m);
                 }));
         },
-        today: py.classmethod.fromJSON(function () {
-            var d = new Date();
-            return py.PY_call(
-                datetime.date, [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
-        }),
         __eq__: function (other) {
             return (this.year === other.year
                  && this.month === other.month
