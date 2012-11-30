@@ -22,6 +22,8 @@
 {
     'name' : 'Portal',
     'version': '1.0',
+    'installable': True,
+    'auto_install': True,
     'depends': [
         'base',
         'share',
@@ -53,7 +55,6 @@ very handy when used in combination with the module 'share'.
     ],
     'demo': ['portal_demo.xml'],
     'css': ['static/src/css/portal.css'],
-    'installable': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

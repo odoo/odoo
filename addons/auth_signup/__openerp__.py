@@ -30,6 +30,7 @@ Allow users to sign up.
     'category': 'Authentication',
     'website': 'http://www.openerp.com',
     'installable': True,
+    'auto_install': True,
     'depends': ['base_setup'],
     'data': [
         'auth_signup_data.xml',
