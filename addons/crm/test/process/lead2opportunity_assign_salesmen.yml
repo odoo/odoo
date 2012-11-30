@@ -55,7 +55,7 @@
 -
   !python {model: crm.lead2opportunity.partner.mass}: |
     context.update({'active_model': 'crm.lead', 'active_ids': [ref("test_crm_lead_01"), ref("test_crm_lead_02"), ref("test_crm_lead_03"), ref("test_crm_lead_04"), ref("test_crm_lead_05"), ref("test_crm_lead_06")], 'active_id': ref("test_crm_lead_01")})
-    id = self.create(cr, uid, {'user_ids': [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')], 'section_id': ref('crm.section_sales_department')}, context=context)
+    id = self.create(cr, uid, {'user_ids': [(6, 0, [ref('test_res_user_01'), ref('test_res_user_02'), ref('test_res_user_03'), ref('test_res_user_04')])], 'section_id': ref('crm.section_sales_department')}, context=context)
     self.mass_convert(cr, uid, [id], context=context)
 -
   The leads should now be opps with a salesman and a salesteam.  Also, salesmen should have been assigned following a round-robin method.
@@ -66,3 +66,5 @@
     i = 0
     for opp in opps:
       assert opp.type == 'opportunity', 'Type mismatch: this should be an opp, not a lead'
+      assert opp.user_id == salesmen_ids[i], 'Salesman mismatch: expected salesman %s, got %s' % (salesmen_ids[i], opp.user_id.id)
+      i = i+1 if (i < len(salesmen_ids) - 1) else 0
