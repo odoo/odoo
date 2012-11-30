@@ -822,7 +822,7 @@ instance.web.Menu =  instance.web.Widget.extend({
         this.renderElement();
         this.limit_entries();
         // Hide toplevel item if there is only one
-        var $toplevel = this.$("li")
+        var $toplevel = this.$("li");
         if($toplevel.length == 1) {
             $toplevel.hide();
         }

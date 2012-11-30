@@ -24,7 +24,7 @@ openerp.web.pyeval = function (instance) {
         var mod = a%b;
         // in python, sign(a % b) === sign(b). Not in JS. If wrong side, add a
         // round of b
-        if (mod > 0 && b < 0 || mod < 0  && b > 0) {
+        if (mod > 0 && b < 0 || mod < 0 && b > 0) {
             mod += b;
         }
         return fn(Math.floor(a/b), mod);
