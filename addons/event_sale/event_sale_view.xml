@@ -22,7 +22,7 @@
              <field name="inherit_id" ref="sale.view_order_form" />
              <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="event_id" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
+                    <field name="event_id" domain="['|', ('type','=', False),('type', '=', event_type_id)]" attrs="{'invisible': [('event_ok', '=', False)],'required': [('event_ok', '!=', False)]}"/>
                     <field name="event_type_id" invisible="1"/>
                     <field name="event_ok" invisible="1"/>
                 </xpath>
