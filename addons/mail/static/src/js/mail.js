@@ -422,15 +422,25 @@ openerp.mail = function (session) {
         /* when the file is uploaded 
         */
         on_attachment_loaded: function (event, result) {
-            for (var i in this.attachment_ids) {
-                if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
-                    this.attachment_ids[i]={
-                        'id': result.id,
-                        'name': result.name,
-                        'filename': result.filename,
-                        'url': mail.ChatterUtils.get_attachment_url(this.session, result)
-                    };
+
+            if (result.erorr || !result.id ) {
+
+                this.do_warn(result.title, result.erorr);
+                this.attachment_ids = _.filter(this.attachment_ids, function (val) { return !val.upload; });
+                
+            } else {
+
+                for (var i in this.attachment_ids) {
+                    if (this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload) {
+                        this.attachment_ids[i]={
+                            'id': result.id,
+                            'name': result.name,
+                            'filename': result.filename,
+                            'url': mail.ChatterUtils.get_attachment_url(this.session, result)
+                        };
+                    }
                 }
+
             }
             this.display_attachments();
 
@@ -486,6 +496,11 @@ openerp.mail = function (session) {
         },
 
         on_compose_fullmail: function (default_composition_mode) {
+
+            if(!this.do_check_attachment_upload()) {
+                return false;
+            }
+
             if (default_composition_mode == 'reply') {
                 var context = {
                     'default_composition_mode': default_composition_mode,
@@ -536,31 +551,32 @@ openerp.mail = function (session) {
             this.reinit();
         },
 
+        /* return true if all file are complete else return false and make an alert */
+        do_check_attachment_upload: function () {
+            if (_.find(this.attachment_ids, function (file) {return file.upload;})) {
+                this.do_warn(session.web._t('Attachment error :'), session.web._t('Please, wait while the file is uploading.'));
+                return false;
+            } else {
+                return true;
+            }
+        },
+
         /*post a message and fetch the message*/
         on_message_post: function (event) {
             var self = this;
 
             var comment_node =  this.$('textarea');
             var body = comment_node.val();
-            comment_node.val('');
 
-            var attachments=[];
-            for (var i in this.attachment_ids) {
-                if (this.attachment_ids[i].upload) {
-                    session.web.dialog($('<div>' + session.web.qweb.render('CrashManager.warning', {message: 'Please, wait while the file is uploading.'}) + '</div>'));
-                    return false;
-                }
-                attachments.push(this.attachment_ids[i].id);
-            }
-
-            if (body.match(/\S+/)) {
+            if (this.do_check_attachment_upload() && (this.attachment_ids.length || body.match(/\S+/))) {
+                comment_node.val('');
                 //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
                         body, 
                         false, 
                         this.context.default_parent_id, 
-                        attachments,
+                        _.map(this.attachment_ids, function (file) {return file.id;}),
                         this.parent_thread.context
                     ]).done(function (record) {
                         var thread = self.parent_thread;
