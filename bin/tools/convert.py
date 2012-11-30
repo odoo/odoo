@@ -49,7 +49,7 @@ from tools.translate import _
 from yaml_import import convert_yaml_import
 
 # List of etree._Element subclasses that we choose to ignore when parsing XML.
-from tools import SKIPPED_ELEMENT_TYPES
+from tools import SKIPPED_ELEMENT_TYPES, cache
 
 # Import of XML records requires the unsafe eval as well,
 # almost everywhere, which is ok because it supposedly comes
@@ -869,6 +869,7 @@ form: module.record_id""" % (xml_id,)
                                                 rec.sourceline,
                                                 etree.tostring(rec).strip(), exc_info=True)
                             self.cr.rollback()
+                            cache.clean_caches_for_db(self.cr.dbname)
                             raise
         return True
 
