@@ -75,5 +75,5 @@
     for invoice in sale_order.invoice_ids:
         if invoice.state != 'cancel':
             total_order_line += len(invoice.invoice_line)
-    assert total_order_line == 2, "wrong number of invoice lines"
+    assert total_order_line == 2, "wrong number of invoice lines, got %s" % total_order_line
 
