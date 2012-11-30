@@ -197,6 +197,7 @@ openerp.web_im = function(instance) {
         "template": "Conversation",
         events: {
             "keydown input": "send_message",
+            "click .oe_im_chatview_close": "destroy",
         },
         init: function(parent, user_rec) {
             this._super(parent);
