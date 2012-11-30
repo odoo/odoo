@@ -188,7 +188,7 @@ openerp.web_im = function(instance) {
             var current = this.get("right_offset");
             _.each(_.range(this.conversations.length), function(i) {
                 this.conversations[i].set("right_position", current);
-                current += this.conversations[i].$el.outerWidth();
+                current += this.conversations[i].$el.outerWidth(true);
             }, this);
         },
     });
