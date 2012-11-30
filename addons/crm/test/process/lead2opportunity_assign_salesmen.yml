@@ -66,5 +66,5 @@
     i = 0
     for opp in opps:
       assert opp.type == 'opportunity', 'Type mismatch: this should be an opp, not a lead'
-      assert opp.user_id == salesmen_ids[i], 'Salesman mismatch: expected salesman %s, got %s' % (salesmen_ids[i], opp.user_id.id)
+      assert opp.user_id.id == salesmen_ids[i], 'Salesman mismatch: expected salesman %r, got %r' % (salesmen_ids[i], opp.user_id.id)
       i = i+1 if (i < len(salesmen_ids) - 1) else 0
