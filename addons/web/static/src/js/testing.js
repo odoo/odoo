@@ -263,7 +263,7 @@ openerp.testing = {};
                     ++di;
                 }
 
-                instance = openerp.init("fuck your shit, don't load anything you cunt");
+                instance = openerp.init(null);
                 _(d).chain()
                     .reverse()
                     .uniq()
