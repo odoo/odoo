@@ -42,6 +42,7 @@ openerp.web_im = function(instance) {
             this.set("current_search", "");
             this.last = null;
             this.users = [];
+            this.activated = false;
             this.c_manager = new instance.web_im.ConversationManager(this);
             this.on("change:right_offset", this.c_manager, _.bind(function() {
                 this.c_manager.set("right_offset", this.get("right_offset"));
@@ -54,9 +55,17 @@ openerp.web_im = function(instance) {
             $(window).resize(_.bind(this.calc_box, this));
             this.calc_box();
 
-            this.poll();
             this.on("change:current_search", this, this.search_changed);
             this.search_changed();
+
+            var self = this;
+
+            new instance.web.Model("im.message").call("activated", [], {context: new instance.web.CompoundContext()}).then(function(activated) {
+                if (activated) {
+                    self.activated = true;
+                    self.poll();
+                }
+            });
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
@@ -99,6 +108,10 @@ openerp.web_im = function(instance) {
                     right: -this.$el.outerWidth(),
                 }, opt);
             } else {
+                if (! this.activated) {
+                    this.do_warn("Instant Messaging is not activated on this server.", "");
+                    return;
+                }
                 this.$el.animate({
                     right: 0,
                 }, opt);
@@ -109,7 +122,7 @@ openerp.web_im = function(instance) {
             var self = this;
             this.rpc("/im/poll", {
                 last: this.last,
-                context: new instance.web.CompoundContext()
+                context: instance.web.pyeval.eval('context', {}),
             }, {shadow: true}).then(function(result) {
                 self.last = result.last;
                 _.each(result.res, function(mes) {

@@ -95,7 +95,7 @@ class ImportController(openerp.addons.web.http.Controller):
             raise Exception("Not usable in a server not running gevent")
         num = 0
         while True:
-            res = req.session.model('im.message').get_messages(last, req.session.eval_context(req.context))
+            res = req.session.model('im.message').get_messages(last, req.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]
@@ -127,3 +127,6 @@ class im_message(osv.osv):
         cr.execute("notify received_message")
         cr.commit()
         return False
+
+    def activated(self, cr, uid, context=None):
+        return not not openerp.tools.config.options["gevent"]
