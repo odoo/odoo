@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
 "PO-Revision-Date: 2012-06-08 02:46+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:31+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:27+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -28,7 +28,7 @@ msgid "Previous Activity"
 msgstr "前のアクティビティ"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:819
 #, python-format
 msgid "The current step for this item has no email or report to preview."
 msgstr "この項目の現在の手順は、プレビューすべきEメールやレポートを持ちません。"
@@ -70,6 +70,11 @@ msgid "Trigger"
 msgstr "トリガー"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
+msgid "Follow-Up"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:campaign.analysis,count:0
 msgid "# of Actions"
 msgstr "アクションの数"
@@ -80,18 +85,19 @@ msgid "Campaign Editor"
 msgstr "キャンペーンエディタ"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: view:marketing.campaign.workitem:0
-msgid "Today"
-msgstr "本日"
-
-#. module: marketing_campaign
 #: view:marketing.campaign:0
 #: selection:marketing.campaign,state:0
 #: view:marketing.campaign.segment:0
 #: selection:marketing.campaign.segment,state:0
 msgid "Running"
 msgstr "実行中"
+
+#. module: marketing_campaign
+#: model:email.template,body_html:marketing_campaign.email_template_3
+msgid ""
+"Hi, we are delighted to let you know that you have entered the select circle "
+"of our Gold Partners"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -109,10 +115,24 @@ msgid "Sync mode: only records created after last sync"
 msgstr "同期モード：最終同期後に生成されたレコードのみ"
 
 #. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_2
+#: help:marketing.campaign.activity,condition:0
 msgid ""
-"Hello, We are happy to announce that you now become our Silver Partner."
-msgstr "拝啓、このたび御社は、弊社のシルバーパートナとなられたことをご報告申し上げます。"
+"Python expression to decide whether the activity can be executed, otherwise "
+"it will be deleted or cancelled.The expression may use the following "
+"[browsable] variables:\n"
+"   - activity: the campaign activity\n"
+"   - workitem: the campaign workitem\n"
+"   - resource: the resource object this campaign item represents\n"
+"   - transitions: list of campaign transitions outgoing from this activity\n"
+"...- re: Python regular expression module"
+msgstr ""
+"アクティビティが実行できるかどうかを決定するPython式です。それ以外はそれは削除されるかキャンセルされます。式は次のような変数（参照可能）を許します："
+"\n"
+"   ・ activity：キャンペーンのアクティビティ\n"
+"   ・ workitem：キャンペーンの作業項目\n"
+"   ・ resource：このキャンペーン項目を代表するリソースオブジェクト\n"
+"   ・ transitions：このアクティビティから外向きのキャンペーン遷移のリスト\n"
+"   ・ re：Pythonの一般的な式のモジュール"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -121,25 +141,23 @@ msgid "Set to Draft"
 msgstr "ドラフトに設定"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,to_ids:0
 msgid "Next Activities"
 msgstr "次のアクティビティ"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-msgid "Synchronization"
-msgstr "同期"
-
-#. module: marketing_campaign
-#: sql_constraint:marketing.campaign.transition:0
-msgid "The interval must be positive or zero"
-msgstr "間隔は正または0である必要があります。"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:818
+#: code:addons/marketing_campaign/marketing_campaign.py:148
 #, python-format
-msgid "No preview"
-msgstr "プレビューなし"
+msgid ""
+"The campaign cannot be started. It does not have any starting activity. "
+"Modify campaign's activities to mark one as the starting point."
+msgstr ""
+
+#. module: marketing_campaign
+#: help:marketing.campaign.activity,email_template_id:0
+msgid "The email to send when this activity is activated"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -172,12 +190,6 @@ msgstr "このキャンペーンを実行するリソースを選択して下さ
 #: field:marketing.campaign.segment,sync_last_date:0
 msgid "Last Synchronization"
 msgstr "最終同期"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:214
-#, python-format
-msgid "You can not duplicate a campaign, it's not supported yet."
-msgstr "キャンペーンの重複はできません。これはまだサポートされていません。"
 
 #. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
@@ -227,6 +239,11 @@ msgid "Initial start date of this segment."
 msgstr "このセグメントの最初の開始日"
 
 #. module: marketing_campaign
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,campaign_id:0
 #: view:marketing.campaign:0
@@ -239,9 +256,9 @@ msgid "Campaign"
 msgstr "キャンペーン"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_3
-msgid "Congratulation! You become our Gold Partner."
-msgstr "おめでとうございます。あなたはゴールドパートナとなりました。"
+#: model:email.template,body_html:marketing_campaign.email_template_1
+msgid "Hello, you will receive your welcome pack via email shortly."
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -253,9 +270,10 @@ msgid "Segment"
 msgstr "セグメント"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Cost / Revenue"
-msgstr "経費 / 売上"
+#: code:addons/marketing_campaign/marketing_campaign.py:214
+#, python-format
+msgid "You cannot duplicate a campaign, Not supported yet."
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,type:0
@@ -293,31 +311,9 @@ msgid "Partner"
 msgstr "パートナ"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
-msgid "Transitions"
-msgstr "遷移"
-
-#. module: marketing_campaign
 #: model:ir.filters,name:marketing_campaign.filter0
 msgid "Partners"
 msgstr "パートナ"
-
-#. module: marketing_campaign
-#: field:marketing.campaign.activity,keep_if_condition_not_met:0
-msgid "Don't delete workitems"
-msgstr "作業項目を削除しないで下さい。"
-
-#. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,state:0
-#: view:marketing.campaign:0
-#: field:marketing.campaign,state:0
-#: view:marketing.campaign.segment:0
-#: field:marketing.campaign.segment,state:0
-#: view:marketing.campaign.workitem:0
-#: field:marketing.campaign.workitem,state:0
-msgid "State"
-msgstr "状態"
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
@@ -331,9 +327,14 @@ msgid "New"
 msgstr "新規"
 
 #. module: marketing_campaign
-#: field:marketing.campaign.activity,type:0
-msgid "Type"
-msgstr "タイプ"
+#: sql_constraint:marketing.campaign.transition:0
+msgid "The interval must be positive or zero"
+msgstr "間隔は正または0である必要があります。"
+
+#. module: marketing_campaign
+#: selection:marketing.campaign.activity,type:0
+msgid "Email"
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign,name:0
@@ -360,9 +361,15 @@ msgid "Run"
 msgstr "実行"
 
 #. module: marketing_campaign
+#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,from_ids:0
 msgid "Previous Activities"
 msgstr "前のアクティビティ"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_2
+msgid "Congratulations! You are now a Silver Partner!"
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign.segment,date_done:0
@@ -385,6 +392,7 @@ msgstr "エラーメッセージ"
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_form
 #: view:marketing.campaign:0
+#: view:res.partner:0
 msgid "Campaigns"
 msgstr "キャンペーン"
 
@@ -394,10 +402,9 @@ msgid "Interval Unit"
 msgstr "間隔の単位"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:792
-#, python-format
-msgid "Email Preview"
-msgstr "Eメールプレビュー"
+#: field:campaign.analysis,country_id:0
+msgid "Country"
+msgstr "国"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,report_id:0
@@ -429,21 +436,9 @@ msgid "Hour(s)"
 msgstr "時"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-msgid "    Month-1    "
-msgstr "    月-1    "
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_segment
 msgid "Campaign Segment"
 msgstr "キャンペーンセグメント"
-
-#. module: marketing_campaign
-#: view:marketing.campaign:0
-#: view:marketing.campaign.segment:0
-#: view:marketing.campaign.workitem:0
-msgid "Cancel"
-msgstr "キャンセル"
 
 #. module: marketing_campaign
 #: help:marketing.campaign.activity,keep_if_condition_not_met:0
@@ -458,6 +453,7 @@ msgid "Exceptions"
 msgstr "例外"
 
 #. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
 #: field:res.partner,workitem_ids:0
 msgid "Workitems"
 msgstr "作業項目"
@@ -468,14 +464,31 @@ msgid "Fixed Cost"
 msgstr "固定経費"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_2
-msgid "Congratulation! You become now our Silver Partner."
-msgstr "おめでとうございます。あなたはシルバーパートナとなりました。"
-
-#. module: marketing_campaign
 #: view:marketing.campaign.segment:0
 msgid "Newly Modified"
 msgstr "新規に修正"
+
+#. module: marketing_campaign
+#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to create a marketing campaign.\n"
+"          </p><p>\n"
+"            OpenERP's marketing campaign allows you to automate "
+"communication\n"
+"            to your prospects. You can define a segment (set of conditions) "
+"on\n"
+"            your leads and partners to fullfil the campaign.\n"
+"          </p><p>\n"
+"            A campaign can have many activities like sending an email, "
+"printing\n"
+"            a letter, assigning to a team, etc. These activities are "
+"triggered\n"
+"            from specific situations; contact form, 10 days after first\n"
+"            contact, if a lead is not closed yet, etc.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.transition,interval_nbr:0
@@ -521,14 +534,11 @@ msgid "Next Activity"
 msgstr "次のアクティビティ"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_followup
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
+#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
 msgid "Campaign Follow-up"
 msgstr "キャンペーンフォローアップ"
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,email_template_id:0
-msgid "The e-mail to send when this activity is activated"
-msgstr "このアクティビティが有効化されたときにEメールを送信します。"
 
 #. module: marketing_campaign
 #: view:marketing.campaign:0
@@ -546,7 +556,7 @@ msgid "ir.actions.report.xml"
 msgstr ""
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_stat
+#: view:marketing.campaign:0
 msgid "Campaign Statistics"
 msgstr "キャンペーン統計値"
 
@@ -605,13 +615,25 @@ msgstr "ドラフト"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
+msgid "Marketing Campaign Activity"
+msgstr ""
+
+#. module: marketing_campaign
+#: view:marketing.campaign.workitem:0
 msgid "Preview"
 msgstr "プレビュー"
 
 #. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,state:0
+#: view:marketing.campaign:0
+#: field:marketing.campaign,state:0
+#: view:marketing.campaign.segment:0
+#: field:marketing.campaign.segment,state:0
 #: view:marketing.campaign.workitem:0
-msgid "Related Resource"
-msgstr "関連するリソース"
+#: field:marketing.campaign.workitem,state:0
+msgid "Status"
+msgstr ""
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -634,6 +656,14 @@ msgid ""
 "An activity with a signal can be called programmatically. Be careful, the "
 "workitem is always created when a signal is sent"
 msgstr "シグナルのアクティビティはプログラム化と呼ばれます。シグナルが送信された時に、作業項目はいつも作成されることに注意して下さい。"
+
+#. module: marketing_campaign
+#: view:campaign.analysis:0
+#: selection:campaign.analysis,state:0
+#: view:marketing.campaign.workitem:0
+#: selection:marketing.campaign.workitem,state:0
+msgid "To Do"
+msgstr "ToDo"
 
 #. module: marketing_campaign
 #: selection:campaign.analysis,month:0
@@ -662,7 +692,6 @@ msgstr "新規に作成"
 
 #. module: marketing_campaign
 #: field:campaign.analysis,date:0
-#: view:marketing.campaign.workitem:0
 msgid "Date"
 msgstr "日付"
 
@@ -672,7 +701,6 @@ msgid "November"
 msgstr "11月"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,condition:0
 msgid "Condition"
 msgstr "条件"
@@ -681,16 +709,6 @@ msgstr "条件"
 #: help:marketing.campaign.activity,report_id:0
 msgid "The report to generate when this activity is activated"
 msgstr "このアクティビティが有効化された時に、レポートは生成されます。"
-
-#. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:148
-#, python-format
-msgid ""
-"The campaign cannot be started: it doesn't have any starting activity. "
-"Modify campaign's activities to mark one as the starting point."
-msgstr ""
-"このキャンペーンは開始できません：これは開始アクティビティを何も持っていません。キャンペーンのアクティビティのひとつを開始点としてマークする修正を加えて下"
-"さい。"
 
 #. module: marketing_campaign
 #: field:marketing.campaign,unique_field_id:0
@@ -749,7 +767,6 @@ msgid "Error"
 msgstr "エラー"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.activity:0
 #: field:marketing.campaign.activity,server_action_id:0
 msgid "Action"
 msgstr "アクション"
@@ -766,10 +783,10 @@ msgid "Start"
 msgstr "開始"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
-#: view:res.partner:0
-msgid "History"
-msgstr "履歴"
+#: code:addons/marketing_campaign/marketing_campaign.py:819
+#, python-format
+msgid "No preview"
+msgstr "プレビューなし"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.workitem:0
@@ -789,18 +806,6 @@ msgid "How is the destination workitem triggered"
 msgstr "引き金となる宛先の作業項目の状態"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,help:marketing_campaign.action_marketing_campaign_form
-msgid ""
-"A marketing campaign is an event or activity that will help you manage and "
-"reach your partners with specific messages. A campaign can have many "
-"activities that will be triggered from a specific situation. One action "
-"could be sending an email template that has previously been created in the "
-"system."
-msgstr ""
-"マーケットキャンペーンは管理を助け、特定のメッセージをパートナに届けるイベントやアクティビティです。キャンペーンは特定の事態をきっかけとする多くのアクティ"
-"ビティを持ちます。あるアクションは以前にシステムに作られたEメールテンプレートを送信できます。"
-
-#. module: marketing_campaign
 #: view:campaign.analysis:0
 #: selection:campaign.analysis,state:0
 #: view:marketing.campaign:0
@@ -817,9 +822,11 @@ msgid "Operation not supported"
 msgstr "操作はサポートされていません。"
 
 #. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_3
-msgid "Hello, We are happy to announce that you become our Gold Partner."
-msgstr "拝啓、このたび御社は、弊社のゴールドパートナとなられたことをご報告申し上げます。"
+#: view:marketing.campaign:0
+#: view:marketing.campaign.segment:0
+#: view:marketing.campaign.workitem:0
+msgid "Cancel"
+msgstr "キャンセル"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -830,26 +837,6 @@ msgstr "閉じる"
 #: constraint:marketing.campaign.segment:0
 msgid "Model of filter must be same as resource model of Campaign "
 msgstr "フィルタのモデルはキャンペーンのリソースモデルと同じである必要があります。 "
-
-#. module: marketing_campaign
-#: help:marketing.campaign.activity,condition:0
-msgid ""
-"Python expression to decide whether the activity can be executed, otherwise "
-"it will be deleted or cancelled.The expression may use the following "
-"[browsable] variables:\n"
-"   - activity: the campaign activity\n"
-"   - workitem: the campaign workitem\n"
-"   - resource: the resource object this campaign item represents\n"
-"   - transitions: list of campaign transitions outgoing from this activity\n"
-"...- re: Python regular expression module"
-msgstr ""
-"アクティビティが実行できるかどうかを決定するPython式です。それ以外はそれは削除されるかキャンセルされます。式は次のような変数（参照可能）を許します："
-"\n"
-"   ・ activity：キャンペーンのアクティビティ\n"
-"   ・ workitem：キャンペーンの作業項目\n"
-"   ・ resource：このキャンペーン項目を代表するリソースオブジェクト\n"
-"   ・ transitions：このアクティビティから外向きのキャンペーン遷移のリスト\n"
-"   ・ re：Pythonの一般的な式のモジュール"
 
 #. module: marketing_campaign
 #: view:marketing.campaign.segment:0
@@ -863,40 +850,28 @@ msgid "Resource ID"
 msgstr "リソースID"
 
 #. module: marketing_campaign
-#: code:addons/marketing_campaign/marketing_campaign.py:136
-#, python-format
-msgid "The campaign cannot be started: there are no activities in it."
-msgstr "キャンペーンは開始できません：アクティビティがありません。"
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign_transition
 msgid "Campaign Transition"
 msgstr "キャンペーン遷移"
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: selection:campaign.analysis,state:0
-#: view:marketing.campaign.workitem:0
-#: selection:marketing.campaign.workitem,state:0
-msgid "To Do"
-msgstr "ToDo"
+#: view:marketing.campaign.segment:0
+msgid "Marketing Campaign Segment"
+msgstr ""
 
 #. module: marketing_campaign
-#: view:marketing.campaign.workitem:0
-msgid "Campaign Step"
-msgstr "キャンペーン手順"
-
-#. module: marketing_campaign
+#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
 #: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_segment_form
 #: model:ir.ui.menu,name:marketing_campaign.menu_marketing_campaign_segment_form
+#: view:marketing.campaign:0
 #: view:marketing.campaign.segment:0
 msgid "Segments"
 msgstr "セグメント"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.act_marketing_campaing_segment_opened
-msgid "All Segments"
-msgstr "全セグメント"
+#: field:marketing.campaign.activity,keep_if_condition_not_met:0
+msgid "Don't Delete Workitems"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:marketing.campaign.activity:0
@@ -904,25 +879,36 @@ msgid "Incoming Transitions"
 msgstr "内向き遷移"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign.activity,type:0
-msgid "E-mail"
-msgstr "Eメール"
-
-#. module: marketing_campaign
 #: selection:marketing.campaign.transition,interval_type:0
 msgid "Day(s)"
 msgstr "日"
 
 #. module: marketing_campaign
+#: view:marketing.campaign:0
 #: field:marketing.campaign,activity_ids:0
 #: view:marketing.campaign.activity:0
 msgid "Activities"
 msgstr "アクティビティ"
 
 #. module: marketing_campaign
+#: selection:marketing.campaign,mode:0
+msgid "With Manual Confirmation"
+msgstr "手動確認"
+
+#. module: marketing_campaign
 #: selection:campaign.analysis,month:0
 msgid "May"
 msgstr "5月"
+
+#. module: marketing_campaign
+#: field:marketing.campaign.activity,type:0
+msgid "Type"
+msgstr "タイプ"
+
+#. module: marketing_campaign
+#: model:email.template,subject:marketing_campaign.email_template_3
+msgid "Congratulations! You are now one of our Gold Partners!"
+msgstr ""
 
 #. module: marketing_campaign
 #: help:marketing.campaign,unique_field_id:0
@@ -942,18 +928,20 @@ msgstr ""
 "可能で、選択または単一の関連を持つもので使用できます。"
 
 #. module: marketing_campaign
+#: view:campaign.analysis:0
+#: field:campaign.analysis,total_cost:0
+msgid "Cost"
+msgstr "経費"
+
+#. module: marketing_campaign
 #: code:addons/marketing_campaign/marketing_campaign.py:529
 #, python-format
 msgid "After %(interval_nbr)d %(interval_type)s"
 msgstr "%(interval_nbr)d %(interval_type)s 後"
 
 #. module: marketing_campaign
-#: model:email.template,subject:marketing_campaign.email_template_1
-msgid "Welcome in OpenERP Partner Channel!"
-msgstr "OpenERPパートナチャネルへ、ようこそおいで下さいました。"
-
-#. module: marketing_campaign
 #: model:ir.model,name:marketing_campaign.model_marketing_campaign
+#: view:marketing.campaign:0
 msgid "Marketing Campaign"
 msgstr "マーケティングキャンペーン"
 
@@ -994,9 +982,10 @@ msgid "Sync mode: only records updated after last sync"
 msgstr "同期モード：最終同期後の更新レコードのみ"
 
 #. module: marketing_campaign
-#: field:campaign.analysis,country_id:0
-msgid "Country"
-msgstr "国"
+#: code:addons/marketing_campaign/marketing_campaign.py:793
+#, python-format
+msgid "Email Preview"
+msgstr "Eメールプレビュー"
 
 #. module: marketing_campaign
 #: field:marketing.campaign.activity,signal:0
@@ -1028,7 +1017,6 @@ msgstr "モード"
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,activity_id:0
-#: view:marketing.campaign.activity:0
 #: view:marketing.campaign.workitem:0
 #: field:marketing.campaign.workitem,activity_id:0
 msgid "Activity"
@@ -1046,10 +1034,10 @@ msgstr ""
 "とができます。フィルタが設定されない場合、フィルタされることなく全レコードが選択されます。同期モードはまた、フィルタに対して基準を追加します。"
 
 #. module: marketing_campaign
-#: model:ir.actions.act_window,name:marketing_campaign.action_marketing_campaign_workitem
-#: model:ir.ui.menu,name:marketing_campaign.menu_action_marketing_campaign_workitem
-msgid "Campaign Followup"
-msgstr "キャンペーンフォローアップ"
+#: code:addons/marketing_campaign/marketing_campaign.py:136
+#, python-format
+msgid "The campaign cannot be started. There are no activities in it."
+msgstr ""
 
 #. module: marketing_campaign
 #: field:marketing.campaign.segment,date_next_sync:0
@@ -1057,7 +1045,12 @@ msgid "Next Synchronization"
 msgstr "次の同期"
 
 #. module: marketing_campaign
-#: view:marketing.campaign.segment:0
+#: model:email.template,body_html:marketing_campaign.email_template_2
+msgid ""
+"Hi, we are delighted to welcome you among our Silver Partners as of today!"
+msgstr ""
+
+#. module: marketing_campaign
 #: field:marketing.campaign.segment,ir_filter_id:0
 msgid "Filter"
 msgstr "フィルタ"
@@ -1083,24 +1076,104 @@ msgid "Variable Cost"
 msgstr "変動経費"
 
 #. module: marketing_campaign
-#: selection:marketing.campaign,mode:0
-msgid "With Manual Confirmation"
-msgstr "手動確認"
+#: model:email.template,subject:marketing_campaign.email_template_1
+msgid "Welcome to the OpenERP Partner Channel!"
+msgstr ""
 
 #. module: marketing_campaign
-#: view:campaign.analysis:0
-#: field:campaign.analysis,total_cost:0
-#: view:marketing.campaign:0
-msgid "Cost"
-msgstr "経費"
-
-#. module: marketing_campaign
-#: model:email.template,body_text:marketing_campaign.email_template_1
-msgid "Hello, We are very happy to send Welcome message."
-msgstr "こんにちは。これは歓迎メッセージです。"
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr ""
 
 #. module: marketing_campaign
 #: view:campaign.analysis:0
 #: field:campaign.analysis,year:0
 msgid "Year"
 msgstr "年"
+
+#~ msgid "Today"
+#~ msgstr "本日"
+
+#~ msgid "Synchronization"
+#~ msgstr "同期"
+
+#~ msgid ""
+#~ "Hello, We are happy to announce that you now become our Silver Partner."
+#~ msgstr "拝啓、このたび御社は、弊社のシルバーパートナとなられたことをご報告申し上げます。"
+
+#, python-format
+#~ msgid "You can not duplicate a campaign, it's not supported yet."
+#~ msgstr "キャンペーンの重複はできません。これはまだサポートされていません。"
+
+#~ msgid "Cost / Revenue"
+#~ msgstr "経費 / 売上"
+
+#~ msgid "Congratulation! You become our Gold Partner."
+#~ msgstr "おめでとうございます。あなたはゴールドパートナとなりました。"
+
+#~ msgid "Don't delete workitems"
+#~ msgstr "作業項目を削除しないで下さい。"
+
+#~ msgid "State"
+#~ msgstr "状態"
+
+#~ msgid "Transitions"
+#~ msgstr "遷移"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    月-1    "
+
+#~ msgid "Congratulation! You become now our Silver Partner."
+#~ msgstr "おめでとうございます。あなたはシルバーパートナとなりました。"
+
+#~ msgid "The e-mail to send when this activity is activated"
+#~ msgstr "このアクティビティが有効化されたときにEメールを送信します。"
+
+#~ msgid "Related Resource"
+#~ msgstr "関連するリソース"
+
+#, python-format
+#~ msgid ""
+#~ "The campaign cannot be started: it doesn't have any starting activity. "
+#~ "Modify campaign's activities to mark one as the starting point."
+#~ msgstr ""
+#~ "このキャンペーンは開始できません：これは開始アクティビティを何も持っていません。キャンペーンのアクティビティのひとつを開始点としてマークする修正を加えて下"
+#~ "さい。"
+
+#~ msgid "History"
+#~ msgstr "履歴"
+
+#, python-format
+#~ msgid "The campaign cannot be started: there are no activities in it."
+#~ msgstr "キャンペーンは開始できません：アクティビティがありません。"
+
+#~ msgid "All Segments"
+#~ msgstr "全セグメント"
+
+#~ msgid "Campaign Step"
+#~ msgstr "キャンペーン手順"
+
+#~ msgid "E-mail"
+#~ msgstr "Eメール"
+
+#~ msgid "Welcome in OpenERP Partner Channel!"
+#~ msgstr "OpenERPパートナチャネルへ、ようこそおいで下さいました。"
+
+#~ msgid "Campaign Followup"
+#~ msgstr "キャンペーンフォローアップ"
+
+#~ msgid "Hello, We are very happy to send Welcome message."
+#~ msgstr "こんにちは。これは歓迎メッセージです。"
+
+#~ msgid "Hello, We are happy to announce that you become our Gold Partner."
+#~ msgstr "拝啓、このたび御社は、弊社のゴールドパートナとなられたことをご報告申し上げます。"
+
+#~ msgid ""
+#~ "A marketing campaign is an event or activity that will help you manage and "
+#~ "reach your partners with specific messages. A campaign can have many "
+#~ "activities that will be triggered from a specific situation. One action "
+#~ "could be sending an email template that has previously been created in the "
+#~ "system."
+#~ msgstr ""
+#~ "マーケットキャンペーンは管理を助け、特定のメッセージをパートナに届けるイベントやアクティビティです。キャンペーンは特定の事態をきっかけとする多くのアクティ"
+#~ "ビティを持ちます。あるアクションは以前にシステムに作られたEメールテンプレートを送信できます。"

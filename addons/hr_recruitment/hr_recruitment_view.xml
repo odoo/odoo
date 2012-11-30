@@ -37,7 +37,7 @@
     <!-- Jobs -->
     <!-- Applicant Read/Unread actions -->
     <record id="actions_server_applicant_unread" model="ir.actions.server">
-        <field name="name">Mark unread</field>
+        <field name="name">HR Applicant: Mark unread</field>
         <field name="condition">True</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_hr_applicant"/>
@@ -55,7 +55,7 @@
     </record>
 
     <record id="actions_server_applicant_read" model="ir.actions.server">
-        <field name="name">Mark read</field>
+        <field name="name">HR Applicant: Mark read</field>
         <field name="condition">True</field>
         <field name="type">ir.actions.server</field>
         <field name="model_id" ref="model_hr_applicant"/>
@@ -318,9 +318,7 @@
 
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
-                                    <div class="oe_left oe_tags">
-                                        <field name="categ_ids"/>
-                                    </div>
+                                    <field name="categ_ids"/>
                                 </div>
                             </div>
                             <div class="oe_clear"></div>
