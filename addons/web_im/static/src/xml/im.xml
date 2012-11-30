@@ -41,4 +41,18 @@
             </div>
         </div>
     </t>
+    <t t-name="Conversation.bubble">
+        <div class="oe_im_chatview_bubble">
+            <div class="oe_im_chatview_clip">
+                <img class="oe_im_chatview_avatar" t-att-src='_s + "/web_im/static/src/img/avatar/avatar.jpeg"'/>
+            </div>
+            <div class="oe_im_chatview_from"><t t-esc="name"/></div>
+            <div class="oe_im_chatview_bubble_list">
+                <t t-foreach="items" t-as="item">
+                    <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>
+                </t>
+            </div>
+            <div class="oe_im_chatview_time"><t t-esc="time"/></div>
+        </div>
+    </t>
 </templates>

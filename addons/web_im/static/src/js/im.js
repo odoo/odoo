@@ -4,6 +4,10 @@ openerp.web_im = function(instance) {
     var USERS_LIMIT = 20;
     var ERROR_DELAY = 5000;
 
+    var _t = instance.web._t,
+       _lt = instance.web._lt;
+    var QWeb = instance.web.qweb;
+
     instance.web.UserMenu.include({
         do_update: function(){
             var self = this;
@@ -207,7 +211,7 @@ openerp.web_im = function(instance) {
             this.$el.css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this.$(".oe_im_chatview_content").append($("<div>").text("Him: " + message.message));
+            this._add_bubble("Him", [message.message]);
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -215,9 +219,14 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this.$(".oe_im_chatview_content").append($("<div>").text("Me: " + mes));
+            this._add_bubble("Me", [mes]);
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
+        },
+        _add_bubble: function(name, items) {
+            var date = new Date().toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
+            var bubble = QWeb.render("Conversation.bubble", {"items": items, "name": name, "time": date});
+            this.$(".oe_im_chatview_content").append($(bubble));
         },
         destroy: function() {
             this.trigger("destroyed");
