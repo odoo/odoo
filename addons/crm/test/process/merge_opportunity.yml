@@ -1,20 +1,112 @@
 -
-  I merge two opportunities.
+  I create two leads (with the same partner).
+-
+  !record {model: crm.lead, id: test_crm_lead_01}:
+    type: 'lead'
+    name: 'Test lead 1'
+    partner_id: base.res_partner_1
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_lead_02}:
+    type: 'lead'
+    name: 'Test lead 2'
+    partner_id: base.res_partner_1
+    stage_id: stage_lead1
 -
   !python {model: crm.lead}: |
-    opportunity_ids = self.search(cr, uid, [('type', '=', 'opportunity'), ('state', 'not in', ['done', 'cancel']), ('partner_id', '=', ref('base.res_partner_2'))], limit=2)
-    assert len(opportunity_ids) == 2, 'There should be two opportunities (got %s instead)' % len(opportunity_ids)
-    context.update({'active_model': 'crm.lead', 'active_ids': opportunity_ids, 'active_id': opportunity_ids[0]})
+    lead_ids = [ref('test_crm_lead_01'), ref('test_crm_lead_02')]
+    context.update({'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]})
 -
-  !record {model: crm.merge.opportunity, id: opportunity_merge_id }:
+  I create a merge wizard and merge the leads together.
+-
+  !record {model: crm.merge.opportunity, id: merge_opp_wizard_01}:
 -
   !python {model: crm.merge.opportunity}: |
-    self.action_merge(cr, uid, [ref("opportunity_merge_id")], context=context)
+    self.action_merge(cr, uid, [ref("merge_opp_wizard_01")], context=context)
 -
-  I check for merged opportunities for customer.
+  I check for the resulting merged lead (based on name and partner).
 -
   !python {model: crm.lead}: |
-    merge_id = self.search(cr, uid, [('partner_id','=', ref("base.res_partner_2"))])
+    merge_id = self.search(cr, uid, [('name', '=', 'Test lead 1'), ('partner_id','=', ref("base.res_partner_1"))])
     assert merge_id, 'Fail to create merge opportunity wizard'
     merge_result = self.browse(cr, uid, merge_id)[0]
-    assert merge_result.partner_id.id == ref("base.res_partner_2"), 'Partner missmatch'
+    assert merge_result.partner_id.id == ref("base.res_partner_1"), 'Partner mismatch'
+    assert merge_result.type == 'lead', 'Type mismatch: when leads get merged together, the result should be a new lead (instead of %s)' % merge_result.type
+-
+  I create two opportunities (with the same partner).
+-
+  !record {model: crm.lead, id: test_crm_opp_01}:
+    type: 'opportunity'
+    name: 'Test opportunity 1'
+    partner_id: base.res_partner_5
+    stage_id: stage_lead1
+-
+  !record {model: crm.lead, id: test_crm_opp_02}:
+    type: 'opportunity'
+    name: 'Test opportunity 2'
+    partner_id: base.res_partner_5
+    stage_id: stage_lead1
+-
+  !python {model: crm.lead}: |
+    opp_ids = [ref('test_crm_opp_01'), ref('test_crm_opp_02')]
+    context.update({'active_model': 'crm.lead', 'active_ids': opp_ids, 'active_id': opp_ids[0]})
+-
+  I create a merge wizard and merge the opps together.
+-
+  !record {model: crm.merge.opportunity, id: merge_opp_wizard_02}:
+-
+  !python {model: crm.merge.opportunity}: |
+    self.action_merge(cr, uid, [ref("merge_opp_wizard_02")], context=context)
+-
+  I check for the resulting merged opp (based on name and partner).
+-
+  !python {model: crm.lead}: |
+    merge_id = self.search(cr, uid, [('name', '=', 'Test opportunity 1'), ('partner_id','=', ref("base.res_partner_5"))])
+    assert merge_id, 'Fail to create merge opportunity wizard'
+    merge_result = self.browse(cr, uid, merge_id)[0]
+    assert merge_result.partner_id.id == ref("base.res_partner_5"), 'Partner mismatch'
+    assert merge_result.type == 'opportunity', 'Type mismatch: when opps get merged together, the result should be a new opp (instead of %s)' % merge_result.type
+-
+  I create two leads and one opportunity (with different data).
+-
+  !record {model: crm.lead, id: test_crm_lead_03}:
+    type: 'lead'
+    name: 'Test lead 3'
+    partner_id: base.res_partner_1
+    stage_id: stage_lead1
+    description: This is the description of the test lead 3.
+-
+  !record {model: crm.lead, id: test_crm_lead_04}:
+    type: 'lead'
+    name: 'Test lead 4'
+    partner_id: base.res_partner_3
+    stage_id: stage_lead1
+    description: This is the description of the test lead 4.
+-
+  !record {model: crm.lead, id: test_crm_opp_03}:
+    type: 'opportunity'
+    name: 'Test opportunity 3'
+    partner_id: base.res_partner_5
+    stage_id: stage_lead1
+    description: This is the description of the test opp 3.
+-
+  !python {model: crm.lead}: |
+    lead_ids = [ref('test_crm_lead_03'), ref('test_crm_lead_04'), ref('test_crm_opp_03')]
+    context.update({'active_model': 'crm.lead', 'active_ids': lead_ids, 'active_id': lead_ids[0]})
+-
+  I create a merge wizard and merge the leads and opp together.
+-
+  !record {model: crm.merge.opportunity, id: merge_opp_wizard_03}:
+-
+  !python {model: crm.merge.opportunity}: |
+    self.action_merge(cr, uid, [ref("merge_opp_wizard_03")], context=context)
+-
+  I check for the resulting merged opp (based on name and partner).
+-
+  !python {model: crm.lead}: |
+    merge_id = self.search(cr, uid, [('name', '=', 'Test lead 3'), ('partner_id','=', ref("base.res_partner_1"))])
+    assert merge_id, 'Fail to create merge opportunity wizard'
+    merge_result = self.browse(cr, uid, merge_id)[0]
+    assert merge_result.partner_id.id == ref("base.res_partner_1"), 'Partner mismatch: when merging leads/opps with different m2o values, the first not null value prevails (the other are dropped)'
+    assert merge_result.description == 'This is the description of the test lead 3., This is the description of the test lead 4., This is the description of the test opp 3.', 'Description mismatch: when merging leads/opps with different text values, these values should get concatenated and separeted with ", "'
+    assert merge_result.type == 'opportunity', 'Type mismatch: when at least one opp in involved in the merge, the result should be a new opp (instead of %s)' % merge_result.type
