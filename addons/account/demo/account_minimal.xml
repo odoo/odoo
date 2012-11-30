@@ -312,7 +312,6 @@
             <field name="name">Sales Journal - (test)</field>
             <field name="code">TSAJ</field>
             <field name="type">sale</field>
-            <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_sale_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
@@ -323,7 +322,6 @@
             <field name="name">Sales Credit Note Journal - (test)</field>
             <field name="code">TSCNJ</field>
             <field name="type">sale_refund</field>
-            <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_sales_journal"/>
             <field model="account.account" name="default_credit_account_id" ref="a_sale"/>
             <field model="account.account" name="default_debit_account_id" ref="a_sale"/>
@@ -335,7 +333,6 @@
             <field name="name">Expenses Journal - (test)</field>
             <field name="code">TEXJ</field>
             <field name="type">purchase</field>
-            <field name="view_id" ref="account_sp_journal_view"/>
             <field name="sequence_id" ref="sequence_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
@@ -346,7 +343,6 @@
             <field name="name">Expenses Credit Notes Journal - (test)</field>
             <field name="code">TECNJ</field>
             <field name="type">purchase_refund</field>
-            <field name="view_id" ref="account_sp_refund_journal_view"/>
             <field name="sequence_id" ref="sequence_refund_purchase_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="a_expense"/>
             <field model="account.account" name="default_credit_account_id" ref="a_expense"/>
@@ -358,7 +354,6 @@
             <field name="name">Bank Journal - (test)</field>
             <field name="code">TBNK</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_bank_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="bnk"/>
             <field model="account.account" name="default_credit_account_id" ref="bnk"/>
@@ -369,7 +364,6 @@
             <field name="name">Checks Journal - (test)</field>
             <field name="code">TCHK</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_check_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
@@ -390,7 +384,6 @@
                  that test OpenERP arrive directly in the touchscreen UI.
             -->
             <field name="cash_control" eval="False"/>
-            <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
             <field model="account.account" name="default_credit_account_id" ref="cash"/>
@@ -401,7 +394,6 @@
             <field name="name">Miscellaneous Journal - (test)</field>
             <field name="code">TMIS</field>
             <field name="type">general</field>
-            <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_miscellaneous_journal"/>
             <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
@@ -410,7 +402,6 @@
             <field name="name">Opening Entries Journal - (test)</field>
             <field name="code">TOEJ</field>
             <field name="type">situation</field>
-            <field name="view_id" ref="account_journal_view"/>
             <field name="sequence_id" ref="sequence_opening_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="o_income"/>
             <field model="account.account" name="default_credit_account_id" ref="o_expense"/>
@@ -422,7 +413,6 @@
             <field name="name">USD Bank Journal - (test)</field>
             <field name="code">TUBK</field>
             <field name="type">bank</field>
-            <field name="view_id" ref="account_journal_bank_view"/>
             <field model="account.account" name="default_debit_account_id" ref="usd_bnk"/>
             <field model="account.account" name="default_credit_account_id" ref="usd_bnk"/>
             <field name="currency" ref="base.USD"/>
