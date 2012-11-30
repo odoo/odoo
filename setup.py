@@ -40,7 +40,7 @@ def data():
         import pytz
         tzdir = os.path.dirname(pytz.__file__)
         for root, _, filenames in os.walk(os.path.join(tzdir, "zoneinfo")):
-            base = root[len(tzdir) + 1:]
+            base = os.path.join('pytz', root[len(tzdir) + 1:])
             r[base] = [os.path.join(root, f) for f in filenames]
 
     return r.items()
