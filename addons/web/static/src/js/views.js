@@ -1136,7 +1136,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         } else {
             var dom = [ ['res_model', '=', dataset.model], ['res_id', '=', model_id], ['type', 'in', ['binary', 'url']] ];
             var ds = new instance.web.DataSetSearch(this, 'ir.attachment', dataset.get_context(), dom);
-            ds.read_slice(['name', 'url', 'type'], {}).done(this.on_attachments_loaded);
+            ds.read_slice(['name', 'url', 'type', 'create_uid', 'create_date', 'write_uid', 'write_date'], {}).done(this.on_attachments_loaded);
         }
     },
     on_attachments_loaded: function(attachments) {
@@ -1148,6 +1148,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
             if(a.type === "binary") {
                 a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
+            a.title =   _t("Create by :") + '\n' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) + 
+                        (a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modify by :") + '\n' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
         });
         self.items['files'] = attachments;
         self.redraw();
