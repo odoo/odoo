@@ -52,6 +52,8 @@ openerp.auth_signup = function(instance) {
             if (result.token) {
                 // switch to signup mode, set user name and login
                 this.$el.addClass("oe_login_signup");
+                self.$(".oe_signup_show").show();
+                self.$(".oe_signup_hide").hide();
                 this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
                 if (result.login) {
                     this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");

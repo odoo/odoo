@@ -11,7 +11,7 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form" />
             <field name="arch" type="xml">
-                <field name="type" on_change="onchange_type(type, currency)" />
+                <field name="type" />
                 <field name="entry_posted" position="after">
                     <field name="allow_check_writing" attrs="{'readonly':[('type','!=','bank')]}" />
                     <field name="use_preprint_check" attrs="{'readonly':[('type','!=','bank')]}" />
