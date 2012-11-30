@@ -206,6 +206,14 @@ class mail_message(osv.Model):
             new_is_favorite = not (uid in message.get('favorite_user_ids'))
             if new_is_favorite:
                 self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(4, uid)]}, context=context)
+                # when setting a favorite, set the related notification as unread, or create an unread notification if not existing
+                notification_obj = self.pool.get('mail.notification')
+                pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
+                notif_id = notification_obj.search(cr, SUPERUSER_ID, [('message_id', '=', message.get('id')), ('partner_id', '=', pid)], context=context)
+                if notif_id:
+                    notification_obj.write(cr, SUPERUSER_ID, notif_id, {'read': False}, context=context)
+                else:
+                    notification_obj.create(cr, SUPERUSER_ID, {'message_id': message.get('id'), 'partner_id': pid, 'read': False}, context=context)
             else:
                 self.write(cr, SUPERUSER_ID, message.get('id'), {'favorite_user_ids': [(3, uid)]}, context=context)
         return new_is_favorite or False

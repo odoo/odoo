@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2011-01-13 02:28+0000\n"
-"Last-Translator: Maxime Chambreuil (http://www.savoirfairelinux.com) "
-"<maxime.chambreuil@savoirfairelinux.com>\n"
+"PO-Revision-Date: 2012-11-29 14:45+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:17+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -32,7 +31,7 @@ msgstr ""
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: mrp_byproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -42,7 +41,7 @@ msgstr "Fixe"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure d'article"
 
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_mrp_production
@@ -53,8 +52,8 @@ msgstr "Ordre de fabrication"
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
-"Le produit de la ligne de la nomenclature ne devrait pas être le même "
-"produit que celui de la nomenclature."
+"L'article de la ligne de la nomenclature ne devrait pas être le même article "
+"que celui de la nomenclature."
 
 #. module: mrp_byproduct
 #: sql_constraint:mrp.bom:0
@@ -63,6 +62,9 @@ msgid ""
 "You should install the mrp_byproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Toutes les quantités doivent être supérieures à 0.\n"
+"Vous devez installer le module mrp_byproduct si vous souhaitez gérer des "
+"produits supplémentaires dans les nomenclatures !"
 
 #. module: mrp_byproduct
 #: view:mrp.bom:0
@@ -73,7 +75,7 @@ msgstr ""
 #. module: mrp_byproduct
 #: model:ir.model,name:mrp_byproduct.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Modifier les quantités d'articles"
 
 #. module: mrp_byproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -88,7 +90,7 @@ msgstr "Nomenclature"
 #. module: mrp_byproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr "Qté de Produit"
+msgstr "Qté d'articles"
 
 #. module: mrp_byproduct
 #: code:addons/mrp_byproduct/mrp_byproduct.py:62

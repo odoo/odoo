@@ -150,8 +150,12 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     def _get_state(self, cr, uid, ids, name, arg, context=None):
-        return dict((user.id, 'new' if not user.login_date else 'reset' if user.signup_token else 'active')
-                    for user in self.browse(cr, uid, ids, context))
+        res = {}
+        for user in self.browse(cr, uid, ids, context):
+            res[user.id] = ('reset' if user.signup_valid else
+                            'active' if user.login_date else
+                            'new')
+        return res
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',

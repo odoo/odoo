@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-05-10 17:49+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"PO-Revision-Date: 2012-11-29 11:12+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:15+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -29,7 +29,7 @@ msgstr "人力资源考勤搜索"
 #. module: hr_attendance
 #: field:hr.employee,last_sign:0
 msgid "Last Sign"
-msgstr ""
+msgstr "上次签到"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -43,12 +43,12 @@ msgstr "考勤"
 #: code:addons/hr_attendance/static/src/js/attendance.js:34
 #, python-format
 msgid "Last sign in: %s,<br />%s.<br />Click to sign out."
-msgstr ""
+msgstr "上次签到：%s,<br />%s.<br />，单击 签出。"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error ! Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr ""
+msgstr "错误"
 
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
@@ -70,7 +70,7 @@ msgstr "打印每月考勤报表"
 #: code:addons/hr_attendance/report/timesheet.py:122
 #, python-format
 msgid "Attendances by Week"
-msgstr ""
+msgstr "周出席率"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -104,7 +104,7 @@ msgstr "签出"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records are found for your selection!"
-msgstr ""
+msgstr "没找到你要的计量"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -170,12 +170,12 @@ msgstr "警告"
 #. module: hr_attendance
 #: help:hr.config.settings,group_hr_attendance:0
 msgid "Allocates attendance group to all users."
-msgstr ""
+msgstr "分配出席组给全体用户"
 
 #. module: hr_attendance
 #: field:hr.employee,attendance_access:0
 msgid "unknown"
-msgstr ""
+msgstr "未知"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
@@ -191,7 +191,7 @@ msgstr "6月"
 #: code:addons/hr_attendance/report/attendance_by_month.py:193
 #, python-format
 msgid "Attendances by Month"
-msgstr ""
+msgstr "月度出勤率"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
@@ -244,7 +244,7 @@ msgstr "日期"
 #. module: hr_attendance
 #: field:hr.config.settings,group_hr_attendance:0
 msgid "Track attendances for all employees"
-msgstr ""
+msgstr "跟踪全体员工出席率"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -328,7 +328,7 @@ msgstr "1月"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No Data Available !"
-msgstr ""
+msgstr "无可用数据"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -401,14 +401,14 @@ msgstr "打印每周考勤报表"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_config_settings
 msgid "hr.config.settings"
-msgstr ""
+msgstr "hr.config.settings"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/attendance.js:36
 #, python-format
 msgid "Click to Sign In at %s."
-msgstr ""
+msgstr "单击登录在 %s."
 
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
@@ -448,7 +448,7 @@ msgstr "操作"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "错误！，你不能创建循环的员工等级"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -461,7 +461,7 @@ msgstr "(*)负数延期表示员工的工作时间超过记录的时间"
 #: view:hr.attendance.month:0
 #: view:hr.attendance.week:0
 msgid "or"
-msgstr ""
+msgstr "or"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0

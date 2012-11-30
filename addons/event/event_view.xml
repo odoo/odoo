@@ -59,7 +59,7 @@
 
         <!-- Event Read/Unread actions -->
         <record id="actions_server_event_event_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Event: Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
@@ -77,7 +77,7 @@
         </record>
 
         <record id="actions_server_event_event_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Event: Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_event"/>
@@ -107,7 +107,7 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
                     </header>
                     <sheet>
-                        <div class="oe_right oe_button_box">
+                        <div class="oe_right oe_button_box" groups="base.group_user">
                             <button name="%(event.act_event_list_register_event)d" type="action" string="Registrations" help="Register with this event"/>
                         </div>
                         <div class="oe_title">
@@ -204,7 +204,7 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
                         <field name="message_ids" widget="mail_thread" placeholder="Share a note..."/>
                     </div>
                 </form>
@@ -377,7 +377,7 @@
 
         <!-- Registration Read/Unread actions -->
         <record id="actions_server_event_registration_unread" model="ir.actions.server">
-            <field name="name">Mark unread</field>
+            <field name="name">Event registration : Mark unread</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
@@ -395,7 +395,7 @@
         </record>
 
         <record id="actions_server_event_registration_read" model="ir.actions.server">
-            <field name="name">Mark read</field>
+            <field name="name">Event registration : Mark read</field>
             <field name="condition">True</field>
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_event_registration"/>
@@ -538,7 +538,7 @@
           <field name="view_mode">tree,form,calendar,graph</field>
           <field name="context">{}</field>
           <field name="search_view_id" ref="view_registration_search"/>
-        </record>view_
+        </record>
 
         <menuitem name="Registrations"
             id="menu_action_registration" parent="base.menu_event_main"
