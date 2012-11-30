@@ -250,7 +250,7 @@ class mail_message(osv.Model):
         partner_tree = dict((partner[0], partner) for partner in partners)
 
         # 2. Attachments
-        attachments = ir_attachment_obj.read(cr, uid, list(attachment_ids), ['id', 'datas_fname'], context=context)
+        attachments = ir_attachment_obj.read(cr, SUPERUSER_ID, list(attachment_ids), ['id', 'datas_fname'], context=context)
         attachments_tree = dict((attachment['id'], {'id': attachment['id'], 'filename': attachment['datas_fname']}) for attachment in attachments)
 
         # 3. Update message dictionaries
