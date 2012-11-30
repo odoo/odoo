@@ -343,7 +343,7 @@ class res_users(osv.osv):
         for k in self._all_columns.keys():
             if k.startswith('context_'):
                 context_key = k[8:]
-            elif k in ['lang', 'tz', 'tz_offset']:
+            elif k in ['lang', 'tz']:
                 context_key = k
             else:
                 context_key = False
