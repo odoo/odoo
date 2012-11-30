@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,4 +19,13 @@
 #
 ##############################################################################
 
-import contact
+from osv import fields, osv
+
+class sale_configuration(osv.osv_memory):
+    _inherit = 'sale.config.settings'
+
+    _columns = {
+        'group_template_required': fields.boolean("Mandatory use of templates.",
+            implied_group='account_analytic_analysis.group_template_required',
+            help="Allows you to set the template field as required when creating an analytic account or a contract."),
+    }
