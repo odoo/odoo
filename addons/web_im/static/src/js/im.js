@@ -228,7 +228,8 @@ openerp.web_im = function(instance) {
             date = instance.web.str_to_datetime(date);
             date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
             var bubble = QWeb.render("Conversation.bubble", {"items": items, "name": name, "time": date});
-            this.$(".oe_im_chatview_content").append($(bubble));
+            $(this.$(".oe_im_chatview_content").children()[0]).append($(bubble));
+            this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },
         destroy: function() {
             this.trigger("destroyed");

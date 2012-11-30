@@ -35,7 +35,9 @@
             <div class="oe_im_chatview_disconnected">
                 <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user_rec.name)'/>
             </div>
-            <div class="oe_im_chatview_content"></div>
+            <div class="oe_im_chatview_content">
+                <div></div>
+            </div>
             <div class="oe_im_chatview_footer">
                 <input class="oe_im_chatview_input" placeholder="Say something..." />
             </div>
