@@ -135,8 +135,12 @@ class hr_employee(osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         id = super(hr_employee, self).create(cr, uid, vals, context=context)
+        hre_vals = {'employee_id': id}
+        if vals.get('evaluation_date', False):
+            hre_vals['date'] = vals['evaluation_date']        
         if vals.get('evaluation_plan_id', False):
-            self.pool.get('hr_evaluation.evaluation').create(cr, uid, {'employee_id': id, 'plan_id': vals['evaluation_plan_id']}, context=context)
+            hre_vals['plan_id'] = vals['evaluation_plan_id']
+            self.pool.get('hr_evaluation.evaluation').create(cr, uid, hre_vals, context=context)
         return id
 
 hr_employee()
