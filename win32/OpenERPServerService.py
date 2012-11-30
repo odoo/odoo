@@ -36,7 +36,7 @@ except ImportError:
         raise
     from setup import generate_files
     generate_files()
-    import meta
+    import meta     # noqa
 
 class OpenERPServerService(win32serviceutil.ServiceFramework):
     # required info
@@ -74,9 +74,8 @@ class OpenERPServerService(win32serviceutil.ServiceFramework):
 def option_handler(opts):
     # configure the service to auto restart on failures...
     service_name = OpenERPServerService._svc_name
-    restart_msg = "Restarting %s" % (OpenERPServerService._svc_display_name_,)
 
-    subprocess.call('sc failure %s reset= 0 reboot= %r actions= reboot/0/reboot/0/reboot/0' % (service_name, restart_msg))
+    subprocess.call('sc failure %s reset= 0 actions= restart/0/restart/0/restart/0' % (service_name,))
 
     # hscm = win32service.OpenSCManager(None, None, win32service.SC_MANAGER_ALL_ACCESS)
     # try:
