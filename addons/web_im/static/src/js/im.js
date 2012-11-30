@@ -207,7 +207,7 @@ openerp.web_im = function(instance) {
             this.$el.css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this.$(".oe_conversation_text").append($("<div>").text("Him: " + message.message));
+            this.$(".oe_im_chatview_content").append($("<div>").text("Him: " + message.message));
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -215,7 +215,7 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this.$(".oe_conversation_text").append($("<div>").text("Me: " + mes));
+            this.$(".oe_im_chatview_content").append($("<div>").text("Me: " + mes));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
         },
