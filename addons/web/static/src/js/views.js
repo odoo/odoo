@@ -1149,8 +1149,8 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
             a.title =   _t("Attachment :") + '\n   ' + a.name + '\n' + 
-                        _t("Created by :") + '\n   ' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) + 
-                        (a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modified by :") + '\n   ' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
+                        (a.create_uid && a.create_uid[0] ? _t("Created by :") + '\n   ' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) : '') + 
+                        (a.create_uid && a.write_uid && a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modified by :") + '\n   ' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
         });
         self.items['files'] = attachments;
         self.redraw();
