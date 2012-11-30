@@ -630,6 +630,20 @@ class ir_model_data(osv.osv):
             id = False
         return id
 
+    def clear_caches(self, cr):
+        """ Clears all orm caches on the object's methods
+
+        :returns: itself
+        """
+        self._get_id.clear_cache(cr.dbname)
+        self.get_object_reference.clear_cache(cr.dbname)
+        return self
+
+    def unlink(self, cr, uid, ids, context=None):
+        """ Regular unlink method, but make sure to clear the caches. """
+        self.clear_caches(cr)
+        return super(ir_model_data,self).unlink(cr, uid, ids, context=context)
+
     def _update(self,cr, uid, model, module, values, xml_id=False, store=True, noupdate=False, mode='init', res_id=False, context=None):
         model_obj = self.pool.get(model)
         if not context:
