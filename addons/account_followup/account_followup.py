@@ -40,13 +40,12 @@ class followup(osv.osv):
     _sql_constraints = [('company_uniq', 'unique(company_id)', 'Only one follow-up per company is allowed')] 
 
 
-
 class followup_line(osv.osv):
 
     def _get_default_template(self, cr, uid, ids, context=None):
         dummy, templ = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')
         return templ
-    
+
     _name = 'account_followup.followup.line'
     _description = 'Follow-up Criteria'
     _columns = {
@@ -124,7 +123,6 @@ class email_template(osv.osv):
         return super(email_template, self).render_template(cr, uid, template, model, res_id, context=context)
 
 
-
 class res_partner(osv.osv):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
@@ -137,9 +135,6 @@ class res_partner(osv.osv):
             root.insert(0, first_node[0])
             res['arch'] = etree.tostring(doc)
         return res
-
-
-
 
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
         res={}
@@ -169,7 +164,6 @@ class res_partner(osv.osv):
                                'latest_followup_level_id_without_lit': latest_level_without_lit}
         return res
 
-
     def do_partner_manual_action(self, cr, uid, partner_ids, context=None): 
         #partner_ids -> res.partner
         for partner in self.browse(cr, uid, partner_ids, context=context):
@@ -179,11 +173,11 @@ class res_partner(osv.osv):
                 action_text = (partner.payment_next_action or '') + "\n" + (partner.latest_followup_level_id_without_lit.manual_action_note or '')
             else:
                 action_text = partner.latest_followup_level_id_without_lit.manual_action_note or ''
-            
+
             #Check date: put the minimum date if it existed already
             action_date = (partner.payment_next_action_date and min(partner.payment_next_action_date, fields.date.context_today(cr, uid, context))
                            ) or fields.date.context_today(cr, uid, context)
-            
+
             # Check responsible: if partner has not got a responsible already, take from follow-up
             responsible_id = False
             if partner.payment_responsible_id:
@@ -194,7 +188,6 @@ class res_partner(osv.osv):
             self.write(cr, uid, [partner.id], {'payment_next_action_date': action_date,
                                         'payment_next_action': action_text,
                                         'payment_responsible_id': responsible_id})
-
 
     def do_partner_print(self, cr, uid, wizard_partner_ids, data, context=None):
         #wizard_partner_ids are ids from special view, not from res.partner
@@ -260,8 +253,6 @@ class res_partner(osv.osv):
         }
 
 
-
-
     _inherit = "res.partner"
     _columns = {
         'payment_responsible_id':fields.many2one('res.users', ondelete='set null', string='Follow-up Responsible', 
@@ -287,7 +278,6 @@ class res_partner(osv.osv):
             help="The maximum follow-up level without taking into account the account move lines with litigation", 
             store=False, 
             multi="latest"),
-        
         'payment_amount_due':fields.related('credit', type='float', string="Total amount due", readonly=True),
         }
 

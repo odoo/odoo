@@ -78,37 +78,35 @@ account_followup_stat_by_partner()
 class account_followup_sending_results(osv.osv_memory):
     
     def do_report(self, cr, uid, ids, context=None):
-        return context['report_data']
-    
+        if context is None:
+            context = {}
+        return context.get('report_data')
+
     def do_done(self, cr, uid, ids, context=None):
         return {}
-    
+
     def _get_description(self, cr, uid, context=None):
-        res = ""
-        if context!=None:
-            res = context['description']
-        return res
-    
+        if context is None:
+            context = {}
+        return context.get('description')
+
     def _get_need_printing(self, cr, uid, context=None):
-        res = False
-        if context!=None:
-            if context['needprinting']:
-                res = context['needprinting']
-        return res
-    
+        if context is None:
+            context = {}
+        return context.get('needprinting')
+
     _name = 'account_followup.sending.results'
     _description = 'Results from the sending of the different letters and emails'
     _columns  = {
-            'description':fields.text("Description", required=False, readonly=True), 
-            'needprinting':fields.boolean("Needs printing")
-                 }
+        'description': fields.text("Description", readonly=True),
+        'needprinting': fields.boolean("Needs Printing")
+    }
     _defaults = {
-                'needprinting':_get_need_printing, 
-                'description':_get_description,
-            
-                 }
-    
-account_followup_sending_results()   
+        'needprinting':_get_need_printing,
+        'description':_get_description,
+    }
+ 
+account_followup_sending_results()
 
 
 class account_followup_print(osv.osv_memory):
@@ -120,16 +118,16 @@ class account_followup_print(osv.osv_memory):
         'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True, readonly = True),
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 
                                         'osv_memory_id', 'partner_id', 'Partners', required=True),
-        'company_id':fields.related('followup_id', 'company_id', type='many2one', 
-                                    relation='res.company', store=True, readonly=True), 
+        'company_id':fields.related('followup_id', 'company_id', type='many2one',
+                                    relation='res.company', store=True, readonly=True),
         'email_conf': fields.boolean('Send Email Confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
-        'partner_lang': fields.boolean('Send Email in Partner Language', 
+        'partner_lang': fields.boolean('Send Email in Partner Language',
                                     help='Do not change message text, if you want to send email in partner language, or configure from company'),
         'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', readonly=True),
         'test_print': fields.boolean('Test Print', 
-                                     help='Check if you want to print follow-ups without changing follow-ups level.'),       
+                                     help='Check if you want to print follow-ups without changing follow-ups level.'),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -140,9 +138,6 @@ class account_followup_print(osv.osv_memory):
         company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         followp_id = self.pool.get('account_followup.followup').search(cr, uid, [('company_id', '=', company_id)], context=context)
         return followp_id and followp_id[0] or False
-
-
-
 
     def process_partners(self, cr, uid, partner_ids, data, context=None):
         partner_obj = self.pool.get('res.partner')
@@ -196,7 +191,6 @@ class account_followup_print(osv.osv_memory):
                 self.pool.get('account.move.line').write(cr, uid, [int(id)], {'followup_line_id': to_update[id]['level'], 
                                                                               'followup_date': date})
 
-
     def clear_manual_actions(self, cr, uid, partner_list, context=None):
         # Partnerlist is list to exclude
         # Will clear the actions of partners that have no due payments anymore
@@ -216,6 +210,9 @@ class account_followup_print(osv.osv_memory):
         return len(ids)
 
     def do_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+
         #Get partners
         tmp = self._get_partners_followp(cr, uid, ids, context=context)
         partner_list = tmp['partner_ids']
@@ -223,17 +220,19 @@ class account_followup_print(osv.osv_memory):
         date = self.browse(cr, uid, ids, context=context)[0].date
         data = self.read(cr, uid, ids, [], context=context)[0]
         data['followup_id'] = data['followup_id'][0]
-        #Update and process partners
+
+        #Update partners
         self.do_update_followup_level(cr, uid, to_update, partner_list, date, context=context)
+        #process the partners (send mails...)
         restot = self.process_partners(cr, uid, partner_list, data, context=context)
+        #clear the manual actions if nothing is due anymore
         nbactionscleared = self.clear_manual_actions(cr, uid, partner_list, context=context)
         if nbactionscleared > 0:
-            restot['resulttext'] = restot['resulttext'] + "<li>" +  str(nbactionscleared) + " " + _("partners have no credits and as such the action is cleared") + "</li>" 
+            restot['resulttext'] = restot['resulttext'] + "<li>" +  _("%s partners have no credits and as such the action is cleared") %(str(nbactionscleared)) + "</li>" 
         res = restot['action']
+
+        #return the next action
         mod_obj = self.pool.get('ir.model.data')
-        if context is None:
-            context = {}
-        data = self.browse(cr, uid, ids, context=context)[0]
         model_data_ids = mod_obj.search(cr, uid, [('model','=','ir.ui.view'),('name','=','view_account_followup_sending_results')], context=context)
         resource_id = mod_obj.read(cr, uid, model_data_ids, fields=['res_id'], context=context)[0]['res_id']
         context.update({'description': restot['resulttext'], 'needprinting': restot['needprinting'], 'report_data': res})
@@ -257,7 +256,6 @@ class account_followup_print(osv.osv_memory):
         'email_body': "",
         'email_subject': _('Invoices Reminder'),
         'partner_lang': True,
-        #'partner_ids': _get_partners,
     }
 
     def _get_partners_followp(self, cr, uid, ids, context=None):
@@ -298,8 +296,7 @@ class account_followup_print(osv.osv_memory):
             delay = datetime.timedelta(days=result['delay'])
             fups[old] = (current_date - delay, result['id'])
             old = result['id']
-        #fups[old] = (datetime.date(datetime.MAXYEAR, 12, 31), old) --> By commenting this, last level won't be printed again and again
-        fups 
+
         partner_list = []
         to_update = {}
         
