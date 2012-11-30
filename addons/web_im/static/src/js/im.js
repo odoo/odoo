@@ -285,7 +285,7 @@ openerp.web_im = function(instance) {
             this.$el.css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this._add_bubble(this.user, [message.message], message.date);
+            this._add_bubble(this.user, message.message, message.date);
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -293,15 +293,22 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this._add_bubble(this.me, [mes], instance.web.datetime_to_str(new Date()));
+            this._add_bubble(this.me, mes, instance.web.datetime_to_str(new Date()));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user.get('id')], {context: new instance.web.CompoundContext()});
         },
-        _add_bubble: function(user, items, date) {
+        _add_bubble: function(user, item, date) {
+            var items = [item];
+            if (user === this.last_user) {
+                this.last_bubble.remove();
+                items = this.last_items.concat(items);
+            }
+            this.last_user = user;
+            this.last_items = items;
             date = instance.web.str_to_datetime(date);
             date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
-            var bubble = QWeb.render("Conversation.bubble", {"items": items, "user": user, "time": date});
-            $(this.$(".oe_im_chatview_content").children()[0]).append($(bubble));
+            this.last_bubble = $(QWeb.render("Conversation.bubble", {"items": items, "user": user, "time": date}));
+            $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },
         destroy: function() {
