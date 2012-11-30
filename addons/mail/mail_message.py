@@ -682,12 +682,23 @@ class mail_message(osv.Model):
                             (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
+        if context is None:
+            context = {}
+        default_starred = context.pop('default_starred', False)
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         elif not values.get('message_id'):
             values['message_id'] = tools.generate_tracking_message_id('private')
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, SUPERUSER_ID, newid, context=context)
+        # TDE FIXME: handle default_starred. Why not setting an inv on starred ?
+        # Because starred will call set_message_starred, that looks for notifications.
+        # When creating a new mail_message, it will create a notification to a message
+        # that does not exist, leading to an error (key not existing). Also this
+        # this means unread notifications will be created, yet we can not assure
+        # this is what we want.
+        if default_starred:
+            self.set_message_starred(cr, uid, [newid], True, context=context)
         return newid
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
