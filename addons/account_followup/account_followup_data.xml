@@ -1,9 +1,5 @@
 <?xml version="1.0"?>
 <openerp>
-    
-    
-    
-    
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
@@ -11,18 +7,19 @@
 		 <record id="email_template_account_followup_level0" model="email.template">
             <field name="name">Follow-up of overdue invoices level 0</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
-    
-    <p>Dear ${object.name and ' ' or ''},</p>
+
+    <p>Dear ${object.name},</p>
     <p>
     Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take
 appropriate measures in order to carry out this payment in the next 8 days.
+
 Would your payment have been carried out after this mail was sent, please ignore this message. Do not hesitate to
 contact our accounting department at (+32).10.68.94.39.
 
@@ -32,57 +29,46 @@ Best Regards,
 
    <br/>
 ${user.name}
-    
-<br/>
-<br/>
-    <table border="2" width=100%>
 
+<br/>
+<br/>
+<%
+    from openerp.addons.account_followup.report import account_followup_print
+    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
+    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
+    followup_table = ''
+    for currency_dict in final_res:
+        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
+        followup_table += '''
+        <table border="2" width=100%%>
         <tr>
             <td>Invoice date</td>
             <td>Reference</td>
             <td>Due date</td>
-            <td>Amount</td>
+            <td>Amount (%s)</td>
             <td>Lit.</td>
         </tr>
+        ''' % (currency_symbol)
+        total = 0
+        for aml in currency_dict['line']:
+            block = aml['blocked'] and 'X' or ' '
+            total += aml['balance']
+            strbegin = "<TD> "
+            strend = "</TD> "
+            date = aml['date_maturity'] or aml['date']
+            if date <= ctx['current_date'] and aml['balance'] > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
+        followup_table += '''<tr> </tr>
+                        </table>
+                        <center>Amount due: %s </center>''' % (total)
 
-<%
-    amls = object.unreconciled_aml_ids
-    mel = {}
-    total = 0
-    for aml in amls:
-        strbegin = "<TD> "
-        strend = "</TD> "
-        date = False
-        if aml.date_maturity: 
-            date = aml.date_maturity
-            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-        else:
-            if aml.date <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            else:
-                strbegin = "<TD>"
-                strend = "</TD>"
-            date = aml.date
-        block = " "
-        if aml.blocked: 
-            block = "X"
-        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
-        if (aml.company_id.id != user.company_id.id): 
-            mel[aml.id] = ""
-        else:
-            total += aml.result
 %>
-<tr>
-</tr>
-% for aml in amls: 
-${mel[aml.id]}
-% endfor
 
-</table>
-<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
+${followup_table}
+
     <br/>
 
 </div>
@@ -95,7 +81,7 @@ ${mel[aml.id]}
 		 <record id="email_template_account_followup_level1" model="email.template">
             <field name="name">Follow-up of overdue invoices level 1</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -103,7 +89,7 @@ ${mel[aml.id]}
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
     
-    <p>Dear ${object.name and ' ' or ''},</p>
+    <p>Dear ${object.name},</p>
    <p>
    	We are disappointed to see that despite sending a reminder, that your account is now seriously overdue.
 It is essential that immediate payment is made, otherwise we will have to consider placing a stop on your account
@@ -123,54 +109,43 @@ ${user.name}
 <br/>
 
    
-    <table border="2" width=100%>
-
+<%
+    from openerp.addons.account_followup.report import account_followup_print
+    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
+    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
+    followup_table = ''
+    for currency_dict in final_res:
+        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
+        followup_table += '''
+        <table border="2" width=100%%>
         <tr>
             <td>Invoice date</td>
             <td>Reference</td>
             <td>Due date</td>
-            <td>Amount</td>
+            <td>Amount (%s)</td>
             <td>Lit.</td>
         </tr>
+        ''' % (currency_symbol)
+        total = 0
+        for aml in currency_dict['line']:
+            block = aml['blocked'] and 'X' or ' '
+            total += aml['balance']
+            strbegin = "<TD> "
+            strend = "</TD> "
+            date = aml['date_maturity'] or aml['date']
+            if date <= ctx['current_date'] and aml['balance'] > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
+        followup_table += '''<tr> </tr>
+                        </table>
+                        <center>Amount due: %s </center>''' % (total)
 
-<%
-    amls = object.unreconciled_aml_ids
-    mel = {}
-    total = 0
-    for aml in amls:
-        strbegin = "<TD> "
-        strend = "</TD> "
-        date = False
-        if aml.date_maturity: 
-            date = aml.date_maturity
-            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-        else:
-            if aml.date <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            else:
-                strbegin = "<TD>"
-                strend = "</TD>"
-            date = aml.date
-        block = " "
-        if aml.blocked: 
-            block = "X"
-        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
-        if (aml.company_id.id != user.company_id.id): 
-            mel[aml.id] = ""
-        else:
-            total += aml.result
 %>
-<tr>
-</tr>
-% for aml in amls: 
-${mel[aml.id]}
-% endfor
 
-</table>
-<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
+${followup_table}
+
     <br/>
 
 </div>
@@ -180,7 +155,7 @@ ${mel[aml.id]}
         <record id="email_template_account_followup_level2" model="email.template">
             <field name="name">Follow-up of overdue invoices level 2</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -188,7 +163,7 @@ ${mel[aml.id]}
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
     
-    <p>Dear ${object.name and ' ' or ''},</p>
+    <p>Dear ${object.name},</p>
     <p>
     Despite several reminders, your account is still not settled.
 Unless full payment is made in next 8 days, legal action for the recovery of the debt will be taken without
@@ -206,54 +181,44 @@ ${user.name}
 <br/>
 
     
-    <table border="2" width=100%>
 
+<%
+    from openerp.addons.account_followup.report import account_followup_print
+    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
+    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
+    followup_table = ''
+    for currency_dict in final_res:
+        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
+        followup_table += '''
+        <table border="2" width=100%%>
         <tr>
             <td>Invoice date</td>
             <td>Reference</td>
             <td>Due date</td>
-            <td>Amount</td>
+            <td>Amount (%s)</td>
             <td>Lit.</td>
         </tr>
+        ''' % (currency_symbol)
+        total = 0
+        for aml in currency_dict['line']:
+            block = aml['blocked'] and 'X' or ' '
+            total += aml['balance']
+            strbegin = "<TD> "
+            strend = "</TD> "
+            date = aml['date_maturity'] or aml['date']
+            if date <= ctx['current_date'] and aml['balance'] > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
+        followup_table += '''<tr> </tr>
+                        </table>
+                        <center>Amount due: %s </center>''' % (total)
 
-<%
-    amls = object.unreconciled_aml_ids
-    mel = {}
-    total = 0
-    for aml in amls:
-        strbegin = "<TD> "
-        strend = "</TD> "
-        date = False
-        if aml.date_maturity: 
-            date = aml.date_maturity
-            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-        else:
-            if aml.date <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            else:
-                strbegin = "<TD>"
-                strend = "</TD>"
-            date = aml.date
-        block = " "
-        if aml.blocked: 
-            block = "X"
-        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
-        if (aml.company_id.id != user.company_id.id): 
-            mel[aml.id] = ""
-        else:
-            total += aml.result
 %>
-<tr>
-</tr>
-% for aml in amls: 
-${mel[aml.id]}
-% endfor
 
-</table>
-<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>
+${followup_table}
+
     <br/>
 
 </div>
@@ -265,7 +230,7 @@ ${mel[aml.id]}
 		 <record id="email_template_account_followup_default" model="email.template">
             <field name="name">Default follow-up of overdue invoices</field>
             <field name="email_from">${user.email or ''}</field>
-            <field name="subject">${object.company_id.name} Payment Follow-up</field>
+            <field name="subject">${user.company_id.name} Payment Follow-up</field>
             <field name="email_to">${object.email}</field>
             <field name="lang">${object.lang}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -273,7 +238,7 @@ ${mel[aml.id]}
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
     
-    <p>Dear ${object.name and ' ' or ''},</p>
+    <p>Dear ${object.name},</p>
     <p>
     Exception made if there was a mistake of ours, it seems that the following amount stays unpaid. Please, take
 appropriate measures in order to carry out this payment in the next 8 days.
@@ -291,54 +256,44 @@ ${user.name}
 <br/>
 
    
-    <table border="2" width=100%>
 
+<%
+    from openerp.addons.account_followup.report import account_followup_print
+    rml_parse = account_followup_print.report_rappel(object._cr, user.id, "followup_rml_parser")
+    final_res = rml_parse._lines_get_with_partner(object, user.company_id.id)
+    followup_table = ''
+    for currency_dict in final_res:
+        currency_symbol = currency_dict.get('line', [{'currency_id': user.company_id.currency_id}])[0]['currency_id'].symbol
+        followup_table += '''
+        <table border="2" width=100%%>
         <tr>
             <td>Invoice date</td>
             <td>Reference</td>
             <td>Due date</td>
-            <td>Amount</td>
+            <td>Amount (%s)</td>
             <td>Lit.</td>
         </tr>
+        ''' % (currency_symbol)
+        total = 0
+        for aml in currency_dict['line']:
+            block = aml['blocked'] and 'X' or ' '
+            total += aml['balance']
+            strbegin = "<TD> "
+            strend = "</TD> "
+            date = aml['date_maturity'] or aml['date']
+            if date <= ctx['current_date'] and aml['balance'] > 0:
+                strbegin = "<TD><B>"
+                strend = "</B></TD>"
+            followup_table +="<TR>" + strbegin + str(aml['date']) + strend + strbegin + aml['ref'] + strend + strbegin + str(date) + strend + strbegin + str(aml['balance']) + strend + strbegin + block + strend + "</TR>"
+        total = rml_parse.formatLang(total, dp='Account', currency_obj=object.company_id.currency_id)
+        followup_table += '''<tr> </tr>
+                        </table>
+                        <center>Amount due: %s </center>''' % (total)
 
-<%
-    amls = object.unreconciled_aml_ids
-    mel = {}
-    total = 0
-    for aml in amls:             
-        strbegin = "<TD> "
-        strend = "</TD> "
-        date = False
-        if aml.date_maturity: 
-            date = aml.date_maturity
-            if aml.date_maturity <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-        else:
-            if aml.date <= ctx['current_date'] and aml.debit > 0:
-                strbegin = "<TD><B>"
-                strend = "</B></TD>"
-            else:
-                strbegin = "<TD>"
-                strend = "</TD>"
-            date = aml.date
-        block = " "
-        if aml.blocked: 
-            block = "X"
-        mel[aml.id] = "<TR>" + strbegin + str(aml.date) + strend + strbegin + aml.ref + strend + strbegin + str(date) + strend + strbegin + str(aml.result) + strend + strbegin + block + strend + "</TR>"
-        if (aml.company_id.id != user.company_id.id): 
-            mel[aml.id] = ""
-        else:
-            total += aml.result
 %>
-<tr>
-</tr>
-% for aml in amls: 
-${mel[aml.id]}
-% endfor
 
-</table>
-<center>Amount due: ${total} ${object.company_id.currency_id.name} </center>   
+${followup_table}
+
     <br/>
 
 </div>
@@ -350,7 +305,6 @@ ${mel[aml.id]}
           
 
         <record id="demo_followup1" model="account_followup.followup">
-            <field name="name">Default Follow-up</field>
             <field name="company_id" ref="base.main_company"/>
         </record>
 

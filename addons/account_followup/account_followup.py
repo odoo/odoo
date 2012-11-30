@@ -66,7 +66,7 @@ class followup_line(osv.osv):
     _sql_constraints = [('days_uniq', 'unique(followup_id, delay)', 'Days of the follow-up levels must be different')]
     _defaults = {
         'send_email': True,
-        'send_letter': False,
+        'send_letter': True,
         'manual_action':False,
         'description': """
         Dear %(partner_name)s,
@@ -218,10 +218,10 @@ class res_partner(osv.osv):
         mtp = self.pool.get('email.template')
         unknown_mails = 0
         for partner in self.browse(cr, uid, partner_ids, context=context):
-            if partner.email != False and partner.email != '' and partner.email != ' ':
-                p = partner.latest_followup_level_id_without_lit
-                if p and p.send_email and p.email_template_id.id != False:
-                    mtp.send_mail(cr, uid, p.email_template_id.id, partner.id, context=context)
+            if partner.email and partner.email.strip():
+                level = partner.latest_followup_level_id_without_lit
+                if level and level.send_email and level.email_template_id and level.email_template_id.id:
+                    mtp.send_mail(cr, uid, level.email_template_id.id, partner.id, context=context)
                 else:
                     mail_template_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 
                                                     'account_followup', 'email_template_account_followup_default')
