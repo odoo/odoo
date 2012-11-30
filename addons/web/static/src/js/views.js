@@ -1144,12 +1144,13 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var items = [];
         var prefix = this.session.url('/web/binary/saveas', {model: 'ir.attachment', field: 'datas', filename_field: 'name'});
         _.each(attachments,function(a) {
-            a.label = a.name;
+            a.label = a.name.length > 25 ? a.name.substr(0,25) + '...' : a.name;
             if(a.type === "binary") {
                 a.url = prefix  + '&id=' + a.id + '&t=' + (new Date().getTime());
             }
-            a.title =   _t("Create by :") + '\n' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) + 
-                        (a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modify by :") + '\n' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
+            a.title =   _t("Attachment :") + '\n   ' + a.name + '\n' + 
+                        _t("Created by :") + '\n   ' + a.create_uid[1] + ' ' + instance.web.format_value(a.create_date, {type:"datetime"}) + 
+                        (a.create_uid[0] != a.write_uid[0] ? '\n' + _t("Modified by :") + '\n   ' + a.write_uid[1] + ' ' + instance.web.format_value(a.write_date, {type:"datetime"}) : '');
         });
         self.items['files'] = attachments;
         self.redraw();
