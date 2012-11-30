@@ -22,6 +22,7 @@
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
+import datetime
 from osv import osv, fields
 
 WATCHER_TIMER = 60
@@ -109,6 +110,11 @@ class im_message(osv.osv):
         'message': fields.char(string="Message", size=200, required=True),
         'from': fields.many2one("res.users", "From", required= True, ondelete='cascade'),
         'to': fields.many2one("res.users", "From", required=True, select=True, ondelete='cascade'),
+        'date': fields.datetime("Date", required=True),
+    }
+
+    _defaults = {
+        'date': datetime.datetime.now(),
     }
     
     def get_messages(self, cr, uid, last=None, context=None):
@@ -116,7 +122,7 @@ class im_message(osv.osv):
             tmp = self.search(cr, uid, [['to', '=', uid]], order="id desc", limit=1, context=context)
             last = tmp[0] if len(tmp) >= 1 else -1
         res = self.search(cr, uid, [['id', '>', last], ['to', '=', uid]], order="id", context=context)
-        res = self.read(cr, uid, res, ["id", "message", "from"], context=context)
+        res = self.read(cr, uid, res, ["id", "message", "from", "date"], context=context)
         if len(res) > 0:
             last = res[-1]["id"]
         return {"res": res, "last": last, "dbname": cr.dbname}

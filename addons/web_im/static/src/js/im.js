@@ -211,7 +211,7 @@ openerp.web_im = function(instance) {
             this.$el.css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this._add_bubble("Him", [message.message]);
+            this._add_bubble("Him", [message.message], message.date);
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -219,12 +219,13 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this._add_bubble("Me", [mes]);
+            this._add_bubble("Me", [mes], instance.web.datetime_to_str(new Date()));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
         },
-        _add_bubble: function(name, items) {
-            var date = new Date().toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
+        _add_bubble: function(name, items, date) {
+            date = instance.web.str_to_datetime(date);
+            date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
             var bubble = QWeb.render("Conversation.bubble", {"items": items, "name": name, "time": date});
             this.$(".oe_im_chatview_content").append($(bubble));
         },
