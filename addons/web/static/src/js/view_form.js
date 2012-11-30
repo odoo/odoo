@@ -2035,7 +2035,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
-        var $self = $(self), ignore_blur = false;
+        var $self = $(self), ignore_blur = false, cm_ignore_blur = false;
 
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
@@ -2084,8 +2084,25 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 });
                 var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'noRightClick': true,
                     bindings: bindings, itemStyle: {"color": ""},
+                    onShowMenu: function(ev, menu) {
+                        if (menu.attr('openerp_cm_id') && menu.attr('openerp_cm_id') != self.cm_id) {
+                            // if contextMenu still visible but for a different
+                            // m2o, force it to hide to ensure 'cm_ignore_blur'
+                            // is correctly resetted.
+                            menu.hide();
+                        }
+                        menu.attr('openerp_cm_id', self.cm_id);
+                        cm_ignore_blur = true;
+                        menu.hide = function() {
+                            if ($(this).attr('openerp_cm_id')) {
+                                $(this).attr('openerp_cm_id', null);
+                                cm_ignore_blur = false;
+                            }
+                            $(this).hide();
+                        }
+                        return menu;
+                    },
                     onContextMenu: function() {
-                        ignore_blur = true;
                         if(self.value) {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").removeClass("oe-m2o-disabled-cm");
                         } else {
@@ -2102,12 +2119,11 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 $.async_when().then(function() {self.$menu_btn.trigger(e);});
             });
         });
-        var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
-        this.$menu_btn.click(ctx_callback);
         this.$menu_btn.bind({
+            click: function(e) { init_context_menu_def.resolve(e); e.preventDefault() },
             focus: function () { $self.trigger('widget-focus'); },
             blur: function () {
-                if(ignore_blur){ return; }
+                if (cm_ignore_blur) { return; }
                 $self.trigger('widget-blur');
             }
         });
@@ -2157,7 +2173,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             autocompleteclose: function () { ignore_blur = false; },
             blur: function () {
                 // autocomplete open
-                if (ignore_blur) { return; }
+                if (ignore_blur || cm_ignore_blur) { return; }
                 var child_popup_open = _(self.widget_children).any(function (child) {
                     return child instanceof openerp.web.form.SelectCreatePopup
                         || child instanceof openerp.web.form.FormOpenPopup;
