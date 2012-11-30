@@ -89,11 +89,6 @@ class bank(osv.osv):
                 }
                 acc_bank_id  = obj_acc.create(cr,uid,acc,context=context)
 
-                # Get the journal view id
-                data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=','account_journal_bank_view')])
-                data = obj_data.browse(cr, uid, data_id[0], context=context)
-                view_id_cash = data.res_id
-
                 jour_obj = self.pool.get('account.journal')
                 new_code = 1
                 while True:
@@ -112,7 +107,6 @@ class bank(osv.osv):
                     'analytic_journal_id': False,
                     'default_credit_account_id': acc_bank_id,
                     'default_debit_account_id': acc_bank_id,
-                    'view_id': view_id_cash
                 }
                 journal_id = jour_obj.create(cr, uid, vals_journal, context=context)
 
