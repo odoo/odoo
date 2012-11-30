@@ -65,11 +65,14 @@ openerp.web_im = function(instance) {
 
             var self = this;
 
-            new instance.web.Model("im.message").call("activated", [], {context: new instance.web.CompoundContext()}).then(function(activated) {
-                if (activated) {
-                    self.activated = true;
-                    self.poll();
-                }
+            return this.ensure_users([instance.session.uid]).then(function() {
+                self.c_manager.set_me(self.get_user(instance.session.uid));
+                return new instance.web.Model("im.message").call("activated", [], {context: new instance.web.CompoundContext()}).then(function(activated) {
+                    if (activated) {
+                        self.activated = true;
+                        self.poll();
+                    }
+                });
             });
         },
         calc_box: function() {
@@ -229,11 +232,14 @@ openerp.web_im = function(instance) {
             this.users = {};
             this.on("change:right_offset", this, this.calc_positions);
         },
+        set_me: function(me) {
+            this.me = me;
+        },
         activate_user: function(user) {
             if (this.users[user.get('id')]) {
                 return this.users[user.get('id')];
             }
-            var conv = new instance.web_im.Conversation(this, user);
+            var conv = new instance.web_im.Conversation(this, user, this.me);
             conv.appendTo(instance.client.$el);
             conv.on("destroyed", this, function() {
                 this.conversations = _.without(this.conversations, conv);
@@ -264,8 +270,9 @@ openerp.web_im = function(instance) {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
         },
-        init: function(parent, user) {
+        init: function(parent, user, me) {
             this._super(parent);
+            this.me = me;
             this.user = user;
             this.user.add_watcher();
             this.set("right_position", 0);
@@ -286,7 +293,7 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this._add_bubble(this.user, [mes], instance.web.datetime_to_str(new Date()));
+            this._add_bubble(this.me, [mes], instance.web.datetime_to_str(new Date()));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user.get('id')], {context: new instance.web.CompoundContext()});
         },
