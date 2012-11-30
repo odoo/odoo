@@ -1,6 +1,6 @@
 
 -
-  I want to see how are processed leads and opps fields when they get merged.  I start by creating two leads and an opp.
+  During a mixed merge (involving leads and opps), data should be handled a certain way following their type (m2o, m2m, text, ...)  Start by creating two leads and an opp.
 -
   !record {model: crm.lead, id: test_crm_lead_01}:
     type: 'lead'
@@ -53,7 +53,7 @@
     tailing_opp = self.search(cr, uid, [('id', '=', ref('test_crm_opp_01'))])
     assert not tailing_opp, 'This tailing opp (id %s) should not exist anymore' % ref('test_crm_opp_01')
 -
-  I want to test leads merge.  I start by creating two leads (with the same partner).
+  I want to test leads merge.  Start by creating two leads (with the same partner).
 -
   !record {model: crm.lead, id: test_crm_lead_03}:
     type: 'lead'
@@ -89,7 +89,7 @@
     tailing_lead = self.search(cr, uid, [('id', '=', ref('test_crm_lead_04'))])
     assert not tailing_lead, 'This tailing lead (id %s) should not exist anymore' % ref('test_crm_lead_04')
 -
-  I want to test opps merge.  I start by creating two opportunities (with the same partner).
+  I want to test opps merge.  Start by creating two opportunities (with the same partner).
 -
   !record {model: crm.lead, id: test_crm_opp_02}:
     type: 'opportunity'
