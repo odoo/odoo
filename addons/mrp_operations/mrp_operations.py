@@ -70,6 +70,18 @@ class mrp_production_workcenter_line(osv.osv):
                 else:
                     res[op.id] = op.date_planned
         return res
+    
+    def onchange_get_date_end(self, cr, uid, ids, date_planned,cycle,hour, context=None):
+        """ Finds ending date from schedule date's onchange.
+        """
+        date_and_hours_by_cal = [(date_planned,hour, 1)]
+        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
+        i = intervals.get((date_planned,hour, 1))
+        if i:
+            res = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+        else:
+            res = date_planned
+        return {'value':{'date_planned_end': res}}
 
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
