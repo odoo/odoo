@@ -113,20 +113,20 @@ class account_analytic_account(osv.osv):
         return res
 
     def open_hr_expense(self, cr, uid, ids, context=None):
+        mod_obj = self.pool.get('ir.model.data')
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'hr_expense', 'expense_all')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
+
         line_ids = self.pool.get('hr.expense.line').search(cr,uid,[('analytic_account', 'in', ids)])
-        domain = [('line_ids', 'in', line_ids)]
+        result['domain'] = [('line_ids', 'in', line_ids)]
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
-        name = _('Expenses of %s') % ','.join(names)
-        return {
-            'type': 'ir.actions.act_window',
-            'name': name,
-            'view_type': 'form',
-            'view_mode': 'tree,form',
-            'context':{'analytic_account':ids[0]},
-            'domain' : domain,
-            'res_model': 'hr.expense.expense',
-            'nodestroy': True,
-        }
+        result['name'] = _('Expenses of %s') % ','.join(names)
+        result['context'] = {'analytic_account':ids[0]}
+        result['view_type'] = 'form'
+        return result
 
     def hr_to_invoice_expense(self, cr, uid, ids, context=None):
         domain = [('invoice_id','=',False),('to_invoice','!=',False), ('journal_id.type', '=', 'purchase'), ('account_id', 'in', ids)]
