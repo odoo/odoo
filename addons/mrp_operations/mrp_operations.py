@@ -83,6 +83,19 @@ class mrp_production_workcenter_line(osv.osv):
             res = date_planned
         return {'value':{'date_planned_end': res}}
 
+    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
+        """ Finds UoM of changed product.
+        @param product_id: Id of changed product.
+        @return: Dictionary of values.
+        """
+        products = self.pool.get('mrp.production').browse(cr, uid, production_id, context=None)
+        result = {
+            'product': products.product_id.id,
+            'qty': products.product_qty,
+            'uom': products.product_uom.id,
+        }
+        return {'value': result}
+
     _inherit = 'mrp.production.workcenter.line'
     _order = "sequence, date_planned"
 
