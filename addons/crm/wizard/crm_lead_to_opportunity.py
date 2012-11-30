@@ -154,8 +154,8 @@ class crm_lead2opportunity_mass_convert(osv.osv_memory):
     _inherit = 'crm.lead2opportunity.partner'
 
     _columns = {
-            'user_ids':  fields.many2many('res.users', string='Salesmen'),
-            'section_id': fields.many2one('crm.case.section', 'Sales Team'),
+        'user_ids':  fields.many2many('res.users', string='Salesmen'),
+        'section_id': fields.many2one('crm.case.section', 'Sales Team'),
     }
 
     def default_get(self, cr, uid, fields, context=None):
