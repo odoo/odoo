@@ -174,6 +174,7 @@ openerp.web_im = function(instance) {
             conv.on("destroyed", this, function() {
                 this.conversations = _.without(this.conversations, conv);
                 delete this.users[conv.user_rec.id];
+                this.calc_positions();
             });
             this.conversations.push(conv);
             this.users[user_rec.id] = conv;
