@@ -21,34 +21,29 @@
 ##############################################################################
 
 import glob, os, re, setuptools, sys
-from os.path import join, isfile
+from os.path import join
 
 # List all data files
 def data():
-    files = []
+    r = {}
     for root, dirnames, filenames in os.walk('openerp'):
         for filename in filenames:
-            if not re.match(r'.*(\.pyc|\.pyo|\~)$',filename):
-                files.append(os.path.join(root, filename))
-    d = {}
-    for v in files:
-        k=os.path.dirname(v)
-        if k in d:
-            d[k].append(v)
-        else:
-            d[k]=[v]
-    r = d.items()
+            if not re.match(r'.*(\.pyc|\.pyo|\~)$', filename):
+                r.setdefault(root, []).append(os.path.join(root, filename))
+
     if os.name == 'nt':
-        r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
+        r["Microsoft.VC90.CRT"] = glob.glob('C:\Microsoft.VC90.CRT\*.*')
 
         import babel
-        r.append(("localedata",
-                  glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))))
+        r["localedata"] = glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))
 
         import pytz
-        r.append((os.path.join("pytz", "zoneinfo"),
-                  glob.glob(os.path.join(os.path.dirname(pytz.__file__), "zoneinfo", '*'))))
-    return r
+        tzdir = os.path.dirname(pytz.__file__)
+        for root, _, filenames in os.walk(os.path.join(tzdir, "zoneinfo")):
+            base = root[len(tzdir) + 1:]
+            r[base] = [os.path.join(root, f) for f in filenames]
+
+    return r.items()
 
 def gen_manifest():
     file_list="\n".join(data())
