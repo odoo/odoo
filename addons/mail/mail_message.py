@@ -631,8 +631,8 @@ class mail_message(osv.Model):
             model_obj = self.pool.get(model)
             mids = model_obj.exists(cr, uid, mids)
             if operation in ['create', 'write', 'unlink']:
-                model_obj.check_access_rights(cr, uid, 'write')
-                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+                model_obj.check_access_rights(cr, uid, 'read')
+                model_obj.check_access_rule(cr, uid, mids, 'read', context=context)
             else:
                 model_obj.check_access_rights(cr, uid, operation)
                 model_obj.check_access_rule(cr, uid, mids, operation, context=context)

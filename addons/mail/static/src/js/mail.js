@@ -569,7 +569,6 @@ openerp.mail = function (session) {
             var body = comment_node.val();
 
             if (this.do_check_attachment_upload() && (this.attachment_ids.length || body.match(/\S+/))) {
-                comment_node.val('');
                 //session.web.blockUI();
                 this.parent_thread.ds_thread.call('message_post_user_api', [
                         this.context.default_res_id, 
@@ -589,8 +588,8 @@ openerp.mail = function (session) {
                             var message = thread.create_message_object( data[0] );
                             // insert the message on dom
                             thread.insert_message( message, root ? undefined : self.$el, root );
-                            self.on_cancel();
                         });
+                        self.on_cancel();
                         //session.web.unblockUI();
                     });
                 return true;
