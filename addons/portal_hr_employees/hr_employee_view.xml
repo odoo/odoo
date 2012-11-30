@@ -40,8 +40,7 @@
             <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_employee_details']" position="inside">
-                    <!-- <li t-if="record.public_info.raw_value"><field name="public_info"/></li> -->
-                    <span>Hello</span>
+                    <t t-if="record.public_info.raw_value"><field name="public_info"/></t>
                 </xpath>
             </field>
         </record>
