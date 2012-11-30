@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2011-01-18 16:46+0000\n"
-"Last-Translator: lholivier <olivier.lenoir@free.fr>\n"
+"PO-Revision-Date: 2012-11-29 14:10+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
@@ -56,7 +56,7 @@ msgstr "Emplacement source"
 #. module: stock_location
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
-msgstr "Autorise l'annulation d'un mouvement lié au produit en flux tiré"
+msgstr "Autorise l'annulation d'un mouvement lié à l'article en flux tiré"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
@@ -73,7 +73,7 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "Vous devez attribuer un numéro de série pour cet article."
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -112,13 +112,13 @@ msgid ""
 "move has to be validated by a worker. With 'Automatic No Step Added', the "
 "location is replaced in the original move."
 msgstr ""
-"C'est utilisé pour définir des chemins que le produit devra suivre dans "
-"l'arbre des emplacements.\n"
-"La valeur 'Mouvement Automatique' créera un mouvement de stock après le "
+"C'est utilisé pour définir des chemins que l'article devra suivre dans "
+"l'arborescence des emplacements.\n"
+"La valeur \"Mouvement Automatique\" créera un mouvement de stock après le "
 "mouvement courant qui sera automatiquement validé.\n"
-"Avec 'Opération Manuelle', le mouvement de stock doit être validé par le "
-"travailleur.\n"
-"Avec 'Automatique aucune étape ajoutée', l'emplacement est remplacé dans le "
+"Avec \"Opération Manuelle\", le mouvement de stock doit être validé par "
+"l'opérateur.\n"
+"Avec \"Automatique sans étape ajoutée\", l'emplacement est remplacé dans le "
 "mouvement original."
 
 #. module: stock_location
@@ -235,8 +235,8 @@ msgstr "Nom"
 msgid ""
 "These rules set the right path of the product in the whole location tree."
 msgstr ""
-"Ces règles placent le chemin correct du produit dans l'arbre complet des "
-"emplacements."
+"Ces règles définissent le chemin correct de l'article dans toute "
+"l'arborescence des emplacements."
 
 #. module: stock_location
 #: constraint:stock.move:0
@@ -252,7 +252,7 @@ msgstr "Opération manuelle"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
@@ -267,8 +267,8 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Production sur stock' : quand il y a une demande, on prend du stock ou on "
-"attend jusqu'au prochain réapprovisionnement. 'Production à la demande' : "
+"\"Production sur stock\" : quand il y a une demande, on prend du stock ou on "
+"attend jusqu'au prochain réapprovisionnement. \"Production à la demande\" : "
 "quand il y a une demande, on achète ou on fabrique selon cette demande."
 
 #. module: stock_location
@@ -280,12 +280,12 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
-msgstr ""
+msgstr "Vous tentez d'assigner un lot qui n'appartient pas au même article."
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
 msgid "Products"
-msgstr "Produits"
+msgstr "Articles"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
@@ -384,7 +384,7 @@ msgid ""
 "products"
 msgstr ""
 "En fonction de la société, choisissez si vous voulez envoyer ou recevoir les "
-"produits"
+"articles"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order

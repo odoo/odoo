@@ -1,9 +1,10 @@
 openerp.account = function (instance) {
+    openerp.account.quickadd(instance);
     var _t = instance.web._t,
         _lt = instance.web._lt;
     var QWeb = instance.web.qweb;
     
-    instance.web.account = {};
+    instance.web.account = instance.web.account || {};
     
     instance.web.views.add('tree_account_reconciliation', 'instance.web.account.ReconciliationListView');
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({

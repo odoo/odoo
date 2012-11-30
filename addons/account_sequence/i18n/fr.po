@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0.0-rc1\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2011-02-15 15:36+0000\n"
-"Last-Translator: <>\n"
+"PO-Revision-Date: 2012-11-29 17:04+0000\n"
+"Last-Translator: Christophe Chauvet - http://www.syleam.fr/ <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:08+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "Vous ne pouvez pas créer d'entrée de journal dans un compte fermé."
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -116,6 +116,7 @@ msgstr "Nom"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view."
 msgstr ""
+"Vous ne pouvez pas créer d'entrée de journal dans un compte de type vue."
 
 #. module: account_sequence
 #: constraint:account.journal:0
@@ -123,6 +124,8 @@ msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
 msgstr ""
+"Erreur de configuration!\n"
+"Le devise choisie doit être aussi partagée par le compte par défaut."
 
 #. module: account_sequence
 #: sql_constraint:account.move.line:0
@@ -134,6 +137,8 @@ msgstr "Valeur erronée au crédit ou au débit dans l'écriture comptable !"
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
 msgstr ""
+"Vous ne pouvez pas créer plus d'un mouvement par période dans un journal "
+"centralisé."
 
 #. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
@@ -143,7 +148,7 @@ msgstr "Séquence interne"
 #. module: account_sequence
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "Le compte et la période doivent appartenir à la même société."
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0

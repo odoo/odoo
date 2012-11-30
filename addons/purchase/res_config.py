@@ -43,9 +43,6 @@ Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
         'group_costing_method':fields.boolean("Compute product cost price based on average cost",
             implied_group='product.group_costing_method',
             help="""Allows you to compute product cost price based on average cost."""),
-        'group_purchase_delivery_address': fields.boolean("Allow a different address for incoming products and invoicing",
-            implied_group='purchase.group_delivery_invoice_address',
-            help="Allows you to specify different delivery and invoice addresses on a purchase order."),
         'module_warning': fields.boolean("Alerts by products or supplier",
             help="""Allow to configure notification on products and trigger them when a user wants to purchase a given product or a given supplier.
 Example: Product: this product is deprecated, do not purchase more than 5.
