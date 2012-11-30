@@ -347,9 +347,9 @@ class account_bank_statement(osv.osv):
     _columns = {
         'coda_statement_id': fields.many2one('coda.bank.statement', 'Associated CODA Bank Statement'),
     }
-    _sql_constraints = [
-        ('name_company_uniq', 'unique (name,company_id)', 'The name of the Bank Statement must be unique per company !')
-    ]
+    # _sql_constraints = [
+    #     ('name_company_uniq', 'unique (name,company_id)', 'The name of the Bank Statement must be unique per company !')
+    # ]
     
     def unlink(self, cr, uid, ids, context=None):
         if context is None:
