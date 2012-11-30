@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 10:58+0000\n"
-"Last-Translator: Eric Vernichon <evernichon@fiefmanage.ch>\n"
+"PO-Revision-Date: 2012-11-29 15:44+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:54+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: account
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
@@ -2428,7 +2428,7 @@ msgstr "Impression de journal comptable"
 #. module: account
 #: model:ir.model,name:account.model_product_category
 msgid "Product Category"
-msgstr "Catégorie de produits"
+msgstr "Catégorie d'articles"
 
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
@@ -2719,12 +2719,12 @@ msgstr "Changer en"
 #. module: account
 #: view:account.entries.report:0
 msgid "# of Products Qty "
-msgstr "Qté de produits "
+msgstr "Nb de qté. d'articles "
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
 msgid "Product Template"
-msgstr "Modèle de produit"
+msgstr "Modèle d'article"
 
 #. module: account
 #: report:account.account.balance:0
@@ -3399,8 +3399,8 @@ msgid ""
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
 "La quantité facultative correspondant à cette ligne, par exemple le nombre "
-"de produits vendus. La quantité n'est pas obligatoire en droit, mais elle "
-"est très utile dans certains rapports."
+"d'articles vendus. La quantité n'est pas obligatoire en droit, mais elle est "
+"très utile dans certains rapports."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -4096,7 +4096,7 @@ msgstr "Continuer"
 #: view:account.invoice.report:0
 #: field:account.invoice.report,categ_id:0
 msgid "Category of Product"
-msgstr "Catégorie de produit"
+msgstr "Catégorie d'article"
 
 #. module: account
 #: code:addons/account/account.py:987
@@ -4142,6 +4142,7 @@ msgstr "Détail"
 #: help:account.config.settings,default_purchase_tax:0
 msgid "This purchase tax will be assigned by default on new products."
 msgstr ""
+"Cette taxe d'achat sera attribuée par défaut à tous les nouveaux articles."
 
 #. module: account
 #: report:account.invoice:0
@@ -4769,9 +4770,9 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
-"Les coûts analytiques (feuilles de temps, dépenses, achats, ...) proviennent "
-"des comptes analytiques. Cela permet d'éditer des factures fournisseurs en "
-"état \"brouillon\"."
+"Les coûts analytiques (feuilles de temps, achats de certains articles, ...) "
+"proviennent des comptes analytiques. Cela permet d'éditer des factures "
+"fournisseurs en état \"brouillon\"."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4828,7 +4829,7 @@ msgstr ""
 #: view:analytic.entries.report:0
 #: field:analytic.entries.report,product_uom_id:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Unité de mesure d'article"
 
 #. module: account
 #: field:res.company,paypal_account:0
@@ -5600,7 +5601,7 @@ msgid ""
 "Check this if the price you use on the product and invoices includes this "
 "tax."
 msgstr ""
-"Cochez cette case si le prix que vous utilisez pour le produit et les "
+"Cochez cette case si le prix que vous utilisez pour l'article et les "
 "factures inclut cette taxe."
 
 #. module: account
@@ -6121,7 +6122,7 @@ msgstr "Lignes d'abonnement"
 #. module: account
 #: field:account.entries.report,quantity:0
 msgid "Products Quantity"
-msgstr "Quantité de produits"
+msgstr "Quantité d'articles"
 
 #. module: account
 #: view:account.entries.report:0
@@ -9686,7 +9687,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Product Information"
-msgstr "Information du produit"
+msgstr "Information de l'article"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9743,7 +9744,7 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft invoices."
 msgstr ""
-"Les coûts analytiques (feuilles de temps, quelques produits achetés, ...) "
+"Les coûts analytiques (feuilles de temps, certains articles achetés, ...) "
 "viennent des comptes analytiques. Ils génèrent des brouillons de facture."
 
 #. module: account
@@ -10626,7 +10627,7 @@ msgstr "Factures fournisseur"
 #: field:report.account.sales,product_id:0
 #: field:report.account_type.sales,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move
@@ -11237,7 +11238,7 @@ msgstr "novembre"
 #. module: account
 #: help:account.invoice.line,account_id:0
 msgid "The income or expense account related to the selected product."
-msgstr "Le compte de revenu ou de dépense associé au produit sélectionné."
+msgstr "Le compte de revenu ou de dépense associé à l'article sélectionné."
 
 #. module: account
 #: view:account.config.settings:0
@@ -11478,7 +11479,7 @@ msgstr "Plan comptable analytiques"
 #. module: account
 #: field:account.chart.template,property_account_expense:0
 msgid "Expense Account on Product Template"
-msgstr "Compte de Dépense sur les Modèles de Produits"
+msgstr "Compte de dépense sur les modèles d'article"
 
 #. module: account
 #: help:accounting.report,label_filter:0

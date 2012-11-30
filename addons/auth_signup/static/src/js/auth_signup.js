@@ -7,12 +7,15 @@ openerp.auth_signup = function(instance) {
             var self = this;
             var d = this._super();
 
+            self.$(".oe_signup_show").hide();
             // to switch between the signup and regular login form
             this.$('a.oe_signup_signup').click(function(ev) {
                 if (ev) {
                     ev.preventDefault();
                 }
                 self.$el.addClass("oe_login_signup");
+                self.$(".oe_signup_show").show();
+                self.$(".oe_signup_hide").hide();
                 return false;
             });
             this.$('a.oe_signup_back').click(function(ev) {
@@ -20,6 +23,8 @@ openerp.auth_signup = function(instance) {
                     ev.preventDefault();
                 }
                 self.$el.removeClass("oe_login_signup");
+                self.$(".oe_signup_show").hide();
+                self.$(".oe_signup_hide").show();
                 delete self.params.token;
                 return false;
             });
@@ -47,6 +52,8 @@ openerp.auth_signup = function(instance) {
             if (result.token) {
                 // switch to signup mode, set user name and login
                 this.$el.addClass("oe_login_signup");
+                self.$(".oe_signup_show").show();
+                self.$(".oe_signup_hide").hide();
                 this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
                 if (result.login) {
                     this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
