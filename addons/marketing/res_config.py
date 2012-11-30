@@ -27,14 +27,14 @@ class marketing_config_settings(osv.osv_memory):
     _columns = {
         'module_marketing_campaign': fields.boolean('Marketing campaigns',
             help="""Provides leads automation through marketing campaigns.
-            Campaigns can in fact be defined on any resource, not just CRM leads.
-            This installs the module marketing_campaign."""),
+Campaigns can in fact be defined on any resource, not just CRM leads.
+This installs the module marketing_campaign."""),
         'module_marketing_campaign_crm_demo': fields.boolean('Demo data for marketing campaigns',
             help="""Installs demo data like leads, campaigns and segments for Marketing Campaigns.
-            This installs the module marketing_campaign_crm_demo."""),
+This installs the module marketing_campaign_crm_demo."""),
         'module_crm_profiling': fields.boolean('Track customer profile to focus your campaigns',
             help="""Allows users to perform segmentation within partners.
-            This installs the module crm_profiling."""),
+This installs the module crm_profiling."""),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
