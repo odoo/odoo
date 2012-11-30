@@ -763,7 +763,7 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
-        message = self.read(cr, uid, newid, ['model', 'res_id', 'author_id', 'subtype_id', 'partner_ids'], context=context)
+        message = self.read(cr, uid, newid, ['model', 'res_id', 'author_id', 'subtype_id', 'partner_ids', 'parent_id'], context=context)
 
         partners_to_notify = set([])
         # message has no subtype_id: pure log message -> no partners, no one notified
@@ -791,7 +791,18 @@ class mail_message(osv.Model):
         if partners_to_notify:
             self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
 
-        self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
+        notification_obj = self.pool.get('mail.notification')
+        notification_obj._notify(cr, uid, newid, context=context)
+
+        if message.get('parent_id') and message.get('parent_id')[0]:
+            partners_to_parent_notify = set(partners_to_notify) - set(self.read(cr, SUPERUSER_ID, message.get('parent_id')[0], ['notified_partner_ids'], context=context).get('notified_partner_ids'))
+            for partner_id in partners_to_parent_notify:
+                notification_obj.create(cr, uid, {
+                        'message_id': message.get('parent_id')[0],
+                        'partner_id': partner_id,
+                        'read': True,
+                    }, context=context)
+
 
     #------------------------------------------------------
     # Tools
