@@ -85,7 +85,7 @@ openerp.web_im = function(instance) {
         search_changed: function(e) {
             var users = new instance.web.Model("res.users");
             var self = this;
-            return this.user_search_dm.add(users.query(["name", "image"])
+            return this.user_search_dm.add(users.query(["name"])
                     .filter([["name", "ilike", this.get("current_search")]])
                     .limit(USERS_LIMIT).all()).then(function(result) {
                 self.add_to_user_cache(result);
@@ -113,7 +113,7 @@ openerp.web_im = function(instance) {
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name", "image"]],
+                return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name"]],
                         {context: new instance.web.CompoundContext()}).then(function(users) {
                     self.add_to_user_cache(users);
                 });
@@ -201,6 +201,7 @@ openerp.web_im = function(instance) {
     instance.web_im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
         init: function(parent, user_rec) {
             instance.web.PropertiesMixin.init.call(this, parent);
+            user_rec.image_url = instance.session.url('/web/binary/image', {model:'res.users', field: 'image_small', id: user_rec.id});
             this.set(user_rec);
             this.set("watcher_count", 0);
             this.on("change:watcher_count", this, function() {
@@ -277,7 +278,7 @@ openerp.web_im = function(instance) {
             this.$el.css("right", this.get("right_position"));
         },
         received_message: function(message) {
-            this._add_bubble("Him", [message.message], message.date);
+            this._add_bubble(this.user, [message.message], message.date);
         },
         send_message: function(e) {
             if(e && e.which !== 13) {
@@ -285,14 +286,14 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this._add_bubble("Me", [mes], instance.web.datetime_to_str(new Date()));
+            this._add_bubble(this.user, [mes], instance.web.datetime_to_str(new Date()));
             var model = new instance.web.Model("im.message");
             model.call("post", [mes, this.user.get('id')], {context: new instance.web.CompoundContext()});
         },
-        _add_bubble: function(name, items, date) {
+        _add_bubble: function(user, items, date) {
             date = instance.web.str_to_datetime(date);
             date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
-            var bubble = QWeb.render("Conversation.bubble", {"items": items, "name": name, "time": date});
+            var bubble = QWeb.render("Conversation.bubble", {"items": items, "user": user, "time": date});
             $(this.$(".oe_im_chatview_content").children()[0]).append($(bubble));
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },

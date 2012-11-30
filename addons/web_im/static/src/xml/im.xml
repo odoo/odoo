@@ -21,7 +21,7 @@
     <t t-name="UserWidget">
         <div class="oe_im_user">
             <span class="oe_im_user_clip">
-                <img t-att-src='_s + "/web_im/static/src/img/avatar/avatar.jpeg"' class="oe_im_user_avatar"/>
+                <img t-att-src='widget.user.get("image_url")' class="oe_im_user_avatar"/>
             </span>
             <span class="oe_im_user_name"><t t-esc="widget.user.get('name')"/></span>
         </div>
@@ -46,9 +46,9 @@
     <t t-name="Conversation.bubble">
         <div class="oe_im_chatview_bubble">
             <div class="oe_im_chatview_clip">
-                <img class="oe_im_chatview_avatar" t-att-src='_s + "/web_im/static/src/img/avatar/avatar.jpeg"'/>
+                <img class="oe_im_chatview_avatar" t-att-src='user.get("image_url")'/>
             </div>
-            <div class="oe_im_chatview_from"><t t-esc="name"/></div>
+            <div class="oe_im_chatview_from"><t t-esc="user.get('name')"/></div>
             <div class="oe_im_chatview_bubble_list">
                 <t t-foreach="items" t-as="item">
                     <div class="oe_im_chatview_bubble_item"><t t-esc="item"/></div>
