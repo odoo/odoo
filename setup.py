@@ -41,10 +41,13 @@ def data():
     if os.name == 'nt':
         r.append(("Microsoft.VC90.CRT", glob.glob('C:\Microsoft.VC90.CRT\*.*')))
 
-    import babel
-    r.append(("localedata",
-              glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata" , '*'))))
+        import babel
+        r.append(("localedata",
+                  glob.glob(os.path.join(os.path.dirname(babel.__file__), "localedata", '*'))))
 
+        import pytz
+        r.append((os.path.join("pytz", "zoneinfo"),
+                  glob.glob(os.path.join(os.path.dirname(pytz.__file__), "zoneinfo", '*'))))
     return r
 
 def gen_manifest():
@@ -64,7 +67,7 @@ def py2exe_options():
                     "skip_archive": 1,
                     "optimize": 2,
                     "dist_dir": 'dist',
-                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
+                    "packages": [ "DAV", "HTMLParser", "PIL", "asynchat", "asyncore", "commands", "dateutil", "decimal", "docutils", "email", "encodings", "imaplib", "lxml", "lxml._elementpath", "lxml.builder", "lxml.etree", "lxml.objectify", "mako", "openerp", "poplib", "pychart", "pydot", "pyparsing", "pytz", "reportlab", "select", "simplejson", "smtplib", "uuid", "vatnumber", "vobject", "xml", "xml.dom", "yaml", ],
                     "excludes" : ["Tkconstants","Tkinter","tcl"],
                 }
             }
