@@ -600,7 +600,7 @@ class account_voucher(osv.osv):
             account_type = 'receivable'
 
         if not context.get('move_line_ids', False):
-            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id)], context=context)
+            ids = move_line_pool.search(cr, uid, [('state','=','valid'), ('account_id.type', '=', account_type), ('reconcile_id', '=', False), ('partner_id', '=', partner_id), ('journal_id.type', 'not in', ('bank', 'cash'))], context=context)
         else:
             ids = context['move_line_ids']
         invoice_id = context.get('invoice_id', False)
@@ -612,10 +612,6 @@ class account_voucher(osv.osv):
         account_move_lines = move_line_pool.browse(cr, uid, ids, context=context)
 
         for line in account_move_lines:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             if invoice_id:
                 if line.invoice.id == invoice_id:
                     #if the invoice linked to the voucher line is equal to the invoice_id in context
@@ -641,10 +637,6 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
-            if line.credit and line.reconcile_partial_id and ttype == 'receipt':
-                continue
-            if line.debit and line.reconcile_partial_id and ttype == 'payment':
-                continue
             if line.currency_id and currency_id==line.currency_id.id:
                 amount_original = abs(line.amount_currency)
                 amount_unreconciled = abs(line.amount_residual_currency)
