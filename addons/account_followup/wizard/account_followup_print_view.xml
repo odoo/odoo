@@ -4,25 +4,30 @@
 
         <record id="view_account_followup_print" model="ir.ui.view">
             <field name="name">account.followup.print.form</field>
-            <field name="model">account.followup.print</field>
+            <field name="model">account_followup.print</field>
             <field name="arch" type="xml">
             <form string="Send follow-ups" version="7.0">
                 <group col="4">
-                    <field name="followup_id"/>
-                    <field name="date"/>
+                    <field name="followup_id" groups="base.group_multi_company"/>
+                    <field name="date" groups="base.group_no_one"/>
                 </group>
-                <footer>
-                    <button name="do_continue" string="Continue" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
-                </footer>
+                	<p class ="oe_grey">
+                        When you hit the button below, for every partner the most overdue invoice (without litigation) is checked.
+                        If the amount of days overdue is greater or equal than the amount of days specified by a next follow-up level, 
+                        it will be updated to that next level and the actions of that level will be executed.  (See Configuration > Follow-up Levels)
+                    </p>
+                    <footer>
+                        <button name="do_process" string="Send emails and generate letters" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
             </form>
-            </field>
+           </field>
         </record>
 
         <record id="action_account_followup_print" model="ir.actions.act_window">
             <field name="name">Send Follow-Ups</field>
-            <field name="res_model">account.followup.print</field>
+            <field name="res_model">account_followup.print</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
@@ -30,8 +35,10 @@
 
         <menuitem action="action_account_followup_print"
                   id="account_followup_print_menu"
-                  parent="account.menu_finance_periodical_processing_billing"
-                  sequence="10"/>
+                  parent="menu_finance_followup"
+                  name = "Send Letters and Emails"
+                  groups = "account.group_account_user"
+                  sequence="2"/>
 
         <record id="account_followup_stat_by_partner_search" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.search</field>
@@ -47,7 +54,6 @@
             </field>
         </record>
 
-       <!-- Screen2 -->
            <record id="account_followup_stat_by_partner_tree" model="ir.ui.view">
             <field name="name">account_followup.stat.by.partner.tree</field>
             <field name="model">account_followup.stat.by.partner</field>
@@ -63,63 +69,25 @@
             </field>
            </record>
 
-           <record id="view_account_followup_print_all" model="ir.ui.view">
-            <field name="name">account.followup.print.all.form</field>
-            <field name="model">account.followup.print.all</field>
+           <record id="view_account_followup_sending_results" model="ir.ui.view">
+            <field name="name">account_followup.sending.results.form</field>
+            <field name="model">account_followup.sending.results</field>
             <field name="arch" type="xml">
-            <form string="Send Follow-Ups" version="7.0">
+            <form string="Summary of actions" version="7.0">
                 <header>
-                    <button name="do_mail" string="Send Mails" type="object" class="oe_highlight"/>
-                    <button name="do_print" string="Print Follow Ups" type="object" class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel"/>
+                    <field name="description" widget="html" class="oe_view_only"/>
                 </header>
-                <notebook>
-                    <page string="Partner Selection">
-                        <field name="partner_ids" context="{'search_default_balance_positive': 1}" domain="[('company_id','=',context.get('company_id',False))]"/>
-                    </page>
-                    <page string="Email Settings">
-                        <group col="4">
-                            <field name="email_conf" colspan="4"/>
-                            <field name="partner_lang" colspan="4"/>
-                            <field name="test_print" colspan="4"/>
-                            <field name="email_subject" colspan="4"/>
-                            <field name="email_body" colspan="4" nolabel="1"/>
-                        </group>
-                        <group string="Legend">
-                            <label string="%%(partner_name)s: Partner name"/>
-                            <label string="%%(user_signature)s: User name"/>
-                            <label string="%%(followup_amount)s: Total Amount Due"/>
-                            <label string="%%(date)s: Current Date"/>
-                            <label string="%%(company_name)s: User's Company name"/>
-                            <label string="%%(company_currency)s: User's Company Currency"/>
-                            <label string="%%(heading)s: Move line header"/>
-                            <label string="%%(line)s: Ledger Posting lines"/>
-                        </group>
-                    </page>
-                </notebook>
+                <footer>
+                    <field name="needprinting" invisible="1"/>
+                    <div attrs="{'invisible':[('needprinting','=', False)]}">
+                        <button name="do_report" string="Download Letters" type="object" class="oe_highlight"/>
+                    </div>
+                    <div attrs="{'invisible':[('needprinting','!=', False)]}">
+                        <button name="do_done" string="Close" type="object" class="oe_highlight"/>
+                    </div>
+                </footer>
             </form>
             </field>
-        </record>
-
-           <record id="view_account_followup_print_all_msg" model="ir.ui.view">
-            <field name="name">account.followup.print.all.msg.form</field>
-            <field name="model">account.followup.print.all</field>
-            <field name="arch" type="xml">
-            <form string="Summary" version="7.0">
-                <separator string="Summary"/>
-                <field name="summary"/>
-            </form>
-            </field>
-        </record>
-
-        <record id="action_account_followup_print_all" model="ir.actions.act_window">
-            <field name="name">Send Follow-Ups</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">account.followup.print.all</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
         </record>
     </data>
 </openerp>
