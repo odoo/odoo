@@ -166,7 +166,7 @@
             <field name="name">ir.module.module.tree</field>
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" string="Modules">
+                <tree colors="blue:state=='to upgrade' or state=='to install';red:state=='uninstalled';grey:state=='uninstallable';black:state=='installed'" create="false" string="Modules">
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>
