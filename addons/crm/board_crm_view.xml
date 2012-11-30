@@ -43,7 +43,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree,form</field>
             <field name="view_id" ref="view_crm_opportunity_user_stage_graph"/>
-            <field name="domain">[('state','!=','cancel'),('opening_date','&gt;',datetime.date.today().strftime("%Y-%m-%d"))]</field>
+            <field name="domain">[('state','!=','cancel'),('opening_date','&gt;',context_today().strftime("%Y-%m-%d"))]</field>
             <field name="context">{'search_default_Stage':1}</field>
         </record>
 
