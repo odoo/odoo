@@ -118,9 +118,16 @@ class im_message(osv.osv):
     }
     
     def get_messages(self, cr, uid, last=None, context=None):
-        if not last:
-            tmp = self.search(cr, uid, [['to', '=', uid]], order="id desc", limit=1, context=context)
-            last = tmp[0] if len(tmp) >= 1 else -1
+        # complex stuff to determine the last message to show
+        users = self.pool.get("res.users")
+        c_user = users.browse(cr, uid, uid, context=context)
+        if last:
+            print "here: ", c_user.im_last_received
+            if c_user.im_last_received < last:
+                users.write(cr, openerp.SUPERUSER_ID, uid, {'im_last_received': last}, context=context)
+        else:
+            last = c_user.im_last_received or -1
+
         res = self.search(cr, uid, [['id', '>', last], ['to', '=', uid]], order="id", context=context)
         res = self.read(cr, uid, res, ["id", "message", "from", "date"], context=context)
         if len(res) > 0:
@@ -136,3 +143,10 @@ class im_message(osv.osv):
 
     def activated(self, cr, uid, context=None):
         return not not openerp.tools.config.options["gevent"]
+
+class res_user(osv.osv):
+    _inherit = "res.users"
+
+    _columns = {
+        'im_last_received': fields.integer(string="Last Received Message"),
+    }
