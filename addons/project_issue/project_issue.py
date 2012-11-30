@@ -225,7 +225,7 @@ class project_issue(base_stage, osv.osv):
                              Define Responsible user and Email account for mail gateway.'),
         'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
-        'description': fields.text('Description'),
+        'description': fields.text('Private Note'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_ISSUE_STATE, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
