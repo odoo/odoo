@@ -1,0 +1,101 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-29 01:53+0000\n"
+"Last-Translator: mrshelly <Unknown>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-11-30 05:08+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_product_product
+msgid "Product"
+msgstr "产品"
+
+#. module: event_sale
+#: help:product.product,event_ok:0
+msgid ""
+"Determine if a product needs to create automatically an event registration "
+"at the confirmation of a sale order line."
+msgstr "销售订单确认时自动创建产品的相关活动."
+
+#. module: event_sale
+#: help:sale.order.line,event_id:0
+msgid ""
+"Choose an event and it will automatically create a registration for this "
+"event."
+msgstr "选择活动"
+
+#. module: event_sale
+#: sql_constraint:product.product:0
+msgid "Error ! Ending Date cannot be set before Beginning Date."
+msgstr "错误!结束日期不能早于开始日期。"
+
+#. module: event_sale
+#: model:event.event,name:event_sale.event_technical_training
+msgid "Technical training in Grand-Rosiere"
+msgstr ""
+
+#. module: event_sale
+#: help:product.product,event_type_id:0
+msgid ""
+"Filter the list of event on this category only, in the sale order lines"
+msgstr "仅在此类中过滤."
+
+#. module: event_sale
+#: constraint:product.product:0
+msgid ""
+"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
+"\"Internal Reference\" field instead."
+msgstr "你提供了一个错误的  \"EAN13 条码\" 编号。你可能要用 “编号”字段替代。"
+
+#. module: event_sale
+#: code:addons/event_sale/event_sale.py:88
+#, python-format
+msgid "The registration %s has been created from the Sale Order %s."
+msgstr ""
+
+#. module: event_sale
+#: field:sale.order.line,event_ok:0
+msgid "event_ok"
+msgstr ""
+
+#. module: event_sale
+#: field:product.product,event_ok:0
+msgid "Event Subscription"
+msgstr "订阅活动"
+
+#. module: event_sale
+#: field:product.product,event_type_id:0
+msgid "Type of Event"
+msgstr "活动类型"
+
+#. module: event_sale
+#: field:sale.order.line,event_type_id:0
+msgid "Event Type"
+msgstr "活动类型"
+
+#. module: event_sale
+#: model:product.template,name:event_sale.event_product_product_template
+msgid "Technical Training"
+msgstr ""
+
+#. module: event_sale
+#: field:sale.order.line,event_id:0
+msgid "Event"
+msgstr "活动"
+
+#. module: event_sale
+#: model:ir.model,name:event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "销售订单明细"

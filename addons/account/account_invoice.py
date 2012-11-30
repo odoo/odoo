@@ -1073,8 +1073,9 @@ class account_invoice(osv.osv):
                 self.message_post(cr, uid, [inv_id], body=message, context=context)
         return True
 
-    def action_cancel(self, cr, uid, ids, *args):
-        context = {} # TODO: Use context from arguments
+    def action_cancel(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         account_move_obj = self.pool.get('account.move')
         invoices = self.read(cr, uid, ids, ['move_id', 'payment_ids'])
         move_ids = [] # ones that we will need to remove
@@ -1244,12 +1245,15 @@ class account_invoice(osv.osv):
             ref = invoice.reference
         else:
             ref = self._convert_ref(cr, uid, invoice.number)
+        partner = invoice.partner_id
+        if partner.parent_id and not partner.is_company:
+            partner = partner.parent_id
         # Pay attention to the sign for both debit/credit AND amount_currency
         l1 = {
             'debit': direction * pay_amount>0 and direction * pay_amount,
             'credit': direction * pay_amount<0 and - direction * pay_amount,
             'account_id': src_account_id,
-            'partner_id': invoice.partner_id.id,
+            'partner_id': partner.id,
             'ref':ref,
             'date': date,
             'currency_id':currency_id,
@@ -1260,7 +1264,7 @@ class account_invoice(osv.osv):
             'debit': direction * pay_amount<0 and - direction * pay_amount,
             'credit': direction * pay_amount>0 and direction * pay_amount,
             'account_id': pay_account_id,
-            'partner_id': invoice.partner_id.id,
+            'partner_id': partner.id,
             'ref':ref,
             'date': date,
             'currency_id':currency_id,
@@ -1377,8 +1381,8 @@ class account_invoice_line(osv.osv):
         'origin': fields.char('Source Document', size=256, help="Reference of the document that produced this invoice."),
         'sequence': fields.integer('Sequence', help="Gives the sequence of this line when displaying the invoice."),
         'invoice_id': fields.many2one('account.invoice', 'Invoice Reference', ondelete='cascade', select=True),
-        'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null'),
-        'product_id': fields.many2one('product.product', 'Product', ondelete='set null'),
+        'uos_id': fields.many2one('product.uom', 'Unit of Measure', ondelete='set null', select=True),
+        'product_id': fields.many2one('product.product', 'Product', ondelete='set null', select=True),
         'account_id': fields.many2one('account.account', 'Account', required=True, domain=[('type','<>','view'), ('type', '<>', 'closed')], help="The income or expense account related to the selected product."),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
         'price_subtotal': fields.function(_amount_line, string='Subtotal', type="float",

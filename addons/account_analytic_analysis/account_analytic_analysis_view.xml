@@ -147,6 +147,18 @@
             </field>
         </record>
 
+        <record id="view_account_analytic_account_template_required" model="ir.ui.view">
+            <field name="name">account.analytic.account.form.template.required</field>
+            <field name="model">account.analytic.account</field>
+            <field name="groups_id" eval="[(6, 0, [ref('group_template_required')])]"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
+            <field name="arch" type="xml">
+                <field name="template_id" position="attributes">
+                    <attribute name="attrs">{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}</attribute>
+                </field>
+            </field>
+        </record>
+
         <record id="template_of_contract_action" model="ir.actions.act_window">
             <field name="name">Template of Contract</field>
             <field name="type">ir.actions.act_window</field>
