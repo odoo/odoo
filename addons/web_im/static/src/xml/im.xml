@@ -18,22 +18,22 @@
             <span class="oe_e">+</span>
         </div>
     </t>
-    <t t-name="ImUser">
+    <t t-name="UserWidget">
         <div class="oe_im_user">
             <span class="oe_im_user_clip">
                 <img t-att-src='_s + "/web_im/static/src/img/avatar/avatar.jpeg"' class="oe_im_user_avatar"/>
             </span>
-            <span class="oe_im_user_name"><t t-esc="widget.user_rec.name"/></span>
+            <span class="oe_im_user_name"><t t-esc="widget.user.get('name')"/></span>
         </div>
     </t>
     <t t-name="Conversation">
         <div class="oe_im_chatview">
             <div class="oe_im_chatview_header">
-                <t t-esc="widget.user_rec.name"/>
+                <t t-esc="widget.user.get('name')"/>
                 <button class="oe_im_chatview_close">×</button>
             </div>
             <div class="oe_im_chatview_disconnected">
-                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user_rec.name)'/>
+                <t t-esc='_.str.sprintf(_t("%s is offline. He/She will receive your messages on his/her next connection."), widget.user.get("name"))'/>
             </div>
             <div class="oe_im_chatview_content">
                 <div></div>

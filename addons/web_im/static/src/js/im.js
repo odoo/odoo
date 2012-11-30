@@ -88,19 +88,18 @@ openerp.web_im = function(instance) {
             return this.user_search_dm.add(users.query(["name", "image"])
                     .filter([["name", "ilike", this.get("current_search")]])
                     .limit(USERS_LIMIT).all()).then(function(result) {
-                _.each(result, function(user) {
-                    self.users_cache[user.id] = user;
-                });
+                self.add_to_user_cache(result);
                 self.$(".oe_im_input").val("");
-                _.each(self.users, function(user) {
-                    user.destroy();
-                });
+                var old_users = self.users;
                 self.users = [];
                 _.each(result, function(user) {
-                    var widget = new instance.web_im.ImUser(self, user);
+                    var widget = new instance.web_im.UserWidget(self, self.get_user(user.id));
                     widget.appendTo(self.$(".oe_im_users"));
                     widget.on("activate_user", self, self.activate_user);
                     self.users.push(widget);
+                });
+                _.each(old_users, function(user) {
+                    user.destroy();
                 });
             });
         },
@@ -116,10 +115,19 @@ openerp.web_im = function(instance) {
             else
                 return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name", "image"]],
                         {context: new instance.web.CompoundContext()}).then(function(users) {
-                    _.each(users, function(el) {
-                        self.users_cache[el.id] = el;
-                    });
+                    self.add_to_user_cache(users);
                 });
+        },
+        add_to_user_cache: function(user_recs) {
+            _.each(user_recs, function(user_rec) {
+                if (! this.users_cache[user_rec.id]) {
+                    var user = new instance.web_im.ImUser(this, user_rec);
+                    this.users_cache[user_rec.id] = user;
+                    user.on("destroyed", this, function() {
+                        delete this.users_cache[user_rec.id];
+                    });
+                }
+            }, this);
         },
         get_user: function(user_id) {
             return this.users_cache[user_id];
@@ -156,8 +164,8 @@ openerp.web_im = function(instance) {
                 var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
                 self.ensure_users(user_ids).then(function() {
                     _.each(result.res, function(mes) {
-                        mes.from = self.get_user(mes.from[0]);
-                        self.c_manager.received_message(mes);
+                        var user = self.get_user(mes.from[0]);
+                        self.c_manager.received_message(mes, user);
                     });
                     self.poll();
                 });
@@ -166,22 +174,49 @@ openerp.web_im = function(instance) {
                 setTimeout(_.bind(self.poll, self), ERROR_DELAY);
             });
         },
-        activate_user: function(user_rec) {
-            this.c_manager.activate_user(user_rec);
+        activate_user: function(user) {
+            this.c_manager.activate_user(user);
         },
     });
 
-    instance.web_im.ImUser = instance.web.Widget.extend({
-        "template": "ImUser",
+    instance.web_im.UserWidget = instance.web.Widget.extend({
+        "template": "UserWidget",
         events: {
             "click": "activate_user",
         },
-        init: function(parent, user_rec) {
+        init: function(parent, user) {
             this._super(parent);
-            this.user_rec = user_rec;
+            this.user = user;
+            this.user.add_watcher();
         },
         activate_user: function() {
-            this.trigger("activate_user", this.user_rec);
+            this.trigger("activate_user", this.user);
+        },
+        destroy: function() {
+            this.user.remove_watcher();
+            this._super();
+        },
+    });
+
+    instance.web_im.ImUser = instance.web.Class.extend(instance.web.PropertiesMixin, {
+        init: function(parent, user_rec) {
+            instance.web.PropertiesMixin.init.call(this, parent);
+            this.set(user_rec);
+            this.set("watcher_count", 0);
+            this.on("change:watcher_count", this, function() {
+                if (this.get("watcher_count") === 0)
+                    this.destroy();
+            });
+        },
+        destroy: function() {
+            this.trigger("destroyed");
+            instance.web.PropertiesMixin.destroy.call(this);
+        },
+        add_watcher: function() {
+            this.set("watcher_count", this.get("watcher_count") + 1);
+        },
+        remove_watcher: function() {
+            this.set("watcher_count", this.get("watcher_count") - 1);
         },
     });
 
@@ -193,24 +228,24 @@ openerp.web_im = function(instance) {
             this.users = {};
             this.on("change:right_offset", this, this.calc_positions);
         },
-        activate_user: function(user_rec) {
-            if (this.users[user_rec.id]) {
-                return this.users[user_rec.id];
+        activate_user: function(user) {
+            if (this.users[user.get('id')]) {
+                return this.users[user.get('id')];
             }
-            var conv = new instance.web_im.Conversation(this, user_rec);
+            var conv = new instance.web_im.Conversation(this, user);
             conv.appendTo(instance.client.$el);
             conv.on("destroyed", this, function() {
                 this.conversations = _.without(this.conversations, conv);
-                delete this.users[conv.user_rec.id];
+                delete this.users[conv.user.get('id')];
                 this.calc_positions();
             });
             this.conversations.push(conv);
-            this.users[user_rec.id] = conv;
+            this.users[user.get('id')] = conv;
             this.calc_positions();
             return conv;
         },
-        received_message: function(message) {
-            var conv = this.activate_user(message.from);
+        received_message: function(message, user) {
+            var conv = this.activate_user(user);
             conv.received_message(message);
         },
         calc_positions: function() {
@@ -228,9 +263,10 @@ openerp.web_im = function(instance) {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
         },
-        init: function(parent, user_rec) {
+        init: function(parent, user) {
             this._super(parent);
-            this.user_rec = user_rec;
+            this.user = user;
+            this.user.add_watcher();
             this.set("right_position", 0);
         },
         start: function() {
@@ -251,7 +287,7 @@ openerp.web_im = function(instance) {
             this.$("input").val("");
             this._add_bubble("Me", [mes], instance.web.datetime_to_str(new Date()));
             var model = new instance.web.Model("im.message");
-            model.call("post", [mes, this.user_rec.id], {context: new instance.web.CompoundContext()});
+            model.call("post", [mes, this.user.get('id')], {context: new instance.web.CompoundContext()});
         },
         _add_bubble: function(name, items, date) {
             date = instance.web.str_to_datetime(date);
@@ -261,6 +297,7 @@ openerp.web_im = function(instance) {
             this.$(".oe_im_chatview_content").scrollTop($(this.$(".oe_im_chatview_content").children()[0]).height());
         },
         destroy: function() {
+            this.user.remove_watcher();
             this.trigger("destroyed");
             return this._super();
         },
