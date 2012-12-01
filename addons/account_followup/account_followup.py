@@ -128,12 +128,13 @@ class res_partner(osv.osv):
     def fields_view_get(self, cr, uid, view_id=None, view_type=None, context=None, toolbar=False, submenu=False):
         res = super(res_partner, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context,
                                                        toolbar=toolbar, submenu=submenu)
-        if view_type == 'form' and context and 'Followupfirst' in context.keys() and context['Followupfirst'] == True:
+        context = context or {}
+        if view_type == 'form' and context.get('Followupfirst'):
             doc = etree.XML(res['arch'], parser=None, base_url=None)
-            first_node = doc.xpath("//page[@string='Payment Follow-up']")
+            first_node = doc.xpath("//page[@name='followup_tab']")
             root = first_node[0].getparent()
             root.insert(0, first_node[0])
-            res['arch'] = etree.tostring(doc)
+            res['arch'] = etree.tostring(doc, encoding="utf-8")
         return res
 
     def _get_latest(self, cr, uid, ids, names, arg, context=None, company_id=None):
