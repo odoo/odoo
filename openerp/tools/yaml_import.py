@@ -384,7 +384,7 @@ class YamlInterpreter(object):
             return val
 
         if view_info:
-            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            arch = etree.fromstring(view_info['arch'].decode('utf-8'))
             view = arch if len(arch) else False
         else:
             view = False
