@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-28 21:53+0000\n"
+"PO-Revision-Date: 2012-12-01 16:00+0000\n"
 "Last-Translator: Thomas Pot (Open2bizz) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2012-12-02 04:37+0000\n"
 "X-Generator: Launchpad (build 16319)\n"
 
 #, python-format
@@ -114,6 +114,7 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Fout! Het is niet toegestaan on een recursief grootboekschema aan te maken."
 
 #. module: account
 #. openerp-web
@@ -553,6 +554,13 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Stelt u in staat activa te beheren voor een bedrijf/persoon.\n"
+"                    Het registreert afschrijvingen voor activa, en creëert "
+"journaalposten voor afschrijvingen.\n"
+"                    Hiermee installeert u de module 'account_asset'. Als u "
+"dit niet aanvinkt, kunt u wel facturen en betalingen\n"
+"                    registreren, maar geen financiële administratie voeren "
+"(Rekeningschema, Journaalboekingen, ....)"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -791,12 +799,12 @@ msgstr "Hoofdvolgorde moet afwijken van de huidige !"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "De huidige valuta-soort is niet juist geconfigureerd."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Winst & Verlies rekeneing"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1249
@@ -808,7 +816,7 @@ msgstr ""
 #. module: account
 #: model:account.journal.view,name:account.account_journal_bank_view_multi
 msgid "Bank/Cash Journal (Multi-Currency) View"
-msgstr ""
+msgstr "Bank / kas dagboek (multi-valuta) overzicht"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -840,6 +848,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Factuur_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -866,7 +876,7 @@ msgstr "Dagboek periode"
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr ""
+msgstr "U kunt niet meerdere boekingen doen bij een centraal journaal"
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0

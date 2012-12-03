@@ -31,7 +31,9 @@ This module adds a contact page (with a contact form creating a lead when submit
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','portal'],
-    'data': ['wizard/contact_view.xml'],
+    'data': [
+        'contact_view.xml',
+    ],
     'test': [
         'test/contact_form.yml',
     ],

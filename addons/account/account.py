@@ -697,44 +697,6 @@ class account_account(osv.osv):
 
 account_account()
 
-class account_journal_view(osv.osv):
-    _name = "account.journal.view"
-    _description = "Journal View"
-    _columns = {
-        'name': fields.char('Journal View', size=64, required=True, translate=True),
-        'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
-    }
-    _order = "name"
-
-account_journal_view()
-
-
-class account_journal_column(osv.osv):
-
-    def _col_get(self, cr, user, context=None):
-        result = []
-        cols = self.pool.get('account.move.line')._columns
-        for col in cols:
-            if col in ('period_id', 'journal_id'):
-                continue
-            result.append( (col, cols[col].string) )
-        result.sort()
-        return result
-
-    _name = "account.journal.column"
-    _description = "Journal Column"
-    _columns = {
-        'name': fields.char('Column Name', size=64, required=True),
-        'field': fields.selection(_col_get, 'Field Name', required=True, size=32),
-        'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
-        'required': fields.boolean('Required'),
-        'readonly': fields.boolean('Readonly'),
-    }
-    _order = "view_id, sequence"
-
-account_journal_column()
-
 class account_journal(osv.osv):
     _name = "account.journal"
     _description = "Journal"
@@ -750,7 +712,6 @@ class account_journal(osv.osv):
                                  " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
-        'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
@@ -885,37 +846,6 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
-
-    def onchange_type(self, cr, uid, ids, type, currency, context=None):
-        obj_data = self.pool.get('ir.model.data')
-        user_pool = self.pool.get('res.users')
-
-        type_map = {
-            'sale':'account_sp_journal_view',
-            'sale_refund':'account_sp_refund_journal_view',
-            'purchase':'account_sp_journal_view',
-            'purchase_refund':'account_sp_refund_journal_view',
-            'cash':'account_journal_bank_view',
-            'bank':'account_journal_bank_view',
-            'general':'account_journal_view',
-            'situation':'account_journal_view'
-        }
-
-        res = {}
-        view_id = type_map.get(type, 'account_journal_view')
-        user = user_pool.browse(cr, uid, uid)
-        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
-            view_id = 'account_journal_bank_view_multi'
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-
-        res.update({
-            'centralisation':type == 'situation',
-            'view_id':data.res_id,
-        })
-        return {
-            'value':res
-        }
 
 account_journal()
 
@@ -1396,13 +1326,6 @@ class account_move(osv.osv):
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
 
-    def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
-        balance = 0.0
-        for line in line_ids:
-            if line[2]:
-                balance += (line[2].get('debit',0.00)- (line[2].get('credit',0.00)))
-        return {'value': {'balance': balance}}
-
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
@@ -1451,9 +1374,9 @@ class account_move(osv.osv):
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id']
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
-            c['date'] = vals['date']
+            if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
             self.validate(cr, uid, [result], context)
         else:
@@ -3208,16 +3131,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     default_account = acc_template_ref.get(template.property_account_income_opening.id)
             return default_account
 
-        def _get_view_id(journal_type):
-            # Get the journal views
-            if journal_type in ('general', 'situation'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view')
-            elif journal_type in ('sale_refund', 'purchase_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view')
-            else:
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view')
-            return data and data[1] or False
-
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
@@ -3247,7 +3160,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'code': journal_codes[journal_type],
                 'company_id': company_id,
                 'centralisation': journal_type == 'situation',
-                'view_id': _get_view_id(journal_type),
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
@@ -3464,11 +3376,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         '''
         obj_data = self.pool.get('ir.model.data')
         obj_journal = self.pool.get('account.journal')
-        # Get the id of journal views
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
-        view_id_cur = tmp and tmp[1] or False
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
-        view_id_cash = tmp and tmp[1] or False
+        
 
         # we need to loop again to find next number for journal code
         # because we can't rely on the value current_num as,
@@ -3494,10 +3402,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_debit_account_id': default_account_id,
         }
         if line['currency_id']:
-            vals['view_id'] = view_id_cur
             vals['currency'] = line['currency_id']
-        else:
-            vals['view_id'] = view_id_cash
+        
         return vals
 
     def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):

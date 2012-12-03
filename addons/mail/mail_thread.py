@@ -906,11 +906,12 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
-        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        self.check_access_rights(cr, uid, 'read')
+        self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         # if subtypes are not specified (and not set to a void list), fetch default ones
         if subtype_ids is None:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+            subtype_ids = subtype_obj.search(cr, SUPERUSER_ID, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
         # update the subscriptions
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
@@ -927,7 +928,8 @@ class mail_thread(osv.AbstractModel):
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers. """
-        return self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        self.check_access_rights(cr, uid, 'read')
+        return self.write(cr, SUPERUSER_ID, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
     #------------------------------------------------------
     # Thread state
