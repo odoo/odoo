@@ -410,6 +410,15 @@ var py = {};
         throw new Error("Could not convert " + val + " to a pyval");
     }
 
+    var typename = function (obj) {
+        if (obj.__class__) { // py type
+            return obj.__class__.__name__;
+        } else if(typeof obj !== 'object') { // JS primitive
+            return typeof obj;
+        } else { // JS object
+            return obj.constructor.name;
+        }
+    };
     // JSAPI, JS-level utility functions for implementing new py.js
     // types
     py.py = {};
@@ -522,16 +531,10 @@ var py = {};
         if (py.PY_isInstance(v, py.str)) {
             return v;
         }
-        var typename;
-        if (v.__class__) { // py type
-            typename = v.__class__.__name__;
-        } else if(typeof v !== 'object') { // JS primitive
-            typename = typeof v;
-        } else { // JS object
-            typename = v.constructor.name;
-        }
         throw new Error(
-            'TypeError: __str__ returned non-string (type '+typename+')');
+            'TypeError: __str__ returned non-string (type '
+                + typename(v)
+                +')');
     };
     py.PY_isInstance = function (inst, cls) {
         var fn = function () {};
@@ -574,7 +577,7 @@ var py = {};
         }
         throw new Error(
             "TypeError: __nonzero__ should return bool, returned "
-                + res.__class__.__name__);
+                + typename(res));
     };
     py.PY_not = function (o) {
         return !py.PY_isTrue(o);
@@ -583,7 +586,7 @@ var py = {};
         if (!o.__len__) {
             throw new Error(
                 "TypeError: object of type '" +
-                    o.__class__.__name__ +
+                    typename(o) +
                     "' has no len()");
         }
         var v = o.__len__();
@@ -608,7 +611,7 @@ var py = {};
         if (!o.__neg__) {
             throw new Error(
                 "TypeError: bad operand for unary -: '"
-                    + o.__class__.__name
+                    + typename(o)
                     + "'");
         }
         return o.__neg__();
@@ -617,7 +620,7 @@ var py = {};
         if (!o.__pos__) {
             throw new Error(
                 "TypeError: bad operand for unary +: '"
-                    + o.__class__.__name
+                    + typename(o)
                     + "'");
         }
         return o.__pos__();
@@ -776,7 +779,7 @@ var py = {};
                     return;
                 }
                 throw new Error('TypeError: __float__ returned non-float (type ' +
-                                res.__class__.__name__ + ')');
+                                typename(res) + ')');
             }
             throw new Error('TypeError: float() argument must be a string or a number');
         },
@@ -809,6 +812,10 @@ var py = {};
                 return py.NotImplemented;
             }
             return this._value >= other._value ? py.True : py.False;
+        },
+        __abs__: function () {
+            return py.float.fromJSON(
+                Math.abs(this._value));
         },
         __add__: function (other) {
             if (!py.PY_isInstance(other, py.float)) {
@@ -1023,6 +1030,16 @@ var py = {};
         }
     });
 
+    py.abs = new py.PY_def.fromJSON(function abs() {
+        var args = py.PY_parseArgs(arguments, ['number']);
+        if (!args.number.__abs__) {
+            throw new Error(
+                "TypeError: bad operand type for abs(): '"
+                    + typename(args.number)
+                    + "'");
+        }
+        return  args.number.__abs__();
+    });
     py.len = new py.PY_def.fromJSON(function len() {
         var args = py.PY_parseArgs(arguments, ['object']);
         return py.float.fromJSON(py.PY_size(args.object));
@@ -1111,6 +1128,7 @@ var py = {};
         list: py.list,
         dict: py.dict,
 
+        abs: py.abs,
         len: py.len,
         isinstance: py.isinstance,
         issubclass: py.issubclass,
