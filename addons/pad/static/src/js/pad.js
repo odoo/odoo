@@ -4,6 +4,16 @@ openerp.pad = function(instance) {
         template: 'FieldPad',
         configured: false,
         content: "",
+        start: function() {
+            this._super.apply(this, arguments);
+            var self  = this;
+            this.on('click', '.oe_pad_switch', function(){
+                self.$el.toggleClass('oe_pad_fullscreen');
+            });
+            this.on('change:effective_readonly',this,function(){
+                self.renderElement();
+            });
+        },
         render_value: function() {
             var self = this;
             var _super = _.bind(this._super, this);
@@ -37,23 +47,23 @@ openerp.pad = function(instance) {
                 }else{
                     this.content = '<div class="oe_pad_loading">... Loading pad ...</div>';
                     $.get(value+'/export/html').success(function(data){
+                        if(!self.get('effective_readonly')){
+                            return false;
+                        }
                         groups = /\<\s*body\s*\>(.*?)\<\s*\/body\s*\>/.exec(data);
                         data = (groups || []).length >= 2 ? groups[1] : '';
                         self.$('.oe_pad_content').html('<div class="oe_pad_readonly"><div>');
                         self.$('.oe_pad_readonly').html(data);
                     }).error(function(){
+                        if(!self.get('effective_readonly')){
+                            return false;
+                        }
                         self.$('.oe_pad_content').text('Unable to load pad');
                     });
                 }
             }
             this._super();
             this.$('.oe_pad_content').html(this.content);
-            this.$('.oe_pad_switch').click(function(){
-                self.$el.toggleClass('oe_pad_fullscreen');
-            });
-            this.on('change:effective_readonly',this,function(){
-                self.renderElement();
-            });
         },
     });
 
