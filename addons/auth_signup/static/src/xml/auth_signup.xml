@@ -24,6 +24,9 @@
                 <a class="oe_signup_show oe_signup_back" href="#">Back to Login</a>
             </li>
         </t>
+        <t t-jquery="form ul:first li:last" t-operation="after">
+            <li><a class="oe_reset_password" href="#">Reset password</a></li>
+        </t>
     </t>
 
 </templates>

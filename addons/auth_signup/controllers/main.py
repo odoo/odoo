@@ -19,10 +19,12 @@
 #
 ##############################################################################
 import logging
+import urllib
+
+import werkzeug
 
 import openerp
 from openerp.modules.registry import RegistryManager
-
 from ..res_users import SignupError
 
 _logger = logging.getLogger(__name__)
@@ -55,5 +57,22 @@ class Controller(openerp.addons.web.http.Controller):
                 return {'error': openerp.tools.exception_to_unicode(e)}
             cr.commit()
         return {}
+
+    @openerp.addons.web.http.httprequest
+    def reset_password(self, req, dbname, login):
+        """ retrieve user, and perform reset password """
+        registry = RegistryManager.get(dbname)
+        with registry.cursor() as cr:
+            try:
+                res_users = registry.get('res.users')
+                res_users.reset_password(cr, openerp.SUPERUSER_ID, login)
+                cr.commit()
+                message = 'An email has been sent with credentials to reset your password'
+            except Exception as e:
+                # signup error
+                _logger.exception('error when resetting password')
+                message = e.message
+        params = [('action', 'login'), ('error_message', message)]
+        return werkzeug.utils.redirect("/#" + urllib.urlencode(params))
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
