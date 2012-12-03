@@ -763,45 +763,44 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
         """
-        message = self.read(cr, uid, newid, ['model', 'res_id', 'author_id', 'subtype_id', 'partner_ids', 'parent_id'], context=context)
+        message = self.browse(cr, uid, newid, context=context)
 
         partners_to_notify = set([])
         # message has no subtype_id: pure log message -> no partners, no one notified
-        if not message.get('subtype_id'):
+        if not message.subtype_id:
             return True
         # all partner_ids of the mail.message have to be notified
-        if message.get('partner_ids'):
-            partners_to_notify |= set(message.get('partner_ids'))
+        if message.partner_ids:
+            partners_to_notify |= set(message.partner_ids)
         # all followers of the mail.message document have to be added as partners and notified
-        if message.get('model') and message.get('res_id'):
+        if message.model and message.res_id:
             fol_obj = self.pool.get("mail.followers")
             fol_ids = fol_obj.search(cr, uid, [
-                ('res_model', '=', message.get('model')),
-                ('res_id', '=', message.get('res_id')),
-                ('subtype_ids', 'in', message.get('subtype_id')[0])
+                ('res_model', '=', message.model),
+                ('res_id', '=', message.res_id),
+                ('subtype_ids', 'in', message.subtype_id.id)
                 ], context=context)
-            fol_objs = fol_obj.read(cr, uid, fol_ids, ['partner_id'], context=context)
-            partners_to_notify |= set(fol['partner_id'][0] for fol in fol_objs)
+            partners_to_notify |= set(fo.partner_id for fo in fol_obj.browse(cr, uid, fol_ids, context=context))
         # remove me from notified partners, unless the message is written on my own wall
-        if message.get('author_id') and message.get('model') == "res.partner" and message.get('res_id') == message.get('author_id')[0]:
-            partners_to_notify |= set([message.get('author_id')[0]])
-        elif message.get('author_id'):
-            partners_to_notify = partners_to_notify - set([message.get('author_id')[0]])
+        if message.author_id and message.model == "res.partner" and message.res_id == message.author_id.id:
+            partners_to_notify |= set([message.author_id])
+        elif message.author_id:
+            partners_to_notify = partners_to_notify - set([message.author_id])
 
         if partners_to_notify:
-            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p_id) for p_id in partners_to_notify]}, context=context)
+            self.write(cr, SUPERUSER_ID, [newid], {'notified_partner_ids': [(4, p.id) for p in partners_to_notify]}, context=context)
 
         notification_obj = self.pool.get('mail.notification')
         notification_obj._notify(cr, uid, newid, context=context)
 
         # An error appear when a user receive a notify to a message without notify to his parent message.
         # Add a notification with read = true to the parented message if there are no notification
-        if message.get('parent_id') and message.get('parent_id')[0]:
-            partners_to_parent_notify = set(partners_to_notify) - set(self.read(cr, SUPERUSER_ID, message.get('parent_id')[0], ['notified_partner_ids'], context=context).get('notified_partner_ids'))
-            for partner_id in partners_to_parent_notify:
+        if message.parent_id:
+            partners_to_parent_notify = set(partners_to_notify) - set(message.parent_id.notified_partner_ids)
+            for partner in partners_to_parent_notify:
                 notification_obj.create(cr, uid, {
-                        'message_id': message.get('parent_id')[0],
-                        'partner_id': partner_id,
+                        'message_id': message.parent_id.id,
+                        'partner_id': partner.id,
                         'read': True,
                     }, context=context)
 
