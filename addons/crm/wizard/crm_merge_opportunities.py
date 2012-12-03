@@ -31,7 +31,7 @@ class crm_merge_opportunity(osv.osv_memory):
     """
 
     _name = 'crm.merge.opportunity'
-    _description = 'Merge two opportunities'
+    _description = 'Merge opportunities'
     _columns = {
         'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
     }
