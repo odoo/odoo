@@ -22,7 +22,7 @@
          * @param {Array|String} modules list of modules to initialize
          */
         init: function(modules) {
-            if (modules === "fuck your shit, don't load anything you cunt") {
+            if (modules === null) {
                 modules = [];
             } else {
                 modules = _.union(['web'], modules || []);
