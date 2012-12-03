@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-29 15:44+0000\n"
+"PO-Revision-Date: 2012-11-30 08:25+0000\n"
 "Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:07+0000\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:08+0000\n"
 "X-Generator: Launchpad (build 16319)\n"
 
 #. module: account
@@ -108,7 +108,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Lettrage des écritures comptables"
+msgstr "Lettrage d'écritures comptables"
 
 #. module: account
 #: view:account.account:0
@@ -1914,7 +1914,7 @@ msgstr "Facture"
 #. module: account
 #: field:account.move,balance:0
 msgid "balance"
-msgstr ""
+msgstr "solde"
 
 #. module: account
 #: model:process.node,note:account.process_node_analytic0
@@ -2411,7 +2411,7 @@ msgstr "Merci de vérifier le compte défini dans le journal"
 #. module: account
 #: selection:account.entries.report,move_line_state:0
 msgid "Valid"
-msgstr "Valide"
+msgstr "Equilibrée"
 
 #. module: account
 #: field:account.bank.statement,message_follower_ids:0
@@ -2702,7 +2702,7 @@ msgstr "Le numéro du RIB et/ou IBAN n'est pas correct."
 #. module: account
 #: help:account.config.settings,default_sale_tax:0
 msgid "This sale tax will be assigned by default on new products."
-msgstr ""
+msgstr "Cette taxe de vente sera attribuée par défaut aux nouveaux articles"
 
 #. module: account
 #: report:account.general.ledger_landscape:0
@@ -3381,7 +3381,7 @@ msgstr "Août"
 #. module: account
 #: field:accounting.report,debit_credit:0
 msgid "Display Debit/Credit Columns"
-msgstr ""
+msgstr "Afficher les colonnes de débit/crédit"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -4419,7 +4419,7 @@ msgstr "Nom"
 #: code:addons/account/installer.py:94
 #, python-format
 msgid "No unconfigured company !"
-msgstr ""
+msgstr "Pas de société non configurée !"
 
 #. module: account
 #: field:res.company,expects_chart_of_accounts:0
@@ -5255,7 +5255,7 @@ msgstr "Facture "
 #. module: account
 #: field:account.chart.template,property_account_income:0
 msgid "Income Account on Product Template"
-msgstr "Modèle d'imputation des charges"
+msgstr "Compte de revenu sur les modèles d'articles"
 
 #. module: account
 #: help:account.journal.period,state:0
@@ -6853,7 +6853,7 @@ msgstr "Exercice comptable"
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Partial Reconcile Entries"
-msgstr "Lettrage partiel d'écritures"
+msgstr "Lettrage partiel d'écriture"
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -7275,7 +7275,7 @@ msgstr "Catégorie de compte de dépenses"
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "Tax Name must be unique per company!"
-msgstr ""
+msgstr "Le nom d'une taxe doit être unique par société !"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7761,6 +7761,7 @@ msgstr "Document d'origine"
 #, python-format
 msgid "There is no expense account defined for this product: \"%s\" (id:%d)."
 msgstr ""
+"Aucun compte de dépense n'a été défini pour cet article : \"%s\" ( id. : %d)."
 
 #. module: account
 #: constraint:account.account:0
@@ -11120,6 +11121,8 @@ msgstr "Manuellement"
 msgid ""
 "This is a field only used for internal purpose and shouldn't be displayed"
 msgstr ""
+"Ceci est un champ uniquement utilisé pour un usage interne et ne devrait pas "
+"être affiché"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -11140,6 +11143,7 @@ msgstr "Grouper les factures par mois"
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)."
 msgstr ""
+"Aucun compte de revenu n'a été défini pour cet article : \"%s\" ( id. : %d)."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_aged_receivable_graph
@@ -11202,6 +11206,8 @@ msgid ""
 "The selected unit of measure is not compatible with the unit of measure of "
 "the product."
 msgstr ""
+"L'unité de mesure choisie n'est pas compatible avec l'unité de mesure de "
+"l'article."
 
 #. module: account
 #: view:account.fiscal.position:0

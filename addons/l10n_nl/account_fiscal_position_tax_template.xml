@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+
+        <!-- account.fiscal.position.tax.template -->
+        
+        <!-- Position 2 - NON-EU Countries -->
+        <!--  All sales tax will become 0 -->
+        <record id="position_tax_extracom_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_0"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X1"/>
+        </record>
+        <record id="position_tax_extracom_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_6"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X1"/>
+        </record>
+        <record id="position_tax_extracom_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_21"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X1"/>
+        </record>
+        <record id="position_tax_extracom_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_overig"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X1"/>
+        </record>
+        
+        <!-- VAT on buying from outside the EU -->
+        <!-- VAT low -->
+        <record id="position_tax_extracom_5" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_6_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_E1"/>
+        </record>
+        <!-- VAT high -->
+        <record id="position_tax_extracom_6" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_21_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_E2"/>
+        </record>
+        <!-- VAT other -->
+        <record id="position_tax_extracom_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_non_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_overig_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_E_overig"/>
+        </record>
+        <!-- Belgian schema has many more lines here.... -->
+        
+        <!-- Position 3 - EU Countries -->
+        <record id="position_tax_intracom_1" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_0"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X0"/>
+        </record>
+        <record id="position_tax_intracom_2" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_6"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X0"/>
+        </record>
+        <record id="position_tax_intracom_3" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_21"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X0"/>
+        </record>
+        <record id="position_tax_intracom_4" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_overig"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_X0"/>
+        </record>
+        
+        <!-- In source-tax we lack the separation of goods and services,
+             therefore no lines now for "Installatie/Afstandsverkopen. -->
+             
+        <!-- Buying from other EU countries (only goods = VAT 0 -->
+        <record id="position_tax_intracom_5" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_6_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_I_6"/>
+        </record>
+        <record id="position_tax_intracom_6" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_21_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_I_21"/>
+        </record>
+        <record id="position_tax_intracom_7" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_template_eu"/>
+            <field name="tax_src_id" ref="l10n_nl.btw_overig_buy"/>
+            <field name="tax_dest_id" ref="l10n_nl.btw_I_overig"/>
+        </record>
+        
+        <!-- Again, Belgian schema has 17 (!) more records. Missing VAT 0
+             and separation of goods and services .. -->
+
+    </data>
+</openerp>
