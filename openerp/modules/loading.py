@@ -104,7 +104,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
 
         """
         for filename in package.data[kind]:
-            _logger.info("module %s: loading %s", module_name, filename)
+            if kind == 'test':
+                _logger.log(logging.TEST, "module %s: loading %s", module_name, filename)
+            else:
+                _logger.info("module %s: loading %s", module_name, filename)
             _, ext = os.path.splitext(filename)
             pathname = os.path.join(module_name, filename)
             fp = tools.file_open(pathname)
