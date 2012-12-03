@@ -913,7 +913,7 @@ class account_coda_import(osv.osv_memory):
                     balance_start_check_date = statement['first_transaction_date'] or statement['date']
                     cr.execute('SELECT balance_end_real \
                         FROM account_bank_statement \
-                        WHERE journal_id = %s and date < %s \
+                        WHERE journal_id = %s and date <= %s \
                         ORDER BY date DESC,id DESC LIMIT 1', (statement['journal_id'], balance_start_check_date))
                     res = cr.fetchone()
                     balance_start_check = res and res[0]
@@ -975,7 +975,7 @@ class account_coda_import(osv.osv_memory):
                     if line['type'] == 'information':
 
                         #Check if this line can be deleted. glob_id_stack marked as undefined here
-                        #line['globalisation_id'] = glob_id_stack[-1][2]
+                        line['globalisation_id'] = glob_id_stack[-1][2]
                         line_note = _('Transaction Type' ': %s - %s'                \
                             '\nTransaction Family: %s - %s'                         \
                             '\nTransaction Code: %s - %s'                           \
@@ -1035,7 +1035,6 @@ class account_coda_import(osv.osv_memory):
                                     'type': 'coda',
                                     'parent_id': glob_id_stack[-1][2],
                                     'amount': line['globalisation_amount'],
-                                    'payment_reference': line['payment_reference']
                                 })
                                 line['globalisation_id'] = glob_id
                                 glob_id_stack.append((glob_lvl_flag, glob_code, glob_id, glob_name))
@@ -1201,7 +1200,6 @@ class account_coda_import(osv.osv_memory):
                                         account_id = account_mapping_obj.account_id_get(cr, uid, **kwargs)
                                         if account_id:
                                             line['account_id'] = account_id
-
                                     st_line_vals = {
                                            'ref': line['ref'],
                                            'name': line_name,
@@ -1216,7 +1214,6 @@ class account_coda_import(osv.osv_memory):
                                            'counterparty_currency': line['counterparty_currency'],
                                            'account_id': line['account_id'],
                                            'globalisation_id': line['globalisation_id'],
-                                           'payment_reference': line['payment_reference'],
                                            'statement_id': bk_st_id,
                                            'voucher_id': voucher_id,
                                            'note': line_note,
