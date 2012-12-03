@@ -25,16 +25,17 @@
             <field name="default" eval="False"/>
         </record>
 
+        <!-- Expense-related subtypes for messaging / Chatter -->
         <record id="mt_expense_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="default" eval="False"/>
         </record>
-
         <record id="mt_expense_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
             <field name="res_model">hr.expense.expense</field>
             <field name="default" eval="False"/>
         </record>
+
     </data>
 </openerp>

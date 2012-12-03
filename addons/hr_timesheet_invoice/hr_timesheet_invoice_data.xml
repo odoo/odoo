@@ -22,7 +22,7 @@
             <field name="factor">20.0</field>
         </record>
 
-        <!-- mail: subtypes -->
+        <!-- Analytic-account-related subtypes for messaging / Chatter -->
         <record id="mt_account_renew" model="mail.message.subtype">
             <field name="name">Contract to Renew</field>
             <field name="res_model">account.analytic.account</field>
@@ -35,6 +35,7 @@
             <field name="name">Contract Renewed</field>
             <field name="res_model">account.analytic.account</field>
         </record>
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
         <record id="mt_salesteam_renew" model="mail.message.subtype">
             <field name="name">Contract to Renew</field>
             <field name="res_model">crm.case.section</field>

@@ -461,7 +461,7 @@
         <field name="alias_user_id" ref="base.user_root"/>
     </record>
 
-    <!-- mail: subtypes -->
+    <!-- Job-related subtypes for messaging / Chatter -->
     <record id="mt_applicant_new" model="mail.message.subtype">
         <field name="name">New Applicant</field>
         <field name="res_model">hr.job</field>
@@ -481,6 +481,7 @@
         <field name="res_model">hr.job</field>
         <field name="default" eval="False"/>
     </record>
+    <!-- Applicant-related subtypes for messaging / Chatter -->
     <record id="mt_stage_changed" model="mail.message.subtype">
         <field name="name">Stage Changed</field>
         <field name="res_model">hr.applicant</field>
@@ -496,5 +497,6 @@
         <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
     </record>
+
 </data>
 </openerp>

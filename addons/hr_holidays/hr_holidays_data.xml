@@ -45,19 +45,17 @@
             <field name="color_name">brown</field>
         </record>
 
-        <!--subtype for leaves -->
+        <!-- Holidays-related subtypes for messaging / Chatter -->
         <record id="mt_approve" model="mail.message.subtype">
             <field name="name">To Approve</field>
             <field name="res_model">hr.holidays</field>
             <field name="default" eval="False"/>
         </record>
-
         <record id="mt_approved" model="mail.message.subtype">
             <field name="name">Approved</field>
             <field name="res_model">hr.holidays</field>
             <field name="default" eval="False"/>
         </record>
-
         <record id="mt_refused" model="mail.message.subtype">
             <field name="name">Refused</field>
             <field name="res_model">hr.holidays</field>
