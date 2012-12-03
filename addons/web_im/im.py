@@ -26,7 +26,8 @@ from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
 from osv import osv, fields
 import time
-import logging 
+import logging
+import json
 
 _logger = logging.getLogger(__name__)
 
@@ -67,7 +68,7 @@ if openerp.tools.config.options["gevent"]:
                     with registry.cursor() as c:
                         conn = c._cnx
                         try:
-                            c.execute("listen received_message;")
+                            c.execute("listen im_channel;")
                             c.commit();
                             while not stopping:
                                 if self.waiting == 0:
@@ -78,12 +79,13 @@ if openerp.tools.config.options["gevent"]:
                                 else:
                                     conn.poll()
                                     while conn.notifies:
-                                        notify = conn.notifies.pop()
+                                        notify = conn.notifies.pop().payload
+                                        # do something with it
                                     self.posted.set()
                                     self.posted.clear()
                         finally:
                             try:
-                                c.execute("unlisten received_message;")
+                                c.execute("unlisten im_channel;")
                                 c.commit()
                             except:
                                 pass # can't do anything if that fails
@@ -155,7 +157,7 @@ class im_message(osv.osv):
     def post(self, cr, uid, message, to_user_id, context=None):
         self.create(cr, uid, {"message": message, 'from': uid, 'to': to_user_id}, context=context)
         cr.commit()
-        cr.execute("notify received_message")
+        cr.execute("notify im_channel, %s", [json.dumps({'type': 'message', 'receiver': to_user_id})])
         cr.commit()
         return False
 
@@ -177,11 +179,17 @@ class res_user(osv.osv):
     def im_connect(self, cr, uid, context=None):
         self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        cr.commit()
+        cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
+        cr.commit()
         return True
 
     def im_disconnect(self, cr, uid, context=None):
         self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        cr.commit()
+        cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
+        cr.commit()
         return True
 
     _columns = {
