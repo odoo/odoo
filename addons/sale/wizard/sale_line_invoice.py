@@ -88,8 +88,6 @@ class sale_order_line_make_invoice(osv.osv_memory):
                         [line.id])
                 for lid in line_id:
                     invoices[line.order_id.id].append((line, lid))
-                sales_order_line_obj.write(cr, uid, [line.id],
-                        {'invoiced': True})
         for result in invoices.values():
             order = result[0][0].order_id
             il = map(lambda x: x[1], result)
