@@ -33,6 +33,18 @@ class Controller(openerp.addons.web.http.Controller):
     _cp_path = '/auth_signup'
 
     @openerp.addons.web.http.jsonrequest
+    def get_config(self, req, dbname):
+        """ retrieve the module config (which features are enabled) for the login page """
+        registry = RegistryManager.get(dbname)
+        with registry.cursor() as cr:
+            icp = registry.get('ir.config_parameter')
+            config = {
+                'signup': icp.get_param(cr, openerp.SUPERUSER_ID, 'auth_signup.allow_uninvited') == 'True',
+                'reset_password': icp.get_param(cr, openerp.SUPERUSER_ID, 'auth_signup.reset_password') == 'True',
+            }
+        return config
+
+    @openerp.addons.web.http.jsonrequest
     def retrieve(self, req, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)

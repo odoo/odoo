@@ -45,7 +45,22 @@ openerp.auth_signup = function(instance) {
             }
 
             // bind reset password link
-            this.$('a.oe_reset_password').click(this.do_reset_password);
+            this.$('a.oe_signup_reset_password').click(this.do_reset_password);
+
+            // make signup link and reset password link visible only when enabled
+            this.$('a.oe_signup_signup').hide();
+            this.$('a.oe_signup_reset_password').hide();
+            if (this.params.db) {
+                this.rpc("/auth_signup/get_config", {dbname: self.params.db})
+                    .done(function(result) {
+                        if (result.signup) {
+                            self.$('a.oe_signup_signup').show();
+                        }
+                        if (result.reset_password) {
+                            self.$('a.oe_signup_reset_password').show();
+                        }
+                    });
+            }
 
             return d;
         },
