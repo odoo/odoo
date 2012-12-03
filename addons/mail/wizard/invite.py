@@ -71,14 +71,16 @@ class invite_wizard(osv.osv_memory):
 
             # send an email
             if wizard.message:
-                ctx = dict(context)
-                ctx.update({'default_res_id': False})
+                # the invite wizard should create a private message not related to any object,
+                # we ensure that by removing default res_id and res_model from the context
+                context.pop('default_res_id')
+                context.pop('default_res_model')
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     mail_id = mail_mail.create(cr, uid, {
                         'subject': 'Invitation to follow %s' % document.name_get()[0][1],
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
-                        }, context=ctx)
+                        }, context=context)
                     mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

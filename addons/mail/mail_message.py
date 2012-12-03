@@ -564,6 +564,7 @@ class mail_message(osv.Model):
                 - uid have write access on the related document if model, res_id, OR
                 - otherwise: raise
             - write: if
+                - author_id == pid, uid is the author, OR
                 - uid has write access on the related document if model, res_id
                 - Otherwise: raise
             - unlink: if
@@ -591,7 +592,7 @@ class mail_message(osv.Model):
                 if message.get('author_id') and message.get('author_id') == partner_id]
         elif operation == 'create':
             author_ids = [mid for mid, message in message_values.iteritems()
-                if not message.get('res_model') and not message.get('res_id')]
+                if not message.get('model') and not message.get('res_id')]
         else:
             author_ids = []
 
