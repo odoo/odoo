@@ -269,6 +269,7 @@ openerp.web_im = function(instance) {
         events: {
             "keydown input": "send_message",
             "click .oe_im_chatview_close": "destroy",
+            "click .oe_im_chatview_header": "show_hide",
         },
         init: function(parent, user, me) {
             this._super(parent);
@@ -276,10 +277,24 @@ openerp.web_im = function(instance) {
             this.user = user;
             this.user.add_watcher();
             this.set("right_position", 0);
+            this.shown = true;
         },
         start: function() {
             this.on("change:right_position", this, this.calc_pos);
+            this.full_height = this.$el.height();
             this.calc_pos();
+        },
+        show_hide: function() {
+            if (this.shown) {
+                this.$el.animate({
+                    height: this.$(".oe_im_chatview_header").outerHeight(),
+                });
+            } else {
+                this.$el.animate({
+                    height: this.full_height,
+                });
+            }
+            this.shown = ! this.shown;
         },
         calc_pos: function() {
             this.$el.css("right", this.get("right_position"));
