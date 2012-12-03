@@ -5260,6 +5260,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
 
 instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
     template: "FieldMonetary",
+    widget_class: 'oe_form_field_float oe_form_field_monetary',
     init: function() {
         this._super.apply(this, arguments);
         this.set({"currency": false});
