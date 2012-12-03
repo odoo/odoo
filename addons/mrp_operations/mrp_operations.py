@@ -88,7 +88,6 @@ class mrp_production_workcenter_line(osv.osv):
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
         res = False
         for op in ops:
-            print "op.planned date>>>>>>>>>", op.date_planned
             if date_planned:
                 i = intervals.get((op.date_planned,op.hour, op.workcenter_id.calendar_id.id))
                 if i:
@@ -97,7 +96,7 @@ class mrp_production_workcenter_line(osv.osv):
                     res = date_planned
         return {'value':{'date_planned_end': res}}
 
-    def onchange_production_id(self, cr, uid,  production_id, context=None):
+    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
         """ Finds UoM of changed product.
         @param product_id: Id of changed product.
         @return: Dictionary of values.
