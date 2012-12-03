@@ -179,8 +179,7 @@ class hr_timesheet_sheet(osv.osv):
         'date_to' : _default_date_to,
         'state': 'new',
         'employee_id': _default_employee,
-        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c),
-        'user_id': _default_employee
+        'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'hr_timesheet_sheet.sheet', context=c),        
     }
 
     def _sheet_date(self, cr, uid, ids, forced_user_id=False, context=None):
