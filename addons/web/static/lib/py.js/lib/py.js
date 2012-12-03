@@ -393,18 +393,9 @@ var py = {};
 
         switch(val.constructor) {
         case Object:
-            // TODO: why py.object instead of py.dict?
-            var o = py.PY_call(py.object);
-            for (var prop in val) {
-                if (val.hasOwnProperty(prop)) {
-                    o[prop] = val[prop];
-                }
-            }
-            return o;
+            return py.dict.fromJSON(val);
         case Array:
-            var a = py.PY_call(py.list);
-            a._values = val;
-            return a;
+            return py.list.fromJSON(val);
         }
 
         throw new Error("Could not convert " + val + " to a pyval");
@@ -595,6 +586,44 @@ var py = {};
         }
         return v;
     };
+    py.PY_getItem = function (o, key) {
+        if (!('__getitem__' in o)) {
+            throw new Error(
+                "TypeError: '" + typename(o) +
+                    "' object is unsubscriptable")
+        }
+        if (!py.PY_isInstance(key, py.object)) {
+            throw new Error(
+                "TypeError: '" + typename(key) +
+                    "' is not a py.js object");
+        }
+        var res = o.__getitem__(key);
+        if (!py.PY_isInstance(key, py.object)) {
+            throw new Error(
+                "TypeError: __getitem__ must return a py.js object, got "
+                    + typename(res));
+        }
+        return res;
+    };
+    py.PY_setItem = function (o, key, v) {
+        if (!('__setitem__' in o)) {
+            throw new Error(
+                "TypeError: '" + typename(o) +
+                    "' object does not support item assignment");
+        }
+        if (!py.PY_isInstance(key, py.object)) {
+            throw new Error(
+                "TypeError: '" + typename(key) +
+                    "' is not a py.js object");
+        }
+        if (!py.PY_isInstance(v, py.object)) {
+            throw new Error(
+                "TypeError: '" + typename(v) +
+                    "' is not a py.js object");
+        }
+        o.__setitem__(key, v);
+    };
+
     py.PY_add = function (o1, o2) {
         return PY_op(o1, o2, '+');
     };
@@ -679,7 +708,7 @@ var py = {};
             return (this === other) ? py.True : py.False;
         },
         __ne__: function (other) {
-            if (this.__eq__(other) === py.True) {
+            if (py.PY_isTrue(this.__eq__(other))) {
                 return py.False;
             } else {
                 return py.True;
@@ -693,7 +722,7 @@ var py = {};
             return this.__unicode__();
         },
         __unicode__: function () {
-            return py.str.fromJSON('<' + this.__class__.__name__ + ' object>');
+            return py.str.fromJSON('<' + typename(this) + ' object>');
         },
         __nonzero__: function () {
             return py.True;
@@ -934,14 +963,14 @@ var py = {};
         },
         __contains__: function (value) {
             for(var i=0, len=this._values.length; i<len; ++i) {
-                if (this._values[i].__eq__(value) === py.True) {
+                if (py.PY_isTrue(this._values[i].__eq__(value))) {
                     return py.True;
                 }
             }
             return py.False;
         },
         __getitem__: function (index) {
-            return PY_ensurepy(this._values[index.toJSON()]);
+            return this._values[index.toJSON()];
         },
         toJSON: function () {
             var out = [];
@@ -949,6 +978,16 @@ var py = {};
                 out.push(this._values[i].toJSON());
             }
             return out;
+        },
+        fromJSON: function (ar) {
+            if (!(ar instanceof Array)) {
+                throw new Error("Can only create a py.tuple from an Array");
+            }
+            var t = py.PY_call(py.tuple);
+            for(var i=0; i<ar.length; ++i) {
+                t._values.push(PY_ensurepy(ar[i]));
+            }
+            return t;
         }
     });
     py.list = py.tuple;
@@ -1107,8 +1146,7 @@ var py = {};
         }
         throw new Error(
             "TypeError: unsupported operand type(s) for " + op + ": '"
-                + o1.__class__.__name__ + "' and '"
-                + o2.__class__.__name__ + "'");
+                + typename(o1) + "' and '" + typename(o2) + "'");
     };
 
     var PY_builtins = {
@@ -1148,7 +1186,7 @@ var py = {};
         case 'in':
             return b.__contains__(a);
         case 'not in':
-            return b.__contains__(a) === py.True ? py.False : py.True;
+            return py.PY_isTrue(b.__contains__(a)) ? py.False : py.True;
         case '==': case '!=': case '<>':
         case '<': case '<=':
         case '>': case '>=':
@@ -1183,20 +1221,20 @@ var py = {};
                     expr.operators[i],
                     left,
                     left = py.evaluate(expr.expressions[i+1], context));
-                if (result === py.False) { return py.False; }
+                if (py.PY_not(result)) { return py.False; }
             }
             return py.True;
         case 'not':
             return py.PY_isTrue(py.evaluate(expr.first, context)) ? py.False : py.True;
         case 'and':
             var and_first = py.evaluate(expr.first, context);
-            if (and_first.__nonzero__() === py.True) {
+            if (py.PY_isTrue(and_first.__nonzero__())) {
                 return py.evaluate(expr.second, context);
             }
             return and_first;
         case 'or':
             var or_first = py.evaluate(expr.first, context);
-            if (or_first.__nonzero__() === py.True) {
+            if (py.PY_isTrue(or_first.__nonzero__())) {
                 return or_first
             }
             return py.evaluate(expr.second, context);
@@ -1223,26 +1261,23 @@ var py = {};
                 tuple_values.push(py.evaluate(
                     tuple_exprs[j], context));
             }
-            var t = py.PY_call(py.tuple);
-            t._values = tuple_values;
-            return t;
+            return py.tuple.fromJSON(tuple_values);
         case '[':
             if (expr.second) {
-                return py.evaluate(expr.first, context)
-                    .__getitem__(py.evaluate(expr.second, context));
+                return py.PY_getItem(
+                    py.evaluate(expr.first, context),
+                    py.evaluate(expr.second, context));
             }
             var list_exprs = expr.first, list_values = [];
             for (var k=0; k<list_exprs.length; ++k) {
                 list_values.push(py.evaluate(
                     list_exprs[k], context));
             }
-            var l = py.PY_call(py.list);
-            l._values = list_values;
-            return l;
+            return py.list.fromJSON(list_values);
         case '{':
             var dict_exprs = expr.first, dict = py.PY_call(py.dict);
             for(var l=0; l<dict_exprs.length; ++l) {
-                dict.__setitem__(
+                py.PY_setItem(dict,
                     py.evaluate(dict_exprs[l][0], context),
                     py.evaluate(dict_exprs[l][1], context));
             }
