@@ -46,6 +46,7 @@ class project_task_type(osv.osv):
         'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
                         help="The status of your document is automatically changed regarding the selected stage. " \
                             "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
+        'subtype': fields.char('Related Subtype', size=64),
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
@@ -993,14 +994,12 @@ class task(base_stage, osv.osv):
             if not task.date_end:
                 vals['date_end'] = fields.datetime.now()
             self.case_set(cr, uid, [task.id], 'done', vals, context=context)
-            self.case_close_send_note(cr, uid, [task.id], context=context)
         return True
 
     def do_reopen(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             project = task.project_id
             self.case_set(cr, uid, [task.id], 'open', {}, context=context)
-            self.case_open_send_note(cr, uid, [task.id], context)
         return True
 
     def do_cancel(self, cr, uid, ids, context=None):
@@ -1012,7 +1011,6 @@ class task(base_stage, osv.osv):
         self._check_child_task(cr, uid, ids, context=context)
         for task in tasks:
             self.case_set(cr, uid, [task.id], 'cancelled', {'remaining_hours': 0.0}, context=context)
-            self.case_cancel_send_note(cr, uid, [task.id], context=context)
         return True
 
     def do_open(self, cr, uid, ids, context=None):
@@ -1022,7 +1020,6 @@ class task(base_stage, osv.osv):
     def case_open(self, cr, uid, ids, context=None):
         if not isinstance(ids,list): ids = [ids]
         self.case_set(cr, uid, ids, 'open', {'date_start': fields.datetime.now()}, context=context)
-        self.case_open_send_note(cr, uid, ids, context)
         return True
 
     def do_draft(self, cr, uid, ids, context=None):
@@ -1031,7 +1028,6 @@ class task(base_stage, osv.osv):
 
     def case_draft(self, cr, uid, ids, context=None):
         self.case_set(cr, uid, ids, 'draft', {}, context=context)
-        self.case_draft_send_note(cr, uid, ids, context=context)
         return True
 
     def do_pending(self, cr, uid, ids, context=None):
@@ -1039,8 +1035,7 @@ class task(base_stage, osv.osv):
         return self.case_pending(cr, uid, ids, context=context)
 
     def case_pending(self, cr, uid, ids, context=None):
-        self.case_set(cr, uid, ids, 'pending', {}, context=context)
-        return self.case_pending_send_note(cr, uid, ids, context=context)
+        return self.case_set(cr, uid, ids, 'pending', {}, context=context)
 
     def _delegate_task_attachments(self, cr, uid, task_id, delegated_task_id, context=None):
         attachment = self.pool.get('ir.attachment')
@@ -1080,7 +1075,6 @@ class task(base_stage, osv.osv):
                 self.do_pending(cr, uid, [task.id], context=context)
             elif delegate_data['state'] == 'done':
                 self.do_close(cr, uid, [task.id], context=context)
-            self.do_delegation_send_note(cr, uid, [task.id], context)
             delegated_tasks[task.id] = delegated_task_id
         return delegated_tasks
 
@@ -1160,7 +1154,6 @@ class task(base_stage, osv.osv):
         self._subscribe_project_followers_to_task(cr, uid, task_id, context=context)
 
         self._store_history(cr, uid, [task_id], context=context)
-        self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
 
     # Overridden to reset the kanban_state to normal whenever
@@ -1178,7 +1171,6 @@ class task(base_stage, osv.osv):
                     #raise osv.except_osv(_('Warning!'), _('Stage is not defined in the project.'))
                 write_vals = vals_reset_kstate if t.stage_id != new_stage else vals
                 super(task, self).write(cr, uid, [t.id], write_vals, context=context)
-                self.stage_set_send_note(cr, uid, [t.id], new_stage, context=context)
             result = True
         else:
             result = super(task, self).write(cr, uid, ids, vals, context=context)
@@ -1288,24 +1280,8 @@ class task(base_stage, osv.osv):
         res = super(task, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
         return res + ['user_id', 'manager_id']
 
-    def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
-        """ Override of the (void) default notification method. """
-        stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
-            context=context)
-
-    def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
-
-    def case_draft_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), context=context)
 
-    def do_delegation_send_note(self, cr, uid, ids, context=None):
-        for task in self.browse(cr, uid, ids, context=context):
-            msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
-            self.message_post(cr, uid, [task.id], body=msg, context=context)
-        return True
-   
     def project_task_reevaluate(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
             return {

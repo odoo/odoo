@@ -324,20 +324,32 @@ class mail_thread(osv.AbstractModel):
             model = c.parent_model or self._name
             lang = context.get('lang')
             return Trans._get_source(cr, uid, '{0},{1}'.format(model, c.name), 'field', lang, ci.column.string)
+        
+        def get_subtype(model, record):
+            record_model = self.pool[model].browse(cr, SUPERUSER_ID, record)
+            if record_model.__hasattr__('subtype'):
+                return record_model.subtype
+            return False 
 
         for record, changed_fields in changes.items():
             # TODO tpl changed_fields
             chg = []
+            subtype = False
             for f in changed_fields:
                 ci = tracked[f]
                 from_ = convert_for_display(record[f], ci.column)
                 to = convert_for_display(values[f], ci.column)
+                if to is None:
+                    to = "Removed"
+                if ci.column._type == "many2one":
+                    subtype = get_subtype(ci.column._obj,values[f])
+
                 chg.append((_t(ci), from_, to))
 
             message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
                                                                         changes=chg)
 
-            record.message_post(message)
+            record.message_post(message,subtype=subtype)
 
         return result
 
