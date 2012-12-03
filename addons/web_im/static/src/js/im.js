@@ -90,7 +90,7 @@ openerp.web_im = function(instance) {
         search_changed: function(e) {
             var users = new instance.web.Model("res.users");
             var self = this;
-            return this.user_search_dm.add(users.query(["name"])
+            return this.user_search_dm.add(users.query(["name", "im_status"])
                     .filter([["name", "ilike", this.get("current_search")]])
                     .limit(USERS_LIMIT).all()).then(function(result) {
                 self.add_to_user_cache(result);
@@ -118,7 +118,7 @@ openerp.web_im = function(instance) {
             if (_.size(no_cache) === 0)
                 return $.when();
             else
-                return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name"]],
+                return new instance.web.Model("res.users").call("read", [_.values(no_cache), ["name", "im_status"]],
                         {context: new instance.web.CompoundContext()}).then(function(users) {
                     self.add_to_user_cache(users);
                 });
@@ -200,6 +200,13 @@ openerp.web_im = function(instance) {
             this._super(parent);
             this.user = user;
             this.user.add_watcher();
+        },
+        start: function() {
+            var change_status = function() {
+                this.$(".oe_im_user_online").toggle(this.user.get("im_status") === true);
+            };
+            this.user.on("change:im_status", this, change_status);
+            change_status.call(this);
         },
         activate_user: function() {
             this.trigger("activate_user", this.user);
@@ -289,6 +296,13 @@ openerp.web_im = function(instance) {
             this.shown = true;
         },
         start: function() {
+            var change_status = function() {
+                this.$(".oe_im_chatview_online").toggle(this.user.get("im_status") === true);
+                this.$(".oe_im_chatview_disconnected").toggle(this.user.get("im_status") === false);
+            };
+            this.user.on("change:im_status", this, change_status);
+            change_status.call(this);
+
             this.on("change:right_position", this, this.calc_pos);
             this.full_height = this.$el.height();
             this.calc_pos();

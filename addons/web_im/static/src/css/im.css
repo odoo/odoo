@@ -57,6 +57,7 @@
     padding-bottom: 38px;
 }
 .openerp .oe_im_user {
+    position: relative;
     padding: 2px 6px;
     cursor: pointer;
     font-size: 13px;
@@ -88,6 +89,17 @@
     position: relative;
 }
 
+.openerp .oe_im_user_online {
+    display: none;
+    position: absolute;
+    top: 9.5px;
+    right: 11px;
+    width: 11px;
+    height: 11px;
+    vertical-align: middle;
+    border: 0;
+}
+
 /* conversations */
 
 .openerp .oe_im_chatview {
@@ -106,6 +118,14 @@
 }
 .openerp .oe_im_chatview .oe_im_chatview_disconnected {
     display:none;
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    background: #E8EBEF;
+    padding: 5px;
+    font-size: 11px;
+    color: #999;
+    line-height: 14px;
 }
 .openerp .oe_im_chatview .oe_im_chatview_header {
     padding: 3px 6px 2px;
@@ -213,4 +233,11 @@
 .openerp .oe_im_chatview .oe_im_chatview_bubble_item {
     margin: 0 0 2px 30px;
     line-height: 14px;
+}
+
+.openerp .oe_im_chatview_online {
+    display: none;
+    margin-top: -4px;
+    width: 11px;
+    height: 11px;
 }
