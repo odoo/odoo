@@ -625,7 +625,7 @@ class fleet_vehicle_log_contract(osv.Model):
             startdate = datetime.datetime.strptime(last_cost_date, tools.DEFAULT_SERVER_DATE_FORMAT).date()
             if found:
                 startdate += deltas.get(contract.cost_frequency)
-            while (startdate < d) & (startdate < datetime.datetime.strptime(contract.expiration_date, tools.DEFAULT_SERVER_DATE_FORMAT).date()):
+            while (startdate <= d) & (startdate <= datetime.datetime.strptime(contract.expiration_date, tools.DEFAULT_SERVER_DATE_FORMAT).date()):
                 data = {
                     'amount': contract.cost_generated,
                     'date': startdate.strftime(tools.DEFAULT_SERVER_DATE_FORMAT),
