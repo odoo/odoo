@@ -1283,30 +1283,32 @@ class task(base_stage, osv.osv):
         return res + ['user_id', 'manager_id']
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="project.mt_task_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task <b>created</b>."), subtype="project.mt_task_new", context=context)
+
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
         return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
             context=context)
+
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>started</b>."), subtype="project.mt_task_started", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task <b>started</b>."), subtype="project.mt_task_started", context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>done</b>."), subtype="project.mt_task_closed", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task <b>closed</b>."), subtype="project.mt_task_closed", context=context)
 
     def case_block_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>blocked</b>."), subtype="project.mt_task_blocked", context=context)
-    
+        return self.message_post(cr, uid, ids, body=_("Task <b>blocked</b>."), subtype="project.mt_task_blocked", context=context)
+
     def case_draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), context=context)
+        return self.message_post(cr, uid, ids, body=_('Task set as <b>draft</b>.'), context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
             self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
-   
+
     def project_task_reevaluate(self, cr, uid, ids, context=None):
         if self.pool.get('res.users').has_group(cr, uid, 'project.group_time_work_estimation_tasks'):
             return {

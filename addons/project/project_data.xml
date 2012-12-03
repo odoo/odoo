@@ -78,21 +78,26 @@
             <field name="fold" eval="True"/>
         </record>
 
-        <!-- mail: subtypes -->
-        <record id="mt_project_new" model="mail.message.subtype">
+        <!-- Project-related subtypes for messaging / Chatter -->
+        <record id="mt_project_task_new" model="mail.message.subtype">
             <field name="name">Task Created</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mt_project_started" model="mail.message.subtype">
+        <record id="mt_project_task_started" model="mail.message.subtype">
             <field name="name">Task Started</field>
             <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
         </record>
-        <record id="mt_project_closed" model="mail.message.subtype">
+        <record id="mt_project_task_blocked" model="mail.message.subtype">
+            <field name="name">Task Blocked</field>
+            <field name="res_model">project.project</field>
+        </record>
+        <record id="mt_project_task_closed" model="mail.message.subtype">
             <field name="name">Task Done</field>
             <field name="res_model">project.project</field>
         </record>
-        
+        <!-- Task-related subtypes for messaging / Chatter -->
         <record id="mt_task_new" model="mail.message.subtype">
             <field name="name">Task Created</field>
             <field name="res_model">project.task</field>
@@ -101,11 +106,11 @@
         <record id="mt_task_started" model="mail.message.subtype">
             <field name="name">Task Started</field>
             <field name="res_model">project.task</field>
+            <field name="default" eval="False"/>
         </record>
         <record id="mt_task_blocked" model="mail.message.subtype">
             <field name="name">Task Blocked</field>
             <field name="res_model">project.task</field>
-            <field name="default" eval="False"/>
         </record>
         <record id="mt_task_closed" model="mail.message.subtype">
             <field name="name">Task Done</field>
