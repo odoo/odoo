@@ -25,8 +25,13 @@ import openerp.modules.registry
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
 from osv import osv, fields
+import time
+import logging 
+
+_logger = logging.getLogger(__name__)
 
 WATCHER_TIMER = 60
+WATCHER_ERROR_DELAY = 10
 POLL_TIMER = 30
 DISCONNECTION_TIMER = POLL_TIMER + 5
 
@@ -54,34 +59,42 @@ if openerp.tools.config.options["gevent"]:
             gevent.spawn(self.loop)
 
         def loop(self):
-            try:
-                while True:
-                    if self.waiting == 0:
-                        return
+            _logger.info("Begin watching for instant messaging events for database " + self.db_name)
+            stopping = False
+            while not stopping:
+                try:
                     registry = openerp.modules.registry.RegistryManager.get(self.db_name)
                     with registry.cursor() as c:
                         conn = c._cnx
                         try:
                             c.execute("listen received_message;")
                             c.commit();
-                            if select.select([conn], [], [], WATCHER_TIMER) == ([],[],[]):
-                                pass
-                            else:
-                                conn.poll()
-                                while conn.notifies:
-                                    notify = conn.notifies.pop()
-                                self.posted.set()
-                                self.posted.clear()
+                            while not stopping:
+                                if self.waiting == 0:
+                                    stopping = True
+                                    break
+                                if select.select([conn], [], [], WATCHER_TIMER) == ([],[],[]):
+                                    pass
+                                else:
+                                    conn.poll()
+                                    while conn.notifies:
+                                        notify = conn.notifies.pop()
+                                    self.posted.set()
+                                    self.posted.clear()
                         finally:
                             try:
                                 c.execute("unlisten received_message;")
                                 c.commit()
                             except:
                                 pass # can't do anything if that fails
-            finally:
-                del Watcher.watchers[self.db_name]
-                self.posted.set()
-                self.posted = None
+                except:
+                    # if something crash, we wait some time then try again
+                    _logger.exception("Exception during instant messaging watcher activity")
+                    time.sleep(WATCHER_ERROR_DELAY)
+            del Watcher.watchers[self.db_name]
+            self.posted.set()
+            self.posted = None
+            _logger.info("End watching for instant messaging events for database " + self.db_name)
 
         def stop(self, timeout=None):
             self.waiting += 1
@@ -96,6 +109,7 @@ class ImportController(openerp.addons.web.http.Controller):
     def poll(self, req, last=None, users_watch=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
+        res = req.session.model('res.users').im_connect(context=req.context)
         num = 0
         while True:
             res = req.session.model('im.message').get_messages(last, users_watch, req.context)
@@ -126,7 +140,6 @@ class im_message(osv.osv):
         users = self.pool.get("res.users")
         c_user = users.browse(cr, uid, uid, context=context)
         if last:
-            print "here: ", c_user.im_last_received
             if c_user.im_last_received < last:
                 users.write(cr, openerp.SUPERUSER_ID, uid, {'im_last_received': last}, context=context)
         else:
@@ -136,7 +149,6 @@ class im_message(osv.osv):
         res = self.read(cr, uid, res, ["id", "message", "from", "date"], context=context)
         if len(res) > 0:
             last = res[-1]["id"]
-        print "users_watch:", users_watch
         users_status = users.read(cr, uid, users_watch, ["im_status"], context=context)
         return {"res": res, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
@@ -161,6 +173,16 @@ class res_user(osv.osv):
             last_update = datetime.datetime.strptime(obj.im_last_status_update, DEFAULT_SERVER_DATETIME_FORMAT)
             res[obj.id] = obj.im_last_status and (last_update + delta) > current
         return res
+
+    def im_connect(self, cr, uid, context=None):
+        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
+            "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return True
+
+    def im_disconnect(self, cr, uid, context=None):
+        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
+            "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
+        return True
 
     _columns = {
         'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
