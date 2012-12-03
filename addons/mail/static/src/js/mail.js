@@ -237,11 +237,9 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
-
             //formating and add some fields for render
             if (this._date) {
-                this.date = session.web.format_value(this._date, {type:"datetime"});
-                this.timerelative = $.timeago(this.date);
+                this.timerelative = $.timeago(this._date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
