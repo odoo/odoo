@@ -7,13 +7,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-28 17:01+0000\n"
+"PO-Revision-Date: 2012-11-30 17:53+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-29 05:14+0000\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:08+0000\n"
 "X-Generator: Launchpad (build 16319)\n"
 
 #. module: sale
@@ -1625,6 +1625,13 @@ msgid ""
 "invoice automatically.\n"
 "            It installs the account_analytic_analysis module."
 msgstr ""
+"允许定义你的客户合同条款：\n"
+"开票方法(固定价格，根据计工单，预付款发票),\n"
+"准确价格（每天每个开发人员650欧元）\n"
+"期间（一年的支持合同）\n"
+"你能跟踪合同的进程和自动开票。\n"
+"\n"
+"为此要安装模块  account_analytic_analysis module 。"
 
 #. module: sale
 #: model:email.template,report_name:sale.email_template_edi_sale
@@ -1724,6 +1731,8 @@ msgid ""
 "replenishment.\n"
 "On order: When needed, the product is purchased or produced."
 msgstr ""
+"从库存: 当需要时，产品从库存取得或者我们等待补充。\n"
+"根据订单: 需要时，产品被采购或者生产。"
 
 #. module: sale
 #: selection:sale.order,state:0
@@ -2115,7 +2124,7 @@ msgstr "销售订单"
 #. module: sale
 #: field:sale.config.settings,module_account_analytic_analysis:0
 msgid "Use contracts management"
-msgstr ""
+msgstr "使用合同管理"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2173,7 +2182,7 @@ msgid ""
 "                        multiple invoicing as part of the same contract "
 "with\n"
 "                        your customer."
-msgstr ""
+msgstr "使用合同 管理 多次开票的服务作为你的客户的相同合同的一部分。"
 
 #. module: sale
 #: view:sale.order:0
@@ -2184,12 +2193,12 @@ msgstr "查找销售订单"
 #. module: sale
 #: field:sale.advance.payment.inv,advance_payment_method:0
 msgid "What do you want to invoice?"
-msgstr ""
+msgstr "你要开什么发票？"
 
 #. module: sale
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "错误，您不能创建循环引用的会员用户"
 
 #. module: sale
 #: field:sale.order.line,sequence:0
@@ -2205,7 +2214,7 @@ msgstr "付款条款"
 #. module: sale
 #: help:account.config.settings,module_sale_analytic_plans:0
 msgid "This allows install module sale_analytic_plans."
-msgstr ""
+msgstr "允许安装模块sale_analytic_plans."
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all

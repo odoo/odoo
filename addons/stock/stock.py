@@ -1845,7 +1845,7 @@ class stock_move(osv.osv):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
                         raise osv.except_osv(_('Operation forbidden !'),
-                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+                                             _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

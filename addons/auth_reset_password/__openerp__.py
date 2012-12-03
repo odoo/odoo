@@ -22,8 +22,11 @@
 {
     'name': 'Reset Password',
     'description': """
+Reset Password
+==============
+
 Allow users to reset their password from the login page.
-========================================================
+Allow administrator to click a button to send a "Reset Password" request to a user.
 """,
     'author': 'OpenERP SA',
     'version': '1.0',
