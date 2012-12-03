@@ -50,8 +50,9 @@ ClientAction (ir.actions.client)
          on this compact mode, the composer is open
       - ``message_ids`` : {Array | False} List of ids to fetch by the root thread. If no value,
          the root search the message by the domain
-      - ``help`` : Message to display when there are no message.
       - ``compose_placeholder`` : Message to display on the textareaboxes.
+      - ``show_link`` : Display partner (authors, followers...) on link or not
+      - ``compose_as_todo`` : The root composer mark automatically the message as todo
 
 Fields
 +++++++
