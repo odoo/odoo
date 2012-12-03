@@ -3244,17 +3244,10 @@ instance.web.form.Many2OneButton = instance.web.form.AbstractField.extend({
         if (this.$button) {
             this.$button.remove();
         }
-        var options = {};
-        try {
-            options = py.eval(this.node.attrs.options);
-        } catch (e) {}
-        if (options.label) {
-            this.string = this.get('value') ? _t(options.label.edit) : _t(options.label.create);
-        } else {
-            this.string = '';
-        }
+        this.string = '';
         this.node.attrs.icon = this.get('value') ? '/web/static/src/img/icons/gtk-yes.png' : '/web/static/src/img/icons/gtk-no.png';
         this.$button = $(QWeb.render('WidgetButton', {'widget': this}));
+        this.$button.addClass('oe_link').css({'padding':'4px'});
         this.$el.append(this.$button);
         this.$button.on('click', self.on_click);
     },
