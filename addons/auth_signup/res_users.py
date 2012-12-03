@@ -249,3 +249,11 @@ class res_users(osv.Model):
             self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
 
         return True
+
+    def create(self, cr, uid, values, context=None):
+        # overridden to automatically invite user to sign up
+        user_id = super(res_users, self).create(cr, uid, values, context=context)
+        user = self.browse(cr, uid, user_id, context=context)
+        if user.email:
+            user.action_reset_password()
+        return user_id
