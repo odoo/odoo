@@ -895,11 +895,4 @@ class crm_lead(base_stage, format_address, osv.osv):
             return {'value':{'country_id':country_id}}
         return {}
 
-    def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
-        # 'Convert to Opprtunity' subtype can only show in lead form view.
-        res = super(crm_lead,self)._get_subscription_data(cr, uid, ids, name, args, context=context)
-        for leads in self.browse(cr, uid, ids,context=context):
-            if leads.type == 'opportunity':
-                    del res[leads.id]['message_subtype_data']['Convert to Opportunity']
-        return res
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
