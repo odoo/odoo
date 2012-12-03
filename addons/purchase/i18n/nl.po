@@ -7,24 +7,24 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-06-01 08:41+0000\n"
+"PO-Revision-Date: 2012-11-30 19:55+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:42+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_analytic_accounting
 msgid "Analytic Accounting for Purchases"
-msgstr ""
+msgstr "Kostenplaatsen voor inkopen"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_config_settings
 msgid "account.config.settings"
-msgstr ""
+msgstr "account.config.settings"
 
 #. module: purchase
 #: view:board.board:0
@@ -156,7 +156,7 @@ msgstr "Order van dag"
 #. module: purchase
 #: help:purchase.order,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "Indien aangevinkt zullen nieuwe berichten uw aandacht vragen."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_procurement_management_inventory
@@ -181,6 +181,9 @@ msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
 msgstr ""
+"Bevat de samenvatting van de chatter (aantal berichten,...). Deze "
+"samenvatting is direct in html formaat om zo in de kanban weergave te worden "
+"ingevoegd."
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:956
@@ -189,7 +192,7 @@ msgstr ""
 #: code:addons/purchase/wizard/purchase_order_group.py:47
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Waarschuwing!"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:556
@@ -240,7 +243,7 @@ msgstr "Gemiddelde prijs"
 #: code:addons/purchase/purchase.py:813
 #, python-format
 msgid "Invoice <b>paid</b>."
-msgstr ""
+msgstr "Factuur <b>betaald</b>."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -274,7 +277,7 @@ msgstr "Afleveradres :"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Confirm Order"
-msgstr ""
+msgstr "Bevestig Order"
 
 #. module: purchase
 #: field:purchase.config.settings,module_warning:0
@@ -291,7 +294,7 @@ msgstr "Order referentie"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Invoicing Process"
-msgstr ""
+msgstr "Factureer proces"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_approvingpurchaseorder0
@@ -341,7 +344,7 @@ msgstr "Totaalbedrag excl. belastingen"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_purchase_uom_categ_form_action
 msgid "Unit of Measure Categories"
-msgstr ""
+msgstr "Maateenheid categorieën"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -352,7 +355,7 @@ msgstr "Categorie"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Quotation "
-msgstr ""
+msgstr "Offerte "
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:793
@@ -379,7 +382,7 @@ msgstr ""
 #: field:purchase.order.line,state:0
 #: view:purchase.report:0
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -389,7 +392,7 @@ msgstr "Augustus"
 #. module: purchase
 #: view:product.product:0
 msgid "to"
-msgstr ""
+msgstr "t/m"
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -426,7 +429,7 @@ msgstr ""
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You must assign a serial number for this product."
-msgstr ""
+msgstr "U dient een productie partij toe te wijzen voor dit product."
 
 #. module: purchase
 #: selection:purchase.report,month:0
@@ -442,7 +445,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_summary:0
 msgid "Summary"
-msgstr ""
+msgstr "Samenvatting"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_createpackinglist0
@@ -575,6 +578,8 @@ msgid ""
 "Error: The default Unit of Measure and the purchase Unit of Measure must be "
 "in the same category."
 msgstr ""
+"Foutmelding: de standaard maateenheid moet in dezelfde categorie vallen als "
+"de inkoop maateenheid."
 
 #. module: purchase
 #: view:board.board:0
@@ -601,19 +606,19 @@ msgstr "De naam van het bedrijf moet uniek zijn!"
 #: view:product.product:0
 #: field:product.template,purchase_ok:0
 msgid "Can be Purchased"
-msgstr ""
+msgstr "Inkoop product"
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_action_picking_tree_in_move
 msgid "Incoming  Products"
-msgstr ""
+msgstr "Inkomende producten"
 
 #. module: purchase
 #: view:purchase.config.settings:0
 #: view:purchase.order.group:0
 #: view:purchase.order.line_invoice:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: purchase
 #: field:res.company,po_lead:0
@@ -623,7 +628,7 @@ msgstr "Voorbereidingstijd inkoop"
 #. module: purchase
 #: constraint:res.partner:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Fout: Ongeldige EAN-code"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_invoicefrompurchase0
@@ -639,7 +644,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Apply"
-msgstr ""
+msgstr "Toepassen"
 
 #. module: purchase
 #: field:purchase.order,amount_untaxed:0
@@ -659,12 +664,12 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Customer Address"
-msgstr ""
+msgstr "Klant adres"
 
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "RFQ Sent"
-msgstr ""
+msgstr "Offerte verzonden"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -717,12 +722,12 @@ msgstr "Inkooporders welke zich de concept fase bevinden"
 #. module: purchase
 #: view:product.product:0
 msgid "Suppliers"
-msgstr ""
+msgstr "Leveranciers"
 
 #. module: purchase
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "Inkoop product"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_form_action
@@ -761,7 +766,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "(update)"
-msgstr ""
+msgstr "(update)"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -838,7 +843,7 @@ msgstr "Prijslijst"
 #. module: purchase
 #: selection:purchase.order,state:0
 msgid "Draft PO"
-msgstr ""
+msgstr "Concept inkoopporder"
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_draftpurchaseorder0
@@ -858,7 +863,7 @@ msgstr "Orderdatum"
 #. module: purchase
 #: field:purchase.config.settings,group_uom:0
 msgid "Manage different units of measure for products"
-msgstr ""
+msgstr "Beheer verschillende maateenheden voor een product."
 
 #. module: purchase
 #: model:process.node,name:purchase.process_node_invoiceafterpacking0
@@ -906,7 +911,7 @@ msgstr "Goederenstromen"
 #: code:addons/purchase/purchase.py:1141
 #, python-format
 msgid "Draft Purchase Order created"
-msgstr ""
+msgstr "Concept inkoopporderBeheer aangemaakt."
 
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
@@ -916,7 +921,7 @@ msgstr "Productcategorieën"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Send Request for Quotation"
-msgstr ""
+msgstr "Verstuur inkooporder"
 
 #. module: purchase
 #: help:purchase.order,invoiced:0
@@ -926,12 +931,12 @@ msgstr "Dit geeft aan dat de factuur is betaald."
 #. module: purchase
 #: field:purchase.order,notes:0
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "Voorwaarden"
 
 #. module: purchase
 #: field:purchase.order,currency_id:0
 msgid "unknown"
-msgstr ""
+msgstr "onbekend"
 
 #. module: purchase
 #: help:purchase.order,date_order:0
@@ -941,7 +946,7 @@ msgstr "Datum waarop dit document gemaakt is."
 #. module: purchase
 #: field:purchase.order,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "Is een volger"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
@@ -1008,7 +1013,7 @@ msgstr "Dagen tot goedkeuring"
 #. module: purchase
 #: view:purchase.config.settings:0
 msgid "Supplier Features"
-msgstr ""
+msgstr "Leveranciersopties"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1019,7 +1024,7 @@ msgstr "Hvhd"
 #. module: purchase
 #: model:res.groups,name:purchase.group_delivery_invoice_address
 msgid "Addresses in Purchase Orders"
-msgstr ""
+msgstr "Adressen in inkooporders"
 
 #. module: purchase
 #: model:process.transition.action,name:purchase.process_transition_action_approvingcancelpurchaseorder0
@@ -1035,7 +1040,7 @@ msgstr "Annuleren"
 #: field:purchase.order,message_comment_ids:0
 #: help:purchase.order,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "Opmerkingen en e-mails."
 
 #. module: purchase
 #: sql_constraint:purchase.order:0
@@ -1079,12 +1084,13 @@ msgstr ""
 #. module: purchase
 #: view:product.product:0
 msgid "a draft purchase order"
-msgstr ""
+msgstr "een concept inkooporder"
 
 #. module: purchase
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product."
 msgstr ""
+"U probeert een partij toe te wijzen wat niet van hetzelfde product is."
 
 #. module: purchase
 #: view:purchase.report:0
@@ -1094,13 +1100,13 @@ msgstr "Order van jaar"
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.act_res_partner_2_purchase_order
 msgid "RFQs and Purchases"
-msgstr ""
+msgstr "Offertes en inkopen"
 
 #. module: purchase
 #: field:account.config.settings,group_analytic_account_for_purchases:0
 #: field:purchase.config.settings,group_analytic_account_for_purchases:0
 msgid "Analytic accounting for purchases"
-msgstr ""
+msgstr "Kostenplaatsen voor inkopen"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder1
@@ -1123,7 +1129,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_mail
 msgid "Outgoing Mails"
-msgstr ""
+msgstr "Uitgaande E-mails"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:420
@@ -1134,13 +1140,13 @@ msgstr ""
 #. module: purchase
 #: help:purchase.order,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "Berichten en communicatie historie"
 
 #. module: purchase
 #: field:purchase.order,warehouse_id:0
 #: field:stock.picking.in,warehouse_id:0
 msgid "Destination Warehouse"
-msgstr ""
+msgstr "Bestemmings magazijn"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:956
@@ -1159,7 +1165,7 @@ msgstr "Maateenheden"
 #. module: purchase
 #: field:purchase.config.settings,group_purchase_pricelist:0
 msgid "Manage pricelist per supplier"
-msgstr ""
+msgstr "Beheer prijslijsten per leverancier"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:816
@@ -1181,7 +1187,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Approve Order"
-msgstr ""
+msgstr "Order goedkeuren"
 
 #. module: purchase
 #: help:purchase.report,date:0
@@ -1209,7 +1215,7 @@ msgstr "Inkooporder statistieken"
 #: view:purchase.order:0
 #: field:purchase.order,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "Ongelezen berichten"
 
 #. module: purchase
 #: view:purchase.order.line_invoice:0
@@ -1259,7 +1265,7 @@ msgstr "Voorraadmutatie"
 #: code:addons/purchase/purchase.py:252
 #, python-format
 msgid "Invalid Action!"
-msgstr ""
+msgstr "Ongeldige actie!"
 
 #. module: purchase
 #: field:purchase.order,validator:0
@@ -1287,7 +1293,7 @@ msgstr "Offerteaanvraag"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Source"
-msgstr ""
+msgstr "Bron"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_picking
@@ -1382,7 +1388,7 @@ msgstr "Maart"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Receive Invoice"
-msgstr ""
+msgstr "Ontvang factuur"
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1409,7 +1415,7 @@ msgstr "Te controleren door de boekhouder."
 #. module: purchase
 #: model:ir.model,name:purchase.model_purchase_config_settings
 msgid "purchase.config.settings"
-msgstr ""
+msgstr "purchase.config.settings"
 
 #. module: purchase
 #: model:process.node,note:purchase.process_node_approvepurchaseorder0
@@ -1420,7 +1426,7 @@ msgstr "Status van de inkooporder."
 #. module: purchase
 #: field:purchase.order.line,product_uom:0
 msgid "Product Unit of Measure"
-msgstr ""
+msgstr "Maateenheid product"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.purchase_pricelist_version_action
@@ -1467,7 +1473,7 @@ msgstr ""
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase Order "
-msgstr ""
+msgstr "InkoopporderBeheer "
 
 #. module: purchase
 #: view:purchase.order.line:0
@@ -1478,12 +1484,12 @@ msgstr "Handmatige facturen"
 #: model:ir.actions.act_window,name:purchase.action_purchase_configuration
 #: view:purchase.config.settings:0
 msgid "Configure Purchases"
-msgstr ""
+msgstr "Inkopen instellen"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Untaxed"
-msgstr ""
+msgstr "Onbelast"
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1494,7 +1500,7 @@ msgstr "Pakbon gegenereerd"
 #: model:ir.actions.act_window,name:purchase.purchase_line_form_action2
 #: model:ir.ui.menu,name:purchase.menu_purchase_line_order_draft
 msgid "On Purchase Order Lines"
-msgstr ""
+msgstr "Op inkooporderregels"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1516,7 +1522,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase_type
 msgid "Price Types"
-msgstr ""
+msgstr "Prijs types"
 
 #. module: purchase
 #: help:purchase.order,date_approve:0
@@ -1675,12 +1681,12 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,invoiced:0
 msgid "Invoice Received"
-msgstr ""
+msgstr "Factuur ontvangen"
 
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_unread
 msgid "Mark unread"
-msgstr ""
+msgstr "Markeer als ongelezen"
 
 #. module: purchase
 #: field:purchase.order,invoice_method:0
@@ -1741,7 +1747,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.actions.client,name:purchase.action_client_purchase_menu
 msgid "Open Purchase Menu"
-msgstr ""
+msgstr "Inkoop menu openen"
 
 #. module: purchase
 #: field:purchase.order,company_id:0
@@ -1795,7 +1801,7 @@ msgstr "Ontvangsten analyse"
 #. module: purchase
 #: field:purchase.order,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "Berichten"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -1820,7 +1826,7 @@ msgstr "Inkooporder"
 #: code:addons/purchase/wizard/purchase_line_invoice.py:109
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -1858,13 +1864,13 @@ msgstr "Geannuleerd"
 #. module: purchase
 #: field:res.partner,purchase_order_count:0
 msgid "# of Purchase Order"
-msgstr ""
+msgstr "# inkoopporderBeheer"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:810
 #, python-format
 msgid "Shipment <b>received</b>."
-msgstr ""
+msgstr "Inkomende levering <b>ontvangen</>"
 
 #. module: purchase
 #: report:purchase.quotation:0
@@ -1874,7 +1880,7 @@ msgstr "Tel.:"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Resend Purchase Order"
-msgstr ""
+msgstr "InkoopporderBeheer opnieuw verzenden"
 
 #. module: purchase
 #: help:purchase.config.settings,group_purchase_delivery_address:0
@@ -1930,7 +1936,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.order,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "Volgers"
 
 #. module: purchase
 #: help:purchase.config.settings,module_purchase_requisition:0
@@ -1951,7 +1957,7 @@ msgstr "Factuurregels"
 #. module: purchase
 #: model:ir.actions.server,name:purchase.actions_server_purchase_order_read
 msgid "Mark read"
-msgstr ""
+msgstr "Markeer als gelezen"
 
 #. module: purchase
 #: model:ir.actions.act_window,help:purchase.action_purchase_order_report_all
@@ -1967,7 +1973,7 @@ msgstr ""
 #. module: purchase
 #: model:email.template,report_name:purchase.email_template_edi_purchase
 msgid "RFQ_${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "Offerte_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:971
@@ -2008,7 +2014,7 @@ msgstr "EDI Prijslijst (%s)"
 #: view:purchase.report:0
 #: field:purchase.report,product_uom:0
 msgid "Reference Unit of Measure"
-msgstr ""
+msgstr "Maateenheid referentie"
 
 #. module: purchase
 #: view:purchase.report:0
@@ -2118,6 +2124,8 @@ msgstr "Januari"
 #: constraint:stock.move:0
 msgid "You cannot move products from or to a location of the type view."
 msgstr ""
+"Het is niet mogelijk om producten te verplaatsen naar een locatie van het "
+"type 'weergave'"
 
 #. module: purchase
 #: help:purchase.order,invoice_method:0
@@ -2231,7 +2239,7 @@ msgstr "Totaalbedrag"
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_template
 msgid "Product Template"
-msgstr ""
+msgstr "Productsjabloon"
 
 #. module: purchase
 #: view:purchase.order.group:0
