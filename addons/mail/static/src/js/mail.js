@@ -237,11 +237,9 @@ openerp.mail = function (session) {
 
         /* Convert date, timerelative and avatar in displayable data. */
         format_data: function () {
-
             //formating and add some fields for render
             if (this._date) {
-                this.date = session.web.format_value(this._date, {type:"datetime"});
-                this.timerelative = $.timeago(this.date);
+                this.timerelative = $.timeago(this._date+"Z");
             } 
             if (this.type == 'email' && (!this.author_id || !this.author_id[0])) {
                 this.avatar = ('/mail/static/src/img/email_icon.png');
@@ -1397,9 +1395,10 @@ openerp.mail = function (session) {
          *      when the user clic on this compact mode, the composer is open
          *...  @param {Array} [message_ids] List of ids to fetch by the root thread.
          *      When you use this option, the domain is not used for the fetch root.
-         *     @param {String} [no_message] Message to display when there are no message
-         *     @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
-         *     @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
+         *...  @param {String} [help] Message to display when there are no message.
+         *...  @param {String} [compose_placeholder] Message to display on the textareaboxes.
+         *...  @param {Boolean} [show_link_partner] Display partner (authors, followers...) on link or not
+         *...  @param {Boolean} [compose_as_todo] The root composer mark automatically the message as todo
          */
         init: function (parent, action) {
             this._super(parent, action);
