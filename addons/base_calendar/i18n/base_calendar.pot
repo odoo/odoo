@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:23+0000\n"
+"PO-Revision-Date: 2012-12-03 10:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -328,6 +328,11 @@ msgid "Meetings"
 msgstr ""
 
 #. module: base_calendar
+#: selection:calendar.attendee,cutype:0
+msgid "Room"
+msgstr ""
+
+#. module: base_calendar
 #: field:calendar.event,recurrent_id:0
 #: field:calendar.todo,recurrent_id:0
 #: field:crm.meeting,recurrent_id:0
@@ -497,18 +502,20 @@ msgid "Email"
 msgstr ""
 
 #. module: base_calendar
-#: selection:calendar.attendee,cutype:0
-msgid "Room"
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
+msgid "CRM Meeting: Mark unread"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
-msgid "Mark read"
+#: selection:calendar.alarm,state:0
+msgid "Run"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_calendar_alarm
-msgid "Event alarm information"
+#: field:calendar.event,exdate:0
+#: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
+msgid "Exception Date/Times"
 msgstr ""
 
 #. module: base_calendar
@@ -1052,6 +1059,11 @@ msgid "Interval"
 msgstr ""
 
 #. module: base_calendar
+#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_read
+msgid "CRM Meeting: Mark read"
+msgstr ""
+
+#. module: base_calendar
 #: selection:calendar.event,week_list:0
 #: selection:calendar.todo,week_list:0
 #: selection:crm.meeting,week_list:0
@@ -1410,10 +1422,8 @@ msgid "Name"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,exdate:0
-#: field:calendar.todo,exdate:0
-#: field:crm.meeting,exdate:0
-msgid "Exception Date/Times"
+#: model:ir.model,name:base_calendar.model_calendar_alarm
+msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
@@ -1447,11 +1457,6 @@ msgid "Email addresses not found"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.actions.server,name:base_calendar.actions_server_crm_meeting_unread
-msgid "Mark unread"
-msgstr ""
-
-#. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
 msgstr ""
@@ -1480,11 +1485,6 @@ msgstr ""
 #: code:addons/base_calendar/base_calendar.py:417
 #, python-format
 msgid "First you have to specify the date of the invitation."
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.alarm,state:0
-msgid "Run"
 msgstr ""
 
 #. module: base_calendar

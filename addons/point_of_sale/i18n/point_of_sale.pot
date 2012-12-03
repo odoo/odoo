@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 10:22+0000\n"
+"PO-Revision-Date: 2012-12-03 10:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -48,12 +48,6 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.ean_wizard:0
-msgid "Enter a reference for this product, it will be converted\n"
-"                        automatically to a valid EAN number."
 msgstr ""
 
 #. module: point_of_sale
@@ -134,7 +128,7 @@ msgid "Red grapefruit"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1342
+#: code:addons/point_of_sale/point_of_sale.py:1343
 #, python-format
 msgid "Assign a Custom EAN"
 msgstr ""
@@ -185,8 +179,8 @@ msgid "Reference"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1039
-#: code:addons/point_of_sale/point_of_sale.py:1055
+#: code:addons/point_of_sale/point_of_sale.py:1040
+#: code:addons/point_of_sale/point_of_sale.py:1056
 #: report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
@@ -223,7 +217,7 @@ msgid "Help needed"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:740
+#: code:addons/point_of_sale/point_of_sale.py:741
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -316,7 +310,7 @@ msgid "Disc.(%)"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -604,7 +598,7 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:869
+#: code:addons/point_of_sale/point_of_sale.py:870
 #, python-format
 msgid "Customer Invoice"
 msgstr ""
@@ -917,6 +911,11 @@ msgid "pos.session.opening"
 msgstr ""
 
 #. module: point_of_sale
+#: view:res.users:0
+msgid "Edit EAN"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
@@ -954,7 +953,7 @@ msgid "User's Product"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1141
+#: code:addons/point_of_sale/point_of_sale.py:1142
 #, python-format
 msgid "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
@@ -1328,7 +1327,7 @@ msgid "Today's Closed Cashbox"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:899
+#: code:addons/point_of_sale/point_of_sale.py:900
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
@@ -1560,6 +1559,12 @@ msgid "pos.config"
 msgstr ""
 
 #. module: point_of_sale
+#: view:pos.ean_wizard:0
+msgid "Enter a reference, it will be converted\n"
+"                        automatically to a valid EAN number."
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Point of Sale Cash Out"
 msgstr ""
@@ -1603,7 +1608,7 @@ msgid "Number of Transaction"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:739
+#: code:addons/point_of_sale/point_of_sale.py:740
 #, python-format
 msgid "There is no receivable account defined to make payment for the partner: \"%s\" (id:%d)."
 msgstr ""
@@ -1925,7 +1930,7 @@ msgid "Salespeople"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:757
+#: code:addons/point_of_sale/point_of_sale.py:758
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:118
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
@@ -1933,7 +1938,7 @@ msgid "You have to open at least one cashbox."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1140
+#: code:addons/point_of_sale/point_of_sale.py:1141
 #, python-format
 msgid "No Pricelist !"
 msgstr ""
@@ -3035,11 +3040,11 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:411
 #: code:addons/point_of_sale/point_of_sale.py:421
 #: code:addons/point_of_sale/point_of_sale.py:459
-#: code:addons/point_of_sale/point_of_sale.py:713
-#: code:addons/point_of_sale/point_of_sale.py:757
-#: code:addons/point_of_sale/point_of_sale.py:819
-#: code:addons/point_of_sale/point_of_sale.py:899
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:714
+#: code:addons/point_of_sale/point_of_sale.py:758
+#: code:addons/point_of_sale/point_of_sale.py:820
+#: code:addons/point_of_sale/point_of_sale.py:900
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box.py:22
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -3133,7 +3138,7 @@ msgid "Chaudfontaine 1.5l"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1067
+#: code:addons/point_of_sale/point_of_sale.py:1068
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
@@ -3177,7 +3182,7 @@ msgid "Journal Entry"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:737
+#: code:addons/point_of_sale/point_of_sale.py:738
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
@@ -3295,7 +3300,7 @@ msgid "Coca-Cola Regular 1L"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:713
+#: code:addons/point_of_sale/point_of_sale.py:714
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr ""
@@ -3336,7 +3341,7 @@ msgid "Spa Barisart 1.5l"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:790
+#: code:addons/point_of_sale/point_of_sale.py:791
 #: view:pos.order:0
 #, python-format
 msgid "Return Products"
@@ -3493,7 +3498,7 @@ msgid "PRO-FORMA"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:819
+#: code:addons/point_of_sale/point_of_sale.py:820
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr ""
@@ -3803,7 +3808,6 @@ msgstr ""
 
 #. module: point_of_sale
 #: view:res.partner:0
-#: view:res.users:0
 msgid "Edit"
 msgstr ""
 

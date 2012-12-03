@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 10:22+0000\n"
+"PO-Revision-Date: 2012-12-03 10:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -44,7 +44,6 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr.open_board_hr
 #: model:ir.ui.menu,name:hr.menu_hr_dashboard
 #: model:ir.ui.menu,name:hr.menu_hr_main
-#: model:ir.ui.menu,name:hr.menu_hr_management
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 #: model:ir.ui.menu,name:hr.menu_hr_root
 #: model:ir.ui.menu,name:hr.menu_human_resources_configuration
@@ -155,8 +154,9 @@ msgid "Birth"
 msgstr ""
 
 #. module: hr
-#: field:hr.employee,last_login:0
-msgid "Latest Connection"
+#: model:ir.actions.act_window,name:hr.open_view_categ_form
+#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
+msgid "Employee Tags"
 msgstr ""
 
 #. module: hr
@@ -237,12 +237,6 @@ msgstr ""
 #. module: hr
 #: selection:hr.employee,gender:0
 msgid "Female"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_form
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_form
-msgid "Categories of Employees"
 msgstr ""
 
 #. module: hr
@@ -343,6 +337,11 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_configuration
 msgid "Configuration"
+msgstr ""
+
+#. module: hr
+#: model:process.node,note:hr.process_node_employee0
+msgid "Employee form and structure"
 msgstr ""
 
 #. module: hr
@@ -640,8 +639,8 @@ msgid "ir.actions.act_window"
 msgstr ""
 
 #. module: hr
-#: model:process.node,note:hr.process_node_employee0
-msgid "Employee form and structure"
+#: field:hr.employee,last_login:0
+msgid "Latest Connection"
 msgstr ""
 
 #. module: hr
@@ -737,12 +736,6 @@ msgstr ""
 #. module: hr
 #: field:hr.config.settings,module_hr_timesheet:0
 msgid "Manage timesheets"
-msgstr ""
-
-#. module: hr
-#: model:ir.actions.act_window,name:hr.open_view_categ_tree
-#: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories Structure"
 msgstr ""
 
 #. module: hr

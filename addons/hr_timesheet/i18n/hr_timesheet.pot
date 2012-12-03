@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 10:22+0000\n"
+"PO-Revision-Date: 2012-12-03 10:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -122,8 +122,8 @@ msgid "Minimum Analytic Amount"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytic.timesheet:0
-msgid "Total time"
+#: view:hr.analytical.timesheet.employee:0
+msgid "Monthly Employee Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
@@ -202,6 +202,11 @@ msgstr ""
 #: code:addons/hr_timesheet/report/users_timesheet.py:77
 #, python-format
 msgid "Sun"
+msgstr ""
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
 msgstr ""
 
 #. module: hr_timesheet
@@ -331,6 +336,11 @@ msgid "or"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
+
+#. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
 msgid "Employee timesheet"
 msgstr ""
@@ -357,6 +367,7 @@ msgid "(Keep empty for current time)"
 msgstr ""
 
 #. module: hr_timesheet
+#: field:account.analytic.account,use_timesheets:0
 #: view:hr.employee:0
 msgid "Timesheets"
 msgstr ""
@@ -487,6 +498,7 @@ msgid "Error! You cannot create recursive hierarchy of Employee(s)."
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
@@ -541,8 +553,8 @@ msgid "May"
 msgstr ""
 
 #. module: hr_timesheet
-#: view:hr.analytical.timesheet.employee:0
-msgid "Monthly Employee Timesheet"
+#: view:hr.analytic.timesheet:0
+msgid "Total time"
 msgstr ""
 
 #. module: hr_timesheet
@@ -611,11 +623,6 @@ msgid "User Error!"
 msgstr ""
 
 #. module: hr_timesheet
-#: field:account.analytic.account,use_timesheets:0
-msgid "Use Timesheets"
-msgstr ""
-
-#. module: hr_timesheet
 #: view:hr.sign.in.project:0
 msgid "Start Working"
 msgstr ""
@@ -634,6 +641,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
+msgstr ""
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet

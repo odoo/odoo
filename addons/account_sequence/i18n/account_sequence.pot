@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:23+0000\n"
+"PO-Revision-Date: 2012-12-03 10:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -140,6 +140,11 @@ msgid "Prefix value of the record for the sequence"
 msgstr ""
 
 #. module: account_sequence
+#: constraint:account.move.line:0
+msgid "The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit."
+msgstr ""
+
+#. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_move
 msgid "Account Entry"
 msgstr ""
@@ -147,6 +152,16 @@ msgstr ""
 #. module: account_sequence
 #: field:account.sequence.installer,suffix:0
 msgid "Suffix"
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
+msgstr ""
+
+#. module: account_sequence
+#: constraint:account.move.line:0
+msgid "You cannot provide a secondary currency if it is the same than the company one."
 msgstr ""
 
 #. module: account_sequence

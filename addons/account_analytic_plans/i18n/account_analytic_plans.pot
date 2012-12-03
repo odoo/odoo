@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:23+0000\n"
+"PO-Revision-Date: 2012-12-03 10:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -123,6 +123,16 @@ msgstr ""
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
 msgid "Bank Statement Line"
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "You cannot provide a secondary currency if it is the same than the company one."
 msgstr ""
 
 #. module: account_analytic_plans
@@ -248,8 +258,8 @@ msgid "Currency"
 msgstr ""
 
 #. module: account_analytic_plans
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
+#: field:account.crossovered.analytic,date1:0
+msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_plans
@@ -488,8 +498,13 @@ msgid "Please put a name and a code before saving the model."
 msgstr ""
 
 #. module: account_analytic_plans
-#: field:account.crossovered.analytic,date1:0
-msgid "Start Date"
+#: constraint:account.analytic.line:0
+msgid "You cannot create analytic line on view account."
+msgstr ""
+
+#. module: account_analytic_plans
+#: constraint:account.move.line:0
+msgid "The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit."
 msgstr ""
 
 #. module: account_analytic_plans

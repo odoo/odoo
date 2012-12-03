@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:23+0000\n"
+"PO-Revision-Date: 2012-12-03 10:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -173,6 +173,11 @@ msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: view:account.analytic.account:0
+msgid "{'required': [('type','=','contract')], 'invisible': [('type','in',['view', 'normal','template'])]}"
+msgstr ""
+
+#. module: account_analytic_analysis
 #: field:account.analytic.account,real_margin_rate:0
 msgid "Real Margin Rate (%)"
 msgstr ""
@@ -196,6 +201,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_analytic_analysis.template_of_contract_action
 #: model:ir.ui.menu,name:account_analytic_analysis.menu_template_of_contract_action
 msgid "Template of Contract"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:res.groups,name:account_analytic_analysis.group_template_required
+msgid "Mandatory use of templates in contracts"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -252,8 +262,8 @@ msgid "Start Date"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: help:account.analytic.account,total_cost:0
-msgid "Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets."
+#: view:account.analytic.account:0
+msgid "Invoiced"
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -272,7 +282,7 @@ msgid "Timesheets"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: code:addons/account_analytic_analysis/account_analytic_analysis.py:452
+#: code:addons/account_analytic_analysis/account_analytic_analysis.py:461
 #, python-format
 msgid "Sale Order Lines of %s"
 msgstr ""
@@ -351,8 +361,8 @@ msgid "Contract"
 msgstr ""
 
 #. module: account_analytic_analysis
-#: view:account.analytic.account:0
-msgid "Invoiced"
+#: help:sale.config.settings,group_template_required:0
+msgid "Allows you to set the template field as required when creating an analytic account or a contract."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -485,8 +495,23 @@ msgid "Date of the latest work done on this account."
 msgstr ""
 
 #. module: account_analytic_analysis
+#: model:ir.model,name:account_analytic_analysis.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: field:sale.config.settings,group_template_required:0
+msgid "Mandatory use of templates."
+msgstr ""
+
+#. module: account_analytic_analysis
 #: view:account.analytic.account:0
 msgid "Contracts Having a Partner"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: help:account.analytic.account,total_cost:0
+msgid "Total of costs for this account. It includes real costs (from invoices) and indirect costs, like time spent on timesheets."
 msgstr ""
 
 #. module: account_analytic_analysis
@@ -508,6 +533,11 @@ msgstr ""
 #: field:account_analytic_analysis.summary.month,unit_amount:0
 #: field:account_analytic_analysis.summary.user,unit_amount:0
 msgid "Total Time"
+msgstr ""
+
+#. module: account_analytic_analysis
+#: model:res.groups,comment:account_analytic_analysis.group_template_required
+msgid "the field template of the analytic accounts and contracts will be required."
 msgstr ""
 
 #. module: account_analytic_analysis

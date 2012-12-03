@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 10:25+0000\n"
+"PO-Revision-Date: 2012-12-03 10:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -61,8 +61,8 @@ msgid "Company"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,user_id:0
-msgid "Salesperson"
+#: field:portal_crm.crm_contact_us,day_open:0
+msgid "Days to Open"
 msgstr ""
 
 #. module: portal_crm
@@ -147,6 +147,11 @@ msgid "Partner"
 msgstr ""
 
 #. module: portal_crm
+#: model:ir.actions.act_window,name:portal_crm.action_contact_us
+msgid "Contact Us"
+msgstr ""
+
+#. module: portal_crm
 #: field:portal_crm.crm_contact_us,name:0
 msgid "Subject"
 msgstr ""
@@ -202,6 +207,11 @@ msgid "Channel"
 msgstr ""
 
 #. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Name"
+msgstr ""
+
+#. module: portal_crm
 #: selection:portal_crm.crm_contact_us,priority:0
 msgid "Lowest"
 msgstr ""
@@ -209,6 +219,11 @@ msgstr ""
 #. module: portal_crm
 #: field:portal_crm.crm_contact_us,create_date:0
 msgid "Creation Date"
+msgstr ""
+
+#. module: portal_crm
+#: view:portal_crm.crm_contact_us:0
+msgid "Close"
 msgstr ""
 
 #. module: portal_crm
@@ -247,7 +262,6 @@ msgid "Contact Name"
 msgstr ""
 
 #. module: portal_crm
-#: model:ir.actions.act_window,name:portal_crm.action_wizard_contact_us
 #: model:ir.ui.menu,name:portal_crm.portal_company_contact
 msgid "Contact"
 msgstr ""
@@ -268,8 +282,13 @@ msgid "Tasks"
 msgstr ""
 
 #. module: portal_crm
-#: help:portal_crm.crm_contact_us,email_from:0
-msgid "Email address of the contact"
+#: view:portal_crm.crm_contact_us:0
+msgid "Contact form"
+msgstr ""
+
+#. module: portal_crm
+#: field:portal_crm.crm_contact_us,company_currency:0
+msgid "Currency"
 msgstr ""
 
 #. module: portal_crm
@@ -379,8 +398,8 @@ msgid "Active"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,day_open:0
-msgid "Days to Open"
+#: field:portal_crm.crm_contact_us,user_id:0
+msgid "Salesperson"
 msgstr ""
 
 #. module: portal_crm
@@ -392,11 +411,6 @@ msgstr ""
 #: field:portal_crm.crm_contact_us,message_comment_ids:0
 #: help:portal_crm.crm_contact_us,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: portal_crm
-#: view:portal_crm.crm_contact_us:0
-msgid "Contact wizard view"
 msgstr ""
 
 #. module: portal_crm
@@ -430,6 +444,11 @@ msgid "Last date this case was forwarded/assigned to a partner"
 msgstr ""
 
 #. module: portal_crm
+#: help:portal_crm.crm_contact_us,email_from:0
+msgid "Email address of the contact"
+msgstr ""
+
+#. module: portal_crm
 #: field:portal_crm.crm_contact_us,city:0
 msgid "City"
 msgstr ""
@@ -445,8 +464,8 @@ msgid "Function"
 msgstr ""
 
 #. module: portal_crm
-#: field:portal_crm.crm_contact_us,company_currency:0
-msgid "Company Currency"
+#: sql_constraint:portal_crm.crm_contact_us:0
+msgid "The probability of closing the deal should be between 0% and 100%!"
 msgstr ""
 
 #. module: portal_crm

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 10:25+0000\n"
+"PO-Revision-Date: 2012-12-03 10:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,13 +21,13 @@ msgid "Order Reference must be unique per Company!"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.product_normal_action
-msgid "There are no public products."
+#: model:ir.model,name:portal_sale.model_account_config_settings
+msgid "account.config.settings"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_picking_tree
-msgid "You don't have any delivery order."
+#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
+msgid "We haven't sent you any invoice."
 msgstr ""
 
 #. module: portal_sale
@@ -46,13 +46,23 @@ msgid "Show payment buttons to employees too"
 msgstr ""
 
 #. module: portal_sale
+#: model:ir.actions.act_window,help:portal_sale.action_orders_portal
+msgid "We haven't sent you any sale order."
+msgstr ""
+
+#. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_sale
 msgid "${object.company_id.name} ${object.state in ('draft', 'sent') and 'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_account_config_settings
-msgid "account.config.settings"
+#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
+msgid "We haven't sent you any quotation."
+msgstr ""
+
+#. module: portal_sale
+#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
+msgid "Sales Orders"
 msgstr ""
 
 #. module: portal_sale
@@ -161,24 +171,13 @@ msgid "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draf
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_orders_portal
-msgid "You don't have any sale order."
-msgstr ""
-
-#. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.product_normal_action
-#: model:ir.ui.menu,name:portal_sale.portal_products
-msgid "Products"
-msgstr ""
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
-msgid "You don't have any invoice."
+#: model:ir.model,name:portal_sale.model_mail_mail
+msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal_sale
@@ -209,20 +208,9 @@ msgid "Show online payment options on Sale Orders and Customer Invoices to emplo
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
-msgid "You don't have any quotation."
-msgstr ""
-
-#. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
 #: model:ir.ui.menu,name:portal_sale.portal_invoices
 msgid "Invoices"
-msgstr ""
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.portal_action_vouchers
-#: model:ir.ui.menu,name:portal_sale.portal_payments
-msgid "Refunds/Payments"
 msgstr ""
 
 #. module: portal_sale
@@ -328,25 +316,13 @@ msgid "\n"
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_vouchers
-msgid "You don't have any refunds or payments."
-msgstr ""
-
-#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
 msgstr ""
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sale Orders"
-msgstr ""
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_picking_tree
-#: model:ir.ui.menu,name:portal_sale.portal_delivery
-msgid "Delivery Orders"
 msgstr ""
 
 #. module: portal_sale

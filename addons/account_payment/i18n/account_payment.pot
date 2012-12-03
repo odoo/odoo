@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:23+0000\n"
+"PO-Revision-Date: 2012-12-03 10:23+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -100,11 +100,6 @@ msgid "Due Date"
 msgstr ""
 
 #. module: account_payment
-#: view:account.move.line:0
-msgid "Account Entry Line"
-msgstr ""
-
-#. module: account_payment
 #: view:payment.order.create:0
 msgid "_Add to payment order"
 msgstr ""
@@ -116,6 +111,13 @@ msgid "Payment Populate statement"
 msgstr ""
 
 #. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
+#, python-format
+msgid "You cannot cancel an invoice which has already been imported in a payment order. Remove it from the following payment order : %s."
+msgstr ""
+
+#. module: account_payment
+#: code:addons/account_payment/account_invoice.py:43
 #: code:addons/account_payment/account_move_line.py:110
 #, python-format
 msgid "Error!"
@@ -148,9 +150,24 @@ msgid "New Payment Order"
 msgstr ""
 
 #. module: account_payment
+#: field:payment.order,total:0
+msgid "Total"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
+msgstr ""
+
+#. module: account_payment
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
+msgstr ""
+
+#. module: account_payment
+#: constraint:account.move.line:0
+msgid "You cannot provide a secondary currency if it is the same than the company one."
 msgstr ""
 
 #. module: account_payment
@@ -259,11 +276,6 @@ msgstr ""
 #. module: account_payment
 #: field:payment.order,date_created:0
 msgid "Creation Date"
-msgstr ""
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total debit"
 msgstr ""
 
 #. module: account_payment
@@ -425,11 +437,6 @@ msgstr ""
 #. module: account_payment
 #: view:account.payment.populate.statement:0
 msgid "Populate Statement:"
-msgstr ""
-
-#. module: account_payment
-#: view:account.move.line:0
-msgid "Total credit"
 msgstr ""
 
 #. module: account_payment
@@ -681,8 +688,8 @@ msgid "Order"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
+#: constraint:account.move.line:0
+msgid "The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit."
 msgstr ""
 
 #. module: account_payment

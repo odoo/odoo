@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:53+0000\n"
-"PO-Revision-Date: 2012-11-24 02:53+0000\n"
+"POT-Creation-Date: 2012-12-03 10:25+0000\n"
+"PO-Revision-Date: 2012-12-03 10:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,11 +66,6 @@ msgid "Invitation Message"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_company
-msgid "Our company"
-msgstr ""
-
-#. module: portal
 #: view:res.groups:0
 msgid "Non-Portal Groups"
 msgstr ""
@@ -78,6 +73,16 @@ msgstr ""
 #. module: portal
 #: view:share.wizard:0
 msgid "Details"
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_orders
+msgid "Quotations and Sales Orders"
+msgstr ""
+
+#. module: portal
+#: view:portal.payment.acquirer:0
+msgid "reference: the reference number of the document to pay"
 msgstr ""
 
 #. module: portal
@@ -101,12 +106,20 @@ msgid "Email"
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_news
+msgid "<p>\n"
+"                    Youd don't have unread company's news.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: view:portal.wizard:0
 msgid "or"
 msgstr ""
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.action_jobs
+#: model:ir.actions.client,name:portal.action_jobs
 #: model:ir.ui.menu,name:portal.portal_jobs
 msgid "Jobs"
 msgstr ""
@@ -139,6 +152,14 @@ msgid "Users you already shared with"
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_jobs
+msgid "<p>\n"
+"                    Youd don't have unread job offers.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: model:ir.ui.menu,name:portal.company_jobs_ir_ui_menu
 msgid "Company's jobs"
 msgstr ""
@@ -168,8 +189,9 @@ msgid "In Portal"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_invoices_payements
-msgid "Invoices and Payments"
+#: model:ir.actions.client,name:portal.action_news
+#: model:ir.ui.menu,name:portal.portal_company_news
+msgid "News"
 msgstr ""
 
 #. module: portal
@@ -192,6 +214,12 @@ msgstr ""
 #. module: portal
 #: model:ir.ui.menu,name:portal.portal_projects
 msgid "Projects"
+msgstr ""
+
+#. module: portal
+#: model:ir.actions.client,name:portal.action_mail_inbox_feeds_portal
+#: model:ir.ui.menu,name:portal.portal_inbox
+msgid "Inbox"
 msgstr ""
 
 #. module: portal
@@ -257,24 +285,18 @@ msgid "Outgoing Mails"
 msgstr ""
 
 #. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:199
+#: code:addons/portal/wizard/portal_wizard.py:194
 #, python-format
 msgid "Email required"
 msgstr ""
 
 #. module: portal
-#: model:ir.actions.act_window,name:portal.action_news
-#: model:ir.ui.menu,name:portal.portal_company_news
-msgid "News"
+#: model:ir.ui.menu,name:portal.portal_messages
+msgid "Messaging"
 msgstr ""
 
 #. module: portal
-#: view:portal.payment.acquirer:0
-msgid "reference: the reference number of the document to pay"
-msgstr ""
-
-#. module: portal
-#: code:addons/portal/wizard/portal_wizard.py:200
+#: code:addons/portal/wizard/portal_wizard.py:195
 #, python-format
 msgid "You must have an email address in your User Preferences to send emails."
 msgstr ""
@@ -290,8 +312,25 @@ msgid "object: the document on which the payment form is rendered (usually an in
 msgstr ""
 
 #. module: portal
+#: model:ir.actions.client,help:portal.action_mail_inbox_feeds_portal
+msgid "<p>\n"
+"                    <b>Good Job!</b> Your inbox is empty.\n"
+"                </p><p>\n"
+"                    Your inbox contains private messages or emails sent to you\n"
+"                    as well as information related to documents or people you\n"
+"                    follow.\n"
+"                </p>\n"
+"            "
+msgstr ""
+
+#. module: portal
 #: help:portal.wizard,welcome_message:0
 msgid "This text is included in the email sent to new users of the portal."
+msgstr ""
+
+#. module: portal
+#: model:ir.ui.menu,name:portal.portal_company
+msgid "About Us"
 msgstr ""
 
 #. module: portal
@@ -302,11 +341,6 @@ msgstr ""
 #. module: portal
 #: view:portal.payment.acquirer:0
 msgid "Payment Acquirer"
-msgstr ""
-
-#. module: portal
-#: model:ir.model,name:portal.model_portal_wizard_user
-msgid "Portal User Config"
 msgstr ""
 
 #. module: portal
@@ -348,8 +382,8 @@ msgid "\n"
 msgstr ""
 
 #. module: portal
-#: model:ir.ui.menu,name:portal.portal_orders
-msgid "Orders"
+#: model:ir.model,name:portal.model_portal_wizard_user
+msgid "Portal User Config"
 msgstr ""
 
 #. module: portal

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 10:22+0000\n"
+"PO-Revision-Date: 2012-12-03 10:22+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -335,9 +335,8 @@ msgid "Job Description"
 msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-#: field:hr.applicant,source_id:0
-msgid "Source"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "HR Applicant: Mark read"
 msgstr ""
 
 #. module: hr_recruitment
@@ -394,11 +393,6 @@ msgid "Good"
 msgstr ""
 
 #. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
-msgid "Mark read"
-msgstr ""
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 #: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
@@ -409,6 +403,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_hired_employee
 #: model:ir.model,name:hr_recruitment.model_hired_employee
 msgid "Create Employee"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
 msgstr ""
 
 #. module: hr_recruitment
@@ -735,8 +734,8 @@ msgid "Degree"
 msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "HR Applicant: Mark unread"
 msgstr ""
 
 #. module: hr_recruitment
@@ -890,6 +889,12 @@ msgstr ""
 #: code:addons/hr_recruitment/hr_recruitment.py:492
 #, python-format
 msgid "Applicant has been <b>hired</b> and created as an employee."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
 msgstr ""
 
 #. module: hr_recruitment
@@ -1152,11 +1157,6 @@ msgstr ""
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "April"
-msgstr ""
-
-#. module: hr_recruitment
-#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
-msgid "Mark unread"
 msgstr ""
 
 #. module: hr_recruitment
