@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-18 15:14+0000\n"
+"PO-Revision-Date: 2012-12-01 16:25+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:51+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-02 04:37+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -97,7 +97,7 @@ msgstr "E-mail onderwerp"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "Betalingsherinneringen stappen"
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
@@ -113,7 +113,7 @@ msgstr "Legenda"
 #. module: account_followup
 #: field:account.followup.print.all,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "Email bericht"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -121,7 +121,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "Verstuur Betalingsherinneringen"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -214,7 +214,7 @@ msgstr "%(user_signature)s: Gebruikersnaam"
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr ""
+msgstr "Betalingsherinneringen rapportage"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -224,12 +224,12 @@ msgstr "Debet"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "Betalingsherinneringen analyses"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "Betalingsherinneringen creteria"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
@@ -241,6 +241,8 @@ msgstr ""
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view."
 msgstr ""
+"Het is niet mogelijk om journaalposten te maken in een rekening van het type "
+"'weergave'"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -257,7 +259,7 @@ msgstr "Laatste betalingsherinnering"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "Betalingsherinneringen afdrukken & E-mails naar klanten versturen"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:292
@@ -269,6 +271,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"E-mails succesvol verzonden naar de navolgende relaties:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -278,12 +285,12 @@ msgstr "Bt."
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "Stuur e-mail bevestiging"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "Laatste betalingsherinnering"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -337,7 +344,7 @@ msgstr "Relatie voor betalingsherinnering"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "Kostenplaats en periode moeten behoren tot hetzelfde bedrijf."
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -348,7 +355,7 @@ msgstr "Betalingsherinneringen"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "Betalingsherinneringen"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -378,7 +385,7 @@ msgstr "E-mails versturen"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr ""
+msgstr "Zoek betalingsherinnering"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
@@ -389,7 +396,7 @@ msgstr "Bericht"
 #: view:account.followup.print:0
 #: view:account.followup.print.all:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -400,6 +407,7 @@ msgstr "Geblokkeerd"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
 msgstr ""
+"Het is niet mogelijk om journaalposten te maken in een gesloten rekenening"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:291
@@ -409,6 +417,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-mail naar de navolgende relaties niet verzonden. geen e-mail adres "
+"beschikbaar.\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -442,7 +454,7 @@ msgstr "Betalingsherinneringen afdrukken"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "Betalingsherinneringen met refels in het huidige jaar"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -459,6 +471,8 @@ msgstr "%(user_signature)s: Gebruikersnaam"
 msgid ""
 "Check if you want to print follow-ups without changing follow-ups level."
 msgstr ""
+"Vink dit aan indien u een betalingsherinneringen wilt afdrukken, zonder het "
+"Betalingsherinnering niveau te wijzigen."
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -469,7 +483,7 @@ msgstr "Boekingen"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-ups"
-msgstr ""
+msgstr "Betalingsherinneringen"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -499,6 +513,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Alle e-mails zijn succesvol verzonden naar de navolgende relaties:\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -518,7 +535,7 @@ msgstr "%(partner_name)s: Relatienaam"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "Laaste betalingsherinnering datum"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -628,7 +645,7 @@ msgstr "Boekingen relatie"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up lines"
-msgstr ""
+msgstr "Betalingsherinneringregels"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -671,7 +688,7 @@ msgstr "Eerste boeking"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "Betalingsherinnering analyses per relatie"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -697,7 +714,7 @@ msgstr "Document: Rekeningoverzicht klant"
 #. module: account_followup
 #: view:account.followup.print:0
 msgid "Send follow-ups"
-msgstr ""
+msgstr "Verstuur Betalingsherinneringen"
 
 #. module: account_followup
 #: view:account.move.line:0
