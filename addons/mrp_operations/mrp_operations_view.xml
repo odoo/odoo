@@ -84,7 +84,7 @@
                 <page string="Information">
                     <group>
                         <group string="Planned Date">
-                            <field name="date_planned" on_change="onchange_get_date_end(date_planned, cycle, hour)"/>
+                            <field name="date_planned" on_change="onchange_get_date_end(workcenter_id, date_planned, cycle, hour,context)"/>
                             <field name="date_planned_end"/>
                         </group>
 

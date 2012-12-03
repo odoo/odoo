@@ -56,8 +56,9 @@ class mrp_production_workcenter_line(osv.osv):
         @return: Dictionary of values.
         """
         ops = self.browse(cr, uid, ids, context=context)
+        print "ops????????????/", ops
         date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
-
+        print "date_and_hours_by_cal>>>>>", date_and_hours_by_cal
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
 
         res = {}
@@ -71,19 +72,32 @@ class mrp_production_workcenter_line(osv.osv):
                     res[op.id] = op.date_planned
         return res
     
-    def onchange_get_date_end(self, cr, uid, ids, date_planned,cycle,hour, context=None):
+    def onchange_get_date_end(self, cr, uid, ids,workcenter_id, date_planned,cycle,hour, context=None):
         """ Finds ending date from schedule date's onchange.
         """
-        date_and_hours_by_cal = [(date_planned,hour, 1)]
+#        date_and_hours_by_cal = [(date_planned,hour, 1)]
+#        intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
+#        i = intervals.get((date_planned,hour, 1))
+#        if i:
+#            res = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+#        else:
+#            res = date_planned
+        work_ids=self.search(cr,uid,[('workcenter_id','=',workcenter_id)],context=context)
+        ops = self.browse(cr, uid, work_ids, context=context)
+        date_and_hours_by_cal = [(op.date_planned, op.hour, op.workcenter_id.calendar_id.id) for op in ops if op.date_planned]
         intervals = self.pool.get('resource.calendar').interval_get_multi(cr, uid, date_and_hours_by_cal)
-        i = intervals.get((date_planned,hour, 1))
-        if i:
-            res = i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
-        else:
-            res = date_planned
+        res = False
+        for op in ops:
+            print "op.planned date>>>>>>>>>", op.date_planned
+            if date_planned:
+                i = intervals.get((op.date_planned,op.hour, op.workcenter_id.calendar_id.id))
+                if i:
+                    res= i[-1][1].strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    res = date_planned
         return {'value':{'date_planned_end': res}}
 
-    def onchange_production_id(self, cr, uid, ids, production_id, context=None):
+    def onchange_production_id(self, cr, uid,  production_id, context=None):
         """ Finds UoM of changed product.
         @param product_id: Id of changed product.
         @return: Dictionary of values.
