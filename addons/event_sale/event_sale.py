@@ -71,6 +71,8 @@ class sale_order_line(osv.osv):
         '''
         create registration with sale order
         '''
+        if context is None:
+            context = {}
         registration_obj = self.pool.get('event.registration')
         sale_obj = self.pool.get('sale.order')
         for order_line in self.browse(cr, uid, ids, context=context):
@@ -84,7 +86,24 @@ class sale_order_line(osv.osv):
                     'origin': order_line.order_id.name,
                     'event_id': order_line.event_id.id,
                 }
+                message = _("The registration has been <b>created</b> for event <i>%s</i> from the Sale Order %s. ") % (order_line.event_id.name, order_line.order_id.name)
+                context.update({'sale_event': True, 'message': message })
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
-                message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
-                registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)
+
+sale_order_line()
+
+class event_registration(osv.osv):
+    _inherit = 'event.registration'
+
+    # ----------------------------------------
+    # OpenChatter methods and notifications
+    # ----------------------------------------
+
+    def create_send_note(self, cr, uid, ids, context=None):
+        if context.get("sale_event") and context.get("message"):
+            message = context.get("message")
+            self.message_post(cr, uid, ids, body=message, context=context)
+        else:
+            super(event_registration, self).create_send_note(cr, uid, ids, context)
+        return True
