@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-09 03:49+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"PO-Revision-Date: 2012-11-30 12:07+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:52+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -91,12 +91,12 @@ msgstr "电子邮件主题"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-up Steps"
-msgstr ""
+msgstr "催款步骤"
 
 #. module: account_followup
 #: field:account_followup.followup.line,start:0
 msgid "Type of Term"
-msgstr "条件类型"
+msgstr "条款类型"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -107,7 +107,7 @@ msgstr "图表"
 #. module: account_followup
 #: field:account.followup.print.all,email_body:0
 msgid "Email Body"
-msgstr ""
+msgstr "电子邮件正文"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -115,7 +115,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_print_all
 #: model:ir.ui.menu,name:account_followup.account_followup_print_menu
 msgid "Send Follow-Ups"
-msgstr ""
+msgstr "发送催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -125,7 +125,7 @@ msgstr "金额"
 #. module: account_followup
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr "错误的分录"
+msgstr "错误的出纳会计分录"
 
 #. module: account_followup
 #: selection:account_followup.followup.line,start:0
@@ -206,7 +206,7 @@ msgstr "%(user_signature)s：用户名"
 #. module: account_followup
 #: model:ir.actions.report.xml,name:account_followup.account_followup_followup_report
 msgid "Follow-up Report"
-msgstr ""
+msgstr "催款报告"
 
 #. module: account_followup
 #: field:account_followup.stat,debit:0
@@ -216,12 +216,12 @@ msgstr "借方"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat
 msgid "Follow-up Statistics"
-msgstr ""
+msgstr "催款统计"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup_line
 msgid "Follow-up Criteria"
-msgstr ""
+msgstr "催款准则"
 
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
@@ -231,7 +231,7 @@ msgstr "输入序列用于显示催款列表"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view."
-msgstr ""
+msgstr "你不能在视图类型的科目创建账目项目"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -248,7 +248,7 @@ msgstr "最近的催款"
 #: model:ir.model,name:account_followup.model_account_followup_print
 #: model:ir.model,name:account_followup.model_account_followup_print_all
 msgid "Print Follow-up & Send Mail to Customers"
-msgstr ""
+msgstr "打印催款并发送邮件给客户"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:292
@@ -260,6 +260,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"Email 成功发送给下列客户：!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -269,12 +274,12 @@ msgstr "Li."
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
 msgid "Send Email Confirmation"
-msgstr ""
+msgstr "发送邮件确认"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,date_followup:0
 msgid "Latest follow-up"
-msgstr ""
+msgstr "最新的催款"
 
 #. module: account_followup
 #: field:account.followup.print.all,partner_lang:0
@@ -324,7 +329,7 @@ msgstr "提醒合作伙伴"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "科目和会计周期必须属于同一个公司"
 
 #. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
@@ -335,14 +340,14 @@ msgstr "催款"
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_followup
 msgid "Account Follow-up"
-msgstr ""
+msgstr "催款"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
 msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
-msgstr "描述有无，请使用正确的标识或百分数。"
+msgstr "描述有误，请使用正确的标识或百分数。"
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -360,18 +365,18 @@ msgstr "发送邮件"
 #. module: account_followup
 #: view:account_followup.followup:0
 msgid "Search Follow-up"
-msgstr ""
+msgstr "搜索催款"
 
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr "信息"
+msgstr "消息"
 
 #. module: account_followup
 #: view:account.followup.print:0
 #: view:account.followup.print.all:0
 msgid "or"
-msgstr ""
+msgstr "or"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -381,7 +386,7 @@ msgstr "已封锁"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
-msgstr ""
+msgstr "你不能在关闭的科目创建分类账条目"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:291
@@ -391,6 +396,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Email 没有发送给下来业务伙伴,Email不可用!\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -422,7 +430,7 @@ msgstr "打印催款"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up Entries with period in current year"
-msgstr ""
+msgstr "本年度的催款明细"
 
 #. module: account_followup
 #: field:account.move.line,followup_date:0
@@ -438,7 +446,7 @@ msgstr "%(user_signature)s: 用户名"
 #: help:account.followup.print.all,test_print:0
 msgid ""
 "Check if you want to print follow-ups without changing follow-ups level."
-msgstr ""
+msgstr "选中 如果你要打印催款而不改变催款级别。"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -449,7 +457,7 @@ msgstr "账簿明细"
 #: model:ir.actions.act_window,name:account_followup.action_account_followup_definition_form
 #: model:ir.ui.menu,name:account_followup.account_followup_menu
 msgid "Follow-ups"
-msgstr ""
+msgstr "催款"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -459,7 +467,7 @@ msgstr "合计:"
 #. module: account_followup
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建递归公司."
+msgstr "错误！您不能创建循环的公司。"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -479,6 +487,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"所有邮件被成功发送给业务伙伴：\n"
+"\n"
+"%s"
 
 #. module: account_followup
 #: field:account_followup.stat,credit:0
@@ -498,7 +509,7 @@ msgstr "%(partner_name)s: 业务伙伴名称"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Latest Follow-up Date"
-msgstr ""
+msgstr "最新的催款日期"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -529,12 +540,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击定义催款级别和他们相关的信息\n"
+"              </p><p>\n"
+"                每个步骤可指定消息和延时天数。\n"
+"               能管理多种语言的消息。\n"
+"              </p>\n"
+"            "
 
 #. module: account_followup
 #: field:account_followup.stat,date_move_last:0
 #: field:account_followup.stat.by.partner,date_move_last:0
 msgid "Last move"
-msgstr "最近"
+msgstr "最近的凭证"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -556,7 +574,7 @@ msgstr "取消"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Litigation"
-msgstr "有争议"
+msgstr "有异议"
 
 #. module: account_followup
 #: field:account_followup.stat.by.partner,max_followup_id:0
@@ -608,7 +626,7 @@ msgstr "业务伙伴凭证"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow-up lines"
-msgstr ""
+msgstr "催款明细"
 
 #. module: account_followup
 #: help:account.followup.print.all,partner_lang:0
@@ -644,12 +662,12 @@ msgstr "名称"
 #: field:account_followup.stat,date_move:0
 #: field:account_followup.stat.by.partner,date_move:0
 msgid "First move"
-msgstr "首先"
+msgstr "第一个凭证"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_followup_stat_by_partner
 msgid "Follow-up Statistics by Partner"
-msgstr ""
+msgstr "按合作伙伴的催款统计"
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -675,7 +693,7 @@ msgstr "文档: 客户帐户对帐单"
 #. module: account_followup
 #: view:account.followup.print:0
 msgid "Send follow-ups"
-msgstr ""
+msgstr "发送催款"
 
 #. module: account_followup
 #: view:account.move.line:0

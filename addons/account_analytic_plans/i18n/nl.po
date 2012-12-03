@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-02-12 11:32+0000\n"
+"PO-Revision-Date: 2012-12-01 16:15+0000\n"
 "Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:07+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-02 04:38+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -96,7 +96,7 @@ msgstr "Account Id"
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Fout!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -137,7 +137,7 @@ msgstr "Ongeldige BBA gestructureerde communicatie!"
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:41
 #, python-format
 msgid "There is no analytic plan defined."
-msgstr ""
+msgstr "Er is geen kostenplaatplan gedefinieerd"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -190,7 +190,7 @@ msgstr "Perc(%)"
 #: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "There are no analytic lines related to account %s."
-msgstr ""
+msgstr "Er zijn geen kostenplaatsregels gekoppeld aan deze kostenplaats %s."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance.line,analytic_account_id:0
@@ -232,7 +232,7 @@ msgstr "Kostenplaatsboekingen"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Account and Period must belong to the same company."
-msgstr ""
+msgstr "Kostenplaats en periode moeten behoren tot hetzelfde bedrijf."
 
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
@@ -264,6 +264,8 @@ msgstr "Valuta"
 #: constraint:account.analytic.line:0
 msgid "You cannot create analytic line on view account."
 msgstr ""
+"Het is niet mogelijk om kostenplaatsregels te maken op een kostenplaats van "
+"het type 'weergave'"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -279,6 +281,7 @@ msgstr "Rekening5 Id"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on closed account."
 msgstr ""
+"Het is niet mogelijk om journaalposten te maken in een gesloten rekenening"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
@@ -300,7 +303,7 @@ msgstr "T/m datum"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:486
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal."
-msgstr ""
+msgstr "U dient een kostenplaats te definiëren op het '%s' dagboek."
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,empty_line:0
@@ -414,7 +417,7 @@ msgstr "Rekening4 Id"
 #: code:addons/account_analytic_plans/account_analytic_plans.py:234
 #, python-format
 msgid "The total should be between %s and %s."
-msgstr ""
+msgstr "Het totaal moet liggen tussen %s en %s."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -468,6 +471,8 @@ msgid ""
 "Configuration error!\n"
 "The currency chosen should be shared by the default accounts too."
 msgstr ""
+"Configurariefout!\n"
+"De gekozen valuta moet ook worden gedeeld door de standaard kostenplaatsen."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_analytic_plan_create_model
@@ -488,18 +493,20 @@ msgstr "Kostenverdelingsmodellen"
 #: constraint:account.move.line:0
 msgid "You cannot create journal items on an account of type view."
 msgstr ""
+"Het is niet mogelijk om journaalposten te maken in een rekening van het type "
+"'weergave'"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
 #, python-format
 msgid "User Error!"
-msgstr ""
+msgstr "Gebruikersfout!"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/analytic_plan_create_model.py:38
 #, python-format
 msgid "Please put a name and a code before saving the model."
-msgstr ""
+msgstr "Geef een naam en code in voordat u het model opslaat."
 
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,date1:0
@@ -512,6 +519,7 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line."
 msgstr ""
+"Het bedrag van de bon moet gelijk zijn met het bedrag op de afschriftregel."
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,sequence:0
@@ -527,13 +535,13 @@ msgstr "De naam van het dagboek moet uniek zijn per bedrijf !"
 #: view:account.crossovered.analytic:0
 #: view:analytic.plan.create.model:0
 msgid "or"
-msgstr ""
+msgstr "of"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:221
 #, python-format
 msgid "A model with this name and code already exists."
-msgstr ""
+msgstr "Een model met deze naam en code bestaat al."
 
 #, python-format
 #~ msgid "A model having this name and code already exists !"

@@ -6,10 +6,11 @@
             <field name="name">Claims</field>
             <field name="res_model">crm.claim</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,calendar,form</field>
+            <field name="view_mode">tree,form,calendar</field>
             <field name="view_id" ref="crm_claim.crm_case_claims_tree_view"/>
-            <field name="context">{"search_default_user_id":'', "stage_type":'claim'}</field>
+            <field name="context">{"search_default_user_id":'', "stage_type":'claim', "portal":'True'}</field>
             <field name="search_view_id" ref="crm_claim.view_crm_case_claims_filter"/>
+            <field name="target">current</field>
             <field name="help"  type="html">
               <p class="oe_view_nocontent_create">
                 Click to register a new claim. 

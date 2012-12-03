@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-10-25 17:16+0000\n"
+"PO-Revision-Date: 2012-11-30 14:35+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:08+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_manager:0
@@ -83,7 +83,7 @@ msgstr "评估阶段"
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0
 msgid "Send Request"
-msgstr ""
+msgstr "发送请求"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan,month_first:0
@@ -96,7 +96,7 @@ msgstr "这个月份将在选择的考评计划里对员工进行首次考评。
 #: view:hr.employee:0
 #: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
 msgid "Appraisals"
-msgstr ""
+msgstr "评估"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -107,7 +107,7 @@ msgstr "(eval_name)s:评估名称"
 #: field:hr.evaluation.interview,message_ids:0
 #: field:hr_evaluation.evaluation,message_ids:0
 msgid "Messages"
-msgstr ""
+msgstr "消息"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -141,13 +141,13 @@ msgstr "没有达到预期"
 #: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
 msgid "Appraisal"
-msgstr "考评"
+msgstr "评估"
 
 #. module: hr_evaluation
 #: help:hr.evaluation.interview,message_unread:0
 #: help:hr_evaluation.evaluation,message_unread:0
 msgid "If checked new messages require your attention."
-msgstr ""
+msgstr "如果要求你关注新消息，勾选此项"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -215,7 +215,7 @@ msgstr "在计划执行阶段的评估"
 msgid ""
 "Holds the Chatter summary (number of messages, ...). This summary is "
 "directly in html format in order to be inserted in kanban views."
-msgstr ""
+msgstr "保存复杂的摘要(消息数量,……等)。为了插入到看板视图，这一摘要直接是是HTML格式。"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -232,7 +232,7 @@ msgstr "截止日期"
 #: code:addons/hr_evaluation/hr_evaluation.py:326
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "警告！"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -252,7 +252,7 @@ msgstr "(date)s: 当前日期"
 #. module: hr_evaluation
 #: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
 msgid "Interviews"
-msgstr ""
+msgstr "面试"
 
 #. module: hr_evaluation
 #: code:addons/hr_evaluation/hr_evaluation.py:82
@@ -264,13 +264,13 @@ msgstr "关于 "
 #: field:hr.evaluation.interview,message_follower_ids:0
 #: field:hr_evaluation.evaluation,message_follower_ids:0
 msgid "Followers"
-msgstr ""
+msgstr "关注者"
 
 #. module: hr_evaluation
 #: field:hr.evaluation.interview,message_unread:0
 #: field:hr_evaluation.evaluation,message_unread:0
 msgid "Unread Messages"
-msgstr ""
+msgstr "未读信息"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -391,6 +391,14 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击定义一个评估计划 \n"
+"              </p><p>\n"
+"                你能定义评估计划(例如：6个月后首次面谈，然后每年一次).\n"
+"                然后每个员工能关联到一个评估计划，这样Openerp 能自动\n"
+"                生成一个面谈要求给管理人员和下属.\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -405,7 +413,7 @@ msgstr "行动计划"
 #. module: hr_evaluation
 #: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
 msgid "Periodic Appraisal"
-msgstr "定义复核"
+msgstr "定期评估"
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan,month_next:0
@@ -438,7 +446,7 @@ msgstr "所有答案"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Answer Survey"
-msgstr ""
+msgstr "填写问卷"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -549,7 +557,7 @@ msgstr " (employee_name)s: 业务伙伴名称"
 #: field:hr.evaluation.interview,message_is_follower:0
 #: field:hr_evaluation.evaluation,message_is_follower:0
 msgid "Is a Follower"
-msgstr ""
+msgstr "是一个关注者"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -580,7 +588,7 @@ msgstr "增加筛选条件"
 #: field:hr_evaluation.evaluation,message_comment_ids:0
 #: help:hr_evaluation.evaluation,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
+msgstr "评论和电子邮件"
 
 #. module: hr_evaluation
 #: help:hr_evaluation.plan.phase,send_anonymous_employee:0
@@ -633,6 +641,13 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"               单击创建一个新的跟个人评估关联的面谈要求。\n"
+"              </p><p>\n"
+"                 面谈要求通常是根据员工的评估计划自动生成的。\n"
+"                 每个用户会自动定期收到要求评估他们的同事的Email。\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: field:hr_evaluation.plan.phase,action:0
@@ -686,12 +701,12 @@ msgstr "截止日期"
 #. module: hr_evaluation
 #: help:hr_evaluation.evaluation,rating:0
 msgid "This is the appreciation on which the evaluation is summarized."
-msgstr ""
+msgstr "这是评估总结的评价"
 
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Top-Down Appraisal Requests"
-msgstr "自上而下的考评申请"
+msgstr "自上而下的评估申请"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.plan.phase:0
@@ -733,7 +748,7 @@ msgstr "取消"
 #. module: hr_evaluation
 #: constraint:hr.employee:0
 msgid "Error! You cannot create recursive hierarchy of Employee(s)."
-msgstr ""
+msgstr "错误！，你不能创建循环的员工层次"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.report:0
@@ -787,13 +802,13 @@ msgstr "这个月份数字描述了计划中每次考评的间距（首次之后
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Self Appraisal Requests"
-msgstr "自我考评申请"
+msgstr "自我评估申请"
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
 #: field:hr_evaluation.evaluation,survey_request_ids:0
 msgid "Appraisal Forms"
-msgstr "考评表"
+msgstr "评估表"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -817,6 +832,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击创建一个新的评估\n"
+"              </p><p>\n"
+"                每个员工被指派了一个评估计划。这样的计划定义你\n"
+"                的周期性的人才测评个人的频率和方法。\n"
+"               你能定义步骤和每一步伴随的面试：自底向上的、自\n"
+"               上而下的、自我评价以及管理人员的最终评估。\n"
+"              </p>\n"
+"            "
 
 #. module: hr_evaluation
 #: view:hr_evaluation.evaluation:0
@@ -836,7 +860,7 @@ msgstr "阶段"
 #. module: hr_evaluation
 #: selection:hr_evaluation.plan.phase,action:0
 msgid "Bottom-Up Appraisal Requests"
-msgstr "自下而上的考评申请"
+msgstr "自下而上的评估申请"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -847,7 +871,7 @@ msgstr "2月"
 #: view:hr.evaluation.interview:0
 #: view:hr_evaluation.evaluation:0
 msgid "Interview Appraisal"
-msgstr "面谈评估"
+msgstr "面谈测评"
 
 #. module: hr_evaluation
 #: field:survey.request,is_evaluation:0
@@ -871,7 +895,7 @@ msgstr "面谈员工"
 msgid ""
 "You cannot change state, because some appraisal(s) are in waiting answer or "
 "draft state."
-msgstr ""
+msgstr "你不能改变状态，因为有些评估正在等待结果。"
 
 #. module: hr_evaluation
 #: selection:hr.evaluation.report,month:0
@@ -887,7 +911,7 @@ msgstr "评估计划阶段"
 #: help:hr.evaluation.interview,message_ids:0
 #: help:hr_evaluation.evaluation,message_ids:0
 msgid "Messages and communication history"
-msgstr ""
+msgstr "消息和通信历史"
 
 #. module: hr_evaluation
 #: view:hr.evaluation.interview:0

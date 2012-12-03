@@ -48,7 +48,7 @@
 
 .openerp .oe_mail .oe_msg{
     position: relative;
-    background: #F4F5FA;
+    background: #EDEDF6;
     border-radius: 2px;
     margin-bottom: 2px;
     min-height: 42px;
@@ -70,7 +70,7 @@
     margin-left: 40px;
 }
 .openerp .oe_mail .oe_msg .oe_msg_footer{
-    padding-left: 4px;
+    margin-left: 4px;
     padding-top: 3px;
     overflow: hidden;
     margin-bottom: 4px;
@@ -93,6 +93,10 @@
 
 .openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_body p {
     margin-bottom: 0px;
+}
+.openerp .oe_mail .oe_msg .oe_msg_content .oe_msg_body * {
+    text-overflow:ellipsis;
+    word-wrap: break-word;
 }
 
 /* a) Indented Messages */
@@ -380,6 +384,10 @@
     line-height: 12px;
     vertical-align: middle;
 }
+.openerp .oe_mail .oe_msg_footer button.oe_post{
+    position: relative;
+    z-index: 2;
+}
 .openerp .oe_mail .oe_msg_footer button.oe_attach{
     width: 24px;
     overflow: hidden;
@@ -387,8 +395,9 @@
 }
 .openerp .oe_mail .oe_msg_footer button.oe_attach .oe_e{
     position: relative;
-    top: -1px;
-    left: -9px;
+    top: -4px;
+    margin-left: -9px;
+    vertical-align: middle;
     filter:none;
 }
 .openerp .oe_mail .oe_hidden_input_file, .openerp .oe_mail .oe_hidden_input_file form{
@@ -402,8 +411,9 @@
 }
 .openerp .oe_mail .oe_msg_footer button.oe_full .oe_e{
     position: relative;
-    top: -1px;
-    left: -9px;
+    top: -4px;
+    margin-left: -9px;
+    vertical-align: middle;
     filter:none;
 }
 .openerp .oe_mail button.oe_attach, .openerp .oe_mail button.oe_full{
@@ -418,13 +428,17 @@
     color: #7C7BAD;
     margin-left: -3px;
 }
+.openerp .oe_mail .oe_msg_footer .oe_attachment_file{
+    cursor: pointer;
+}
 .openerp .oe_mail .oe_msg_footer .oe_attachment_file .oe_form_binary_file{
     display: inline-block;
-    margin-left: -47px;
-    height: 28px;
-    width: 52px;
-    margin-top: -6px;
+    margin-left: -122px;
+    height: 22px;
+    width: 128px;
+    margin-top: -4px;
     filter:none;
+    cursor: pointer;
 }
 .openerp .oe_mail .oe_mail_list_recipients{
     font-size: 12px;

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-25 13:43+0000\n"
-"Last-Translator: Erwin van der Ploeg (Endian Solutions) <Unknown>\n"
+"PO-Revision-Date: 2012-12-01 16:00+0000\n"
+"Last-Translator: Thomas Pot (Open2bizz) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-26 04:41+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-02 04:37+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #, python-format
 #~ msgid "Integrity Error !"
@@ -114,6 +114,7 @@ msgid ""
 "Error!\n"
 "You cannot create recursive account templates."
 msgstr ""
+"Fout! Het is niet toegestaan on een recursief grootboekschema aan te maken."
 
 #. module: account
 #. openerp-web
@@ -155,6 +156,19 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik om de zichtbare kolommen van een dagboek te "
+"specificeren.\n"
+"              </p><p>\n"
+"                Dagboekweergaves bepalen de manier waarop boekingen \n"
+"                ingevoerd kunnen worden. Selecteer de velden welke zichtbaar "
+"\n"
+"                moeten zijn en bepaald de volgorde daarvan.\n"
+"              </p><p>\n"
+"                In de dagboekinstellingen kan bepaald worden welke gegevens\n"
+"                zichtbaar zijn bij boekingen in het betreffende dagboek.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: help:account.payment.term,active:0
@@ -205,6 +219,8 @@ msgid ""
 "which is set after generating opening entries from 'Generate Opening "
 "Entries'."
 msgstr ""
+"U dient het 'Jaarafsluiting dagboek' te definiëren voor het fiscale jaar, "
+"nadat u een openingsbalans heeft gemaakt"
 
 #. module: account
 #: field:account.fiscal.position.account,account_src_id:0
@@ -223,6 +239,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                klik hier om een fiscale periode toe te voegen.\n"
+"              </p><p>\n"
+"                Een fiscale periode is vaak een maand of een kwartaal. "
+"Normaal\n"
+"                zal dit gelijk zijn met de periode van uw Belasting "
+"aangifte.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -243,7 +268,7 @@ msgstr "Dagboek: %s"
 #. module: account
 #: help:account.config.settings,code_digits:0
 msgid "No. of digits to use for account code"
-msgstr ""
+msgstr "Aantal cijfers voor de rekening code"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -263,6 +288,9 @@ msgid ""
 "lines for invoices. Leave empty if you don't want to use an analytic account "
 "on the invoice tax lines by default."
 msgstr ""
+"Geef de kostenplaats welke standaard gebruikt moet worden bij BTW factuur "
+"regels. Als u dit veld niet invuld, wordt er standaard geen kostenplaats "
+"gebruikt."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -298,7 +326,7 @@ msgstr "Belgische overzichten"
 #. module: account
 #: model:account.account.type,name:account.account_type_income_view1
 msgid "Income View"
-msgstr ""
+msgstr "View opbrengsten"
 
 #. module: account
 #: help:account.account,user_type:0
@@ -314,7 +342,7 @@ msgstr ""
 #. module: account
 #: field:account.config.settings,sale_refund_sequence_next:0
 msgid "Next credit note number"
-msgstr ""
+msgstr "Volgend nummer creditnota"
 
 #. module: account
 #: help:account.config.settings,module_account_voucher:0
@@ -323,6 +351,10 @@ msgid ""
 "sales, purchase, expense, contra, etc.\n"
 "                This installs the module account_voucher."
 msgstr ""
+"Deze module bevat alle voorzieningen voor registratie van "
+"(bank)afschriften.\n"
+"                                                                          "
+"hiermee installeert u de module 'account_voucher'"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_use_model_create_entry
@@ -361,6 +393,18 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Klik hier om een creditnota te maken. \n"
+"              </p><p>\n"
+"                Een creditnota is een factuur, waarbij u een bestaande "
+"factuur volledig of gedeeltelijk \n"
+"                crediteert.\n"
+"              </p><p>\n"
+"                In plaats van handmatig kunt u hiermee een creditnota maken "
+"\n"
+"                direct vanaf de originele factuur.\n"
+"              </p>\n"
+"            "
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -426,12 +470,12 @@ msgstr "Juni"
 #: code:addons/account/wizard/account_automatic_reconcile.py:148
 #, python-format
 msgid "You must select accounts to reconcile."
-msgstr ""
+msgstr "Selecteer de grootboekrekeningen die afgeletterd moeten worden."
 
 #. module: account
 #: help:account.config.settings,group_analytic_accounting:0
 msgid "Allows you to use the analytic accounting."
-msgstr ""
+msgstr "stelt u in staat kostenplaatsen te gebruiken"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_bank
@@ -510,6 +554,13 @@ msgid ""
 "this box, you will be able to do invoicing & payments,\n"
 "                but not accounting (Journal Items, Chart of Accounts, ...)"
 msgstr ""
+"Stelt u in staat activa te beheren voor een bedrijf/persoon.\n"
+"                    Het registreert afschrijvingen voor activa, en creëert "
+"journaalposten voor afschrijvingen.\n"
+"                    Hiermee installeert u de module 'account_asset'. Als u "
+"dit niet aanvinkt, kunt u wel facturen en betalingen\n"
+"                    registreren, maar geen financiële administratie voeren "
+"(Rekeningschema, Journaalboekingen, ....)"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -531,6 +582,18 @@ msgid ""
 "should choose 'Round per line' because you certainly want the sum of your "
 "tax-included line subtotals to be equal to the total amount with taxes."
 msgstr ""
+"Als u 'afronden per regel' selecteert: voor elke BTW rekening , wordt het "
+"BTW bedrag eerst berekend en afgerond voor elke  factuur regel en vervolgens "
+"worden deze afgeronde bedragen opgeteld, wat leidt tot het totale bedrag "
+"voor deze belasting. \r\n"
+"\r\n"
+"Als u 'afronden globaal' selecteert: voor elke BTW rekening wordt het BTW "
+"bedrag berekend voor elke factuur regel. vervolgens zullen deze bedragen "
+"worden opgeteld en uiteindelijk wordt dit totale BTW bedrag afgerond. \r\n"
+"\r\n"
+"Als u verkoopt met BTW inbegrepen, moet u kiezen voor 'afronden per regel', "
+"omdat U zeker wil zijn dat de subtotalen van \r\n"
+"uw (BTW inbegrepen) regels gelijk zijn aan het totale bedrag met BTW."
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -600,7 +663,7 @@ msgstr "Bovenliggend doel"
 #. module: account
 #: help:account.invoice.line,sequence:0
 msgid "Gives the sequence of this line when displaying the invoice."
-msgstr ""
+msgstr "Geeft de volgorde van de factuur regel bij het tonen van de factuur"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -679,7 +742,7 @@ msgstr "Niets af te letteren"
 #. module: account
 #: field:account.config.settings,decimal_precision:0
 msgid "Decimal precision on journal entries"
-msgstr ""
+msgstr "Aantal decimalen van journaalposten"
 
 #. module: account
 #: selection:account.config.settings,period:0
@@ -713,7 +776,7 @@ msgstr "Rapport waarde"
 msgid ""
 "Specified journal does not have any account move entries in draft state for "
 "this period."
-msgstr ""
+msgstr "Geselecteerd dagboek heeft geen 'concept'boekingen"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -736,12 +799,12 @@ msgstr "Hoofdvolgorde moet afwijken van de huidige !"
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly."
-msgstr ""
+msgstr "De huidige valuta-soort is niet juist geconfigureerd."
 
 #. module: account
 #: field:account.journal,profit_account_id:0
 msgid "Profit Account"
-msgstr ""
+msgstr "Winst & Verlies rekeneing"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1249
@@ -753,7 +816,7 @@ msgstr ""
 #. module: account
 #: model:account.journal.view,name:account.account_journal_bank_view_multi
 msgid "Bank/Cash Journal (Multi-Currency) View"
-msgstr ""
+msgstr "Bank / kas dagboek (multi-valuta) overzicht"
 
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
@@ -768,12 +831,16 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"<p>\n"
+"                    Geen journaalposten gevonden.\n"
+"                </p>\n"
+"            "
 
 #. module: account
 #: code:addons/account/account.py:1606
 #, python-format
 msgid "Cannot create move with currency different from .."
-msgstr ""
+msgstr "U kunt geen boeking doen met een andere valuta dan ..."
 
 #. module: account
 #: model:email.template,report_name:account.email_template_edi_invoice
@@ -781,6 +848,8 @@ msgid ""
 "Invoice_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
 "and 'draft' or ''}"
 msgstr ""
+"Factuur_${(object.number or '').replace('/','_')}_${object.state == 'draft' "
+"and 'draft' or ''}"
 
 #. module: account
 #: view:account.period:0
@@ -807,7 +876,7 @@ msgstr "Dagboek periode"
 #: constraint:account.move:0
 msgid ""
 "You cannot create more than one move per period on a centralized journal."
-msgstr ""
+msgstr "U kunt niet meerdere boekingen doen bij een centraal journaal"
 
 #. module: account
 #: help:account.tax,account_analytic_paid_id:0
