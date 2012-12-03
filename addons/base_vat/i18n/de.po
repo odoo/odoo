@@ -6,18 +6,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-01-13 19:12+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"PO-Revision-Date: 2012-11-30 10:07+0000\n"
+"Last-Translator: Felix Schubert <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 04:58+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-01 05:07+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
 
 #. module: base_vat
-#: code:addons/base_vat/base_vat.py:141
+#: view:res.partner:0
+msgid "Check Validity"
+msgstr ""
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:147
 #, python-format
 msgid ""
 "This VAT number does not seem to be valid.\n"
@@ -29,7 +34,7 @@ msgstr ""
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr "Der Name der Firma darf nur einmal vorkommen!"
+msgstr "Der Unternehmensname muss eindeutig sein!"
 
 #. module: base_vat
 #: constraint:res.partner:0
@@ -50,6 +55,17 @@ msgstr "Unternehmen"
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Fehler! Sie können keine rekursiven Unternehmen erzeugen."
+
+#. module: base_vat
+#: code:addons/base_vat/base_vat.py:111
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: base_vat
+#: constraint:res.partner:0
+msgid "Error: Invalid ean code"
+msgstr "Fehler: Falscher EAN code"
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0

@@ -6,7 +6,7 @@
         <menuitem name="Warehouse"
             id="menu_stock_root"
             groups="group_stock_manager,group_stock_user"
-            sequence="50"/>
+            sequence="70"/>
 
         <menuitem id="menu_stock_warehouse_mgmt" name="Receive/Deliver By Orders" parent="menu_stock_root" sequence="1"/>
         <menuitem id="menu_stock_products_moves" name="Receive/Deliver Products" parent="menu_stock_root" sequence="2"/>
@@ -114,7 +114,7 @@
                 </header>
                 <sheet>
                     <div class="oe_right oe_button_box">
-                        <button name="%(action_view_stock_fill_inventory)d" string="Fill Inventory" type="action" />
+                        <button name="%(action_view_stock_fill_inventory)d" string="Fill Inventory" states="draft,confirm" type="action" />
                     </div>
                     <group>
                         <group>
@@ -1151,7 +1151,7 @@
                     <field name="date" groups="base.group_no_one"/>
                     <field name="date_expected"/>
                     <field name="state"/>
-                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward"/>
+                    <button name="action_done" states="confirmed,assigned" string="Process" type="object" icon="gtk-go-forward" help="Done"/>
                 </tree>
             </field>
         </record>
@@ -1198,7 +1198,7 @@
         <record id="view_move_form" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field eval="4" name="priority"/>
+            <field eval="1" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Stock Moves" version="7.0">
                 <header>
@@ -1235,7 +1235,7 @@
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group name="origin_grp" string="Origin">
-                            <field name="picking_id"/>
+                            <field name="picking_id" domain="[('type','=',type)]"/>
                              <field name="type" on_change="onchange_move_type(type)"/>
                             <field name="location_id" groups="stock.group_locations"/>
                             <field name="create_date" groups="base.group_no_one"/>
@@ -1247,7 +1247,7 @@
                             <field name="date_expected" on_change="onchange_date(date,date_expected)"/>
                             <field name="date" groups="base.group_no_one"/>
                         </group>
-                        <group string="Tracability"
+                        <group string="Traceability"
                             groups="stock.group_tracking_lot">
                             <label for="tracking_id" groups="stock.group_tracking_lot"/>
                             <div groups="stock.group_tracking_lot">
@@ -1307,6 +1307,7 @@
                                 <field name="product_uos" on_change="onchange_quantity(product_id, product_qty, product_uom, product_uos)" class="oe_inline"/>
                             </div>
                             <field name="product_packaging" groups="product.group_stock_packaging" domain="[('product_id','=',product_id)]"/>
+                            <field name="partner_id"/>
                             </group>
                             <group>
                                 <field name="create_date" invisible="1"/>
@@ -1457,7 +1458,7 @@
                         states="assigned" class="oe_highlight"/>
                     <button name="action_done" states="draft,assigned,confirmed"
                         icon="gtk-go-forward" type="object"
-                        class="oe_highlight"/>
+                        class="oe_highlight" help="Done"/>
                 </tree>
             </field>
         </record>

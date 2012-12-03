@@ -184,8 +184,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     order.getSelectedLine().set_quantity(val);
                 }else if( mode === 'discount'){
                     order.getSelectedLine().set_discount(val);
-                }else if( mode === 'list_price'){
-                    order.getSelectedLine().set_list_price(val);
+                }else if( mode === 'price'){
+                    order.getSelectedLine().set_price(val);
                 }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
@@ -202,9 +202,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.currentOrderLines.bind('remove', this.renderElement, this);
         },
         update_numpad: function() {
-        	this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
-        	if (this.numpadState)
-        		this.numpadState.reset();
+            this.selected_line = this.pos.get('selectedOrder').getSelectedLine();
+            if (this.numpadState)
+                this.numpadState.reset();
         },
         renderElement: function() {
             var self = this;
@@ -298,8 +298,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.payment_line.bind('change', this.changedAmount, this);
         },
         changeAmount: function(event) {
-            var newAmount;
-            newAmount = event.currentTarget.value;
+            var newAmount = event.currentTarget.value;
             if (newAmount && !isNaN(newAmount)) {
             	this.amount = parseFloat(newAmount);
                 this.payment_line.set_amount(this.amount);
@@ -324,10 +323,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template:'OrderButtonWidget',
         init: function(parent, options) {
             this._super(parent,options);
+            var self = this;
+
             this.order = options.order;
-            this.order.bind('destroy', _.bind( function() {
-                this.destroy();
-            }, this));
+            this.order.bind('destroy',function(){ self.destroy(); });
+            this.order.bind('change', function(){ self.renderElement(); });
             this.pos.bind('change:selectedOrder', _.bind( function(pos) {
                 var selectedOrder;
                 selectedOrder = pos.get('selectedOrder');
@@ -338,8 +338,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         renderElement:function(){
             this._super();
-            this.$('button.select-order').click(_.bind(this.selectOrder, this));
-            this.$('button.close-order').click(_.bind(this.closeOrder, this));
+            this.$('button.select-order').off('click').click(_.bind(this.selectOrder, this));
+            this.$('button.close-order').off('click').click(_.bind(this.closeOrder, this));
         },
         selectOrder: function(event) {
             this.pos.set({
@@ -668,7 +668,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: "DebugWidget",
         eans:{
             admin_badge:  '0410100000006',
-            client_badge: '0420100000005',
+            client_badge: '0420200000004',
             invalid_ean:  '1232456',
             soda_33cl:    '5449000000996',
             oranges_kg:   '2100002031410',
@@ -708,9 +708,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.$('.button.set_weight').click(function(){
                 var kg = Number(self.$('input.weight').val());
-                if(!Number.isNaN(kg)){
+                if(!isNaN(kg)){
                     self.pos.proxy.debug_set_weight(kg);
                 }
+            });
+            this.$('.button.reset_weight').click(function(){
+                self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
                 var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
@@ -792,7 +795,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         template: 'PosWidget',
         init: function() { 
             this._super(arguments[0],{});
-            
+
+            instance.web.blockUI(); 
+
             this.pos = new module.PosModel(this.session);
             this.pos_widget = this; //So that pos_widget's childs have pos_widget set automatically
 
@@ -842,11 +847,11 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     self.screen_selector.show_popup('error', 'Sorry, we could not find any PoS Configuration for this session');
                 }
             
+                instance.web.unblockUI();
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
-                self.$('.loader img').hide();
 
             }).fail(function(){   // error when loading models data from the backend
-                self.$('.loader img').hide();
+                instance.web.unblockUI();
                 return new instance.web.Model("ir.model.data").get_func("search_read")([['name', '=', 'action_pos_session_opening']], ['res_id'])
                     .pipe( _.bind(function(res){
                         return instance.session.rpc('/web/action/load', {'action_id': res[0]['res_id']})
@@ -902,6 +907,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
             this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
             this.choose_receipt_popup.appendTo($('.point-of-sale'));
+
+            this.error_negative_price_popup = new module.ErrorNegativePricePopupWidget(this, {});
+            this.error_negative_price_popup.appendTo($('.point-of-sale'));
 
             // --------  Misc ---------
 
@@ -962,6 +970,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error': this.error_popup,
                     'error-product': this.error_product_popup,
                     'error-session': this.error_session_popup,
+                    'error-negative-price': this.error_negative_price_popup,
                     'choose-receipt': this.choose_receipt_popup,
                 },
                 default_client_screen: 'welcome',

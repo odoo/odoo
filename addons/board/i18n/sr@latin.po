@@ -7,56 +7,59 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-11-24 02:52+0000\n"
 "PO-Revision-Date: 2010-12-23 16:16+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: Serbian latin <sr@latin@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:16+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-25 06:12+0000\n"
+"X-Generator: Launchpad (build 16293)\n"
 
 #. module: board
-#: view:res.log.report:0
-msgid "  Year  "
-msgstr "  Godina  "
+#: model:ir.actions.act_window,name:board.action_board_create
+#: model:ir.ui.menu,name:board.menu_board_create
+msgid "Create Board"
+msgstr ""
 
 #. module: board
-#: model:ir.model,name:board.model_board_menu_create
-msgid "Menu Create"
-msgstr "Kreiraj Meni"
+#: view:board.create:0
+msgid "Create"
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Menu Information"
-msgstr "Informacije Menija"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:4
+#, python-format
+msgid "Reset Layout.."
+msgstr ""
 
 #. module: board
-#: view:res.users:0
-msgid "Latest Connections"
-msgstr "Poslednje konekcije"
+#: view:board.create:0
+msgid "Create New Dashboard"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Log created in last month"
-msgstr "Log kreiran proslog meseca"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:40
+#, python-format
+msgid "Choose dashboard layout"
+msgstr ""
 
 #. module: board
-#: view:board.board:0
-#: model:ir.actions.act_window,name:board.open_board_administration_form
-msgid "Administration Dashboard"
-msgstr "Administraciona Glavna Tabla"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:70
+#, python-format
+msgid "Add"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Group By..."
-msgstr "Grupirano po..."
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current year"
-msgstr "Log kreiran trenutne godine"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:139
+#, python-format
+msgid "Are you sure you want to remove this item ?"
+msgstr ""
 
 #. module: board
 #: model:ir.model,name:board.model_board_board
@@ -64,288 +67,110 @@ msgid "Board"
 msgstr "Tabla"
 
 #. module: board
-#: field:board.menu.create,menu_name:0
-msgid "Menu Name"
-msgstr "Naziv menija"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_weekly_res_log_report_action
-#: view:res.log.report:0
-msgid "Weekly Global Activity"
-msgstr "Nedeljne globalne aktivnosti"
-
-#. module: board
-#: field:board.board.line,name:0
-msgid "Title"
-msgstr "Naslov"
-
-#. module: board
-#: field:res.log.report,nbr:0
-msgid "# of Entries"
-msgstr "od Sadržaja"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,month:0
-msgid "Month"
-msgstr "Mesec"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log created in current month"
-msgstr "Log kreiran trenutnog meseca"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_monthly_res_log_report_action
-#: view:res.log.report:0
-msgid "Monthly Activity per Document"
-msgstr "Mesečna aktivnost po Dokumentu"
-
-#. module: board
 #: view:board.board:0
-msgid "Configuration Overview"
-msgstr "Pregled konfiguracije"
+#: model:ir.actions.act_window,name:board.open_board_my_dash_action
+#: model:ir.ui.menu,name:board.menu_board_my_dash
+msgid "My Dashboard"
+msgstr ""
 
 #. module: board
-#: model:ir.actions.act_window,name:board.action_view_board_list_form
-#: model:ir.ui.menu,name:board.menu_view_board_form
-msgid "Dashboard Definition"
-msgstr "Definicija Glavne Table"
+#: field:board.create,name:0
+msgid "Board Name"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "March"
-msgstr "Mart"
+#: model:ir.model,name:board.model_board_create
+msgid "Board Creation"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "August"
-msgstr "Avgust"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_user_connection_tree
-msgid "User Connections"
-msgstr "Korisnikove konekcije"
-
-#. module: board
-#: field:res.log.report,creation_date:0
-msgid "Creation Date"
-msgstr "Datum Kreiranja"
-
-#. module: board
-#: view:res.log.report:0
-msgid "Log Analysis"
-msgstr "Analiza logova"
-
-#. module: board
-#: field:res.log.report,res_model:0
-msgid "Object"
-msgstr "Objekat"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "June"
-msgstr "Jun"
-
-#. module: board
-#: field:board.board,line_ids:0
-msgid "Action Views"
-msgstr "Pregled Akcija"
-
-#. module: board
-#: model:ir.model,name:board.model_res_log_report
-msgid "Log Report"
-msgstr "Izveštaj Log-a"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:46
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:67
 #, python-format
-msgid "Please Insert Dashboard View(s) !"
-msgstr "Molimo da umetnete pogled(e) Glavne Table !"
+msgid "Add to Dashboard"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "July"
-msgstr "Jul"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:28
+#, python-format
+msgid "&nbsp;"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-#: field:res.log.report,day:0
-msgid "Day"
-msgstr "Dan"
+#: model:ir.actions.act_window,help:board.open_board_my_dash_action
+msgid ""
+"<div class=\"oe_empty_custom_dashboard\">\n"
+"                  <p>\n"
+"                    <b>Your personal dashboard is empty.</b>\n"
+"                  </p><p>\n"
+"                    To add your first report into this dashboard, go to any\n"
+"                    menu, switch to list or graph view, and click <i>'Add "
+"to\n"
+"                    Dashboard'</i> in the extended search options.\n"
+"                  </p><p>\n"
+"                    You can filter and group data before inserting into the\n"
+"                    dashboard using the search options.\n"
+"                  </p>\n"
+"              </div>\n"
+"            "
+msgstr ""
 
 #. module: board
-#: view:board.menu.create:0
-msgid "Create Menu For Dashboard"
-msgstr "Kreiraj Meni za Glavnu Tablu"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:6
+#, python-format
+msgid "Reset"
+msgstr ""
 
 #. module: board
-#: selection:res.log.report,month:0
-msgid "February"
-msgstr "Februar"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "October"
-msgstr "Oktobar"
-
-#. module: board
-#: model:ir.model,name:board.model_board_board_line
-msgid "Board Line"
-msgstr "Linija Table"
-
-#. module: board
-#: field:board.menu.create,menu_parent_id:0
+#: field:board.create,menu_parent_id:0
 msgid "Parent Menu"
 msgstr "Roditeljski Meni"
 
 #. module: board
-#: view:res.log.report:0
-msgid "    Month-1    "
-msgstr "    Mesec-1    "
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "January"
-msgstr "Januar"
-
-#. module: board
-#: view:board.board:0
-msgid "Users"
-msgstr "Korisnici"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "November"
-msgstr "Novembar"
-
-#. module: board
-#: help:board.board.line,sequence:0
-msgid ""
-"Gives the sequence order                         when displaying a list of "
-"board lines."
-msgstr "Daje redosled sekvenci pri prikazu liste linija table."
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "April"
-msgstr "April"
-
-#. module: board
-#: view:board.board:0
-#: field:board.board,name:0
-#: field:board.board.line,board_id:0
-#: model:ir.ui.menu,name:board.menu_dasboard
-msgid "Dashboard"
-msgstr "Glavna Tabla"
-
-#. module: board
-#: code:addons/board/wizard/board_menu_create.py:45
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:8
 #, python-format
-msgid "User Error!"
-msgstr "Greška korisnika!"
+msgid "Change Layout.."
+msgstr ""
 
 #. module: board
-#: field:board.board.line,action_id:0
-msgid "Action"
-msgstr "Akcija"
+#. openerp-web
+#: code:addons/board/static/src/js/dashboard.js:93
+#, python-format
+msgid "Edit Layout"
+msgstr ""
 
 #. module: board
-#: field:board.board.line,position:0
-msgid "Position"
-msgstr "Pozicija"
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:10
+#, python-format
+msgid "Change Layout"
+msgstr ""
 
 #. module: board
-#: view:res.log.report:0
-msgid "Model"
-msgstr "Model"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.board_homepage_action
-msgid "Home Page"
-msgstr "Početna Strana"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_latest_activities_tree
-msgid "Latest Activities"
-msgstr "Poslednje Aktivnosti"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Left"
-msgstr "Levo"
-
-#. module: board
-#: field:board.board,view_id:0
-msgid "Board View"
-msgstr "Pogled Table"
-
-#. module: board
-#: selection:board.board.line,position:0
-msgid "Right"
-msgstr "Desno"
-
-#. module: board
-#: field:board.board.line,width:0
-msgid "Width"
-msgstr "širina"
-
-#. module: board
-#: view:res.log.report:0
-msgid "   Month   "
-msgstr "   Mesec   "
-
-#. module: board
-#: field:board.board.line,sequence:0
-msgid "Sequence"
-msgstr "Sekvenca"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "September"
-msgstr "Septembar"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "December"
-msgstr "Decembar"
-
-#. module: board
-#: view:board.board:0
-#: view:board.menu.create:0
-msgid "Create Menu"
-msgstr "Kreiraj Meni"
-
-#. module: board
-#: field:board.board.line,height:0
-msgid "Height"
-msgstr "Visina"
-
-#. module: board
-#: model:ir.actions.act_window,name:board.action_board_menu_create
-msgid "Create Board Menu"
-msgstr "Kreiraj Meni Table"
-
-#. module: board
-#: selection:res.log.report,month:0
-msgid "May"
-msgstr "Maj"
-
-#. module: board
-#: view:res.log.report:0
-#: field:res.log.report,name:0
-msgid "Year"
-msgstr "Godina"
-
-#. module: board
-#: view:board.menu.create:0
+#: view:board.create:0
 msgid "Cancel"
 msgstr "Otkaži"
 
 #. module: board
-#: view:board.board:0
-msgid "Dashboard View"
-msgstr "Pregled table"
+#: view:board.create:0
+msgid "or"
+msgstr ""
+
+#. module: board
+#. openerp-web
+#: code:addons/board/static/src/xml/board.xml:69
+#, python-format
+msgid "Title of new dashboard item"
+msgstr ""
+
+#~ msgid "  Year  "
+#~ msgstr "  Godina  "
+
+#~ msgid "Menu Create"
+#~ msgstr "Kreiraj Meni"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Pogrešno ime modela u definiciji akcije."
@@ -356,19 +181,44 @@ msgstr "Pregled table"
 #~ msgid "Dashboard main module"
 #~ msgstr "Glavna tabla osnovnog modula"
 
+#, python-format
+#~ msgid "User Error!"
+#~ msgstr "Greška korisnika!"
+
+#~ msgid "Administration Dashboard"
+#~ msgstr "Administraciona Glavna Tabla"
+
 #~ msgid "Note"
 #~ msgstr "Napomena"
+
+#~ msgid "Group By..."
+#~ msgstr "Grupirano po..."
+
+#~ msgid "Title"
+#~ msgstr "Naslov"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr ""
 #~ "Ime objekta mora da počne sa x_ i ne sme da sadrži specijalne karaktere !"
 
+#~ msgid "Dashboard Definition"
+#~ msgstr "Definicija Glavne Table"
+
 #~ msgid "Publish a note"
 #~ msgstr "Publikuj napomenu"
 
+#~ msgid "Menu Information"
+#~ msgstr "Informacije Menija"
+
+#~ msgid "Latest Connections"
+#~ msgstr "Poslednje konekcije"
+
 #~ msgid "Note type"
 #~ msgstr "Tip Napomene"
+
+#~ msgid "Action Views"
+#~ msgstr "Pregled Akcija"
 
 #~ msgid "Date"
 #~ msgstr "Datum"
@@ -376,17 +226,71 @@ msgstr "Pregled table"
 #~ msgid "Note Type"
 #~ msgstr "Tip Napomene"
 
+#~ msgid "Create Menu For Dashboard"
+#~ msgstr "Kreiraj Meni za Glavnu Tablu"
+
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Nevažeći XML za pregled arhitekture"
+
+#~ msgid "Board Line"
+#~ msgstr "Linija Table"
 
 #~ msgid "Notes"
 #~ msgstr "Napomene"
 
+#~ msgid ""
+#~ "Gives the sequence order                         when displaying a list of "
+#~ "board lines."
+#~ msgstr "Daje redosled sekvenci pri prikazu liste linija table."
+
+#, python-format
+#~ msgid "Please Insert Dashboard View(s) !"
+#~ msgstr "Molimo da umetnete pogled(e) Glavne Table !"
+
+#~ msgid "Dashboard"
+#~ msgstr "Glavna Tabla"
+
 #~ msgid "Base module for all dashboards."
 #~ msgstr "Bazni modul za sve glavne table"
 
+#~ msgid "Position"
+#~ msgstr "Pozicija"
+
 #~ msgid "Open Dashboard"
 #~ msgstr "Otvori Glavnu Tablu"
+
+#~ msgid "Menu Name"
+#~ msgstr "Naziv menija"
+
+#~ msgid "Latest Activities"
+#~ msgstr "Poslednje Aktivnosti"
+
+#~ msgid "Left"
+#~ msgstr "Levo"
+
+#~ msgid "Board View"
+#~ msgstr "Pogled Table"
+
+#~ msgid "Right"
+#~ msgstr "Desno"
+
+#~ msgid "Width"
+#~ msgstr "širina"
+
+#~ msgid "Sequence"
+#~ msgstr "Sekvenca"
+
+#~ msgid "Create Menu"
+#~ msgstr "Kreiraj Meni"
+
+#~ msgid "Height"
+#~ msgstr "Visina"
+
+#~ msgid "Create Board Menu"
+#~ msgstr "Kreiraj Meni Table"
+
+#~ msgid "Dashboard View"
+#~ msgstr "Pregled table"
 
 #~ msgid "Subject"
 #~ msgstr "Tema"
@@ -408,3 +312,102 @@ msgstr "Pregled table"
 
 #~ msgid "Dashboards"
 #~ msgstr "Glavna Tabla"
+
+#~ msgid "Weekly Global Activity"
+#~ msgstr "Nedeljne globalne aktivnosti"
+
+#~ msgid "Log created in current year"
+#~ msgstr "Log kreiran trenutne godine"
+
+#~ msgid "Log created in current month"
+#~ msgstr "Log kreiran trenutnog meseca"
+
+#~ msgid "Configuration Overview"
+#~ msgstr "Pregled konfiguracije"
+
+#~ msgid "March"
+#~ msgstr "Mart"
+
+#~ msgid "Log created in last month"
+#~ msgstr "Log kreiran proslog meseca"
+
+#~ msgid "# of Entries"
+#~ msgstr "od Sadržaja"
+
+#~ msgid "Month"
+#~ msgstr "Mesec"
+
+#~ msgid "Monthly Activity per Document"
+#~ msgstr "Mesečna aktivnost po Dokumentu"
+
+#~ msgid "August"
+#~ msgstr "Avgust"
+
+#~ msgid "October"
+#~ msgstr "Oktobar"
+
+#~ msgid "February"
+#~ msgstr "Februar"
+
+#~ msgid "Day"
+#~ msgstr "Dan"
+
+#~ msgid "July"
+#~ msgstr "Jul"
+
+#~ msgid "Log Report"
+#~ msgstr "Izveštaj Log-a"
+
+#~ msgid "Creation Date"
+#~ msgstr "Datum Kreiranja"
+
+#~ msgid "June"
+#~ msgstr "Jun"
+
+#~ msgid "Object"
+#~ msgstr "Objekat"
+
+#~ msgid "Log Analysis"
+#~ msgstr "Analiza logova"
+
+#~ msgid "User Connections"
+#~ msgstr "Korisnikove konekcije"
+
+#~ msgid "November"
+#~ msgstr "Novembar"
+
+#~ msgid "January"
+#~ msgstr "Januar"
+
+#~ msgid "April"
+#~ msgstr "April"
+
+#~ msgid "September"
+#~ msgstr "Septembar"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Mesec-1    "
+
+#~ msgid "   Month   "
+#~ msgstr "   Mesec   "
+
+#~ msgid "Model"
+#~ msgstr "Model"
+
+#~ msgid "Action"
+#~ msgstr "Akcija"
+
+#~ msgid "Home Page"
+#~ msgstr "Početna Strana"
+
+#~ msgid "Users"
+#~ msgstr "Korisnici"
+
+#~ msgid "May"
+#~ msgstr "Maj"
+
+#~ msgid "Year"
+#~ msgstr "Godina"
+
+#~ msgid "December"
+#~ msgstr "Decembar"
