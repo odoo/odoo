@@ -66,7 +66,9 @@ openerp.web_im = function(instance) {
             var self = this;
 
             return this.ensure_users([instance.session.uid]).then(function() {
-                self.c_manager.set_me(self.get_user(instance.session.uid));
+                var me = self.users_cache[instance.session.uid];
+                delete self.users_cache[instance.session.uid];
+                self.c_manager.set_me(me);
                 return new instance.web.Model("im.message").call("activated", [], {context: new instance.web.CompoundContext()}).then(function(activated) {
                     if (activated) {
                         self.activated = true;
@@ -159,10 +161,17 @@ openerp.web_im = function(instance) {
         },
         poll: function() {
             var self = this;
+            var user_ids = _.map(this.users_cache, function(el) {
+                return el.get("id");
+            });
             this.rpc("/im/poll", {
                 last: this.last,
+                users_watch: user_ids,
                 context: instance.web.pyeval.eval('context', {}),
             }, {shadow: true}).then(function(result) {
+                _.each(result.users_status, function(el) {
+                    self.get_user(el.id).set(el);
+                });
                 self.last = result.last;
                 var user_ids = _.pluck(_.pluck(result.res, "from"), 0);
                 self.ensure_users(user_ids).then(function() {

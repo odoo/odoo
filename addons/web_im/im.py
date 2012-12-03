@@ -22,11 +22,13 @@
 import openerp
 import openerp.tools.config
 import openerp.modules.registry
+from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 import datetime
 from osv import osv, fields
 
 WATCHER_TIMER = 60
 POLL_TIMER = 30
+DISCONNECTION_TIMER = POLL_TIMER + 5
 
 if openerp.tools.config.options["gevent"]:
     import gevent
@@ -91,12 +93,12 @@ class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/im'
 
     @openerp.addons.web.http.jsonrequest
-    def poll(self, req, last=None):
+    def poll(self, req, last=None, users_watch=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
         num = 0
         while True:
-            res = req.session.model('im.message').get_messages(last, req.context)
+            res = req.session.model('im.message').get_messages(last, users_watch, req.context)
             if num >= 1 or len(res["res"]) > 0:
                 return res
             last = res["last"]
@@ -117,7 +119,9 @@ class im_message(osv.osv):
         'date': datetime.datetime.now(),
     }
     
-    def get_messages(self, cr, uid, last=None, context=None):
+    def get_messages(self, cr, uid, last=None, users_watch=None, context=None):
+        users_watch = users_watch or []
+
         # complex stuff to determine the last message to show
         users = self.pool.get("res.users")
         c_user = users.browse(cr, uid, uid, context=context)
@@ -132,7 +136,9 @@ class im_message(osv.osv):
         res = self.read(cr, uid, res, ["id", "message", "from", "date"], context=context)
         if len(res) > 0:
             last = res[-1]["id"]
-        return {"res": res, "last": last, "dbname": cr.dbname}
+        print "users_watch:", users_watch
+        users_status = users.read(cr, uid, users_watch, ["im_status"], context=context)
+        return {"res": res, "last": last, "dbname": cr.dbname, "users_status": users_status}
 
     def post(self, cr, uid, message, to_user_id, context=None):
         self.create(cr, uid, {"message": message, 'from': uid, 'to': to_user_id}, context=context)
@@ -147,6 +153,24 @@ class im_message(osv.osv):
 class res_user(osv.osv):
     _inherit = "res.users"
 
+    def _im_status(self, cr, uid, ids, something, something_else, context=None):
+        res = {}
+        current = datetime.datetime.now()
+        delta = datetime.timedelta(0, DISCONNECTION_TIMER)
+        for obj in self.browse(cr, uid, ids, context=context):
+            last_update = datetime.datetime.strptime(obj.im_last_status_update, DEFAULT_SERVER_DATETIME_FORMAT)
+            res[obj.id] = obj.im_last_status and (last_update + delta) > current
+        return res
+
     _columns = {
-        'im_last_received': fields.integer(string="Last Received Message"),
+        'im_last_received': fields.integer(string="Instant Messaging Last Received Message"),
+        'im_last_status': fields.boolean(strint="Instant Messaging Last Status"),
+        'im_last_status_update': fields.datetime(string="Instant Messaging Last Status Update"),
+        'im_status': fields.function(_im_status, string="Instant Messaging Status", type='boolean'),
+    }
+
+    _defaults = {
+        'im_last_received': -1,
+        'im_last_status': False,
+        'im_last_status_update': datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
