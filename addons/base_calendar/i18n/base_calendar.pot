@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:23+0000\n"
-"PO-Revision-Date: 2012-12-03 10:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-03 16:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,8 +34,10 @@ msgid "This property defines the list of date/time exceptions for a recurring ca
 msgstr ""
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#: selection:calendar.event,rrule_type:0
+#: selection:calendar.todo,rrule_type:0
+#: selection:crm.meeting,rrule_type:0
+msgid "Week(s)"
 msgstr ""
 
 #. module: base_calendar
@@ -512,10 +514,8 @@ msgid "Run"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.event,exdate:0
-#: field:calendar.todo,exdate:0
-#: field:crm.meeting,exdate:0
-msgid "Exception Date/Times"
+#: model:ir.model,name:base_calendar.model_calendar_alarm
+msgid "Event alarm information"
 msgstr ""
 
 #. module: base_calendar
@@ -632,16 +632,6 @@ msgid "Public for Employees"
 msgstr ""
 
 #. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: base_calendar
-#: sql_constraint:ir.model:0
-msgid "Each model must be unique!"
-msgstr ""
-
-#. module: base_calendar
 #: view:crm.meeting:0
 msgid "hours"
 msgstr ""
@@ -661,13 +651,6 @@ msgstr ""
 #: field:calendar.todo,end_date:0
 #: field:crm.meeting,end_date:0
 msgid "Repeat Until"
-msgstr ""
-
-#. module: base_calendar
-#: selection:calendar.event,rrule_type:0
-#: selection:calendar.todo,rrule_type:0
-#: selection:crm.meeting,rrule_type:0
-msgid "Week(s)"
 msgstr ""
 
 #. module: base_calendar
@@ -1154,11 +1137,6 @@ msgid "Recurrence Termination"
 msgstr ""
 
 #. module: base_calendar
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: base_calendar
 #: view:crm.meeting:0
 msgid "Until"
 msgstr ""
@@ -1352,12 +1330,6 @@ msgid "Search Meetings"
 msgstr ""
 
 #. module: base_calendar
-#: field:calendar.attendee,availability:0
-#: field:res.users,availability:0
-msgid "Free/Busy"
-msgstr ""
-
-#. module: base_calendar
 #: model:ir.model,name:base_calendar.model_crm_meeting_type
 msgid "Meeting Type"
 msgstr ""
@@ -1422,8 +1394,10 @@ msgid "Name"
 msgstr ""
 
 #. module: base_calendar
-#: model:ir.model,name:base_calendar.model_calendar_alarm
-msgid "Event alarm information"
+#: field:calendar.event,exdate:0
+#: field:calendar.todo,exdate:0
+#: field:crm.meeting,exdate:0
+msgid "Exception Date/Times"
 msgstr ""
 
 #. module: base_calendar
@@ -1578,8 +1552,9 @@ msgid "Second"
 msgstr ""
 
 #. module: base_calendar
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
+#: field:calendar.attendee,availability:0
+#: field:res.users,availability:0
+msgid "Free/Busy"
 msgstr ""
 
 #. module: base_calendar

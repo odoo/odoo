@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:23+0000\n"
-"PO-Revision-Date: 2012-12-03 10:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -510,11 +510,6 @@ msgstr ""
 #: help:account.vat.declaration,chart_account_id:0
 #: help:accounting.report,chart_account_id:0
 msgid "Select Charts of Accounts"
-msgstr ""
-
-#. module: account
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: account
@@ -1268,11 +1263,6 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr ""
-
-#. module: account
-#: view:res.partner:0
-msgid "History"
 msgstr ""
 
 #. module: account
@@ -2084,11 +2074,6 @@ msgid "Treasury Analysis"
 msgstr ""
 
 #. module: account
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr ""
-
-#. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
 msgstr ""
@@ -2385,11 +2370,6 @@ msgid "Income Account"
 msgstr ""
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr ""
-
-#. module: account
 #: help:account.config.settings,default_sale_tax:0
 msgid "This sale tax will be assigned by default on new products."
 msgstr ""
@@ -2492,14 +2472,16 @@ msgid "Create an Account Based on this Template"
 msgstr ""
 
 #. module: account
-#: view:account.move:0
-#: model:ir.model,name:account.model_account_move
-msgid "Account Entry"
+#: code:addons/account/account_invoice.py:889
+#, python-format
+msgid "Cannot create the invoice.\n"
+"The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
 msgstr ""
 
 #. module: account
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: view:account.move:0
+#: model:ir.model,name:account.model_account_move
+msgid "Account Entry"
 msgstr ""
 
 #. module: account
@@ -2920,11 +2902,6 @@ msgid "Account and Period must belong to the same company."
 msgstr ""
 
 #. module: account
-#: constraint:res.currency:0
-msgid "Error! You cannot define a rounding factor for the company's main currency that is smaller than the decimal precision of 'Account'."
-msgstr ""
-
-#. module: account
 #: field:account.invoice.line,discount:0
 msgid "Discount (%)"
 msgstr ""
@@ -3308,11 +3285,6 @@ msgid "Electronic File"
 msgstr ""
 
 #. module: account
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: account
 #: field:account.config.settings,has_chart_of_accounts:0
 msgid "Company has a chart of accounts"
 msgstr ""
@@ -3498,11 +3470,6 @@ msgstr ""
 #. module: account
 #: report:account.overdue:0
 msgid "VAT:"
-msgstr ""
-
-#. module: account
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
 msgstr ""
 
 #. module: account
@@ -3706,11 +3673,6 @@ msgid "Unreconciled Journal Items"
 msgstr ""
 
 #. module: account
-#: sql_constraint:res.currency:0
-msgid "The currency code must be unique per company!"
-msgstr ""
-
-#. module: account
 #: selection:account.account.type,close_method:0
 msgid "Detail"
 msgstr ""
@@ -3863,8 +3825,8 @@ msgid "Pro-forma Invoices"
 msgstr ""
 
 #. module: account
-#: constraint:account.bank.statement.line:0
-msgid "The amount of the voucher must be the same amount as the one on the statement line."
+#: view:res.partner:0
+msgid "History"
 msgstr ""
 
 #. module: account
@@ -4349,10 +4311,8 @@ msgid "Paypal Account"
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_invoice.py:889
-#, python-format
-msgid "Cannot create the invoice.\n"
-"The related payment term is probably misconfigured as it gives a computed amount greater than the total invoiced amount. In order to avoid rounding issues, the latest line of your payment term must be of type 'balance'."
+#: view:account.entries.report:0
+msgid "Acc.Type"
 msgstr ""
 
 #. module: account
@@ -4797,11 +4757,6 @@ msgid "Check"
 msgstr ""
 
 #. module: account
-#: constraint:account.analytic.line:0
-msgid "You cannot create analytic line on view account."
-msgstr ""
-
-#. module: account
 #: view:account.aged.trial.balance:0
 #: view:account.analytic.balance:0
 #: view:account.analytic.chart:0
@@ -4985,8 +4940,9 @@ msgid "Balance by Type of Account"
 msgstr ""
 
 #. module: account
-#: view:account.fiscalyear.close:0
-msgid "Generate Fiscal Year Opening Entries"
+#: code:addons/account/account_cash_statement.py:301
+#, python-format
+msgid "There is no %s Account on the journal %s."
 msgstr ""
 
 #. module: account
@@ -6885,12 +6841,6 @@ msgid "Account tax chart"
 msgstr ""
 
 #. module: account
-#: constraint:res.partner.bank:0
-msgid "\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make valid payments"
-msgstr ""
-
-#. module: account
 #: report:account.analytic.account.cost_ledger:0
 #: report:account.analytic.account.quantity_cost_ledger:0
 #: report:account.central.journal:0
@@ -7598,11 +7548,6 @@ msgid "Paypal account"
 msgstr ""
 
 #. module: account
-#: constraint:product.category:0
-msgid "Error ! You cannot create recursive categories."
-msgstr ""
-
-#. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
 msgstr ""
@@ -8073,11 +8018,6 @@ msgid "This wizard will remove the end of year journal entries of selected fisca
 msgstr ""
 
 #. module: account
-#: constraint:product.template:0
-msgid "Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category."
-msgstr ""
-
-#. module: account
 #: report:account.invoice:0
 msgid "Tel. :"
 msgstr ""
@@ -8409,8 +8349,10 @@ msgid "Sales tax (%)"
 msgstr ""
 
 #. module: account
-#: model:ir.model,name:account.model_account_fiscal_position_account_template
-msgid "Template Account Fiscal Mapping"
+#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
+#: model:ir.actions.act_window,name:account.action_account_analytic_chart
+#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
+msgid "Chart of Analytic Accounts"
 msgstr ""
 
 #. module: account
@@ -9003,9 +8945,8 @@ msgid "Accounting entries are the first input of the reconciliation."
 msgstr ""
 
 #. module: account
-#: code:addons/account/account_cash_statement.py:301
-#, python-format
-msgid "There is no %s Account on the journal %s."
+#: view:account.fiscalyear.close:0
+msgid "Generate Fiscal Year Opening Entries"
 msgstr ""
 
 #. module: account
@@ -9555,11 +9496,6 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
-
-#. module: account
-#: view:account.entries.report:0
-msgid "Acc.Type"
 msgstr ""
 
 #. module: account
@@ -10370,10 +10306,8 @@ msgid "Usually 1 or -1."
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_account_analytic_account_tree2
-#: model:ir.actions.act_window,name:account.action_account_analytic_chart
-#: model:ir.ui.menu,name:account.menu_action_analytic_account_tree2
-msgid "Chart of Analytic Accounts"
+#: model:ir.model,name:account.model_account_fiscal_position_account_template
+msgid "Template Account Fiscal Mapping"
 msgstr ""
 
 #. module: account

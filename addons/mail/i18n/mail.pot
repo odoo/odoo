@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:22+0000\n"
-"PO-Revision-Date: 2012-12-03 10:22+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-03 16:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -136,7 +136,7 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/js/mail.js:780
+#: code:addons/mail/static/src/js/mail.js:778
 #, python-format
 msgid "Do you really want to delete this message?"
 msgstr ""
@@ -256,13 +256,6 @@ msgstr ""
 #. module: mail
 #: selection:mail.mail,state:0
 msgid "Cancelled"
-msgstr ""
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/xml/mail.xml:272
-#, python-format
-msgid "unlike"
 msgstr ""
 
 #. module: mail
@@ -511,11 +504,6 @@ msgid "Favorite messages"
 msgstr ""
 
 #. module: mail
-#: view:mail.mail:0
-msgid "by"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/res_users.py:97
 #, python-format
 msgid "%s has joined the %s network."
@@ -641,11 +629,6 @@ msgstr ""
 #: field:mail.thread,message_ids:0
 #: field:res.partner,message_ids:0
 msgid "Messages"
-msgstr ""
-
-#. module: mail
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: mail
@@ -894,11 +877,6 @@ msgid "Add Followers"
 msgstr ""
 
 #. module: mail
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: mail
 #: model:mail.message.subtype,name:mail.mt_issue_closed
 msgid "Closed"
 msgstr ""
@@ -974,8 +952,8 @@ msgid "Message subtype gives a more precise type on the message, especially for 
 msgstr ""
 
 #. module: mail
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
+#: view:mail.mail:0
+msgid "by"
 msgstr ""
 
 #. module: mail
@@ -1158,11 +1136,6 @@ msgid "Cc"
 msgstr ""
 
 #. module: mail
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/mail.xml:110
 #: view:mail.compose.message:0
@@ -1333,11 +1306,6 @@ msgid "Outgoing mail server"
 msgstr ""
 
 #. module: mail
-#: model:ir.ui.menu,name:mail.group_hr_policies_ir_ui_menu
-msgid "HR Policies"
-msgstr ""
-
-#. module: mail
 #: code:addons/mail/mail_message.py:813
 #, python-format
 msgid "Partners email addresses not found"
@@ -1496,8 +1464,10 @@ msgid "Related Document Model"
 msgstr ""
 
 #. module: mail
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#. openerp-web
+#: code:addons/mail/static/src/xml/mail.xml:272
+#, python-format
+msgid "unlike"
 msgstr ""
 
 #. module: mail
@@ -1555,9 +1525,8 @@ msgid "Initial thread message."
 msgstr ""
 
 #. module: mail
-#: constraint:res.partner:0
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
+#: model:ir.ui.menu,name:mail.group_hr_policies_ir_ui_menu
+msgid "HR Policies"
 msgstr ""
 
 #. module: mail

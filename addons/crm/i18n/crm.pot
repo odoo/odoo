@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:22+0000\n"
-"PO-Revision-Date: 2012-12-03 10:22+0000\n"
+"POT-Creation-Date: 2012-12-03 16:01+0000\n"
+"PO-Revision-Date: 2012-12-03 16:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -335,11 +335,6 @@ msgid "When a real project/opportunity is detected"
 msgstr ""
 
 #. module: crm
-#: constraint:crm.segmentation:0
-msgid "Error ! You cannot create recursive profiles."
-msgstr ""
-
-#. module: crm
 #: field:res.partner,opportunity_ids:0
 msgid "Leads and Opportunities"
 msgstr ""
@@ -509,11 +504,6 @@ msgstr ""
 #: selection:crm.lead.report,deadline_month:0
 #: selection:crm.phonecall.report,month:0
 msgid "October"
-msgstr ""
-
-#. module: crm
-#: constraint:crm.meeting:0
-msgid "Error ! End date cannot be set before start date."
 msgstr ""
 
 #. module: crm
@@ -776,9 +766,9 @@ msgid "or"
 msgstr ""
 
 #. module: crm
-#: constraint:res.partner:0
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
+#: field:crm.lead.report,create_date:0
+#: field:crm.phonecall.report,create_date:0
+msgid "Create Date"
 msgstr ""
 
 #. module: crm
@@ -1420,12 +1410,6 @@ msgid "Log a call"
 msgstr ""
 
 #. module: crm
-#: field:crm.lead.report,create_date:0
-#: field:crm.phonecall.report,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: crm
 #: selection:crm.segmentation.line,expr_name:0
 msgid "Sale Amount"
 msgstr ""
@@ -1931,11 +1915,6 @@ msgid "Note"
 msgstr ""
 
 #. module: crm
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: crm
 #: selection:crm.lead,priority:0
 #: selection:crm.lead.report,priority:0
 #: selection:crm.phonecall,priority:0
@@ -2385,11 +2364,6 @@ msgid "Operator"
 msgstr ""
 
 #. module: crm
-#: model:ir.model,name:crm.model_crm_phonecall2phonecall
-msgid "Phonecall To Phonecall"
-msgstr ""
-
-#. module: crm
 #: view:crm.lead:0
 #: model:ir.actions.act_window,name:crm.opportunity2phonecall_act
 msgid "Schedule/Log Call"
@@ -2514,11 +2488,6 @@ msgstr ""
 #. module: crm
 #: view:res.partner:0
 msgid "Calls"
-msgstr ""
-
-#. module: crm
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
 msgstr ""
 
 #. module: crm
@@ -2794,8 +2763,8 @@ msgid "CRM Lead: Mark read"
 msgstr ""
 
 #. module: crm
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
+#: model:ir.model,name:crm.model_crm_phonecall2phonecall
+msgid "Phonecall To Phonecall"
 msgstr ""
 
 #. module: crm
@@ -2806,11 +2775,6 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_case_stage
 msgid "Stage of case"
-msgstr ""
-
-#. module: crm
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
 msgstr ""
 
 #. module: crm

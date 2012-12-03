@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:22+0000\n"
-"PO-Revision-Date: 2012-12-03 10:22+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -183,11 +183,6 @@ msgstr ""
 #. module: project
 #: model:res.groups,name:project.group_delegate_task
 msgid "Task Delegation"
-msgstr ""
-
-#. module: project
-#: constraint:account.analytic.account:0
-msgid "Error! You cannot create recursive analytic accounts."
 msgstr ""
 
 #. module: project
@@ -423,11 +418,6 @@ msgid "Use integrated collaborative note pads on task"
 msgstr ""
 
 #. module: project
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: project
 #: model:process.node,note:project.process_node_opentask0
 msgid "Encode your working hours."
 msgstr ""
@@ -448,8 +438,8 @@ msgid "Delegation"
 msgstr ""
 
 #. module: project
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
+#: field:project.task,create_date:0
+msgid "Create Date"
 msgstr ""
 
 #. module: project
@@ -814,10 +804,8 @@ msgid "Is a Follower"
 msgstr ""
 
 #. module: project
-#: field:project.task.history,date:0
-#: field:project.task.history.cumulative,date:0
-#: field:project.task.work,date:0
-msgid "Date"
+#: field:project.task,work_ids:0
+msgid "Work done"
 msgstr ""
 
 #. module: project
@@ -841,8 +829,10 @@ msgid "Companies"
 msgstr ""
 
 #. module: project
-#: field:project.task,work_ids:0
-msgid "Work done"
+#: field:project.task.history,date:0
+#: field:project.task.history.cumulative,date:0
+#: field:project.task.work,date:0
+msgid "Date"
 msgstr ""
 
 #. module: project
@@ -1538,11 +1528,6 @@ msgid "Deadlines"
 msgstr ""
 
 #. module: project
-#: field:project.task,create_date:0
-msgid "Create Date"
-msgstr ""
-
-#. module: project
 #: code:addons/project/wizard/project_task_delegate.py:69
 #: code:addons/project/wizard/project_task_delegate.py:70
 #: code:addons/project/wizard/project_task_delegate.py:77
@@ -1606,11 +1591,6 @@ msgstr ""
 #. module: project
 #: model:process.node,note:project.process_node_drafttask0
 msgid "Define the Requirements and Set Planned Hours."
-msgstr ""
-
-#. module: project
-#: constraint:project.project:0
-msgid "Error! You cannot assign escalation to the same project!"
 msgstr ""
 
 #. module: project
@@ -1678,11 +1658,6 @@ msgstr ""
 #. module: project
 #: view:project.project:0
 msgid "Documents"
-msgstr ""
-
-#. module: project
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: project
@@ -2054,11 +2029,6 @@ msgstr ""
 #: view:board.board:0
 #: field:project.project,task_count:0
 msgid "Open Tasks"
-msgstr ""
-
-#. module: project
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: project

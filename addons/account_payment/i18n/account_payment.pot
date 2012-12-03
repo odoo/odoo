@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:23+0000\n"
-"PO-Revision-Date: 2012-12-03 10:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -130,11 +130,6 @@ msgid "Amount"
 msgstr ""
 
 #. module: account_payment
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-
-#. module: account_payment
 #: view:payment.order:0
 msgid "Total in Company Currency"
 msgstr ""
@@ -150,24 +145,9 @@ msgid "New Payment Order"
 msgstr ""
 
 #. module: account_payment
-#: field:payment.order,total:0
-msgid "Total"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 #: field:payment.order,reference:0
 msgid "Reference"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot provide a secondary currency if it is the same than the company one."
 msgstr ""
 
 #. module: account_payment
@@ -176,19 +156,9 @@ msgid "The payment line name must be unique!"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr ""
-
-#. module: account_payment
 #: model:ir.actions.act_window,name:account_payment.action_payment_order_tree
 #: model:ir.ui.menu,name:account_payment.menu_action_payment_order_form
 msgid "Payment Orders"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_payment
@@ -337,11 +307,6 @@ msgid "Partner"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,bank_statement_line_id:0
 msgid "Bank statement line"
 msgstr ""
@@ -354,11 +319,6 @@ msgstr ""
 #. module: account_payment
 #: field:account.invoice,amount_to_pay:0
 msgid "Amount to be paid"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal."
 msgstr ""
 
 #. module: account_payment
@@ -520,11 +480,6 @@ msgid "Invoice Ref"
 msgstr ""
 
 #. module: account_payment
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr ""
-
-#. module: account_payment
 #: field:payment.line,name:0
 msgid "Your Reference"
 msgstr ""
@@ -662,11 +617,6 @@ msgid "Name"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_payment
 #: report:payment.order:0
 msgid "Bank Account"
 msgstr ""
@@ -688,8 +638,8 @@ msgid "Order"
 msgstr ""
 
 #. module: account_payment
-#: constraint:account.move.line:0
-msgid "The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit."
+#: field:payment.order,total:0
+msgid "Total"
 msgstr ""
 
 #. module: account_payment
@@ -708,11 +658,6 @@ msgstr ""
 #: view:account.payment.populate.statement:0
 #: view:payment.order.create:0
 msgid "or"
-msgstr ""
-
-#. module: account_payment
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_payment

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-03 10:23+0000\n"
-"PO-Revision-Date: 2012-12-03 10:23+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -208,23 +208,8 @@ msgid "Amount"
 msgstr ""
 
 #. module: account_followup
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-
-#. module: account_followup
 #: view:res.partner:0
 msgid "No Responsible"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You cannot create journal items with a secondary currency without recording both 'currency' and 'amount currency' field."
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You cannot provide a secondary currency if it is the same than the company one."
 msgstr ""
 
 #. module: account_followup
@@ -308,11 +293,6 @@ msgstr ""
 #. module: account_followup
 #: help:account_followup.followup.line,send_letter:0
 msgid "When processing, it will print a letter"
-msgstr ""
-
-#. module: account_followup
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
 msgstr ""
 
 #. module: account_followup
@@ -501,18 +481,13 @@ msgid "Print overdue payments report independent of follow-up line"
 msgstr ""
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.followup.line,followup_id:0
 #: field:account_followup.stat,followup_id:0
 msgid "Follow Ups"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:228
+#: code:addons/account_followup/account_followup.py:227
 #, python-format
 msgid "Email not sent because of email address of partner not filled in"
 msgstr ""
@@ -533,11 +508,6 @@ msgid "Results from the sending of the different letters and emails"
 msgstr ""
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_followup
 #: constraint:account_followup.followup.line:0
 msgid "Your description is invalid, use the right legend or %% if you want to use the percent character."
 msgstr ""
@@ -546,11 +516,6 @@ msgstr ""
 #: code:addons/account_followup/wizard/account_followup_print.py:172
 #, python-format
 msgid " manual action(s) assigned:"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The selected account of your Journal Entry forces to provide a secondary currency. You should remove the secondary currency on the account or select a multi-currency view on the journal."
 msgstr ""
 
 #. module: account_followup
@@ -680,7 +645,7 @@ msgid "unknown"
 msgstr ""
 
 #. module: account_followup
-#: code:addons/account_followup/account_followup.py:246
+#: code:addons/account_followup/account_followup.py:245
 #, python-format
 msgid "Printed overdue payments report"
 msgstr ""
@@ -709,11 +674,6 @@ msgstr ""
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
 msgid "Journal Items"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "The date of your Journal Entry is not in the defined period! You should change the date or remove this constraint from the journal."
 msgstr ""
 
 #. module: account_followup
@@ -1078,11 +1038,6 @@ msgid "<p>\n"
 msgstr ""
 
 #. module: account_followup
-#: field:account_followup.print,test_print:0
-msgid "Test Print"
-msgstr ""
-
-#. module: account_followup
 #: view:account.move.line:0
 msgid "Partner entries"
 msgstr ""
@@ -1121,11 +1076,6 @@ msgstr ""
 #: view:account_followup.stat:0
 #: model:ir.actions.act_window,name:account_followup.action_followup_stat
 msgid "Follow-ups Sent"
-msgstr ""
-
-#. module: account_followup
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: account_followup
@@ -1266,16 +1216,6 @@ msgid "Total credit"
 msgstr ""
 
 #. module: account_followup
-#: constraint:account.move.line:0
-msgid "The amount expressed in the secondary currency must be positif when journal item are debit and negatif when journal item are credit."
-msgstr ""
-
-#. module: account_followup
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: account_followup
 #: field:account_followup.stat,credit:0
 msgid "Credit"
 msgstr ""
@@ -1301,18 +1241,13 @@ msgid "Latest date that the follow-up level of the partner was changed"
 msgstr ""
 
 #. module: account_followup
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
+#: field:account_followup.print,test_print:0
+msgid "Test Print"
 msgstr ""
 
 #. module: account_followup
 #: view:res.partner:0
 msgid "Search view"
-msgstr ""
-
-#. module: account_followup
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_followup
