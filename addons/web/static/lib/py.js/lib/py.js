@@ -393,7 +393,13 @@ var py = {};
 
         switch(val.constructor) {
         case Object:
-            return py.dict.fromJSON(val);
+            var out = py.PY_call(py.object);
+            for(var k in val) {
+                if (val.hasOwnProperty(k)) {
+                    out[k] = val[k];
+                }
+            }
+            return out;
         case Array:
             return py.list.fromJSON(val);
         }
@@ -756,7 +762,14 @@ var py = {};
 
         // Conversion
         toJSON: function () {
-            throw new Error(this.constructor.name + ' can not be converted to JSON');
+            var out = {};
+            for(var k in this) {
+                if (this.hasOwnProperty(k) && !/^__/.test(k)) {
+                    var val = this[k];
+                    out[k] = val.toJSON ? val.toJSON() : val;
+                }
+            }
+            return out;
         }
     });
     var NoneType = py.type('NoneType', null, {
