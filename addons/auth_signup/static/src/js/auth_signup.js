@@ -91,7 +91,7 @@ openerp.auth_signup = function(instance) {
             if (ev) {
                 ev.preventDefault();
             }
-            this.show_error("Invalid signup token");
+            this.show_error(_t("Invalid signup token"));
             delete this.params.db;
             delete this.params.token;
         },
@@ -108,19 +108,19 @@ openerp.auth_signup = function(instance) {
                 var password = this.$("form input[name=password]").val();
                 var confirm_password = this.$("form input[name=confirm_password]").val();
                 if (!db) {
-                    this.do_warn("Login", "No database selected !");
+                    this.do_warn(_t("Login"), _t("No database selected !"));
                     return false;
                 } else if (!name) {
-                    this.do_warn("Login", "Please enter a name.");
+                    this.do_warn(_t("Login"), _t("Please enter a name."));
                     return false;
                 } else if (!login) {
-                    this.do_warn("Login", "Please enter a username.");
+                    this.do_warn(_t("Login"), _t("Please enter a username."));
                     return false;
                 } else if (!password || !confirm_password) {
-                    this.do_warn("Login", "Please enter a password and confirm it.");
+                    this.do_warn(_t("Login"), _t("Please enter a password and confirm it."));
                     return false;
                 } else if (password !== confirm_password) {
-                    this.do_warn("Login", "Passwords do not match; please retype them.");
+                    this.do_warn(_t("Login"), _t("Passwords do not match; please retype them."));
                     return false;
                 }
                 var params = {
@@ -154,10 +154,10 @@ openerp.auth_signup = function(instance) {
             var db = this.$("form [name=db]").val();
             var login = this.$("form input[name=login]").val();
             if (!db) {
-                this.do_warn("Login", "No database selected !");
+                this.do_warn(_t("Login"), _t("No database selected !"));
                 return false;
             } else if (!login) {
-                this.do_warn("Login", "Please enter a username or email address.")
+                this.do_warn(_t("Login"), _t("Please enter a username or email address."))
                 return false;
             }
             var params = {
