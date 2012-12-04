@@ -82,7 +82,7 @@
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="create_date" invisible="1"/>
-                <field name="opportunity_id" invisible="1"/>
+                <field name="opportunity_id" invisible="1" on_change="on_change_opportunity(opportunity_id)"/>
                 <field name="state"/>
                 <button name="case_open" string="Confirm" type="object"
                         states="draft,pending" icon="gtk-go-forward"/>
