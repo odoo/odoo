@@ -1398,7 +1398,7 @@ instance.web.fields_view_get = function(args) {
     function postprocess(fvg) {
         fvg.arch_string = fvg.arch;
         fvg.arch_doc = $.parseXML(fvg.arch);
-        fvg.arch = instance.web.xml_to_json(fvg.arch_doc);
+        fvg.arch = instance.web.xml_to_json(fvg.arch_doc, true);
         if ('id' in fvg.fields) {
             // Special case for id's
             var id_field = fvg.fields['id'];
@@ -1424,14 +1424,13 @@ instance.web.fields_view_get = function(args) {
     });
 };
 
-instance.web.xml_to_json = function(node) {
+instance.web.xml_to_json = function(node, strip_whitespace) {
     switch (node.nodeType) {
         case 9:
-            return instance.web.xml_to_json(node.documentElement);
+            return instance.web.xml_to_json(node.documentElement, strip_whitespace);
         case 3:
         case 4:
-            return node.data;
-        break;
+            return (strip_whitespace && node.data.trim() === '') ? undefined : node.data;
         case 1:
             var attrs = $(node).getAttributes();
             _.each(['domain', 'filter_domain', 'context', 'default_get'], function(key) {
@@ -1444,7 +1443,9 @@ instance.web.xml_to_json = function(node) {
             return {
                 tag: node.tagName.toLowerCase(),
                 attrs: attrs,
-                children: _.map(node.childNodes, instance.web.xml_to_json)
+                children: _.compact(_.map(node.childNodes, function(node) {
+                    return instance.web.xml_to_json(node, strip_whitespace);
+                })),
             }
     }
 }
