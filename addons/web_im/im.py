@@ -149,7 +149,7 @@ class im_message(osv.osv):
     }
 
     _defaults = {
-        'date': datetime.datetime.now(),
+        'date': datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
     }
     
     def get_messages(self, cr, uid, last=None, users_watch=None, context=None):
@@ -188,9 +188,10 @@ class res_user(osv.osv):
         res = {}
         current = datetime.datetime.now()
         delta = datetime.timedelta(0, DISCONNECTION_TIMER)
-        for obj in self.browse(cr, uid, ids, context=context):
-            last_update = datetime.datetime.strptime(obj.im_last_status_update, DEFAULT_SERVER_DATETIME_FORMAT)
-            res[obj.id] = obj.im_last_status and (last_update + delta) > current
+        data = self.read(cr, uid, ids, ["im_last_status_update", "im_last_status"], context=context)
+        for obj in data:
+            last_update = datetime.datetime.strptime(obj["im_last_status_update"], DEFAULT_SERVER_DATETIME_FORMAT)
+            res[obj["id"]] = obj["im_last_status"] and (last_update + delta) > current
         return res
 
     def im_connect(self, cr, uid, context=None):
