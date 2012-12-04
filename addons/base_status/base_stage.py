@@ -277,9 +277,6 @@ class base_stage(object):
     
     def write(self, cr, uid, ids, vals, context=None):
         res = super(base_stage,self).write(cr, uid, ids, vals, context)
-        if vals.get('stage_id'):
-            for case in self.browse(cr, uid, ids, context=context):
-                self._action(cr, uid, case, case.stage_id.state, context=context)
         return res
 
     
