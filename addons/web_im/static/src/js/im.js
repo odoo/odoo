@@ -367,7 +367,14 @@ openerp.web_im = function(instance) {
             this.last_user = user;
             this.last_items = items;
             date = instance.web.str_to_datetime(date);
-            date = date.toString(Date.CultureInfo.formatPatterns.shortDate + " " + Date.CultureInfo.formatPatterns.shortTime);
+            var now = new Date();
+            var diff = now - date;
+            if (diff > (1000 * 60 * 60 * 24)) {
+                date = $.timeago(date);
+            } else {
+                date = date.toString(Date.CultureInfo.formatPatterns.shortTime);
+            }
+            
             this.last_bubble = $(QWeb.render("Conversation.bubble", {"items": items, "user": user, "time": date}));
             $(this.$(".oe_im_chatview_content").children()[0]).append(this.last_bubble);
             this._go_bottom();

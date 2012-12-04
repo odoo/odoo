@@ -190,6 +190,7 @@
 }
 .openerp .oe_im_chatview .oe_im_chatview_bubble {
     background: white;
+    position: relative;
     padding: 3px;
     margin: 3px;
     -moz-border-radius: 3px;
@@ -219,17 +220,23 @@
     -ms-interpolation-mode: bicubic;
 }
 .openerp .oe_im_chatview .oe_im_chatview_time {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    margin: 3px;
     text-align: right;
     line-height: 13px;
     font-size: 11px;
     color: #999;
+    width: 60px;
+    overflow: hidden;
 }
 .openerp .oe_im_chatview .oe_im_chatview_from {
     margin: 0 0 2px 0;
     line-height: 14px;
     font-weight: bold;
     font-size: 12px;
-    width: 154px;
+    width: 140px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
