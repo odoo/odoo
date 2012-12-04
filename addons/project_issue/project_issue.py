@@ -234,10 +234,10 @@ class project_issue(base_stage, osv.osv):
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
-                                         help="A task's kanban state indicates special situations affecting it:\n"
+                                         help="A Issue's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
-                                              " * Blocked indicates something is preventing the progress of this task\n"
-                                              " * Ready for next stage indicates the task is ready to be pulled to the next stage",
+                                              " * Blocked indicates something is preventing the progress of this issue\n"
+                                              " * Ready for next stage indicates the issue is ready to be pulled to the next stage",
                                          readonly=True, required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
