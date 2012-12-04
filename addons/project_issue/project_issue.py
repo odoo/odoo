@@ -233,6 +233,12 @@ class project_issue(base_stage, osv.osv):
                       When the case is over, the status is set to \'Done\'.\
                       If the case needs to be reviewed then the status is \
                       set to \'Pending\'.'),
+        'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready for next stage')], 'Kanban State',
+                                         help="A task's kanban state indicates special situations affecting it:\n"
+                                              " * Normal is the default situation\n"
+                                              " * Blocked indicates something is preventing the progress of this task\n"
+                                              " * Ready for next stage indicates the task is ready to be pulled to the next stage",
+                                         readonly=True, required=False),
         'email_from': fields.char('Email', size=128, help="These people will receive email.", select=1),
         'email_cc': fields.char('Watchers Emails', size=256, help="These email addresses will be added to the CC field of all inbound and outbound emails for this record before being sent. Separate multiple email addresses with a comma"),
         'date_open': fields.datetime('Opened', readonly=True,select=True),
@@ -279,6 +285,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
+        'kanban_state': 'normal',
     }
 
     _group_by_full = {
@@ -551,7 +558,7 @@ class project_issue(base_stage, osv.osv):
         return self.message_post(cr, uid, ids, body=message, subtype="project_issue.mt_issue_new", context=context)
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task <b>started</b>."), subtype="project_issue.mt_issue_started", context=context)
+        return self.message_post(cr, uid, ids, body=_("Issue <b>started</b>."), subtype="project_issue.mt_issue_started", context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -563,9 +570,25 @@ class project_issue(base_stage, osv.osv):
                 obj.message_post(body=message)
         return True
 
+    def case_block_send_note(self, cr, uid, ids, context=None):
+        return self.message_post(cr, uid, ids, body=_("Issue <b>blocked</b>."), subtype="project_issue.mt_issue_blocked", context=context)
+    
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Project issue <b>closed</b>."), subtype="project_issue.mt_issue_closed", context=context)
 
+    def set_kanban_state_blocked(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'blocked'}, context=context)
+        self.case_block_send_note(cr, uid, ids, context=context)
+        return True
+
+    def set_kanban_state_normal(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'normal'}, context=context)
+        self.case_open_send_note(cr, uid, ids, context=context)
+        return True
+
+    def set_kanban_state_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, {'kanban_state': 'done'}, context=context)
+        return False
 project_issue()
 
 class project(osv.osv):

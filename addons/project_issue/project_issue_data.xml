@@ -54,6 +54,11 @@ Access all issues from the top Project menu, and access the issues of a specific
             <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
         </record>
+        <record id="mt_issue_blocked" model="mail.message.subtype">
+            <field name="name">Issue Blocked</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+        </record>
         <record id="mt_issue_closed" model="mail.message.subtype">
             <field name="name">Issue Closed</field>
             <field name="res_model">project.issue</field>
