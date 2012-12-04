@@ -213,8 +213,10 @@ function openerp_pos_db(instance, module){
             var stored_products   = this.load('products',{});
             var product_ids  = stored_categories[category_id];
             var list = [];
-            for(var i = 0, len = Math.min(product_ids.length,this.limit); i < len; i++){
-                list.push(stored_products[product_ids[i]]);
+            if (product_ids) {
+                for (var i = 0, len = Math.min(product_ids.length, this.limit); i < len; i++) {
+                    list.push(stored_products[product_ids[i]]);
+                }
             }
             return list;
         },

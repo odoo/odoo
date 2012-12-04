@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-09-21 14:21+0000\n"
 "Last-Translator: Jordi Esteve (www.zikzakmedia.com) "
 "<jesteve@zikzakmedia.com>\n"
@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:33+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: sale_stock
 #: help:sale.config.settings,group_invoice_deli_orders:0
@@ -40,6 +40,12 @@ msgstr "Ordre d'enviament"
 msgid ""
 "Allows you to specify different delivery and invoice addresses on a sale "
 "order."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.actions.act_window,name:sale_stock.outgoing_picking_list_to_invoice
+#: model:ir.ui.menu,name:sale_stock.menu_action_picking_list_to_invoice
+msgid "Deliveries to Invoice"
 msgstr ""
 
 #. module: sale_stock
@@ -209,11 +215,6 @@ msgstr ""
 "l'ordre de proveïment. Representa l'assignació dels components de la comanda "
 "de venda. Hi ha un albarà per línia de la comanda de venda que evoluciona "
 "amb la disponibilitat dels components."
-
-#. module: sale_stock
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Error! No podeu crear companyies recursives."
 
 #. module: sale_stock
 #: help:res.company,security_lead:0
@@ -396,11 +397,6 @@ msgid "Properties"
 msgstr "Propietats"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: sale_stock
 #: field:sale.config.settings,group_mrp_properties:0
 msgid "Product properties on order lines"
 msgstr ""
@@ -411,11 +407,6 @@ msgid ""
 "You can generate invoices based on sales orders or based on shippings."
 msgstr ""
 "Podeu generar factures basades en comandes de venda o basades en enviaments."
-
-#. module: sale_stock
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -437,12 +428,6 @@ msgid ""
 "                and to automatically creates project tasks from procurement "
 "lines.\n"
 "                This installs the modules project_timesheet and project_mrp."
-msgstr ""
-
-#. module: sale_stock
-#: sql_constraint:stock.picking:0
-#: sql_constraint:stock.picking.out:0
-msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: sale_stock
@@ -511,11 +496,6 @@ msgid "Number Packages"
 msgstr "Número paquets"
 
 #. module: sale_stock
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale_stock
 #: field:sale.order,shipped:0
 msgid "Delivered"
 msgstr "Lliurat"
@@ -560,11 +540,6 @@ msgid "Incoterm"
 msgstr "Incoterm"
 
 #. module: sale_stock
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/sale_stock.py:521
 #, python-format
 msgid "Cannot cancel sales order line!"
@@ -589,11 +564,6 @@ msgstr ""
 #: field:sale.order,picking_ids:0
 msgid "Related Picking"
 msgstr "Albarà relacionat"
-
-#. module: sale_stock
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_config_settings

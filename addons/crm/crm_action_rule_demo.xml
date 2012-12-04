@@ -43,7 +43,7 @@ Thanks,
         </record>
 
         <record id="filter_draft_lead" model="ir.filters">
-            <field name="name">Filter on leads which are draft.</field>
+            <field name="name">Draft Leads</field>
             <field name="model_id">crm.lead</field>
             <field name="domain">[('state','=','draft')]</field>
             <field name="user_id" eval="False"/>
@@ -62,7 +62,7 @@ Thanks,
         </record>
 
         <record id="filter_usa_lead" model="ir.filters">
-            <field name="name">Filter on leads which come from USA.</field>
+            <field name="name">Leads from USA</field>
             <field name="model_id">crm.lead</field>
             <field name="domain">[('country_id','=','United States')]</field>
             <field name="user_id" eval="False"/>

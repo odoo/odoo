@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-01-17 16:49+0000\n"
 "Last-Translator: Aline (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:23+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:47+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: share
 #: code:addons/share/wizard/share_wizard.py:837
@@ -172,12 +172,6 @@ msgid "Optional domain for further data filtering"
 msgstr "Domaine facultatif pour filtrer davantage les données"
 
 #. module: share
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-"Vous ne pouvez pas avoir deux utilisateurs avec le même identifiant !"
-
-#. module: share
 #: view:share.wizard:0
 msgid "Next"
 msgstr "Suivant"
@@ -225,11 +219,6 @@ msgid ""
 msgstr ""
 "Veuillez sélectionner l'action qui ouvrira l'écran contenant les données que "
 "vous voulez partager."
-
-#. module: share
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: share
 #: field:res.groups,share:0
@@ -336,13 +325,6 @@ msgstr ""
 "L'action qui ouvre l'écran contenant les données que vous souhaitez partager."
 
 #. module: share
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"La société choisie ne fait pas partie des sociétés autorisées pour cet "
-"utilisateur"
-
-#. module: share
 #: code:addons/share/wizard/share_wizard.py:541
 #, python-format
 msgid "(Copy for sharing)"
@@ -380,11 +362,6 @@ msgid ""
 "You must configure your email address in the user preferences before using "
 "the Share button."
 msgstr ""
-
-#. module: share
-#: sql_constraint:res.groups:0
-msgid "The name of the group must be unique !"
-msgstr "Le nom du groupe doit être unique !"
 
 #. module: share
 #: model:res.groups,name:share.group_share_user
@@ -656,11 +633,6 @@ msgid "or"
 msgstr ""
 
 #. module: share
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: share
 #: help:share.wizard,access_mode:0
 msgid "Access rights to be granted on the shared documents."
 msgstr ""
@@ -788,12 +760,21 @@ msgstr ""
 #~ msgid "New users (emails required)"
 #~ msgstr "Nouveaux utilisateurs (couriels requis)"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr ""
+#~ "La société choisie ne fait pas partie des sociétés autorisées pour cet "
+#~ "utilisateur"
+
 #~ msgid "Read & Write"
 #~ msgstr "Lecture & Écriture"
 
 #, python-format
 #~ msgid "Please specify \"share_root_url\" in context"
 #~ msgstr "Veuillez spécifier \"share_root_url\" dans le contexte"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr ""
+#~ "Vous ne pouvez pas avoir deux utilisateurs avec le même identifiant !"
 
 #~ msgid "res.users"
 #~ msgstr "res.users"
@@ -804,6 +785,9 @@ msgstr ""
 #, python-format
 #~ msgid "User already exists"
 #~ msgstr "L'utilisateur existe déjà"
+
+#~ msgid "The name of the group must be unique !"
+#~ msgstr "Le nom du groupe doit être unique !"
 
 #~ msgid "Groups"
 #~ msgstr "Groupes"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-07-28 22:27+0000\n"
 "Last-Translator: Fábio Martinelli - http://zupy.com.br "
 "<webmaster@guaru.net>\n"
@@ -15,19 +15,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:30+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: auth_ldap
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Voce não pode criar empresas recursivas"
-
-#. module: auth_ldap
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"A empresa escolhida não está entre as empresas habilitadas para este usuário"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: auth_ldap
 #: field:res.company.ldap,user:0
@@ -89,19 +78,9 @@ msgid "User Information"
 msgstr "Informações do usuário"
 
 #. module: auth_ldap
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "O nome da empresa deve ser exclusivo!"
-
-#. module: auth_ldap
 #: field:res.company.ldap,ldap_password:0
 msgid "LDAP password"
 msgstr "Senha LDAP"
-
-#. module: auth_ldap
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company
@@ -149,11 +128,6 @@ msgid "Setup your LDAP Server"
 msgstr "Configure seu servidor LDAP"
 
 #. module: auth_ldap
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Não é permitido criar dois usuários com o mesmo login!"
-
-#. module: auth_ldap
 #: view:res.company:0
 #: field:res.company,ldaps:0
 msgid "LDAP Parameters"
@@ -169,16 +143,6 @@ msgstr ""
 "diretório"
 
 #. module: auth_ldap
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: auth_ldap
-#: model:ir.model,name:auth_ldap.model_res_users
-msgid "Users"
-msgstr ""
-
-#. module: auth_ldap
 #: help:res.company.ldap,ldap_binddn:0
 msgid ""
 "The user account on the LDAP server that is used to query the directory. "
@@ -186,6 +150,11 @@ msgid ""
 msgstr ""
 "A conta do usuário no servidor LDAP que é usada para a busca no diretório, "
 "deixe em branco para conectar anonimamente"
+
+#. module: auth_ldap
+#: model:ir.model,name:auth_ldap.model_res_users
+msgid "Users"
+msgstr ""
 
 #. module: auth_ldap
 #: field:res.company.ldap,ldap_filter:0

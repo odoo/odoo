@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-02-08 03:39+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-11-27 12:39+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:16+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company the pickings and moves belong."
-msgstr ""
+msgstr "用来了解属于哪个公司的的分拣和移动"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -68,11 +68,6 @@ msgstr "拉式流"
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
 msgstr "库位用于提供目标的库位"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
@@ -155,9 +150,10 @@ msgid "Pulled flows"
 msgstr "拉式流"
 
 #. module: stock_location
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
+msgstr "公司"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
@@ -188,7 +184,7 @@ msgstr "按库存生产"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location."
-msgstr ""
+msgstr "从其它库位拉动"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
@@ -228,11 +224,6 @@ msgid ""
 msgstr "这些规则确定了产品在整个库位树的正确路径。"
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr "手动操作"
@@ -263,11 +254,6 @@ msgstr ""
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
 msgstr "需要提供目标库位"
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -312,12 +298,6 @@ msgid ""
 msgstr "拉式调拨需求来自源库位 %s,拉式规则 %s,通过源需求 %s (#%d)"
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr "账簿"
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr "需求单"
@@ -339,13 +319,6 @@ msgstr "自动调拨"
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
 msgstr "收货"
-
-#. module: stock_location
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: stock_location
 #: view:product.product:0
@@ -381,10 +354,10 @@ msgid "Location Paths"
 msgstr "库位路径"
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
-msgstr "公司"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
+msgstr "账簿"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0

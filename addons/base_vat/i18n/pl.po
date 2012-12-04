@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2010-11-29 07:54+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:51+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:19+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_vat
 #: view:res.partner:0
@@ -32,16 +32,6 @@ msgstr ""
 "Format powinien być %s"
 
 #. module: base_vat
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Nazwa firmy musi być unikalna !"
-
-#. module: base_vat
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr ""
-
-#. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
 msgstr "Sprawdzanie NIP (VIES VAT)"
@@ -52,19 +42,9 @@ msgid "Companies"
 msgstr "Firmy"
 
 #. module: base_vat
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
-
-#. module: base_vat
 #: code:addons/base_vat/base_vat.py:111
 #, python-format
 msgid "Error!"
-msgstr ""
-
-#. module: base_vat
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
 msgstr ""
 
 #. module: base_vat
@@ -122,3 +102,9 @@ msgstr "Notka prawna o NIP i VAT"
 #~ msgstr ""
 #~ "Numer NIP jest niepoprawny. Powinien byc poprzedzony kodem kraju (dla "
 #~ "polskiego partnera PL)"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Błąd! Nie możesz tworzyć firm rekurencyjnych."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Nazwa firmy musi być unikalna !"

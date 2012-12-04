@@ -85,7 +85,7 @@
             <button class="input-button number-char">7</button>
             <button class="input-button number-char">8</button>
             <button class="input-button number-char">9</button>
-            <button class="mode-button" data-mode='list_price'>Price</button>
+            <button class="mode-button" data-mode='price'>Price</button>
             <br />
             <button class="input-button" id="numpad-minus" >+/-</button>
             <button class="input-button number-char">0</button>
@@ -387,12 +387,12 @@
                     <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))"/>
                         </span>
                     </t>
                     <t t-if="widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))+'/Kg'"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))+'/Kg'"/>
                         </span>
                     </t>
                 </div>
@@ -510,7 +510,7 @@
                         </em>
                         <t t-esc="widget.model.get_unit().name" />
                         at
-                        <t t-esc="widget.format_currency(widget.model.get_list_price())" />
+                        <t t-esc="widget.format_currency(widget.model.get_price())" />
                         /
                         <t t-esc="widget.model.get_unit().name" />
                     </li>
@@ -563,7 +563,7 @@
         <div class="pos-sale-ticket">
             
             <div class="pos-right-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
-                Date.CultureInfo.formatPatterns.longTime)"/><t t-esc="widget.currentOrder.attributes.name"/></div>
+                Date.CultureInfo.formatPatterns.longTime)"/> <t t-esc="widget.currentOrder.attributes.name"/></div>
             <br />
             <t t-esc="widget.company.name"/><br />
             Phone: <t t-esc="widget.company.phone || ''"/><br />
@@ -584,7 +584,7 @@
                         <t t-esc="order.get_quantity().toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_list_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        <t t-esc="widget.format_currency(order.get_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
                     </td>
                 </tr>
             </table>

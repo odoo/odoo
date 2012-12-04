@@ -21,6 +21,7 @@
 
 import account_analytic_analysis
 import cron_account_analytic_account
+import res_config
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

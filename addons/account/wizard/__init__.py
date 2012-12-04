@@ -31,7 +31,6 @@ import account_reconcile_partner_process
 import account_reconcile
 import account_unreconcile
 import account_invoice_refund
-import account_move_journal
 import account_journal_select
 import account_move_bank_reconcile
 import account_subscription_generate

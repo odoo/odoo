@@ -139,7 +139,7 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'type': 'out_invoice',
                 'reference': False,
                 'account_id': sale.partner_id.property_account_receivable.id,
-                'partner_id': sale.partner_id.id,
+                'partner_id': sale.partner_invoice_id.id,
                 'invoice_line': [(0, 0, inv_line_values)],
                 'currency_id': sale.pricelist_id.currency_id.id,
                 'comment': '',

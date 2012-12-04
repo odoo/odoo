@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-05-10 18:06+0000\n"
-"Last-Translator: 开阖软件     Jeff Wang <jeff@osbzr.com>\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-28 06:58+0000\n"
+"Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -46,11 +46,6 @@ msgstr ""
 #: selection:res.company,check_layout:0
 msgid "Check on bottom"
 msgstr "底部的支票"
-
-#. module: account_check_writing
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "错误！您不能创建循环的公司。"
 
 #. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
@@ -110,6 +105,15 @@ msgid ""
 "              </p>\n"
 "            "
 msgstr ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                单击 创建一个新的支票。\n"
+"              </p><p>\n"
+"                支票支付表单允许跟踪用支票支付给供应商的过程。\n"
+"                当年选择了一个供应商，Openerp 将自动提供 支付\n"
+"                方法和支付金额，用于核销待支付的供应商发票和\n"
+"               单据。\n"
+"              </p>\n"
+"            "
 
 #. module: account_check_writing
 #: field:account.voucher,allow_check:0
@@ -131,12 +135,7 @@ msgstr "用预先打印的支票"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_bottom
 msgid "Print Check (Bottom)"
-msgstr ""
-
-#. module: account_check_writing
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "公司名称必须唯一！"
+msgstr "打印支票（底部）"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -148,14 +147,7 @@ msgstr "到期日期"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
 msgid "Print Check (Middle)"
-msgstr ""
-
-#. module: account_check_writing
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
+msgstr "打印支票（中间）"
 
 #. module: account_check_writing
 #: model:ir.model,name:account_check_writing.model_res_company
@@ -171,7 +163,7 @@ msgstr "截止余额"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_top
 msgid "Print Check (Top)"
-msgstr ""
+msgstr "打印支票（顶部）"
 
 #. module: account_check_writing
 #: report:account.print.check.bottom:0
@@ -184,16 +176,6 @@ msgstr "支票金额"
 #: model:ir.model,name:account_check_writing.model_account_voucher
 msgid "Accounting Voucher"
 msgstr "手工凭证"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "每个公司的账簿名称必须唯一！"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "每个公司的账簿编码必须唯一！"
 
 #. module: account_check_writing
 #: field:account.voucher,amount_in_word:0
@@ -218,8 +200,17 @@ msgstr "选择支票格式"
 #~ msgstr ""
 #~ "付款支票表单用来跟踪你对供应商的支票付款。选择了一个供应商、付款方式、付款金额以后，OpenERP会建议你对未核销的供应商发票进行核销。你可以打印支票。"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "错误！您不能创建循环的公司。"
+
 #~ msgid "Configuration"
 #~ msgstr "配置"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名称必须唯一！"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿编码必须唯一！"
 
 #~ msgid "Default Check layout"
 #~ msgstr "默认支票格式"
@@ -228,3 +219,6 @@ msgstr "选择支票格式"
 #~ "Configuration error! The currency chosen should be shared by the default "
 #~ "accounts too."
 #~ msgstr "设置错误！所选币种应与默认科目共享。"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "每个公司的账簿名称必须唯一！"

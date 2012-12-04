@@ -6,20 +6,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
-"PO-Revision-Date: 2012-05-10 18:18+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-11-28 18:29+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:45+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:14+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr "Numéro du Produit"
+msgstr "N° article"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
@@ -51,13 +51,6 @@ msgstr "Imprimer le ticket de la vente"
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.ean_wizard:0
-msgid ""
-"Enter a reference for this product, it will be converted\n"
-"                        automatically to a valid EAN number."
 msgstr ""
 
 #. module: point_of_sale
@@ -130,7 +123,7 @@ msgstr "Jour"
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr "Nom du Produit"
+msgstr "Nom de l'article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pamplemousse_rouge_pamplemousse_product_template
@@ -138,7 +131,7 @@ msgid "Red grapefruit"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1342
+#: code:addons/point_of_sale/point_of_sale.py:1343
 #, python-format
 msgid "Assign a Custom EAN"
 msgstr ""
@@ -191,8 +184,8 @@ msgid "Reference"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1039
-#: code:addons/point_of_sale/point_of_sale.py:1055
+#: code:addons/point_of_sale/point_of_sale.py:1040
+#: code:addons/point_of_sale/point_of_sale.py:1056
 #: report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
@@ -229,7 +222,7 @@ msgid "Help needed"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:740
+#: code:addons/point_of_sale/point_of_sale.py:741
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -322,7 +315,7 @@ msgid "Disc.(%)"
 msgstr "Rem.(%)"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -476,13 +469,6 @@ msgid ") is \""
 msgstr ""
 
 #. module: point_of_sale
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
 msgstr ""
@@ -570,11 +556,6 @@ msgid "Pepsi Max Cool Lemon 33cl"
 msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "June"
 msgstr "Juin"
@@ -628,7 +609,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:869
+#: code:addons/point_of_sale/point_of_sale.py:870
 #, python-format
 msgid "Customer Invoice"
 msgstr "Facture clilent"
@@ -787,7 +768,7 @@ msgstr "Pizza"
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr "Ajouter un produit"
+msgstr "Ajouter un article"
 
 #. module: point_of_sale
 #: field:pos.config,name:0
@@ -885,13 +866,6 @@ msgid "Spa Reine 1L"
 msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
-
-#. module: point_of_sale
 #: constraint:res.partner:0
 #: constraint:res.users:0
 msgid "Error: Invalid ean code"
@@ -958,6 +932,11 @@ msgid "pos.session.opening"
 msgstr ""
 
 #. module: point_of_sale
+#: view:res.users:0
+msgid "Edit EAN"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
@@ -992,17 +971,17 @@ msgstr "Mars"
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr "Produit utilisateur"
+msgstr "Articles utilisateur"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1141
+#: code:addons/point_of_sale/point_of_sale.py:1142
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
 "Vous devez sélectionner une liste de prix dans le formulaire de vente !\n"
-"Veuillez en choisir une avant de choisir un produit"
+"Veuillez en choisir une avant de choisir un article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
@@ -1378,7 +1357,7 @@ msgid "Today's Closed Cashbox"
 msgstr "Caisse fermée d'aujourd'hui"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:899
+#: code:addons/point_of_sale/point_of_sale.py:900
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
@@ -1449,7 +1428,7 @@ msgstr "Dr. Oetker Restaurant Funghi"
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category
 msgid "Product Categories"
-msgstr ""
+msgstr "Catégories d'articles"
 
 #. module: point_of_sale
 #: help:pos.config,journal_id:0
@@ -1581,7 +1560,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:348
 #, python-format
 msgid "The scanned product was not recognized"
-msgstr ""
+msgstr "L'article scanné n'a pas été reconnu"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_transaction_pos
@@ -1607,6 +1586,13 @@ msgstr "Boon Framboise 37.5cl"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config
 msgid "pos.config"
+msgstr ""
+
+#. module: point_of_sale
+#: view:pos.ean_wizard:0
+msgid ""
+"Enter a reference, it will be converted\n"
+"                        automatically to a valid EAN number."
 msgstr ""
 
 #. module: point_of_sale
@@ -1655,7 +1641,7 @@ msgid "Number of Transaction"
 msgstr "Nombre de Transactions"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:739
+#: code:addons/point_of_sale/point_of_sale.py:740
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -1690,7 +1676,7 @@ msgstr "Annuler"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:306
 #, python-format
 msgid "Please put your product on the scale"
-msgstr ""
+msgstr "Veuillez placer l'article sur la balance"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_details_summary
@@ -1725,7 +1711,7 @@ msgstr "Prix unitaire"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:184
 #, python-format
 msgid "Product Weighting"
-msgstr ""
+msgstr "Pesée des articles"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1866,7 +1852,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.unreferenced_product_product_template
 msgid "Unreferenced Products"
-msgstr ""
+msgstr "Article inconnu"
 
 #. module: point_of_sale
 #: view:pos.ean_wizard:0
@@ -1914,9 +1900,12 @@ msgid "User:"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Le nom du journal doit être unique dans chaque société !"
+#: code:addons/point_of_sale/point_of_sale.py:318
+#, python-format
+msgid ""
+"Unable to open the session. You have to assign a sale journal to your point "
+"of sale."
+msgstr ""
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -1949,6 +1938,8 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
 msgstr ""
+"Indique l'ordre d'affichage lorsqu'une liste de catégories d'articles est "
+"affichée."
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
@@ -1986,7 +1977,7 @@ msgid "Salespeople"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:757
+#: code:addons/point_of_sale/point_of_sale.py:758
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:118
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
@@ -1994,7 +1985,7 @@ msgid "You have to open at least one cashbox."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1140
+#: code:addons/point_of_sale/point_of_sale.py:1141
 #, python-format
 msgid "No Pricelist !"
 msgstr "Pas de Liste de Prix !"
@@ -2099,7 +2090,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 #: view:pos.order:0
 msgid "Products"
-msgstr "Produits"
+msgstr "Articles"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
@@ -2283,7 +2274,7 @@ msgstr ""
 #: report:pos.details:0
 #: report:pos.details_summary:0
 msgid "Qty of product"
-msgstr "Qté de Produits"
+msgstr "Qté d'articles"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pomme_golden_perlim_product_template
@@ -2323,7 +2314,7 @@ msgstr "Coca-Cola Light 50cl"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:472
 #, python-format
 msgid "Unknown Product"
-msgstr ""
+msgstr "Article inconnu"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2443,11 +2434,6 @@ msgid "Opening Balance"
 msgstr "Solde initial"
 
 #. module: point_of_sale
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: point_of_sale
 #: view:account.bank.statement:0
 #: selection:report.pos.order,state:0
 msgid "Closed"
@@ -2544,13 +2530,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:579
 #, python-format
 msgid "% discount"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: point_of_sale
@@ -2754,7 +2733,7 @@ msgstr "Statistiques des commandes du point de vente"
 #: view:report.pos.order:0
 #: field:report.pos.order,product_id:0
 msgid "Product"
-msgstr "Produit"
+msgstr "Article"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_pollo_product_template
@@ -3109,11 +3088,11 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:411
 #: code:addons/point_of_sale/point_of_sale.py:421
 #: code:addons/point_of_sale/point_of_sale.py:459
-#: code:addons/point_of_sale/point_of_sale.py:713
-#: code:addons/point_of_sale/point_of_sale.py:757
-#: code:addons/point_of_sale/point_of_sale.py:819
-#: code:addons/point_of_sale/point_of_sale.py:899
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:714
+#: code:addons/point_of_sale/point_of_sale.py:758
+#: code:addons/point_of_sale/point_of_sale.py:820
+#: code:addons/point_of_sale/point_of_sale.py:900
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box.py:22
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -3209,15 +3188,10 @@ msgid "Chaudfontaine 1.5l"
 msgstr "Chaudfontaine 1.5l"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1067
+#: code:addons/point_of_sale/point_of_sale.py:1068
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
-
-#. module: point_of_sale
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Le code du journal doit être unique dans chaque société !"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:531
@@ -3257,7 +3231,7 @@ msgid "Journal Entry"
 msgstr "Pièce comptable"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:737
+#: code:addons/point_of_sale/point_of_sale.py:738
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
@@ -3286,11 +3260,6 @@ msgstr "Dr. Oetker Restaurant Tonno"
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Facture fournisseur"
-
-#. module: point_of_sale
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:460
@@ -3360,11 +3329,6 @@ msgid "Orval 33cl"
 msgstr "Orval 33cl"
 
 #. module: point_of_sale
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:521
 #, python-format
@@ -3377,7 +3341,7 @@ msgid "Coca-Cola Regular 1L"
 msgstr "Coca-Cola Regular 1L"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:713
+#: code:addons/point_of_sale/point_of_sale.py:714
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr "Impossible d'annuler le bon de préparation"
@@ -3418,7 +3382,7 @@ msgid "Spa Barisart 1.5l"
 msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:790
+#: code:addons/point_of_sale/point_of_sale.py:791
 #: view:pos.order:0
 #, python-format
 msgid "Return Products"
@@ -3578,7 +3542,7 @@ msgid "PRO-FORMA"
 msgstr "PRO-FORMA"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:819
+#: code:addons/point_of_sale/point_of_sale.py:820
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Veuiller renseigner un client"
@@ -3715,11 +3679,6 @@ msgid "The session"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
 msgstr ""
@@ -3782,14 +3741,6 @@ msgstr "Leffe Blonde 33cl"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
 msgstr "Rapport de règlement"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:318
-#, python-format
-msgid ""
-"Unable to open the session. You have to assign a sale journal to your point "
-"of sale."
-msgstr ""
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
@@ -3897,7 +3848,6 @@ msgstr "Février"
 
 #. module: point_of_sale
 #: view:res.partner:0
-#: view:res.users:0
 msgid "Edit"
 msgstr ""
 
@@ -3973,11 +3923,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: point_of_sale
@@ -4556,6 +4501,9 @@ msgstr ""
 #~ msgid "Validation Date"
 #~ msgstr "Date de validation"
 
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Le code du journal doit être unique dans chaque société !"
+
 #~ msgid "No"
 #~ msgstr "Non"
 
@@ -4646,6 +4594,9 @@ msgstr ""
 
 #~ msgid "Special Journal"
 #~ msgstr "Journal spécial"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Le nom du journal doit être unique dans chaque société !"
 
 #~ msgid "]"
 #~ msgstr "]"
