@@ -916,7 +916,16 @@ class BaseModel(object):
                     else:
                         new.extend(cls.__dict__.get(s, []))
                     nattr[s] = new
+
+                # Keep links to non-inherited constraints, e.g. useful when exporting translations
+                nattr['_local_constraints'] = cls.__dict__.get('_constraints', [])
+                nattr['_local_sql_constraints'] = cls.__dict__.get('_sql_constraints', [])
+
                 cls = type(name, (cls, parent_class), dict(nattr, _register=False))
+        else:
+            cls._local_constraints = getattr(cls, '_constraints', [])
+            cls._local_sql_constraints = getattr(cls, '_sql_constraints', [])
+
         if not getattr(cls, '_original_module', None):
             cls._original_module = cls._module
         obj = object.__new__(cls)
