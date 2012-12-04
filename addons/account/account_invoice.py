@@ -674,6 +674,9 @@ class account_invoice(osv.osv):
         return super(account_invoice, self).copy(cr, uid, id, default, context)
 
     def test_paid(self, cr, uid, ids, *args):
+        for inv in self.browse(cr, uid, ids):
+            if inv.amount_total == 0.0:
+                return True
         res = self.move_line_id_payment_get(cr, uid, ids)
         if not res:
             return False
@@ -851,6 +854,8 @@ class account_invoice(osv.osv):
         if context is None:
             context = {}
         for inv in self.browse(cr, uid, ids, context=context):
+            if inv.amount_total == 0.0:
+                continue
             if not inv.journal_id.sequence_id:
                 raise osv.except_osv(_('Error!'), _('Please define sequence on the journal related to this invoice.'))
             if not inv.invoice_line:
@@ -1037,6 +1042,8 @@ class account_invoice(osv.osv):
         self.write(cr, uid, ids, {})
 
         for obj_inv in self.browse(cr, uid, ids, context=context):
+            if obj_inv.amount_total == 0.0:
+                continue
             id = obj_inv.id
             invtype = obj_inv.type
             number = obj_inv.number
