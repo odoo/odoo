@@ -217,7 +217,6 @@ class base_stage(object):
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(case.section_id.parent_id, context=context)
         cases = self.browse(cr, uid, ids, context=context)
-        self._action(cr, uid, cases, 'escalate', context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -282,18 +281,6 @@ class base_stage(object):
         if values_to_update:
             self.write(cr, uid, ids, values_to_update, context=context)
         return True
-
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        if not rule_obj:
-            return True
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)], context=context)
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])], context=context)
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
     
     def _check(self, cr, uid, ids=False, context=None):

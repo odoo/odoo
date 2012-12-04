@@ -107,7 +107,6 @@ class base_state(object):
                 raise osv.except_osv(_('Error !'), _('You can not escalate, you are already at the top level regarding your sales-team category.'))
             self.write(cr, uid, [case.id], data, context=context)
             case.case_escalate_send_note(parent_id, context=context)
-        self._action(cr, uid, cases, 'escalate', context=context)
         return True
 
     def case_open(self, cr, uid, ids, context=None):
@@ -163,17 +162,6 @@ class base_state(object):
             update_values = {}
         update_values['state'] = state_name
         self.write(cr, uid, ids, update_values, context=context)
-        #self._action(cr, uid, cases, state_name, context=context)
-
-    def _action(self, cr, uid, cases, state_to, scrit=None, context=None):
-        if context is None:
-            context = {}
-        context['state_to'] = state_to
-        rule_obj = self.pool.get('base.action.rule')
-        model_obj = self.pool.get('ir.model')
-        model_ids = model_obj.search(cr, uid, [('model','=',self._name)])
-        rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])])
-        return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
     
     # ******************************
     # Notifications
