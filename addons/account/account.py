@@ -115,10 +115,9 @@ class account_payment_term_line(osv.osv):
     _description = "Payment Term Line"
     _columns = {
         'name': fields.char('Line Name', size=32, required=True),
-        'sequence': fields.integer('Sequence', required=True, help="The sequence field is used to order the payment term lines from the lowest sequences to the higher ones"),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
-                                   ('fixed', 'Fixed Amount')], 'Valuation',
+                                   ('fixed', 'Fixed Amount')], 'Computation',
                                    required=True, help="""Select here the kind of valuation related to this payment term line. Note that you should have your last line with the type 'Balance' to ensure that the whole amount will be treated."""),
 
         'value_amount': fields.float('Amount To Pay', digits_compute=dp.get_precision('Payment Term'), help="For percent enter a ratio between 0-1."),
@@ -129,10 +128,9 @@ class account_payment_term_line(osv.osv):
     }
     _defaults = {
         'value': 'balance',
-        'sequence': 5,
         'days2': 0,
     }
-    _order = "sequence"
+    _order = "days,value"
 
     def _check_percent(self, cr, uid, ids, context=None):
         obj = self.browse(cr, uid, ids[0], context=context)
