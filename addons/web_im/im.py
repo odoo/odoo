@@ -55,8 +55,10 @@ if openerp.tools.config.options["gevent"]:
         def __init__(self, db_name):
             self.db_name = db_name
             Watcher.watchers[db_name] = self
-            self.posted = gevent.event.Event()
             self.waiting = 0
+            self.wait_id = 0
+            self.users = {}
+            self.users_watch = {}
             gevent.spawn(self.loop)
 
         def loop(self):
@@ -79,10 +81,13 @@ if openerp.tools.config.options["gevent"]:
                                 else:
                                     conn.poll()
                                     while conn.notifies:
-                                        notify = conn.notifies.pop().payload
-                                        # do something with it
-                                    self.posted.set()
-                                    self.posted.clear()
+                                        message = json.loads(conn.notifies.pop().payload)
+                                        if message["type"] == "message":
+                                            for waiter in self.users.get(message["receiver"], {}).values():
+                                                waiter.set()
+                                        else: #type status
+                                            for waiter in self.users_watch.get(message["user"], {}).values():
+                                                waiter.set()
                         finally:
                             try:
                                 c.execute("unlisten im_channel;")
@@ -94,14 +99,26 @@ if openerp.tools.config.options["gevent"]:
                     _logger.exception("Exception during instant messaging watcher activity")
                     time.sleep(WATCHER_ERROR_DELAY)
             del Watcher.watchers[self.db_name]
-            self.posted.set()
-            self.posted = None
             _logger.info("End watching for instant messaging events for database " + self.db_name)
 
-        def stop(self, timeout=None):
+        def _get_wait_id(self):
+            self.wait_id += 1
+            return self.wait_id
+
+        def stop(self, user_id, watch_users, timeout=None):
+            wait_id = self._get_wait_id()
+            event = gevent.event.Event()
             self.waiting += 1
-            self.posted.wait(timeout)
-            self.waiting -= 1
+            self.users.setdefault(user_id, {})[wait_id] = event
+            for watch in watch_users:
+                self.users_watch.setdefault(watch, {})[wait_id] = event
+            try:
+                event.wait(timeout)
+            finally:
+                for watch in watch_users:
+                    del self.users_watch[watch][wait_id]
+                del self.users[user_id][wait_id]
+                self.waiting -= 1
 
 
 class ImportController(openerp.addons.web.http.Controller):
@@ -119,7 +136,7 @@ class ImportController(openerp.addons.web.http.Controller):
                 return res
             last = res["last"]
             num += 1
-            Watcher.get_watcher(res["dbname"]).stop(POLL_TIMER)
+            Watcher.get_watcher(res["dbname"]).stop(req.session._uid, users_watch or [], POLL_TIMER)
 
 
 class im_message(osv.osv):
@@ -177,18 +194,18 @@ class res_user(osv.osv):
         return res
 
     def im_connect(self, cr, uid, context=None):
-        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
-            "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
-        cr.commit()
-        cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
-        cr.commit()
-        return True
+        return self._im_change_status(cr, uid, True, context)
 
     def im_disconnect(self, cr, uid, context=None):
-        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": True, 
+        return self._im_change_status(cr, uid, False, context)
+
+    def _im_change_status(self, cr, uid, new_one, context=None):
+        current_status = self.read(cr, openerp.SUPERUSER_ID, uid, ["im_status"], context=None)["im_status"]
+        self.write(cr, openerp.SUPERUSER_ID, uid, {"im_last_status": new_one, 
             "im_last_status_update": datetime.datetime.now().strftime(DEFAULT_SERVER_DATETIME_FORMAT)}, context=context)
         cr.commit()
-        cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
+        if current_status != new_one:
+            cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
         cr.commit()
         return True
 

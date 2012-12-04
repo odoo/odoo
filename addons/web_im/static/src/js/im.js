@@ -53,6 +53,7 @@ openerp.web_im = function(instance) {
             }, this));
             this.user_search_dm = new instance.web.DropMisordered();
             this.users_cache = {};
+            this.unload_event_handler = _.bind(this.unload, this);
         },
         start: function() {
             this.$el.css("right", -this.$el.outerWidth());
@@ -65,6 +66,8 @@ openerp.web_im = function(instance) {
 
             var self = this;
 
+            $(window).on("unload", this.unload_event_handler);
+
             return this.ensure_users([instance.session.uid]).then(function() {
                 var me = self.users_cache[instance.session.uid];
                 delete self.users_cache[instance.session.uid];
@@ -76,6 +79,13 @@ openerp.web_im = function(instance) {
                     }
                 });
             });
+        },
+        unload: function() {
+            return new instance.web.Model("res.users").call("im_disconnect", [], {context: new instance.web.CompoundContext()});
+        },
+        destroy: function() {
+            $(window).off("unload", this.unload_event_handler);
+            this._super();
         },
         calc_box: function() {
             var $topbar = instance.client.$(".oe_topbar");
