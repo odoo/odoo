@@ -676,8 +676,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             'user_id': (lead.user_id and lead.user_id.id),
             'type': 'opportunity',
             'stage_id': stage_id or False,
-            'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
-            'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+            'date_action': fields.datetime.now(),
+            'date_open': fields.datetime.now(),
             'email_from': customer and customer.email or lead.email_from,
             'phone': customer and customer.phone or lead.phone,
         }
