@@ -35,41 +35,9 @@ class base_action_rule(osv.osv):
     _description = 'Action Rules'
 
     _columns = {
-        'trg_section_id': fields.many2one('crm.case.section', 'Sales Team'),
-        'trg_max_history': fields.integer('Maximum Communication History'),
-        'trg_categ_id':  fields.many2one('crm.case.categ', 'Category'),
-        'regex_history' : fields.char('Regular Expression on Case History', size=128),
         'act_section_id': fields.many2one('crm.case.section', 'Set Team to'),
         'act_categ_id': fields.many2one('crm.case.categ', 'Set Category to'),
     }
-
-    def do_check(self, cr, uid, action, obj, precondition_ok=True, context=None):
-        ok = super(base_action_rule, self).do_check(cr, uid, action, obj, precondition_ok=precondition_ok, context=context)
-
-        if hasattr(obj, 'section_id'):
-            ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
-        if hasattr(obj, 'categ_ids'):
-            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id in [x.id for x in obj.categ_ids])
-
-        #Cheking for history
-        regex = action.regex_history
-        if regex:
-            res = False
-            ptrn = re.compile(ustr(regex))
-            for history in obj.message_ids:
-                _result = ptrn.search(ustr(history.subject))
-                if _result:
-                    res = True
-                    break
-            ok = ok and res
-
-        if action.trg_max_history:
-            res_count = False
-            history_ids = filter(lambda x: x.email_from, obj.message_ids)
-            if len(history_ids) <= action.trg_max_history:
-                res_count = True
-            ok = ok and res_count
-        return ok
 
     def do_action(self, cr, uid, action, obj, context=None):
         res = super(base_action_rule, self).do_action(cr, uid, action, obj, context=context)

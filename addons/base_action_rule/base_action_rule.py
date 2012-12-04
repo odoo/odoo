@@ -84,18 +84,9 @@ specifies you can put a negative number. If you need a delay before the \
 trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_date_range_type': fields.selection([('minutes', 'Minutes'), ('hour', 'Hours'), \
                                 ('day', 'Days'), ('month', 'Months')], 'Delay type'),
-        'trg_user_id':  fields.many2one('res.users', 'Responsible'),
-        'trg_partner_id': fields.many2one('res.partner', 'Partner'),
-        'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'and previously was', size=16),
-        'trg_state_to': fields.selection(_state_get, 'Status changes to', size=16),
-
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
         'act_state': fields.selection(_state_get, 'Set State to', size=16),
         'act_followers': fields.many2many("res.partner", string="Set Followers"),
-        'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
-\ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
-\nNote: This is case sensitive search."),
         'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
         'filter_id':fields.many2one('ir.filters', 'Postcondition Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
         'filter_pre_id': fields.many2one('ir.filters', 'Precondition Filter', required=False),
@@ -290,26 +281,6 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             ctx.update(eval(action.filter_id.context))
             obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
             ok = ok and obj.id in obj_ids
-        if getattr(obj, 'user_id', False):
-            ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
-        if getattr(obj, 'partner_id', False):
-            ok = ok and (not action.trg_partner_id.id or action.trg_partner_id.id==obj.partner_id.id)
-            ok = ok and (
-                not action.trg_partner_categ_id.id or
-                (
-                    obj.partner_id.id and
-                    (action.trg_partner_categ_id.id in map(lambda x: x.id, obj.partner_id.category_id or []))
-                )
-            )
-        reg_name = action.regex_name
-        result_name = True
-        if reg_name:
-            ptrn = re.compile(ustr(reg_name))
-            _result = ptrn.search(ustr(obj.name))
-            if not _result:
-                result_name = False
-        regex_n = not reg_name or result_name
-        ok = ok and regex_n
         return ok
 
     def do_action(self, cr, uid, action, obj, context=None):
@@ -359,38 +330,10 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         context.update({'action': False})
         return True
 
-base_action_rule()
-
 class actions_server(osv.osv):
     _inherit = 'ir.actions.server'
     _columns = {
         'action_rule_id': fields.many2one("base.action.rule", string="Action Rule")
     }
-actions_server()
-
-class ir_cron(osv.osv):
-    _inherit = 'ir.cron'
-    _init_done = False
-
-    def _poolJobs(self, db_name, check=False):
-        if not self._init_done:
-            self._init_done = True
-            try:
-                db = pooler.get_db(db_name)
-            except:
-                return False
-            cr = db.cursor()
-            try:
-                next = datetime.now().strftime('%Y-%m-%d %H:00:00')
-                # Putting nextcall always less than current time in order to call it every time
-                cr.execute('UPDATE ir_cron set nextcall = \'%s\' where numbercall<>0 and active and model=\'base.action.rule\' ' % (next))
-            finally:
-                cr.commit()
-                cr.close()
-
-        super(ir_cron, self)._poolJobs(db_name, check=check)
-
-ir_cron()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

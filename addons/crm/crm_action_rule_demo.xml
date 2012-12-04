@@ -72,7 +72,6 @@ Thanks,
             <field name="name">Set Auto Followers on leads which are urgent and come from USA.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">2</field>
-            <field name="regex_name">urgent.*</field>
             <field name="filter_id" ref="filter_usa_lead"/>
             <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
             <field name="act_user_id" ref="base.user_root"/>
