@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2011-01-18 14:55+0000\n"
 "Last-Translator: Douwe Wullink (Dypalio) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:10+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_gtd
 #: view:project.task:0
@@ -118,14 +118,9 @@ msgid "My Tasks"
 msgstr "Mijn taken"
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "Fout! U kunt geen recursieve taken aanmaken."
-
-#. module: project_gtd
-#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
-msgid "This Week"
-msgstr "Deze week"
+#: help:project.task,context_id:0
+msgid "The context place where user has to treat task"
+msgstr "De context plaats waar de gebruiker de taak moet behandelen"
 
 #. module: project_gtd
 #: model:ir.actions.act_window,name:project_gtd.action_project_gtd_empty
@@ -139,9 +134,9 @@ msgid "Tasks having no timebox assigned yet"
 msgstr "Taken waaraan geen tijd is toegewezen"
 
 #. module: project_gtd
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "Fout! Einddatum taak moet groter zijn dat begindatum taak"
+#: model:project.gtd.timebox,name:project_gtd.timebox_weekly
+msgid "This Week"
+msgstr "Deze week"
 
 #. module: project_gtd
 #: field:project.gtd.timebox,icon:0
@@ -271,11 +266,6 @@ msgstr "Postvak in"
 #: field:project.timebox.fill.plan,timebox_id:0
 msgid "Get from Timebox"
 msgstr "Haal uit timebox"
-
-#. module: project_gtd
-#: help:project.task,context_id:0
-msgid "The context place where user has to treat task"
-msgstr "De context plaats waar de gebruiker de taak moet behandelen"
 
 #. module: project_gtd
 #: view:project.timebox.fill.plan:0
@@ -450,6 +440,9 @@ msgstr ""
 #~ msgid "GTD"
 #~ msgstr "GTD"
 
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "Fout! U kunt geen recursieve taken aanmaken."
+
 #~ msgid "_Cancel"
 #~ msgstr "_Annuleren"
 
@@ -498,3 +491,6 @@ msgstr ""
 
 #~ msgid "Previous"
 #~ msgstr "Vorige"
+
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "Fout! Einddatum taak moet groter zijn dat begindatum taak"

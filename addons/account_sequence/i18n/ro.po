@@ -7,20 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-03-24 12:20+0000\n"
 "Last-Translator: Dorin <dhongu@gmail.com>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
-msgstr ""
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_sequence
 #: view:account.sequence.installer:0
@@ -75,15 +70,6 @@ msgid "Company"
 msgstr "Companie"
 
 #. module: account_sequence
-#: help:account.journal,internal_sequence_id:0
-msgid ""
-"This sequence will be used to maintain the internal number for the journal "
-"entries related to this journal."
-msgstr ""
-"Aceasta succesiune va fi folosita pentru a pastra numarul intern pentru "
-"inregistrarile in jurnal asociate acestui jurnal."
-
-#. module: account_sequence
 #: field:account.sequence.installer,padding:0
 msgid "Number padding"
 msgstr "Numar umplutura"
@@ -114,38 +100,9 @@ msgid "Name"
 msgstr "Nume"
 
 #. module: account_sequence
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
-
-#. module: account_sequence
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
-msgstr ""
-
-#. module: account_sequence
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
-"Valoare gresita a creditului sau debitului in inregistrarea contabila !"
-
-#. module: account_sequence
-#: constraint:account.move:0
-msgid ""
-"You cannot create more than one move per period on a centralized journal."
-msgstr ""
-
-#. module: account_sequence
 #: field:account.journal,internal_sequence_id:0
 msgid "Internal Sequence"
 msgstr "Secventa Interna"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
 
 #. module: account_sequence
 #: help:account.sequence.installer,prefix:0
@@ -168,39 +125,18 @@ msgid "title"
 msgstr "titlu"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "Numele jurnalului trebuie sa fie unic per companie !"
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
-"secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
-"o vizualizare multi-moneda in jurnal."
-
-#. module: account_sequence
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
-"schimbati data sau sa eliminati aceasta restrictie din jurnal."
-
-#. module: account_sequence
 #: field:account.sequence.installer,prefix:0
 msgid "Prefix"
 msgstr "Prefix"
 
 #. module: account_sequence
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "Codul jurnalului trebuie sa fie unic per companie !"
+#: help:account.journal,internal_sequence_id:0
+msgid ""
+"This sequence will be used to maintain the internal number for the journal "
+"entries related to this journal."
+msgstr ""
+"Aceasta succesiune va fi folosita pentru a pastra numarul intern pentru "
+"inregistrarile in jurnal asociate acestui jurnal."
 
 #. module: account_sequence
 #: model:ir.model,name:account_sequence.model_account_sequence_installer
@@ -249,6 +185,12 @@ msgstr "Puteti mari Aplicatia Secventei Contului instaland ."
 #~ msgid "You can not create move line on closed account."
 #~ msgstr "Nu puteti crea o linie de miscare intr-un cont inchis."
 
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "Codul jurnalului trebuie sa fie unic per companie !"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "Numele jurnalului trebuie sa fie unic per companie !"
+
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Compania trebuie sa fie aceeasi pentru contul si perioada asociate."
 
@@ -270,9 +212,29 @@ msgstr "Puteti mari Aplicatia Secventei Contului instaland ."
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "Nu puteti crea elemente ale jurnalului intr-un cont inchis."
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr ""
+#~ "Valoare gresita a creditului sau debitului in inregistrarea contabila !"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "Data Inregistrarii in Jurnal nu se afla in perioada definita! Ar trebui sa "
+#~ "schimbati data sau sa eliminati aceasta restrictie din jurnal."
+
 #~ msgid ""
 #~ "Configuration error! The currency chosen should be shared by the default "
 #~ "accounts too."
 #~ msgstr ""
 #~ "Eroare de configurare! Moneda aleasa ar trebui sa fie comuna si conturilor "
 #~ "predefinite."
+
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "Contul selectat din Inregistrarea in Jurnal solicita furnizarea unei monede "
+#~ "secundare. Ar trebui sa stergeti moneda secundara din cont sau sa selectati "
+#~ "o vizualizare multi-moneda in jurnal."

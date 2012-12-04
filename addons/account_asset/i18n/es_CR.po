@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-13 19:28+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: es\n"
 
 #. module: account_asset
@@ -39,11 +39,6 @@ msgstr "Valor residual"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "Cuenta gastos amortización"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "Calcular activo"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -198,11 +193,6 @@ msgid "Depreciation Entry"
 msgstr "Asiento de amortización"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "¡Valor haber o debe erróneo en el asiento contable!"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -230,11 +220,6 @@ msgstr "Fecha final"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "Referencia"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "¡Estructura de comunicación BBA no válida!"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -327,15 +312,6 @@ msgstr ""
 "depreciación no irá más allá."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"¡La fecha de su asiento no está en el periodo definido! Usted debería "
-"cambiar la fecha o borar esta restricción del diario."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "Tiempo en meses entre 2 depreciaciones"
@@ -366,11 +342,6 @@ msgid "Assets in closed state"
 msgstr "Activos en estado cerrado"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "Padre del activo"
@@ -390,17 +361,6 @@ msgstr "Buscar categoría de activo"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "Línea de factura"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
-"Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
-"vista multi-moneda"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -428,11 +388,6 @@ msgstr "Método de tiempo"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -578,9 +533,9 @@ msgid "History"
 msgstr "Historia"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "¡El número de factura debe ser único por compañía!"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "Calcular activo"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -726,11 +681,6 @@ msgstr ""
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "Nombre"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -1030,8 +980,14 @@ msgstr "Jerarquía de activos"
 #~ "Este asistente asentará las líneas de depreciación de los activos en "
 #~ "ejecución que pertenezcan al periodo seleccionado"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "¡Valor haber o debe erróneo en el asiento contable!"
+
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "Secuencia de amortización"
+
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "¡Estructura de comunicación BBA no válida!"
 
 #~ msgid "Gross value "
 #~ msgstr "Valor bruto "
@@ -1045,6 +1001,22 @@ msgstr "Jerarquía de activos"
 #~ msgid "Assets purchased in current year"
 #~ msgstr "Activos comprados en el año actual"
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "La cuenta seleccionada en su asiento fuerza a tener una moneda secundaria. "
+#~ "Debería eliminar la moneda secundaria de la cuenta o asignar al diario una "
+#~ "vista multi-moneda"
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "¡La fecha de su asiento no está en el periodo definido! Usted debería "
+#~ "cambiar la fecha o borar esta restricción del diario."
+
 #~ msgid "Company must be the same for its related account and period."
 #~ msgstr "La compañía debe ser la misma para su cuenta y periodos relacionados"
 
@@ -1053,6 +1025,9 @@ msgstr "Jerarquía de activos"
 
 #~ msgid "Analytic information"
 #~ msgstr "Información analítica"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "¡El número de factura debe ser único por compañía!"
 
 #~ msgid "Assets purchased in current month"
 #~ msgstr "Activos comprados en el mes corriente"

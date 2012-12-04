@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2009-04-24 15:00+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:47+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:16+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
@@ -51,13 +51,6 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.session,cash_register_balance_end:0
 msgid "Computed Balance"
-msgstr ""
-
-#. module: point_of_sale
-#: view:pos.ean_wizard:0
-msgid ""
-"Enter a reference for this product, it will be converted\n"
-"                        automatically to a valid EAN number."
 msgstr ""
 
 #. module: point_of_sale
@@ -138,7 +131,7 @@ msgid "Red grapefruit"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1342
+#: code:addons/point_of_sale/point_of_sale.py:1343
 #, python-format
 msgid "Assign a Custom EAN"
 msgstr ""
@@ -191,8 +184,8 @@ msgid "Reference"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1039
-#: code:addons/point_of_sale/point_of_sale.py:1055
+#: code:addons/point_of_sale/point_of_sale.py:1040
+#: code:addons/point_of_sale/point_of_sale.py:1056
 #: report:pos.invoice:0
 #: report:pos.lines:0
 #, python-format
@@ -229,7 +222,7 @@ msgid "Help needed"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:740
+#: code:addons/point_of_sale/point_of_sale.py:741
 #, python-format
 msgid "Configuration Error!"
 msgstr ""
@@ -322,7 +315,7 @@ msgid "Disc.(%)"
 msgstr "Korting(%)"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #, python-format
 msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
@@ -476,13 +469,6 @@ msgid ") is \""
 msgstr ""
 
 #. module: point_of_sale
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: point_of_sale
 #: model:product.template,name:point_of_sale.Onions_product_template
 msgid "Onions"
 msgstr ""
@@ -570,11 +556,6 @@ msgid "Pepsi Max Cool Lemon 33cl"
 msgstr "Pepsi Max Cool Lemon 33cl"
 
 #. module: point_of_sale
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: point_of_sale
 #: selection:report.pos.order,month:0
 msgid "June"
 msgstr "Juni"
@@ -628,7 +609,7 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:869
+#: code:addons/point_of_sale/point_of_sale.py:870
 #, python-format
 msgid "Customer Invoice"
 msgstr "Verkoopfactuur"
@@ -885,13 +866,6 @@ msgid "Spa Reine 1L"
 msgstr "Spa Reine 1L"
 
 #. module: point_of_sale
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
-
-#. module: point_of_sale
 #: constraint:res.partner:0
 #: constraint:res.users:0
 msgid "Error: Invalid ean code"
@@ -958,6 +932,11 @@ msgid "pos.session.opening"
 msgstr ""
 
 #. module: point_of_sale
+#: view:res.users:0
+msgid "Edit EAN"
+msgstr ""
+
+#. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:80
 #, python-format
 msgid "List of Cash Registers"
@@ -995,7 +974,7 @@ msgid "User's Product"
 msgstr "Product van de gebruiker"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1141
+#: code:addons/point_of_sale/point_of_sale.py:1142
 #, python-format
 msgid ""
 "You have to select a pricelist in the sale form !\n"
@@ -1378,7 +1357,7 @@ msgid "Today's Closed Cashbox"
 msgstr "Gesloten kasboek van vandaag"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:899
+#: code:addons/point_of_sale/point_of_sale.py:900
 #, python-format
 msgid "Selected orders do not have the same session!"
 msgstr ""
@@ -1610,6 +1589,13 @@ msgid "pos.config"
 msgstr ""
 
 #. module: point_of_sale
+#: view:pos.ean_wizard:0
+msgid ""
+"Enter a reference, it will be converted\n"
+"                        automatically to a valid EAN number."
+msgstr ""
+
+#. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "Point of Sale Cash Out"
 msgstr ""
@@ -1655,7 +1641,7 @@ msgid "Number of Transaction"
 msgstr "Aantal transacties"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:739
+#: code:addons/point_of_sale/point_of_sale.py:740
 #, python-format
 msgid ""
 "There is no receivable account defined to make payment for the partner: "
@@ -1916,9 +1902,12 @@ msgid "User:"
 msgstr "Gebruiker:"
 
 #. module: point_of_sale
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "De naam van het journaal moet uniek zijn per firma."
+#: code:addons/point_of_sale/point_of_sale.py:318
+#, python-format
+msgid ""
+"Unable to open the session. You have to assign a sale journal to your point "
+"of sale."
+msgstr ""
 
 #. module: point_of_sale
 #: view:report.pos.order:0
@@ -1989,7 +1978,7 @@ msgid "Salespeople"
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:757
+#: code:addons/point_of_sale/point_of_sale.py:758
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:118
 #: code:addons/point_of_sale/wizard/pos_box_out.py:91
 #, python-format
@@ -1997,7 +1986,7 @@ msgid "You have to open at least one cashbox."
 msgstr ""
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1140
+#: code:addons/point_of_sale/point_of_sale.py:1141
 #, python-format
 msgid "No Pricelist !"
 msgstr "Geen prijslijst"
@@ -2446,11 +2435,6 @@ msgid "Opening Balance"
 msgstr "Beginsaldo"
 
 #. module: point_of_sale
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-
-#. module: point_of_sale
 #: view:account.bank.statement:0
 #: selection:report.pos.order,state:0
 msgid "Closed"
@@ -2547,13 +2531,6 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:579
 #, python-format
 msgid "% discount"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: point_of_sale
@@ -3115,11 +3092,11 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:411
 #: code:addons/point_of_sale/point_of_sale.py:421
 #: code:addons/point_of_sale/point_of_sale.py:459
-#: code:addons/point_of_sale/point_of_sale.py:713
-#: code:addons/point_of_sale/point_of_sale.py:757
-#: code:addons/point_of_sale/point_of_sale.py:819
-#: code:addons/point_of_sale/point_of_sale.py:899
-#: code:addons/point_of_sale/point_of_sale.py:1004
+#: code:addons/point_of_sale/point_of_sale.py:714
+#: code:addons/point_of_sale/point_of_sale.py:758
+#: code:addons/point_of_sale/point_of_sale.py:820
+#: code:addons/point_of_sale/point_of_sale.py:900
+#: code:addons/point_of_sale/point_of_sale.py:1005
 #: code:addons/point_of_sale/report/pos_invoice.py:46
 #: code:addons/point_of_sale/wizard/pos_box.py:22
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -3215,15 +3192,10 @@ msgid "Chaudfontaine 1.5l"
 msgstr "Chaudfontaine 1.5l"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:1067
+#: code:addons/point_of_sale/point_of_sale.py:1068
 #, python-format
 msgid "Trade Receivables"
 msgstr ""
-
-#. module: point_of_sale
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "De code van het journaal moet uniek zijn per firma."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:531
@@ -3265,7 +3237,7 @@ msgid "Journal Entry"
 msgstr "Boeking"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:737
+#: code:addons/point_of_sale/point_of_sale.py:738
 #, python-format
 msgid "There is no receivable account defined to make payment."
 msgstr ""
@@ -3294,11 +3266,6 @@ msgstr "Dr. Oetker Ristorante Tonno"
 #: report:pos.invoice:0
 msgid "Supplier Invoice"
 msgstr "Aankoopfactuur"
-
-#. module: point_of_sale
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "Journaal en periode moeten tot dezelfde firma behoren."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:460
@@ -3368,11 +3335,6 @@ msgid "Orval 33cl"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:521
 #, python-format
@@ -3385,7 +3347,7 @@ msgid "Coca-Cola Regular 1L"
 msgstr "Coca-Cola Regular 1L"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:713
+#: code:addons/point_of_sale/point_of_sale.py:714
 #, python-format
 msgid "Unable to cancel the picking."
 msgstr "Kan de picking niet annuleren."
@@ -3426,7 +3388,7 @@ msgid "Spa Barisart 1.5l"
 msgstr "Spa Barisart 1.5l"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:790
+#: code:addons/point_of_sale/point_of_sale.py:791
 #: view:pos.order:0
 #, python-format
 msgid "Return Products"
@@ -3586,7 +3548,7 @@ msgid "PRO-FORMA"
 msgstr "PRO FORMA"
 
 #. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:819
+#: code:addons/point_of_sale/point_of_sale.py:820
 #, python-format
 msgid "Please provide a partner for the sale."
 msgstr "Gelieve een relatie op te geven voor de verkoop."
@@ -3723,11 +3685,6 @@ msgid "The session"
 msgstr ""
 
 #. module: point_of_sale
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
 msgstr "Algemene informatie"
@@ -3790,14 +3747,6 @@ msgstr "Leffe Blonde 33cl"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
 msgstr "Betalingsrapport"
-
-#. module: point_of_sale
-#: code:addons/point_of_sale/point_of_sale.py:318
-#, python-format
-msgid ""
-"Unable to open the session. You have to assign a sale journal to your point "
-"of sale."
-msgstr ""
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
@@ -3905,7 +3854,6 @@ msgstr "Februari"
 
 #. module: point_of_sale
 #: view:res.partner:0
-#: view:res.users:0
 msgid "Edit"
 msgstr ""
 
@@ -3981,11 +3929,6 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.raisins_noir_product_template
 msgid "Black Grapes"
-msgstr ""
-
-#. module: point_of_sale
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
 msgstr ""
 
 #. module: point_of_sale
@@ -4235,6 +4178,9 @@ msgstr ""
 #~ msgid "]"
 #~ msgstr "]"
 
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "De naam van het journaal moet uniek zijn per firma."
+
 #~ msgid "Lays Light Naturel 170g"
 #~ msgstr "Lays Light Naturel 170g"
 
@@ -4398,6 +4344,9 @@ msgstr ""
 #~ "Met dit veld kunnen kasboeken automatisch worden gemaakt, zonder controle "
 #~ "van het beginsaldo."
 
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "Journaal en periode moeten tot dezelfde firma behoren."
+
 #, python-format
 #~ msgid "In order to set to draft a sale, it must be cancelled."
 #~ msgstr ""
@@ -4408,6 +4357,9 @@ msgstr ""
 
 #~ msgid "Put Money"
 #~ msgstr "Geld in kas"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "De code van het journaal moet uniek zijn per firma."
 
 #~ msgid "POS ordered created during current month"
 #~ msgstr "Bestellingen verkooppunt van deze maand"

@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-07-07 21:23+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:25+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:49+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: crm_claim
 #: help:crm.claim.stage,fold:0
@@ -207,9 +207,9 @@ msgid "Partner"
 msgstr "パートナー"
 
 #. module: crm_claim
-#: view:crm.claim.report:0
-msgid "Month of claim"
-msgstr "クレームの月"
+#: view:crm.claim:0
+msgid "Follow Up"
+msgstr "追求する"
 
 #. module: crm_claim
 #: selection:crm.claim,type_action:0
@@ -804,20 +804,15 @@ msgid "# Emails"
 msgstr "Eメールの数"
 
 #. module: crm_claim
-#: field:crm.claim.report,create_date:0
-msgid "Create Date"
-msgstr "作成日"
-
-#. module: crm_claim
 #: code:addons/crm_claim/crm_claim.py:253
 #, python-format
 msgid "Stage changed to <b>%s</b>."
 msgstr ""
 
 #. module: crm_claim
-#: view:crm.claim:0
-msgid "Follow Up"
-msgstr "追求する"
+#: view:crm.claim.report:0
+msgid "Month of claim"
+msgstr "クレームの月"
 
 #. module: crm_claim
 #: selection:crm.claim.report,month:0
@@ -861,11 +856,6 @@ msgid "Messages and communication history"
 msgstr ""
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error ! You cannot create recursive associated members."
-msgstr "エラー：重複したメンバーを作ることはできません。"
-
-#. module: crm_claim
 #: field:sale.config.settings,fetchmail_claim:0
 msgid "Create claims from incoming mails"
 msgstr ""
@@ -893,9 +883,9 @@ msgid "Sales Team"
 msgstr "営業チーム"
 
 #. module: crm_claim
-#: constraint:res.partner:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:crm.claim.report,create_date:0
+msgid "Create Date"
+msgstr "作成日"
 
 #. module: crm_claim
 #: view:crm.claim:0
@@ -980,6 +970,9 @@ msgstr ""
 
 #~ msgid "Claims created in last month"
 #~ msgstr "先月に作成されたクレーム"
+
+#~ msgid "Error ! You cannot create recursive associated members."
+#~ msgstr "エラー：重複したメンバーを作ることはできません。"
 
 #~ msgid ""
 #~ "Create claim categories to better manage and classify your claims. Some "
