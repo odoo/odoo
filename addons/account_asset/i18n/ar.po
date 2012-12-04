@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-08 02:35+0000\n"
 "Last-Translator: kifcaliph <Unknown>\n"
 "Language-Team: Arabic <ar@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:31+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -38,11 +38,6 @@ msgstr "القيمة التخريدية"
 #: field:account.asset.category,account_expense_depreciation_id:0
 msgid "Depr. Expense Account"
 msgstr "حساب مصروف الإستهلاك"
-
-#. module: account_asset
-#: view:asset.depreciation.confirmation.wizard:0
-msgid "Compute Asset"
-msgstr "حساب الأصول"
 
 #. module: account_asset
 #: view:asset.asset.report:0
@@ -197,11 +192,6 @@ msgid "Depreciation Entry"
 msgstr "قيد إستهلاك"
 
 #. module: account_asset
-#: sql_constraint:account.move.line:0
-msgid "Wrong credit or debit value in accounting entry !"
-msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
-
-#. module: account_asset
 #: view:asset.asset.report:0
 #: field:asset.asset.report,nbr:0
 msgid "# of Depreciation Lines"
@@ -229,11 +219,6 @@ msgstr "تاريخ الانتهاء"
 #: field:account.asset.asset,code:0
 msgid "Reference"
 msgstr "مرجع"
-
-#. module: account_asset
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "خطأ في إتصال قاعدة البيانات"
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -323,15 +308,6 @@ msgstr ""
 "يتمتتجاوزه."
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The date of your Journal Entry is not in the defined period! You should "
-"change the date or remove this constraint from the journal."
-msgstr ""
-"تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
-"اليومية."
-
-#. module: account_asset
 #: help:account.asset.history,method_period:0
 msgid "Time in month between two depreciations"
 msgstr "الوقت بالشهر لفترتي إستهلاك"
@@ -362,11 +338,6 @@ msgid "Assets in closed state"
 msgstr "إصول في حالة مغلق"
 
 #. module: account_asset
-#: constraint:account.move.line:0
-msgid "Account and Period must belong to the same company."
-msgstr ""
-
-#. module: account_asset
 #: field:account.asset.asset,parent_id:0
 msgid "Parent Asset"
 msgstr "أصول رئيسية"
@@ -386,16 +357,6 @@ msgstr "بحث فئة الأصول"
 #: model:ir.model,name:account_asset.model_account_invoice_line
 msgid "Invoice Line"
 msgstr "خط الفاتورة"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid ""
-"The selected account of your Journal Entry forces to provide a secondary "
-"currency. You should remove the secondary currency on the account or select "
-"a multi-currency view on the journal."
-msgstr ""
-"الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
-"الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
 
 #. module: account_asset
 #: view:account.asset.asset:0
@@ -423,11 +384,6 @@ msgstr "طريقة الوقت"
 #: view:asset.depreciation.confirmation.wizard:0
 #: view:asset.modify:0
 msgid "or"
-msgstr ""
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on closed account."
 msgstr ""
 
 #. module: account_asset
@@ -570,9 +526,9 @@ msgid "History"
 msgstr "المؤرخات"
 
 #. module: account_asset
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
+#: view:asset.depreciation.confirmation.wizard:0
+msgid "Compute Asset"
+msgstr "حساب الأصول"
 
 #. module: account_asset
 #: field:asset.depreciation.confirmation.wizard,period_id:0
@@ -716,11 +672,6 @@ msgstr ""
 #: field:account.asset.category,name:0
 msgid "Name"
 msgstr "الاسم"
-
-#. module: account_asset
-#: constraint:account.move.line:0
-msgid "You cannot create journal items on an account of type view."
-msgstr ""
 
 #. module: account_asset
 #: help:account.asset.category,open_asset:0
@@ -872,6 +823,9 @@ msgstr "هرمية الأصول"
 #~ msgid "Asset account"
 #~ msgstr "حساب الأصل"
 
+#~ msgid "Wrong credit or debit value in accounting entry !"
+#~ msgstr "قيمة دائنة أو مدينة خاطئة في القيد المحاسبي !"
+
 #~ msgid "Other Information"
 #~ msgstr "معلومات أخرى"
 
@@ -893,6 +847,9 @@ msgstr "هرمية الأصول"
 #~ msgid "Sequence of the depreciation"
 #~ msgstr "مسلسل الإستهلاك"
 
+#~ msgid "Invalid BBA Structured Communication !"
+#~ msgstr "خطأ في إتصال قاعدة البيانات"
+
 #~ msgid "Gross value "
 #~ msgstr "إجمالي القيمة "
 
@@ -902,11 +859,29 @@ msgstr "هرمية الأصول"
 #~ msgid "Assets purchased in current year"
 #~ msgstr "أصول مشتراه هذا العام"
 
+#~ msgid ""
+#~ "The selected account of your Journal Entry forces to provide a secondary "
+#~ "currency. You should remove the secondary currency on the account or select "
+#~ "a multi-currency view on the journal."
+#~ msgstr ""
+#~ "الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
+#~ "الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
+
+#~ msgid ""
+#~ "The date of your Journal Entry is not in the defined period! You should "
+#~ "change the date or remove this constraint from the journal."
+#~ msgstr ""
+#~ "تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
+#~ "اليومية."
+
 #~ msgid "Asset durations to modify"
 #~ msgstr "مدد الأصول للتحرير"
 
 #~ msgid "Analytic information"
 #~ msgstr "معلومات تحليلية"
+
+#~ msgid "Invoice Number must be unique per Company!"
+#~ msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
 
 #~ msgid "You can not create journal items on closed account."
 #~ msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."

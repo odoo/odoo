@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-23 06:08+0000\n"
 "Last-Translator: Akira Hiyama <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -60,11 +60,6 @@ msgstr "選択した明細書行をキャンセル"
 #: field:account.bank.statement.line,val_date:0
 msgid "Value Date"
 msgstr ""
-
-#. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "銀行情報のRIBまたはIBANが正しくありません。"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -197,16 +192,6 @@ msgid "Confirmed lines cannot be changed anymore."
 msgstr "確認された行はもはや変更できません。"
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"正当な支払いを行うために銀行タイプIBAN口座のための銀行にBIC / SWIFTコードを定義して下さい。"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr "選択した銀行明細行のキャンセルを本当に行いますか？"
@@ -299,13 +284,6 @@ msgid "Code"
 msgstr "コード"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line."
-msgstr ""
-
-#. module: account_bank_statement_extensions
 #: field:account.bank.statement.line,counterparty_name:0
 msgid "Counterparty Name"
 msgstr "相手方名"
@@ -319,11 +297,6 @@ msgstr "通信"
 #: model:ir.model,name:account_bank_statement_extensions.model_res_partner_bank
 msgid "Bank Accounts"
 msgstr "銀行口座"
-
-#. module: account_bank_statement_extensions
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr "選択された仕訳帳と期間は同じ会社に属していなければなりません。"
 
 #. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
@@ -394,7 +367,21 @@ msgstr "国際化ID"
 #~ msgid "Confirm selected statement lines."
 #~ msgstr "選択した明細行の確認をします。"
 
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr "選択された仕訳帳と期間は同じ会社に属していなければなりません。"
+
 #~ msgid ""
 #~ "The amount of the voucher must be the same amount as the one on the "
 #~ "statement line"
 #~ msgstr "バウチャーの金額は明細行のひとつの金額と同じでなければなりません。"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "銀行情報のRIBまたはIBANが正しくありません。"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "正当な支払いを行うために銀行タイプIBAN口座のための銀行にBIC / SWIFTコードを定義して下さい。"

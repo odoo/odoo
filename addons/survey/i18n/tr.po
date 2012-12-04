@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2012-01-25 17:40+0000\n"
 "Last-Translator: Ahmet Altınışık <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:19+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:45+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: survey
 #: view:survey.response.line:0
@@ -37,11 +37,6 @@ msgstr ""
 #: view:survey.question.wiz:0
 msgid "Your Messages"
 msgstr "Mesajlarınız"
-
-#. module: survey
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Bu kullanıcının seçilen şirkete erişim hakkı yok"
 
 #. module: survey
 #: field:survey.question,comment_valid_type:0
@@ -650,12 +645,6 @@ msgid "Error Message"
 msgstr "Hata Mesajı"
 
 #. module: survey
-#: code:addons/survey/survey.py:687
-#, python-format
-msgid "You cannot duplicate the resource!"
-msgstr "Kaynağın bir eşini kopyalayamazsınız(duplicate)"
-
-#. module: survey
 #: code:addons/survey/wizard/survey_answer.py:126
 #, python-format
 msgid "You cannot answer this survey more than %s times."
@@ -676,11 +665,6 @@ msgstr "Tarih olmalı"
 #: model:ir.model,name:survey.model_survey_print
 msgid "survey.print"
 msgstr "Yazdır"
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
 
 #. module: survey
 #: view:survey:0
@@ -825,11 +809,6 @@ msgstr "#Cevap"
 #: field:survey.print.answer,without_pagebreak:0
 msgid "Print Without Page Breaks"
 msgstr "Sayfa Aralıksız Yazdır"
-
-#. module: survey
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
 
 #. module: survey
 #: view:survey:0
@@ -1512,10 +1491,10 @@ msgid "You cannot select same answer more than one time.'"
 msgstr ""
 
 #. module: survey
-#: field:survey.response,date_create:0
-#: field:survey.response.line,date_create:0
-msgid "Create Date"
-msgstr "Oluşturulma Tarihi"
+#: code:addons/survey/survey.py:687
+#, python-format
+msgid "You cannot duplicate the resource!"
+msgstr "Kaynağın bir eşini kopyalayamazsınız(duplicate)"
 
 #. module: survey
 #: code:addons/survey/survey.py:525
@@ -1745,9 +1724,10 @@ msgid "Date & Time"
 msgstr "Tarih ve Zaman"
 
 #. module: survey
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
+#: field:survey.response,date_create:0
+#: field:survey.response.line,date_create:0
+msgid "Create Date"
+msgstr "Oluşturulma Tarihi"
 
 #. module: survey
 #: field:survey.question,column_name:0
@@ -1820,8 +1800,14 @@ msgstr "Sayfa Pozisyonu"
 #~ msgid "Send reminder for existing user"
 #~ msgstr "Mevcut Kullanıcılara Uyarıcı Gönder"
 
+#~ msgid "The chosen company is not in the allowed companies for this user"
+#~ msgstr "Bu kullanıcının seçilen şirkete erişim hakkı yok"
+
 #~ msgid "_Cancel"
 #~ msgstr "İptal Et"
+
+#~ msgid "You can not have two users with the same login !"
+#~ msgstr "Aynı kullanıcı adı ile iki kullanıcı oluşturamazsınız !"
 
 #, python-format
 #~ msgid ""

@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-12-06 11:07+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:40+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:09+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -204,9 +204,9 @@ msgid "For purchased material"
 msgstr "Per material comprat"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
-msgstr "Qtat. total"
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:648
@@ -313,11 +313,6 @@ msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr "Produeix producte"
@@ -325,11 +320,6 @@ msgstr "Produeix producte"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
 msgstr ""
 
 #. module: mrp
@@ -362,7 +352,6 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr ""
 
@@ -512,11 +501,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
 msgstr "Producte de tipus servei"
-
-#. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -688,13 +672,6 @@ msgstr "Components de la llista de materials"
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "Moviment d'estoc"
-
-#. module: mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1118,11 +1095,6 @@ msgid "BOM Name"
 msgstr "Nom LdM"
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
@@ -1130,6 +1102,11 @@ msgstr ""
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "Ordres de producció"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -2021,11 +1998,6 @@ msgid "Manufacturing Efficiency"
 msgstr "Eficiència de la producció"
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Error! No podeu crear companyies recursives."
-
-#. module: mrp
 #: field:mrp.bom,message_follower_ids:0
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
@@ -2087,9 +2059,9 @@ msgid "Type of period"
 msgstr "Tipus de període"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr ""
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "Qtat. total"
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -2179,11 +2151,6 @@ msgid "Assignment from stock."
 msgstr "Assignació des d'estoc."
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr "Esperant mercaderia"
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
@@ -2246,11 +2213,6 @@ msgstr "Ref LdM"
 #: field:mrp.production.workcenter.line,message_comment_ids:0
 #: help:mrp.production.workcenter.line,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 
 #. module: mrp
@@ -3223,6 +3185,9 @@ msgstr "Productes a consumir"
 #~ msgid "plus"
 #~ msgstr "més"
 
+#~ msgid "Waiting Goods"
+#~ msgstr "Esperant mercaderia"
+
 #~ msgid "Stockable Product Process"
 #~ msgstr "Procés producte estocable"
 
@@ -3895,6 +3860,9 @@ msgstr "Productes a consumir"
 #, python-format
 #~ msgid "Copy"
 #~ msgstr "Copieu"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Error! No podeu crear companyies recursives."
 
 #~ msgid ""
 #~ "When the production order is created the state is set to 'Draft'.\n"

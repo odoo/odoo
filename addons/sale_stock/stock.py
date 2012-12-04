@@ -100,14 +100,8 @@ class stock_picking(osv.osv):
         return super(stock_picking, self)._get_account_analytic_invoice(cursor, user, picking, move_line)
 
     def _invoice_line_hook(self, cursor, user, move_line, invoice_line_id):
-        sale_line_obj = self.pool.get('sale.order.line')
-        invoice_line_obj = self.pool.get('account.invoice.line')
         if move_line.sale_line_id:
-            sale_line_obj.write(cursor, user, [move_line.sale_line_id.id],
-                                    {
-                                        'invoiced': True,
-                                        'invoice_lines': [(4, invoice_line_id)],
-                                    })
+            move_line.sale_line_id.write({'invoice_lines': [(4, invoice_line_id)]})
         return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
@@ -180,10 +174,8 @@ class stock_picking(osv.osv):
                     vals['account_analytic_id'] = self._get_account_analytic_invoice(cursor, user, picking, sale_line)
                     vals['invoice_id'] = invoices[result[picking.id]].id
                     invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
-                    order_line_obj.write(cursor, user, [sale_line.id], {
-                        'invoiced': True,
-                        'invoice_lines': [(6, 0, [invoice_line_id])],
-                    })
+                    sale_line.write({'invoice_lines': [(4, invoice_line_id)]})
+                    invoice_obj.button_compute(cursor, user, [invoice_created.id], context=context)
         return result
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm

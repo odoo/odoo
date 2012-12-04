@@ -338,7 +338,7 @@ class mail_message(osv.Model):
 
         return {'id': message.id,
                 'type': message.type,
-                'body': html_email_clean(message.body),
+                'body': html_email_clean(message.body or ''),
                 'model': message.model,
                 'res_id': message.res_id,
                 'record_name': message.record_name,

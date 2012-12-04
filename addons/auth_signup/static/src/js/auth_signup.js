@@ -43,8 +43,28 @@ openerp.auth_signup = function(instance) {
                         .fail(self.on_token_failed)
                 });
             }
+
+            // bind reset password link
+            this.$('a.oe_signup_reset_password').click(this.do_reset_password);
+
+            // make signup link and reset password link visible only when enabled
+            this.$('a.oe_signup_signup').hide();
+            this.$('a.oe_signup_reset_password').hide();
+            if (this.params.db) {
+                this.rpc("/auth_signup/get_config", {dbname: self.params.db})
+                    .done(function(result) {
+                        if (result.signup) {
+                            self.$('a.oe_signup_signup').show();
+                        }
+                        if (result.reset_password) {
+                            self.$('a.oe_signup_reset_password').show();
+                        }
+                    });
+            }
+
             return d;
         },
+
         on_token_loaded: function(result) {
             // select the right the database
             this.selected_db = result.db;
@@ -66,6 +86,7 @@ openerp.auth_signup = function(instance) {
                 this.$("form input[name=login]").val(result.login || "");
             }
         },
+
         on_token_failed: function(result, ev) {
             if (ev) {
                 ev.preventDefault();
@@ -74,6 +95,7 @@ openerp.auth_signup = function(instance) {
             delete this.params.db;
             delete this.params.token;
         },
+
         on_submit: function(ev) {
             if (ev) {
                 ev.preventDefault();
@@ -124,6 +146,26 @@ openerp.auth_signup = function(instance) {
                 this._super(ev);
             }
         },
-    });
 
+        do_reset_password: function(ev) {
+            if (ev) {
+                ev.preventDefault();
+            }
+            var db = this.$("form [name=db]").val();
+            var login = this.$("form input[name=login]").val();
+            if (!db) {
+                this.do_warn("Login", "No database selected !");
+                return false;
+            } else if (!login) {
+                this.do_warn("Login", "Please enter a username or email address.")
+                return false;
+            }
+            var params = {
+                dbname : db,
+                login: login,
+            };
+            var url = "/auth_signup/reset_password?" + $.param(params);
+            window.location = url;
+        },
+    });
 };

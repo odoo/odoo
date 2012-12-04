@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:51+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2011-12-06 11:04+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 05:41+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:10+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: mrp
 #: help:mrp.config.settings,module_mrp_repair:0
@@ -205,9 +205,9 @@ msgid "For purchased material"
 msgstr "For innkjøpt materiale"
 
 #. module: mrp
-#: view:mrp.production:0
-msgid "Total Qty"
-msgstr "Total kva."
+#: field:mrp.config.settings,module_mrp_operations:0
+msgid "Allow detailed planning of work order"
+msgstr ""
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:648
@@ -314,11 +314,6 @@ msgid "Manage Routings"
 msgstr ""
 
 #. module: mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
 msgid "Product Produce"
 msgstr "Produkt Produser"
@@ -327,11 +322,6 @@ msgstr "Produkt Produser"
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
 msgstr "Feil! Du kan ikke lage en uendelig struktur!"
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -363,7 +353,6 @@ msgstr ""
 
 #. module: mrp
 #: sql_constraint:mrp.production:0
-#: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
 msgstr "Referanse må være unik pr firma!"
 
@@ -513,11 +502,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_serviceproduct0
 msgid "Product type is service"
 msgstr "Produkt type er tjeneste"
-
-#. module: mrp
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Firmanavn må være unikt !"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_cycle:0
@@ -690,13 +674,6 @@ msgstr "Materialliste komponenter"
 #: model:ir.model,name:mrp.model_stock_move
 msgid "Stock Move"
 msgstr "Lagerbevegelse"
-
-#. module: mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_planning
@@ -1120,11 +1097,6 @@ msgid "BOM Name"
 msgstr "Materialliste Navn"
 
 #. module: mrp
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_manufacturing_open
 #: model:ir.actions.act_window,name:mrp.mrp_production_action
 #: model:ir.actions.act_window,name:mrp.mrp_production_action_planning
@@ -1132,6 +1104,11 @@ msgstr ""
 #: view:mrp.production:0
 msgid "Manufacturing Orders"
 msgstr "Produksjonsordre"
+
+#. module: mrp
+#: selection:mrp.production,state:0
+msgid "Awaiting Raw Materials"
+msgstr ""
 
 #. module: mrp
 #: field:mrp.bom,position:0
@@ -2008,11 +1985,6 @@ msgid "Manufacturing Efficiency"
 msgstr "Produksjonseffektivitet"
 
 #. module: mrp
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Feil! Dukan ikke opprette rekursive firmaer."
-
-#. module: mrp
 #: field:mrp.bom,message_follower_ids:0
 #: field:mrp.production,message_follower_ids:0
 #: field:mrp.production.workcenter.line,message_follower_ids:0
@@ -2072,9 +2044,9 @@ msgid "Type of period"
 msgstr "Periodetype"
 
 #. module: mrp
-#: field:mrp.config.settings,module_mrp_operations:0
-msgid "Allow detailed planning of work order"
-msgstr ""
+#: view:mrp.production:0
+msgid "Total Qty"
+msgstr "Total kva."
 
 #. module: mrp
 #: field:mrp.production.workcenter.line,hour:0
@@ -2164,11 +2136,6 @@ msgid "Assignment from stock."
 msgstr ""
 
 #. module: mrp
-#: selection:mrp.production,state:0
-msgid "Waiting Goods"
-msgstr ""
-
-#. module: mrp
 #: code:addons/mrp/report/price.py:139
 #, python-format
 msgid "Cost Price per Unit of Measure"
@@ -2231,11 +2198,6 @@ msgstr "Materialliste Ref"
 #: field:mrp.production.workcenter.line,message_comment_ids:0
 #: help:mrp.production.workcenter.line,message_comment_ids:0
 msgid "Comments and emails"
-msgstr ""
-
-#. module: mrp
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
 msgstr ""
 
 #. module: mrp
@@ -2994,6 +2956,9 @@ msgstr "Produkter til forbruk"
 #~ msgid "Product UoS Qty"
 #~ msgstr "Produkt Salgsenhet Ant"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Feil! Dukan ikke opprette rekursive firmaer."
+
 #~ msgid "December"
 #~ msgstr "Desember"
 
@@ -3027,6 +2992,9 @@ msgstr "Produkter til forbruk"
 
 #~ msgid "Configure your work centers"
 #~ msgstr "Konfigurer arbeidssenter"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Firmanavn må være unikt !"
 
 #~ msgid "Sugar"
 #~ msgstr "Sukker"

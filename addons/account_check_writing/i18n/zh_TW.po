@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-08-22 06:48+0000\n"
 "Last-Translator: Eric Huang <eh@cenoq.com>\n"
 "Language-Team: Cenoq\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:32+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_check_writing
 #: selection:res.company,check_layout:0
@@ -46,11 +46,6 @@ msgstr ""
 #: selection:res.company,check_layout:0
 msgid "Check on bottom"
 msgstr "支票位於底部"
-
-#. module: account_check_writing
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "錯誤！您不能創建遞歸公司."
 
 #. module: account_check_writing
 #: help:account.journal,allow_check_writing:0
@@ -134,11 +129,6 @@ msgid "Print Check (Bottom)"
 msgstr ""
 
 #. module: account_check_writing
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "公司名稱必須唯一！"
-
-#. module: account_check_writing
 #: report:account.print.check.bottom:0
 #: report:account.print.check.middle:0
 #: report:account.print.check.top:0
@@ -148,13 +138,6 @@ msgstr "到期日期"
 #. module: account_check_writing
 #: model:ir.actions.report.xml,name:account_check_writing.account_print_check_middle
 msgid "Print Check (Middle)"
-msgstr ""
-
-#. module: account_check_writing
-#: constraint:account.journal:0
-msgid ""
-"Configuration error!\n"
-"The currency chosen should be shared by the default accounts too."
 msgstr ""
 
 #. module: account_check_writing
@@ -186,16 +169,6 @@ msgid "Accounting Voucher"
 msgstr "手工憑證"
 
 #. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The name of the journal must be unique per company !"
-msgstr "每個公司的帳簿名稱必須唯一！"
-
-#. module: account_check_writing
-#: sql_constraint:account.journal:0
-msgid "The code of the journal must be unique per company !"
-msgstr "每個公司的帳簿編碼必須唯一！"
-
-#. module: account_check_writing
 #: field:account.voucher,amount_in_word:0
 msgid "Amount in Word"
 msgstr "金額大寫"
@@ -218,8 +191,14 @@ msgstr "選擇支票版型"
 #~ msgstr ""
 #~ "付款支票表單用來跟蹤你對供應商的支票付款。選擇了一個供應商、付款方式、付款金額以後，OpenERP會建議你對未核銷的供應商發票進行核銷。你可以列印支票。"
 
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "錯誤！您不能創建遞歸公司."
+
 #~ msgid "Configuration"
 #~ msgstr "設置"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "公司名稱必須唯一！"
 
 #~ msgid "Default Check layout"
 #~ msgstr "默認支票格式"
@@ -228,3 +207,9 @@ msgstr "選擇支票版型"
 #~ "Configuration error! The currency chosen should be shared by the default "
 #~ "accounts too."
 #~ msgstr "設置錯誤！所選幣種應與默認科目共享。"
+
+#~ msgid "The name of the journal must be unique per company !"
+#~ msgstr "每個公司的帳簿名稱必須唯一！"
+
+#~ msgid "The code of the journal must be unique per company !"
+#~ msgstr "每個公司的帳簿編碼必須唯一！"

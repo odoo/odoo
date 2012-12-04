@@ -7,39 +7,30 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-11-29 13:54+0000\n"
 "Last-Translator: ccdos <ccdos@163.com>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-30 05:08+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:55+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: portal_sale
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "订单号必须在一个公司范围内唯一"
+#: model:ir.model,name:portal_sale.model_account_config_settings
+msgid "account.config.settings"
+msgstr "account.config.settings"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.product_normal_action
-msgid "There are no public products."
-msgstr "没有公共产品"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_picking_tree
-msgid "You don't have any delivery order."
-msgstr "你没有任何发运单"
-
-#. module: portal_sale
-#: model:email.template,report_name:portal_sale.email_template_edi_sale
-msgid ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
-"'draft' or ''}"
+#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
+msgid "We haven't sent you any invoice."
 msgstr ""
-"${(object.name or '').replace('/','_')}_${object.state == 'draft' and '草稿' "
-"or ''}"
+
+#. module: portal_sale
+#: model:ir.actions.act_window,help:portal_sale.action_orders_portal
+msgid "We haven't sent you any sale order."
+msgstr ""
 
 #. module: portal_sale
 #: model:res.groups,name:portal_sale.group_payment_options
@@ -61,9 +52,14 @@ msgstr ""
 "'订单'} (Ref ${object.name or 'n/a' })"
 
 #. module: portal_sale
-#: model:ir.model,name:portal_sale.model_account_config_settings
-msgid "account.config.settings"
-msgstr "account.config.settings"
+#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
+msgid "We haven't sent you any quotation."
+msgstr ""
+
+#. module: portal_sale
+#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
+msgid "Sales Orders"
+msgstr ""
 
 #. module: portal_sale
 #: model:email.template,body_html:portal_sale.email_template_edi_invoice
@@ -209,36 +205,20 @@ msgstr ""
 "and '草稿' or ''}"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_orders_portal
-msgid "You don't have any sale order."
-msgstr "你还没有任何销售订单"
-
-#. module: portal_sale
 #: model:email.template,subject:portal_sale.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
 msgstr "${object.company_id.name} 发票 (编号 ${object.number or 'n/a' })"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.product_normal_action
-#: model:ir.ui.menu,name:portal_sale.portal_products
-msgid "Products"
-msgstr "产品"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_invoices
-msgid "You don't have any invoice."
-msgstr "你没有任何发票"
+#: model:ir.model,name:portal_sale.model_mail_mail
+msgid "Outgoing Mails"
+msgstr ""
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_quotations_portal
 #: model:ir.ui.menu,name:portal_sale.portal_quotations
 msgid "Quotations"
 msgstr "报价单"
-
-#. module: portal_sale
-#: sql_constraint:account.invoice:0
-msgid "Invoice Number must be unique per Company!"
-msgstr "发票号必须在公司范围内唯一"
 
 #. module: portal_sale
 #: model:ir.model,name:portal_sale.model_sale_order
@@ -259,21 +239,10 @@ msgid ""
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.action_quotations_portal
-msgid "You don't have any quotation."
-msgstr "你没有任何报价单"
-
-#. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.portal_action_invoices
 #: model:ir.ui.menu,name:portal_sale.portal_invoices
 msgid "Invoices"
 msgstr "发票列表"
-
-#. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.portal_action_vouchers
-#: model:ir.ui.menu,name:portal_sale.portal_payments
-msgid "Refunds/Payments"
-msgstr "退款/支付"
 
 #. module: portal_sale
 #: view:account.config.settings:0
@@ -411,28 +380,20 @@ msgid ""
 msgstr ""
 
 #. module: portal_sale
-#: model:ir.actions.act_window,help:portal_sale.portal_action_vouchers
-msgid "You don't have any refunds or payments."
-msgstr "你没有任何退款或者支付"
-
-#. module: portal_sale
 #: model:ir.model,name:portal_sale.model_account_invoice
 msgid "Invoice"
 msgstr "发票"
 
 #. module: portal_sale
 #: model:ir.actions.act_window,name:portal_sale.action_orders_portal
-#: model:ir.ui.menu,name:portal_sale.portal_sales_orders
 msgid "Sale Orders"
 msgstr "销售订单"
 
 #. module: portal_sale
-#: model:ir.actions.act_window,name:portal_sale.action_picking_tree
-#: model:ir.ui.menu,name:portal_sale.portal_delivery
-msgid "Delivery Orders"
-msgstr "送货单"
-
-#. module: portal_sale
-#: constraint:account.invoice:0
-msgid "Invalid BBA Structured Communication !"
-msgstr "BBA传输结构有误！"
+#: model:email.template,report_name:portal_sale.email_template_edi_sale
+msgid ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and "
+"'draft' or ''}"
+msgstr ""
+"${(object.name or '').replace('/','_')}_${object.state == 'draft' and '草稿' "
+"or ''}"
