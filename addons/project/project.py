@@ -49,11 +49,17 @@ class project_task_type(osv.osv):
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
+    def _get_default_project_id(self, cr, uid, ctx={}):
+        proj = ctx.get('default_project_id', False)
+        if type(proj) is int:
+            return [proj]
+        return proj
     _defaults = {
         'sequence': 1,
         'state': 'open',
         'fold': False,
         'case_default': True,
+        'project_ids': _get_default_project_id
     }
     _order = 'sequence'
 
@@ -532,7 +538,7 @@ def Project():
         # Prevent double project creation when 'use_tasks' is checked!
         context = dict(context, project_creation_in_progress=True)
         mail_alias = self.pool.get('mail.alias')
-        if not vals.get('alias_id'):
+        if not vals.get('alias_id') and vals.get('name', False):
             vals.pop('alias_name', None) # prevent errors during copy()
             alias_id = mail_alias.create_unique_alias(cr, uid,
                           # Using '+' allows using subaddressing for those who don't
@@ -603,18 +609,13 @@ class task(base_stage, osv.osv):
         stage_obj = self.pool.get('project.task.type')
         order = stage_obj._order
         access_rights_uid = access_rights_uid or uid
-        # lame way to allow reverting search, should just work in the trivial case
         if read_group_order == 'stage_id desc':
             order = '%s desc' % order
-        # retrieve section_id from the context and write the domain
-        # - ('id', 'in', 'ids'): add columns that should be present
-        # - OR ('case_default', '=', True), ('fold', '=', False): add default columns that are not folded
-        # - OR ('project_ids', 'in', project_id), ('fold', '=', False) if project_id: add project columns that are not folded
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
             search_domain += ['|', ('project_ids', '=', project_id)]
-        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
+        search_domain += [('id', 'in', ids)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
@@ -750,7 +751,7 @@ class task(base_stage, osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage',
-                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', ('fold', '=', False), ('project_ids', '=', project_id)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="Status", readonly=True,
                 help='The status is set to \'Draft\', when a case is created.\
@@ -936,14 +937,11 @@ class task(base_stage, osv.osv):
         for task in cases:
             if task.project_id:
                 section_ids.append(task.project_id.id)
-        # OR all section_ids and OR with case_default
         search_domain = []
         if section_ids:
-            search_domain += [('|')] * len(section_ids)
+            search_domain = [('|')] * (len(section_ids)-1)
             for section_id in section_ids:
                 search_domain.append(('project_ids', '=', section_id))
-        search_domain.append(('case_default', '=', True))
-        # AND with the domain in parameter
         search_domain += list(domain)
         # perform search, return the first found
         stage_ids = self.pool.get('project.task.type').search(cr, uid, search_domain, order=order, context=context)

@@ -149,7 +149,7 @@
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" sequence="70" />
+        <menuitem name="Fleet" id="menu_root" sequence="110" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
@@ -318,12 +318,7 @@
                                         
                                     </ul>
 
-                                    <div class="oe_kanban_partner_categories">
-                                        <span class="oe_kanban_list_many2many">
-                                            <div modifiers="{}" name="tag_ids" class="oe_form_field oe_tags" model="fleet.vehicle.tag" t-att-data="record.tag_ids.raw_value" />
-                                        </span>
-                                    </div>
-
+                                    <field name="tag_ids"/>
                                 </div>
                             </div>
                         </t>

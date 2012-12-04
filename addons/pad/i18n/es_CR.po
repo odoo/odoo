@@ -7,26 +7,33 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-02-17 20:54+0000\n"
 "Last-Translator: Freddy Gonzalez <freddy.gonzalez.contreras@gmail.com>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:34+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:53+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 "Language: es\n"
 
 #. module: pad
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "¡El nombre de la compañía debe ser único!"
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:27
+#, python-format
+msgid "&Ntilde;"
+msgstr ""
 
 #. module: pad
-#: help:res.company,pad_url_template:0
-msgid "Template used to generate pad URL."
-msgstr "Plantilla utilizada para generar la URL almohadilla."
+#: model:ir.model,name:pad.model_pad_common
+msgid "pad.common"
+msgstr ""
+
+#. module: pad
+#: help:res.company,pad_key:0
+msgid "Etherpad lite api key."
+msgstr ""
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -34,29 +41,39 @@ msgid "Companies"
 msgstr "Compañías"
 
 #. module: pad
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "¡Error! No puede crear compañías recursivas."
-
-#. module: pad
-#: model:ir.model,name:pad.model_ir_attachment
-msgid "ir.attachment"
-msgstr "ir.attachment"
+#. openerp-web
+#: code:addons/pad/static/src/xml/pad.xml:10
+#, python-format
+msgid ""
+"You must configure the etherpad through the menu Setting > Companies > "
+"Companies, in the configuration tab of your company."
+msgstr ""
 
 #. module: pad
 #: view:res.company:0
-msgid "Pad"
-msgstr "Pad"
+msgid "Pads"
+msgstr ""
 
 #. module: pad
-#: field:res.company,pad_url_template:0
-msgid "Pad URL Template"
-msgstr "Pad plantilla URL"
+#: field:res.company,pad_server:0
+msgid "Pad Server"
+msgstr ""
 
-#. openerp-web
-#: /home/odo/repositories/addons/trunk/pad/static/src/xml/pad.xml:9
-msgid "Add Pad"
-msgstr "Agregar Pad"
+#. module: pad
+#: field:res.company,pad_key:0
+msgid "Pad Api Key"
+msgstr ""
+
+#. module: pad
+#: help:res.company,pad_server:0
+msgid "Etherpad lite server. Example: beta.primarypad.com"
+msgstr ""
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "¡Error! No puede crear compañías recursivas."
+
+#~ msgid "Pad"
+#~ msgstr "Pad"
 
 #, python-format
 #~ msgid "Name"
@@ -94,3 +111,18 @@ msgstr "Agregar Pad"
 
 #~ msgid "The root URL of the company's pad instance"
 #~ msgstr "La URL raíz de la instancia pad de la compañía."
+
+#~ msgid "Template used to generate pad URL."
+#~ msgstr "Plantilla utilizada para generar la URL almohadilla."
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "¡El nombre de la compañía debe ser único!"
+
+#~ msgid "ir.attachment"
+#~ msgstr "ir.attachment"
+
+#~ msgid "Add Pad"
+#~ msgstr "Agregar Pad"
+
+#~ msgid "Pad URL Template"
+#~ msgstr "Pad plantilla URL"

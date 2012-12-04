@@ -641,8 +641,7 @@ class account_account(osv.osv):
         return True
 
     def _check_allow_type_change(self, cr, uid, ids, new_type, context=None):
-        group1 = ['payable', 'receivable', 'other']
-        group2 = ['consolidation','view']
+        restricted_groups = ['consolidation','view']
         line_obj = self.pool.get('account.move.line')
         for account in self.browse(cr, uid, ids, context=context):
             old_type = account.type
@@ -650,14 +649,25 @@ class account_account(osv.osv):
             if line_obj.search(cr, uid, [('account_id', 'in', account_ids)]):
                 #Check for 'Closed' type
                 if old_type == 'closed' and new_type !='closed':
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from 'Closed' to any other type which contains journal items!"))
-                #Check for change From group1 to group2 and vice versa
-                if (old_type in group1 and new_type in group2) or (old_type in group2 and new_type in group1):
-                    raise osv.except_osv(_('Warning!'), _("You cannot change the type of account from '%s' to '%s' type as it contains journal items!") % (old_type,new_type,))
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account from 'Closed' to any other type as it contains journal items!"))
+                # Forbid to change an account type for restricted_groups as it contains journal items (or if one of its children does)
+                if (new_type in restricted_groups):
+                    raise osv.except_osv(_('Warning !'), _("You cannot change the type of account to '%s' type as it contains journal items!") % (new_type,))
+
+        return True
+
+    # For legal reason (forbiden to modify journal entries which belongs to a closed fy or period), Forbid to modify
+    # the code of an account if journal entries have been already posted on this account. This cannot be simply 
+    # 'configurable' since it can lead to a lack of confidence in OpenERP and this is what we want to change.
+    def _check_allow_code_change(self, cr, uid, ids, context=None):
+        line_obj = self.pool.get('account.move.line')
+        for account in self.browse(cr, uid, ids, context=context):
+            account_ids = self.search(cr, uid, [('id', 'child_of', [account.id])], context=context)
+            if line_obj.search(cr, uid, [('account_id', 'in', account_ids)], context=context):
+                raise osv.except_osv(_('Warning !'), _("You cannot change the code of account which contains journal items!"))
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
-
         if context is None:
             context = {}
         if not ids:
@@ -677,6 +687,8 @@ class account_account(osv.osv):
             self._check_moves(cr, uid, ids, "write", context=context)
         if 'type' in vals.keys():
             self._check_allow_type_change(cr, uid, ids, vals['type'], context=context)
+        if 'code' in vals.keys():
+            self._check_allow_code_change(cr, uid, ids, context=context)
         return super(account_account, self).write(cr, uid, ids, vals, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
@@ -684,44 +696,6 @@ class account_account(osv.osv):
         return super(account_account, self).unlink(cr, uid, ids, context=context)
 
 account_account()
-
-class account_journal_view(osv.osv):
-    _name = "account.journal.view"
-    _description = "Journal View"
-    _columns = {
-        'name': fields.char('Journal View', size=64, required=True, translate=True),
-        'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
-    }
-    _order = "name"
-
-account_journal_view()
-
-
-class account_journal_column(osv.osv):
-
-    def _col_get(self, cr, user, context=None):
-        result = []
-        cols = self.pool.get('account.move.line')._columns
-        for col in cols:
-            if col in ('period_id', 'journal_id'):
-                continue
-            result.append( (col, cols[col].string) )
-        result.sort()
-        return result
-
-    _name = "account.journal.column"
-    _description = "Journal Column"
-    _columns = {
-        'name': fields.char('Column Name', size=64, required=True),
-        'field': fields.selection(_col_get, 'Field Name', required=True, size=32),
-        'view_id': fields.many2one('account.journal.view', 'Journal View', select=True),
-        'sequence': fields.integer('Sequence', help="Gives the sequence order to journal column.", readonly=True),
-        'required': fields.boolean('Required'),
-        'readonly': fields.boolean('Readonly'),
-    }
-    _order = "view_id, sequence"
-
-account_journal_column()
 
 class account_journal(osv.osv):
     _name = "account.journal"
@@ -738,7 +712,6 @@ class account_journal(osv.osv):
                                  " Select 'Opening/Closing Situation' for entries generated for new fiscal years."),
         'type_control_ids': fields.many2many('account.account.type', 'account_journal_type_rel', 'journal_id','type_id', 'Type Controls', domain=[('code','<>','view'), ('code', '<>', 'closed')]),
         'account_control_ids': fields.many2many('account.account', 'account_account_type_rel', 'journal_id','account_id', 'Account', domain=[('type','<>','view'), ('type', '<>', 'closed')]),
-        'view_id': fields.many2one('account.journal.view', 'Display Mode', required=True, help="Gives the view used when writing or browsing entries in this journal. The view tells OpenERP which fields should be visible, required or readonly and in which order. You can create your own view for a faster encoding in each journal."),
         'default_credit_account_id': fields.many2one('account.account', 'Default Credit Account', domain="[('type','!=','view')]", help="It acts as a default account for credit amount"),
         'default_debit_account_id': fields.many2one('account.account', 'Default Debit Account', domain="[('type','!=','view')]", help="It acts as a default account for debit amount"),
         'centralisation': fields.boolean('Centralised Counterpart', help="Check this box to determine that each entry of this journal won't create a new counterpart but will share the same counterpart. This is used in fiscal year closing."),
@@ -873,37 +846,6 @@ class account_journal(osv.osv):
             ids = self.search(cr, user, [('name', 'ilike', name)]+ args, limit=limit, context=context)#fix it ilike should be replace with operator
 
         return self.name_get(cr, user, ids, context=context)
-
-    def onchange_type(self, cr, uid, ids, type, currency, context=None):
-        obj_data = self.pool.get('ir.model.data')
-        user_pool = self.pool.get('res.users')
-
-        type_map = {
-            'sale':'account_sp_journal_view',
-            'sale_refund':'account_sp_refund_journal_view',
-            'purchase':'account_sp_journal_view',
-            'purchase_refund':'account_sp_refund_journal_view',
-            'cash':'account_journal_bank_view',
-            'bank':'account_journal_bank_view',
-            'general':'account_journal_view',
-            'situation':'account_journal_view'
-        }
-
-        res = {}
-        view_id = type_map.get(type, 'account_journal_view')
-        user = user_pool.browse(cr, uid, uid)
-        if type in ('cash', 'bank') and currency and user.company_id.currency_id.id != currency:
-            view_id = 'account_journal_bank_view_multi'
-        data_id = obj_data.search(cr, uid, [('model','=','account.journal.view'), ('name','=',view_id)])
-        data = obj_data.browse(cr, uid, data_id[0], context=context)
-
-        res.update({
-            'centralisation':type == 'situation',
-            'view_id':data.res_id,
-        })
-        return {
-            'value':res
-        }
 
 account_journal()
 
@@ -1384,13 +1326,6 @@ class account_move(osv.osv):
                        'WHERE id IN %s', ('draft', tuple(ids),))
         return True
 
-    def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
-        balance = 0.0
-        for line in line_ids:
-            if line[2]:
-                balance += (line[2].get('debit',0.00)- (line[2].get('credit',0.00)))
-        return {'value': {'balance': balance}}
-
     def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
@@ -1439,9 +1374,9 @@ class account_move(osv.osv):
         if 'line_id' in vals:
             c = context.copy()
             c['novalidate'] = True
-            c['period_id'] = vals['period_id']
+            c['period_id'] = vals['period_id'] if 'period_id' in vals else self._get_period(cr, uid, context)
             c['journal_id'] = vals['journal_id']
-            c['date'] = vals['date']
+            if 'date' in vals: c['date'] = vals['date']
             result = super(account_move, self).create(cr, uid, vals, c)
             self.validate(cr, uid, [result], context)
         else:
@@ -1470,6 +1405,11 @@ class account_move(osv.osv):
                 raise osv.except_osv(_('User Error!'),
                         _('You cannot delete a posted journal entry "%s".') % \
                                 move['name'])
+            for line in move.line_id:
+                if line.invoice:
+                    raise osv.except_osv(_('User Error!'),
+                            _("Move cannot be deleted if linked to an invoice. (Invoice: %s - Move ID:%s)") % \
+                                    (line.invoice.number,move.name))
             line_ids = map(lambda x: x.id, move.line_id)
             context['journal_id'] = move.journal_id.id
             context['period_id'] = move.period_id.id
@@ -1678,11 +1618,41 @@ class account_move_reconcile(osv.osv):
         'line_id': fields.one2many('account.move.line', 'reconcile_id', 'Entry Lines'),
         'line_partial_ids': fields.one2many('account.move.line', 'reconcile_partial_id', 'Partial Entry lines'),
         'create_date': fields.date('Creation date', readonly=True),
+        'opening_reconciliation': fields.boolean('Opening Entries Reconciliation', help="Is this reconciliation produced by the opening of a new fiscal year ?."),
     }
     _defaults = {
         'name': lambda self,cr,uid,ctx=None: self.pool.get('ir.sequence').get(cr, uid, 'account.reconcile', context=ctx) or '/',
     }
+    
+    # You cannot unlink a reconciliation if it is a opening_reconciliation one,
+    # you should use the generate opening entries wizard for that
+    def unlink(self, cr, uid, ids, context=None):
+        for move_rec in self.browse(cr, uid, ids, context=context):
+            if move_rec.opening_reconciliation:
+                raise osv.except_osv(_('Error!'), _('You cannot unreconcile journal items if they has been generated by the \
+                                                        opening/closing fiscal year process.'))
+        return super(account_move_reconcile, self).unlink(cr, uid, ids, context=context)
+    
+    # Look in the line_id and line_partial_ids to ensure the partner is the same or empty
+    # on all lines. We allow that only for opening/closing period
+    def _check_same_partner(self, cr, uid, ids, context=None):
+        for reconcile in self.browse(cr, uid, ids, context=context):
+            move_lines = []
+            if not reconcile.opening_reconciliation:
+                if reconcile.line_id:
+                    first_partner = reconcile.line_id[0].partner_id.id
+                    move_lines = reconcile.line_id
+                elif reconcile.line_partial_ids:
+                    first_partner = reconcile.line_partial_ids[0].partner_id.id
+                    move_lines = reconcile.line_partial_ids
+                if any([line.partner_id.id != first_partner for line in move_lines]):
+                    return False
+        return True
 
+    _constraints = [
+        (_check_same_partner, 'You can only reconcile journal items with the same partner.', ['line_id']),
+    ]
+    
     def reconcile_partial_check(self, cr, uid, ids, type='auto', context=None):
         total = 0.0
         for rec in self.browse(cr, uid, ids, context=context):
@@ -3161,16 +3131,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     default_account = acc_template_ref.get(template.property_account_income_opening.id)
             return default_account
 
-        def _get_view_id(journal_type):
-            # Get the journal views
-            if journal_type in ('general', 'situation'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_view')
-            elif journal_type in ('sale_refund', 'purchase_refund'):
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_refund_journal_view')
-            else:
-                data = obj_data.get_object_reference(cr, uid, 'account', 'account_sp_journal_view')
-            return data and data[1] or False
-
         journal_names = {
             'sale': _('Sales Journal'),
             'purchase': _('Purchase Journal'),
@@ -3200,7 +3160,6 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'code': journal_codes[journal_type],
                 'company_id': company_id,
                 'centralisation': journal_type == 'situation',
-                'view_id': _get_view_id(journal_type),
                 'analytic_journal_id': _get_analytic_journal(journal_type),
                 'default_credit_account_id': _get_default_account(journal_type, 'credit'),
                 'default_debit_account_id': _get_default_account(journal_type, 'debit'),
@@ -3417,11 +3376,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         '''
         obj_data = self.pool.get('ir.model.data')
         obj_journal = self.pool.get('account.journal')
-        # Get the id of journal views
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view_multi')
-        view_id_cur = tmp and tmp[1] or False
-        tmp = obj_data.get_object_reference(cr, uid, 'account', 'account_journal_bank_view')
-        view_id_cash = tmp and tmp[1] or False
+        
 
         # we need to loop again to find next number for journal code
         # because we can't rely on the value current_num as,
@@ -3447,10 +3402,8 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                 'default_debit_account_id': default_account_id,
         }
         if line['currency_id']:
-            vals['view_id'] = view_id_cur
             vals['currency'] = line['currency_id']
-        else:
-            vals['view_id'] = view_id_cash
+        
         return vals
 
     def _prepare_bank_account(self, cr, uid, line, new_code, acc_template_ref, ref_acc_bank, company_id, context=None):

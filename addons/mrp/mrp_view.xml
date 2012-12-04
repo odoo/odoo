@@ -6,7 +6,7 @@
         <menuitem name="Manufacturing"
             id="base.menu_mrp_root"
             groups="group_mrp_user,group_mrp_manager"
-            sequence="60"/>
+            sequence="80"/>
 
         <menuitem name="Manufacturing"
             id="menu_mrp_manufacturing"
@@ -347,7 +347,7 @@
                 <form string="Bill of Material" version="7.0">
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" context="{'default_supply_method':'produce'}" class="oe_inline"/>
                             <label for="product_qty" string="Quantity"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
@@ -380,7 +380,7 @@
                         <page string="Components">
                             <field name="bom_lines" widget="one2many_list">
                                 <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                    <field name="product_id" context="{'default_supply_method':'produce'}" on_change="onchange_product_id(product_id, name)"/>
                                     <field name="product_qty"/>
                                     <field name="product_uom" on_change="onchange_uom(product_id, product_uom)" groups="product.group_uom"/>
                                     <field name="name" invisible="1"/>

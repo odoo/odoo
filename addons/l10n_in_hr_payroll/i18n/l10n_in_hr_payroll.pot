@@ -1,13 +1,13 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#   * l10n_in_hr_payroll
+#	* l10n_in_hr_payroll
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-17 06:46+0000\n"
-"PO-Revision-Date: 2012-08-17 06:46+0000\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-11-24 02:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,13 +46,25 @@ msgid "Hr Salary Employee By Category Report"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:salary.detail.byyear:0
-msgid "Employees Salary Details"
+#: view:payslip.report:0
+msgid "Payslips which are paid"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:hr.payroll.advice:0
+#: view:payment.advice.report:0
+#: view:payslip.report:0
+msgid "Group By..."
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: report:salary.detail.byyear:0
 msgid "Allowances with Basic:"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Payslips which are in done state"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -89,12 +101,8 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "March"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: report:paylip.details.in:0
-msgid "("
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -103,6 +111,8 @@ msgstr ""
 #: field:hr.payroll.advice.line,company_id:0
 #: view:payment.advice.report:0
 #: field:payment.advice.report,company_id:0
+#: view:payslip.report:0
+#: field:payslip.report,company_id:0
 msgid "Company"
 msgstr ""
 
@@ -117,18 +127,8 @@ msgid "Letter Details"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:paylip.details.in:0
-msgid ","
-msgstr ""
-
-#. module: l10n_in_hr_payroll
 #: view:hr.payroll.advice:0
 msgid "Set to Draft"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: help:hr.employee,number_of_year:0
-msgid "Total years of work experience"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -152,6 +152,11 @@ msgid "Advices which are paid using NEFT transfer"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: field:payslip.report,nbr:0
+msgid "# Payslip lines"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: help:hr.contract,tds:0
 msgid "Amount for Tax Deduction at Source"
 msgstr ""
@@ -164,6 +169,8 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: view:payment.advice.report:0
 #: field:payment.advice.report,day:0
+#: view:payslip.report:0
+#: field:payslip.report,day:0
 msgid "Day"
 msgstr ""
 
@@ -199,6 +206,11 @@ msgid "Cancelled"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: model:ir.actions.act_window,help:l10n_in_hr_payroll.action_payslip_report_all
+msgid "This report performs analysis on Payslip"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: report:payroll.advice:0
 msgid "For"
 msgstr ""
@@ -209,20 +221,9 @@ msgid "Details by Salary Rule Category:"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: help:hr.contract,voluntary_provident_fund:0
-msgid "VPF computed as percentage(%)"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
 #: field:hr.payroll.advice,number:0
 #: report:paylip.details.in:0
 msgid "Reference"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: view:hr.payroll.advice:0
-#: view:payment.advice.report:0
-msgid "Group By..."
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -233,6 +234,17 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: report:paylip.details.in:0
 msgid "Identification No"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+#: field:payslip.report,struct_id:0
+msgid "Structure"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: report:payroll.advice:0
+msgid "form period"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -279,20 +291,19 @@ msgid "Yearly Salary by Head"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:184
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:134
 #, python-format
 msgid "You can not confirm Payment advice without advice lines."
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: field:hr.payroll.advice,state:0
-#: field:payment.advice.report,state:0
-msgid "State"
+#: report:payroll.advice:0
+msgid "Yours Sincerely"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:payroll.advice:0
-msgid "Yours Sincerely"
+#: view:payslip.report:0
+msgid "# Payslip Lines"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -306,6 +317,11 @@ msgid "Bank Advice Lines"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Day of Payslip"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: report:paylip.details.in:0
 msgid "Email"
 msgstr ""
@@ -316,18 +332,33 @@ msgid "If this box is checked which means that Payment Advice exists for current
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:158
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:184
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:240
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:257
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:108
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:134
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:190
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:207
 #, python-format
 msgid "Error !"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: field:payslip.report,paid:0
+msgid "Made Payment Order ? "
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:hr.salary.employee.month:0
 #: view:yearly.salary.detail:0
 msgid "Print"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: selection:payslip.report,state:0
+msgid "Rejected"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Year of Payslip"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -358,12 +389,18 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "July"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:res.company:0
 msgid "Configuration"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Payslip Line"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -391,17 +428,13 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: report:paylip.details.in:0
+#: field:payslip.report,date_to:0
 msgid "Date To"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: field:hr.contract,tds:0
 msgid "TDS"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: field:hr.employee,join_date:0
-msgid "Join Date"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -421,17 +454,13 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "August"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:hr.contract:0
 msgid "Deduction"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: view:hr.payroll.advice:0
-msgid "Search Payment advice"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -446,6 +475,7 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "December"
 msgstr ""
 
@@ -457,17 +487,14 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: view:payment.advice.report:0
 #: field:payment.advice.report,month:0
+#: view:payslip.report:0
+#: field:payslip.report,month:0
 msgid "Month"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: report:salary.detail.byyear:0
 msgid "Employee Code"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: selection:hr.contract,city_type:0
-msgid "Non Metro"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -483,11 +510,13 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: field:hr.salary.employee.month,category_id:0
+#: view:payslip.report:0
+#: field:payslip.report,category_id:0
 msgid "Category"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:240
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:190
 #, python-format
 msgid "Payment advice already exists for %s, 'Set to Draft' to create a new advice."
 msgstr ""
@@ -495,11 +524,6 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: view:hr.payslip.run:0
 msgid "To Advice"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: field:hr.employee,number_of_year:0
-msgid "No. of Years of Service"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -517,17 +541,15 @@ msgstr ""
 #: selection:hr.payroll.advice,state:0
 #: view:payment.advice.report:0
 #: selection:payment.advice.report,state:0
+#: view:payslip.report:0
+#: selection:payslip.report,state:0
 msgid "Draft"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: report:paylip.details.in:0
+#: field:payslip.report,date_from:0
 msgid "Date From"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: field:hr.contract,voluntary_provident_fund:0
-msgid "Voluntary Provident Fund"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -542,13 +564,12 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:hr.payroll.advice:0
+#: field:hr.payroll.advice,state:0
 #: view:payment.advice.report:0
+#: field:payment.advice.report,state:0
+#: view:payslip.report:0
+#: field:payslip.report,state:0
 msgid "Status"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: field:hr.contract,city_type:0
-msgid "Type of City"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -565,7 +586,18 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "June"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Paid"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: help:hr.contract,voluntary_provident_fund:0
+msgid "VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government and VPF computed as percentage(%)"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -592,11 +624,13 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "November"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:payment.advice.report:0
+#: view:payslip.report:0
 msgid "Extended Filters..."
 msgstr ""
 
@@ -607,6 +641,7 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "October"
 msgstr ""
 
@@ -617,7 +652,13 @@ msgid "Designation"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Month of Payslip"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "January"
 msgstr ""
 
@@ -643,6 +684,11 @@ msgid "Contract"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: field:hr.contract,supplementary_allowance:0
+msgid "Supplementary Allowance"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: view:hr.payroll.advice.line:0
 msgid "Advice Lines"
 msgstr ""
@@ -655,6 +701,11 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: help:hr.contract,driver_salay:0
 msgid "Check this box if you provide allowance for driver"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+msgid "Payslips which are in draft state"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -681,18 +732,21 @@ msgid "Check this box if your company use online transfer for salary"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:salary.detail.byyear:0
-msgid "To"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
 #: field:payment.advice.report,number:0
+#: field:payslip.report,number:0
 msgid "Number"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "September"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: view:payslip.report:0
+#: selection:payslip.report,state:0
+msgid "Done"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -708,18 +762,13 @@ msgid "Day of Payment Advices"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: constraint:hr.employee:0
-msgid "Error! You cannot create recursive hierarchy of Employee(s)."
+#: view:hr.payroll.advice:0
+msgid "Search Payment advice"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:yearly.salary.detail:0
 msgid "This wizard will print report which display a pay head employee breakup for a specified dates."
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: view:hr.payslip.run:0
-msgid "Payslip Batches ready to be Adviced"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -734,9 +783,10 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: field:hr.payroll.advice.line,employee_id:0
-#: model:ir.model,name:l10n_in_hr_payroll.model_hr_employee
 #: view:payment.advice.report:0
 #: field:payment.advice.report,employee_id:0
+#: view:payslip.report:0
+#: field:payslip.report,employee_id:0
 msgid "Employee"
 msgstr ""
 
@@ -746,14 +796,9 @@ msgid "Compute Advice"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: help:hr.employee,join_date:0
-msgid "Joining date of employee"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
 #: report:payroll.advice:0
 msgid "Dear Sir/Madam,"
-msgstr "Dear Sir/Madam,"
+msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: field:hr.payroll.advice,note:0
@@ -761,8 +806,9 @@ msgid "Description"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:paylip.details.in:0
-msgid ")"
+#: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
+msgid "May"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -799,6 +845,7 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "February"
 msgstr ""
 
@@ -812,13 +859,9 @@ msgstr ""
 #: field:hr.payroll.advice,name:0
 #: report:paylip.details.in:0
 #: field:payment.advice.report,name:0
+#: field:payslip.report,name:0
 #: report:salary.employee.bymonth:0
 msgid "Name"
-msgstr ""
-
-#. module: l10n_in_hr_payroll
-#: selection:hr.contract,city_type:0
-msgid "Metro"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -835,7 +878,16 @@ msgid "Bank Account"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
+#: model:ir.actions.act_window,name:l10n_in_hr_payroll.action_payslip_report_all
+#: model:ir.model,name:l10n_in_hr_payroll.model_payslip_report
+#: model:ir.ui.menu,name:l10n_in_hr_payroll.menu_reporting_payslip
+#: view:payslip.report:0
+msgid "Payslip Analysis"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
 #: selection:payment.advice.report,month:0
+#: selection:payslip.report,month:0
 msgid "April"
 msgstr ""
 
@@ -845,8 +897,8 @@ msgid "Name of the Employe"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:158
-#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:257
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:108
+#: code:addons/l10n_in_hr_payroll/l10n_in_hr_payroll.py:207
 #, python-format
 msgid "Please define bank account for the %s employee"
 msgstr ""
@@ -860,6 +912,16 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: view:hr.contract:0
 msgid "Allowance"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: field:hr.contract,voluntary_provident_fund:0
+msgid "Voluntary Provident Fund (%)"
+msgstr ""
+
+#. module: l10n_in_hr_payroll
+#: field:hr.contract,house_rent_allowance_metro_nonmetro:0
+msgid "House Rent Allowance (%)"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -894,8 +956,8 @@ msgid "Advice Date is used to search Payslips"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: selection:payment.advice.report,month:0
-msgid "May"
+#: view:hr.payslip.run:0
+msgid "Payslip Batches ready to be Adviced"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
@@ -906,6 +968,8 @@ msgstr ""
 #. module: l10n_in_hr_payroll
 #: view:payment.advice.report:0
 #: field:payment.advice.report,year:0
+#: view:payslip.report:0
+#: field:payslip.report,year:0
 msgid "Year"
 msgstr ""
 
@@ -917,17 +981,19 @@ msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: report:paylip.details.in:0
+#: field:payslip.report,total:0
 #: report:salary.detail.byyear:0
 #: report:salary.employee.bymonth:0
 msgid "Total"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
-#: report:payroll.advice:0
-msgid "form period"
+#: help:hr.contract,house_rent_allowance_metro_nonmetro:0
+msgid "HRA is an allowance given by the employer to the employee for taking care of his rental or accommodation expenses for metro city it is 50 % and for non metro 40%.HRA computed as percentage(%)"
 msgstr ""
 
 #. module: l10n_in_hr_payroll
 #: view:payment.advice.report:0
 msgid "Year of Payment Advices"
 msgstr ""
+

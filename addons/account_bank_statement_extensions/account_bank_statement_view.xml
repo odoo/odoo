@@ -43,10 +43,10 @@
       <field name="arch" type="xml">
         <data>
           <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='date']" position="after">
-            <field name="val_date"/>
-          </xpath>
+            <field name="val_date" invisible="1"/>
+          </xpath> 
           <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-            <field name="globalisation_id" string="Glob. Id"/>
+            <field name="globalisation_id" string="Glob. Id" invisible="1"/>
             <field name="state" invisible="1"/>
           </xpath>
           <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='date']" position="after">
