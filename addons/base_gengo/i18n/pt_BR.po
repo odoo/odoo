@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2012-12-01 11:39+0000\n"
 "Last-Translator: Luiz Fernando M.França <Unknown>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-12-02 04:38+0000\n"
-"X-Generator: Launchpad (build 16319)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:55+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: base_gengo
 #: view:res.company:0
@@ -32,11 +32,6 @@ msgstr ""
 #, python-format
 msgid "This language is not supported by the Gengo translation services."
 msgstr "Este idioma não é suportado pelos serviços de tradução do Gengo"
-
-#. module: base_gengo
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Erro! Você não pode criar empresas recursivas."
 
 #. module: base_gengo
 #: field:res.company,gengo_comment:0
@@ -167,11 +162,6 @@ msgid "Translations"
 msgstr "Traduções"
 
 #. module: base_gengo
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "O nome da empresa deve ser único!"
-
-#. module: base_gengo
 #: field:res.company,gengo_auto_approve:0
 msgid "Auto Approve Translation ?"
 msgstr "Aprovar tradução automaticamente?"
@@ -251,9 +241,10 @@ msgid "Gengo Request Form"
 msgstr "Formulário de pedido Gengo"
 
 #. module: base_gengo
-#: sql_constraint:ir.translation:0
-msgid "Language code of translation item must be among known languages"
-msgstr "O idioma deve estar entre os idiomas conhecidos"
+#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
+#, python-format
+msgid "Warning"
+msgstr "Atenção"
 
 #. module: base_gengo
 #: help:res.company,gengo_comment:0
@@ -268,12 +259,6 @@ msgstr ""
 #: view:base.gengo.translations:0
 msgid "Cancel"
 msgstr "Cancelar"
-
-#. module: base_gengo
-#: code:addons/base_gengo/wizard/base_gengo_translations.py:114
-#, python-format
-msgid "Warning"
-msgstr "Atenção"
 
 #. module: base_gengo
 #: view:base.gengo.translations:0

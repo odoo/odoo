@@ -6,20 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
 "PO-Revision-Date: 2009-02-03 06:25+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-11-25 06:08+0000\n"
-"X-Generator: Launchpad (build 16293)\n"
-
-#. module: project_mrp
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
+"X-Launchpad-Export-Date: 2012-12-04 05:36+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
@@ -30,11 +25,6 @@ msgstr "لكل منتج, على نوع الخدمة وعلى النظام"
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
 msgstr "علامة المنتج هي خدمة, وهي تنشأ المهمة."
-
-#. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! Task end-date must be greater then task start-date"
-msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
 
 #. module: project_mrp
 #: code:addons/project_mrp/project_procurement.py:93
@@ -61,16 +51,6 @@ msgstr "المنتج"
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
 msgstr "اذا كانت علامة المنتج هي ‘خدمة‘ ثم تنشأ المهمنة."
-
-#. module: project_mrp
-#: constraint:project.task:0
-msgid "Error ! You cannot create recursive tasks."
-msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
-
-#. module: project_mrp
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
@@ -133,13 +113,6 @@ msgid "Task created."
 msgstr ""
 
 #. module: project_mrp
-#: constraint:product.product:0
-msgid ""
-"You provided an invalid \"EAN13 Barcode\" reference. You may use the "
-"\"Internal Reference\" field instead."
-msgstr ""
-
-#. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
 msgstr "اذا كانت طريقة الشراء لعمل امر واسلوب العرض هو للانتاج"
@@ -174,11 +147,17 @@ msgstr "في حالة قيامك ببيع الخدمات على حسب ترتي�
 msgid "a task"
 msgstr ""
 
+#~ msgid "Error ! Task end-date must be greater then task start-date"
+#~ msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
+
 #~ msgid "Error: Invalid ean code"
 #~ msgstr "خطأ: كود إين غير صالح"
 
 #~ msgid "Procurement and Project Management integration"
 #~ msgstr "تكامل ادارة المشروع والمشتريات"
+
+#~ msgid "Error ! You cannot create recursive tasks."
+#~ msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
 
 #~ msgid ""
 #~ "\n"
@@ -223,3 +202,6 @@ msgstr ""
 #~ "هذا النموذج هو مفيد لتكون قادرة على فاتورة الخدمات على أساس المهام\n"
 #~ "إنشاؤه تلقائيا عن طريق أوامر بيع.\n"
 #~ "\n"
+
+#~ msgid "Order Reference must be unique per Company!"
+#~ msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"

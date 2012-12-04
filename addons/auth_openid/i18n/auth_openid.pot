@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:52+0000\n"
-"PO-Revision-Date: 2012-11-24 02:52+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
+"PO-Revision-Date: 2012-12-03 16:02+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -40,9 +40,10 @@ msgstr ""
 
 #. module: auth_openid
 #. openerp-web
-#: code:addons/auth_openid/static/src/xml/auth_openid.xml:18
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:9
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:10
 #, python-format
-msgid "Google Apps Domain"
+msgid "Google"
 msgstr ""
 
 #. module: auth_openid
@@ -53,33 +54,15 @@ msgid "Launchpad"
 msgstr ""
 
 #. module: auth_openid
-#: sql_constraint:res.users:0
-msgid "You can not have two users with the same login !"
-msgstr ""
-
-#. module: auth_openid
 #: help:res.users,openid_email:0
 msgid "Used for disambiguation in case of a shared OpenID URL"
 msgstr ""
 
 #. module: auth_openid
-#: sql_constraint:res.users:0
-msgid "OAuth UID must be unique per provider"
-msgstr ""
-
-#. module: auth_openid
-#: field:res.users,openid_key:0
-msgid "OpenID Key"
-msgstr ""
-
-#. module: auth_openid
-#: constraint:res.users:0
-msgid "Error: Invalid ean code"
-msgstr ""
-
-#. module: auth_openid
-#: constraint:res.users:0
-msgid "The chosen company is not in the allowed companies for this user"
+#. openerp-web
+#: code:addons/auth_openid/static/src/xml/auth_openid.xml:18
+#, python-format
+msgid "Google Apps Domain"
 msgstr ""
 
 #. module: auth_openid
@@ -88,8 +71,8 @@ msgid "OpenID Email"
 msgstr ""
 
 #. module: auth_openid
-#: model:ir.model,name:auth_openid.model_res_users
-msgid "Users"
+#: field:res.users,openid_key:0
+msgid "OpenID Key"
 msgstr ""
 
 #. module: auth_openid
@@ -107,10 +90,7 @@ msgid "Google Apps"
 msgstr ""
 
 #. module: auth_openid
-#. openerp-web
-#: code:addons/auth_openid/static/src/xml/auth_openid.xml:9
-#: code:addons/auth_openid/static/src/xml/auth_openid.xml:10
-#, python-format
-msgid "Google"
+#: model:ir.model,name:auth_openid.model_res_users
+msgid "Users"
 msgstr ""
 
