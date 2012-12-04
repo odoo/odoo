@@ -40,7 +40,6 @@ CRM_LEAD_FIELDS_TO_MERGE = ['name',
     'state_id',
     'type_id',
     'user_id',
-    'categ_ids',
     'title',
     'city',
     'contact_name',
@@ -536,6 +535,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         body = []
         if title:
             body.append("%s\n" % (title))
+
         for field_name in fields:
             field_info = self._all_columns.get(field_name)
             if field_info is None:
@@ -556,9 +556,13 @@ class crm_lead(base_stage, format_address, osv.osv):
                 value = lead[field_name]
 
             body.append("%s: %s" % (field.string, value or ''))
+
         return "\n".join(body + ['---'])
 
-    def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
+    def _merge_notify(self, cr, uid, opportunity_id, opportunities, context=None):
+        """
+        Create a message gathering merged leads/opps information.
+        """
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
         result_type = self._merge_get_result_type(cr, uid, opportunities, context)
@@ -643,7 +647,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
 
         # Merge notifications about loss of information
-        self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
+        self._merge_notify(cr, uid, first_opportunity, opportunities, context=context)
         # Write merged data into first opportunity
         self.write(cr, uid, [first_opportunity.id], merged_data, context=context)
         # Delete tail opportunities
