@@ -111,7 +111,6 @@ Dashboard for CRM will include:
         'test/process/lead2opportunity2win.yml',
         'test/process/merge_opportunity.yml',
         'test/process/cancel_lead.yml',
-        'test/process/action_rule.yml',
         'test/process/segmentation.yml',
         'test/process/phonecalls.yml',
         'test/ui/crm_demo.yml',
