@@ -66,7 +66,7 @@ class stock_picking(osv.osv):
                  }),
         'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
         'number_of_packages': fields.integer('Number of Packages'),
-        'product_uom_weight': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
+        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
 
     def _prepare_shipping_invoice_line(self, cr, uid, picking, invoice, context=None):
@@ -135,7 +135,7 @@ class stock_picking(osv.osv):
         return result
 
     _defaults = {
-        'product_uom_weight': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
+        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
     }
 
 stock_picking()
@@ -174,8 +174,13 @@ class stock_move(osv.osv):
                   store={
                  'stock.move': (lambda self, cr, uid, ids, c=None: ids, ['product_id', 'product_qty', 'product_uom'], 20),
                  }),
+        'weight_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
+        'weight_net_uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True,readonly="1",help="Unit of Measure (Unit of Measure) is the unit of measurement for Weight",),
         }
-
+    _defaults = {
+        'weight_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
+        'weight_net_uom_id': lambda self,cr,uid,c: self.pool.get('product.uom').search(cr, uid, [('name', '=', _('kg'))], context=c)[0],
+    }
 stock_move()
 
 # Redefinition of the new fields in order to update the model stock.picking.out in the orm
