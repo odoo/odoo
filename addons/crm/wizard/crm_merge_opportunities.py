@@ -60,8 +60,8 @@ class crm_merge_opportunity(osv.osv_memory):
     def default_get(self, cr, uid, fields, context=None):
         """
         Use active_ids from the context to fetch the leads/opps to merge.
-        In order to get merged, these leads/opps have can't be in 'Done' or
-        'Candel' state.
+        In order to get merged, these leads/opps can't be in 'Done' or
+        'Cancel' state.
         """
         if context is None:
             context = {}
