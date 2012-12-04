@@ -343,9 +343,20 @@ openerp.web_im = function(instance) {
             }
             var mes = this.$("input").val();
             this.$("input").val("");
-            this._add_bubble(this.me, mes, instance.web.datetime_to_str(new Date()));
-            var model = new instance.web.Model("im.message");
-            model.call("post", [mes, this.user.get('id')], {context: new instance.web.CompoundContext()});
+            var send_it = _.bind(function() {
+                var model = new instance.web.Model("im.message");
+                return model.call("post", [mes, this.user.get('id')],
+                    {context: new instance.web.CompoundContext()});
+            }, this);
+            var tries = 0;
+            send_it().then(_.bind(function() {
+                this._add_bubble(this.me, mes, instance.web.datetime_to_str(new Date()));
+            }, this), function(error, e) {
+                e.preventDefault();
+                tries += 1;
+                if (tries < 3)
+                    return send_it();
+            });
         },
         _add_bubble: function(user, item, date) {
             var items = [item];

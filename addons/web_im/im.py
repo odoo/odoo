@@ -128,7 +128,7 @@ class ImportController(openerp.addons.web.http.Controller):
     def poll(self, req, last=None, users_watch=None):
         if not openerp.tools.config.options["gevent"]:
             raise Exception("Not usable in a server not running gevent")
-        res = req.session.model('res.users').im_connect(context=req.context)
+        req.session.model('res.users').im_connect(context=req.context)
         num = 0
         while True:
             res = req.session.model('im.message').get_messages(last, users_watch, req.context)
@@ -144,7 +144,7 @@ class im_message(osv.osv):
     _columns = {
         'message': fields.char(string="Message", size=200, required=True),
         'from': fields.many2one("res.users", "From", required= True, ondelete='cascade'),
-        'to': fields.many2one("res.users", "From", required=True, select=True, ondelete='cascade'),
+        'to': fields.many2one("res.users", "To", required=True, select=True, ondelete='cascade'),
         'date': fields.datetime("Date", required=True),
     }
 
@@ -207,7 +207,7 @@ class res_user(osv.osv):
         cr.commit()
         if current_status != new_one:
             cr.execute("notify im_channel, %s", [json.dumps({'type': 'status', 'user': uid})])
-        cr.commit()
+            cr.commit()
         return True
 
     _columns = {
