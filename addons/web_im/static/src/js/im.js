@@ -102,6 +102,7 @@ openerp.web_im = function(instance) {
             var self = this;
             return this.user_search_dm.add(users.query(["name", "im_status"])
                     .filter([["name", "ilike", this.get("current_search")]])
+                    .filter([["id", "<>", instance.session.uid]])
                     .limit(USERS_LIMIT).all()).then(function(result) {
                 self.add_to_user_cache(result);
                 self.$(".oe_im_input").val("");
