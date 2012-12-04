@@ -184,8 +184,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     order.getSelectedLine().set_quantity(val);
                 }else if( mode === 'discount'){
                     order.getSelectedLine().set_discount(val);
-                }else if( mode === 'list_price'){
-                    order.getSelectedLine().set_list_price(val);
+                }else if( mode === 'price'){
+                    order.getSelectedLine().set_price(val);
                 }
         	} else {
         	    this.pos.get('selectedOrder').destroy();
@@ -711,6 +711,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 if(!isNaN(kg)){
                     self.pos.proxy.debug_set_weight(kg);
                 }
+            });
+            this.$('.button.reset_weight').click(function(){
+                self.pos.proxy.debug_reset_weight();
             });
             this.$('.button.custom_ean').click(function(){
                 var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');

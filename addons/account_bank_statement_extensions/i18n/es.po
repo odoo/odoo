@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-02-09 19:03+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish <es@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:36+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:54+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -57,19 +57,14 @@ msgid "Cancel selected statement lines"
 msgstr "Cancelar las líneas seleccionadas"
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid "The RIB and/or IBAN is not valid"
-msgstr "La CC y/o IBAN no es válido"
+#: field:account.bank.statement.line,val_date:0
+msgid "Value Date"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
 msgid "Group By..."
 msgstr "Agrupar por..."
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,state:0
-msgid "State"
-msgstr "Estado"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -107,19 +102,32 @@ msgid "Batch Payment Info"
 msgstr "Información del pago por lote"
 
 #. module: account_bank_statement_extensions
+#: field:account.bank.statement.line,state:0
+msgid "Status"
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid ""
+"Delete operation not allowed.             Please go to the associated bank "
+"statement in order to delete and/or modify bank statement line."
+msgstr ""
+
+#. module: account_bank_statement_extensions
+#: view:confirm.statement.line:0
+msgid "or"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:confirm.statement.line:0
 msgid "Confirm Lines"
 msgstr "Confirmación de las líneas"
 
 #. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid ""
-"Delete operation not allowed !             Please go to the associated bank "
-"statement in order to delete and/or modify this bank statement line"
-msgstr ""
-"¡La operación de borrado no está permitida! Por favor vaya al extracto "
-"bancario asociado para borrar y/o modificar la línea del extracto."
+#: view:account.bank.statement.line.global:0
+msgid "Transactions"
+msgstr "Transacciones"
 
 #. module: account_bank_statement_extensions
 #: field:account.bank.statement.line.global,type:0
@@ -128,7 +136,6 @@ msgstr "Tipo"
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
-#: field:account.bank.statement.line,journal_id:0
 #: report:bank.statement.balance.report:0
 msgid "Journal"
 msgstr "Diario"
@@ -152,17 +159,6 @@ msgstr "Eliminar las lineas de extracto seleccionadas"
 #: field:account.bank.statement.line,counterparty_number:0
 msgid "Counterparty Number"
 msgstr "Contrapartida"
-
-#. module: account_bank_statement_extensions
-#: view:account.bank.statement.line.global:0
-msgid "Transactions"
-msgstr "Transacciones"
-
-#. module: account_bank_statement_extensions
-#: code:addons/account_bank_statement_extensions/account_bank_statement.py:130
-#, python-format
-msgid "Warning"
-msgstr "Advertencia"
 
 #. module: account_bank_statement_extensions
 #: report:bank.statement.balance.report:0
@@ -196,27 +192,6 @@ msgid "Confirmed lines cannot be changed anymore."
 msgstr "Las líneas confirmadas no pueden ser modificadas."
 
 #. module: account_bank_statement_extensions
-#: constraint:res.partner.bank:0
-msgid ""
-"\n"
-"Please define BIC/Swift code on bank for bank type IBAN Account to make "
-"valid payments"
-msgstr ""
-"\n"
-"Por favor defina el código BIC/Swift del banco para una cuenta de tipo IBAN "
-"para realizar pagos válidos"
-
-#. module: account_bank_statement_extensions
-#: field:account.bank.statement.line,val_date:0
-msgid "Valuta Date"
-msgstr "Fecha de conversión"
-
-#. module: account_bank_statement_extensions
-#: model:ir.actions.act_window,help:account_bank_statement_extensions.action_confirm_statement_line
-msgid "Confirm selected statement lines."
-msgstr "Confirmar las líneas de extracto seleccionadas"
-
-#. module: account_bank_statement_extensions
 #: view:cancel.statement.line:0
 msgid "Are you sure you want to cancel the selected Bank Statement lines ?"
 msgstr ""
@@ -242,6 +217,11 @@ msgstr "Notas"
 #: selection:account.bank.statement.line.global,type:0
 msgid "Manual"
 msgstr "Manual"
+
+#. module: account_bank_statement_extensions
+#: view:account.bank.statement.line:0
+msgid "Bank Transaction"
+msgstr ""
 
 #. module: account_bank_statement_extensions
 #: view:account.bank.statement.line:0
@@ -279,15 +259,6 @@ msgid "Are you sure you want to confirm the selected Bank Statement lines ?"
 msgstr ""
 "¿Está seguro que desea confirmar las líneas del extracto bancario "
 "seleccionadas?"
-
-#. module: account_bank_statement_extensions
-#: constraint:account.bank.statement.line:0
-msgid ""
-"The amount of the voucher must be the same amount as the one on the "
-"statement line"
-msgstr ""
-"El importe del recibo debe ser el mismo importe que el de la línea del "
-"extracto"
 
 #. module: account_bank_statement_extensions
 #: help:account.bank.statement.line,globalisation_id:0
@@ -334,12 +305,6 @@ msgid "Bank Accounts"
 msgstr "Cuentas bancarias"
 
 #. module: account_bank_statement_extensions
-#: constraint:account.bank.statement:0
-msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
-"El diario y periodo seleccionados tienen que pertenecer a la misma compañía."
-
-#. module: account_bank_statement_extensions
 #: model:ir.model,name:account_bank_statement_extensions.model_account_bank_statement
 msgid "Bank Statement"
 msgstr "Extracto bancario"
@@ -362,12 +327,17 @@ msgid "Bank Statement Lines"
 msgstr "Líneas de extracto bancario"
 
 #. module: account_bank_statement_extensions
+#: code:addons/account_bank_statement_extensions/account_bank_statement.py:129
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: account_bank_statement_extensions
 #: view:account.bank.statement.line.global:0
 msgid "Child Batch Payments"
 msgstr "Pagos en lote hijos"
 
 #. module: account_bank_statement_extensions
-#: view:cancel.statement.line:0
 #: view:confirm.statement.line:0
 msgid "Cancel"
 msgstr "Cancelar"
@@ -386,3 +356,47 @@ msgstr "Importe total"
 #: field:account.bank.statement.line,globalisation_id:0
 msgid "Globalisation ID"
 msgstr "ID global"
+
+#~ msgid "The RIB and/or IBAN is not valid"
+#~ msgstr "La CC y/o IBAN no es válido"
+
+#~ msgid "State"
+#~ msgstr "Estado"
+
+#, python-format
+#~ msgid ""
+#~ "Delete operation not allowed !             Please go to the associated bank "
+#~ "statement in order to delete and/or modify this bank statement line"
+#~ msgstr ""
+#~ "¡La operación de borrado no está permitida! Por favor vaya al extracto "
+#~ "bancario asociado para borrar y/o modificar la línea del extracto."
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Advertencia"
+
+#~ msgid "Valuta Date"
+#~ msgstr "Fecha de conversión"
+
+#~ msgid "Confirm selected statement lines."
+#~ msgstr "Confirmar las líneas de extracto seleccionadas"
+
+#~ msgid ""
+#~ "\n"
+#~ "Please define BIC/Swift code on bank for bank type IBAN Account to make "
+#~ "valid payments"
+#~ msgstr ""
+#~ "\n"
+#~ "Por favor defina el código BIC/Swift del banco para una cuenta de tipo IBAN "
+#~ "para realizar pagos válidos"
+
+#~ msgid ""
+#~ "The amount of the voucher must be the same amount as the one on the "
+#~ "statement line"
+#~ msgstr ""
+#~ "El importe del recibo debe ser el mismo importe que el de la línea del "
+#~ "extracto"
+
+#~ msgid "The journal and period chosen have to belong to the same company."
+#~ msgstr ""
+#~ "El diario y periodo seleccionados tienen que pertenecer a la misma compañía."
