@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
+"PO-Revision-Date: 2012-12-03 16:03+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -185,11 +185,6 @@ msgid "Invalid Action!"
 msgstr ""
 
 #. module: procurement
-#: constraint:product.product:0
-msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
-msgstr ""
-
-#. module: procurement
 #: help:procurement.order,message_summary:0
 msgid "Holds the Chatter summary (number of messages, ...). This summary is directly in html format in order to be inserted in kanban views."
 msgstr ""
@@ -261,8 +256,8 @@ msgid "Procurement Orders to Process"
 msgstr ""
 
 #. module: procurement
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
+#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
+msgid "Minimum Inventory Rule"
 msgstr ""
 
 #. module: procurement
@@ -391,11 +386,6 @@ msgid "<p class=\"oe_view_nocontent_create\">\n"
 "                order proposition, manufacturing order, etc.\n"
 "              </p>\n"
 "            "
-msgstr ""
-
-#. module: procurement
-#: field:stock.warehouse.orderpoint,qty_multiple:0
-msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
@@ -575,11 +565,6 @@ msgid "Normal"
 msgstr ""
 
 #. module: procurement
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
-msgstr ""
-
-#. module: procurement
 #: help:product.template,supply_method:0
 msgid "Manufacture: When procuring the product, a manufacturing order or a task will be generated, depending on the product type. \n"
 "Buy: When procuring the product, a purchase order will be generated."
@@ -624,11 +609,6 @@ msgid "Comments and emails"
 msgstr ""
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
-msgstr ""
-
-#. module: procurement
 #: field:procurement.order,date_planned:0
 msgid "Scheduled date"
 msgstr ""
@@ -656,13 +636,8 @@ msgid "Automatic Order Point"
 msgstr ""
 
 #. module: procurement
-#: model:ir.model,name:procurement.model_stock_warehouse_orderpoint
-msgid "Minimum Inventory Rule"
-msgstr ""
-
-#. module: procurement
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
+#: field:stock.warehouse.orderpoint,qty_multiple:0
+msgid "Qty Multiple"
 msgstr ""
 
 #. module: procurement
@@ -699,11 +674,6 @@ msgstr ""
 #. module: procurement
 #: selection:stock.warehouse.orderpoint,logic:0
 msgid "Order to Max"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
 msgstr ""
 
 #. module: procurement
@@ -858,11 +828,6 @@ msgid "Product"
 msgstr ""
 
 #. module: procurement
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
-msgstr ""
-
-#. module: procurement
 #: view:procurement.order:0
 msgid "Temporary"
 msgstr ""
@@ -876,11 +841,6 @@ msgstr ""
 #. module: procurement
 #: selection:procurement.order,priority:0
 msgid "Urgent"
-msgstr ""
-
-#. module: procurement
-#: constraint:product.template:0
-msgid "Error: The default Unit of Measure and the purchase Unit of Measure must be in the same category."
 msgstr ""
 
 #. module: procurement
@@ -923,11 +883,6 @@ msgstr ""
 #. module: procurement
 #: view:procurement.order:0
 msgid "Temporary Procurement Exceptions"
-msgstr ""
-
-#. module: procurement
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
 msgstr ""
 
 #. module: procurement

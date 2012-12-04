@@ -43,8 +43,10 @@ class followup(osv.osv):
 class followup_line(osv.osv):
 
     def _get_default_template(self, cr, uid, ids, context=None):
-        dummy, templ = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')
-        return templ
+        try:
+            return self.pool.get('ir.model.data').get_object_reference(cr, uid, 'account_followup', 'email_template_account_followup_default')[1]
+        except ValueError:
+            return False
 
     _name = 'account_followup.followup.line'
     _description = 'Follow-up Criteria'

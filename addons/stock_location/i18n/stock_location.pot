@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-11-24 02:54+0000\n"
-"PO-Revision-Date: 2012-11-24 02:54+0000\n"
+"POT-Creation-Date: 2012-12-03 16:04+0000\n"
+"PO-Revision-Date: 2012-12-03 16:04+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -66,11 +66,6 @@ msgstr ""
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You must assign a serial number for this product."
 msgstr ""
 
 #. module: stock_location
@@ -143,8 +138,9 @@ msgid "Pulled flows"
 msgstr ""
 
 #. module: stock_location
-#: sql_constraint:product.product:0
-msgid "Error ! Ending Date cannot be set before Beginning Date."
+#: field:product.pulled.flow,company_id:0
+#: field:stock.location.path,company_id:0
+msgid "Company"
 msgstr ""
 
 #. module: stock_location
@@ -215,11 +211,6 @@ msgid "These rules set the right path of the product in the whole location tree.
 msgstr ""
 
 #. module: stock_location
-#: constraint:stock.move:0
-msgid "You cannot move products from or to a location of the type view."
-msgstr ""
-
-#. module: stock_location
 #: selection:stock.location.path,auto:0
 msgid "Manual Operation"
 msgstr ""
@@ -244,11 +235,6 @@ msgstr ""
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
-
-#. module: stock_location
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product."
 msgstr ""
 
 #. module: stock_location
@@ -290,12 +276,6 @@ msgid "Move for pulled procurement coming from original location %s, pull rule %
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,journal_id:0
-#: field:stock.location.path,journal_id:0
-msgid "Journal"
-msgstr ""
-
-#. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
 msgstr ""
@@ -316,11 +296,6 @@ msgstr ""
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
-
-#. module: stock_location
-#: constraint:product.product:0
-msgid "You provided an invalid \"EAN13 Barcode\" reference. You may use the \"Internal Reference\" field instead."
 msgstr ""
 
 #. module: stock_location
@@ -355,9 +330,9 @@ msgid "Location Paths"
 msgstr ""
 
 #. module: stock_location
-#: field:product.pulled.flow,company_id:0
-#: field:stock.location.path,company_id:0
-msgid "Company"
+#: field:product.pulled.flow,journal_id:0
+#: field:stock.location.path,journal_id:0
+msgid "Journal"
 msgstr ""
 
 #. module: stock_location
