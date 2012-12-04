@@ -44,7 +44,7 @@
        % if object.partner_ref:
        &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />
        % endif
-       % if object.user_id:
+       % if object.validator:
        &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
        % endif
     </p>

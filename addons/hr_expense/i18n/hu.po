@@ -6,18 +6,18 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-05-10 17:29+0000\n"
-"Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
-"<openerp@novotrade.hu>\n"
+"Last-Translator: Krisztian Eyssen <krisz@eyssen.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:15+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:37+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: model:process.node,name:hr_expense.process_node_confirmedexpenses0
 msgid "Confirmed Expenses"
 msgstr "Megerősített költségek"
@@ -39,7 +39,8 @@ msgid "Confirmation Date"
 msgstr "Megerősítés dátuma"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
+#: view:hr.expense.expense:0
+#: view:hr.expense.report:0
 msgid "Group By..."
 msgstr "Csoportosítás..."
 
@@ -54,8 +55,10 @@ msgid "Validated By"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,department_id:0
-#: view:hr.expense.report:0 field:hr.expense.report,department_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,department_id:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,department_id:0
 msgid "Department"
 msgstr "Osztály, részleg"
 
@@ -65,17 +68,24 @@ msgid "New Expense"
 msgstr ""
 
 #. module: hr_expense
+#: field:hr.expense.line,uom_id:0
+#: view:product.product:0
+msgid "Unit of Measure"
+msgstr ""
+
+#. module: hr_expense
 #: selection:hr.expense.report,month:0
 msgid "March"
 msgstr "Március"
 
 #. module: hr_expense
-#: field:hr.expense.report,invoiced:0
-msgid "# of Invoiced Lines"
-msgstr "Kiszámlázott sorok száma"
+#: field:hr.expense.expense,message_unread:0
+msgid "Unread Messages"
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.expense,company_id:0 view:hr.expense.report:0
+#: field:hr.expense.expense,company_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,company_id:0
 msgid "Company"
 msgstr "Vállalat"
@@ -96,14 +106,15 @@ msgid "Expenses Statistics"
 msgstr "Költség statisztika"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,day:0
-msgid "Day"
-msgstr "Nap"
+#: view:hr.expense.expense:0
+msgid "Open Receipt"
+msgstr ""
 
 #. module: hr_expense
-#: field:hr.expense.line,uom_id:0 view:product.product:0
-msgid "UoM"
-msgstr "ME"
+#: view:hr.expense.report:0
+#: field:hr.expense.report,day:0
+msgid "Day"
+msgstr "Nap"
 
 #. module: hr_expense
 #: help:hr.expense.expense,date_valid:0
@@ -115,21 +126,24 @@ msgstr ""
 "amikor az elfogadás gombot megnyomják."
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Expenses during current month"
-msgstr ""
-
-#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Notes"
 msgstr "Megjegyzések"
 
 #. module: hr_expense
-#: field:hr.expense.expense,invoice_id:0
-msgid "Employee's Invoice"
-msgstr "Alkalmazotti számla"
+#: field:hr.expense.expense,message_ids:0
+msgid "Messages"
+msgstr ""
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:179
+#: code:addons/hr_expense/hr_expense.py:195
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: hr_expense
+#: model:ir.actions.act_window,name:hr_expense.hr_expense_product
 #: view:product.product:0
 msgid "Products"
 msgstr ""
@@ -152,9 +166,9 @@ msgstr ""
 "állapotba."
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Validation"
-msgstr "Jóváhagyás"
+#: help:hr.expense.expense,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,state:0
@@ -167,7 +181,6 @@ msgid "Accepted"
 msgstr "Elfogadott"
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,ref:0
 #: field:hr.expense.line,ref:0
 msgid "Reference"
 msgstr "Hivatkozás"
@@ -175,6 +188,16 @@ msgstr "Hivatkozás"
 #. module: hr_expense
 #: report:hr.expense:0
 msgid "Certified honest and conform,"
+msgstr ""
+
+#. module: hr_expense
+#: help:hr.expense.expense,state:0
+msgid ""
+"When the expense request is created the status is 'Draft'.\n"
+" It is confirmed by the user and request is sent to admin, the status is "
+"'Waiting Confirmation'.            \n"
+"If the admin accepts it, the status is 'Accepted'.\n"
+" If a receipt is made for the expense request, the status is 'Done'."
 msgstr ""
 
 #. module: hr_expense
@@ -187,9 +210,33 @@ msgstr ""
 "amikor a megerősítés gombot megnyomják."
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,nbr:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,nbr:0
 msgid "# of Lines"
 msgstr "Sorok száma"
+
+#. module: hr_expense
+#: help:hr.expense.expense,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:300
+#, python-format
+msgid "Warning"
+msgstr ""
+
+#. module: hr_expense
+#: report:hr.expense:0
+msgid "(Date and signature)"
+msgstr "(Dátum és aláírás)"
+
+#. module: hr_expense
+#: report:hr.expense:0
+msgid "Total:"
+msgstr "Összesen:"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_refuseexpense0
@@ -200,11 +247,6 @@ msgstr "Költségek elutasítása"
 #: field:hr.expense.report,price_average:0
 msgid "Average Price"
 msgstr "Átlagár"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Total Invoiced Lines"
-msgstr "Összes kiszámlázott tétel"
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -218,12 +260,6 @@ msgid "The accoutant validates the sheet"
 msgstr "A könyvelő jóváhagyja a táblázatot"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:187
-#, python-format
-msgid "The employee's home address must have a partner linked."
-msgstr ""
-
-#. module: hr_expense
 #: field:hr.expense.report,delay_valid:0
 msgid "Delay to Valid"
 msgstr "Jóváhagyási késedelem"
@@ -234,7 +270,15 @@ msgid "Gives the sequence order when displaying a list of expense lines."
 msgstr "Megadja a költségsorok listázási sorrendjét."
 
 #. module: hr_expense
-#: field:hr.expense.line,analytic_account:0 view:hr.expense.report:0
+#: field:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,state:0
+msgid "Status"
+msgstr ""
+
+#. module: hr_expense
+#: field:hr.expense.line,analytic_account:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,analytic_account:0
 msgid "Analytic account"
 msgstr "Gyűjtőkód"
@@ -245,49 +289,38 @@ msgid "Date "
 msgstr "Dátum "
 
 #. module: hr_expense
-#: field:hr.expense.expense,state:0 view:hr.expense.report:0
-#: field:hr.expense.report,state:0
-msgid "State"
-msgstr "Állapot"
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:173
-#, python-format
-msgid ""
-"Please configure Default Expense account for Product purchase, "
-"`property_account_expense_categ`"
-msgstr ""
-"Kérem, állítsa be az alapértelmezett beszerzés főkönyvi számlát a termékre, "
-"`property_account_expense_categ`"
-
-#. module: hr_expense
 #: view:hr.expense.report:0
-msgid "Expenses during last month"
+msgid "Waiting"
+msgstr "Jóváhagyásra váró"
+
+#. module: hr_expense
+#: field:hr.expense.expense,message_follower_ids:0
+msgid "Followers"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0 view:hr.expense.expense:0
-#: field:hr.expense.expense,employee_id:0 view:hr.expense.report:0
+#: report:hr.expense:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,employee_id:0
+#: view:hr.expense.report:0
 msgid "Employee"
 msgstr "Alkalmazott"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 selection:hr.expense.expense,state:0
+#: view:hr.expense.expense:0
+#: selection:hr.expense.expense,state:0
 msgid "New"
 msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Confirmed Expense"
-msgstr ""
-
-#. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.report,product_qty:0
+#: report:hr.expense:0
+#: field:hr.expense.report,product_qty:0
 msgid "Qty"
 msgstr "Menny."
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,price_total:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,price_total:0
 msgid "Total Price"
 msgstr "Összérték"
 
@@ -298,15 +331,14 @@ msgstr ""
 "A költségek egy részét valószínűleg tovább lehet számlázni a vevőknek"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:173
-#: code:addons/hr_expense/hr_expense.py:185
-#: code:addons/hr_expense/hr_expense.py:187
+#: code:addons/hr_expense/hr_expense.py:195
 #, python-format
-msgid "Error !"
-msgstr "Hiba !"
+msgid "The employee must have a home address."
+msgstr ""
 
 #. module: hr_expense
 #: view:board.board:0
+#: view:hr.expense.expense:0
 #: model:ir.actions.act_window,name:hr_expense.action_my_expense
 msgid "My Expenses"
 msgstr "Költségeim"
@@ -332,12 +364,14 @@ msgid "Reimburse expense"
 msgstr "Költségek megtérítése"
 
 #. module: hr_expense
-#: field:hr.expense.expense,journal_id:0 field:hr.expense.report,journal_id:0
+#: field:hr.expense.expense,journal_id:0
+#: field:hr.expense.report,journal_id:0
 msgid "Force Journal"
 msgstr "Napló"
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,no_of_products:0
+#: view:hr.expense.report:0
+#: field:hr.expense.report,no_of_products:0
 msgid "# of Products"
 msgstr "Termékek száma"
 
@@ -352,23 +386,26 @@ msgid "After creating invoice, reimburse expenses"
 msgstr "A költségek megtérítése a számla elkészülte után"
 
 #. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:106
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reimbursement0
 msgid "Reimbursement"
 msgstr "Megtérítés"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "    Month-1    "
-msgstr "    Előző hónap    "
-
-#. module: hr_expense
-#: field:hr.expense.expense,date_valid:0 field:hr.expense.report,date_valid:0
+#: field:hr.expense.expense,date_valid:0
+#: field:hr.expense.report,date_valid:0
 msgid "Validation Date"
 msgstr "Jóváhagyás dátuma"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "My Department"
+#: code:addons/hr_expense/hr_expense.py:225
+#, python-format
+msgid "Expense Receipt"
 msgstr ""
 
 #. module: hr_expense
@@ -379,14 +416,16 @@ msgid "Expenses Analysis"
 msgstr "Költségek elemzése"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.line,expense_id:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.line,expense_id:0
 #: model:ir.model,name:hr_expense.model_hr_expense_expense
 #: model:process.process,name:hr_expense.process_process_expenseprocess0
 msgid "Expense"
 msgstr "Költség"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,line_ids:0
+#: view:hr.expense.expense:0
+#: field:hr.expense.expense,line_ids:0
 #: view:hr.expense.line:0
 msgid "Expense Lines"
 msgstr "Költségtételek"
@@ -407,12 +446,8 @@ msgid "December"
 msgstr "December"
 
 #. module: hr_expense
+#: view:hr.expense.expense:0
 #: view:hr.expense.report:0
-msgid "Invoiced Expenses"
-msgstr ""
-
-#. module: hr_expense
-#: view:hr.expense.expense:0 view:hr.expense.report:0
 #: field:hr.expense.report,month:0
 msgid "Month"
 msgstr "Hónap"
@@ -422,6 +457,16 @@ msgstr "Hónap"
 #: field:hr.expense.report,currency_id:0
 msgid "Currency"
 msgstr "Pénznem"
+
+#. module: hr_expense
+#: field:hr.expense.expense,user_id:0
+msgid "User"
+msgstr "Felhasználó"
+
+#. module: hr_expense
+#: field:hr.expense.expense,voucher_id:0
+msgid "Employee's Receipt"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.expense,state:0
@@ -434,20 +479,17 @@ msgid "Employee encode all his expenses"
 msgstr "Az alkalmazott berögzíti minden költségét"
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
-#: selection:hr.expense.report,state:0
-msgid "Invoiced"
-msgstr "Kiszámlázott"
+#: code:addons/hr_expense/hr_expense.py:300
+#, python-format
+msgid ""
+"Selected Unit of Measure does not belong to the same category as the product "
+"Unit of Measure"
+msgstr ""
 
 #. module: hr_expense
-#: field:product.product,hr_expense_ok:0
-msgid "Can Constitute an Expense"
-msgstr "Elszámolható költségként"
-
-#. module: hr_expense
-#: selection:hr.expense.expense,state:0 selection:hr.expense.report,state:0
-msgid "Reimbursed"
-msgstr "Megtérített"
+#: help:hr.expense.expense,journal_id:0
+msgid "The journal used when the expense is done."
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,note:0
@@ -465,9 +507,12 @@ msgid "Draft"
 msgstr "Tervezet"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Accounting Data"
-msgstr "Könyvelési adatok"
+#: code:addons/hr_expense/hr_expense.py:179
+#, python-format
+msgid ""
+"Please configure Default Expense account for Product purchase: "
+"`property_account_expense_categ`."
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_approveexpense0
@@ -500,9 +545,9 @@ msgid "Draft Expenses"
 msgstr "Jóváhagyásra váró költségek"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "Customer Project"
-msgstr "Vevő projekt"
+#: field:hr.expense.expense,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.product_normal_form_view_installer
@@ -510,7 +555,8 @@ msgid "Review Your Expenses Products"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.expense,date:0
+#: report:hr.expense:0
+#: field:hr.expense.expense,date:0
 #: field:hr.expense.line,date_value:0
 msgid "Date"
 msgstr "Dátum"
@@ -526,14 +572,9 @@ msgid "Extended Filters..."
 msgstr "Kiterjesztett szűrők…"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,user_id:0
-msgid "User"
-msgstr "Felhasználó"
-
-#. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:185
-#, python-format
-msgid "The employee must have a Home address."
+#: field:hr.expense.expense,message_comment_ids:0
+#: help:hr.expense.expense,message_comment_ids:0
+msgid "Comments and emails"
 msgstr ""
 
 #. module: hr_expense
@@ -542,9 +583,25 @@ msgid "October"
 msgstr "Október"
 
 #. module: hr_expense
-#: report:hr.expense:0
-msgid "Total:"
-msgstr "Összesen:"
+#: model:ir.actions.act_window,help:hr_expense.expense_all
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to register new expenses. \n"
+"              </p><p>\n"
+"                OpenERP will ensure the whole process is followed; the "
+"expense\n"
+"                sheet is validated by manager(s), the employee is "
+"reimbursed\n"
+"                from his expenses, some expenses must be re-invoiced to the\n"
+"                customers.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.expense:0
+msgid "Generate Accounting Entries"
+msgstr ""
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -557,6 +614,11 @@ msgid "HR Expenses"
 msgstr "HR költségek"
 
 #. module: hr_expense
+#: field:hr.expense.expense,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_expense
 #: model:product.template,name:hr_expense.car_travel_product_template
 msgid "Car Travel Expenses"
 msgstr ""
@@ -564,6 +626,11 @@ msgstr ""
 #. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Submit to Manager"
+msgstr ""
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+msgid "Done Expenses"
 msgstr ""
 
 #. module: hr_expense
@@ -588,9 +655,9 @@ msgid "Expenses Sheet"
 msgstr "Költségtáblázat"
 
 #. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Waiting"
-msgstr "Jóváhagyásra váró"
+#: field:hr.expense.report,voucher_id:0
+msgid "Receipt"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.report:0
@@ -598,20 +665,28 @@ msgid "Approved Expenses"
 msgstr ""
 
 #. module: hr_expense
-#: report:hr.expense:0 field:hr.expense.line,unit_amount:0
+#: report:hr.expense:0
+#: field:hr.expense.line,unit_amount:0
 msgid "Unit Price"
 msgstr "Egységár"
 
 #. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "References"
-msgstr "Hivatkozások"
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
+#: selection:hr.expense.report,state:0
+msgid "Done"
+msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.report,invoice_id:0
 #: model:process.transition.action,name:hr_expense.process_transition_action_supplierinvoice0
 msgid "Invoice"
 msgstr "Számla"
+
+#. module: hr_expense
+#: view:hr.expense.report:0
+#: field:hr.expense.report,year:0
+msgid "Year"
+msgstr "Év"
 
 #. module: hr_expense
 #: model:process.transition,name:hr_expense.process_transition_reimbursereinvoice0
@@ -619,20 +694,14 @@ msgid "Reinvoice"
 msgstr "Továbbszámlázás"
 
 #. module: hr_expense
-#: view:board.board:0
-#: model:ir.actions.act_window,name:hr_expense.action_employee_expense
-msgid "All Employee Expenses"
-msgstr "Minden dolgozói költség"
-
-#. module: hr_expense
 #: view:hr.expense.expense:0
-msgid "Other Info"
-msgstr "Egyéb információ"
+msgid "Expense Date"
+msgstr ""
 
 #. module: hr_expense
-#: help:hr.expense.expense,journal_id:0
-msgid "The journal used when the expense is invoiced"
-msgstr "A költségek továbbszámlázására használt napló"
+#: field:hr.expense.expense,user_valid:0
+msgid "Validation By"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -678,31 +747,24 @@ msgid ""
 msgstr ""
 
 #. module: hr_expense
-#: selection:hr.expense.expense,state:0 view:hr.expense.report:0
+#: selection:hr.expense.expense,state:0
+#: view:hr.expense.report:0
 #: model:process.node,name:hr_expense.process_node_approved0
 msgid "Approved"
 msgstr "Jóváhagyott"
 
 #. module: hr_expense
-#: code:addons/hr_expense/hr_expense.py:141
-#, python-format
-msgid "Supplier Invoices"
-msgstr ""
-
-#. module: hr_expense
-#: field:hr.expense.line,product_id:0 view:hr.expense.report:0
+#: field:hr.expense.line,product_id:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,product_id:0
 #: model:ir.model,name:hr_expense.model_product_product
 msgid "Product"
 msgstr "Termék"
 
 #. module: hr_expense
+#: report:hr.expense:0
 #: view:hr.expense.expense:0
-msgid "Expenses of My Department"
-msgstr "Osztályom költségei"
-
-#. module: hr_expense
-#: view:hr.expense.expense:0 field:hr.expense.expense,name:0
+#: field:hr.expense.expense,name:0
 #: field:hr.expense.line,description:0
 msgid "Description"
 msgstr "Leírás"
@@ -734,6 +796,11 @@ msgid "Refused"
 msgstr "Elutasított"
 
 #. module: hr_expense
+#: field:product.product,hr_expense_ok:0
+msgid "Can be Expensed"
+msgstr ""
+
+#. module: hr_expense
 #: report:hr.expense:0
 msgid "Ref."
 msgstr "Hiv."
@@ -744,38 +811,15 @@ msgid "Employee's Name"
 msgstr "Alkalmazott neve"
 
 #. module: hr_expense
-#: model:ir.actions.act_window,help:hr_expense.expense_all
-msgid ""
-"The OpenERP expenses management module allows you to track the full flow. "
-"Every month, the employees record their expenses. At the end of the month, "
-"their managers validates the expenses sheets which creates costs on "
-"projects/analytic accounts. The accountant validates the proposed entries "
-"and the employee can be reimbursed. You can also reinvoice the customer at "
-"the end of the flow."
-msgstr ""
-"A rendszer költségtérítés kezelési modulja lehetővé teszi a teljes folyamat "
-"nyomon követését. Minden hónapban az alkalmazottak berögzítik a "
-"költségeiket. A hónap végén a menedzserek jóváhagyják a költségtáblázatokat, "
-"amelyek könyvelési tételeket hoznak létre a projekteken/gyűjtőkódokon. A "
-"könyvelő jóváhagyja a javasolt tételeket és az alkalmazottaknak "
-"megtéríthetik a költségeiket. Ezeket a folyamat végén tovább lehet számlázni "
-"a vevőknek."
-
-#. module: hr_expense
-#: view:hr.expense.expense:0
-msgid "This Month"
-msgstr "Tárgyhó"
-
-#. module: hr_expense
-#: field:hr.expense.expense,user_valid:0 view:hr.expense.report:0
+#: view:hr.expense.report:0
 #: field:hr.expense.report,user_id:0
 msgid "Validation User"
 msgstr "Jóváhagyó felhasználó"
 
 #. module: hr_expense
-#: report:hr.expense:0
-msgid "(Date and signature)"
-msgstr "(Dátum és aláírás)"
+#: view:hr.expense.expense:0
+msgid "Accounting Data"
+msgstr "Könyvelési adatok"
 
 #. module: hr_expense
 #: selection:hr.expense.report,month:0
@@ -786,6 +830,12 @@ msgstr "Február"
 #: report:hr.expense:0
 msgid "Name"
 msgstr "Név"
+
+#. module: hr_expense
+#: code:addons/hr_expense/hr_expense.py:106
+#, python-format
+msgid "You can only delete draft expenses!"
+msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.expense,account_move_id:0
@@ -813,43 +863,24 @@ msgid "Expense Note"
 msgstr "Költség megjegyzés"
 
 #. module: hr_expense
-#: help:hr.expense.expense,state:0
-msgid ""
-"When the expense request is created the state is 'Draft'.\n"
-" It is confirmed by the user and request is sent to admin, the state is "
-"'Waiting Confirmation'.            \n"
-"If the admin accepts it, the state is 'Accepted'.\n"
-" If an invoice is made for the expense request, the state is 'Invoiced'.\n"
-" If the expense is paid to user, the state is 'Reimbursed'."
-msgstr ""
-"Amikor a költségtérítési kérelmet létrehozzák, az állapota 'tervezet'.\n"
-" Ha a felhasználó megerősíti és elküldi az adminisztrátornak, az állapota "
-"'megerősítésre váró'.            \n"
-"Ha az az adminisztrátor elfogadja, 'elfogadott' állapotba kerül.\n"
-" Ha a költségtérítési kérelem alapján számlát készítenek, az állapota "
-"'kiszámlázott'.\n"
-" Ha a költséget visszatérítik a felhasználónak, 'megtérített' állapotba "
-"kerül."
-
-#. module: hr_expense
 #: view:hr.expense.expense:0
 msgid "Approve"
 msgstr "Jóváhagyás"
 
 #. module: hr_expense
-#: view:hr.expense.line:0 field:hr.expense.line,total_amount:0
-msgid "Total"
-msgstr "Összesen"
-
-#. module: hr_expense
-#: view:hr.expense.report:0
-msgid "Expenses during current year"
+#: help:hr.expense.expense,message_ids:0
+msgid "Messages and communication history"
 msgstr ""
 
 #. module: hr_expense
 #: field:hr.expense.line,sequence:0
 msgid "Sequence"
 msgstr "Sorszám"
+
+#. module: hr_expense
+#: model:ir.ui.menu,name:hr_expense.menu_hr_product
+msgid "Types of Expenses"
+msgstr ""
 
 #. module: hr_expense
 #: model:process.transition,note:hr_expense.process_transition_confirmexpense0
@@ -866,14 +897,14 @@ msgid "Expenses"
 msgstr "Költségek"
 
 #. module: hr_expense
-#: constraint:product.product:0
-msgid "Error: Invalid ean code"
-msgstr "Hiba: Helytelen vonalkód"
+#: help:product.product,hr_expense_ok:0
+msgid "Specify if the product can be selected in an HR expense line."
+msgstr ""
 
 #. module: hr_expense
-#: view:hr.expense.report:0 field:hr.expense.report,year:0
-msgid "Year"
-msgstr "Év"
+#: view:hr.expense.expense:0
+msgid "Accounting"
+msgstr ""
 
 #. module: hr_expense
 #: view:hr.expense.expense:0
@@ -881,21 +912,32 @@ msgid "To Approve"
 msgstr "Jóváhagyandó"
 
 #. module: hr_expense
-#: help:product.product,hr_expense_ok:0
-msgid ""
-"Determines if the product can be visible in the list of product within a "
-"selection from an HR expense sheet line."
-msgstr ""
-"Meghatározza, hogy a termék látható-e a humán erőforrás modulban lévő "
-"költségtáblázat sor termék kiválasztási listájában."
+#: view:hr.expense.expense:0
+#: view:hr.expense.line:0
+#: field:hr.expense.line,total_amount:0
+msgid "Total"
+msgstr "Összesen"
 
 #. module: hr_expense
 #: model:process.node,name:hr_expense.process_node_reinvoicing0
 msgid "Reinvoicing"
 msgstr "Továbbszámlázás"
 
+#~ msgid "# of Invoiced Lines"
+#~ msgstr "Kiszámlázott sorok száma"
+
+#~ msgid "UoM"
+#~ msgstr "ME"
+
 #~ msgid "   Month   "
 #~ msgstr "   Hónap   "
+
+#~ msgid "Total Invoiced Lines"
+#~ msgstr "Összes kiszámlázott tétel"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hiba !"
 
 #~ msgid "  Year  "
 #~ msgstr "  Év  "
@@ -906,8 +948,93 @@ msgstr "Továbbszámlázás"
 #~ msgid "Human Resources Expenses Tracking"
 #~ msgstr "HR költségek nyomon követése"
 
+#~ msgid "References"
+#~ msgstr "Hivatkozások"
+
+#~ msgid "Other Info"
+#~ msgstr "Egyéb információ"
+
+#~ msgid "This Month"
+#~ msgstr "Tárgyhó"
+
+#~ msgid "Error: Invalid ean code"
+#~ msgstr "Hiba: Helytelen vonalkód"
+
+#~ msgid "Employee's Invoice"
+#~ msgstr "Alkalmazotti számla"
+
 #~ msgid "Car Travel"
 #~ msgstr "Utazás autóval"
+
+#~ msgid "State"
+#~ msgstr "Állapot"
+
+#~ msgid "Expenses of My Department"
+#~ msgstr "Osztályom költségei"
+
+#~ msgid "Can Constitute an Expense"
+#~ msgstr "Elszámolható költségként"
+
+#~ msgid "The journal used when the expense is invoiced"
+#~ msgstr "A költségek továbbszámlázására használt napló"
+
+#~ msgid ""
+#~ "Determines if the product can be visible in the list of product within a "
+#~ "selection from an HR expense sheet line."
+#~ msgstr ""
+#~ "Meghatározza, hogy a termék látható-e a humán erőforrás modulban lévő "
+#~ "költségtáblázat sor termék kiválasztási listájában."
+
+#~ msgid "Customer Project"
+#~ msgstr "Vevő projekt"
+
+#~ msgid "Validation"
+#~ msgstr "Jóváhagyás"
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Előző hónap    "
+
+#~ msgid "Invoiced"
+#~ msgstr "Kiszámlázott"
+
+#~ msgid "All Employee Expenses"
+#~ msgstr "Minden dolgozói költség"
+
+#~ msgid ""
+#~ "The OpenERP expenses management module allows you to track the full flow. "
+#~ "Every month, the employees record their expenses. At the end of the month, "
+#~ "their managers validates the expenses sheets which creates costs on "
+#~ "projects/analytic accounts. The accountant validates the proposed entries "
+#~ "and the employee can be reimbursed. You can also reinvoice the customer at "
+#~ "the end of the flow."
+#~ msgstr ""
+#~ "A rendszer költségtérítés kezelési modulja lehetővé teszi a teljes folyamat "
+#~ "nyomon követését. Minden hónapban az alkalmazottak berögzítik a "
+#~ "költségeiket. A hónap végén a menedzserek jóváhagyják a költségtáblázatokat, "
+#~ "amelyek könyvelési tételeket hoznak létre a projekteken/gyűjtőkódokon. A "
+#~ "könyvelő jóváhagyja a javasolt tételeket és az alkalmazottaknak "
+#~ "megtéríthetik a költségeiket. Ezeket a folyamat végén tovább lehet számlázni "
+#~ "a vevőknek."
+
+#~ msgid "Reimbursed"
+#~ msgstr "Megtérített"
+
+#~ msgid ""
+#~ "When the expense request is created the state is 'Draft'.\n"
+#~ " It is confirmed by the user and request is sent to admin, the state is "
+#~ "'Waiting Confirmation'.            \n"
+#~ "If the admin accepts it, the state is 'Accepted'.\n"
+#~ " If an invoice is made for the expense request, the state is 'Invoiced'.\n"
+#~ " If the expense is paid to user, the state is 'Reimbursed'."
+#~ msgstr ""
+#~ "Amikor a költségtérítési kérelmet létrehozzák, az állapota 'tervezet'.\n"
+#~ " Ha a felhasználó megerősíti és elküldi az adminisztrátornak, az állapota "
+#~ "'megerősítésre váró'.            \n"
+#~ "Ha az az adminisztrátor elfogadja, 'elfogadott' állapotba kerül.\n"
+#~ " Ha a költségtérítési kérelem alapján számlát készítenek, az állapota "
+#~ "'kiszámlázott'.\n"
+#~ " Ha a költséget visszatérítik a felhasználónak, 'megtérített' állapotba "
+#~ "kerül."
 
 #~ msgid ""
 #~ "\n"
@@ -940,3 +1067,11 @@ msgstr "Továbbszámlázás"
 #~ "    kimutatás alapján történő számlázás modullal, így Ön automatikusan\n"
 #~ "    továbbszámlázhatja a projekt költségeit a vevőknek.\n"
 #~ "    "
+
+#, python-format
+#~ msgid ""
+#~ "Please configure Default Expense account for Product purchase, "
+#~ "`property_account_expense_categ`"
+#~ msgstr ""
+#~ "Kérem, állítsa be az alapértelmezett beszerzés főkönyvi számlát a termékre, "
+#~ "`property_account_expense_categ`"

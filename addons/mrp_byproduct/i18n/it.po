@@ -6,167 +6,99 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-12-03 16:03+0000\n"
 "PO-Revision-Date: 2011-01-12 20:27+0000\n"
 "Last-Translator: OpenERP Administrators <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-19 05:25+0000\n"
-"X-Generator: Launchpad (build 16165)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:43+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
-#. module: mrp_subproduct
-#: field:mrp.subproduct,product_id:0
-msgid "Product"
-msgstr "Prodotto"
-
-#. module: mrp_subproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Fixed"
-msgstr "Fissato"
-
-#. module: mrp_subproduct
-#: sql_constraint:mrp.bom:0
-msgid ""
-"All product quantities must be greater than 0.\n"
-"You should install the mrp_subproduct module if you want to manage extra "
-"products on BoMs !"
-msgstr ""
-"Tutte le quantità prodotto devono essere maggiori di 0.\n"
-"Dovreste installare il modulo mrp_subproducts se volete gestire prodotti "
-"extra nelle distinte base!"
-
-#. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "sub products"
-msgstr "Sotto Prodotti"
-
-#. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_production
-msgid "Manufacturing Order"
-msgstr "Ordini di Produzione"
-
-#. module: mrp_subproduct
-#: constraint:mrp.bom:0
-msgid "BoM line product should not be same as BoM product."
-msgstr ""
-
-#. module: mrp_subproduct
-#: view:mrp.bom:0
-msgid "Sub Products"
-msgstr "Sotto prodotti"
-
-#. module: mrp_subproduct
-#: field:mrp.subproduct,subproduct_type:0
-msgid "Quantity Type"
-msgstr "Tipi di Quantità"
-
-#. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_bom
-msgid "Bill of Material"
-msgstr "Distinta base"
-
-#. module: mrp_subproduct
-#: field:mrp.subproduct,product_qty:0
-msgid "Product Qty"
-msgstr "Qtà Prodotto"
-
-#. module: mrp_subproduct
-#: field:mrp.subproduct,product_uom:0
-msgid "Product UOM"
-msgstr "Unità di Misura del Prodotto"
-
-#. module: mrp_subproduct
-#: field:mrp.subproduct,bom_id:0
-msgid "BoM"
-msgstr "Distinta base"
-
-#. module: mrp_subproduct
-#: sql_constraint:mrp.production:0
-msgid "Reference must be unique per Company!"
-msgstr ""
-
-#. module: mrp_subproduct
-#: field:mrp.bom,sub_products:0
-msgid "sub_products"
-msgstr "sub_products"
-
-#. module: mrp_subproduct
-#: selection:mrp.subproduct,subproduct_type:0
-msgid "Variable"
-msgstr "Variabile"
-
-#. module: mrp_subproduct
-#: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
-msgid "Sub Product"
-msgstr "Sotto Prodotto"
-
-#. module: mrp_subproduct
-#: constraint:mrp.production:0
-msgid "Order quantity cannot be negative or zero!"
-msgstr ""
-
-#. module: mrp_subproduct
+#. module: mrp_byproduct
 #: help:mrp.subproduct,subproduct_type:0
 msgid ""
-"Define how the quantity of subproducts will be set on the production orders "
+"Define how the quantity of byproducts will be set on the production orders "
 "using this BoM.  'Fixed' depicts a situation where the quantity of created "
-"subproduct is always equal to the quantity set on the BoM, regardless of how "
+"byproduct is always equal to the quantity set on the BoM, regardless of how "
 "many are created in the production order.  By opposition, 'Variable' means "
-"that the quantity will be computed as    '(quantity of subproduct set on the "
+"that the quantity will be computed as    '(quantity of byproduct set on the "
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
 
-#. module: mrp_subproduct
-#: constraint:mrp.bom:0
-msgid "Error ! You cannot create recursive BoM."
+#. module: mrp_byproduct
+#: field:mrp.subproduct,product_id:0
+msgid "Product"
+msgstr "Prodotto"
+
+#. module: mrp_byproduct
+#: field:mrp.subproduct,product_uom:0
+msgid "Product Unit of Measure"
 msgstr ""
 
-#~ msgid ""
-#~ "The Object name must start with x_ and not contain any special character !"
-#~ msgstr ""
-#~ "Il nome dell'oggetto deve iniziare per x_ e non deve contenere caratteri "
-#~ "speciali!"
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "Ordini di Produzione"
 
-#~ msgid "Mrp Sub Product"
-#~ msgstr "MRP Sotto Prodotti"
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_change_production_qty
+msgid "Change Quantity of Products"
+msgstr ""
 
-#~ msgid "MRP Sub Product"
-#~ msgstr "MRP Sotto Prodotto"
+#. module: mrp_byproduct
+#: view:mrp.bom:0
+#: field:mrp.bom,sub_products:0
+msgid "Byproducts"
+msgstr ""
 
-#~ msgid ""
-#~ "MRP Sub Product - To produce several products from one production order"
-#~ msgstr ""
-#~ "MRP Sub Product - Produzione di n prodotti da un singolo ordine di produzione"
+#. module: mrp_byproduct
+#: field:mrp.subproduct,subproduct_type:0
+msgid "Quantity Type"
+msgstr "Tipi di Quantità"
 
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "XML non valido per l'Achitettura della Vista"
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_bom
+msgid "Bill of Material"
+msgstr "Distinta base"
 
-#~ msgid ""
-#~ "\n"
-#~ "This module allows you to produce several products from one production "
-#~ "order.\n"
-#~ "You can configure sub-products in the bill of material.\n"
-#~ "Without this module:\n"
-#~ "    A + B + C -> D\n"
-#~ "With this module:\n"
-#~ "    A + B + C -> D + E\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "Questo modulo permette di produrre parecchi articoli da un ordine di "
-#~ "produzione.\n"
-#~ "E' possibile configurare sotto prodotti nella distinta base dei materiali.\n"
-#~ "Senza questo modulo:\n"
-#~ "    A + B + C -> D\n"
-#~ "Con questo modulo:\n"
-#~ "    A + B + C -> D + E\n"
-#~ "    "
+#. module: mrp_byproduct
+#: field:mrp.subproduct,product_qty:0
+msgid "Product Qty"
+msgstr "Qtà Prodotto"
 
-#~ msgid "Order quantity cannot be negative or zero !"
-#~ msgstr "La quantità ordinata non può essere negativa o zero !"
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:62
+#, python-format
+msgid "Warning"
+msgstr ""
 
-#~ msgid "Error ! You can not create recursive BoM."
-#~ msgstr "Errore! Non è possibile creare distinte base ricorsive."
+#. module: mrp_byproduct
+#: field:mrp.subproduct,bom_id:0
+msgid "BoM"
+msgstr "Distinta base"
+
+#. module: mrp_byproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Variable"
+msgstr "Variabile"
+
+#. module: mrp_byproduct
+#: selection:mrp.subproduct,subproduct_type:0
+msgid "Fixed"
+msgstr "Fissato"
+
+#. module: mrp_byproduct
+#: code:addons/mrp_byproduct/mrp_byproduct.py:62
+#, python-format
+msgid ""
+"The Product Unit of Measure you chose has a different category than in the "
+"product form."
+msgstr ""
+
+#. module: mrp_byproduct
+#: model:ir.model,name:mrp_byproduct.model_mrp_subproduct
+msgid "Byproduct"
+msgstr ""

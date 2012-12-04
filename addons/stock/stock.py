@@ -730,7 +730,7 @@ class stock_picking(osv.osv):
                 model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
         return super(stock_picking,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
-    def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
+    def onchange_partner_in(self, cr, uid, ids, partner_id=None, context=None):
         return {}
 
     def action_explode(self, cr, uid, moves, context=None):
@@ -1023,8 +1023,10 @@ class stock_picking(osv.osv):
             partner = self.pool.get('res.partner').browse(cr, uid, partner, context=context)
         if inv_type in ('out_invoice', 'out_refund'):
             account_id = partner.property_account_receivable.id
+            payment_term = partner.property_payment_term.id or False
         else:
             account_id = partner.property_account_payable.id
+            payment_term = partner.property_supplier_payment_term.id or False
         comment = self._get_comment_invoice(cr, uid, picking)
         invoice_vals = {
             'name': picking.name,
@@ -1033,7 +1035,7 @@ class stock_picking(osv.osv):
             'account_id': account_id,
             'partner_id': partner.id,
             'comment': comment,
-            'payment_term': partner.property_payment_term and partner.property_payment_term.id or False,
+            'payment_term': payment_term,
             'fiscal_position': partner.property_account_position.id,
             'date_invoice': context.get('date_inv', False),
             'company_id': picking.company_id.id,
@@ -1845,7 +1847,7 @@ class stock_move(osv.osv):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
                         raise osv.except_osv(_('Operation forbidden !'),
-                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
+                                             _('Quantities, Units of Measure, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
