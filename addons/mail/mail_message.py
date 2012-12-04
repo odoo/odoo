@@ -575,12 +575,15 @@ class mail_message(osv.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
         partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
-
         # Read mail_message.ids to have their values
         message_values = dict.fromkeys(ids)
         model_record_ids = {}
         cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
         for id, rmod, rid, author_id in cr.fetchall():
+            if partner_id != author_id:
+                raise orm.except_orm(_('Access Denied'),
+                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                            (self._description, operation))
             message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
             if rmod:
                 model_record_ids.setdefault(rmod, dict()).setdefault(rid, set()).add(id)
@@ -643,9 +646,6 @@ class mail_message(osv.Model):
         other_ids = other_ids - set(document_related_ids)
         if not other_ids:
             return
-        raise orm.except_orm(_('Access Denied'),
-                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                            (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
