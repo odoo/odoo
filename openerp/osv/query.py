@@ -102,7 +102,7 @@ class Query(object):
         tables_to_process = list(self.tables)
 
         def add_joins_for_table(table, query_from):
-            for (dest_table, lhs_col, col, join) in self.joins.get(table,[]):
+            for (dest_table, lhs_col, col, join) in self.joins.get(table, []):
                 tables_to_process.remove(dest_table)
                 query_from += ' %s %s ON (%s."%s" = %s."%s")' % \
                     (join, dest_table, table, lhs_col, dest_table, col)
@@ -114,7 +114,7 @@ class Query(object):
             if table in self.joins:
                 query_from = add_joins_for_table(table, query_from)
             query_from += ','
-        query_from = query_from[:-1] # drop last comma
+        query_from = query_from[:-1]  # drop last comma
         return (query_from, " AND ".join(self.where_clause), self.where_clause_params)
 
     def __str__(self):

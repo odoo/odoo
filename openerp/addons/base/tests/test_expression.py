@@ -92,7 +92,30 @@ class test_expression(common.TransactionCase):
         # self.assertTrue(a not in with_any_other_than_a, "Search for category_id with any other than cat_a failed (1).")
         # self.assertTrue(ab in with_any_other_than_a, "Search for category_id with any other than cat_a failed (2).")
 
-    def test_10_auto_join(self):
+    def test_10_expression_parse(self):
+        # TDE note: those tests have been added when refactoring the expression.parse() method.
+        # They come in addition to the already existing test_osv_expression.yml; maybe some tests
+        # will be a bit redundant
+        registry, cr, uid = self.registry, self.cr, self.uid
+        users_obj = registry('res.users')
+
+        # Create users
+        a = users_obj.create(cr, uid, {'name': 'test_A', 'login': 'test_A'})
+        b1 = users_obj.create(cr, uid, {'name': 'test_B', 'login': 'test_B'})
+        b1_user = users_obj.browse(cr, uid, [b1])[0]
+        b2 = users_obj.create(cr, uid, {'name': 'test_B2', 'login': 'test_B2', 'parent_id': b1_user.partner_id.id})
+
+        # Test1: simple inheritance
+        user_ids = users_obj.search(cr, uid, [('name', 'like', 'test')])
+        self.assertEqual(set(user_ids), set([a, b1, b2]), 'searching through inheritance failed')
+        user_ids = users_obj.search(cr, uid, [('name', '=', 'test_B')])
+        self.assertEqual(set(user_ids), set([b1]), 'searching through inheritance failed')
+
+        # Test2: inheritance + relational fields
+        user_ids = users_obj.search(cr, uid, [('child_ids.name', 'like', 'test_B')])
+        self.assertEqual(set(user_ids), set([b1]), 'searching through inheritance failed')
+
+    def test_20_auto_join(self):
         registry, cr, uid = self.registry, self.cr, self.uid
 
         # Get models
@@ -132,6 +155,9 @@ class test_expression(common.TransactionCase):
         # Do: one2many without _auto_join
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('bank_ids.name', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result
         self.assertEqual(set(partner_ids), set([p_aa]),
             "_auto_join off: ('bank_ids.name', 'like', '..'): incorrect result")
@@ -141,14 +167,14 @@ class test_expression(common.TransactionCase):
         sql_query = self.query_list[0].get_sql()
         self.assertIn('res_partner_bank', sql_query[0],
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect main table")
-        self.assertIn('res_partner_bank."name" like %s', sql_query[1],
+        self.assertIn('"res_partner_bank"."name" like %s', sql_query[1],
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect where condition")
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
             "_auto_join off: ('bank_ids.name', 'like', '..') first query incorrect parameter")
         sql_query = self.query_list[2].get_sql()
         self.assertIn('res_partner', sql_query[0],
             "_auto_join off: ('bank_ids.name', 'like', '..') third query incorrect main table")
-        self.assertIn('res_partner."id" in (%s)', sql_query[1],
+        self.assertIn('"res_partner"."id" in (%s)', sql_query[1],
             "_auto_join off: ('bank_ids.name', 'like', '..') third query incorrect where condition")
         self.assertEqual(set([p_aa]), set(sql_query[2]),
             "_auto_join off: ('bank_ids.name', 'like', '..') third query incorrect parameter")
@@ -156,6 +182,9 @@ class test_expression(common.TransactionCase):
         # Do: cascaded one2many without _auto_join
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('child_ids.bank_ids.id', 'in', [b_aa, b_ba])])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result
         self.assertEqual(set(partner_ids), set([p_a, p_b]),
             "_auto_join off: ('child_ids.bank_ids.id', 'in', [..]): incorrect result")
@@ -167,6 +196,8 @@ class test_expression(common.TransactionCase):
         partner_bank_ids_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('bank_ids.name', 'like', 'test_a')])
+        # for query in self.query_list:
+        #     print query
         # Test result
         self.assertEqual(set(partner_ids), set([p_aa]),
             "_auto_join on: ('bank_ids.name', 'like', '..') incorrect result")
@@ -178,9 +209,9 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect main table")
         self.assertIn('"res_partner_bank" as res_partner__bank_ids', sql_query[0],
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect join")
-        self.assertIn('res_partner__bank_ids."name" like %s', sql_query[1],
+        self.assertIn('"res_partner__bank_ids"."name" like %s', sql_query[1],
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect where condition")
-        self.assertIn('res_partner__bank_ids."partner_id"=res_partner."id"', sql_query[1],
+        self.assertIn('res_partner."id"=res_partner__bank_ids."partner_id"', sql_query[1],
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect join condition")
         self.assertEqual(set(['%' + name_test + '%']), set(sql_query[2]),
             "_auto_join on: ('bank_ids.name', 'like', '..') query incorrect parameter")
@@ -188,6 +219,9 @@ class test_expression(common.TransactionCase):
         # Do: one2many with _auto_join, test final leaf is an id
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('bank_ids.id', 'in', [b_aa, b_ab])])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result
         self.assertEqual(set(partner_ids), set([p_aa, p_ab]),
             "_auto_join on: ('bank_ids.id', 'in', [..]) incorrect result")
@@ -199,9 +233,9 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect main table")
         self.assertIn('"res_partner_bank" as res_partner__bank_ids', sql_query[0],
             "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect join")
-        self.assertIn('res_partner__bank_ids."id" in (%s,%s)', sql_query[1],
+        self.assertIn('"res_partner__bank_ids"."id" in (%s,%s)', sql_query[1],
             "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect where condition")
-        self.assertIn('res_partner__bank_ids."partner_id"=res_partner."id"', sql_query[1],
+        self.assertIn('res_partner."id"=res_partner__bank_ids."partner_id"', sql_query[1],
             "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect join condition")
         self.assertEqual(set([b_aa, b_ab]), set(sql_query[2]),
             "_auto_join on: ('bank_ids.id', 'in', [..]) query incorrect parameter")
@@ -210,6 +244,9 @@ class test_expression(common.TransactionCase):
         partner_child_ids_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('child_ids.bank_ids.id', 'in', [b_aa, b_ba])])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result
         self.assertEqual(set(partner_ids), set([p_a, p_b]),
             "_auto_join on: ('child_ids.bank_ids.id', 'not in', [..]): incorrect result")
@@ -223,11 +260,11 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join")
         self.assertIn('"res_partner_bank" as res_partner__child_ids__bank_ids', sql_query[0],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join")
-        self.assertIn('res_partner__child_ids__bank_ids."id" in (%s,%s)', sql_query[1],
+        self.assertIn('"res_partner__child_ids__bank_ids"."id" in (%s,%s)', sql_query[1],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect where condition")
-        self.assertIn('res_partner__child_ids."parent_id"=res_partner."id"', sql_query[1],
+        self.assertIn('res_partner."id"=res_partner__child_ids."parent_id"', sql_query[1],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
-        self.assertIn('res_partner__child_ids__bank_ids."partner_id"=res_partner__child_ids."id"', sql_query[1],
+        self.assertIn('res_partner__child_ids."id"=res_partner__child_ids__bank_ids."partner_id"', sql_query[1],
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect join condition")
         self.assertEqual(set([b_aa, b_ba]), set(sql_query[2]),
             "_auto_join on: ('child_ids.bank_ids.id', 'in', [..]) query incorrect parameter")
@@ -241,6 +278,9 @@ class test_expression(common.TransactionCase):
         # Do: many2one without _auto_join
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b, p_aa, p_ab, p_ba]).issubset(set(partner_ids)),
             "_auto_join off: ('state_id.country_id.code', 'like', '..') incorrect result")
@@ -252,6 +292,9 @@ class test_expression(common.TransactionCase):
         partner_state_id_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b, p_aa, p_ab, p_ba]).issubset(set(partner_ids)),
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') incorrect result")
@@ -261,7 +304,7 @@ class test_expression(common.TransactionCase):
         sql_query = self.query_list[0].get_sql()
         self.assertIn('"res_country"', sql_query[0],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect main table")
-        self.assertIn('res_country."code" like %s', sql_query[1],
+        self.assertIn('"res_country"."code" like %s', sql_query[1],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect parameter")
@@ -270,9 +313,9 @@ class test_expression(common.TransactionCase):
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect main table")
         self.assertIn('"res_country_state" as res_partner__state_id', sql_query[0],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join")
-        self.assertIn('res_partner__state_id."country_id" in (%s)', sql_query[1],
+        self.assertIn('"res_partner__state_id"."country_id" in (%s)', sql_query[1],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect where condition")
-        self.assertIn('(res_partner__state_id."id"=res_partner."state_id"', sql_query[1],
+        self.assertIn('res_partner."state_id"=res_partner__state_id."id"', sql_query[1],
             "_auto_join on for state_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect join condition")
 
         # Do: many2one with 1 _auto_join on the second many2one
@@ -280,6 +323,9 @@ class test_expression(common.TransactionCase):
         state_country_id_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b, p_aa, p_ab, p_ba]).issubset(set(partner_ids)),
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') incorrect result")
@@ -292,9 +338,9 @@ class test_expression(common.TransactionCase):
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect main table")
         self.assertIn('"res_country" as res_country_state__country_id', sql_query[0],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join")
-        self.assertIn('res_country_state__country_id."code" like %s', sql_query[1],
+        self.assertIn('"res_country_state__country_id"."code" like %s', sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect where condition")
-        self.assertIn('res_country_state__country_id."id"=res_country_state."country_id"', sql_query[1],
+        self.assertIn('res_country_state."country_id"=res_country_state__country_id."id"', sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect join condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 1 incorrect parameter")
@@ -302,7 +348,7 @@ class test_expression(common.TransactionCase):
         sql_query = self.query_list[1].get_sql()
         self.assertIn('"res_partner"', sql_query[0],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect main table")
-        self.assertIn('res_partner."state_id" in', sql_query[1],
+        self.assertIn('"res_partner"."state_id" in', sql_query[1],
             "_auto_join on for country_id: ('state_id.country_id.code', 'like', '..') query 2 incorrect where condition")
 
         # Do: many2one with 2 _auto_join
@@ -310,6 +356,8 @@ class test_expression(common.TransactionCase):
         state_country_id_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b, p_aa, p_ab, p_ba]).issubset(set(partner_ids)),
             "_auto_join on: ('state_id.country_id.code', 'like', '..') incorrect result")
@@ -323,11 +371,11 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join")
         self.assertIn('"res_country" as res_partner__state_id__country_id', sql_query[0],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join")
-        self.assertIn('res_partner__state_id__country_id."code" like %s', sql_query[1],
+        self.assertIn('"res_partner__state_id__country_id"."code" like %s', sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect where condition")
-        self.assertIn('res_partner__state_id."id"=res_partner."state_id"', sql_query[1],
+        self.assertIn('res_partner."state_id"=res_partner__state_id."id"', sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
-        self.assertIn('res_partner__state_id__country_id."id"=res_partner__state_id."country_id"', sql_query[1],
+        self.assertIn('res_partner__state_id."country_id"=res_partner__state_id__country_id."id"', sql_query[1],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect join condition")
         self.assertEqual(['%' + name_test + '%'], sql_query[2],
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect parameter")
@@ -345,6 +393,9 @@ class test_expression(common.TransactionCase):
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') without _auto_join
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('child_ids.state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b]).issubset(set(partner_ids)),
             "_auto_join off: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
@@ -358,6 +409,9 @@ class test_expression(common.TransactionCase):
         state_country_id_col._auto_join = True
         self._reinit_mock()
         partner_ids = partner_obj.search(cr, uid, [('child_ids.state_id.country_id.code', 'like', name_test)])
+        for query in self.query_list:
+            print query
+        print '----------------------'
         # Test result: at least our added data + demo data
         self.assertTrue(set([p_a, p_b]).issubset(set(partner_ids)),
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') incorrect result")
@@ -365,12 +419,12 @@ class test_expression(common.TransactionCase):
         self.assertEqual(len(self.query_list), 1,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
-        # Remove mocks and modifications
-        partner_bank_ids_col._auto_join = False
-        partner_child_ids_col._auto_join = False
-        partner_state_id_col._auto_join = False
-        state_country_id_col._auto_join = False
-        BaseModel._where_calc = self._base_model_where_calc
+        # # Remove mocks and modifications
+        # partner_bank_ids_col._auto_join = False
+        # partner_child_ids_col._auto_join = False
+        # partner_state_id_col._auto_join = False
+        # state_country_id_col._auto_join = False
+        # BaseModel._where_calc = self._base_model_where_calc
 
 if __name__ == '__main__':
     unittest2.main()

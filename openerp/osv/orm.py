@@ -2721,10 +2721,9 @@ class BaseModel(object):
         parent_table_name = parent_model._table
         quoted_parent_table_name = '"%s"' % parent_table_name
         if quoted_parent_table_name not in query.tables:
+            print '--> _inheratis_join_add adding %s' % (quoted_parent_table_name)
             query.tables.append(quoted_parent_table_name)
             query.where_clause.append('(%s.%s = %s.id)' % (current_table._table, inherits_field, parent_table_name))
-
-
 
     def _inherits_join_calc(self, field, query):
         """
@@ -4658,8 +4657,10 @@ class BaseModel(object):
                 query.where_clause += added_clause
                 query.where_clause_params += added_params
                 for table in added_tables:
-                    if table not in query.tables:
-                        query.tables.append(table)
+                    quoted_table_name = '%s' % (table)
+                    if quoted_table_name not in query.tables:
+                        print '--> apply_rule adding %s' % quoted_table_name
+                        query.tables.append(quoted_table_name)
                 return True
             return False
 
