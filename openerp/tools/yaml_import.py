@@ -350,39 +350,41 @@ class YamlInterpreter(object):
             return one2many_view
 
         def process_val(key, val):
-            if fg[key]['type']=='many2one':
+            if fg[key]['type'] == 'many2one':
                 if type(val) in (tuple,list):
                     val = val[0]
-            elif (fg[key]['type']=='one2many'):
-                if val is False:
-                    val = []
-                if len(val) and type(val[0]) == dict:
-                    #we want to return only the fields that aren't readonly
-                    #For that, we need to first get the right tree view to consider for the field `key´
+            elif fg[key]['type'] == 'one2many':
+                if val and isinstance(val, (list,tuple)) and isinstance(val[0], dict):
+                    # we want to return only the fields that aren't readonly
+                    # For that, we need to first get the right tree view to consider for the field `key´
                     one2many_tree_view = _get_right_one2many_view(fg, key, 'tree')
+                    arch = etree.fromstring(one2many_tree_view['arch'].encode('utf-8'))
                     for rec in val:
-                        #make a copy for the iteration, as we will alterate the size of `rec´ dictionary
+                        # make a copy for the iteration, as we will alter `rec´
                         rec_copy = rec.copy()
                         for field_key in rec_copy:
-                            #seek in the view for the field `field_key´ and removing it from `key´ values, as this column is readonly in the tree view
-                            subfield_obj = etree.fromstring(one2many_tree_view['arch'].encode('utf-8')).xpath("//field[@name='%s']"%(field_key))
-                            if subfield_obj and (subfield_obj[0].get('modifiers', '{}').find('"readonly": true') >= 0):
-                                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
-                                del(rec[field_key])
-
-                    #now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
+                            # if field is missing in view or has a readonly modifier, drop it
+                            field_elem = arch.xpath("//field[@name='%s']" % field_key)
+                            if field_elem and (field_elem[0].get('modifiers', '{}').find('"readonly": true') >= 0):
+                                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                                del rec[field_key]
+                    # now that unwanted values have been removed from val, we can encapsulate it in a tuple as returned value
                     val = map(lambda x: (0,0,x), val)
+            elif fg[key]['type'] == 'many2many':
+                if val and isinstance(val,(list,tuple)) and isinstance(val[0], (int,long)):
+                    val = [(6,0,val)]
 
-            #we want to return only the fields that aren't readonly
+            # we want to return only the fields that aren't readonly
             if el.get('modifiers', '{}').find('"readonly": true') >= 0:
-                #TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
-                #order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
+                # TODO: currently we only support if readonly is True in the modifiers. Some improvement may be done in 
+                # order to support also modifiers that look like {"readonly": [["state", "not in", ["draft", "confirm"]]]}
                 return False
+
             return val
 
         if view_info:
-            arch = etree.fromstring(view_info['arch'].encode('utf-8'))
+            arch = etree.fromstring(view_info['arch'].decode('utf-8'))
             view = arch if len(arch) else False
         else:
             view = False

@@ -153,7 +153,7 @@ class res_users(osv.osv):
             help="Specify a value only when creating a user or if you're "\
                  "changing the user's password, otherwise leave empty. After "\
                  "a change of password, the user has to login again."),
-        'signature': fields.text('Signature', size=64),
+        'signature': fields.text('Signature'),
         'active': fields.boolean('Active'),
         'action_id': fields.many2one('ir.actions.actions', 'Home Action', help="If specified, this action will be opened at logon for this user, in addition to the standard menu."),
         'menu_id': fields.many2one('ir.actions.actions', 'Menu Action', help="If specified, the action will replace the standard menu for this user."),
@@ -343,7 +343,7 @@ class res_users(osv.osv):
         for k in self._all_columns.keys():
             if k.startswith('context_'):
                 context_key = k[8:]
-            elif k in ['lang', 'tz', 'tz_offset']:
+            elif k in ['lang', 'tz']:
                 context_key = k
             else:
                 context_key = False

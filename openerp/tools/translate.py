@@ -167,18 +167,21 @@ class GettextAlias(object):
         if db_name:
             return sql_db.db_connect(db_name)
 
-    def _get_cr(self, frame):
+    def _get_cr(self, frame, allow_create=True):
         is_new_cr = False
         cr = frame.f_locals.get('cr', frame.f_locals.get('cursor'))
         if not cr:
             s = frame.f_locals.get('self', {})
             cr = getattr(s, 'cr', None)
-        if not cr:
+        if not cr and allow_create:
             db = self._get_db()
             if db:
                 cr = db.cursor()
                 is_new_cr = True
         return cr, is_new_cr
+
+    def _get_uid(self, frame):
+        return frame.f_locals.get('uid') or frame.f_locals.get('user')
 
     def _get_lang(self, frame):
         lang = None
@@ -194,11 +197,21 @@ class GettextAlias(object):
                 ctx = kwargs.get('context')
         if ctx:
             lang = ctx.get('lang')
+        s = frame.f_locals.get('self', {})
         if not lang:
-            s = frame.f_locals.get('self', {})
             c = getattr(s, 'localcontext', None)
             if c:
                 lang = c.get('lang')
+        if not lang:
+            # Last resort: attempt to guess the language of the user
+            # Pitfall: some operations are performed in sudo mode, and we 
+            #          don't know the originial uid, so the language may
+            #          be wrong when the admin language differs.
+            pool = getattr(s, 'pool', None)
+            (cr, dummy) = self._get_cr(frame, allow_create=False)
+            uid = self._get_uid(frame)
+            if pool and cr and uid:
+                lang = pool.get('res.users').context_get(cr, uid)['lang']
         return lang
 
     def __call__(self, source):
@@ -443,12 +456,17 @@ def trans_export(lang, modules, buffer, format, cr):
             for module, type, name, res_id, src, trad, comments in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
-                if ('translation' not in row) or (not row['translation']):
+                if not row.get('translation') and trad != src:
                     row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
                 row.setdefault('comments', set()).update(comments)
 
             for src, row in grouped_rows.items():
+                if not lang:
+                    # translation template, so no translation value
+                    row['translation'] = ''
+                elif not row.get('translation'):
+                    row['translation'] = src
                 writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
@@ -484,16 +502,25 @@ def trans_export(lang, modules, buffer, format, cr):
     del translations
 
 def trans_parse_xsl(de):
+    return list(set(trans_parse_xsl_aux(de, False)))
+
+def trans_parse_xsl_aux(de, t):
     res = []
+
     for n in de:
-        if n.get("t"):
-            for m in n:
-                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+        t = t or n.get("t")
+        if t:
+                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
                     continue
-                l = m.text.strip().replace('\n',' ')
-                if len(l):
-                    res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl(n))
+                if n.text:
+                    l = n.text.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+                if n.tail:
+                    l = n.tail.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+        res.extend(trans_parse_xsl_aux(n, t))
     return res
 
 def trans_parse_rml(de):
