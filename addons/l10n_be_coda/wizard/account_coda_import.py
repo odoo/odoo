@@ -973,6 +973,8 @@ class account_coda_import(osv.osv_memory):
                     # handling non-transactional records : line['type'] in ['information', 'communication']
 
                     if line['type'] == 'information':
+                        if line['ref_move_detail'] == '0000':
+                            glob_id_stack = [(0, '', 0, '')]  # initialise stack with tuples (glob_lvl_flag, glob_code, glob_id, glob_name)
 
                         #Check if this line can be deleted. glob_id_stack marked as undefined here
                         line['globalisation_id'] = glob_id_stack[-1][2]
@@ -1349,12 +1351,15 @@ class account_coda_import(osv.osv_memory):
         Use this method to adapt the statement line created by the
         CODA parsing to customer specific needs.
         """
+        print 'PLZ DISPLAY SOMETHING RIGHTPLZPLZPLZ'
+        print st_line_vals['name']
+        print st_line_vals['counterparty_name']
         return [st_line_vals]
 
     def action_open_coda_statements(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        module, xml_id = 'account_coda', 'action_coda_bank_statements'
+        module, xml_id = 'l10n_be_coda', 'action_coda_bank_statements'
         res_model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
         action = self.pool.get('ir.actions.act_window').read(cr, uid, res_id, context=context)
         domain = eval(action.get('domain') or '[]')

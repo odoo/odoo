@@ -546,7 +546,7 @@ class account_bank_statement_line(osv.osv):
     _name = "account.bank.statement.line"
     _description = "Bank Statement Line"
     _columns = {
-        'name': fields.char('Communication', size=64, required=True),
+        'name': fields.char('Communication', size=256, required=True),
         'date': fields.date('Date', required=True),
         'amount': fields.float('Amount', digits_compute=dp.get_precision('Account')),
         'type': fields.selection([
