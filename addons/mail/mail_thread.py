@@ -268,12 +268,7 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def write(self, cr, uid, ids, values, context=None):
-        # XXX is translation a good idea?
-        # TODO get user lang if not in context
-        # XXX idea: store a datastructure and render it on demand in the correct language
-        # TODO? use link to record for m2o
-        # TODO handle x2m fields. how?
-
+        
         if context is None:
             context = {}
         #import pudb;pudb.set_trace()
@@ -284,27 +279,17 @@ class mail_thread(osv.AbstractModel):
             return f._symbol_set[1](False)
 
         def convert_for_comparison(v, f):
+            # It will convert value for comparison between current and new.
             if not v:
                 return false_value(f)
             if isinstance(v, browse_record):
                 return v.id
             return v
 
-        def convert_for_display(v, f):
-            if not v:
-                return false_value(f)
-            if f._type == 'many2one':
-                if not isinstance(v, browse_record):
-                    v = self.pool[f._obj].browse(cr, SUPERUSER_ID, v)
-                return v.name_get()[0][1]
-            if f._type == 'selection':
-                # TODO get translated value
-                pass
-            return v
-
         tracked = dict((n, f) for n, f in self._all_columns.items() if getattr(f.column, 'tracked', False))
         to_log = [k for k in values if k in tracked]
 
+        from_ = None
         changes = defaultdict(list)
         if to_log:
             for record in self.browse(cr, uid, ids, context):
@@ -314,6 +299,7 @@ class mail_thread(osv.AbstractModel):
                     new = convert_for_comparison(values[tl], column)
                     if new != current:
                         changes[record].append(tl)
+                        from_ = record[tl]
 
         result = super(mail_thread, self).write(cr, uid, ids, values, context=context)
 
@@ -321,11 +307,13 @@ class mail_thread(osv.AbstractModel):
 
         Trans = self.pool['ir.translation']
         def _t(c):
+            # translate field
             model = c.parent_model or self._name
             lang = context.get('lang')
             return Trans._get_source(cr, uid, '{0},{1}'.format(model, c.name), 'field', lang, ci.column.string)
         
         def get_subtype(model, record):
+            # it will return subtype name(xml_id) for stage.
             record_model = self.pool[model].browse(cr, SUPERUSER_ID, record)
             if record_model.__hasattr__('subtype'):
                 return record_model.subtype
@@ -336,14 +324,14 @@ class mail_thread(osv.AbstractModel):
             chg = []
             subtype = False
             for f in changed_fields:
+                to = self.browse(cr, uid, ids[0], context)[f]
                 ci = tracked[f]
-                from_ = convert_for_display(record[f], ci.column)
-                to = convert_for_display(values[f], ci.column)
                 if to is None:
                     to = "Removed"
                 if ci.column._type == "many2one":
+                    to = to.name
+                    from_ = from_.name
                     subtype = get_subtype(ci.column._obj,values[f])
-
                 chg.append((_t(ci), from_, to))
 
             message = MakoTemplate(self._TRACK_TEMPLATE).render_unicode(updated_fields=updated_fields,
