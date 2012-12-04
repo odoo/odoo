@@ -381,7 +381,42 @@ class test_expression(common.TransactionCase):
             "_auto_join on: ('state_id.country_id.code', 'like', '..') query incorrect parameter")
 
         # ----------------------------------------
-        # Test3: result-based tests
+        # Test3: domain attribute on one2many fields
+        # ----------------------------------------
+
+        partner_child_ids_col._auto_join = True
+        partner_bank_ids_col._auto_join = True
+        partner_child_ids_col._domain = lambda self: ['!', ('name', '=', self._name)]
+        partner_bank_ids_col._domain = [('acc_number', 'like', '1')]
+        # Do: 2 cascaded one2many with _auto_join, test final leaf is an id
+        self._reinit_mock()
+        partner_ids = partner_obj.search(cr, uid, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa, b_ba])])
+        for query in self.query_list:
+            print query
+        print partner_ids
+        print '--------------------'
+        # Test result: at least one of our added data
+        self.assertTrue(set([p_a]).issubset(set(partner_ids)),
+            "_auto_join on one2many with domains incorrect result")
+        self.assertTrue(set([p_ab, p_ba]) not in set(partner_ids),
+            "_auto_join on one2many with domains incorrect result")
+        # Test produced queries that domains effectively present
+        sql_query = self.query_list[0].get_sql()
+        self.assertIn('"res_partner__child_ids__bank_ids"."acc_number" like %s', sql_query[1],
+            "_auto_join on one2many with domains incorrect result")
+        # TDE TODO: check first domain has a correct table name
+        self.assertIn('"res_partner__child_ids__bank_ids"."acc_number" like %s', sql_query[1],
+            "_auto_join on one2many with domains incorrect result")
+
+        partner_child_ids_col._domain = lambda self: [('name', '=', '__%s' % self._name)]
+        self._reinit_mock()
+        partner_ids = partner_obj.search(cr, uid, ['&', (1, '=', 1), ('child_ids.bank_ids.id', 'in', [b_aa, b_ba])])
+        # Test result: no one
+        self.assertFalse(partner_ids,
+            "_auto_join on one2many with domains incorrect result")
+
+        # ----------------------------------------
+        # Test4: result-based tests
         # ----------------------------------------
 
         partner_bank_ids_col._auto_join = False
@@ -389,6 +424,8 @@ class test_expression(common.TransactionCase):
         partner_state_id_col._auto_join = False
         partner_parent_id_col._auto_join = False
         state_country_id_col._auto_join = False
+        partner_child_ids_col._domain = []
+        partner_bank_ids_col._domain = []
 
         # Do: ('child_ids.state_id.country_id.code', 'like', '..') without _auto_join
         self._reinit_mock()
@@ -419,12 +456,12 @@ class test_expression(common.TransactionCase):
         self.assertEqual(len(self.query_list), 1,
             "_auto_join on: ('child_ids.state_id.country_id.code', 'like', '..') number of queries incorrect")
 
-        # # Remove mocks and modifications
-        # partner_bank_ids_col._auto_join = False
-        # partner_child_ids_col._auto_join = False
-        # partner_state_id_col._auto_join = False
-        # state_country_id_col._auto_join = False
-        # BaseModel._where_calc = self._base_model_where_calc
+        # Remove mocks and modifications
+        partner_bank_ids_col._auto_join = False
+        partner_child_ids_col._auto_join = False
+        partner_state_id_col._auto_join = False
+        state_country_id_col._auto_join = False
+        BaseModel._where_calc = self._base_model_where_calc
 
 if __name__ == '__main__':
     unittest2.main()

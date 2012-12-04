@@ -415,32 +415,32 @@ class ExtendedLeaf(object):
         for item in self.context_stack:
             self._tables.append(item[0])
         self._tables.append(table)
-        # if leaf.is_operator:
-        #     self.elements = self.leaf, None, None
-        # elif leaf.is_true_leaf() or leaf.is_false_leaf():
-        #     # because we consider left as a string
-        #     self.elements = ('%s' % leaf.leaf[0], leaf.leaf[1], leaf.leaf[2])
-        # else:
-        #     self.elements = leaf.leaf
-        # self.field_path = self.elements[0].split('.', 1)
-        # self.field = self.table._columns.get(self.field_path[0])
-        # if self.field and self.field._obj:
-        #     relational_table = working_table.pool.get(field._obj)
-        # else:
-        #     relational_table = None
+        if self.is_operator():
+            self.elements = self.leaf, None, None
+        elif self.is_true_leaf() or self.is_false_leaf():
+            # because we consider left as a string
+            self.elements = ('%s' % leaf[0], leaf[1], leaf[2])
+        else:
+            self.elements = leaf
+        self.field_path = self.elements[0].split('.', 1)
+        self.field = self.table._columns.get(self.field_path[0])
+        if self.field and self.field._obj:
+            self.relational_table = self.table.pool.get(self.field._obj)
+        else:
+            self.relational_table = None
         # check validity
         self.check_leaf()
 
     def __str__(self):
         return '<osv.ExtendedLeaf: %s on %s (ctx: %s)>' % (str(self.leaf), self.table._table, ','.join(self._get_context_debug()))
 
-    def create_substitution_leaf(self, new_leaf, new_table=None):
-        if new_table is None:
-            new_table = self.table
-        return ExtendedLeaf(new_leaf, new_table, self.context_stack)
+    # def create_substitution_leaf(self, new_leaf, new_table=None):
+    #     if new_table is None:
+    #         new_table = self.table
+    #     return ExtendedLeaf(new_leaf, new_table, self.context_stack)
 
-    def create_sibling_leaf(self, new_leaf):
-        pass
+    # def create_sibling_leaf(self, new_leaf):
+    #     pass
 
     # --------------------------------------------------
     # Join / Context manipulation
@@ -464,7 +464,7 @@ class ExtendedLeaf(object):
     #       i.e.: many2one: res_country_state as res_partner__state_id
     #   - join condition use aliases
     #       i.e.: inherits: res_users.partner_id = res_users__partner_id.id
-    #       i.e.: one2many: res_partner.id = res_partner__bank_ids.partner_id
+    #       i.e.: one2many: res_partner.id = res_partner__bank_ids.parr_id
     #       i.e.: many2one: res_partner.state_id = res_partner__state_id.id
     # Variables explanation:
     #   - src_table: working table before the join
@@ -646,11 +646,8 @@ class expression(object):
             return [(left, 'in', recursive_children(ids, left_model, parent or left_model._parent_name))]
 
     # ----------------------------------------
-    # Internal structure
+    # Leafs management
     # ----------------------------------------
-
-    def _format_table_name(self, table_name):
-        return '"%s"' % (table_name)
 
     def get_tables(self):
         """ Returns the list of tables for SQL queries, like select from ... """
@@ -663,6 +660,16 @@ class expression(object):
         if table_name not in tables:
             tables.append(table_name)
         return tables
+
+    def create_substitution_leaf(self, leaf, new_elements, new_table=None):
+        if new_table is None:
+            new_table = leaf.table
+        new_context_stack = [tuple(context) for context in leaf.context_stack]
+        new_leaf = ExtendedLeaf(new_elements, new_table, context_stack=new_context_stack)
+        return new_leaf
+
+    def create_sibling_leaf(self, leaf, new_elements):
+        pass
 
     # ----------------------------------------
     # Parsing
@@ -697,6 +704,11 @@ class expression(object):
 
             # Get working variables
             working_table = leaf.table
+            # left, operator, right = leaf.elements
+            # field_path = leaf.field_path
+            # field = leaf.field
+            # relational_table = leaf.relational_table
+
             if leaf.is_operator():
                 left, operator, right = leaf.leaf, None, None
             elif leaf.is_true_leaf() or leaf.is_false_leaf():
@@ -748,30 +760,43 @@ class expression(object):
             elif not field and left == 'id' and operator == 'child_of':
                 ids2 = self.to_ids(cr, uid, right, working_table, context)
                 dom = self.child_of_domain(cr, uid, left, ids2, working_table)
-                leafs_to_stack += [leaf.create_substitution_leaf(dom_leaf, working_table) for dom_leaf in dom]
+                leafs_to_stack += [self.create_substitution_leaf(leaf, dom_leaf, working_table) for dom_leaf in dom]
 
             elif not field and field_path[0] in MAGIC_COLUMNS:
                 results_to_stack.append(leaf)
 
             elif not field:
-                raise ValueError("Invalid field %r in leaf %r" % (left, leaf))
+                raise ValueError("Invalid field %r in leaf %r" % (left, str(leaf)))
 
             # ----------------------------------------
             # PATH SPOTTED
-            # -> XX
+            # -> many2one or one2many with _auto_join:
+            #    - add a join, then jump into linked field: field.remaining on
+            #      src_table is replaced by remaining on dst_table, and set for re-evaluation
+            #    - if a domain is defined on the field, add it into evaluation
+            #      on the relational table
+            # -> many2one, many2many, one2many: replace by an equivalent computed
+            #    domain, given by recursively searching on the remaining of the path
             # -> note: hack about fields.property should not be necessary anymore
             #    as after transforming the field, it will go through this loop once again
             # ----------------------------------------
 
             elif len(field_path) > 1 and field._type == 'many2one' and field._auto_join:
-                # res_partner.parent_id = res_partner.id
+                # res_partner.state_id = res_partner__state_id.id
                 leaf.add_join_context(field_path[0], field_path[0], relational_table, 'id')
-                leafs_to_stack.append(leaf.create_substitution_leaf((field_path[1], operator, right), relational_table))
+                leafs_to_stack.append(self.create_substitution_leaf(leaf, (field_path[1], operator, right), relational_table))
 
             elif len(field_path) > 1 and field._type == 'one2many' and field._auto_join:
-                # res_partner.id = res_partner.parent_id
+                # res_partner.id = res_partner__bank_ids.partner_id
                 leaf.add_join_context(field_path[0], 'id', relational_table, field._fields_id)
-                leafs_to_stack.append(leaf.create_substitution_leaf((field_path[1], operator, right), relational_table))
+                domain = field._domain(working_table) if callable(field._domain) else field._domain
+                if domain:
+                    domain = normalize_domain(domain)
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, AND_OPERATOR, relational_table))
+                    for elem in domain:
+                        leafs_to_stack.append(self.create_substitution_leaf(leaf, elem, relational_table))
+                        print '--> appending %s' % str(leafs_to_stack[-1])
+                leafs_to_stack.append(self.create_substitution_leaf(leaf, (field_path[1], operator, right), relational_table))
 
             elif len(field_path) > 1 and field._auto_join:
                 assert False, \
@@ -817,10 +842,10 @@ class expression(object):
                 else:
                     # we assume that the expression is valid
                     # we create a dummy leaf for forcing the parsing of the resulting expression
-                    leafs_to_stack.append(leaf.create_substitution_leaf(AND_OPERATOR, working_table))
-                    leafs_to_stack.append(leaf.create_substitution_leaf(TRUE_LEAF, working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, AND_OPERATOR, working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, TRUE_LEAF, working_table))
                     for domain_element in fct_domain:
-                        leafs_to_stack.append(leaf.create_substitution_leaf(domain_element, working_table))
+                        leafs_to_stack.append(self.create_substitution_leaf(leaf, domain_element, working_table))
 
             # Applying recursivity on field(one2many)
             elif field._type == 'one2many' and operator == 'child_of':
@@ -829,7 +854,7 @@ class expression(object):
                     dom = self.child_of_domain(cr, uid, left, ids2, relational_table, prefix=field._obj)
                 else:
                     dom = self.child_of_domain(cr, uid, 'id', ids2, working_table, parent=left)
-                leafs_to_stack += [leaf.create_substitution_leaf(dom_leaf, working_table) for dom_leaf in dom]
+                leafs_to_stack += [self.create_substitution_leaf(leaf, dom_leaf, working_table) for dom_leaf in dom]
 
             elif field._type == 'one2many':
                 call_null = True
@@ -848,17 +873,17 @@ class expression(object):
                         if operator in ['like', 'ilike', 'in', '=']:
                             #no result found with given search criteria
                             call_null = False
-                            leafs_to_stack.append(leaf.create_substitution_leaf(FALSE_LEAF, working_table))
+                            leafs_to_stack.append(self.create_substitution_leaf(leaf, FALSE_LEAF, working_table))
                     else:
                         ids2 = select_from_where(cr, field._fields_id, relational_table._table, 'id', ids2, operator)
                         if ids2:
                             call_null = False
                             o2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            leafs_to_stack.append(leaf.create_substitution_leaf(('id', o2m_op, ids2), working_table))
+                            leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', o2m_op, ids2), working_table))
 
                 if call_null:
                     o2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                    leafs_to_stack.append(leaf.create_substitution_leaf(('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_table._table)), working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', o2m_op, select_distinct_from_where_not_null(cr, field._fields_id, relational_table._table)), working_table))
 
             elif field._type == 'many2many':
                 rel_table, rel_id1, rel_id2 = field._sql_names(working_table)
@@ -872,7 +897,7 @@ class expression(object):
                     ids2 = self.to_ids(cr, uid, right, relational_table, context)
                     dom = self.child_of_domain(cr, uid, 'id', ids2, relational_table)
                     ids2 = relational_table.search(cr, uid, dom, context=context)
-                    leafs_to_stack.append(leaf.create_substitution_leaf(('id', 'in', _rec_convert(ids2)), working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', 'in', _rec_convert(ids2)), working_table))
                 else:
                     call_null_m2m = True
                     if right is not False:
@@ -889,17 +914,17 @@ class expression(object):
                             if operator in ['like', 'ilike', 'in', '=']:
                                 #no result found with given search criteria
                                 call_null_m2m = False
-                                leafs_to_stack.append(leaf.create_substitution_leaf(FALSE_LEAF, working_table))
+                                leafs_to_stack.append(self.create_substitution_leaf(leaf, FALSE_LEAF, working_table))
                             else:
                                 operator = 'in'  # operator changed because ids are directly related to main object
                         else:
                             call_null_m2m = False
                             m2m_op = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                            leafs_to_stack.append(leaf.create_substitution_leaf(('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), working_table))
+                            leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', m2m_op, select_from_where(cr, rel_id1, rel_table, rel_id2, res_ids, operator) or [0]), working_table))
 
                     if call_null_m2m:
                         m2m_op = 'in' if operator in NEGATIVE_TERM_OPERATORS else 'not in'
-                        leafs_to_stack.append(leaf.create_substitution_leaf(('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), working_table))
+                        leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', m2m_op, select_distinct_from_where_not_null(cr, rel_id1, rel_table)), working_table))
 
             elif field._type == 'many2one':
                 if operator == 'child_of':
@@ -908,7 +933,7 @@ class expression(object):
                         dom = self.child_of_domain(cr, uid, left, ids2, relational_table, prefix=field._obj)
                     else:
                         dom = self.child_of_domain(cr, uid, 'id', ids2, working_table, parent=left)
-                    leafs_to_stack += [leaf.create_substitution_leaf(dom_leaf, working_table) for dom_leaf in dom]
+                    leafs_to_stack += [self.create_substitution_leaf(leaf, dom_leaf, working_table) for dom_leaf in dom]
                 else:
                     def _get_expression(relational_table, cr, uid, left, right, operator, context=None):
                         if context is None:
@@ -932,7 +957,7 @@ class expression(object):
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, basestring) or \
                             right and isinstance(right, (tuple, list)) and all(isinstance(item, basestring) for item in right):
-                        leafs_to_stack.append(leaf.create_substitution_leaf(_get_expression(relational_table, cr, uid, left, right, operator, context=context), working_table))
+                        leafs_to_stack.append(self.create_substitution_leaf(leaf, _get_expression(relational_table, cr, uid, left, right, operator, context=context), working_table))
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
                         results_to_stack.append(leaf)
@@ -947,7 +972,7 @@ class expression(object):
                     elif operator in ('<', '<='):
                         right += ' 23:59:59'
 
-                    leafs_to_stack.append(leaf.create_substitution_leaf((left, operator, right), working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, (left, operator, right), working_table))
 
                 elif field.translate:
                     need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
@@ -982,7 +1007,7 @@ class expression(object):
                               right,
                               right,
                              ]
-                    leafs_to_stack.append(leaf.create_substitution_leaf(('id', 'inselect', (subselect, params)), working_table))
+                    leafs_to_stack.append(self.create_substitution_leaf(leaf, ('id', 'inselect', (subselect, params)), working_table))
 
                 else:
                     results_to_stack.append(leaf)
