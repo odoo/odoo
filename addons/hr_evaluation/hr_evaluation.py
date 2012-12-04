@@ -117,6 +117,8 @@ class hr_employee(osv.osv):
         return True
 
     def onchange_evaluation_plan_id(self, cr, uid, ids, evaluation_plan_id, evaluation_date, context=None):
+        if not evaluation_plan_id:
+            evaluation_date = False
         if evaluation_plan_id:
             evaluation_plan_obj=self.pool.get('hr_evaluation.plan')
             obj_evaluation = self.pool.get('hr_evaluation.evaluation')
@@ -130,7 +132,7 @@ class hr_employee(osv.osv):
                     evaluation_date=(parser.parse(evaluation_date)+ relativedelta(months=+evaluation_plan.month_next)).strftime('%Y-%m-%d')
                     flag = True
             if ids and flag:
-                obj_evaluation.create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id}, context=context)
+                obj_evaluation.create(cr, uid, {'employee_id': ids[0], 'plan_id': evaluation_plan_id, 'date': evaluation_date}, context=context)
         return {'value': {'evaluation_date': evaluation_date}}
 
     def create(self, cr, uid, vals, context=None):
@@ -186,7 +188,7 @@ class hr_evaluation(osv.osv):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            name = record.plan_id.name
+            name = "%s (%s) (%s)" % (record.plan_id.name, record.date, record.employee_id.name)
             res.append((record['id'], name))
         return res
 
