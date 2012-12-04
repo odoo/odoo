@@ -649,15 +649,20 @@ class task(base_stage, osv.osv):
     }
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
-        obj_project = self.pool.get('project.project')
+        res  = super(task, self).search(cr, user,  args, offset=offset, limit=limit, order=order, context=context, count=count)
         for domain in args:
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
-                id = isinstance(domain[2], list) and domain[2][0] or domain[2]
-                if id and isinstance(id, (long, int)):
-                    if obj_project.read(cr, user, id, ['state'])['state'] == 'template':
-                        args.append(('active', '=', False))
-        return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
-
+                ids = isinstance(domain[2], list) and domain[2]
+                # project in template state it's all task has active : false so those task are not search by orm
+                # so here we explicitly added those task ids to search result
+                obj_project = self.pool.get('project.project')
+                project_ids = obj_project.search(cr, user, [('state','=','template'),('id','in',ids)]);
+                if project_ids:
+                    cr.execute('select id from project_task where project_id in %s', (tuple(project_ids),))
+                    task_ids = [x[0] for x in cr.fetchall()]
+                    res = list(set(res + task_ids))
+        return res
+    
     def _str_get(self, task, level=0, border='***', context=None):
         return border+' '+(task.user_id and task.user_id.name.upper() or '')+(level and (': L'+str(level)) or '')+(' - %.1fh / %.1fh'%(task.effective_hours or 0.0,task.planned_hours))+' '+border+'\n'+ \
             border[0]+' '+(task.name or '')+'\n'+ \
