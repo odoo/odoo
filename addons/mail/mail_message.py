@@ -98,15 +98,7 @@ class mail_message(osv.Model):
     def _search_to_read(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages to read by the current user. Condition is
             inversed because we search unread message on a read column. """
-        if domain[0][2]:
-            read_cond = "(read = False OR read IS NULL)"
-        else:
-            read_cond = "read = True"
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        cr.execute("SELECT message_id FROM mail_notification "\
-                        "WHERE partner_id = %%s AND %s" % read_cond,
-                    (partner_id,))
-        return [('id', 'in', [r[0] for r in cr.fetchall()])]
+        return ['&', ('notification_ids.partner_id.user_ids', 'in', [uid]), ('notification_ids.read', '=', not domain[0][2])]
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -146,7 +138,7 @@ class mail_message(osv.Model):
             store=True, string='Message Record Name',
             help="Name get of the related document."),
         'notification_ids': fields.one2many('mail.notification', 'message_id',
-            string='Notifications',
+            string='Notifications', _auto_join=True,
             help='Technical field holding the message notifications. Use notified_partner_ids to access notified partners.'),
         'subject': fields.char('Subject'),
         'date': fields.datetime('Date'),
@@ -166,9 +158,7 @@ class mail_message(osv.Model):
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
-        if self._needaction:
-            return [('to_read', '=', True)]
-        return []
+        return [('to_read', '=', True)]
 
     def _get_default_author(self, cr, uid, context=None):
         return self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]

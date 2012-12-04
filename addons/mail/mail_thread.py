@@ -122,17 +122,7 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
-        res = {}
-        notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('message_id.model', '=', self._name),
-            ('read', '=', False)
-        ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
-            res[notif.message_id.res_id] = True
-        return [('id', 'in', res.keys())]
+        return ['&', ('message_ids.model', '=', self._name), ('message_ids.notification_ids.to_read', '=', False)]
 
     def _get_followers(self, cr, uid, ids, name, arg, context=None):
         fol_obj = self.pool.get('mail.followers')
@@ -207,6 +197,7 @@ class mail_thread(osv.AbstractModel):
             help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name)],
+            _auto_join=True,
             string='Messages',
             help="Messages and communication history"),
         'message_unread': fields.function(_get_message_data, fnct_search=_search_unread,
