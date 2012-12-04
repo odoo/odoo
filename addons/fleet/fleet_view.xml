@@ -149,11 +149,11 @@
             </field>
         </record>
 
-        <menuitem name="Fleet" id="menu_root" sequence="110" />
-        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" />
+        <menuitem name="Fleet" id="menu_root" sequence="110" groups="group_fleet_user"/>
+        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" sequence="3" groups="group_fleet_manager"/>
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" groups="base.group_no_one"/>
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" groups="base.group_no_one"/>
-        <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" />
+        <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" groups="group_fleet_manager"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
             <field name="name">fleet.vehicle.form</field>
@@ -179,7 +179,7 @@
                         </div>
                         <div class="oe_right oe_button_box">
                             <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_contract_act'}" string="Contracts" help="show the contract for this vehicle" />
-                            <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" />
+                            <button name="act_show_log_cost" type="object" string="Costs" help="show all the costs for this vehicle" groups="fleet.group_fleet_manager"/>
                             <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_services_act'}" string="Services" help="show the services logs for this vehicle" />
                             <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_log_fuel_act'}" string="Fuel Logs" help="show the fuel logs for this vehicle" />
                             <button name="return_action_to_open" type="object" context="{'xml_id':'fleet_vehicle_odometer_act'}" string="Odometer Logs" help="show the odometer logs for this vehicle" />
@@ -347,8 +347,8 @@
             </field>
         </record>
 
-        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" />
-        <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" sequence="2" groups="group_fleet_user"/>
+        <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" groups="group_fleet_user"/>
 
 
 
@@ -358,10 +358,10 @@
             <field name="arch" type="xml">
                 <form string="Contract logs" version="7.0">
                     <header>
-                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract"/>
-                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract"/>
-                        <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress"/>
-                        <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" />
+                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
+                        <button modifiers="{'invisible': [['state', '=', 'closed']]}" name="contract_close" states="toclose" type="object" class="oe_highlight" string="Terminate Contract" groups="fleet.group_fleet_manager"/>
+                        <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress" groups="fleet.group_fleet_manager"/>
+                        <button class="oe_highlight" name="act_renew_contract" type="object" string="Renew Contract" help="Create a new contract automatically with all the same informations except for the date that will start at the end of current contract" groups="fleet.group_fleet_manager"/>
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
@@ -491,7 +491,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" />
+        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" groups="group_fleet_user"/>
 
        <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
             <field name="name">fleet.vehicle.odometer.form</field>
@@ -568,7 +568,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
+        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" groups="group_fleet_user"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
             <field name="name">fleet.vehicle.log.fuel.form</field>
@@ -657,7 +657,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
+        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" groups="group_fleet_user"/>
 
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
@@ -749,7 +749,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
+        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" groups="group_fleet_user"/>
 
         <record model='ir.ui.view' id='fleet_vehicle_service_types_tree'>
             <field name="name">fleet.service.type.tree</field>
@@ -870,7 +870,7 @@
             </field>
         </record>
 
-        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" />
+        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" groups="group_fleet_manager"/>
 <!--    
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>
