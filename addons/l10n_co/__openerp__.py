@@ -47,6 +47,12 @@ account for Colombia in Openerp.
 We recommend install the module account_anglo_sxon to be able to have the cost
 accounting correctly setted in out invoices.
 
+After installing this module, the Configuration wizard for accounting is launched.
+    * We have the account templates which can be helpful to generate Charts of Accounts.
+    * On that particular wizard, you will be asked to pass the name of the company,
+      the chart template to follow, the no. of digits to generate, the code for your
+      account and bank account, currency to create journals.
+
 .. _here: http://puc.com.co/
 .. _link: http://puc.com.co/normatividad/
     """,
