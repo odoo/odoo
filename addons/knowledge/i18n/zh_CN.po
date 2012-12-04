@@ -7,20 +7,90 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2011-01-13 19:01+0000\n"
-"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"POT-Creation-Date: 2012-11-24 02:53+0000\n"
+"PO-Revision-Date: 2012-11-28 08:39+0000\n"
+"Last-Translator: hifly <Unknown>\n"
 "Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:29+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-11-29 05:15+0000\n"
+"X-Generator: Launchpad (build 16319)\n"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Documents"
+msgstr "文档"
+
+#. module: knowledge
+#: model:ir.model,name:knowledge.model_knowledge_config_settings
+msgid "knowledge.config.settings"
+msgstr "knowledge.config.settings"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document_webdav:0
+msgid ""
+"Access your documents in OpenERP through WebDAV.\n"
+"                This installs the module document_webdav."
+msgstr "在OpenERP中，通过WebDAV访问你的文档。"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document_page:0
+msgid "This installs the module document_page."
+msgstr "安装模块document_page."
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document2
 msgid "Collaborative Content"
-msgstr "协作编辑"
+msgstr "协作内容"
+
+#. module: knowledge
+#: model:ir.actions.act_window,name:knowledge.action_knowledge_configuration
+#: view:knowledge.config.settings:0
+msgid "Configure Knowledge"
+msgstr "配置知识库"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Knowledge and Documents Management"
+msgstr "知识和文档管理"
+
+#. module: knowledge
+#: help:knowledge.config.settings,module_document:0
+msgid ""
+"This is a complete document management system, with: user authentication,\n"
+"                full document search (but pptx and docx are not supported), "
+"and a document dashboard.\n"
+"                This installs the module document."
+msgstr ""
+"这是一个完整的文档管理系统，\n"
+"包含：用户认证，全文搜索（目前不支持pptx和docx）和一个文档控制台。\n"
+"需要安装document模块。"
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_page:0
+msgid "Create static web pages"
+msgstr "创建静态页面"
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_ftp:0
+msgid "Share repositories (FTP)"
+msgstr "共享库(FTP)"
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document:0
+msgid "Manage documents"
+msgstr "管理文档"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Cancel"
+msgstr "取消"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "Apply"
+msgstr "应用"
 
 #. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document_configuration
@@ -28,7 +98,27 @@ msgid "Configuration"
 msgstr "配置"
 
 #. module: knowledge
+#: help:knowledge.config.settings,module_document_ftp:0
+msgid ""
+"Access your documents in OpenERP through an FTP interface.\n"
+"                This installs the module document_ftp."
+msgstr ""
+"在OpenERP里通过FTP接口访问你的文档。\n"
+"需要安装模块document_ftp。"
+
+#. module: knowledge
+#: view:knowledge.config.settings:0
+msgid "or"
+msgstr "或者"
+
+#. module: knowledge
+#: field:knowledge.config.settings,module_document_webdav:0
+msgid "Share repositories (WebDAV)"
+msgstr "共享仓库(WebDAV)"
+
+#. module: knowledge
 #: model:ir.ui.menu,name:knowledge.menu_document
+#: model:ir.ui.menu,name:knowledge.menu_knowledge_configuration
 msgid "Knowledge"
 msgstr "知识管理"
 

@@ -134,8 +134,7 @@
                   parent="base.menu_marketing_config_association"
                   id="menu_membership_products"
                   action="action_membership_products"
-                  sequence="1"
-                  groups="base.group_partner_manager"/>
+                  sequence="1"/>
 
 
         <!-- MEMBERSHIP/CURRENT MEMBERS -->
@@ -183,7 +182,7 @@
             <field name="name">Members</field>
             <field name="res_model">res.partner</field>
             <field name="search_view_id" ref="view_res_partner_member_filter"/>
-            <field name="context">{"search_default_all_members": 1}</field>
+            <field name="context">{"search_default_all_members": 1, "default_free_member": True}</field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_membership_members_view_tree">
@@ -234,15 +233,16 @@
                                 <field name="free_member"/>
                                 <label for="membership_state"/>
                                 <div>
-                                    <field name="membership_state" class="oe_inline"/>
-                                    <button name="%(action_membership_invoice_view)d" type="action" string="Join Membership" attrs="{'readonly':[('free_member','=',True)]}" class="oe_inline oe_right"/>
+                                    <field name="membership_state"/>
+                                    <button name="%(action_membership_invoice_view)d" type="action" string="Buy Membership" 
+                                        attrs="{'invisible':[('free_member','=',True)]}" class="oe_link"/>
                                 </div>
                             </group>
                             <group>
-                                <field name="associate_member" attrs="{'readonly':[('membership_state','!=', 'none')]}"/>
-                                <field name="membership_start"/>
-                                <field name="membership_stop"/>
-                                <field name="membership_cancel"/>
+                                <field name="associate_member" attrs="{'invisible':[('free_member','=',True)]}"/>
+                                <field name="membership_start" attrs="{'invisible':[('membership_start','=',False)]}"/>
+                                <field name="membership_stop" attrs="{'invisible':[('membership_stop','=',False)]}"/>
+                                <field name="membership_cancel" attrs="{'invisible':[('membership_cancel','=',False)]}"/>
                             </group>
                         </group>
                         <field name="member_lines" nolabel="1" colspan="4" readonly="1">

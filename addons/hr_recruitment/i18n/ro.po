@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-12-03 16:02+0000\n"
 "PO-Revision-Date: 2012-01-06 15:31+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian <ro@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-30 05:28+0000\n"
-"X-Generator: Launchpad (build 16206)\n"
+"X-Launchpad-Export-Date: 2012-12-04 05:48+0000\n"
+"X-Generator: Launchpad (build 16335)\n"
 
 #. module: hr_recruitment
 #: help:hr.applicant,active:0
@@ -27,26 +27,37 @@ msgstr ""
 "sa il stergeti."
 
 #. module: hr_recruitment
-#: view:hr.recruitment.stage:0 field:hr.recruitment.stage,requirements:0
+#: view:hr.recruitment.stage:0
+#: field:hr.recruitment.stage,requirements:0
 msgid "Requirements"
 msgstr "Cerinte"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.source:0
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
-msgid "Sources of Applicants"
-msgstr "Surse Candidati"
+#: view:hr.applicant:0
+msgid "Application Summary"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,delay_open:0
-msgid "Avg. Delay to Open"
-msgstr "Intarzierea medie la deschidere"
+#: view:hr.applicant:0
+msgid "Start Interview"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,nbr:0
-msgid "# of Cases"
-msgstr "# de Cazuri"
+#: view:hr.applicant:0
+msgid "Mobile:"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,fold:0
+msgid ""
+"This stage is not visible, for example in status bar or kanban view, when "
+"there are no records in that stage to display."
+msgstr ""
+
+#. module: hr_recruitment
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
+msgid "Graduate"
+msgstr "Licentiat"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -54,18 +65,15 @@ msgid "Group By..."
 msgstr "Grupati dupa..."
 
 #. module: hr_recruitment
-#: field:hr.applicant,user_email:0
-msgid "User Email"
-msgstr "E-mail utilizator"
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
 msgid "Filter and view on next actions and date"
 msgstr "Filtrati si vizualizati actiunile si datele urmatoare"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,department_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,department_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,department_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,department_id:0
 msgid "Department"
 msgstr "Departament"
 
@@ -90,18 +98,27 @@ msgid "Pending Jobs"
 msgstr "Locuri de munca in asteptare"
 
 #. module: hr_recruitment
-#: field:hr.applicant,company_id:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,company_id:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,company_id:0
 msgid "Company"
 msgstr "Companie"
 
 #. module: hr_recruitment
-#: view:hired.employee:0
-msgid "No"
-msgstr "Nu"
+#: view:hr.recruitment.source:0
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
+#: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
+msgid "Sources of Applicants"
+msgstr "Surse Candidati"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: code:addons/hr_recruitment/hr_recruitment.py:424
 #, python-format
 msgid "You must define Applied Job for this applicant."
 msgstr "Trebuie sa definiti 'A aplicat' pentru acest candidat."
@@ -117,45 +134,59 @@ msgid "Close job request"
 msgstr "Inchide cererea de locuri de munca"
 
 #. module: hr_recruitment
+#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to add a new job applicant.\n"
+"              </p><p>\n"
+"                OpenERP helps you track applicants in the recruitment\n"
+"                process and follow up all operations: meetings, interviews, "
+"etc.\n"
+"              </p><p>\n"
+"                If you setup the email gateway, applicants and their "
+"attached\n"
+"                CV are created automatically when an email is sent to\n"
+"                jobs@yourcompany.com. If you install the document "
+"management\n"
+"                modules, all resumes are indexed automatically, so that you "
+"can\n"
+"                easily search through their content.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
+#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
+msgid "Applications"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,day_open:0
 msgid "Days to Open"
 msgstr "Zile pana la deschidere"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,note:0
-msgid "Goals"
-msgstr "Scopuri"
+#: field:hr.applicant,emp_id:0
+msgid "employee"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,partner_address_id:0
-msgid "Partner Contact Name"
-msgstr "Nume Contact Partener"
+#: field:hr.config.settings,fetchmail_applicants:0
+msgid "Create applicants from an incoming email account"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 view:hr.recruitment.partner.create:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
-msgid "Create Partner"
-msgstr "Creati Partenerul"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,day:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,day:0
 msgid "Day"
 msgstr "Zi"
 
 #. module: hr_recruitment
-#: field:hr.applicant,reference:0
-msgid "Refered By"
-msgstr "Recomandat de"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Contract Data"
-msgstr "Date contract"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Add Internal Note"
-msgstr "Adaugati Nota Interna"
+#: view:hr.recruitment.partner.create:0
+#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_partner_create
+msgid "Create Contact"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -173,11 +204,6 @@ msgid "Mobile"
 msgstr "Mobil"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Notes"
-msgstr "Note"
-
-#. module: hr_recruitment
 #: field:hr.applicant,message_ids:0
 msgid "Messages"
 msgstr "Mesaje"
@@ -188,19 +214,34 @@ msgid "Next Actions"
 msgstr "Actiunile urmatoare"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_expected:0 view:hr.recruitment.report:0
-msgid "Expected Salary"
-msgstr "Salariul dorit"
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "Error!"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,job_id:0 field:hr.recruitment.report,job_id:0
+#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
+msgid "Doctoral Degree"
+msgstr "Diploma Doctorat"
+
+#. module: hr_recruitment
+#: field:hr.applicant,job_id:0
+#: field:hr.recruitment.report,job_id:0
 msgid "Applied Job"
 msgstr "S-a aplicat pentru locul de munca"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_graduate
-msgid "Graduate"
-msgstr "Licentiat"
+#: help:hr.recruitment.stage,department_id:0
+msgid ""
+"Stages of the recruitment process may be different per department. If this "
+"stage is common to all departments, keep this field empty."
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,color:0
@@ -208,7 +249,12 @@ msgid "Color Index"
 msgstr "Index culori"
 
 #. module: hr_recruitment
-#: view:board.board:0 view:hr.applicant:0
+#: model:ir.actions.act_window,name:hr_recruitment.act_hr_applicant_to_meeting
+msgid "Meetings"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
 #: model:ir.actions.act_window,name:hr_recruitment.action_applicants_status
 msgid "Applicants Status"
 msgstr "Status candidati"
@@ -239,7 +285,14 @@ msgid "Recruitment"
 msgstr "Recrutare"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:436
+#: help:hr.applicant,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:424
 #, python-format
 msgid "Warning!"
 msgstr "Avertizare!"
@@ -251,8 +304,8 @@ msgstr "Salariul Propus"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Change Color"
-msgstr "Schimbati culoarea"
+msgid "Edit..."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -260,35 +313,23 @@ msgid "Avg Proposed Salary"
 msgstr "Salariul mediu propus"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.recruitment.report,available:0
+#: view:hr.applicant:0
+#: field:hr.applicant,availability:0
+#: field:hr.recruitment.report,available:0
 msgid "Availability"
 msgstr "Disponibilitate"
 
 #. module: hr_recruitment
-#: help:hr.recruitment.stage,department_id:0
-msgid ""
-"Stages of the recruitment process may be different per department. If this "
-"stage is common to all departments, keep tempy this field."
-msgstr ""
-"Etapele procesului de recrutare pot fi diferite in functie de departament. "
-"Daca aceasta etapa este comuna tuturor departamentelor, lasati acest camp "
-"necompletat."
+#: field:hr.applicant,salary_proposed:0
+#: view:hr.recruitment.report:0
+msgid "Proposed Salary"
+msgstr "Salariul propus"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Previous"
-msgstr "Precedent(a)"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
-msgid "Source of Applicants"
-msgstr "Sursa Candidati"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_phonecall.py:115
+#: code:addons/hr_recruitment/hr_recruitment.py:482
 #, python-format
-msgid "Phone Call"
-msgstr "Apel telefonic"
+msgid "Applicant has been set <b>in progress</b>."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.partner.create:0
@@ -301,15 +342,9 @@ msgid "Recruitments Statistics"
 msgstr "Statistica Recrutari"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:476
-#, python-format
-msgid "Changed Stage to: %s"
-msgstr "Etapa schimbata in: %s"
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Hire"
-msgstr "Angajeaza"
+msgid "Print interview report"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -317,34 +352,27 @@ msgid "Hired employees"
 msgstr "Salariati angajati"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Next"
-msgstr "Urmatorul (urmatoarea)"
-
-#. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_job
 msgid "Job Description"
 msgstr "Fisa postului"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,source_id:0
-msgid "Source"
-msgstr "Sursa"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_read
+msgid "HR Applicant: Mark read"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:504
+#, python-format
+msgid "Applicant has been set as <b>new</b>."
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Send New Email"
-msgstr "Trimiteti un e-mail nou"
-
-#. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
-#, python-format
-msgid "A partner is already defined on this job request."
-msgstr "Un partener este deja definit pe aceasta cerere de loc de munca."
-
-#. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "New"
 msgstr "Nou(a)"
 
@@ -354,9 +382,18 @@ msgid "Email"
 msgstr "E-Mail"
 
 #. module: hr_recruitment
-#: field:hr.applicant,availability:0
-msgid "Availability (Days)"
-msgstr "Disponibilitate (Zile)"
+#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Define here your stages of the recruitment process, for "
+"example:\n"
+"            qualification call, first interview, second interview, refused,\n"
+"            hired.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
@@ -369,29 +406,21 @@ msgid "Next Action"
 msgstr "Urmatoarea actiune"
 
 #. module: hr_recruitment
+#: help:hr.job,alias_id:0
+msgid ""
+"Email alias for this job position. New emails will automatically create new "
+"applicants for this job position."
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.applicant,priority:0
 #: selection:hr.recruitment.report,priority:0
 msgid "Good"
 msgstr "Bun/bine"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:38
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
-#, python-format
-msgid "Error !"
-msgstr "Eroare !"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
-msgid ""
-"Define here your stages of the recruitment process, for example: "
-"qualification call, first interview, second interview, refused, hired."
-msgstr ""
-"Aici definiti etapele procesului de recrutare, de exemplu: calificari, "
-"primul interviu, al doilea interviu, respins, angajat."
-
-#. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,create_date:0
+#: view:hr.applicant:0
+#: field:hr.applicant,create_date:0
 #: view:hr.recruitment.report:0
 msgid "Creation Date"
 msgstr "Data crearii"
@@ -403,12 +432,13 @@ msgid "Create Employee"
 msgstr "Creati Angajatul"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,deadline:0
-msgid "Planned Date"
-msgstr "Data Planificata"
+#: field:hr.applicant,partner_phone:0
+msgid "Phone"
+msgstr "Telefon"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,priority:0
+#: view:hr.applicant:0
+#: field:hr.applicant,priority:0
 #: field:hr.recruitment.report,priority:0
 msgid "Appreciation"
 msgstr "Apreciere"
@@ -424,17 +454,18 @@ msgid "Print Interview"
 msgstr "Tipariti Interviul"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,stage_id:0
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,stage_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,stage_id:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,stage_id:0
 #: view:hr.recruitment.stage:0
 msgid "Stage"
 msgstr "Etapa"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-#: view:hr.recruitment.report:0 selection:hr.recruitment.report,state:0
-msgid "Pending"
-msgstr "In asteptare"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
+msgid "Second Interview"
+msgstr "Al doilea interviu"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_job_stage_act
@@ -442,19 +473,15 @@ msgid "Recruitment / Applicants Stages"
 msgstr "Etapele Recrutarii / Candidati"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.degree,name:hr_recruitment.degree_bac5
-msgid "Doctoral Degree"
-msgstr "Diploma Doctorat"
+#: field:hr.applicant,salary_expected:0
+#: view:hr.recruitment.report:0
+msgid "Expected Salary"
+msgstr "Salariul dorit"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "July"
 msgstr "Iulie"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Subject"
-msgstr "Subiect"
 
 #. module: hr_recruitment
 #: field:hr.applicant,email_cc:0
@@ -463,36 +490,14 @@ msgstr "Email-uri supraveghetori"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-#: model:ir.actions.act_window,name:hr_recruitment.crm_case_categ0_act_job
-#: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ0_act_job
 msgid "Applicants"
 msgstr "Candidati"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "History Information"
-msgstr "Istoric Informatii"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Dates"
-msgstr "Date"
-
-#. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
-msgid ""
-" Check if the following stages are matching your recruitment process. Don't "
-"forget to specify the department if your recruitment process is different "
-"according to the job position."
-msgstr ""
-" Bifati daca etapele urmatoare se potrivesc in procesul d-voastra de "
-"recrutare. Nu uitati sa specificati departamentul daca procesul d-voastra de "
-"recrutare este diferit conform functiei postului."
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "    Month-1    "
-msgstr "    Luna-1    "
+#: code:addons/hr_recruitment/hr_recruitment.py:342
+#, python-format
+msgid "No Subject"
+msgstr "Nici un subiect"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,salary_exp:0
@@ -510,7 +515,7 @@ msgid "Gives the sequence order when displaying a list of stages."
 msgstr "Da ordinea secventei atunci cand afiseaza o lista cu etape."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,partner_id:0
 msgid "Contact"
 msgstr "Contact"
 
@@ -520,12 +525,7 @@ msgid "Salary Expected by Applicant, extra advantages"
 msgstr "Salariul dorit de candidat, plus beneficii"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Qualification"
-msgstr "Calificare"
-
-#. module: hr_recruitment
-#: field:hr.applicant,partner_id:0 view:hr.recruitment.report:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,partner_id:0
 msgid "Partner"
 msgstr "Partener"
@@ -534,11 +534,6 @@ msgstr "Partener"
 #: selection:hr.recruitment.report,month:0
 msgid "March"
 msgstr "Martie"
-
-#. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
-msgid "Stage of Recruitment"
-msgstr "Etapa de recrutare"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.stage:0
@@ -563,9 +558,9 @@ msgid "In progress"
 msgstr "In desfasurare"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
-msgid "Review Recruitment Stages"
-msgstr "Verificati Etapele de Recrutare"
+#: view:hr.applicant:0
+msgid "Hire & Create Employee"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -578,6 +573,11 @@ msgid "Probability"
 msgstr "Probabilitate"
 
 #. module: hr_recruitment
+#: field:hr.job,alias_id:0
+msgid "Alias"
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "September"
 msgstr "Septembrie"
@@ -588,34 +588,36 @@ msgid "December"
 msgstr "Decembrie"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Recruitment performed in current year"
-msgstr "Recrutari efectuate in anul curent"
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:39
+#, python-format
+msgid "A contact is already defined on this job request."
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,categ_ids:0
+msgid "Tags"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_applicant_category
+msgid "Category of applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
-msgid "Recruitment during last month"
-msgstr "Recrutari in timpul lunii trecute"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,month:0
+#: field:hr.recruitment.report,month:0
 msgid "Month"
 msgstr "Luna"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Unassigned Recruitments"
-msgstr "Recrutari nealocate"
+msgid "Answer related job question"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Job Info"
-msgstr "Informatii despre locul de munca"
-
-#. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
-msgid "First Interview"
-msgstr "Primul interviu"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
+msgid "Degree of Recruitment"
+msgstr "Gradul de recrutare"
 
 #. module: hr_recruitment
 #: field:hr.applicant,write_date:0
@@ -628,14 +630,16 @@ msgid "Yes"
 msgstr "Da"
 
 #. module: hr_recruitment
-#: field:hr.applicant,salary_proposed:0 view:hr.recruitment.report:0
-msgid "Proposed Salary"
-msgstr "Salariul propus"
+#: view:hr.applicant:0
+#: field:hr.applicant,name:0
+msgid "Subject"
+msgstr "Subiect"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Schedule Meeting"
-msgstr "Programati Intalnirea"
+#: view:hired.employee:0
+#: view:hr.recruitment.partner.create:0
+msgid "or"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -643,9 +647,9 @@ msgid "Search Jobs"
 msgstr "Cautati Locuri de muncă"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,category_id:0
-msgid "Category"
-msgstr "Categorie"
+#: view:hr.applicant:0
+msgid "Schedule Meeting"
+msgstr "Programati Intalnirea"
 
 #. module: hr_recruitment
 #: field:hr.applicant,partner_name:0
@@ -659,9 +663,9 @@ msgid "Very Good"
 msgstr "Foarte bine"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "# Cases"
-msgstr "# Cazuri"
+#: field:hr.applicant,user_email:0
+msgid "User Email"
+msgstr "E-mail utilizator"
 
 #. module: hr_recruitment
 #: field:hr.applicant,date_open:0
@@ -674,14 +678,9 @@ msgid "Group By ..."
 msgstr "Grupati dupa ..."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 selection:hr.applicant,state:0
-msgid "In Progress"
-msgstr "In curs de desfasurare"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Reset to New"
-msgstr "Resetati pe Nou(a)"
+#: view:hired.employee:0
+msgid "No"
+msgstr "Nu"
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_expected:0
@@ -710,7 +709,8 @@ msgid "Degrees"
 msgstr "Diplome"
 
 #. module: hr_recruitment
-#: field:hr.applicant,date_closed:0 field:hr.recruitment.report,date_closed:0
+#: field:hr.applicant,date_closed:0
+#: field:hr.recruitment.report,date_closed:0
 msgid "Closed"
 msgstr "Inchis(a)"
 
@@ -718,11 +718,6 @@ msgstr "Inchis(a)"
 #: view:hr.recruitment.stage:0
 msgid "Stage Definition"
 msgstr "Definirea etapei"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Answer"
-msgstr "Raspuns"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,delay_close:0
@@ -736,24 +731,24 @@ msgstr "Salariul propus de catre Organizatie"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Meeting"
-msgstr "Intalnire"
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
+#: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "Pending"
+msgstr "In asteptare"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:347
-#, python-format
-msgid "No Subject"
-msgstr "Nici un subiect"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
+#: field:hr.applicant,state:0
+#: field:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,state:0
 msgid "Status"
 msgstr "Status"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "Communication & History"
-msgstr "Comunicare & Istoric"
+msgid "Schedule interview with this applicant"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -761,22 +756,19 @@ msgid "August"
 msgstr "August"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,type_id:0
-#: view:hr.recruitment.degree:0 view:hr.recruitment.report:0
+#: view:hr.applicant:0
+#: field:hr.applicant,type_id:0
+#: view:hr.recruitment.degree:0
+#: view:hr.recruitment.report:0
 #: field:hr.recruitment.report,type_id:0
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_degree_action
 msgid "Degree"
 msgstr "Diploma"
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_phone:0
-msgid "Phone"
-msgstr "Telefon"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Global CC"
-msgstr "CC (Carbon Copy) global"
+#: model:ir.actions.server,name:hr_recruitment.actions_server_applicant_unread
+msgid "HR Applicant: Mark unread"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -784,9 +776,24 @@ msgid "June"
 msgstr "Iunie"
 
 #. module: hr_recruitment
+#: help:hr.applicant,state:0
+msgid ""
+"The status is set to 'Draft', when a case is created.                      "
+"If the case is in progress the status is set to 'Open'.                      "
+"When the case is over, the status is set to 'Done'.                      If "
+"the case needs to be reviewed then the status is                       set "
+"to 'Pending'."
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,day_close:0
 msgid "Days to Close"
 msgstr "Zile pana la inchidere"
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.recruitment.report,user_id:0
@@ -805,14 +812,23 @@ msgid "Active"
 msgstr "Activ(a)"
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "November"
-msgstr "Noiembrie"
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,nbr:0
+msgid "# of Applications"
+msgstr ""
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0
-msgid "Extended Filters..."
-msgstr "Filtre Extinse..."
+#: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_act
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"            Click to add a new stage in the recruitment process.\n"
+"          </p><p>\n"
+"            Don't forget to specify the department if your recruitment "
+"process\n"
+"            is different according to the job position.\n"
+"          </p>\n"
+"        "
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,response:0
@@ -820,21 +836,20 @@ msgid "Response"
 msgstr "Raspuns"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.stage,department_id:0
-msgid "Specific to a Department"
-msgstr "Specific unui Departament"
+#: field:hr.applicant,message_comment_ids:0
+#: help:hr.applicant,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.recruitment.report,salary_prop_avg:0
-msgid "Avg Salary Proposed"
-msgstr "Salariul mediu propus"
+#: selection:hr.recruitment.report,month:0
+msgid "October"
+msgstr "Octombrie"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.job2phonecall:0
-#: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_phonecall
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_job2phonecall
-msgid "Schedule Phone Call"
-msgstr "Programati Apelul Telefonic"
+#: field:hr.config.settings,module_document_ftp:0
+msgid "Allow the automatic indexation of resumes"
+msgstr ""
 
 #. module: hr_recruitment
 #: field:hr.applicant,salary_proposed_extra:0
@@ -842,37 +857,47 @@ msgid "Proposed Salary Extra"
 msgstr "Salariul propus suplimentar"
 
 #. module: hr_recruitment
+#: model:mail.message.subtype,name:hr_recruitment.mt_hired
+msgid "Employee Hired"
+msgstr ""
+
+#. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
 msgid "January"
 msgstr "Ianuarie"
 
 #. module: hr_recruitment
-#: help:hr.applicant,email_from:0
-msgid "These people will receive email."
-msgstr "Aceste persoane vor primi e-mail."
+#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:56
+#, python-format
+msgid "A contact is already existing with the same name."
+msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.applicant,priority:0
-#: selection:hr.recruitment.report,priority:0
-msgid "Not Good"
-msgstr "Nu e bine"
+#: code:addons/hr_recruitment/hr_recruitment.py:495
+#, python-format
+msgid "Applicant has been <b>hired</b>."
+msgstr ""
 
 #. module: hr_recruitment
-#: field:hr.applicant,date:0 field:hr.recruitment.report,date:0
+#: view:hr.applicant:0
+msgid "Contact:"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: hr_recruitment
+#: field:hr.applicant,date:0
+#: field:hr.recruitment.report,date:0
 msgid "Date"
 msgstr "Data"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.job2phonecall:0
-msgid "Phone Call Description"
-msgstr "Descrierea Apelului Telefonic"
-
-#. module: hr_recruitment
-#: view:hr.recruitment.partner.create:0
-msgid "Are you sure you want to create a partner based on this job request ?"
-msgstr ""
-"Sunteti sigur(a) ca doriti sa creati un partener pe baza acestei cereri de "
-"loc de munca?"
+#: field:hr.applicant,survey:0
+msgid "Survey"
+msgstr "Sondaj"
 
 #. module: hr_recruitment
 #: view:hired.employee:0
@@ -880,33 +905,14 @@ msgid "Would you like to create an employee ?"
 msgstr "Doriti sa creati un angajat ?"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
-msgid ""
-"From this menu you can track applicants in the recruitment process and "
-"manage all operations: meetings, interviews, phone calls, etc. If you setup "
-"the email gateway, applicants and their attached CV are created "
-"automatically when an email is sent to jobs@yourcompany.com. If you install "
-"the document management modules, all documents (CV and motivation letters) "
-"are indexed automatically, so that you can easily search through their "
-"content."
-msgstr ""
-"Din acest meniu puteti sa tineti evidenta candidatilor in procesul de "
-"recrutare si sa gestionati toate operatiunile: intalniri, interviuri, "
-"apeluri telefonice, etc. Daca setati email gateway, candidatii si CV-ul lor "
-"atasat sunt creati automat atunci cand un email este trimis la "
-"jobs@yourcompany.com. Daca instalati modulele de management al documentelor, "
-"toate documentele (CV-urile si scrisorile de intentie) sunt indexate "
-"automat, astfel ca puteti cauta cu usurinta prin cuprinsul lor."
-
-#. module: hr_recruitment
 #: view:hr.applicant:0
-msgid "History"
-msgstr "Istoric"
+msgid "Degree:"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
-msgid "Recruitment performed in current month"
-msgstr "Recrutari efectuate in luna curenta"
+msgid "Extended Filters..."
+msgstr "Filtre Extinse..."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,help:hr_recruitment.hr_recruitment_stage_form_installer
@@ -920,20 +926,26 @@ msgstr ""
 "recrutare este diferit conform functiei postului."
 
 #. module: hr_recruitment
-#: field:hr.applicant,partner_address_id:0
-msgid "Partner Contact"
-msgstr "Contact Partener"
+#: view:hr.config.settings:0
+msgid "Configure"
+msgstr ""
+
+#. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:492
+#, python-format
+msgid "Applicant has been <b>hired</b> and created as an employee."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: field:hr.applicant,source_id:0
+msgid "Source"
+msgstr "Sursa"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job4
 msgid "Contract Proposed"
 msgstr "Contract propus"
-
-#. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,state:0 view:hr.recruitment.report:0
-#: field:hr.recruitment.report,state:0
-msgid "State"
-msgstr "Stare"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_website_company
@@ -946,31 +958,41 @@ msgid "The name of the Degree of Recruitment must be unique!"
 msgstr "Numele Gradului Recrutarii trebuie sa fie unic!"
 
 #. module: hr_recruitment
-#: view:hr.recruitment.report:0 field:hr.recruitment.report,year:0
+#: view:hr.recruitment.report:0
+#: field:hr.recruitment.report,year:0
 msgid "Year"
 msgstr "An"
 
 #. module: hr_recruitment
-#: view:hired.employee:0 view:hr.recruitment.job2phonecall:0
+#: view:hired.employee:0
 #: view:hr.recruitment.partner.create:0
 msgid "Cancel"
 msgstr "Anulati"
 
 #. module: hr_recruitment
-#: model:ir.actions.act_window,name:hr_recruitment.hr_job_categ_action
-msgid "Applicant Categories"
-msgstr "Categorii Candidati"
+#: field:hr.applicant,message_follower_ids:0
+msgid "Followers"
+msgstr ""
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,state:0
-msgid "Open"
-msgstr "Deschideti"
+#: view:hr.recruitment.partner.create:0
+msgid "Are you sure you want to create a contact based on this job request ?"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/wizard/hr_recruitment_create_partner_job.py:57
-#, python-format
-msgid "A partner is already existing with the same name."
-msgstr "Deja exista un partener cu acelasi nume."
+#: help:hr.config.settings,fetchmail_applicants:0
+msgid ""
+"Allow applicants to send their job application to an email address "
+"(jobs@mycompany.com),\n"
+"                and create automatically application documents in the system."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.stage,state:0
+msgid "In Progress"
+msgstr "In curs de desfasurare"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -983,7 +1005,8 @@ msgid "Gives the sequence order when displaying a list of degrees."
 msgstr "Da ordinea secventei atunci cand afisează o lista de diplome."
 
 #. module: hr_recruitment
-#: view:hr.applicant:0 field:hr.applicant,user_id:0
+#: view:hr.applicant:0
+#: field:hr.applicant,user_id:0
 #: view:hr.recruitment.report:0
 msgid "Responsible"
 msgstr "Responsabil"
@@ -1006,9 +1029,14 @@ msgid "LinkedIn"
 msgstr "LinkedIn"
 
 #. module: hr_recruitment
-#: selection:hr.recruitment.report,month:0
-msgid "October"
-msgstr "Octombrie"
+#: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
+msgid "New Applicant"
+msgstr ""
+
+#. module: hr_recruitment
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_stage
+msgid "Stage of Recruitment"
+msgstr "Etapa de recrutare"
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1016,14 +1044,20 @@ msgid "Cases By Stage and Estimates"
 msgstr "Cazuri dupa Etapa si Estimari"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Reply"
-msgstr "Raspundeti"
+#: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
+msgid "Source of Applicants"
+msgstr "Sursa Candidati"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
+#: model:crm.meeting.type,name:hr_recruitment.categ_meet_interview
+#: view:hr.job:0
 msgid "Interview"
 msgstr "Interviu"
+
+#. module: hr_recruitment
+#: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_form_installer
+msgid "Review Recruitment Stages"
+msgstr "Verificati Etapele de Recrutare"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.source,name:0
@@ -1031,9 +1065,25 @@ msgid "Source Name"
 msgstr "Nume sursa"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:476
+#, python-format
+msgid "Stage changed to <b>%s</b>."
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Day(s)"
+msgstr ""
+
+#. module: hr_recruitment
 #: field:hr.applicant,description:0
 msgid "Description"
 msgstr "Descriere"
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Unassigned Recruitments"
+msgstr "Recrutari nealocate"
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1051,22 +1101,44 @@ msgid "Word of Mouth"
 msgstr "Oral"
 
 #. module: hr_recruitment
-#: selection:hr.applicant,state:0 selection:hr.recruitment.report,state:0
+#: field:hr.recruitment.stage,fold:0
+msgid "Hide in views if empty"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.config.settings,module_document_ftp:0
+msgid ""
+"Manage your CV's and motivation letter related to all applicants.\n"
+"                This installs the module document_ftp. This will install the "
+"knowledge management  module in order to allow you to search using specific "
+"keywords through  the content of all documents (PDF, .DOCx...)"
+msgstr ""
+
+#. module: hr_recruitment
+#: selection:hr.applicant,state:0
+#: selection:hr.recruitment.report,state:0
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job6
+#: selection:hr.recruitment.stage,state:0
 msgid "Refused"
 msgstr "Respins"
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:414
-#, python-format
-msgid "Applicant '%s' is being hired."
-msgstr "Candidatul '%s' este angajat."
-
-#. module: hr_recruitment
-#: selection:hr.applicant,state:0 view:hr.recruitment.report:0
+#: selection:hr.applicant,state:0
+#: view:hr.recruitment.report:0
 #: selection:hr.recruitment.report,state:0
+#: selection:hr.recruitment.stage,state:0
 msgid "Hired"
 msgstr "Angajat"
+
+#. module: hr_recruitment
+#: field:hr.applicant,reference:0
+msgid "Referred By"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Departement:"
+msgstr ""
 
 #. module: hr_recruitment
 #: selection:hr.applicant,priority:0
@@ -1075,9 +1147,14 @@ msgid "On Average"
 msgstr "In medie"
 
 #. module: hr_recruitment
-#: model:ir.model,name:hr_recruitment.model_hr_recruitment_degree
-msgid "Degree of Recruitment"
-msgstr "Gradul de recrutare"
+#: model:hr.recruitment.stage,name:hr_recruitment.stage_job2
+msgid "First Interview"
+msgstr "Primul interviu"
+
+#. module: hr_recruitment
+#: field:hr.recruitment.report,salary_prop_avg:0
+msgid "Avg. Proposed Salary"
+msgstr ""
 
 #. module: hr_recruitment
 #: view:hr.applicant:0
@@ -1090,25 +1167,42 @@ msgid "February"
 msgstr "Februarie"
 
 #. module: hr_recruitment
-#: field:hr.applicant,name:0 field:hr.recruitment.degree,name:0
+#: selection:hr.applicant,priority:0
+#: selection:hr.recruitment.report,priority:0
+msgid "Not Good"
+msgstr "Nu e bine"
+
+#. module: hr_recruitment
+#: field:hr.applicant_category,name:0
+#: field:hr.recruitment.degree,name:0
 #: field:hr.recruitment.stage,name:0
 msgid "Name"
 msgstr "Nume"
 
 #. module: hr_recruitment
-#: view:hr.applicant:0
-msgid "Edit"
-msgstr "Editati"
+#: selection:hr.recruitment.report,month:0
+msgid "November"
+msgstr "Noiembrie"
 
 #. module: hr_recruitment
-#: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
-msgid "Second Interview"
-msgstr "Al doilea interviu"
+#: field:hr.recruitment.report,salary_exp_avg:0
+msgid "Avg. Expected Salary"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.recruitment.report:0
+msgid "Avg Expected Salary"
+msgstr ""
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_partner_create
 msgid "Create Partner from job application"
 msgstr "Creati Parteneri din aplicarea la locul de munca"
+
+#. module: hr_recruitment
+#: help:hr.applicant,email_from:0
+msgid "These people will receive email."
+msgstr "Aceste persoane vor primi e-mail."
 
 #. module: hr_recruitment
 #: selection:hr.recruitment.report,month:0
@@ -1121,24 +1215,29 @@ msgid "Pending recruitment"
 msgstr "Recrutare in asteptare"
 
 #. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Contract"
+msgstr ""
+
+#. module: hr_recruitment
+#: help:hr.applicant,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.source,name:hr_recruitment.source_monster
 msgid "Monster"
 msgstr "Monstru"
 
 #. module: hr_recruitment
-#: model:ir.ui.menu,name:hr_recruitment.menu_hr_job
-msgid "Job Positions"
-msgstr "Functii post"
+#: field:hr.recruitment.stage,department_id:0
+msgid "Specific to a Department"
+msgstr "Specific unui Departament"
 
 #. module: hr_recruitment
 #: view:hr.recruitment.report:0
 msgid "In progress recruitment"
 msgstr "Recrutare in desfasurare"
-
-#. module: hr_recruitment
-#: sql_constraint:hr.job:0
-msgid "The name of the job position must be unique per company!"
-msgstr "Numele functiei postului trebuie sa fie unic per companie!"
 
 #. module: hr_recruitment
 #: field:hr.recruitment.degree,sequence:0
@@ -1147,21 +1246,35 @@ msgid "Sequence"
 msgstr "Secventa"
 
 #. module: hr_recruitment
+#: code:addons/hr_recruitment/hr_recruitment.py:490
+#, python-format
+msgid "New employee joined the company %s."
+msgstr ""
+
+#. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_bachelor
 msgid "Bachelor Degree"
 msgstr "Diploma de licenta"
 
 #. module: hr_recruitment
-#: field:hr.recruitment.job2phonecall,user_id:0
-msgid "Assign To"
-msgstr "Atribuiti lui"
+#: model:ir.model,name:hr_recruitment.model_hr_config_settings
+msgid "hr.config.settings"
+msgstr ""
 
 #. module: hr_recruitment
-#: code:addons/hr_recruitment/hr_recruitment.py:407
+#: code:addons/hr_recruitment/hr_recruitment.py:508
 #, python-format
-msgid "The job request '%s' has been set 'in progress'."
+msgid "Applicant has been <b>created</b>."
 msgstr ""
-"Cererea pentru locul de munca '%s' a fost setata pe 'in desfăsurare'."
+
+#. module: hr_recruitment
+#: help:hr.recruitment.stage,state:0
+msgid ""
+"The related status for the stage. The status of your document will "
+"automatically change according to the selected stage. Example, a stage is "
+"related to the status 'Close', when your document reach this stage, it will "
+"be automatically closed."
+msgstr ""
 
 #. module: hr_recruitment
 #: help:hr.applicant,salary_proposed_extra:0
@@ -1170,14 +1283,38 @@ msgstr "Salariul propus de Organizatie, plus bonusuri"
 
 #. module: hr_recruitment
 #: help:hr.recruitment.report,delay_close:0
-#: help:hr.recruitment.report,delay_open:0
 msgid "Number of Days to close the project issue"
 msgstr "Numarul de Zile pana la inchiderea problemei proiectului"
 
 #. module: hr_recruitment
-#: field:hr.applicant,survey:0
-msgid "Survey"
-msgstr "Sondaj"
+#: selection:hr.recruitment.report,state:0
+msgid "Open"
+msgstr "Deschideti"
+
+#. module: hr_recruitment
+#: view:board.board:0
+msgid "Applications to be Processed"
+msgstr ""
+
+#. module: hr_recruitment
+#: view:hr.applicant:0
+msgid "Schedule Interview"
+msgstr ""
+
+#~ msgid "# of Cases"
+#~ msgstr "# de Cazuri"
+
+#~ msgid "Avg. Delay to Open"
+#~ msgstr "Intarzierea medie la deschidere"
+
+#~ msgid "Goals"
+#~ msgstr "Scopuri"
+
+#~ msgid "Contract Data"
+#~ msgstr "Date contract"
+
+#~ msgid "Notes"
+#~ msgstr "Note"
 
 #~ msgid "Junior Developer"
 #~ msgstr "Dezvoltator subaltern"
@@ -1185,23 +1322,80 @@ msgstr "Sondaj"
 #~ msgid "Initial Jobs Demand"
 #~ msgstr "Cererea initială de locuri de muncă"
 
+#~ msgid "Partner Contact"
+#~ msgstr "Contact Partener"
+
 #~ msgid "Reference"
 #~ msgstr "Referință"
+
+#, python-format
+#~ msgid "Phone Call"
+#~ msgstr "Apel telefonic"
+
+#~ msgid "Availability (Days)"
+#~ msgstr "Disponibilitate (Zile)"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Eroare !"
+
+#~ msgid ""
+#~ "Define here your stages of the recruitment process, for example: "
+#~ "qualification call, first interview, second interview, refused, hired."
+#~ msgstr ""
+#~ "Aici definiti etapele procesului de recrutare, de exemplu: calificari, "
+#~ "primul interviu, al doilea interviu, respins, angajat."
+
+#~ msgid "    Month-1    "
+#~ msgstr "    Luna-1    "
 
 #~ msgid " > Bac +5"
 #~ msgstr " > Bac +5"
 
+#~ msgid "Dates"
+#~ msgstr "Date"
+
+#~ msgid "History Information"
+#~ msgstr "Istoric Informatii"
+
 #~ msgid "HR - Recruitement"
 #~ msgstr "Resurse Umane - Recrutare"
 
+#~ msgid "Qualification"
+#~ msgstr "Calificare"
+
 #~ msgid "Salesman"
 #~ msgstr "Agent comercial"
+
+#~ msgid "# Cases"
+#~ msgstr "# Cazuri"
+
+#~ msgid "Category"
+#~ msgstr "Categorie"
+
+#~ msgid "Communication & History"
+#~ msgstr "Comunicare & Istoric"
+
+#~ msgid "Global CC"
+#~ msgstr "CC (Carbon Copy) global"
 
 #~ msgid "Refused by Company"
 #~ msgstr "Refuzat de către Companie"
 
 #~ msgid "Licenced"
 #~ msgstr "Licentiat"
+
+#~ msgid "Avg Salary Proposed"
+#~ msgstr "Salariul mediu propus"
+
+#~ msgid "History"
+#~ msgstr "Istoric"
+
+#~ msgid "Applicant Categories"
+#~ msgstr "Categorii Candidati"
+
+#~ msgid "State"
+#~ msgstr "Stare"
 
 #~ msgid "Attachments"
 #~ msgstr "Atașamente"
@@ -1238,8 +1432,140 @@ msgstr "Sondaj"
 #~ "CV-uri.\n"
 #~ "    "
 
+#, python-format
+#~ msgid "Applicant '%s' is being hired."
+#~ msgstr "Candidatul '%s' este angajat."
+
 #~ msgid "Refused by Employee"
 #~ msgstr "Refuzat de către angajat"
 
+#~ msgid "Assign To"
+#~ msgstr "Atribuiti lui"
+
 #~ msgid "HR Department"
 #~ msgstr "Departamentul HR (Resurse Umane)"
+
+#~ msgid "Refered By"
+#~ msgstr "Recomandat de"
+
+#~ msgid "Partner Contact Name"
+#~ msgstr "Nume Contact Partener"
+
+#~ msgid "Create Partner"
+#~ msgstr "Creati Partenerul"
+
+#~ msgid "Add Internal Note"
+#~ msgstr "Adaugati Nota Interna"
+
+#~ msgid "Previous"
+#~ msgstr "Precedent(a)"
+
+#~ msgid "Change Color"
+#~ msgstr "Schimbati culoarea"
+
+#~ msgid ""
+#~ "Stages of the recruitment process may be different per department. If this "
+#~ "stage is common to all departments, keep tempy this field."
+#~ msgstr ""
+#~ "Etapele procesului de recrutare pot fi diferite in functie de departament. "
+#~ "Daca aceasta etapa este comuna tuturor departamentelor, lasati acest camp "
+#~ "necompletat."
+
+#, python-format
+#~ msgid "A partner is already defined on this job request."
+#~ msgstr "Un partener este deja definit pe aceasta cerere de loc de munca."
+
+#~ msgid "Send New Email"
+#~ msgstr "Trimiteti un e-mail nou"
+
+#~ msgid "Next"
+#~ msgstr "Urmatorul (urmatoarea)"
+
+#, python-format
+#~ msgid "Changed Stage to: %s"
+#~ msgstr "Etapa schimbata in: %s"
+
+#~ msgid "Hire"
+#~ msgstr "Angajeaza"
+
+#~ msgid "Planned Date"
+#~ msgstr "Data Planificata"
+
+#~ msgid "Job Info"
+#~ msgstr "Informatii despre locul de munca"
+
+#~ msgid "Recruitment performed in current year"
+#~ msgstr "Recrutari efectuate in anul curent"
+
+#~ msgid "Reset to New"
+#~ msgstr "Resetati pe Nou(a)"
+
+#~ msgid "Answer"
+#~ msgstr "Raspuns"
+
+#~ msgid "Meeting"
+#~ msgstr "Intalnire"
+
+#~ msgid ""
+#~ "From this menu you can track applicants in the recruitment process and "
+#~ "manage all operations: meetings, interviews, phone calls, etc. If you setup "
+#~ "the email gateway, applicants and their attached CV are created "
+#~ "automatically when an email is sent to jobs@yourcompany.com. If you install "
+#~ "the document management modules, all documents (CV and motivation letters) "
+#~ "are indexed automatically, so that you can easily search through their "
+#~ "content."
+#~ msgstr ""
+#~ "Din acest meniu puteti sa tineti evidenta candidatilor in procesul de "
+#~ "recrutare si sa gestionati toate operatiunile: intalniri, interviuri, "
+#~ "apeluri telefonice, etc. Daca setati email gateway, candidatii si CV-ul lor "
+#~ "atasat sunt creati automat atunci cand un email este trimis la "
+#~ "jobs@yourcompany.com. Daca instalati modulele de management al documentelor, "
+#~ "toate documentele (CV-urile si scrisorile de intentie) sunt indexate "
+#~ "automat, astfel ca puteti cauta cu usurinta prin cuprinsul lor."
+
+#~ msgid "Are you sure you want to create a partner based on this job request ?"
+#~ msgstr ""
+#~ "Sunteti sigur(a) ca doriti sa creati un partener pe baza acestei cereri de "
+#~ "loc de munca?"
+
+#~ msgid "Phone Call Description"
+#~ msgstr "Descrierea Apelului Telefonic"
+
+#~ msgid "Schedule Phone Call"
+#~ msgstr "Programati Apelul Telefonic"
+
+#~ msgid "Recruitment performed in current month"
+#~ msgstr "Recrutari efectuate in luna curenta"
+
+#~ msgid "The name of the job position must be unique per company!"
+#~ msgstr "Numele functiei postului trebuie sa fie unic per companie!"
+
+#~ msgid "Job Positions"
+#~ msgstr "Functii post"
+
+#~ msgid ""
+#~ " Check if the following stages are matching your recruitment process. Don't "
+#~ "forget to specify the department if your recruitment process is different "
+#~ "according to the job position."
+#~ msgstr ""
+#~ " Bifati daca etapele urmatoare se potrivesc in procesul d-voastra de "
+#~ "recrutare. Nu uitati sa specificati departamentul daca procesul d-voastra de "
+#~ "recrutare este diferit conform functiei postului."
+
+#, python-format
+#~ msgid "A partner is already existing with the same name."
+#~ msgstr "Deja exista un partener cu acelasi nume."
+
+#~ msgid "Reply"
+#~ msgstr "Raspundeti"
+
+#~ msgid "Edit"
+#~ msgstr "Editati"
+
+#, python-format
+#~ msgid "The job request '%s' has been set 'in progress'."
+#~ msgstr ""
+#~ "Cererea pentru locul de munca '%s' a fost setata pe 'in desfăsurare'."
+
+#~ msgid "Recruitment during last month"
+#~ msgstr "Recrutari in timpul lunii trecute"

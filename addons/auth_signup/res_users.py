@@ -18,14 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
+from datetime import datetime, timedelta
 import random
-import time
 import urllib
 import urlparse
 
 from openerp.osv import osv, fields
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from openerp.tools.safe_eval import safe_eval
+from openerp.tools.translate import _
 
 class SignupError(Exception):
     pass
@@ -33,10 +34,12 @@ class SignupError(Exception):
 def random_token():
     # the token has an entropy of about 120 bits (6 bits/char * 20 chars)
     chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return ''.join(random.choice(chars) for _ in xrange(20))
+    return ''.join(random.choice(chars) for i in xrange(20))
 
-def now():
-    return time.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+def now(**kwargs):
+    dt = datetime.now() + timedelta(**kwargs)
+    return dt.strftime(DEFAULT_SERVER_DATETIME_FORMAT)
+
 
 class res_partner(osv.Model):
     _inherit = 'res.partner'
@@ -58,7 +61,7 @@ class res_partner(osv.Model):
             # when required, make sure the partner has a valid signup token
             if context and context.get('signup_valid') and not partner.user_ids:
                 self.signup_prepare(cr, uid, [partner.id], context=context)
-    
+
             action_template = None
             params = {
                 'action': urllib.quote(action),
@@ -150,8 +153,12 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     def _get_state(self, cr, uid, ids, name, arg, context=None):
-        return dict((user.id, 'new' if not user.login_date else 'reset' if user.signup_token else 'active')
-                    for user in self.browse(cr, uid, ids, context))
+        res = {}
+        for user in self.browse(cr, uid, ids, context):
+            res[user.id] = ('reset' if user.signup_valid else
+                            'active' if user.login_date else
+                            'new')
+        return res
 
     _columns = {
         'state': fields.function(_get_state, string='Status', type='selection',
@@ -163,43 +170,39 @@ class res_users(osv.Model):
             - create a new user (no token), or
             - create a user for a partner (with token, but no user for partner), or
             - change the password of a user (with token, and existing user).
-            :param values: a dictionary with field values
+            :param values: a dictionary with field values that are written on user
             :param token: signup token (optional)
             :return: (dbname, login, password) for the signed up user
         """
-        assert values.get('login') and values.get('password')
-        result = (cr.dbname, values['login'], values['password'])
-
         if token:
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
-            partner = res_partner._signup_retrieve_partner(cr, uid, token,
-                                        check_validity=True, raise_exception=True, context=None)
+            partner = res_partner._signup_retrieve_partner(
+                            cr, uid, token, check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_expiration': False})
-            if partner.user_ids:
-                # user exists, modify its password
-                partner.user_ids[0].write({'password': values['password']})
+
+            partner_user = partner.user_ids and partner.user_ids[0] or False
+            if partner_user:
+                # user exists, modify it according to values
+                values.pop('login', None)
+                values.pop('name', None)
+                partner_user.write(values)
+                return (cr.dbname, partner_user.login, values.get('password'))
             else:
                 # user does not exist: sign up invited user
-                self._signup_create_user(cr, uid, {
+                values.update({
                     'name': partner.name,
-                    'login': values['login'],
-                    'password': values['password'],
-                    'email': values['login'],
                     'partner_id': partner.id,
-                }, context=context)
-            return result
+                    'email': values.get('email') or values.get('login'),
+                })
+                self._signup_create_user(cr, uid, values, context=context)
+        else:
+            # no token, sign up an external user
+            values['email'] = values.get('email') or values.get('login')
+            self._signup_create_user(cr, uid, values, context=context)
 
-        # sign up an external user
-        assert values.get('name'), 'Signup: no name given for new user'
-        self._signup_create_user(cr, uid, {
-            'name': values['name'],
-            'login': values['login'],
-            'password': values['password'],
-            'email': values['login'],
-        }, context=context)
-        return result
+        return (cr.dbname, values.get('login'), values.get('password'))
 
     def _signup_create_user(self, cr, uid, values, context=None):
         """ create a new user from the template user """
@@ -212,6 +215,45 @@ class res_users(osv.Model):
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
                 raise SignupError('Signup is not allowed for uninvited users')
 
+        assert values.get('login'), "Signup: no login given for new user"
+        assert values.get('partner_id') or values.get('name'), "Signup: no name or partner given for new user"
+
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
         return self.copy(cr, uid, template_user_id, values, context=context)
+
+    def reset_password(self, cr, uid, login, context=None):
+        """ retrieve the user corresponding to login (login or email),
+            and reset their password
+        """
+        user_ids = self.search(cr, uid, [('login', '=', login)], context=context)
+        if not user_ids:
+            user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
+        if len(user_ids) != 1:
+            raise Exception('Reset password: invalid username or email')
+        return self.action_reset_password(cr, uid, user_ids, context=context)
+
+    def action_reset_password(self, cr, uid, ids, context=None):
+        """ create signup token for each user, and send their signup url by email """
+        # prepare reset password signup
+        res_partner = self.pool.get('res.partner')
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
+        res_partner.signup_prepare(cr, uid, partner_ids, expiration=now(days=+1), context=context)
+
+        # send email to users with their signup url
+        template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_signup', 'reset_password_email')
+        assert template._name == 'email.template'
+        for user in self.browse(cr, uid, ids, context):
+            if not user.email:
+                raise osv.except_osv(_("Cannot send email: user has no email address."), user.name)
+            self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
+
+        return True
+
+    def create(self, cr, uid, values, context=None):
+        # overridden to automatically invite user to sign up
+        user_id = super(res_users, self).create(cr, uid, values, context=context)
+        user = self.browse(cr, uid, user_id, context=context)
+        if user.email:
+            user.action_reset_password()
+        return user_id

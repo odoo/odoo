@@ -44,7 +44,7 @@ pay online on their Sale Orders and Invoices that are not paid yet. Paypal is in
 by default, you simply need to configure a Paypal account in the Accounting/Invoicing settings.
     """,
     'author': 'OpenERP SA',
-    'depends': ['sale_stock','portal'],
+    'depends': ['sale','portal'],
     'data': [
         'security/portal_security.xml',
         'portal_sale_view.xml',

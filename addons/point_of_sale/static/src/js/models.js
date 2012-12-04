@@ -36,6 +36,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'company':          null,
                 'user':             null,   // the user that loaded the pos
                 'user_list':        null,   // list of all users
+                'partner_list':     null,   // list of all partners with an ean
                 'cashier':          null,   // the logged cashier, if different from user
 
                 'orders':           new module.OrderCollection(),
@@ -121,6 +122,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).then(function(users){
                     self.set('user_list',users);
 
+                    return self.fetch('res.partner', ['name','ean13'], [['ean13', '!=', false]]);
+                }).then(function(partners){
+                    self.set('partner_list',partners);
+                    console.log('Loaded partners:',partners);
+
                     return self.fetch('account.tax', ['amount', 'price_include', 'type']);
                 }).then(function(taxes){
                     self.set('taxes', taxes);
@@ -166,7 +172,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                         'product.product', 
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
-                        [['pos_categ_id','!=', false],['sale_ok','=',true]],
+                        [['sale_ok','=',true],['available_in_pos','=',true]],
                         {pricelist: self.get('shop').pricelist_id[0]} // context for price
                     );
                 }).then(function(products){
@@ -336,7 +342,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos = options.pos;
             this.order = options.order;
             this.product = options.product;
-            this.price   = options.product.get('list_price');
+            this.price   = options.product.get('price');
             this.quantity = 1;
             this.discount = 0;
             this.type = 'unit';
@@ -390,11 +396,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return this.product;
         },
         // return the base price of this product (for this orderline)
-        get_list_price: function(){
+        get_price: function(){
             return this.price;
         },
         // changes the base price of the product for this orderline
-        set_list_price: function(price){
+        set_price: function(price){
             this.price = price;
             this.trigger('change');
         },
@@ -428,7 +434,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         export_as_JSON: function() {
             return {
                 qty: this.get_quantity(),
-                price_unit: this.get_list_price(),
+                price_unit: this.get_price(),
                 discount: this.get_discount(),
                 product_id: this.get_product().get('id'),
             };
@@ -438,7 +444,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             return {
                 quantity:           this.get_quantity(),
                 unit_name:          this.get_unit().name,
-                list_price:         this.get_list_price(),
+                price:              this.get_price(),
                 discount:           this.get_discount(),
                 product_name:       this.get_product().get('name'),
                 price_with_tax :    this.get_price_with_tax(),
@@ -583,7 +589,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 line.set_quantity(options.quantity);
             }
             if(options.price !== undefined){
-                line.set_list_price(options.price);
+                line.set_price(options.price);
             }
 
             var last_orderline = this.getLastOrderline();
@@ -619,7 +625,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         getDiscountTotal: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
-                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+                return sum + (orderLine.get_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
             }), 0);
         },
         getTotalTaxExcluded: function() {
@@ -656,6 +662,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         get_client: function(){
             return this.get('client');
+        },
+        get_client_name: function(){
+            var client = this.get('client');
+            return client ? client.name : "";
         },
         // the order also stores the screen status, as the PoS supports
         // different active screens per order. This method is used to
