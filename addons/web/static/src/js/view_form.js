@@ -3986,6 +3986,14 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
                         return item.name;
                     },
                 },
+                core: {
+                    onSetInputData: function(e, data) {
+                        if (data == '') {
+                            this._plugins.autocomplete._suggestions = null;
+                        }
+                        this.input().val(data);
+                    },
+                },
             },
         }).bind('getSuggestions', function(e, data) {
             var _this = this;
