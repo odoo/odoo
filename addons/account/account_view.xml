@@ -1553,10 +1553,9 @@
             <field name="name">account.payment.term.line.tree</field>
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
-                <tree string="Payment Term">
-                    <field name="name"/>
+                <tree string="Payment Term" editable="bottom">
                     <field name="value"/>
-                    <field name="value_amount"/>
+                    <field name="value_amount" readonly="1"/>
                     <field name="days"/>
                     <field name="days2"/>
                 </tree>
@@ -1568,12 +1567,13 @@
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
                     <group>
-                        <field name="name"/>
-                    </group>
-                    <group>
                         <group string="Amount Computation">
                             <field name="value"/>
-                            <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}"/>
+                            <label for="value_amount" string="Amount To Pay"/>
+                            <div>
+                                <field name="value_amount" attrs="{'readonly':[('value','=','balance')]}" class="oe_inline"/>
+                                <label string="%%" class="oe_inline" attrs="{'invisible':['!',('value','=','procent')]}"/>
+                            </div>
                         </group>
                         <group string="Due Date Computation">
                             <field name="days"/>

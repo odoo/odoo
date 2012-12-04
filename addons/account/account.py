@@ -114,7 +114,6 @@ class account_payment_term_line(osv.osv):
     _name = "account.payment.term.line"
     _description = "Payment Term Line"
     _columns = {
-        'name': fields.char('Line Name', size=32, required=True),
         'value': fields.selection([('procent', 'Percent'),
                                    ('balance', 'Balance'),
                                    ('fixed', 'Fixed Amount')], 'Computation',
@@ -128,7 +127,8 @@ class account_payment_term_line(osv.osv):
     }
     _defaults = {
         'value': 'balance',
-        'days2': 0,
+        'days': 30,
+        'days2': 1,
     }
     _order = "days,value"
 
