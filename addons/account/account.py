@@ -94,6 +94,20 @@ class account_payment_term(osv.osv):
                 amount -= amt
         return result
 
+    def _check_balance_line(self, cr, uid, ids, context=None):
+        line_value = []
+        for payment in self.browse(cr, uid, ids, context=context):
+            for line_id in  payment.line_ids:
+                if line_id.value == 'balance':
+                    line_value.append(line_id.value)
+        if len(line_value) > 1:
+            return False
+        return True
+        
+    _constraints = [
+        (_check_balance_line, 'A payment term should have one and only one "Balance" computation line.', ['line_ids', 'value']),
+    ]
+
 account_payment_term()
 
 class account_payment_term_line(osv.osv):
