@@ -416,6 +416,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.error('At least one test failed when loading the modules.')
         else:
             _logger.info('Modules loaded.')
+
+        # STEP 7: for every model call _register_hook
+        for models in pool.models:
+            pool_mod = pool.get(models)
+            pool_mod._register_hook(cr)
+
     finally:
         cr.close()
 
