@@ -275,7 +275,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         if (action.domain) {
             action.domain = instance.web.pyeval.eval(
-                'domain', action.domain);
+                'domain', action.domain, action.context || {});
         }
 
         if (!action.type) {
