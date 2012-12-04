@@ -923,6 +923,18 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         }, this);
 
         this.$current = $('<tbody>')
+            .delegate('input[readonly=readonly]', 'click', function (e) {
+                /*
+                    Against all logic and sense, as of right now @readonly
+                    apparently does nothing on checkbox and radio inputs, so
+                    the trick of using @readonly to have, well, readonly
+                    checkboxes (which still let clicks go through) does not
+                    work out of the box. We *still* need to preventDefault()
+                    on the event, otherwise the checkbox's state *will* toggle
+                    on click
+                 */
+                e.preventDefault();
+            })
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
