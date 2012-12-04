@@ -1204,13 +1204,11 @@ instance.web.View = instance.web.Widget.extend({
         } else {
             if (! this.view_type)
                 console.warn("view_type is not defined", this);
-            view_loaded = this.rpc("/web/view/load", {
-                "model": this.dataset.model,
+            view_loaded = instance.web.fields_view_get({
+                "model": this.dataset._model,
                 "view_id": this.view_id,
                 "view_type": this.view_type,
-                toolbar: !!this.options.$sidebar,
-                context: instance.web.pyeval.eval(
-                    'context', this.dataset.get_context(context))
+                "toolbar": !!this.options.$sidebar,
             });
         }
         return view_loaded.then(function(r) {
@@ -1385,8 +1383,51 @@ instance.web.View = instance.web.Widget.extend({
     }
 });
 
+/**
+ * Performs a fields_view_get and apply postprocessing.
+ * return a {$.Deferred} resolved with the fvg
+ *
+ * @param {Object} [args]
+ * @param {String|Object} args.model instance.web.Model instance or string repr of the model
+ * @param {null|Object} args.context context if args.model is a string
+ * @param {null|Number} args.view_id id of the view to be loaded, default view if null
+ * @param {null|String} args.view_type type of view to be loaded if view_id is null
+ * @param {Boolean} [args.toolbar=false] get the toolbar definition
+ */
+instance.web.fields_view_get = function(args) {
+    function postprocess(fvg) {
+        fvg.arch_string = fvg.arch;
+        fvg.arch_doc = $.parseXML(fvg.arch);
+        fvg.arch = instance.web.xml_to_json(fvg.arch_doc);
+        if ('id' in fvg.fields) {
+            // Special case for id's
+            var id_field = fvg.fields['id'];
+            id_field.original_type = id_field.type;
+            id_field.type = 'id';
+        }
+        _.each(fvg.fields, function(field) {
+            _.each(field.views || {}, function(view) {
+                postprocess(view);
+            });
+        });
+        return fvg;
+    }
+    args = _.defaults(args, {
+        toolbar: false,
+    });
+    var model = args.model;
+    if (typeof(model) === 'string') {
+        model = new instance.web.Model(args.model, args.context);
+    }
+    return args.model.call('fields_view_get', [args.view_id, args.view_type, model.context(), args.toolbar]).then(function(fvg) {
+        return postprocess(fvg);
+    });
+};
+
 instance.web.xml_to_json = function(node) {
     switch (node.nodeType) {
+        case 9:
+            return instance.web.xml_to_json(node.documentElement);
         case 3:
         case 4:
             return node.data;
@@ -1455,26 +1496,6 @@ instance.web.xml_to_str = function(node) {
         throw new Error(_t("Could not serialize XML"));
     }
 };
-instance.web.str_to_xml = function(s) {
-    if (window.DOMParser) {
-        var dp = new DOMParser();
-        var r = dp.parseFromString(s, "text/xml");
-        if (r.body && r.body.firstChild && r.body.firstChild.nodeName == 'parsererror') {
-            throw new Error(_t("Could not parse string to xml"));
-        }
-        return r;
-    }
-    var xDoc;
-    try {
-        xDoc = new ActiveXObject("MSXML2.DOMDocument");
-    } catch (e) {
-        throw new Error(_.str.sprintf( _t("Could not find a DOM Parser: %s"), e.message));
-    }
-    xDoc.async = false;
-    xDoc.preserveWhiteSpace = true;
-    xDoc.loadXML(s);
-    return xDoc;
-}
 
 /**
  * Registry for all the main views
