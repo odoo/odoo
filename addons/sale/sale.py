@@ -1016,6 +1016,7 @@ class sale_order_line(osv.osv):
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
         warning = {}
+        warning_msgs = []
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
@@ -1051,10 +1052,7 @@ class sale_order_line(osv.osv):
                             "Here is a proposition of quantities according to the packaging:\n\n"
                             "EAN: %s Quantity: %s Type of ul: %s") % \
                                 (qty, ean, qty_pack, type_ul.name)
-                warning = {
-                    'title': _('Picking Information !'),
-                    'message': warn_msg
-                    }
+                warning_msgs.append('%s :\n%s' % (_('Picking Information !'), warn_msg))
             result['product_uom_qty'] = qty
 
         uom2 = False
@@ -1115,39 +1113,38 @@ class sale_order_line(osv.osv):
             uom2 = product_obj.uom_id
         if (product_obj.type=='product') and (product_obj.virtual_available * uom2.factor < qty * product_obj.uom_id.factor) \
           and (product_obj.procure_method=='make_to_stock'):
-            warning = {
-                'title': _('Not enough stock !'),
-                'message': _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') %
+            warn_msg = _('You plan to sell %.2f %s but you only have %.2f %s available !\nThe real stock is %.2f %s. (without reservations)') % \
                     (qty, uom2 and uom2.name or product_obj.uom_id.name,
                      max(0,product_obj.virtual_available), product_obj.uom_id.name,
                      max(0,product_obj.qty_available), product_obj.uom_id.name)
-            }
+            warning_msgs.append('%s :\n%s' % (_('Not enough stock !'), warn_msg))
+
         # get unit price
         if not pricelist:
-            warning = {
-                'title': 'No Pricelist !',
-                'message':
-                    'You have to select a pricelist or a customer in the sales form !\n'
-                    'Please set one before choosing a product.'
-                }
+            warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
+                         'Please set one before choosing a product.')
+            warning_msgs.append('%s :\n%s' % (_('No Pricelist !'), warn_msg))
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
                     product, qty or 1.0, partner_id, {
                         'uom': uom,
                         'date': date_order,
                         })[pricelist]
-            # at end, round price depending of 'Sale Unit' decimal precision
-            price_unit_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price')
-            price = rounding(price, 10**-price_unit_precision)
             if price is False:
-                warning = {
-                    'title': 'No valid pricelist line found !',
-                    'message':
-                        "Couldn't find a pricelist line matching this product and quantity.\n"
-                        "You have to change either the product, the quantity or the pricelist."
-                    }
+                warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
+                        "You have to change either the product, the quantity or the pricelist.")
+                warning_msgs.append('%s :\n%s' % (_('No valid pricelist line found !'), warn_msg))
             else:
+                # at end, round price depending of 'Sale Unit' decimal precision
+                price_unit_precision = self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price')
+                price = rounding(price, 10**-price_unit_precision)
                 result.update({'price_unit': price})
+
+        if warning_msgs:
+            warning = {
+                'title': _('Configuration Error !'),
+                'message' : '\n\n'.join(warning_msgs)
+            }
         return {'value': result, 'domain': domain, 'warning': warning}
 
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,

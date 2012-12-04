@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.0.0-rc2\n"
+"Project-Id-Version: OpenERP Server 6.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2011-01-11 11:16:02+0000\n"
-"PO-Revision-Date: 2011-01-11 11:16:02+0000\n"
+"POT-Creation-Date: 2012-12-04 13:01+0000\n"
+"PO-Revision-Date: 2012-12-04 13:01+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -60,7 +60,7 @@ msgid "Configure Sales Order Logistics"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:603
+#: code:addons/sale/sale.py:606
 #, python-format
 msgid "The quotation '%s' has been converted to a sales order."
 msgstr ""
@@ -200,6 +200,12 @@ msgid "The invoice is created automatically if the shipping policy is 'Invoice f
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:1136
+#, python-format
+msgid "No valid pricelist line found !"
+msgstr ""
+
+#. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
 msgid "Sales Make Invoice"
 msgstr ""
@@ -242,7 +248,7 @@ msgid "Shop Name"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "No Customer Defined !"
 msgstr ""
@@ -250,6 +256,12 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_tree2
 msgid "Sales in Exception"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:1145
+#, python-format
+msgid "Configuration Error !"
 msgstr ""
 
 #. module: sale
@@ -272,7 +284,7 @@ msgid "The Shipping Policy is used to synchronise invoice and delivery operation
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:939
+#: code:addons/sale/sale.py:942
 #, python-format
 msgid "There is no income category account defined in default Properties for Product Category or Fiscal Position is not defined !"
 msgstr ""
@@ -288,7 +300,7 @@ msgid "You try to assign a lot which is not from the same product"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:620
+#: code:addons/sale/sale.py:623
 #, python-format
 msgid "invalid mode for test_state"
 msgstr ""
@@ -299,7 +311,7 @@ msgid "June"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:584
+#: code:addons/sale/sale.py:587
 #, python-format
 msgid "Could not cancel this sales order !"
 msgstr ""
@@ -360,6 +372,7 @@ msgstr ""
 #. module: sale
 #: view:sale.order:0
 #: view:sale.order.line:0
+#: field:sale.report,product_uom:0
 msgid "UoM"
 msgstr ""
 
@@ -380,13 +393,13 @@ msgid "The salesman confirms the quotation. The state of the sales order becomes
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:971
+#: code:addons/sale/sale.py:974
 #, python-format
 msgid "You must first cancel stock moves attached to this sales order line."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1042
+#: code:addons/sale/sale.py:1047
 #, python-format
 msgid "(n/a)"
 msgstr ""
@@ -469,6 +482,11 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Invoice address :"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
 msgstr ""
 
 #. module: sale
@@ -570,9 +588,9 @@ msgid "My Sales"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:290
-#: code:addons/sale/sale.py:966
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:293
+#: code:addons/sale/sale.py:969
+#: code:addons/sale/sale.py:1169
 #, python-format
 msgid "Invalid action !"
 msgstr ""
@@ -617,6 +635,13 @@ msgid "September"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:1124
+#, python-format
+msgid "You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr ""
+
+#. module: sale
 #: view:sale.report:0
 #: field:sale.report,categ_id:0
 msgid "Category of Product"
@@ -655,7 +680,7 @@ msgid "Sales By Month"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:970
+#: code:addons/sale/sale.py:973
 #, python-format
 msgid "Could not cancel sales order line!"
 msgstr ""
@@ -758,7 +783,7 @@ msgid "The name and address of the contact who requested the order or quotation.
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:966
+#: code:addons/sale/sale.py:969
 #, python-format
 msgid "You cannot cancel a sales order line that has already been invoiced !"
 msgstr ""
@@ -833,6 +858,11 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
 #: view:sale.open.invoice:0
 msgid "Open Invoice"
+msgstr ""
+
+#. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
 msgstr ""
 
 #. module: sale
@@ -960,6 +990,12 @@ msgid "Procurement Method"
 msgstr ""
 
 #. module: sale
+#: code:addons/sale/sale.py:1126
+#, python-format
+msgid "No Pricelist !"
+msgstr ""
+
+#. module: sale
 #: view:sale.config.picking_policy:0
 #: view:sale.installer:0
 msgid "title"
@@ -1054,15 +1090,15 @@ msgid "Picking List"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:387
-#: code:addons/sale/sale.py:920
-#: code:addons/sale/sale.py:938
+#: code:addons/sale/sale.py:390
+#: code:addons/sale/sale.py:923
+#: code:addons/sale/sale.py:941
 #, python-format
 msgid "Error !"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:570
+#: code:addons/sale/sale.py:573
 #, python-format
 msgid "Could not cancel sales order !"
 msgstr ""
@@ -1094,7 +1130,7 @@ msgid "Shipping & Manual Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1051
+#: code:addons/sale/sale.py:1055
 #, python-format
 msgid "Picking Information !"
 msgstr ""
@@ -1209,7 +1245,7 @@ msgid "Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1014
+#: code:addons/sale/sale.py:1017
 #, python-format
 msgid "You have to select a customer in the sales form !\n"
 "Please set one customer before choosing a product."
@@ -1246,7 +1282,7 @@ msgid "The amount without tax."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:571
+#: code:addons/sale/sale.py:574
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
 msgstr ""
@@ -1313,11 +1349,6 @@ msgid "Manual In Progress"
 msgstr ""
 
 #. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Product UoM"
-msgstr ""
-
-#. module: sale
 #: view:sale.order:0
 msgid "Logistic"
 msgstr ""
@@ -1328,7 +1359,7 @@ msgid "Order"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:921
+#: code:addons/sale/sale.py:924
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
 msgstr ""
@@ -1372,7 +1403,7 @@ msgid "Total"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:388
+#: code:addons/sale/sale.py:391
 #, python-format
 msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
 msgstr ""
@@ -1383,7 +1414,7 @@ msgid "Depending on the configuration of the location Output, the move between t
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1165
+#: code:addons/sale/sale.py:1169
 #, python-format
 msgid "Cannot delete a sales order line which is %s !"
 msgstr ""
@@ -1429,6 +1460,13 @@ msgstr ""
 #: selection:sale.order,state:0
 #: selection:sale.report,state:0
 msgid "Invoice Exception"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:1134
+#, python-format
+msgid "Couldn't find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
 msgstr ""
 
 #. module: sale
@@ -1491,7 +1529,7 @@ msgid "Sales by Month"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1045
+#: code:addons/sale/sale.py:1050
 #, python-format
 msgid "You selected a quantity of %d Units.\n"
 "But it's not compatible with the selected packaging.\n"
@@ -1655,7 +1693,7 @@ msgid "Advance Invoice"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:591
+#: code:addons/sale/sale.py:594
 #, python-format
 msgid "The sales order '%s' has been cancelled."
 msgstr ""
@@ -1734,7 +1772,7 @@ msgid "You invoice has been successfully created!"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:585
+#: code:addons/sale/sale.py:588
 #, python-format
 msgid "You must first cancel all invoices attached to this sales order."
 msgstr ""
@@ -1792,13 +1830,13 @@ msgid "Confirmed sales order to invoice."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:290
+#: code:addons/sale/sale.py:293
 #, python-format
 msgid "Cannot delete Sales Order(s) which are already confirmed !"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:316
+#: code:addons/sale/sale.py:319
 #, python-format
 msgid "The sales order '%s' has been set in draft state."
 msgstr ""
@@ -1824,7 +1862,7 @@ msgid "Delivered"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1115
+#: code:addons/sale/sale.py:1120
 #, python-format
 msgid "Not enough stock !"
 msgstr ""
